@@ -2,12 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-html body * {
-  font-family: IranSans !important;
-}
-
 @font-face {
   font-family: IranSans;
   display: swap;
   src: url("../../public/fonts/IranSans/IRANSansMobile(FaNum).ttf");
+}
+
+html body * {
+  font-family: IranSans !important;
 }

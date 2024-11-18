@@ -7,6 +7,7 @@ import {
 } from "@/providers";
 import { Toaster } from "sonner";
 import NextTopLoader from "nextjs-toploader";
+import MainPanelLayout from "@/templates/layout/MainPanelLayout";
 
 type TRootProvider = {
   readonly children: ReactNode;
@@ -19,7 +20,9 @@ const RootProvider: FC<TRootProvider> = ({ children }) => {
         <NetworkProvider>
           <Toaster richColors closeButton />
           <NextTopLoader showSpinner={false} />
-          <MuiRtlProvider>{children}</MuiRtlProvider>
+          <MuiRtlProvider>
+            <MainPanelLayout>{children}</MainPanelLayout>
+          </MuiRtlProvider>
         </NetworkProvider>
       </ReactQueryClientProvider>
     </MuiThemeProvider>

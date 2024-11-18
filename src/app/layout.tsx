@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body dir="rtl">
         <RootProvider>{children}</RootProvider>
       </body>
     </html>

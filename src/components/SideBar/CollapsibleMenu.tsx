@@ -3,18 +3,26 @@
 import { useState } from "react";
 import Image from "next/image";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { TabData } from "@/data/home-page";
-// import IconButton from "@mui/material/IconButton";
-// import { IoIosArrowDown } from "react-icons/io";
-// import Accordion from "@mui/material/Accordion";
-// import AccordionDetails from "@mui/material/AccordionDetails";
-// import AccordionSummary from "@mui/material/AccordionSummary";
+import { TabData } from "@/data/home-page/Tab.constant";
+import { Button } from "@mui/material";
+import { AllData } from "@/data/home-page";
+import IconButton from "@mui/material/IconButton";
+import { IoIosArrowDown } from "react-icons/io";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
 
-const CollapsibleMenu = () => {
+export default function CollapsibleMenu() {
   const [activeTab, setActiveTab] = useState<number>(0);
+
+  const filterMenu = () => {
+    if (activeTab === 0) return AllData;
+    const filterData = AllData.filter((item) => item.id === activeTab);
+    return filterData;
+  };
+  const showMenu = filterMenu();
 
   return (
     <Stack>
@@ -34,9 +42,8 @@ const CollapsibleMenu = () => {
         }}
       >
         {TabData.map((itemTab) => (
-          <Box key={itemTab.id} mx="5px">
+          <Box className="mx-[6px]" key={itemTab.id}>
             <Button
-              disableRipple
               onClick={() => setActiveTab(itemTab.id)}
               sx={{
                 bgcolor: itemTab.id === activeTab ? "#96FAEE" : "#FFF",
@@ -89,7 +96,7 @@ const CollapsibleMenu = () => {
         sx={{
           overflowY: "scroll",
           paddingTop: 0,
-          //   paddingBottom: isMobile ? "325px" : "75px",
+          paddingBottom: "50px",
           marginTop: "8px",
           height: "calc(100vh - 188px)",
           "&::-webkit-scrollbar": {
@@ -100,7 +107,7 @@ const CollapsibleMenu = () => {
           },
         }}
       >
-        {/* {showMenu.map((itemMenu: any, index: number) => (
+        {showMenu.map((itemMenu, index) => (
           <Accordion
             key={index}
             defaultExpanded={true}
@@ -136,7 +143,7 @@ const CollapsibleMenu = () => {
                 rowGap="10px"
               >
                 {itemMenu.data?.map(
-                  (itemData: any, index: number) =>
+                  (itemData, index) =>
                     itemData?.show && (
                       <div
                         key={index}
@@ -161,10 +168,8 @@ const CollapsibleMenu = () => {
               </Box>
             </AccordionDetails>
           </Accordion>
-        ))} */}
+        ))}
       </Box>
     </Stack>
   );
-};
-
-export default CollapsibleMenu;
+}

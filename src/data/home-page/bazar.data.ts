@@ -7,21 +7,4 @@ export const bazarData = [
     show: true,
     link: "",
   },
-
-  {
-    id: 3,
-    title: "سات من",
-    icon: "/images/home-page/MBimeh.svg",
-    children: [],
-    show: false,
-    link: "",
-  },
-  {
-    id: 4,
-    title: "سات من",
-    icon: "/images/home-page/MBimeh.svg",
-    children: [],
-    show: false,
-    link: "",
-  },
 ];

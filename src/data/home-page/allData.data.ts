@@ -6,8 +6,8 @@ import {
   heavenlyMissionData,
   banckingServicesData,
   messangerData,
-  nonAttendanceServices,
 } from "@/data/home-page";
+import { nonAttendanceServices } from "./nonAttendanceServices.data";
 import { loanData } from "./loan.data";
 import { bimeData } from "./bime.data";
 import { otherData } from "./other.data";

@@ -14,7 +14,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="fa">
       <body dir="rtl">
         <NextTopLoader showSpinner={false} />
         <RootProvider>{children}</RootProvider>

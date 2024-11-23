@@ -1,4 +1,4 @@
-const haghOzviatData = [
+export const haghOzviatData = [
   {
     id: 1,
     title: "پرداخت حق عضویت",
@@ -24,5 +24,3 @@ const haghOzviatData = [
     children: [],
   },
 ];
-
-export { haghOzviatData };

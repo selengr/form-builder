@@ -8,6 +8,7 @@ import Etka from "@/../public/images/home-page/etka-fix.svg";
 import Kish from "@/../public/images/home-page/kish-vand.svg";
 import HeaderDesktop from "@/../public/images/home-page/new-mresalt-header.svg";
 import MenuSidebar from "@/components/SideBar/MenuSidebar";
+import CollapsibleMenu from "@/components/SideBar/CollapsibleMenu";
 
 export default function MainPanel({
   children,
@@ -83,6 +84,9 @@ export default function MainPanel({
               className="w-full"
             />
           </div>
+        </div>
+        <div>
+          <CollapsibleMenu />
         </div>
       </div>
       <div>{children}</div>

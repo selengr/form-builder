@@ -12,7 +12,7 @@ export const accountingData = [
     title: "ام حسام تجاری",
     link: "",
     icon: "/images/home-page/MHesamTejari.svg",
-    show: false,
+    show: true,
     children: [],
   },
 ];

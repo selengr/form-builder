@@ -4,7 +4,7 @@ export const nonAttendanceServices = [
     title: "ورود به نقشه",
     icon: "/icons/sepehr.svg",
     link: "",
-    show: false,
+    show: true,
     children: [],
   },
   {
@@ -12,7 +12,7 @@ export const nonAttendanceServices = [
     title: "فعالیت های ام تی آر",
     icon: "/icons/sepehr.svg",
     link: "",
-    show: false,
+    show: true,
     children: [],
   },
 ];

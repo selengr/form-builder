@@ -16,8 +16,8 @@ const RootProvider: FC<TRootProvider> = ({ children }) => {
   return (
     <MuiThemeProvider>
       <ReactQueryClientProvider>
+        <Toaster richColors closeButton />
         <NetworkProvider>
-          <Toaster richColors closeButton />
           <MuiRtlProvider>
             <MainPanel>{children}</MainPanel>
           </MuiRtlProvider>

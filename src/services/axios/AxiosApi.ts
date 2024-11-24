@@ -4,6 +4,26 @@ const AxiosApi = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL + "/psya",
 });
 
+// AxiosApi.interceptors.request.use(async (request) => {
+//   try {
+//     let session;
+
+//     if (typeof window === "undefined") {
+//       session = await getServerSession(authOptions);
+//     } else {
+//       session = await getSession();
+//     }
+
+//     if (session && session.access_token) {
+//       request.headers["Authorization"] = `Bearer ${session.access_token}`;
+//     }
+//   } catch (error) {
+//     console.error("Error retrieving session:", error);
+//   }
+
+//   return request;
+// });
+
 AxiosApi.interceptors.response.use(
   (response) => {
     return response;

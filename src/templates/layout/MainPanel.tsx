@@ -3,12 +3,8 @@ import MresalatLogo from "@/../public/images/home-page/mresalat_logo.svg";
 import ProfileLogo from "@/../public/images/home-page/profile.webp";
 import LogoutIcon from "@/../public/images/home-page/logout.svg";
 import InfoIcon from "@/../public/images/home-page/info-icon.svg";
-import Huze from "@/../public/images/home-page/huze-fix.svg";
-import Etka from "@/../public/images/home-page/etka-fix.svg";
-import Kish from "@/../public/images/home-page/kish-vand.svg";
 import HeaderDesktop from "@/../public/images/home-page/new-mresalt-header.svg";
 import MenuSidebar from "@/components/SideBar/MenuSidebar";
-import CollapsibleMenu from "@/components/SideBar/CollapsibleMenu";
 
 export default function MainPanel({
   children,
@@ -56,38 +52,8 @@ export default function MainPanel({
             className="w-full"
           />
         </div>
-        <div className="flex justify-between mt-2 gap-2">
-          <div className="cursor-pointer w-full">
-            <Image
-              src={Etka}
-              width={110}
-              height={35}
-              alt="etka"
-              className="w-full"
-            />
-          </div>
-          <div className="cursor-pointer w-full">
-            <Image
-              src={Kish}
-              width={115}
-              height={35}
-              alt="Kish"
-              className="w-full"
-            />
-          </div>
-          <div className="cursor-pointer w-full">
-            <Image
-              src={Huze}
-              width={110}
-              height={35}
-              alt="Huze"
-              className="w-full"
-            />
-          </div>
-        </div>
-        <div>
-          <CollapsibleMenu />
-        </div>
+        <div className="flex justify-between mt-2 gap-2"></div>
+        <div className="w-full flex"></div>
       </div>
       <div>{children}</div>
     </div>

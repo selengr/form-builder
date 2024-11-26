@@ -1,6 +1,6 @@
 {
-  "name": "Psya",
-  "version": "0.1.0",
+  "name": "psya",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",

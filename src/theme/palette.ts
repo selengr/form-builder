@@ -14,7 +14,7 @@ const palette: ThemeOptions["palette"] = {
     900: "#161C24",
   },
   primary: {
-    main: "#433792",
+    main: "#1758BA",
     dark: "#DE74A3",
     light: "#84A9FF",
   },

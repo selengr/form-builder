@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
@@ -40,7 +41,6 @@ interface Props {
 let totalData: any = null;
 async function getdatas(
   { pageParam = 0 }: { pageParam: number },
-  session: any,
   searchFilterBoxList: any,
   url: string
 ) {
@@ -50,7 +50,7 @@ async function getdatas(
     searchFilterBoxList: [{ restrictionList: [] }],
     sortList: [
       {
-        fieldName: "id",
+        fieldName: "id", // ^ name
         type: "DSC",
       },
     ],
@@ -60,8 +60,7 @@ async function getdatas(
 
   const res = await clientFetch(
     "GET",
-    `${url}${"ALL"}?searchFilterModel=`,
-    session,
+    `${url}${"ALL"}/${"PUBLIC"}?searchFilterModel=`,
     params
   );
 
@@ -130,7 +129,7 @@ const ListGrid: React.FC<Props> = ({
   } = useInfiniteQuery({
     queryKey: ["datas", queryState],
     queryFn: ({ pageParam }) =>
-      getdatas({ pageParam }, session, searchFilterBoxList, url),
+      getdatas({ pageParam }, searchFilterBoxList, url),
     enabled: sessionStatus === "authenticated",
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {

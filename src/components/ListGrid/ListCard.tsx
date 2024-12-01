@@ -5,6 +5,7 @@ import Image from "next/image";
 import EditIcon from "@/../public/images/home-page/edit-2.svg";
 import TrashIcon from "@/../public/images/home-page/trash.svg";
 import CopyIcon from "@/../public/images/home-page/copy.svg";
+import Link from "next/link";
 
 export default function ListCard(props: any) {
   return (
@@ -47,7 +48,9 @@ export default function ListCard(props: any) {
           <Image src={CopyIcon} alt="" width={24} height={24} />
         </IconButton>
         <IconButton>
-          <Image src={EditIcon} alt="" width={24} height={24} />
+          <Link href={`/builder/${props.data.id}`}>
+            <Image src={EditIcon} alt="" width={24} height={24} />
+          </Link>
         </IconButton>
       </div>
     </div>

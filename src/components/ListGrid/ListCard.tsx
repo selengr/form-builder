@@ -13,7 +13,15 @@ export default function ListCard(props: any) {
       <div className="flex justify-between gap-4 items-center">
         <div className="flex gap-1 text-[#393939]">
           <span className="text-[14px]">نام:</span>
-          <p className="text-[14px] font-bold">{props.data.name}</p>
+          <p
+            className="text-[14px] font-bold"
+            style={{
+              wordBreak: "break-word",
+              whiteSpace: "pre-wrap",
+            }}
+          >
+            {props.data.name}
+          </p>
         </div>
         <div>
           <SwitchButton />
@@ -21,12 +29,12 @@ export default function ListCard(props: any) {
       </div>
       <div className="flex gap-1 text-[#393939]">
         <span className="text-[14px]">نوع:</span>
-        {/* <p>{props.data.formType}</p> */}
+        {/* <p>{props.data.type}</p> */}
       </div>
       <div className="flex gap-1 text-[#393939]">
         <span className="text-[14px]">دسترسی:</span>
         <p className="text-[14px] font-bold">
-          {props.data.name ? props.data.type : "عمومی"}
+          {props.data.accessType ? props.data.accessType : "عمومی"}
         </p>
       </div>
       <div className="flex gap-1 text-[#393939]">

@@ -7,7 +7,6 @@ import React, { ReactNode, useEffect, useState } from "react";
 import Image from "next/image";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
-import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import SearchInput from "./SearchInput";
 import { Box, Grid2, LinearProgress, Typography } from "@mui/material";
@@ -16,6 +15,7 @@ import FilterIcon from "@/../public/images/home-page/filter-icon.svg";
 import { clientFetch } from "./clientFetch";
 import BottomSheet from "../BottomSheet/BottomSheet";
 import CreateFormBtn from "../CreateFormBtn/CreateFormBtn";
+// import { useSession } from "next-auth/react";
 
 interface SearchBoxItem {
   fieldName: string;
@@ -88,7 +88,7 @@ const ListGrid: React.FC<Props> = ({
   console.log("refreshGrid Filter List", refreshGrid, filterBoxList);
   const { ref, inView } = useInView();
   const searchParams = useSearchParams();
-  const { data: session, status: sessionStatus } = useSession();
+  // const { data: session, status: sessionStatus } = useSession();
   const query = searchParams.get("query")?.toString() || "";
   const [queryState, setQueryState] = useState(query);
   const [open, setOpen] = useState(false);
@@ -130,7 +130,7 @@ const ListGrid: React.FC<Props> = ({
     queryKey: ["datas", queryState],
     queryFn: ({ pageParam }) =>
       getdatas({ pageParam }, searchFilterBoxList, url),
-    enabled: sessionStatus === "authenticated",
+    // enabled: sessionStatus === "authenticated",
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.length === 10 ? allPages.length : undefined;
@@ -159,7 +159,7 @@ const ListGrid: React.FC<Props> = ({
     handleRefreshGrid();
   }, [refreshGrid]);
 
-  if (sessionStatus === "loading" || (isFetching && !isFetchingNextPage)) {
+  if (isFetching && !isFetchingNextPage) {
     return (
       <Box sx={{ width: "100%" }}>
         <LinearProgress />

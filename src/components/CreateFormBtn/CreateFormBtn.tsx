@@ -68,7 +68,7 @@ export default function CreateFormBtn() {
       const response: any = await AxiosApi.post("/form", values as any);
       setIsLoadingData(true);
       toast.success("عملیات با موفقیت انجام شد");
-      router.push(`/psya/builder/${response?.data?.id}`);
+      router.push(`/builder/${response?.data?.id}`);
     } catch (error: any) {
       console.log(error);
       setIsLoadingData(false);

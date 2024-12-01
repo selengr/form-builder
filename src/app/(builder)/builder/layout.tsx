@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { Toaster } from "sonner";
 import DesignerContextProvider from "@/context/DesignerContext";
 
 export default function BuilderPageLayout({
@@ -7,10 +6,5 @@ export default function BuilderPageLayout({
 }: {
   children: ReactNode;
 }) {
-  return (
-    <>
-      <DesignerContextProvider>{children}</DesignerContextProvider>
-      <Toaster />
-    </>
-  );
+  return <DesignerContextProvider>{children}</DesignerContextProvider>;
 }

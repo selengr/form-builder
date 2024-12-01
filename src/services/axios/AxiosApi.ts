@@ -1,22 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
+// import { signIn } from "next-auth/react";
+// import { getServerSession } from "next-auth";
+// import { getSession } from "next-auth/react";
+// import { authOptions } from "../auth/authConfig";
 
 const AxiosApi = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL + "/psya",
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
 // AxiosApi.interceptors.request.use(async (request) => {
 //   try {
-//     let session;
-
-//     if (typeof window === "undefined") {
-//       session = await getServerSession(authOptions);
-//     } else {
-//       session = await getSession();
-//     }
-
-//     if (session && session.access_token) {
-//       request.headers["Authorization"] = `Bearer ${session.access_token}`;
-//     }
+//     // let session: any;
+//     // if (typeof window === "undefined") {
+//     //   session = await getServerSession(authOptions);
+//     // } else {
+//     //   session = await getSession();
+//     // }
+//     // if (session && session.access_token) {
+//     // }
 //   } catch (error) {
 //     console.error("Error retrieving session:", error);
 //   }
@@ -37,6 +39,7 @@ AxiosApi.interceptors.response.use(
 
       let errorMessage = `API request error: ${status}`;
       if (status === 401) {
+        // await signIn("authorize");
         errorMessage = "Authentication error occurred";
       } else if (status === 403) {
         errorMessage = "Authorization error occurred";

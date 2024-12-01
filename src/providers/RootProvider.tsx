@@ -1,3 +1,5 @@
+"use client";
+
 import type { ReactNode, FC } from "react";
 import {
   MuiRtlProvider,
@@ -7,6 +9,7 @@ import {
 } from "@/providers";
 import { Toaster } from "sonner";
 import MainPanel from "@/templates/layout/MainPanel";
+import { SessionProvider } from "next-auth/react";
 
 type TRootProvider = {
   readonly children: ReactNode;
@@ -14,16 +17,18 @@ type TRootProvider = {
 
 const RootProvider: FC<TRootProvider> = ({ children }) => {
   return (
-    <MuiThemeProvider>
-      <ReactQueryClientProvider>
-        <Toaster richColors closeButton />
-        <NetworkProvider>
-          <MuiRtlProvider>
-            <MainPanel>{children}</MainPanel>
-          </MuiRtlProvider>
-        </NetworkProvider>
-      </ReactQueryClientProvider>
-    </MuiThemeProvider>
+    <SessionProvider>
+      <MuiThemeProvider>
+        <ReactQueryClientProvider>
+          <Toaster richColors closeButton />
+          <NetworkProvider>
+            <MuiRtlProvider>
+              <MainPanel>{children}</MainPanel>
+            </MuiRtlProvider>
+          </NetworkProvider>
+        </ReactQueryClientProvider>
+      </MuiThemeProvider>
+    </SessionProvider>
   );
 };
 

@@ -1,3 +1,5 @@
+import { FormElementInstance } from "./FormElements";
+
 export type IFormElementConstructor = {
   questionId: number;
   questionGroupId?: number | null;
@@ -56,7 +58,7 @@ export type IQPLTextField = [
   {
     questionPropertyEnum: "MAXIMUM_LEN";
     value: string | number | null;
-  },
+  }
 ];
 
 export type ISpectralQTapAndOptionsType = { value: string; label: string }[];
@@ -89,7 +91,7 @@ export type IQPLSpectral = [
   {
     questionPropertyEnum: "SPECTRAL_END";
     value: number | string;
-  },
+  }
 ];
 
 export type IQPLMultipleChoice = [
@@ -108,7 +110,7 @@ export type IQPLMultipleChoice = [
   {
     questionPropertyEnum: "DESCRIPTION";
     value: string | null;
-  },
+  }
 ];
 
 export type ITest = {
@@ -121,4 +123,16 @@ export type IChangeOrMovePositionApi = {
   questionGroupId: number;
   targetQuestionGroupId: number | null;
   newPosition: number;
+};
+
+export type formResDataTypes = {
+  name: string;
+  typeEnum: string;
+  startPageMsg: string | null;
+  endPageList: IEndPageList[];
+  questionGroups: {
+    formId: number;
+    questionGroupId: number;
+    questions: FormElementInstance[];
+  }[];
 };

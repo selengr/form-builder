@@ -9,7 +9,7 @@ import MenuSidebar from "@/components/SideBar/MenuSidebar";
 function MainSidebar() {
   return (
     <>
-      <div className="w-24 min-h-screen bg-white">
+      <div className="flex flex-col justify-between w-24 min-h-screen bg-white">
         <div className="flex flex-col gap-4 p-4">
           <Image
             src={MresalatLogo}

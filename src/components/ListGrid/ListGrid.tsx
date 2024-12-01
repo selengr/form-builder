@@ -36,21 +36,22 @@ interface Props {
   refreshGrid?: boolean;
   disableFilter: boolean | undefined;
   textTotal?: any;
+  searchQueryFilter: any;
 }
 
 let totalData: any = null;
 async function getdatas(
   { pageParam = 0 }: { pageParam: number },
   searchFilterBoxList: any,
-  url: string
+  url: string,
+  searchQueryFilter: any = { type: "ALL", status: "PUBLIC" }
 ) {
-  console.log(searchFilterBoxList);
   // if (session) {
   const params = {
-    searchFilterBoxList: [{ restrictionList: [] }],
+    searchFilterBoxList,
     sortList: [
       {
-        fieldName: "id", // ^ name
+        fieldName: "id",
         type: "DSC",
       },
     ],
@@ -60,7 +61,7 @@ async function getdatas(
 
   const res = await clientFetch(
     "GET",
-    `${url}${"ALL"}/${"PUBLIC"}?searchFilterModel=`,
+    `${url}${searchQueryFilter.type}/${searchQueryFilter.status}?searchFilterModel=`,
     params
   );
 
@@ -83,6 +84,7 @@ const ListGrid: React.FC<Props> = ({
   onCheck,
   refreshGrid,
   disableFilter,
+  searchQueryFilter,
   textTotal = ["", "عدد"],
 }) => {
   console.log("refreshGrid Filter List", refreshGrid, filterBoxList);
@@ -129,7 +131,7 @@ const ListGrid: React.FC<Props> = ({
   } = useInfiniteQuery({
     queryKey: ["datas", queryState],
     queryFn: ({ pageParam }) =>
-      getdatas({ pageParam }, searchFilterBoxList, url),
+      getdatas({ pageParam }, searchFilterBoxList, url, searchQueryFilter),
     // enabled: sessionStatus === "authenticated",
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
@@ -351,7 +353,7 @@ const ListGrid: React.FC<Props> = ({
           justifyContent="flex-start"
           alignItems="center"
           sx={{
-            backgroundColor: "#F7F7FF",
+            backgroundColor: "white",
             borderRadius: "16px",
             gap: 1,
             m: 1,

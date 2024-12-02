@@ -11,3 +11,13 @@
 html body * {
   font-family: IranSans !important;
 }
+
+body {
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  background-image: url("../../public/images/home-page/bg-pattern.svg");
+  background-repeat: repeat;
+}

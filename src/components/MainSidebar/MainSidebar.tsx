@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import MresalatLogo from "@/../public/images/home-page/mresalat_logo.svg";
 import ProfileLogo from "@/../public/images/home-page/profile.webp";
@@ -5,18 +7,25 @@ import LogoutIcon from "@/../public/images/home-page/logout.svg";
 import InfoIcon from "@/../public/images/home-page/info-icon.svg";
 import HeaderDesktop from "@/../public/images/home-page/new-mresalt-header.svg";
 import MenuSidebar from "@/components/SideBar/MenuSidebar";
+import { useRouter } from "next/navigation";
+import Button from "@mui/material/Button";
+import Link from "next/link";
 
-function MainSidebar() {
+export default function MainSidebar() {
+  const router = useRouter();
+
   return (
     <>
-      <div className="flex flex-col justify-between w-24 min-h-screen bg-white">
-        <div className="flex flex-col gap-4 p-4">
-          <Image
-            src={MresalatLogo}
-            alt="Mresalat_Logo"
-            width={64}
-            height={15}
-          />
+      <div className="flex flex-col justify-between w-24 bg-white">
+        <div className="flex flex-col gap-4 items-center pt-4">
+          <Link href="/">
+            <Image
+              src={MresalatLogo}
+              alt="Mresalat_Logo"
+              width={64}
+              height={15}
+            />
+          </Link>
           <Image
             src={ProfileLogo}
             alt="Profile_Logo"
@@ -38,7 +47,7 @@ function MainSidebar() {
           </button>
         </div>
       </div>
-      <div className="min-w-[400px] w-[400px] min-h-screen bg-[#F7F7FF] px-5">
+      <div className="min-w-[400px] w-[400px] min-h-screen bg-[#F7F7FF] px-5 gap-8 flex flex-col">
         <div className="mt-4 w-full">
           <Image
             src={HeaderDesktop}
@@ -48,11 +57,31 @@ function MainSidebar() {
             className="w-full"
           />
         </div>
-        <div className="flex justify-between mt-2 gap-2"></div>
-        <div className="w-full flex"></div>
+        <div className="w-full flex flex-col gap-4">
+          <Button
+            sx={{
+              height: "56px",
+              bgcolor: "#1758BA",
+              boxShadow: "none",
+              borderRadius: "8px",
+              color: "white",
+              fontSize: "16px",
+              fontWeight: 700,
+              "&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active": {
+                bgcolor: "#1758BA",
+                boxShadow: "none",
+              },
+            }}
+            fullWidth
+            variant="contained"
+            onClick={() => {
+              router.push("/builder");
+            }}
+          >
+            فرم ساز
+          </Button>
+        </div>
       </div>
     </>
   );
 }
-
-export default MainSidebar;

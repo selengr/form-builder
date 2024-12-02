@@ -9,10 +9,11 @@ import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 
 export default function SearchInput() {
-  const [value, setValue] = useState("");
   const searchParams = useSearchParams();
+  const search = searchParams.get("query");
+  const [value, setValue] = useState(search || "");
   const pathname = usePathname();
-  const { replace } = useRouter();
+  const { push } = useRouter();
 
   function handleSearch(term: any) {
     setValue(term);
@@ -20,12 +21,14 @@ export default function SearchInput() {
 
   function handleClick() {
     const params = new URLSearchParams(searchParams);
+
     if (value) {
       params.set("query", value);
     } else {
       params.delete("query");
     }
-    replace(`${pathname}?${params.toString()}`);
+
+    push(`${pathname}?${params.toString()}`);
   }
 
   const handleKeyDown = (event: any) => {

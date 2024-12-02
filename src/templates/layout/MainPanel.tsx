@@ -13,15 +13,20 @@ export default function MainPanel({
   const path = usePathname();
 
   return (
-    <div className="flex min-h-screen w-full gap-4">
+    <div
+      className="flex w-full"
+      style={{
+        height: "100vh",
+      }}
+    >
       {isMobile && path === "/" ? (
-        <div className="w-full flex flex-col">
+        <div className="w-full flex flex-col bg-[#f7f7ff]">
           <TopAppBar title="" />
           <div className="w-full">{children}</div>
           <FooterTab />
         </div>
       ) : isMobile ? (
-        <div className="w-full flex flex-col">
+        <div className="w-full flex flex-col bg-white">
           <div className="w-full">{children}</div>
         </div>
       ) : (

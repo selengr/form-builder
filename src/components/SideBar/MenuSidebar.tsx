@@ -68,6 +68,7 @@ export default function MenuSidebar() {
       </div>
       {sidebarData?.map((item) => {
         const { id, active, notActive, title, link } = item;
+
         return (
           <div
             key={id}

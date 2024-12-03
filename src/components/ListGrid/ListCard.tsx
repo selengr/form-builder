@@ -12,6 +12,13 @@ import AxiosApi from "@/services/axios/AxiosApi";
 import { toast } from "sonner";
 import ConfirmDialog from "../confirm-dialog";
 
+const formTypePersian: any = {
+  TEST: "آزمون",
+  QUESTION: "پرسشنامه",
+  SURVEY: "نظرسنجی",
+  COMPETITION: "مسابقه",
+};
+
 export default function ListCard(props: any) {
   const [loadingInvalidData, setLoadingInvalidData] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
@@ -79,7 +86,7 @@ export default function ListCard(props: any) {
         </div>
         <div className="flex gap-1 text-[#393939]">
           <span className="text-[14px]">نوع:</span>
-          {/* <p>{props.data.type}</p> */}
+          <p>{formTypePersian[props.data.type]}</p>
         </div>
         <div className="flex gap-1 text-[#393939]">
           <span className="text-[14px]">دسترسی:</span>

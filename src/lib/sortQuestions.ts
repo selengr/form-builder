@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 function sortQuestions(questions: any, groups: any) {
   return questions?.sort((a: any, b: any) => {
     // Sort by group first

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Fragment, useState } from "react";
@@ -37,7 +36,7 @@ const propertiesSchema = z.object({
         .min(2, { message: "حداقل باید 2 و حداکثر 50 کاراکتر باشد" })
         .max(50, { message: "حداقل باید 2 و حداکثر 50 کاراکتر باشد" })
     ),
-  typeEnum: z.string(),
+  typeEnum: z.string().min(1, { message: "لطفا یک مورد را انتخاب کنید" }),
 });
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;

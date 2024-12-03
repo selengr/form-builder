@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 // import { signIn } from "next-auth/react";
 // import { getServerSession } from "next-auth";

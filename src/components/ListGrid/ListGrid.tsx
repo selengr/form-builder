@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { ReactNode, useEffect, useState } from "react";
@@ -21,7 +18,6 @@ import { clientFetch } from "./clientFetch";
 import BottomSheet from "../BottomSheet/BottomSheet";
 import CreateFormBtn from "../CreateFormBtn/CreateFormBtn";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
-// import { useSession } from "next-auth/react";
 
 interface SearchBoxItem {
   fieldName: string;
@@ -52,7 +48,6 @@ async function getdatas(
   url: string,
   searchQueryFilter: any = { type: "ALL", status: "PUBLIC" }
 ) {
-  // if (session) {
   const params = {
     searchFilterBoxList,
     sortList: [
@@ -66,7 +61,6 @@ async function getdatas(
   };
 
   const res = await clientFetch(
-    "GET",
     `${url}${searchQueryFilter.type}/${searchQueryFilter.status}?searchFilterModel=`,
     params
   );
@@ -78,7 +72,6 @@ async function getdatas(
   totalData = res.data.totalElements;
 
   return res.data.content;
-  // } else return [];
 }
 
 const ListGrid: React.FC<Props> = ({
@@ -99,7 +92,6 @@ const ListGrid: React.FC<Props> = ({
   const [queryState, setQueryState] = useState(query);
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  // const { data: session, status: sessionStatus } = useSession();
 
   const handleOpen = () => {
     if (!disableFilter) {
@@ -144,7 +136,6 @@ const ListGrid: React.FC<Props> = ({
     queryKey: ["datas", queryState],
     queryFn: ({ pageParam }) =>
       getdatas({ pageParam }, searchFilterBoxList, url, searchQueryFilter),
-    // enabled: sessionStatus === "authenticated",
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.length === 10 ? allPages.length : undefined;

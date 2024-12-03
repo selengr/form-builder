@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { SwitchButton } from "@/components/Switch/SwitchButton";
 import { IconButton } from "@mui/material";

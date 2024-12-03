@@ -1,13 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import AxiosApi from "@/services/axios/AxiosApi";
 
-export async function clientFetch(
-  method: "GET" | "POST" | "PUT" | "DELETE",
-  url: string,
-  params: any = {}
-): Promise<any> {
+export async function clientFetch(url: string, params: any = {}): Promise<any> {
   try {
     const queryString = encodeURI(JSON.stringify(params));
     const fullURL = `${url}${queryString === "%7B%7D" ? "" : `${queryString}`}`;

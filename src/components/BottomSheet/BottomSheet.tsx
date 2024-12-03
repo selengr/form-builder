@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { forwardRef, ReactElement, Ref } from "react";
 import {
   Box,
@@ -21,7 +20,6 @@ interface BottomSheetProps {
   children: React.ReactNode;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const StyledModal = styled(Modal)(({ theme }) => ({
   display: "flex",
   alignItems: "flex-end",

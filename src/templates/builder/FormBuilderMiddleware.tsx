@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { useEffect, memo } from "react";
 import { FormElementInstance } from "@/types/FormElements";
 import useActionElements from "@/hooks/useActionElements";

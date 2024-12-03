@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { OAuthConfig } from "next-auth/providers/oauth";
 import type { NextAuthOptions } from "next-auth";
 

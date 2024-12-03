@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChangeEvent } from "react";
 import { TextField, TextFieldProps } from "@mui/material";
 import { useFormContext, Controller } from "react-hook-form";

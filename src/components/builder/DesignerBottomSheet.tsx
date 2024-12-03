@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import React from "react";
 import { Box, Modal, Slide, Grid2 } from "@mui/material";
 import { styled } from "@mui/system";

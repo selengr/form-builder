@@ -37,6 +37,7 @@ export const SwitchButton = styled(Switch)(({ theme }) => ({
     boxSizing: "border-box",
     width: 19,
     height: 19,
+    boxShadow: "none",
   },
   "& .MuiSwitch-track": {
     borderRadius: 26 / 2,

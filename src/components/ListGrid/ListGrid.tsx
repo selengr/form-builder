@@ -220,44 +220,43 @@ const ListGrid: React.FC<Props> = ({
               فرم‌های من
             </p>
           </div>
-          {totalData && totalData != 0 ? (
-            <Box
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              gap: "8px",
+              width: "100%",
+            }}
+          >
+            <Grid2
+              id="testthis"
+              display="flex"
               sx={{
-                display: "flex",
-                justifyContent: "center",
-                gap: "8px",
                 width: "100%",
+                maxWidth: "480px",
+                justifyContent: "space-between",
+                gap: 2,
+                bgcolor: "#ECFAFF",
+                borderRadius: "16px",
+                paddingX: "10px",
+                paddingY: "16px",
               }}
             >
-              <Grid2
-                id="testthis"
-                display="flex"
-                sx={{
-                  width: "100%",
-                  maxWidth: "480px",
-                  justifyContent: "space-between",
-                  gap: 2,
-                  bgcolor: "#ECFAFF",
-                  borderRadius: "16px",
-                  paddingX: "10px",
-                  paddingY: "16px",
-                }}
-              >
-                <Box display="flex" justifyItems="center" gap="10px">
-                  <Image src={TotalGrid} width={20} height={20} alt="filter" />
-                  <Typography color="#393939" fontSize="14px">
-                    تعداد کل فرم‌ها {textTotal[0]}:
-                  </Typography>
-                </Box>
-                <p className="flex items-center text-[14px] text-[#393939] font-bold">
-                  {totalData} {textTotal[1]}
-                </p>
-              </Grid2>
-              <div className="w-[50px] h-full">
-                <CreateFormBtn />
-              </div>
-            </Box>
-          ) : null}
+              <Box display="flex" justifyItems="center" gap="10px">
+                <Image src={TotalGrid} width={20} height={20} alt="filter" />
+                <Typography color="#393939" fontSize="14px">
+                  تعداد کل فرم‌ها {textTotal[0]}:
+                </Typography>
+              </Box>
+              <p className="flex items-center text-[14px] text-[#393939] font-bold">
+                {totalData} {textTotal[1]}
+              </p>
+            </Grid2>
+            <div className="w-[50px] h-full">
+              <CreateFormBtn />
+            </div>
+          </Box>
 
           <Grid2
             id="testthis"

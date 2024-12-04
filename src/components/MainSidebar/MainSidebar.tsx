@@ -10,13 +10,23 @@ import MenuSidebar from "@/components/SideBar/MenuSidebar";
 import { useRouter } from "next/navigation";
 import Button from "@mui/material/Button";
 import Link from "next/link";
+import Box from "@mui/material/Box";
 
 export default function MainSidebar() {
   const router = useRouter();
 
   return (
     <>
-      <div className="flex flex-col justify-between w-24 bg-white">
+      <Box
+        sx={{
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
+          overflowY: "auto",
+          minWidth: "100px",
+        }}
+        className="flex flex-col justify-between bg-white"
+      >
         <div className="flex flex-col gap-4 items-center pt-4">
           <Link href="/">
             <Image
@@ -34,7 +44,7 @@ export default function MainSidebar() {
             className="rounded-full border-[2px] border-[#1758BA]"
           />
         </div>
-        <div className="h-[520px] w-[80px] bg-cover bg-[url('/images/home-page/right_sidebar_bg.svg')]">
+        <div className="h-[520px] min-h-[520px] w-[80px] bg-cover bg-[url('/images/home-page/right_sidebar_bg.svg')]">
           <MenuSidebar />
         </div>
         <div className="flex flex-col gap-6 items-center justify-center p-4">
@@ -46,7 +56,7 @@ export default function MainSidebar() {
             <span className="text-[10px] text-black font-bold">خروج</span>
           </button>
         </div>
-      </div>
+      </Box>
       <div className="min-w-[400px] w-[400px] min-h-screen bg-[#F7F7FF] px-5 gap-8 flex flex-col">
         <div className="mt-4 w-full">
           <Image

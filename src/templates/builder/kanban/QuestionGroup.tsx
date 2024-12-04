@@ -5,11 +5,11 @@ import {
 } from "@dnd-kit/sortable";
 import QuestionCard from "./QuestionCard";
 import { FormElementInstance } from "../../../types/FormElements";
-// import GroupPopUpMenu from "../../components/GroupPopUpMenu";
 import useActionOpenBottomSheet from "@/hooks/useActionOpenBottomSheet";
 import useActionDesigner from "@/hooks/useActionDesigner";
 import { useDroppable } from "@dnd-kit/core";
 import { useResponsive } from "@/hooks/useResponsive";
+import GroupPopUpMenu from "./GroupPopUpMenu";
 
 const QuestionGroup = memo(function QuestionGroup({
   group,
@@ -70,7 +70,7 @@ const QuestionGroup = memo(function QuestionGroup({
             نوع سوال را از فهرست کناری نگه داشته و بکشید
           </p>
         )}
-        {/* <GroupPopUpMenu groupId={group} /> */}
+        <GroupPopUpMenu groupId={group} />
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import {
   FormElementInstance,
   FormElements,
 } from "../../../types/FormElements";
-// import QuestionCardExtra from "../QuestionCardExtra";
+import QuestionCardExtra from "./QuestionCardExtra";
 
 const QuestionCard = memo(function QuestionCard({
   question,
@@ -70,7 +70,7 @@ const QuestionCard = memo(function QuestionCard({
       >
         <DesignerElement elementInstance={question} />
       </div>
-      {/* <QuestionCardExtra questionId={question?.questionId} index={index} /> */}
+      <QuestionCardExtra questionId={question?.questionId} index={index} />
     </div>
   );
 });

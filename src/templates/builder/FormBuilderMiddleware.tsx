@@ -53,8 +53,6 @@ const FormBuilderMiddleware = memo(function FormBuilderMiddleware({
     }
 
     setFormName(formData.name);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <FormBuilder />;

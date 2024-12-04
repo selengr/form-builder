@@ -8,7 +8,7 @@ export default function BuilderPageLayout({
 }) {
   return (
     <Suspense>
-      <DesignerContextProvider>{children}</DesignerContextProvider>;
+      <DesignerContextProvider>{children}</DesignerContextProvider>
     </Suspense>
   );
 }

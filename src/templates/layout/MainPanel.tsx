@@ -20,19 +20,31 @@ export default function MainPanel({
       }}
     >
       {isMobile && path === "/" ? (
-        <div className="w-full flex flex-col bg-[#f7f7ff]">
+        <div className="w-full flex flex-col bg-[#f7f7f7]">
           <TopAppBar title="" />
           <div className="w-full">{children}</div>
           <FooterTab />
         </div>
       ) : isMobile ? (
         <div className="w-full flex flex-col bg-white">
-          <div className="w-full">{children}</div>
+          <div
+            className={`w-full h-full ${
+              path.includes("/builder/") ? "overflow-y-auto" : ""
+            }`}
+          >
+            {children}
+          </div>
         </div>
       ) : (
         <>
           <MainSidebar />
-          <div className="w-full">{children}</div>
+          <div
+            className={`w-full ${
+              path.includes("/builder/") ? "overflow-y-auto bg-[#f7f7f7]" : ""
+            }`}
+          >
+            {children}
+          </div>
         </>
       )}
     </div>

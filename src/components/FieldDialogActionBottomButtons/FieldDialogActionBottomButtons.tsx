@@ -18,6 +18,8 @@ export default function FieldDialogActionBottomButtons({
         fullWidth
         variant="contained"
         loading={status}
+        disabled={status}
+        disableRipple
         sx={{
           bgcolor: "#1758BA",
           fontWeight: "400",

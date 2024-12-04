@@ -25,24 +25,21 @@ import {
   IChangeOrMovePositionApi,
   IFormElementConstructor,
 } from "../../../types/bulider";
-import { LoadingButton } from "@mui/lab";
 import { idGenerator } from "../../../lib/idGenerator";
 import useElements from "@/hooks/useElements";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";
 import useActionElements from "@/hooks/useActionElements";
 import useActionSelectedElement from "@/hooks/useActionSelectedElement";
-import useActionDesigner from "@/hooks/useActionDesigner";
 import AxiosApi from "@/services/axios/AxiosApi";
 import { toast } from "sonner";
+import CreateGroupBtn from "./CreateGroupBtn";
 
 const KanbanBoard = memo(function KanbanBoard() {
   const elements = useElements();
   const setOpenDialog = useActionOpenDialog();
   const setElements = useActionElements();
   const setSelectedElement = useActionSelectedElement();
-  const { createNewQuestionGroup } = useActionDesigner();
   const { questionGroups } = useDesigner();
-  const [newPageIsLoading, setNewPageIsLoading] = useState<boolean>(false);
   const [snapshot, setSnapshot] = useState<[] | FormElementInstance[]>([]);
   const itemsByGroup = useMemo(() => {
     return elements?.reduce((acc: any, question: any) => {
@@ -77,30 +74,8 @@ const KanbanBoard = memo(function KanbanBoard() {
         console.error(error);
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-
-  const handleCreateNewPage = useCallback(async () => {
-    try {
-      setNewPageIsLoading(true);
-      const res = await AxiosApi.post("/question-group", {
-        formId: id,
-      } as any);
-      if (res?.data?.questionGroupId) {
-        createNewQuestionGroup(res.data.questionGroupId);
-        toast.success("گروه سوال با موفقیت ایجاد شد");
-      } else {
-        toast.error("ایجاد گروه سوال با خطا مواجه شده است");
-      }
-      setNewPageIsLoading(false);
-    } catch (error) {
-      console.error(error);
-      toast.error("عملیات ناموفق بود مجددا تلاش کنید");
-      setNewPageIsLoading(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useDndMonitor({
     onDragStart: (event: DragStartEvent) => {
@@ -361,11 +336,6 @@ const KanbanBoard = memo(function KanbanBoard() {
     },
   });
 
-  const isLastQuestionGroupNotEmpty = elements?.some(
-    (questions) =>
-      questions?.questionGroupId === questionGroups[questionGroups?.length - 1]
-  );
-
   return (
     <Fragment>
       <div className="flex flex-col w-full gap-4 box-border">
@@ -377,30 +347,7 @@ const KanbanBoard = memo(function KanbanBoard() {
           />
         ))}
       </div>
-      {/* // ^ make it a component of itself */}
-      {isLastQuestionGroupNotEmpty && (
-        <div
-          dir="rtl"
-          className="flex justify-center items-center h-[54px] w-full cursor-pointer rounded-xl border-[1px] border-dashed border-[#DDE1E6] bg-[#fff]"
-        >
-          <LoadingButton
-            variant="text"
-            onClick={handleCreateNewPage}
-            loading={newPageIsLoading}
-            fullWidth
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100%",
-              color: "#6F6F6F",
-            }}
-          >
-            <p className="font-bold">گروه سوال جدید</p>
-          </LoadingButton>
-        </div>
-      )}
-      {/* // ^ make it a component of itself */}
+      <CreateGroupBtn />
     </Fragment>
   );
 });

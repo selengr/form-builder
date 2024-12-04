@@ -48,7 +48,7 @@ export default function FormBuilderPage() {
   };
 
   return (
-    <Suspense fallback="">
+    <Suspense>
       <ListGrid
         searchBoxList={searchBoxList}
         filterBoxList={filterBoxList}

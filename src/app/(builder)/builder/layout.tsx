@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
 import DesignerContextProvider from "@/context/DesignerContext";
 
 export default function BuilderPageLayout({
@@ -6,5 +6,9 @@ export default function BuilderPageLayout({
 }: {
   children: ReactNode;
 }) {
-  return <DesignerContextProvider>{children}</DesignerContextProvider>;
+  return (
+    <Suspense>
+      <DesignerContextProvider>{children}</DesignerContextProvider>;
+    </Suspense>
+  );
 }

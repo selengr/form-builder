@@ -1,6 +1,8 @@
 "use client";
 
-import { Box, Button, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import Loading from "./loading";
@@ -15,9 +17,42 @@ function PreviewPage() {
   const { id: paramId } = useParams();
   const { status, title } = usePreview();
 
+  if (status === "loading") {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loading />
+      </div>
+    );
+  }
+
+  if (status === "notExist") {
+    return (
+      <div className="flex justify-center h-[calc(100%-48px)] md:my-[20px] md:mx-[10px] m-[20px]">
+        <div className="flex w-full h-full flex-col items-center justify-center gap-4">
+          <h2 className="text-destructive text-3xl text-center">
+            هنوز سوالی ساخته نشده است
+          </h2>
+          <Button
+            variant="contained"
+            sx={{
+              color: "#fff",
+              background: "#111",
+              "&.MuiButtonBase-root:hover": {
+                bgcolor: "#222",
+              },
+            }}
+          >
+            <Link href={`/builder/${paramId}`}>بازگشت به فرم ساز</Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   if (status === "ready") {
     return (
       <Box
+        sx={{ userSelect: "none" }}
         display="flex"
         justifyContent="center"
         margin={isMobile ? "20px 10px" : 2.5}
@@ -82,48 +117,6 @@ function PreviewPage() {
           <PreviewQuestion />
           <PreviewProgress />
         </Box>
-      </Box>
-    );
-  }
-
-  if (status === "loading") {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        margin={isMobile ? "20px 10px" : 2.5}
-        height="calc(100% - 48px)"
-      >
-        <Loading />
-      </Box>
-    );
-  }
-
-  if (status === "notExist") {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        margin={isMobile ? "20px 10px" : 2.5}
-        height="calc(100% - 48px)"
-      >
-        <div className="flex w-full h-full flex-col items-center justify-center gap-4">
-          <h2 className="text-destructive text-3xl text-center">
-            هنوز سوالی ساخته نشده است
-          </h2>
-          <Button
-            variant="contained"
-            sx={{
-              color: "#fff",
-              background: "#111",
-              "&.MuiButtonBase-root:hover": {
-                bgcolor: "#222",
-              },
-            }}
-          >
-            <Link href={`/builder/${paramId}`}>بازگشت به فرم ساز</Link>
-          </Button>
-        </div>
       </Box>
     );
   }

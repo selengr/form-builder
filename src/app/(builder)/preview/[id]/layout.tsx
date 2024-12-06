@@ -2,5 +2,9 @@ import { ReactNode } from "react";
 import { PreviewProvider } from "@/context/PreviewContext";
 
 export default function PreviewLayout({ children }: { children: ReactNode }) {
-  return <PreviewProvider>{children}</PreviewProvider>;
+  return (
+    <div className="w-full h-ful">
+      <PreviewProvider>{children}</PreviewProvider>
+    </div>
+  );
 }

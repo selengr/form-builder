@@ -3,17 +3,23 @@ import { ElementsType, FormElements } from "../../types/FormElements";
 import { useResponsive } from "@/hooks/useResponsive";
 import usePreview from "@/hooks/usePreview";
 
-function PreviewQuestion() {
+export default function PreviewQuestion() {
   const isMobile = useResponsive("down", "md");
-  const { questions, index } = usePreview();
+  const { questions, index, numQuestions, endPage } = usePreview();
   const question = questions.at(index);
 
-  const FormComponent =
-    FormElements[question?.questionType as ElementsType]?.formComponent;
+  let FormComponent;
+  if (index + 1 > (numQuestions as any)) {
+    FormComponent =
+      FormElements["TitleFieldFinish" as ElementsType]?.formComponent;
+  } else {
+    FormComponent =
+      FormElements[question?.questionType as ElementsType]?.formComponent;
+  }
 
   return (
     <motion.div
-      key={question.questionId}
+      key={Math.random()}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 1 }}
@@ -30,9 +36,11 @@ function PreviewQuestion() {
         border: "1px solid #e5e5e5",
       }}
     >
-      <FormComponent elementInstance={question} />
+      <FormComponent
+        elementInstance={
+          index + 1 > (numQuestions as any) ? (endPage as any) : question
+        }
+      />
     </motion.div>
   );
 }
-
-export default PreviewQuestion;

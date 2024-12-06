@@ -22,6 +22,8 @@ import useSelectedElement from "@/hooks/useSelectedElement";
 import useActionDesigner from "@/hooks/useActionDesigner";
 import { toast } from "sonner";
 import { memo } from "react";
+import Image from "next/image";
+import finishIcon from "@/../public/images/home-page/finish.svg";
 
 const questionType: ElementsType = "TitleFieldFinish";
 
@@ -88,8 +90,29 @@ function FormComponent({
 }: {
   elementInstance: FormElementInstance;
 }) {
-  // const { title } = element.questionPropertyList;
-  return <p className="text-xl"></p>;
+  console.log(elementInstance);
+  return (
+    <div className="flex flex-col gap-4 items-center justify-center w-full">
+      <Image
+        src={finishIcon}
+        alt=""
+        width={200}
+        height={300}
+        className="h-[300px] w-full"
+      />
+      {elementInstance && (
+        <p className="text-[14px] text-[#161616] text-center">
+          {elementInstance as any}
+        </p>
+      )}
+      <button
+        disabled
+        className="h-[52px] rounded-lg border-[1px] border-[#1758BA] text-[#1758BA] w-full max-w-[240px]"
+      >
+        ثبت و ارسال
+      </button>
+    </div>
+  );
 }
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;

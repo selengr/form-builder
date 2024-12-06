@@ -19,6 +19,7 @@ type IInitialState = {
   title: string;
   index: number;
   answer: string | null;
+  endPage: string;
   numQuestions: number | null;
   dispatch: Dispatch<any>;
 };
@@ -45,6 +46,7 @@ const initialState: IInitialState = {
   // 'loading', 'error', 'ready', "notExist"
   status: "loading",
   index: 0,
+  endPage: "",
   answer: null,
   numQuestions: null,
   dispatch: () => {},
@@ -57,9 +59,10 @@ function reducer(state: IInitialState, action: any) {
         ...state,
         questions: action.payload.questions,
         title: action.payload.title,
+        endPage: action.payload.page,
         index:
           action.payload.index !== null &&
-          action.payload.index <= action.payload.questions.length - 1 &&
+          action.payload.index <= action.payload.questions.length &&
           action.payload.index >= 0
             ? Number(action.payload.index)
             : 0,
@@ -81,10 +84,8 @@ function reducer(state: IInitialState, action: any) {
 export function PreviewProvider({ children }: { children: ReactNode }) {
   const { id } = useParams();
   const searchParams = useSearchParams();
-  const [{ questions, status, index, answer, title }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ questions, status, index, answer, title, endPage }, dispatch] =
+    useReducer(reducer, initialState);
   const numQuestions: number = questions.length;
   const currentIndex = searchParams?.get("question");
 
@@ -108,6 +109,9 @@ export function PreviewProvider({ children }: { children: ReactNode }) {
             payload: {
               questions: allQuestions as FormElementInstance[],
               index: currentIndex,
+              page: data.endPageList.length
+                ? data.endPageList[0].description
+                : "",
               title: data.name,
             },
           });
@@ -128,6 +132,7 @@ export function PreviewProvider({ children }: { children: ReactNode }) {
         status,
         index,
         answer,
+        endPage,
         numQuestions,
         title,
 

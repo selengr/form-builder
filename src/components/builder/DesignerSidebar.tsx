@@ -39,7 +39,7 @@ const DesignerSidebar = memo(function DesignerSidebar() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Link href={`/psya/preview/${id}`}>
+          <Link href={`/preview/${id}`}>
             <IconButton
               sx={{
                 height: "100%",
@@ -112,7 +112,7 @@ const DesignerSidebar = memo(function DesignerSidebar() {
           </div>
 
           <div className="flex gap-2">
-            <Link href={`/psya/preview/${id}`}>
+            <Link href={`/preview/${id}`}>
               <IconButton
                 sx={{
                   height: "40px",

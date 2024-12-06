@@ -24,7 +24,7 @@ export function UppyUploader({
       debug: true,
       locale: Persian,
     }).use(Tus, {
-      endpoint: `${process.env.NEXT_PUBLIC_API_URL}/filemanager/upload`,
+      endpoint: `${process.env.NEXT_PUBLIC_BASE_URL}/filemanager/upload`,
     })
   );
   uppy.current.setOptions({ restrictions: fileRestriction });

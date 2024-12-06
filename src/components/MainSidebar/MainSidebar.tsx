@@ -8,24 +8,22 @@ import InfoIcon from "@/../public/images/home-page/info-icon.svg";
 import HeaderDesktop from "@/../public/images/home-page/new-mresalt-header.svg";
 import MenuSidebar from "@/components/SideBar/MenuSidebar";
 import { useRouter } from "next/navigation";
-import Button from "@mui/material/Button";
 import Link from "next/link";
-import Box from "@mui/material/Box";
 
 export default function MainSidebar() {
   const router = useRouter();
 
   return (
     <>
-      <Box
-        sx={{
-          "&::-webkit-scrollbar": {
-            display: "none",
-          },
-          overflowY: "auto",
-          minWidth: "100px",
-        }}
-        className="flex flex-col justify-between bg-white"
+      <div
+        // sx={{
+        //   "&::-webkit-scrollbar": {
+        //     display: "none",
+        //   },
+        //   overflowY: "auto",
+        //   minWidth: "100px",
+        // }}
+        className="flex flex-col justify-between bg-white overflow-y-auto min-w-[100px]"
       >
         <div className="flex flex-col gap-4 items-center pt-4">
           <Link href="/">
@@ -56,7 +54,7 @@ export default function MainSidebar() {
             <span className="text-[10px] text-black font-bold">خروج</span>
           </button>
         </div>
-      </Box>
+      </div>
       <div className="min-w-[400px] w-[400px] min-h-screen bg-[#F7F7FF] px-5 gap-8 flex flex-col">
         <div className="mt-4 w-full">
           <Image
@@ -68,28 +66,14 @@ export default function MainSidebar() {
           />
         </div>
         <div className="w-full flex flex-col gap-4">
-          <Button
-            sx={{
-              height: "56px",
-              bgcolor: "#1758BA",
-              boxShadow: "none",
-              borderRadius: "8px",
-              color: "white",
-              fontSize: "16px",
-              fontWeight: 700,
-              "&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active": {
-                bgcolor: "#1758BA",
-                boxShadow: "none",
-              },
-            }}
-            fullWidth
-            variant="contained"
+          <button
+            className="h-[56px] bg-[#1758BA] shadow-none rounded-lg text-white text-[16px] font-bold"
             onClick={() => {
               router.push("/builder");
             }}
           >
             فرم ساز
-          </Button>
+          </button>
         </div>
       </div>
     </>

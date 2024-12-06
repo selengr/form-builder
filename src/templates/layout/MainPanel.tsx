@@ -1,7 +1,6 @@
 import FooterTab from "@/components/FooterTab/Footer";
 import MainSidebar from "@/components/MainSidebar/MainSidebar";
 import TopAppBar from "@/components/TopAppBar/TopAppBar";
-import { useResponsive } from "@/hooks/useResponsive";
 import { usePathname } from "next/navigation";
 
 export default function MainPanel({
@@ -9,44 +8,35 @@ export default function MainPanel({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isMobile = useResponsive("down", "md");
   const path = usePathname();
 
   return (
-    <div
-      className="flex w-full"
-      style={{
-        height: "100vh",
-      }}
-    >
-      {isMobile && path === "/" ? (
-        <div className="w-full flex flex-col bg-[#f7f7f7]">
-          <TopAppBar title="" />
-          <div className="w-full">{children}</div>
-          <FooterTab />
-        </div>
-      ) : isMobile ? (
-        <div className="w-full flex flex-col bg-white">
-          <div
-            className={`w-full h-full ${
-              path.includes("/builder/") ? "overflow-y-auto" : ""
-            }`}
-          >
-            {children}
+    <div className="flex w-full h-screen">
+      <div className="hidden md:flex">
+        <MainSidebar />
+      </div>
+
+      <div
+        className={`flex flex-col w-full ${
+          path === "/" ? "bg-[#f7f7f7]" : "bg-white"
+        } overflow-y-auto`}
+      >
+        {path === "/" && (
+          <div className="md:hidden block">
+            <TopAppBar title="" />
           </div>
+        )}
+
+        <div className="w-full flex flex-col lg:h-auto h-full lg:flex-row overflow-y-auto">
+          {children}
         </div>
-      ) : (
-        <>
-          <MainSidebar />
-          <div
-            className={`w-full ${
-              path.includes("/builder/") ? "overflow-y-auto bg-[#f7f7f7]" : ""
-            }`}
-          >
-            {children}
+
+        {path === "/" && (
+          <div className="md:hidden block">
+            <FooterTab />
           </div>
-        </>
-      )}
+        )}
+      </div>
     </div>
   );
 }

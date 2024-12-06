@@ -26,7 +26,7 @@ const DesignerSidebar = memo(function DesignerSidebar() {
         scrollbarWidth: "none",
       }}
     >
-      <div className="flex justify-between items-center gap-1">
+      <div className="flex justify-between items-center gap-1 bg-[#F7F7FF] px-4 py-2 rounded-lg">
         <div className="flex items-baseline">
           <p
             className="text-[16px] text-[#2a2a2a] font-bold"

@@ -4,7 +4,7 @@ import { Suspense } from "react";
 export default function FormBuilderPage() {
   return (
     <Suspense>
-      <ListGridWrapper />;
+      <ListGridWrapper />
     </Suspense>
   );
 }

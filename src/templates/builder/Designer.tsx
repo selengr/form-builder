@@ -16,7 +16,7 @@ const Designer = memo(function Designer() {
         className="p-4 w-full min-h-full flex-grow max-w-[920px] rounded-lg flex overflow-y-auto flex-col items-center bg-white shadow-[0_0_2px_0_rgba(187,187,187,0.2),0_12px_24px_-4px_rgba(187,187,187,0.12)] gap-4"
         style={{ scrollbarWidth: "none", userSelect: "none" }}
       >
-        <div className="w-full flex items-center justify-start">
+        <div className="w-full flex items-center justify-center md:justify-start">
           <DesignerTabs />
         </div>
         <DesignerStartPageElement />

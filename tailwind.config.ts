@@ -10,6 +10,10 @@ const config: Config = {
   ],
   theme: {
     extend: {},
+    screens: {
+      md: "900px",
+      lg: "1280px",
+    },
   },
   plugins: [],
 };

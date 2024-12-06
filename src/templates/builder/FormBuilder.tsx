@@ -1,3 +1,5 @@
+"use client";
+
 import { memo } from "react";
 import { createPortal } from "react-dom";
 import {

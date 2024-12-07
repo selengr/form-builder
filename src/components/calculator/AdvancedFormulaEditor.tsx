@@ -7,10 +7,11 @@ import styles from '@/sections/calculator/advancedFormulaEditor.module.css'
 import JSONData from '../../../public/fake-data/response_v1.json'
 import { Element, FnFxItem } from '../../types/formulaEditor';
 import { htmlToFormula } from '../../lib/formulaUtils';
-import Keypad from './Keypad';
+import Keypad from "./Keypad";
+
 
 const AdvancedFormulaEditor: React.FC = () => {
-  const [cursorIndex, setCursorIndex] = useState(0);
+  const [cursorIndex, setCursorIndex] = useState<number>(0);
   const [elements, setElements] = useState<Element[]>([]);
   const [isClient, setIsClient] = useState(false);
 
@@ -32,7 +33,7 @@ const AdvancedFormulaEditor: React.FC = () => {
     updateElements(newElements, newCursorIndex);
   }, [elements, cursorIndex]);
 
-  const updateElements = (newElements: Element[], newCursorIndex?: number) => {
+  const updateElements = (newElements: Element[], newCursorIndex: number) => {
     setElements(newElements);
     setCursorIndex(newCursorIndex);
     setTimeout(() => {

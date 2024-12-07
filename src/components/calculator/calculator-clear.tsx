@@ -1,5 +1,6 @@
 
-import { Box, Button } from "@mui/material";
+import { Button } from "@mui/material";
+import Image from "next/image";
 
 interface ICalculatorClear {
     handleClear: () => void
@@ -19,9 +20,12 @@ const CalculatorClear = ({ handleClear }: ICalculatorClear) => {
                 onClick={handleClear}
             >
 
-<Box component={"icon"} icon={"ion:arrow-back-outline"} sx={{ width: 25, height: 25, color: "#FA4D56" }} />
+        <Image
+            src={"/images/home-page/arrow-left.svg"}
+            width={25}
+            height={25} alt="" 
+        />
 
-              
             </Button >
 
 

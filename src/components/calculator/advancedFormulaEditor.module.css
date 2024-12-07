@@ -16,10 +16,14 @@
 }
 
 .OPERATOR,
-.PARENTHESIS,
-.AVG_PARENTHESIS {
+.PARENTHESIS {
   color: #1758ba;
   background-color: #1758ba1a;
+}
+
+.AVG_PARENTHESIS {
+  color: #9d2cdf;
+  background-color: #9d2cdf1a;
 }
 
 .asNumber,
@@ -42,10 +46,10 @@
   background-repeat: no-repeat;
 }
 .NEW_FnFx .customDropdown::before {
-  background-image: url("/images/calc/ic_fx.svg");
+  background-image: url("/assets/icons/svg/ic_fx.svg");
 }
 .NEW_FIELD .customDropdown::before {
-  background-image: url("/images/calc/ic_tick.svg");
+  background-image: url("/assets/icons/svg/ic_tick.svg");
 }
 
 .customDropdown[data-type="down"]::after,
@@ -60,10 +64,10 @@
   background-repeat: no-repeat;
 }
 .customDropdown[data-type="up"]::after {
-  background-image: url("/images/calc/ic_arrow_up.svg");
+  background-image: url("/assets/icons/svg/ic_arrow_up.svg");
 }
 .customDropdown[data-type="down"]::after {
-  background-image: url("/images/calc/ic_arrow_down.svg");
+  background-image: url("/assets/icons/svg/ic_arrow_down.svg");
 }
 
 .NEW_FIELD .option {

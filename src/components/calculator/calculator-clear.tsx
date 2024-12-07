@@ -1,5 +1,5 @@
-import Iconify from "@/components/iconify/Iconify";
-import { Button } from "@mui/material";
+
+import { Box, Button } from "@mui/material";
 
 interface ICalculatorClear {
     handleClear: () => void
@@ -19,7 +19,9 @@ const CalculatorClear = ({ handleClear }: ICalculatorClear) => {
                 onClick={handleClear}
             >
 
-                <Iconify icon="ion:arrow-back-outline" sx={{ width: 25, height: 25, color: "#FA4D56" }} />
+<Box component={"icon"} icon={"ion:arrow-back-outline"} sx={{ width: 25, height: 25, color: "#FA4D56" }} />
+
+              
             </Button >
 
 

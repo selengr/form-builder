@@ -3,7 +3,7 @@ import { Button } from "@mui/material";
 
 interface IParenthesis {
     operator: string
-    handleParenthesis: (content?: string, type?: string) => void
+    handleParenthesis: (content?: any, type?: any) => void
     idx?: number
 }
 

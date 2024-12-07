@@ -1,10 +1,9 @@
 import React from 'react';
 import { Box, Button, Select, MenuItem, Stack, Grid } from '@mui/material';
 import Image from 'next/image';
-import CalculatorParenthesis from '@/sections/calculator/calculator-parenthesis';
-import CalculatorClear from '@/sections/calculator/calculator-clear';
-// import CalculatorParenthesis from './CalculatorParenthesis';
-// import CalculatorClear from './CalculatorClear';
+import CalculatorParenthesis from './calculator-parenthesis';
+import CalculatorClear from './calculator-clear';
+
 
 interface KeypadProps {
   handleFnFX: () => void;

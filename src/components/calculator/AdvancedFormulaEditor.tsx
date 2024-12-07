@@ -8,9 +8,11 @@ import JSONData from '../../../public/fake-data/response_v1.json'
 import { Element, FnFxItem } from '../../types/formulaEditor';
 import { htmlToFormula } from '../../lib/formulaUtils';
 import Keypad from "./Keypad";
+import AxiosApi from "@/services/axios/AxiosApi";
 
 
-const AdvancedFormulaEditor: React.FC = () => {
+const AdvancedFormulaEditor: React.FC<any> = ({questionList}) => {
+//   const [questionList, setQu] = useState<number>(0);
   const [cursorIndex, setCursorIndex] = useState<number>(0);
   const [elements, setElements] = useState<Element[]>([]);
   const [isClient, setIsClient] = useState(false);
@@ -184,7 +186,7 @@ const AdvancedFormulaEditor: React.FC = () => {
               {elem.content}
             </div>
             <div className={styles.optionsContainer} style={{ display: 'none' }}>
-              {JSONData.dataList.map((item: any) => (
+              {questionList.dataList.map((item: any) => (
                 <div
                   key={item.extMap.UNIC_NAME}
                   className={styles.option}
@@ -346,6 +348,21 @@ const AdvancedFormulaEditor: React.FC = () => {
     }
   };
 
+
+  const callApi = async () => {
+    try {
+      const newFormula = htmlToFormula(elements, selectFieldRef, selectAvgRef);
+      const response = await AxiosApi.post(`/calculation`,{
+        "name": "جدید",
+        "formBuilderId": 81,
+        "theFormula": newFormula
+      });
+
+    } catch (err) {
+      console.log(err);
+    } 
+  };
+
   if (!isClient) return null;
 
   return (
@@ -419,7 +436,7 @@ const AdvancedFormulaEditor: React.FC = () => {
           <LoadingButton
             type="button"
             onClick={() => {
-              const newFormula = htmlToFormula(elements, selectFieldRef, selectAvgRef);
+              callApi()
             }}
             variant="contained"
             sx={{

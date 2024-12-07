@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Box, Button, Container, Stack, TextField, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import styles from '@/sections/calculator/advancedFormulaEditor.module.css'
+import styles from './advancedFormulaEditor.module.css'
 import JSONData from '../../../public/fake-data/response_v1.json'
 import { Element, FnFxItem } from '../../types/formulaEditor';
 import { htmlToFormula } from '../../lib/formulaUtils';
@@ -431,6 +431,7 @@ const AdvancedFormulaEditor: React.FC = () => {
                 backgroundColor: "#1758BA",
               },
               minWidth: "132px",
+              borderRadius: '8px'
             }}
           >
             <Typography variant="body2" component={'p'} py={0.5} sx={{ color: "#fff", fontWeight: 500 }}>
@@ -441,7 +442,7 @@ const AdvancedFormulaEditor: React.FC = () => {
           <Button
             type="button"
             variant="outlined"
-            sx={{ height: '50px', minWidth: "132px", fontWeight: '500', fontSize: '15px', borderColor: "#1758BA", background: "#F7F7FF" }}
+            sx={{ height: '50px', minWidth: "132px", fontWeight: '500', fontSize: '15px', borderColor: "#1758BA", background: "#F7F7FF",borderRadius: '8px' }}
           >
             <Typography variant="body2" component={'p'} py={0.5} color={"#1758BA"} sx={{ fontWeight: 500 }}>
               انصراف

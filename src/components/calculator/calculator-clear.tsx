@@ -15,13 +15,13 @@ const CalculatorClear = ({ handleClear }: ICalculatorClear) => {
                 '&.MuiButtonBase-root:hover': {
                     backgroundColor: "#FA4D561A"
                 },
-                fontWeight: 500
+                fontWeight: 500,borderRadius: '8px'
             }}
                 onClick={handleClear}
             >
 
         <Image
-            src={"/images/home-page/arrow-left.svg"}
+            src={"/images/calc/arrow-left.svg"}
             width={25}
             height={25} alt="" 
         />

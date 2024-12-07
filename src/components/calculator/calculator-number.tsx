@@ -12,7 +12,7 @@ const CalculatorNumber = ({ number, handleOperator, idx }: ICalculatorNumber) =>
 
         <Button sx={{
             border: '1px solid white', width: number === "0" ? 70 : 33, height: 33, minWidth: number === "0" ? 70 : 33, color: "#1758BA", backgroundColor: "#1758BA1A", margin: "2px",
-            fontWeight: 500
+            fontWeight: 500,borderRadius: '8px'
         }}
             onClick={() => handleOperator(number, "NUMBER")}
             key={idx}

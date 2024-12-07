@@ -58,7 +58,7 @@ const Keypad: React.FC<KeypadProps> = ({
           <Box sx={{ display: "flex", gap: 1 }}>
             <Image
               alt="file preview"
-              src={"/assets/icons/svg/ic_fx.svg"}
+              src={"/images/calc/ic_fx.svg"}
               height={30}
               width={30}
             />
@@ -108,6 +108,7 @@ const Keypad: React.FC<KeypadProps> = ({
           height: 33,
           fontWeight: 500,
           color: "#1758BA", 
+          borderRadius: '8px',
           backgroundColor: "#1758BA1A"
         }}
         onClick={handleNewField}
@@ -116,7 +117,7 @@ const Keypad: React.FC<KeypadProps> = ({
       </Button>
 
       <Stack sx={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-        <Grid gridColumn={3} sx={{ width: "90%", display: "flex", flexDirection: "column", marginRight: "4px" }} >
+        <Grid gridColumn={3} sx={{ width: "90%", display: "flex", flexDirection: "column" }} >
           <CalculatorParenthesis operator={'('} handleParenthesis={handleParenthesis} />
           {operators.map((op, idx) => (
             <Button 
@@ -129,7 +130,8 @@ const Keypad: React.FC<KeypadProps> = ({
                 color: "#1758BA", 
                 backgroundColor: "#1758BA1A", 
                 margin: "2px", 
-                fontWeight: 500 
+                fontWeight: 500 ,
+                borderRadius: '8px'
               }}
               onClick={() => handleOperator(op)}
             >
@@ -151,7 +153,8 @@ const Keypad: React.FC<KeypadProps> = ({
                 color: "#1758BA", 
                 backgroundColor: "#1758BA1A", 
                 margin: "2px",
-                fontWeight: 500
+                fontWeight: 500,
+                borderRadius: '8px'
               }}
               onClick={() => handleNumber(num)}
             >

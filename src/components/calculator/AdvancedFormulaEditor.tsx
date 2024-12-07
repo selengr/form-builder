@@ -4,9 +4,9 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Box, Button, Container, Stack, TextField, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import styles from '@/sections/calculator/advancedFormulaEditor.module.css'
-import JSONData from '../../public/assets/fake-data/response_v1.json'
-import { Element, FnFxItem } from '../types/formulaEditor';
-import { htmlToFormula } from '../utils/formulaUtils';
+import JSONData from '../../../public/assets/fake-data/response_v1.json'
+import { Element, FnFxItem } from '../../types/formulaEditor';
+import { htmlToFormula } from '../../lib/formulaUtils';
 import Keypad from './Keypad';
 
 const AdvancedFormulaEditor: React.FC = () => {

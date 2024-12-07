@@ -286,6 +286,64 @@ const AdvancedFormulaEditor: React.FC = () => {
     }
   };
 
+  const handleFnFX = () => {
+    const editableDiv = contentEditable.current;
+    if (!editableDiv) return;
+
+    const selectId = `select_${Date.now()}`;
+    const newElement: Element = {
+      type: 'NEW_FnFx',
+      content: 'میانگین()',
+      id: selectId,
+    };
+
+    const newElements = [...elements];
+    newElements.splice(cursorIndex, 0, newElement);
+    newElements.splice(cursorIndex + 1, 0, { type: 'AVG_PARENTHESIS', content: '(' });
+    newElements.splice(cursorIndex + 2, 0, { type: 'AVG_PARENTHESIS', content: ')' });
+
+    setElements(newElements);
+    selectAvgRef.current[selectId] = '#avgNumber';
+
+    setTimeout(() => {
+      const range = document.createRange();
+      const sel = window.getSelection();
+
+      if (editableDiv.childNodes[cursorIndex + 1]) {
+        range.setStartAfter(editableDiv.childNodes[cursorIndex + 1]);
+      } else {
+        range.setStartAfter(editableDiv.lastChild || editableDiv);
+      }
+
+      range.collapse(true);
+      sel?.removeAllRanges();
+      sel?.addRange(range);
+
+      setCursorIndex(cursorIndex + 2);
+      editableDiv.focus();
+    }, 0);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (!/^[0-9+\-*/().()]$/.test(event.key) &&
+      !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(event.key)) {
+      event.preventDefault();
+    }
+    if (event.key === "Enter") {
+      event.preventDefault();
+    }
+  };
+
+  const handleClick = (e: React.MouseEvent) => {
+    const editableDiv = contentEditable.current;
+    if (editableDiv) {
+      const range = document.caretRangeFromPoint(e.clientX, e.clientY);
+      if (range) {
+        const index = Array.from(editableDiv.childNodes).findIndex((node, index) => index === range.endOffset);
+        setCursorIndex(index === -1 ? elements.length : index);
+      }
+    }
+  };
 
   if (!isClient) return null;
 

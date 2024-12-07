@@ -260,7 +260,31 @@ const AdvancedFormulaEditor: React.FC = () => {
     };
   }, [styles]);
 
+  const handleFnFXDropdownClick = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    const optionsContainer = (e.target as HTMLElement).nextElementSibling as HTMLElement;
+    const isHidden = optionsContainer.style.display === 'none';
+    optionsContainer.style.display = isHidden ? 'block' : 'none';
+    (e.target as HTMLElement).setAttribute('data-type', isHidden ? 'up' : 'down');
+  };
 
+  const handleFnFXOptionClick = (item: FnFxItem, id: string) => {
+    const newElements = elements.map(elem =>
+      elem.id === id ? { ...elem, content: item.fnCaption } : elem
+    );
+    setElements(newElements);
+    selectAvgRef.current[id] = item.fnValue;
+
+    const optionsContainer = document.querySelector(`[data-id="${id}"] .${styles.optionsContainer}`) as HTMLElement;
+    if (optionsContainer) {
+      optionsContainer.style.display = 'none';
+    }
+
+    const dropdownButton = document.querySelector(`[data-id="${id}"] .${styles.customDropdown}`) as HTMLElement;
+    if (dropdownButton) {
+      dropdownButton.setAttribute('data-type', 'down');
+    }
+  };
 
 
   if (!isClient) return null;

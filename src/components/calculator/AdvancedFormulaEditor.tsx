@@ -10,9 +10,11 @@ import { htmlToFormula } from '../../lib/formulaUtils';
 import Keypad from "./Keypad";
 import AxiosApi from "@/services/axios/AxiosApi";
 import { toast } from "sonner";
+import { useParams } from "next/navigation";
 
 
 const AdvancedFormulaEditor: React.FC<any> = ({questionList}) => {
+  const { id } = useParams();
   const [formName, setFormName] = useState<string>("");
   const [cursorIndex, setCursorIndex] = useState<number>(0);
   const [elements, setElements] = useState<Element[]>([]);
@@ -372,14 +374,15 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList}) => {
     try {
      
       const response = await AxiosApi.post(`/calculation`,{
-        "name": "جدید",
-        "formBuilderId": 81,
+        "name": formName,
+        "formBuilderId": id,
         "theFormula": formula
       }); 
        toast.success("محاسبه گر با موفقیت ثبت شد");
     } catch (error) {
       toast.error("عملیات ناموفق بود مجددا امتحان فرمایید");
   };
+}
 
   if (!isClient) return null;
 

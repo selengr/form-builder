@@ -46,11 +46,7 @@ export default function MenuSidebar() {
       >
         <div>
           <Image
-            src={
-              pathname.split("/").length === 2
-                ? ServicesActive
-                : ServicesNotActive
-            }
+            src={pathname === "/" ? ServicesActive : ServicesNotActive}
             width={28}
             height={28}
             alt="logo-side-bar"
@@ -59,7 +55,7 @@ export default function MenuSidebar() {
         <div>
           <p
             className={`text-[9px] text-white ${
-              pathname.split("/").length === 2 ? "#2CDFC9" : "#F2F4F8"
+              pathname === "/" ? "#2CDFC9" : "#F2F4F8"
             }`}
           >
             خانه

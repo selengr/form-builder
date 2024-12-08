@@ -16,11 +16,7 @@ export default function MainPanel({
         <MainSidebar />
       </div>
 
-      <div
-        className={`flex flex-col w-full ${
-          path === "/" ? "bg-[#f7f7f7]" : "bg-white"
-        } overflow-y-auto`}
-      >
+      <div className="flex flex-col w-full overflow-y-auto">
         {path === "/" && (
           <div className="md:hidden block">
             <TopAppBar title="" />

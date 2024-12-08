@@ -32,7 +32,7 @@ export default function RHFTextField({
           if (other.type === "number") {
             callBack(Number(e?.target?.value));
             if (e.target.value === "") {
-              field.onChange(0);
+              field.onChange("");
             } else {
               const value = Number(e?.target?.value);
               field.onChange(value);

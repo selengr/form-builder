@@ -267,13 +267,43 @@ function FormComponent({
       content = (
         <Fragment>
           <TextField
-            type="number"
+            type="text"
             sx={{
               "& .MuiInputBase-root": {
                 padding: 1.5,
               },
               "& input": {
                 padding: 0,
+              },
+            }}
+            slotProps={{
+              htmlInput: {
+                maxLength: 15,
+                pattern: "^-?\\d*\\.?\\d*$",
+                onInput: (e: any) => {
+                  const value = e.target.value;
+
+                  let newValue = value
+                    .replace(/[^0-9.-]/g, "")
+                    .replace(/(?!^)-/g, "")
+                    .replace(/(\..*)\..*/g, "$1");
+
+                  if (newValue.startsWith(".")) {
+                    newValue = newValue.substring(1);
+                  }
+
+                  if (newValue === "-" || newValue === "") {
+                    newValue = "";
+                  } else if (
+                    newValue.startsWith("-") &&
+                    newValue.length > 1 &&
+                    !/^\d/.test(newValue[1])
+                  ) {
+                    newValue = "-";
+                  }
+
+                  e.target.value = newValue;
+                },
               },
             }}
             fullWidth
@@ -286,7 +316,7 @@ function FormComponent({
         <Fragment>
           <TextField
             placeholder="2981859878"
-            type="tel"
+            type="text"
             sx={{
               "& .MuiInputBase-root": {
                 padding: 1.5,
@@ -295,8 +325,14 @@ function FormComponent({
                 padding: 0,
               },
             }}
-            inputProps={{
-              maxLength: 10,
+            slotProps={{
+              htmlInput: {
+                maxLength: 10,
+                pattern: "[0-9]*",
+                onInput: (e: any) => {
+                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                },
+              },
             }}
             fullWidth
           />
@@ -307,10 +343,16 @@ function FormComponent({
       content = (
         <Fragment>
           <TextField
-            type="tel"
+            type="text"
             placeholder="09358956545"
-            inputProps={{
-              maxLength: 11,
+            slotProps={{
+              htmlInput: {
+                maxLength: 11,
+                pattern: "[0-9]*",
+                onInput: (e: any) => {
+                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                },
+              },
             }}
             sx={{
               "& .MuiInputBase-root": {
@@ -373,7 +415,7 @@ function FormComponent({
             sx={{ direction: "rtl", textWrap: "nowrap", fontWeight: "600" }}
             variant="subtitle2"
           >
-            {max + " / " + min}
+            {min + " / " + max}
           </Typography>
         ) : null}
       </Box>

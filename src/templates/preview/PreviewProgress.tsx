@@ -39,7 +39,7 @@ export default function PreviewProgress() {
       >
         سوال قبلی
       </Button>
-      {index + 1 <= (numQuestions as number) ? (
+      {index + 1 < (numQuestions as number) ? (
         <Typography fontSize="16px" fontWeight={600}>
           سوال {numQuestions === 0 ? 0 : index + 1} از {numQuestions}
         </Typography>
@@ -73,7 +73,7 @@ export default function PreviewProgress() {
           }
         }}
       >
-        سوال بعدی
+        {index + 1 < (numQuestions as number) ? `سوال بعدی` : `ادامه`}
       </Button>
     </Box>
   );

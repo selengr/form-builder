@@ -74,9 +74,13 @@ const RHFTextFieldOptionList = memo(function RHFTextFieldOptionList({
                       placeholder="0..99"
                       type="number"
                       value={value.score}
-                      onChange={(e) =>
-                        onChange({ ...value, score: Number(e.target.value) })
-                      }
+                      onChange={(e) => {
+                        if (e.target.value === "") {
+                          onChange({ ...value, score: "" });
+                        } else {
+                          onChange({ ...value, score: Number(e.target.value) });
+                        }
+                      }}
                     />
                     <IconButton
                       aria-label="trash"

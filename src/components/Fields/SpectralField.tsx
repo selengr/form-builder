@@ -41,7 +41,7 @@ const questionType: ElementsType = "SPECTRAL";
 const questionPropertyList: IQPLSpectral = [
   {
     questionPropertyEnum: "SPECTRAL_TYPE",
-    value: "CONTINUOUS",
+    value: "SPECTRAL",
   },
   {
     questionPropertyEnum: "REQUIRED",
@@ -53,7 +53,7 @@ const questionPropertyList: IQPLSpectral = [
   },
   {
     questionPropertyEnum: "SELECTION_TYPE",
-    value: "SPECTRAL",
+    value: "CONTINUOUS",
   },
   {
     questionPropertyEnum: "STEP",
@@ -82,29 +82,29 @@ const optionList: IFormOptionList[] = [
   },
 ];
 
-const spectralTypeOptions: ISpectralQTapAndOptionsType = [
+const tapTypeOptions: ISpectralQTapAndOptionsType = [
   { value: "CONTINUOUS", label: "پیوسته" },
   { value: "DISCRETE", label: "گسسته" },
 ];
 
-const tapTypeOptions: ISpectralQTapAndOptionsType = [
+const spectralTypeOptions: ISpectralQTapAndOptionsType = [
   { value: "SPECTRAL", label: "طیف" },
   { value: "DOMAIN", label: "دامنه" },
 ];
 
 const optionsSchema = z.object({
   title: z
-    .string()
+    .string({ invalid_type_error: "الزامی است" })
     .trim()
     .transform((value) => value.replace(/\s+/g, " "))
     .pipe(
       z
-        .string()
+        .string({ invalid_type_error: "الزامی است" })
         .min(1, { message: "حداقل باید 1 و حداکثر 20 کاراکتر داشته باشد" })
         .max(20, { message: "حداقل باید 1 و حداکثر 20 کاراکتر داشته باشد" })
     ),
   score: z
-    .number()
+    .number({ invalid_type_error: "الزامی است" })
     .min(0, { message: "نمیتواند منفی باشد" })
     .nonnegative({ message: "نمیتواند منفی باشد" }),
 });
@@ -164,8 +164,8 @@ const propertiesSchema = z
     (val) => {
       const distance = val.SPECTRAL_END - val.SPECTRAL_START;
       if (
-        val.SPECTRAL_TYPE === "CONTINUOUS" ||
-        val.SPECTRAL_TYPE === "DISCRETE"
+        val.SELECTION_TYPE === "CONTINUOUS" ||
+        val.SELECTION_TYPE === "DISCRETE"
       ) {
         if (Math.ceil(distance / val.STEP) + 1 < val.optionList.length)
           return false;
@@ -195,7 +195,7 @@ const propertiesSchema = z
   )
   .refine(
     (val) => {
-      if (val.SPECTRAL_TYPE === "DISCRETE") {
+      if (val.SELECTION_TYPE === "DISCRETE") {
         return val.STEP >= 1 ? true : false;
       } else return true;
     },
@@ -404,7 +404,7 @@ function PropertiesComponent({
   );
   const stepInputStatus: boolean = element.questionPropertyList.some(
     (property) => {
-      if (property.questionPropertyEnum === "SPECTRAL_TYPE") {
+      if (property.questionPropertyEnum === "SELECTION_TYPE") {
         return property.value === "CONTINUOUS" ? true : false;
       } else {
         return false;
@@ -628,7 +628,7 @@ function PropertiesComponent({
           <Typography variant="subtitle2" fontWeight="700">
             نوع نوار لغزان:
           </Typography>
-          <RHFMultiSelect name="SELECTION_TYPE" options={tapTypeOptions} />
+          <RHFMultiSelect name="SPECTRAL_TYPE" options={spectralTypeOptions} />
         </Stack>
 
         <Stack spacing={1} marginTop={2.5}>
@@ -637,9 +637,9 @@ function PropertiesComponent({
           </Typography>
           <RHFMultiSelect
             setValue={setValue}
-            name="SPECTRAL_TYPE"
+            name="SELECTION_TYPE"
             clearErros={clearErrors}
-            options={spectralTypeOptions}
+            options={tapTypeOptions}
             setProp={setDisableInput}
           />
         </Stack>

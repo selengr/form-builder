@@ -76,7 +76,7 @@ export const TitleFieldFinishFormElement: FormElement = {
     questionType,
   }),
   designerBtnElement: {
-    label: "پایان پرسشنامه",
+    label: "صفحه پایان",
   },
   designerComponent: DesignerComponent,
   formComponent: FormComponent,
@@ -90,7 +90,6 @@ function FormComponent({
 }: {
   elementInstance: FormElementInstance;
 }) {
-  console.log(elementInstance);
   return (
     <div className="flex flex-col gap-4 items-center justify-center w-full">
       <Image

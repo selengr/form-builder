@@ -9,10 +9,11 @@ import { Element, FnFxItem } from '../../types/formulaEditor';
 import { htmlToFormula } from '../../lib/formulaUtils';
 import Keypad from "./Keypad";
 import AxiosApi from "@/services/axios/AxiosApi";
+import { toast } from "sonner";
 
 
 const AdvancedFormulaEditor: React.FC<any> = ({questionList}) => {
-//   const [questionList, setQu] = useState<number>(0);
+  const [formName, setFormName] = useState<string>("");
   const [cursorIndex, setCursorIndex] = useState<number>(0);
   const [elements, setElements] = useState<Element[]>([]);
   const [isClient, setIsClient] = useState(false);
@@ -350,17 +351,34 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList}) => {
 
 
   const callApi = async () => {
+    let formula = ''
+    const newFormula = htmlToFormula(elements, selectFieldRef, selectAvgRef);
+    if(!!!formName) return toast.error("ابتدا نام محاسبه گر را وارد کنید");
+    if(!!!newFormula) return toast.error("هیج محاسبه ای افزوده نشده");
+    if(newFormula.includes("undefined")) return toast.error("سوال انتخاب نشده دارید");
+
+
+        
+        const avgNum = newFormula.split("#avg")
+        avgNum.map(item => {
+          if (item.includes("Number")) {
+            formula += "#avg" + item?.replaceAll("}{", "},{")
+          } else {
+            formula += item
+          }
+        })
+      
+
     try {
-      const newFormula = htmlToFormula(elements, selectFieldRef, selectAvgRef);
+     
       const response = await AxiosApi.post(`/calculation`,{
         "name": "جدید",
         "formBuilderId": 81,
-        "theFormula": newFormula
-      });
-
-    } catch (err) {
-      console.log(err);
-    } 
+        "theFormula": formula
+      }); 
+       toast.success("محاسبه گر با موفقیت ثبت شد");
+    } catch (error) {
+      toast.error("عملیات ناموفق بود مجددا امتحان فرمایید");
   };
 
   if (!isClient) return null;
@@ -401,6 +419,7 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList}) => {
               },
             }}
             name="name"
+            onChange={(e)=>setFormName(e.target.value)}
           />
         </Stack>
 

@@ -234,7 +234,7 @@ const ListGrid: React.FC<Props> = ({
               display="flex"
               sx={{
                 width: "100%",
-                maxWidth: "480px",
+                maxWidth: "404px",
                 justifyContent: "space-between",
                 gap: 2,
                 bgcolor: "#ECFAFF",
@@ -300,7 +300,7 @@ const ListGrid: React.FC<Props> = ({
 
           <Grid2
             container
-            size={{ xs: 12, sm: 12, xl: 8, md: 8, lg: 8 }}
+            size={{ xs: 12, sm: 12, xl: 8, md: 8, lg: 10 }}
             sx={{
               width: "100%",
               mx: "auto",

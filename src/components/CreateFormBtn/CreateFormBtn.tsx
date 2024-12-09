@@ -23,7 +23,7 @@ import { IoClose } from "react-icons/io5";
 import { RHFTextField } from "../hook-form";
 import AxiosApi from "@/services/axios/AxiosApi";
 import { toast } from "sonner";
-import PlusIcon from "@/../public/images/home-page/plus.svg";
+import PlusIcon from "@/../public/images/home-page/Add-fill.svg";
 
 const propertiesSchema = z.object({
   name: z
@@ -91,8 +91,9 @@ export default function CreateFormBtn() {
         sx={{
           width: "100%",
           height: "100%",
-          bgcolor: "#ECFAFF",
+          // bgcolor: "#ECFAFF",
           borderRadius: "16px",
+          border : "1px solid #1758BA",
         }}
       >
         <Image src={PlusIcon} alt="" width={22} height={22} />

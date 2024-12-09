@@ -73,7 +73,7 @@ export default function PreviewProgress() {
           }
         }}
       >
-        سوال بعدی
+        {index + 1 < (numQuestions as number) ? `سوال بعدی` : `ادامه`}
       </Button>
     </Box>
   );

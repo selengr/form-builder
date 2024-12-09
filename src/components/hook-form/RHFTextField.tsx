@@ -32,7 +32,7 @@ export default function RHFTextField({
           if (other.type === "number") {
             callBack(Number(e?.target?.value));
             if (e.target.value === "") {
-              field.onChange(0);
+              field.onChange("");
             } else {
               const value = Number(e?.target?.value);
               field.onChange(value);
@@ -51,16 +51,19 @@ export default function RHFTextField({
                 padding: 1,
               },
               "& .MuiInputBase-input::-webkit-inner-spin-button": {
-                "-webkit-appearance": "none",
+                WebkitAppearance: "none",
                 margin: 0,
-                "-moz-appearance": "none",
+                MozAppearance: "none",
                 appearance: "none",
               },
               "& .MuiInputBase-input::-webkit-outer-spin-button": {
-                "-webkit-appearance": "none",
+                WebkitAppearance: "none",
                 margin: 0,
-                "-moz-appearance": "none",
+                MozAppearance: "none",
                 appearance: "none",
+              },
+              "& .MuiFormHelperText-root": {
+                marginX: "0 !important",
               },
             }}
             fullWidth

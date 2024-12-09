@@ -40,22 +40,27 @@ export type ITextFieldFormPatternOptions = {
 
 export type IQPLTextField = [
   {
+    id: number;
     questionPropertyEnum: "TEXT_FIELD_PATTERN";
     value: string;
   },
   {
+    id: number;
     questionPropertyEnum: "REQUIRED";
     value: string;
   },
   {
+    id: number;
     questionPropertyEnum: "DESCRIPTION";
     value: string | null;
   },
   {
+    id: number;
     questionPropertyEnum: "MINIMUM_LEN";
     value: string | number | null;
   },
   {
+    id: number;
     questionPropertyEnum: "MAXIMUM_LEN";
     value: string | number | null;
   }
@@ -67,47 +72,58 @@ export type IQPLSpectral = [
   {
     questionPropertyEnum: "SPECTRAL_TYPE";
     value: string;
+    id: number;
   },
   {
     questionPropertyEnum: "REQUIRED";
     value: string;
+    id: number;
   },
   {
     questionPropertyEnum: "DESCRIPTION";
     value: string | null;
+    id: number;
   },
   {
     questionPropertyEnum: "SELECTION_TYPE";
     value: string;
+    id: number;
   },
   {
     questionPropertyEnum: "STEP";
     value: number | string;
+    id: number;
   },
   {
     questionPropertyEnum: "SPECTRAL_START";
     value: number | string;
+    id: number;
   },
   {
     questionPropertyEnum: "SPECTRAL_END";
     value: number | string;
+    id: number;
   }
 ];
 
 export type IQPLMultipleChoice = [
   {
+    id: number;
     questionPropertyEnum: "MULTI_SELECT";
     value: string;
   },
   {
+    id: number;
     questionPropertyEnum: "REQUIRED";
     value: string;
   },
   {
+    id: number;
     questionPropertyEnum: "RANDOMIZE_OPTIONS";
     value: string;
   },
   {
+    id: number;
     questionPropertyEnum: "DESCRIPTION";
     value: string | null;
   }

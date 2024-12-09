@@ -42,7 +42,7 @@ export default function MainSidebar() {
         <div className="h-[520px] min-h-[520px] w-[80px] bg-cover bg-[url('/images/home-page/right_sidebar_bg.svg')]">
           <MenuSidebar />
         </div>
-        <div className="flex flex-col gap-6 items-center justify-center p-4">
+        <div className="flex flex-col gap-6 items-start pr-5 justify-center p-4">
           <button>
             <Image src={InfoIcon} alt="Logout" width={24} height={24} />
           </button>

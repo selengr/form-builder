@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import {
   ElementsType,
   FormElement,
@@ -48,18 +48,22 @@ const questionType: ElementsType = "MULTIPLE_CHOICE";
 
 const questionPropertyList: IQPLMultipleChoice = [
   {
+    id: 1,
     questionPropertyEnum: "MULTI_SELECT",
     value: "false",
   },
   {
+    id: 2,
     questionPropertyEnum: "REQUIRED",
     value: "false",
   },
   {
+    id: 3,
     questionPropertyEnum: "RANDOMIZE_OPTIONS",
     value: "false",
   },
   {
+    id: 4,
     questionPropertyEnum: "DESCRIPTION",
     value: "",
   },
@@ -105,15 +109,27 @@ const propertiesSchema = z.object({
         .min(1, { message: "حداقل باید 1 و حداکثر 100 کاراکتر باشد" })
         .max(100, { message: "حداقل باید 1 و حداکثر 100 کاراکتر باشد" })
     ),
-  DESCRIPTION: z
-    .string()
-    .trim()
-    .transform((value) => value.replace(/\s+/g, " "))
-    .pipe(z.string().max(250, { message: "حداکثر میتواند 250 کاراکتر باشد" }))
-    .optional(),
-  REQUIRED: z.boolean().default(false),
-  RANDOMIZE_OPTIONS: z.boolean().default(false),
-  MULTI_SELECT: z.boolean().default(false),
+  DESCRIPTION: z.object({
+    value: z
+      .string()
+      .trim()
+      .transform((value) => value.replace(/\s+/g, " "))
+      .pipe(z.string().max(250, { message: "حداکثر میتواند 250 کاراکتر باشد" }))
+      .optional(),
+    id: z.number(),
+  }),
+  REQUIRED: z.object({
+    value: z.boolean().default(false),
+    id: z.number(),
+  }),
+  RANDOMIZE_OPTIONS: z.object({
+    value: z.boolean().default(false),
+    id: z.number(),
+  }),
+  MULTI_SELECT: z.object({
+    value: z.boolean().default(false),
+    id: z.number(),
+  }),
   optionList: z
     .array(optionsSchema)
     .min(2, { message: "حداقل باید 2 و حداکثر 10 گزینه وجود داشته باشد" })
@@ -288,47 +304,54 @@ function PropertiesComponent({
   elementInstance: FormElementInstance;
 }) {
   const element = elementInstance as CustomInstance;
-  const descriptionSwitchStatus: boolean = element.questionPropertyList.some(
-    (property) => {
-      if (property.questionPropertyEnum === "DESCRIPTION") {
-        return property.value ? true : false;
-      } else {
-        return false;
-      }
-    }
-  );
-
-  const [openDescriptionSwitch, setOpenDescriptionSwitch] = useState<boolean>(
-    descriptionSwitchStatus
-  );
   const elements = useElements();
   const setOpenDialog = useActionOpenDialog();
   const setSelectedElement = useActionSelectedElement();
   const selectedElement = useSelectedElement();
   const { updateElement, addElement } = useActionDesigner();
   const { questionGroups } = useDesigner();
-
-  const defaultValues = element.questionPropertyList.reduce(
-    (acc: any, attribute: any) => {
-      if (
-        attribute.questionPropertyEnum === "REQUIRED" ||
-        attribute.questionPropertyEnum === "RANDOMIZE_OPTIONS" ||
-        attribute.questionPropertyEnum === "MULTI_SELECT"
-      ) {
-        acc[attribute.questionPropertyEnum] =
-          attribute.value === "true" ? true : false;
-      } else if (attribute.questionPropertyEnum === "DESCRIPTION") {
-        acc[attribute.questionPropertyEnum] =
-          attribute.value === null ? "" : attribute.value;
-      } else {
-        acc[attribute.questionPropertyEnum] = attribute.value;
-      }
-      return acc;
-    },
-    {}
+  const [openDescriptionSwitch, setOpenDescriptionSwitch] = useState<boolean>(
+    () =>
+      element.questionPropertyList.some((property) => {
+        return (
+          property.questionPropertyEnum === "DESCRIPTION" && property.value
+        );
+      })
   );
-  defaultValues.title = element?.title;
-  defaultValues.optionList = element?.optionList;
+
+  const defaultValues = useMemo(() => {
+    const values = element.questionPropertyList.reduce(
+      (acc: any, attribute: any) => {
+        if (!acc[attribute.questionPropertyEnum]) {
+          acc[attribute.questionPropertyEnum] = {};
+        }
+
+        if (
+          attribute.questionPropertyEnum === "REQUIRED" ||
+          attribute.questionPropertyEnum === "RANDOMIZE_OPTIONS" ||
+          attribute.questionPropertyEnum === "MULTI_SELECT"
+        ) {
+          acc[attribute.questionPropertyEnum].value =
+            attribute.value === "true";
+        } else if (attribute.questionPropertyEnum === "DESCRIPTION") {
+          acc[attribute.questionPropertyEnum].value =
+            attribute.value === null ? "" : attribute.value;
+        } else {
+          acc[attribute.questionPropertyEnum].value = attribute.value;
+        }
+
+        acc[attribute.questionPropertyEnum].id = attribute.id;
+
+        return acc;
+      },
+      {}
+    );
+
+    values.title = element?.title;
+    values.optionList = element?.optionList;
+
+    return values;
+  }, []);
 
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
@@ -341,10 +364,6 @@ function PropertiesComponent({
     handleSubmit,
     formState: { isSubmitting, errors },
   } = methods;
-
-  // useEffect(() => {
-  //   form.reset(element.questionPropertyList);
-  // }, [element, form]);
 
   async function onSubmit(values: propertiesFormSchemaType) {
     const {
@@ -361,22 +380,27 @@ function PropertiesComponent({
       (el: any) => el?.questionId === element?.questionId
     );
 
-    const data = [
+    const propertiesData = [
       {
         questionPropertyEnum: "MULTI_SELECT",
-        value: MULTI_SELECT ? "true" : "false",
+        value: MULTI_SELECT.value ? "true" : "false",
+        id: MULTI_SELECT.id,
       },
       {
         questionPropertyEnum: "RANDOMIZE_OPTIONS",
-        value: RANDOMIZE_OPTIONS ? "true" : "false",
+        value: RANDOMIZE_OPTIONS.value ? "true" : "false",
+        id: RANDOMIZE_OPTIONS.id,
       },
       {
         questionPropertyEnum: "REQUIRED",
-        value: REQUIRED ? "true" : "false",
+        value: REQUIRED.value ? "true" : "false",
+        id: REQUIRED.id,
       },
       {
         questionPropertyEnum: "DESCRIPTION",
-        value: openDescriptionSwitch && DESCRIPTION ? DESCRIPTION : null,
+        value:
+          openDescriptionSwitch && DESCRIPTION.value ? DESCRIPTION.value : null,
+        id: DESCRIPTION.id,
       },
     ];
 
@@ -420,7 +444,7 @@ function PropertiesComponent({
       ...element,
       title,
       position: selectedElement?.position?.apiPosition ?? group.length,
-      questionPropertyList: data,
+      questionPropertyList: propertiesData,
       optionList: optionListData,
     };
 
@@ -526,7 +550,7 @@ function PropertiesComponent({
           </Typography>
           <RHFSwitch
             label=""
-            name="MULTI_SELECT"
+            name="MULTI_SELECT.value"
             labelPlacement="start"
             sx={{ mb: 1, mx: 0, width: 1, justifyContent: "space-between" }}
           />
@@ -543,7 +567,7 @@ function PropertiesComponent({
           </Typography>
           <RHFSwitch
             label=""
-            name="REQUIRED"
+            name="REQUIRED.value"
             labelPlacement="start"
             sx={{ mb: 1, mx: 0, width: 1, justifyContent: "space-between" }}
           />
@@ -560,7 +584,7 @@ function PropertiesComponent({
           </Typography>
           <RHFSwitch
             label=""
-            name="RANDOMIZE_OPTIONS"
+            name="RANDOMIZE_OPTIONS.value"
             labelPlacement="start"
             sx={{ mb: 1, mx: 0, width: 1, justifyContent: "space-between" }}
           />
@@ -576,7 +600,7 @@ function PropertiesComponent({
             توضیحات
           </Typography>
           <SwitchButton
-            onChange={() => setOpenDescriptionSwitch(!openDescriptionSwitch)}
+            onChange={() => setOpenDescriptionSwitch((prev) => !prev)}
             checked={openDescriptionSwitch}
           />
         </Stack>
@@ -587,7 +611,7 @@ function PropertiesComponent({
               متن توضیح:
             </Typography>
             <RHFTextField
-              name="DESCRIPTION"
+              name="DESCRIPTION.value"
               placeholder="پیامی برای توضیح بیشتر در مورد این سوال"
             />
           </Stack>

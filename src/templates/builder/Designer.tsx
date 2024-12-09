@@ -10,22 +10,24 @@ import DesignerTabs from "./TabComponent";
 
 const Designer = memo(function Designer() {
   return (
-    <div className="w-full min-h-full flex flex-col-reverse lg:flex-row px-4 py-4 justify-center gap-4 bg-[#f7f7f7]">
+    <div className="w-full min-h-full px-4 py-4 bg-[#f7f7f7]">
       <CreateFieldDialog />
-      <div
-        className="p-4 w-full min-h-full flex-grow max-w-[920px] rounded-lg flex overflow-y-auto flex-col items-center bg-white shadow-[0_0_2px_0_rgba(187,187,187,0.2),0_12px_24px_-4px_rgba(187,187,187,0.12)] gap-4"
-        style={{ scrollbarWidth: "none", userSelect: "none" }}
-      >
-        <div className="w-full flex items-center justify-center md:justify-start">
-          <DesignerTabs />
+      <div className="bg-white w-full h-full lg:flex-row rounded-xl">
+        <DesignerTabs />
+        <div className="rounded-xl h-full w-full flex flex-col-reverse lg:flex-row py-4 lg:justify-center justify-between lg:pr-4 pb-0 flex-grow px-4">
+          <div
+            className="py-4 px-0 pt-4 lg:pt-0 w-full flex-grow max-w-[920px] flex overflow-y-auto lg:pr-4 lg:pl-0 flex-col items-center bg-white gap-4"
+            style={{ scrollbarWidth: "none", userSelect: "none" }}
+          >
+            <DesignerStartPageElement />
+            <div className="w-full h-full flex-grow flex items-center flex-col justify-start rounded-md gap-4">
+              <KanbanBoard />
+            </div>
+            <DesignerFinishPageElement />
+          </div>
+          <DesignerSidebar />
         </div>
-        <DesignerStartPageElement />
-        <div className="w-full h-full flex flex-grow flex-1 items-center flex-col justify-start rounded-md gap-4">
-          <KanbanBoard />
-        </div>
-        <DesignerFinishPageElement />
       </div>
-      <DesignerSidebar />
     </div>
   );
 });

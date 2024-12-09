@@ -1,112 +1,48 @@
 import Image from "next/image";
-import HeaderDesktop from "@/../public/images/home-page/new-mresalt-header.svg";
-import { useRouter } from "next/navigation";
+import Logo from "@/../public/images/home-page/psya-logo.svg";
+import Additem from "@/../public/images/home-page/additem.svg";
+import SidebarRoleSelection from "../SidebarRoleSelection/SidebarRoleSelection";
+import { IoIosArrowDown } from "react-icons/io";
+import Link from "next/link";
 
 export default function MiddleSidebar() {
-  const router = useRouter();
 
-
-return (
-        <div className="min-w-[400px] w-[400px] bg-[#FFFFFF] min-h-screen px-5 gap-8 flex flex-col">
-            <div className="my-5 w-full flex justify-center align-middle">
-                <Image
-                    src={"/images/logo/LOGO.svg"}
-                    alt="header"
-                    width={5}
-                    height={5}
-                    className="w-32"
-                />
-            </div>
-            <div className="w-full flex flex-row gap-3 bg-[#F2F4F8] h-20 rounded-2xl items-center justify-between">
-
-
-
-                <div className="flex flex-row items-center mr-3">
-                    <Image
-                        src={"/images/home-page/user-octagon.svg"}
-                        alt="header"
-                        width={5}
-                        height={5}
-                        className="w-8 ml-1"
+  return (
+    <div className="min-w-[400px] w-[400px] min-h-screen bg-white px-5 gap-8 flex flex-col py-5">
+      <div className="w-full flex flex-col gap-5 items-center">
+        <Image priority src={Logo} width={111} height={38} alt="Psya-Logo" />
+        <div className="flex flex-col items-center w-full gap-5">
+          <SidebarRoleSelection />
+          <div className="w-full pr-3 flex flex-col gap-3">
+            {[1, 2, 3].map((item) => (
+              <div
+                key={item}
+                className="gap-4 w-ful border-b-[1px] border-b-[#DDE1E6]"
+              >
+                <Link
+                  href="/builder"
+                  className="w-full h-full pb-3 flex items-center justify-between "
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <Image src={Additem} alt="" width={32} height={32} />
+                    <p className="text-[14px] text-black font-bold">فرم‌ساز</p>
+                  </div>
+                  <div>
+                    <IoIosArrowDown
+                      size="1.3rem"
+                      color="#292D32"
+                      width={32}
+                      height={32}
+                      className="rotate-90"
                     />
-                    <span className="font-bold">شرکت فرداپ</span>
-                </div>
-                <span className="bg-[#96FAEE] rounded-xl text-[#00A692] w-14 text-xs p-1 flex items-center justify-center  ml-6">مدیر</span>
+                  </div>
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-            </div>
-
-            <div className="w-full flex flex-row border-b-[#DDE1E6] border-b-solid border-b-[1px] h-6 mr-3 items-center justify-between">
-
-                <div className="flex flex-row items-center mb-7">
-                    <Image
-                        src={"/images/home-page/additem.svg"}
-                        alt="header"
-                        width={5}
-                        height={5}
-                        className="w-8 ml-1"
-                    />
-                    <span>فرم ساز</span>
-                </div>
-
-            </div>
-            <div className="w-full flex flex-row border-b-[#DDE1E6] border-b-solid border-b-[1px] h-6 mr-3 items-center justify-between">
-
-                <div className="flex flex-row items-center mb-7">
-                    <Image
-                        src={"/images/home-page/additem.svg"}
-                        alt="header"
-                        width={5}
-                        height={5}
-                        className="w-8 ml-1"
-                    />
-                    <span>فرم ساز</span>
-                </div>
-
-            </div>
-            <div className="w-full flex flex-row border-b-[#DDE1E6] border-b-solid border-b-[1px] h-6 mr-3 items-center justify-between">
-
-                <div className="flex flex-row items-center mb-7">
-                    <Image
-                        src={"/images/home-page/additem.svg"}
-                        alt="header"
-                        width={5}
-                        height={5}
-                        className="w-8 ml-1"
-                    />
-                    <span>فرم ساز</span>
-                </div>
-
-            </div>
-            <div className="w-full flex flex-row border-b-[#DDE1E6] border-b-solid border-b-[1px] h-6 mr-3 items-center justify-between">
-
-                <div className="flex flex-row items-center mb-7">
-                    <Image
-                        src={"/images/home-page/additem.svg"}
-                        alt="header"
-                        width={5}
-                        height={5}
-                        className="w-8 ml-1"
-                    />
-                    <span>فرم ساز</span>
-                </div>
-
-            </div>
-
-
-
-
-
-            {/*         
-        <button
-          className="h-[56px] bg-[#1758BA] shadow-none rounded-lg text-white text-[16px] font-bold"
-          onClick={() => {
-            router.push("/builder");
-          }}
-        >
-          فرم ساز
-        </button> */}
-
-        </div >
-      
-    );
-  }

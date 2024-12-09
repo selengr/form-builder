@@ -17,7 +17,7 @@ const DesignerElementNoDnD = memo(function DesignerElementNoDnD({
   return (
     <div
       dir="rtl"
-      className="flex items-center h-[65px] w-full relative border-[1px] border-[#1758BA] rounded-xl justify-start flex-row p-2"
+      className="flex items-center h-[65px] w-full relative border-[1px] border-[#1758BA] rounded-xl justify-start flex-row p-2 bg-white"
     >
       <DesignerElement elementInstance={element} />
       <div className="flex flex-row gap-2 absolute left-2">

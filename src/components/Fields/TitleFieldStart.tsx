@@ -74,7 +74,7 @@ export const TitleFieldStartFormElement: FormElement = {
     questionType,
   }),
   designerBtnElement: {
-    label: "شروع پرسشنامه",
+    label: "صفحه شروع",
   },
   designerComponent: DesignerComponent,
   formComponent: FormComponent,
@@ -88,7 +88,6 @@ function FormComponent({
 }: {
   elementInstance: FormElementInstance;
 }) {
-  // const { title } = element.questionPropertyList;
   return <p className="text-xl"></p>;
 }
 
@@ -131,7 +130,7 @@ function PropertiesComponent({
 
     if (!startPage) {
       try {
-        const res = await AxiosApi.post("/form/start-page", data as any);
+        const res = await AxiosApi.put("/form/start-page", data as any);
         addStartPage({
           ...selectedElement?.fieldElement,
           startPageMsg: res.data.startPageMsg,

@@ -175,18 +175,18 @@ export function RHFMultiSelect({
                 clearErros();
               } else if (e.target.value === "CONTINUOUS") {
                 setProp(true);
-                setValue("STEP", 0.1);
+                setValue("STEP.value", 0.1);
                 clearErros();
               } else if (e.target.value === "DISCRETE") {
                 setProp(false);
-                setValue("STEP", 1);
+                setValue("STEP.value", 1);
                 clearErros();
               } else if (
                 textFieldPatternList.includes(e.target.value as string)
               ) {
                 setProp(false);
-                setValue("MAXIMUM_LEN", 250);
-                setValue("MINIMUM_LEN", 1);
+                setValue("MAXIMUM_LEN.value", 250);
+                setValue("MINIMUM_LEN.value", 1);
               } else {
                 setProp(false);
               }

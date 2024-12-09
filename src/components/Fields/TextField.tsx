@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, memo, useState } from "react";
+import { Fragment, memo, useMemo, useState } from "react";
 import {
   ElementsType,
   FormElement,
@@ -44,22 +44,27 @@ const questionType: ElementsType = "TEXT_FIELD";
 
 const questionPropertyList: IQPLTextField = [
   {
+    id: 1,
     questionPropertyEnum: "TEXT_FIELD_PATTERN",
     value: "SHORT_TEXT",
   },
   {
+    id: 2,
     questionPropertyEnum: "REQUIRED",
     value: "false",
   },
   {
+    id: 3,
     questionPropertyEnum: "DESCRIPTION",
     value: "",
   },
   {
+    id: 4,
     questionPropertyEnum: "MINIMUM_LEN",
     value: 1,
   },
   {
+    id: 5,
     questionPropertyEnum: "MAXIMUM_LEN",
     value: 250,
   },
@@ -86,20 +91,37 @@ const propertiesSchema = z
           .min(1, { message: "حداقل باید 1 و حداکثر 100 کاراکتر باشد" })
           .max(100, { message: "حداقل باید 1 و حداکثر 100 کاراکتر باشد" })
       ),
-    MINIMUM_LEN: z
-      .number({ invalid_type_error: "اجباری است" })
-      .min(1, { message: "حداقل باید 1 کاراکتر باشد" }),
-    MAXIMUM_LEN: z
-      .number({ invalid_type_error: "اجباری است" })
-      .min(1, { message: "حداقل باید 1 کاراکتر باشد" }),
-    DESCRIPTION: z
-      .string()
-      .trim()
-      .transform((value) => value.replace(/\s+/g, " "))
-      .pipe(z.string().max(250, { message: "حداکثر میتواند 250 کاراکتر باشد" }))
-      .optional(),
-    REQUIRED: z.boolean().default(false),
-    TEXT_FIELD_PATTERN: z.string(),
+    MINIMUM_LEN: z.object({
+      value: z
+        .number({ invalid_type_error: "اجباری است" })
+        .min(1, { message: "حداقل باید 1 کاراکتر باشد" }),
+      id: z.number(),
+    }),
+    MAXIMUM_LEN: z.object({
+      value: z
+        .number({ invalid_type_error: "اجباری است" })
+        .min(1, { message: "حداقل باید 1 کاراکتر باشد" }),
+      id: z.number(),
+    }),
+    DESCRIPTION: z.object({
+      value: z
+        .string()
+        .trim()
+        .transform((value) => value.replace(/\s+/g, " "))
+        .pipe(
+          z.string().max(250, { message: "حداکثر میتواند 250 کاراکتر باشد" })
+        )
+        .optional(),
+      id: z.number(),
+    }),
+    REQUIRED: z.object({
+      value: z.boolean().default(false),
+      id: z.number(),
+    }),
+    TEXT_FIELD_PATTERN: z.object({
+      value: z.string().min(1, { message: "الزامی است" }),
+      id: z.number(),
+    }),
   })
   .refine((val) => val.MAXIMUM_LEN >= val.MINIMUM_LEN, {
     message: "حداکثر باید از حداقل بیشتر باشد",
@@ -107,8 +129,8 @@ const propertiesSchema = z
   })
   .refine(
     (val) => {
-      if (val.TEXT_FIELD_PATTERN === "LONG_TEXT") {
-        return val.MAXIMUM_LEN <= 1000;
+      if (val.TEXT_FIELD_PATTERN.value === "LONG_TEXT") {
+        return val.MAXIMUM_LEN.value <= 1000;
       }
       return true;
     },
@@ -119,8 +141,8 @@ const propertiesSchema = z
   )
   .refine(
     (val) => {
-      if (val.TEXT_FIELD_PATTERN === "SHORT_TEXT") {
-        return val.MAXIMUM_LEN <= 250;
+      if (val.TEXT_FIELD_PATTERN.value === "SHORT_TEXT") {
+        return val.MAXIMUM_LEN.value <= 250;
       }
       return true;
     },
@@ -267,13 +289,41 @@ function FormComponent({
       content = (
         <Fragment>
           <TextField
-            type="number"
+            type="text"
             sx={{
               "& .MuiInputBase-root": {
                 padding: 1.5,
               },
               "& input": {
                 padding: 0,
+              },
+            }}
+            slotProps={{
+              htmlInput: {
+                maxLength: 15,
+                pattern: "^-?\\d*\\.?\\d*$",
+                onInput: (e: any) => {
+                  const value = e.target.value;
+
+                  let newValue = value
+                    .replace(/[^0-9.-]/g, "")
+                    .replace(/(?!^)-/g, "")
+                    .replace(/(\..*)\..*/g, "$1");
+
+                  if (newValue.startsWith(".")) {
+                    newValue = newValue.substring(1);
+                  }
+
+                  if (
+                    newValue.startsWith("-") &&
+                    newValue.length > 1 &&
+                    !/^\d/.test(newValue[1])
+                  ) {
+                    newValue = "-";
+                  }
+
+                  e.target.value = newValue;
+                },
               },
             }}
             fullWidth
@@ -286,7 +336,7 @@ function FormComponent({
         <Fragment>
           <TextField
             placeholder="2981859878"
-            type="tel"
+            type="text"
             sx={{
               "& .MuiInputBase-root": {
                 padding: 1.5,
@@ -295,8 +345,14 @@ function FormComponent({
                 padding: 0,
               },
             }}
-            inputProps={{
-              maxLength: 10,
+            slotProps={{
+              htmlInput: {
+                maxLength: 10,
+                pattern: "[0-9]*",
+                onInput: (e: any) => {
+                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                },
+              },
             }}
             fullWidth
           />
@@ -307,10 +363,16 @@ function FormComponent({
       content = (
         <Fragment>
           <TextField
-            type="tel"
+            type="text"
             placeholder="09358956545"
-            inputProps={{
-              maxLength: 11,
+            slotProps={{
+              htmlInput: {
+                maxLength: 11,
+                pattern: "[0-9]*",
+                onInput: (e: any) => {
+                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                },
+              },
             }}
             sx={{
               "& .MuiInputBase-root": {
@@ -373,7 +435,7 @@ function FormComponent({
             sx={{ direction: "rtl", textWrap: "nowrap", fontWeight: "600" }}
             variant="subtitle2"
           >
-            {max + " / " + min}
+            {min + " / " + max}
           </Typography>
         ) : null}
       </Box>
@@ -397,27 +459,23 @@ function PropertiesComponent({
   elementInstance: FormElementInstance;
 }) {
   const element = elementInstance as CustomInstance;
-  const descriptionSwitchStatus: boolean = element.questionPropertyList.some(
-    (property) => {
-      if (property.questionPropertyEnum === "DESCRIPTION") {
-        return property.value ? true : false;
-      } else {
-        return false;
-      }
-    }
-  );
-  const textFieldPatternVal = element.questionPropertyList.find(
-    (prop) => prop.questionPropertyEnum === "TEXT_FIELD_PATTERN"
-  )?.value;
-  const isShortTextPatternSelected =
-    textFieldPatternVal === "SHORT_TEXT" || textFieldPatternVal === "LONG_TEXT"
-      ? true
-      : false;
-  const [showMinMaxProps, setShowMinMaxProps] = useState<boolean>(
-    isShortTextPatternSelected
-  );
+  const [showMinMaxProps, setShowMinMaxProps] = useState<boolean>(() => {
+    const textFieldPatternVal = element.questionPropertyList.find(
+      (prop) => prop.questionPropertyEnum === "TEXT_FIELD_PATTERN"
+    )?.value;
+
+    return (
+      textFieldPatternVal === "SHORT_TEXT" ||
+      textFieldPatternVal === "LONG_TEXT"
+    );
+  });
   const [openDescriptionSwitch, setOpenDescriptionSwitch] = useState<boolean>(
-    descriptionSwitchStatus
+    () =>
+      element.questionPropertyList.some((property) => {
+        return (
+          property.questionPropertyEnum === "DESCRIPTION" && property.value
+        );
+      })
   );
   const elements = useElements();
   const setOpenDialog = useActionOpenDialog();
@@ -426,32 +484,43 @@ function PropertiesComponent({
   const { updateElement, addElement } = useActionDesigner();
   const { questionGroups } = useDesigner();
 
-  const defaultValues = element.questionPropertyList.reduce(
-    (acc: any, attribute: any) => {
-      if (attribute.questionPropertyEnum === "REQUIRED") {
-        acc[attribute.questionPropertyEnum] =
-          attribute.value === "true" ? true : false;
-      } else if (attribute.questionPropertyEnum === "MINIMUM_LEN") {
-        acc[attribute.questionPropertyEnum] =
-          attribute.value === "" || attribute.value === null
-            ? 1
-            : Number(attribute.value);
-      } else if (attribute.questionPropertyEnum === "MAXIMUM_LEN") {
-        acc[attribute.questionPropertyEnum] =
-          attribute.value === "" || attribute.value === null
-            ? 250
-            : Number(attribute.value);
-      } else if (attribute.questionPropertyEnum === "DESCRIPTION") {
-        acc[attribute.questionPropertyEnum] =
-          attribute.value === null ? "" : attribute.value;
-      } else {
-        acc[attribute.questionPropertyEnum] = attribute.value;
-      }
-      return acc;
-    },
-    {}
-  );
-  defaultValues.title = element.title;
+  const defaultValues = useMemo(() => {
+    const values = element.questionPropertyList.reduce(
+      (acc: any, attribute) => {
+        if (!acc[attribute.questionPropertyEnum]) {
+          acc[attribute.questionPropertyEnum] = {};
+        }
+
+        if (attribute.questionPropertyEnum === "REQUIRED") {
+          acc[attribute.questionPropertyEnum].value =
+            attribute.value === "true";
+        } else if (attribute.questionPropertyEnum === "MINIMUM_LEN") {
+          acc[attribute.questionPropertyEnum].value =
+            attribute.value === "" || attribute.value === null
+              ? 1
+              : Number(attribute.value);
+        } else if (attribute.questionPropertyEnum === "MAXIMUM_LEN") {
+          acc[attribute.questionPropertyEnum].value =
+            attribute.value === "" || attribute.value === null
+              ? 250
+              : Number(attribute.value);
+        } else if (attribute.questionPropertyEnum === "DESCRIPTION") {
+          acc[attribute.questionPropertyEnum].value =
+            attribute.value === null ? "" : attribute.value;
+        } else {
+          acc[attribute.questionPropertyEnum].value = attribute.value;
+        }
+
+        acc[attribute.questionPropertyEnum].id = attribute.id;
+
+        return acc;
+      },
+      {}
+    );
+    values.title = element.title;
+
+    return values;
+  }, []);
 
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
@@ -482,34 +551,36 @@ function PropertiesComponent({
       (el: any) => el?.questionId === element?.questionId
     );
 
-    const data = [
+    const isTextInputsSelected =
+      TEXT_FIELD_PATTERN.value === "SHORT_TEXT" ||
+      TEXT_FIELD_PATTERN.value === "LONG_TEXT";
+
+    const propertiesData = [
       {
         questionPropertyEnum: "TEXT_FIELD_PATTERN",
-        value: TEXT_FIELD_PATTERN,
+        value: TEXT_FIELD_PATTERN.value,
+        id: TEXT_FIELD_PATTERN.id,
       },
       {
         questionPropertyEnum: "REQUIRED",
         value: REQUIRED ? "true" : "false",
+        id: REQUIRED.id,
       },
       {
         questionPropertyEnum: "DESCRIPTION",
-        value: openDescriptionSwitch && DESCRIPTION ? DESCRIPTION : null,
+        value:
+          openDescriptionSwitch && DESCRIPTION.value ? DESCRIPTION.value : null,
+        id: DESCRIPTION.id,
       },
       {
         questionPropertyEnum: "MAXIMUM_LEN",
-        value:
-          TEXT_FIELD_PATTERN === "SHORT_TEXT" ||
-          TEXT_FIELD_PATTERN === "LONG_TEXT"
-            ? MAXIMUM_LEN
-            : null,
+        value: isTextInputsSelected ? MAXIMUM_LEN.value : null,
+        id: MAXIMUM_LEN.id,
       },
       {
         questionPropertyEnum: "MINIMUM_LEN",
-        value:
-          TEXT_FIELD_PATTERN === "SHORT_TEXT" ||
-          TEXT_FIELD_PATTERN === "LONG_TEXT"
-            ? MINIMUM_LEN
-            : null,
+        value: isTextInputsSelected ? MINIMUM_LEN.value : null,
+        id: MINIMUM_LEN.id,
       },
     ];
 
@@ -551,7 +622,7 @@ function PropertiesComponent({
       ...element,
       title,
       position: selectedElement?.position?.apiPosition ?? group.length,
-      questionPropertyList: data,
+      questionPropertyList: propertiesData,
     };
 
     if (!selectedYet) {
@@ -642,7 +713,7 @@ function PropertiesComponent({
             الگوی فیلد پاسخ:
           </Typography>
           <RHFMultiSelect
-            name="TEXT_FIELD_PATTERN"
+            name="TEXT_FIELD_PATTERN.value"
             options={fieldPatternOptions}
             setProp={setShowMinMaxProps}
             clearErros={clearErrors}
@@ -661,13 +732,13 @@ function PropertiesComponent({
               <Typography variant="subtitle2" fontWeight="700">
                 حداقل کرکتر:
               </Typography>
-              <RHFTextField name="MINIMUM_LEN" type="number" />
+              <RHFTextField name="MINIMUM_LEN.value" type="number" />
             </Box>
             <Box width="100%">
               <Typography variant="subtitle2" fontWeight="700">
                 حداکثر کرکتر:
               </Typography>
-              <RHFTextField name="MAXIMUM_LEN" type="number" />
+              <RHFTextField name="MAXIMUM_LEN.value" type="number" />
             </Box>
           </Box>
         ) : null}
@@ -683,7 +754,7 @@ function PropertiesComponent({
           </Typography>
           <RHFSwitch
             label=""
-            name="REQUIRED"
+            name="REQUIRED.value"
             labelPlacement="start"
             sx={{ mb: 1, mx: 0, width: 1, justifyContent: "space-between" }}
           />
@@ -700,7 +771,7 @@ function PropertiesComponent({
             توضیحات
           </Typography>
           <SwitchButton
-            onChange={() => setOpenDescriptionSwitch(!openDescriptionSwitch)}
+            onChange={() => setOpenDescriptionSwitch((prev) => !prev)}
             checked={openDescriptionSwitch}
           />
         </Stack>
@@ -711,7 +782,7 @@ function PropertiesComponent({
               متن توضیح:
             </Typography>
             <RHFTextField
-              name="DESCRIPTION"
+              name="DESCRIPTION.value"
               placeholder="پیامی برای توضیح بیشتر در مورد این سوال"
             />
           </Stack>

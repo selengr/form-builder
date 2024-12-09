@@ -18,7 +18,7 @@ export default async function Calculator({params}:{params : {id:string} }) {
         typeRequest: "QAC_BY_FILTER"
     }
 };
- const res = await AxiosApi.get(`/question/q-and-c-custom-combo?customComboFilterModel==${encodeURIComponent(JSON.stringify(customComboFilterModel))}`);
+ const res = await AxiosApi.get(`/question/q-and-c-custom-combo?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`);
 
   
   

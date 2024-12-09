@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, memo, useState } from "react";
+import { Fragment, memo, useMemo, useState } from "react";
 import {
   ElementsType,
   FormElement,
@@ -44,22 +44,27 @@ const questionType: ElementsType = "TEXT_FIELD";
 
 const questionPropertyList: IQPLTextField = [
   {
+    id: Math.random(),
     questionPropertyEnum: "TEXT_FIELD_PATTERN",
     value: "SHORT_TEXT",
   },
   {
+    id: Math.random(),
     questionPropertyEnum: "REQUIRED",
     value: "false",
   },
   {
+    id: Math.random(),
     questionPropertyEnum: "DESCRIPTION",
     value: "",
   },
   {
+    id: Math.random(),
     questionPropertyEnum: "MINIMUM_LEN",
     value: 1,
   },
   {
+    id: Math.random(),
     questionPropertyEnum: "MAXIMUM_LEN",
     value: 250,
   },
@@ -437,27 +442,23 @@ function PropertiesComponent({
   elementInstance: FormElementInstance;
 }) {
   const element = elementInstance as CustomInstance;
-  const descriptionSwitchStatus: boolean = element.questionPropertyList.some(
-    (property) => {
-      if (property.questionPropertyEnum === "DESCRIPTION") {
-        return property.value ? true : false;
-      } else {
-        return false;
-      }
-    }
-  );
-  const textFieldPatternVal = element.questionPropertyList.find(
-    (prop) => prop.questionPropertyEnum === "TEXT_FIELD_PATTERN"
-  )?.value;
-  const isShortTextPatternSelected =
-    textFieldPatternVal === "SHORT_TEXT" || textFieldPatternVal === "LONG_TEXT"
-      ? true
-      : false;
-  const [showMinMaxProps, setShowMinMaxProps] = useState<boolean>(
-    isShortTextPatternSelected
-  );
+  const [showMinMaxProps, setShowMinMaxProps] = useState<boolean>(() => {
+    const textFieldPatternVal = element.questionPropertyList.find(
+      (prop) => prop.questionPropertyEnum === "TEXT_FIELD_PATTERN"
+    )?.value;
+
+    return (
+      textFieldPatternVal === "SHORT_TEXT" ||
+      textFieldPatternVal === "LONG_TEXT"
+    );
+  });
   const [openDescriptionSwitch, setOpenDescriptionSwitch] = useState<boolean>(
-    descriptionSwitchStatus
+    () =>
+      element.questionPropertyList.some((property) => {
+        return (
+          property.questionPropertyEnum === "DESCRIPTION" && property.value
+        );
+      })
   );
   const elements = useElements();
   const setOpenDialog = useActionOpenDialog();
@@ -466,32 +467,36 @@ function PropertiesComponent({
   const { updateElement, addElement } = useActionDesigner();
   const { questionGroups } = useDesigner();
 
-  const defaultValues = element.questionPropertyList.reduce(
-    (acc: any, attribute: any) => {
-      if (attribute.questionPropertyEnum === "REQUIRED") {
-        acc[attribute.questionPropertyEnum] =
-          attribute.value === "true" ? true : false;
-      } else if (attribute.questionPropertyEnum === "MINIMUM_LEN") {
-        acc[attribute.questionPropertyEnum] =
-          attribute.value === "" || attribute.value === null
-            ? 1
-            : Number(attribute.value);
-      } else if (attribute.questionPropertyEnum === "MAXIMUM_LEN") {
-        acc[attribute.questionPropertyEnum] =
-          attribute.value === "" || attribute.value === null
-            ? 250
-            : Number(attribute.value);
-      } else if (attribute.questionPropertyEnum === "DESCRIPTION") {
-        acc[attribute.questionPropertyEnum] =
-          attribute.value === null ? "" : attribute.value;
-      } else {
-        acc[attribute.questionPropertyEnum] = attribute.value;
-      }
-      return acc;
-    },
-    {}
-  );
-  defaultValues.title = element.title;
+  const defaultValues = useMemo(() => {
+    const values = element.questionPropertyList.reduce(
+      (acc: any, attribute: any) => {
+        if (attribute.questionPropertyEnum === "REQUIRED") {
+          acc[attribute.questionPropertyEnum] =
+            attribute.value === "true" ? true : false;
+        } else if (attribute.questionPropertyEnum === "MINIMUM_LEN") {
+          acc[attribute.questionPropertyEnum] =
+            attribute.value === "" || attribute.value === null
+              ? 1
+              : Number(attribute.value);
+        } else if (attribute.questionPropertyEnum === "MAXIMUM_LEN") {
+          acc[attribute.questionPropertyEnum] =
+            attribute.value === "" || attribute.value === null
+              ? 250
+              : Number(attribute.value);
+        } else if (attribute.questionPropertyEnum === "DESCRIPTION") {
+          acc[attribute.questionPropertyEnum] =
+            attribute.value === null ? "" : attribute.value;
+        } else {
+          acc[attribute.questionPropertyEnum] = attribute.value;
+        }
+        return acc;
+      },
+      {}
+    );
+    values.title = element.title;
+
+    return values;
+  }, []);
 
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),

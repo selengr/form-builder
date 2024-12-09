@@ -40,22 +40,27 @@ export type ITextFieldFormPatternOptions = {
 
 export type IQPLTextField = [
   {
+    id: number;
     questionPropertyEnum: "TEXT_FIELD_PATTERN";
     value: string;
   },
   {
+    id: number;
     questionPropertyEnum: "REQUIRED";
     value: string;
   },
   {
+    id: number;
     questionPropertyEnum: "DESCRIPTION";
     value: string | null;
   },
   {
+    id: number;
     questionPropertyEnum: "MINIMUM_LEN";
     value: string | number | null;
   },
   {
+    id: number;
     questionPropertyEnum: "MAXIMUM_LEN";
     value: string | number | null;
   }

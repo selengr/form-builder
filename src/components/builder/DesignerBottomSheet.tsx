@@ -64,7 +64,7 @@ const DesignerBottomSheet: React.FC<BottomSheetProps> = ({ children }) => {
             >
               <Divider
                 sx={{ width: "3.5rem", height: "0.2rem" }}
-                color="#1758BA"
+                color="#2cdfc9"
               />
             </Grid2>
             <Grid2

@@ -19,9 +19,9 @@ const DesignerSidebar = memo(function DesignerSidebar() {
   return isDesktop ? (
     <div
       dir="rtl"
-      className={`bg-white sticky right-0 w-[400px] max-w-[400px] flex flex-col flex-grow overflow-y-scroll rounded-[10px] select-none gap-2 py-4 px-2 ${
-        isDesktop ? "top-[18px]" : "top-auto"
-      } ${isDesktop ? "h-[96vh]" : "h-auto"}`}
+      className={`bg-white rounded-2xl sticky right-0 w-[400px] max-w-[400px] flex flex-col flex-grow border-[#DDE1E6] border-[1.5px] overflow-y-scroll select-none gap-2 py-4 px-2 ${
+        isDesktop ? "top-4" : "top-auto"
+      } ${isDesktop ? "h-[calc(100vh-100px)]" : "h-auto"}`}
       style={{
         scrollbarWidth: "none",
       }}
@@ -96,7 +96,7 @@ const DesignerSidebar = memo(function DesignerSidebar() {
     <Fragment>
       <div
         dir="rtl"
-        className="right-0 w-full flex flex-col bg-white rounded-[10px] select-none gap-2 p-4"
+        className="right-0 w-full flex flex-col lg:bg-white rounded-[10px] select-none gap-2 p-4 bg-[#f7f7ff]"
       >
         <div className="flex justify-between items-center gap-1">
           <div className="flex items-center">

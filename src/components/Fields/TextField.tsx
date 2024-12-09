@@ -292,9 +292,7 @@ function FormComponent({
                     newValue = newValue.substring(1);
                   }
 
-                  if (newValue === "-" || newValue === "") {
-                    newValue = "";
-                  } else if (
+                  if (
                     newValue.startsWith("-") &&
                     newValue.length > 1 &&
                     !/^\d/.test(newValue[1])

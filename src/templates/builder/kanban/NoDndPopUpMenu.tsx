@@ -35,7 +35,7 @@ const NoDndPopUpMenu = memo(function NoDndPopUpMenu({
     if (element.questionType === "TitleFieldStart") {
       try {
         setLoading(true);
-        const res = await AxiosApi.post("/form/start-page", {
+        const res = await AxiosApi.put("/form/start-page", {
           formId: id,
           startPageMsg: null,
         });

@@ -130,7 +130,7 @@ function PropertiesComponent({
 
     if (!startPage) {
       try {
-        const res = await AxiosApi.post("/form/start-page", data as any);
+        const res = await AxiosApi.put("/form/start-page", data as any);
         addStartPage({
           ...selectedElement?.fieldElement,
           startPageMsg: res.data.startPageMsg,

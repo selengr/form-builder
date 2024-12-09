@@ -100,7 +100,7 @@ function FormComponent({
         className="h-[300px] w-full"
       />
       {elementInstance && (
-        <p className="text-[14px] text-[#161616] text-center">
+        <p className="text-[15px] font-bold text-[#161616] text-justify mb-6">
           {elementInstance as any}
         </p>
       )}

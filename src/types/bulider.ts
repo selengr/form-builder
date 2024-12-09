@@ -101,18 +101,22 @@ export type IQPLSpectral = [
 
 export type IQPLMultipleChoice = [
   {
+    id: number;
     questionPropertyEnum: "MULTI_SELECT";
     value: string;
   },
   {
+    id: number;
     questionPropertyEnum: "REQUIRED";
     value: string;
   },
   {
+    id: number;
     questionPropertyEnum: "RANDOMIZE_OPTIONS";
     value: string;
   },
   {
+    id: number;
     questionPropertyEnum: "DESCRIPTION";
     value: string | null;
   }

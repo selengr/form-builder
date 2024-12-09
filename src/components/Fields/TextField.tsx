@@ -771,7 +771,7 @@ function PropertiesComponent({
             توضیحات
           </Typography>
           <SwitchButton
-            onChange={() => setOpenDescriptionSwitch(!openDescriptionSwitch)}
+            onChange={() => setOpenDescriptionSwitch((prev) => !prev)}
             checked={openDescriptionSwitch}
           />
         </Stack>

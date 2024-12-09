@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import {
   ElementsType,
   FormElement,
@@ -42,30 +42,37 @@ const questionPropertyList: IQPLSpectral = [
   {
     questionPropertyEnum: "SPECTRAL_TYPE",
     value: "SPECTRAL",
+    id: 1,
   },
   {
     questionPropertyEnum: "REQUIRED",
     value: "false",
+    id: 2,
   },
   {
     questionPropertyEnum: "DESCRIPTION",
     value: "",
+    id: 3,
   },
   {
     questionPropertyEnum: "SELECTION_TYPE",
     value: "CONTINUOUS",
+    id: 4,
   },
   {
     questionPropertyEnum: "STEP",
     value: 0.1,
+    id: 5,
   },
   {
     questionPropertyEnum: "SPECTRAL_START",
     value: 0,
+    id: 6,
   },
   {
     questionPropertyEnum: "SPECTRAL_END",
     value: 100,
+    id: 7,
   },
 ];
 
@@ -125,37 +132,55 @@ const propertiesSchema = z
           .min(1, { message: "حداقل باید 1 و حداکثر 100 کاراکتر باشد" })
           .max(100, { message: "حداقل باید 1 و حداکثر 100 کاراکتر باشد" })
       ),
-    SELECTION_TYPE: z.string(),
-    SPECTRAL_TYPE: z.string(),
-    STEP: z
-      .number({ invalid_type_error: "اجباری است" })
-      .min(0.1, { message: "باید از صفر بزرگتر باشد" }),
-    DESCRIPTION: z
-      .string()
-      .trim()
-      .transform((value) => value.replace(/\s+/g, " "))
-      .pipe(z.string().max(250, { message: "حداکثر میتواند 250 کاراکتر باشد" }))
-      .optional(),
-    SPECTRAL_START: z
-      .number({ invalid_type_error: "اجباری است" })
-      .min(0, { message: "نمیتواند منفی باشد" })
-      .nonnegative({ message: "نمیتواند منفی باشد" }),
-    SPECTRAL_END: z
-      .number({ invalid_type_error: "اجباری است" })
-      .min(1, { message: "حداقل باید 1 باشد" })
-      .positive({ message: "حداقل باید 1 باشد" }),
-    REQUIRED: z.boolean().default(false),
+    SELECTION_TYPE: z.object({ value: z.string(), id: z.number() }),
+    SPECTRAL_TYPE: z.object({ value: z.string(), id: z.number() }),
+    STEP: z.object({
+      value: z
+        .number({ invalid_type_error: "اجباری است" })
+        .min(0.1, { message: "باید از صفر بزرگتر باشد" }),
+      id: z.number(),
+    }),
+    DESCRIPTION: z.object({
+      value: z
+        .string()
+        .trim()
+        .transform((value) => value.replace(/\s+/g, " "))
+        .pipe(
+          z.string().max(250, { message: "حداکثر میتواند 250 کاراکتر باشد" })
+        )
+        .optional(),
+      id: z.number(),
+    }),
+    SPECTRAL_START: z.object({
+      value: z
+        .number({ invalid_type_error: "اجباری است" })
+        .min(0, { message: "نمیتواند منفی باشد" })
+        .nonnegative({ message: "نمیتواند منفی باشد" }),
+      id: z.number(),
+    }),
+    SPECTRAL_END: z.object({
+      value: z
+        .number({ invalid_type_error: "اجباری است" })
+        .min(1, { message: "حداقل باید 1 باشد" })
+        .positive({ message: "حداقل باید 1 باشد" }),
+      id: z.number(),
+    }),
+    REQUIRED: z.object({
+      value: z.boolean().default(false),
+      id: z.number(),
+    }),
     optionList: z
       .array(optionsSchema)
       .max(10, { message: "حداکثر میتواند 10 برچسب وجود داشته باشد" }),
   })
-  .refine((val) => val.SPECTRAL_END >= val.SPECTRAL_START, {
+  .refine((val) => val.SPECTRAL_END.value >= val.SPECTRAL_START.value, {
     message: "پایان باید بزرگتر یا مساوی با شروع باشد",
     path: ["SPECTRAL_END"],
   })
   .refine(
     (val) => {
-      if (val.SPECTRAL_END - val.SPECTRAL_START < val.STEP) return false;
+      if (val.SPECTRAL_END.value - val.SPECTRAL_START.value < val.STEP.value)
+        return false;
       else return true;
     },
     {
@@ -165,12 +190,12 @@ const propertiesSchema = z
   )
   .refine(
     (val) => {
-      const distance = val.SPECTRAL_END - val.SPECTRAL_START;
+      const distance = val.SPECTRAL_END.value - val.SPECTRAL_START.value;
       if (
-        val.SELECTION_TYPE === "CONTINUOUS" ||
-        val.SELECTION_TYPE === "DISCRETE"
+        val.SELECTION_TYPE.value === "CONTINUOUS" ||
+        val.SELECTION_TYPE.value === "DISCRETE"
       ) {
-        if (Math.ceil(distance / val.STEP) + 1 < val.optionList.length)
+        if (Math.ceil(distance / val.STEP.value) + 1 < val.optionList.length)
           return false;
         else return true;
       }
@@ -186,7 +211,8 @@ const propertiesSchema = z
       const uniqueScores = [...(new Set(scores) as any)];
       return (
         scores.every(
-          (score) => score >= val.SPECTRAL_START && score <= val.SPECTRAL_END
+          (score) =>
+            score >= val.SPECTRAL_START.value && score <= val.SPECTRAL_END.value
         ) && scores.length === uniqueScores.length
       );
     },
@@ -198,8 +224,8 @@ const propertiesSchema = z
   )
   .refine(
     (val) => {
-      if (val.SELECTION_TYPE === "DISCRETE") {
-        return val.STEP >= 1 ? true : false;
+      if (val.SELECTION_TYPE.value === "DISCRETE") {
+        return val.STEP.value >= 1 ? true : false;
       } else return true;
     },
     {
@@ -396,60 +422,64 @@ function PropertiesComponent({
   elementInstance: FormElementInstance;
 }) {
   const element = elementInstance as CustomInstance;
-  const descriptionSwitchStatus: boolean = element.questionPropertyList.some(
-    (property) => {
-      if (property.questionPropertyEnum === "DESCRIPTION") {
-        return property.value ? true : false;
-      } else {
-        return false;
-      }
-    }
-  );
-  const stepInputStatus: boolean = element.questionPropertyList.some(
-    (property) => {
-      if (property.questionPropertyEnum === "SELECTION_TYPE") {
-        return property.value === "CONTINUOUS" ? true : false;
-      } else {
-        return false;
-      }
-    }
-  );
-
-  const [openDescriptionSwitch, setOpenDescriptionSwitch] = useState<boolean>(
-    descriptionSwitchStatus
-  );
-  const [disableInput, setDisableInput] = useState<boolean>(stepInputStatus);
   const elements = useElements();
   const setOpenDialog = useActionOpenDialog();
   const setSelectedElement = useActionSelectedElement();
   const selectedElement = useSelectedElement();
   const { updateElement, addElement } = useActionDesigner();
   const { questionGroups } = useDesigner();
-
-  const defaultValues = element.questionPropertyList.reduce(
-    (acc: any, attribute: any) => {
-      if (attribute.questionPropertyEnum === "REQUIRED") {
-        acc[attribute.questionPropertyEnum] =
-          attribute.value === "true" ? true : false;
-      } else if (
-        attribute.questionPropertyEnum === "SPECTRAL_START" ||
-        attribute.questionPropertyEnum === "SPECTRAL_END" ||
-        attribute.questionPropertyEnum === "STEP"
-      ) {
-        acc[attribute.questionPropertyEnum] =
-          attribute.value === "" ? 0 : Number(attribute.value);
-      } else if (attribute.questionPropertyEnum === "DESCRIPTION") {
-        acc[attribute.questionPropertyEnum] =
-          attribute.value === null ? "" : attribute.value;
-      } else {
-        acc[attribute.questionPropertyEnum] = attribute.value;
-      }
-      return acc;
-    },
-    {}
+  const [disableInput, setDisableInput] = useState<boolean>(() =>
+    element.questionPropertyList.some(
+      (property) =>
+        property.questionPropertyEnum === "SELECTION_TYPE" &&
+        property.value === "CONTINUOUS"
+    )
   );
-  defaultValues.title = element.title;
-  defaultValues.optionList = element.optionList;
+  const [openDescriptionSwitch, setOpenDescriptionSwitch] = useState<boolean>(
+    () =>
+      element.questionPropertyList.some((property) => {
+        return (
+          property.questionPropertyEnum === "DESCRIPTION" && property.value
+        );
+      })
+  );
+
+  const defaultValues = useMemo(() => {
+    const values = element.questionPropertyList.reduce(
+      (acc: any, attribute: any) => {
+        if (!acc[attribute.questionPropertyEnum]) {
+          acc[attribute.questionPropertyEnum] = {};
+        }
+
+        if (attribute.questionPropertyEnum === "REQUIRED") {
+          acc[attribute.questionPropertyEnum].value =
+            attribute.value === "true";
+        } else if (
+          attribute.questionPropertyEnum === "SPECTRAL_START" ||
+          attribute.questionPropertyEnum === "SPECTRAL_END" ||
+          attribute.questionPropertyEnum === "STEP"
+        ) {
+          acc[attribute.questionPropertyEnum].value =
+            attribute.value === "" ? 0 : Number(attribute.value);
+        } else if (attribute.questionPropertyEnum === "DESCRIPTION") {
+          acc[attribute.questionPropertyEnum].value =
+            attribute.value === null ? "" : attribute.value;
+        } else {
+          acc[attribute.questionPropertyEnum].value = attribute.value;
+        }
+
+        acc[attribute.questionPropertyEnum].id = attribute.id;
+
+        return acc;
+      },
+      {}
+    );
+
+    values.title = element.title;
+    values.optionList = element.optionList;
+
+    return values;
+  }, []);
 
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
@@ -483,34 +513,42 @@ function PropertiesComponent({
       (el: any) => el?.questionId === element?.questionId
     );
 
-    const data = [
+    const propertiesData = [
       {
         questionPropertyEnum: "SPECTRAL_TYPE",
-        value: SPECTRAL_TYPE,
+        value: SPECTRAL_TYPE.value,
+        id: SPECTRAL_TYPE.id,
       },
       {
         questionPropertyEnum: "REQUIRED",
-        value: REQUIRED ? "true" : "false",
+        value: REQUIRED.value ? "true" : "false",
+        id: REQUIRED.id,
       },
       {
         questionPropertyEnum: "DESCRIPTION",
-        value: openDescriptionSwitch && DESCRIPTION ? DESCRIPTION : null,
+        value:
+          openDescriptionSwitch && DESCRIPTION.value ? DESCRIPTION.value : null,
+        id: DESCRIPTION.id,
       },
       {
         questionPropertyEnum: "SELECTION_TYPE",
-        value: SELECTION_TYPE,
+        value: SELECTION_TYPE.value,
+        id: SELECTION_TYPE.id,
       },
       {
         questionPropertyEnum: "STEP",
-        value: SPECTRAL_TYPE !== "CONTINUOUS" ? STEP : 0.1,
+        value: SPECTRAL_TYPE.value !== "CONTINUOUS" ? STEP.value : 0.1,
+        id: STEP.id,
       },
       {
         questionPropertyEnum: "SPECTRAL_START",
-        value: SPECTRAL_START,
+        value: SPECTRAL_START.value,
+        id: SPECTRAL_START.id,
       },
       {
         questionPropertyEnum: "SPECTRAL_END",
-        value: SPECTRAL_END,
+        value: SPECTRAL_END.value,
+        id: SPECTRAL_END.id,
       },
     ];
 
@@ -554,7 +592,7 @@ function PropertiesComponent({
       ...element,
       title,
       position: selectedElement?.position?.apiPosition ?? group.length,
-      questionPropertyList: data,
+      questionPropertyList: propertiesData,
       optionList: optionListData,
     };
 
@@ -631,7 +669,10 @@ function PropertiesComponent({
           <Typography variant="subtitle2" fontWeight="700">
             نوع نوار لغزان:
           </Typography>
-          <RHFMultiSelect name="SPECTRAL_TYPE" options={spectralTypeOptions} />
+          <RHFMultiSelect
+            name="SPECTRAL_TYPE.value"
+            options={spectralTypeOptions}
+          />
         </Stack>
 
         <Stack spacing={1} marginTop={2.5}>
@@ -640,7 +681,7 @@ function PropertiesComponent({
           </Typography>
           <RHFMultiSelect
             setValue={setValue}
-            name="SELECTION_TYPE"
+            name="SELECTION_TYPE.value"
             clearErros={clearErrors}
             options={tapTypeOptions}
             setProp={setDisableInput}
@@ -657,13 +698,13 @@ function PropertiesComponent({
             <Typography variant="subtitle2" fontWeight="700">
               شروع:
             </Typography>
-            <RHFTextField name="SPECTRAL_START" type="number" />
+            <RHFTextField name="SPECTRAL_START.value" type="number" />
           </Box>
           <Box width="100%">
             <Typography variant="subtitle2" fontWeight="700">
               پایان:
             </Typography>
-            <RHFTextField name="SPECTRAL_END" type="number" />
+            <RHFTextField name="SPECTRAL_END.value" type="number" />
           </Box>
           <Box width="100%">
             <Typography variant="subtitle2" fontWeight="700">
@@ -671,7 +712,7 @@ function PropertiesComponent({
             </Typography>
             <RHFTextField
               disabled={disableInput}
-              name="STEP"
+              name="STEP.value"
               type="number"
               changeValueToDefault={disableInput}
             />
@@ -715,7 +756,7 @@ function PropertiesComponent({
           </Typography>
           <RHFSwitch
             label=""
-            name="REQUIRED"
+            name="REQUIRED.value"
             labelPlacement="start"
             sx={{ mb: 1, mx: 0, width: 1, justifyContent: "space-between" }}
           />
@@ -732,7 +773,7 @@ function PropertiesComponent({
             توضیحات
           </Typography>
           <SwitchButton
-            onChange={() => setOpenDescriptionSwitch(!openDescriptionSwitch)}
+            onChange={() => setOpenDescriptionSwitch((prev) => !prev)}
             checked={openDescriptionSwitch}
           />
         </Stack>
@@ -743,7 +784,7 @@ function PropertiesComponent({
               متن توضیح:
             </Typography>
             <RHFTextField
-              name="DESCRIPTION"
+              name="DESCRIPTION.value"
               placeholder="پیامی برای توضیح بیشتر در مورد این سوال"
             />
           </Stack>

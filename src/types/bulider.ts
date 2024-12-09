@@ -72,30 +72,37 @@ export type IQPLSpectral = [
   {
     questionPropertyEnum: "SPECTRAL_TYPE";
     value: string;
+    id: number;
   },
   {
     questionPropertyEnum: "REQUIRED";
     value: string;
+    id: number;
   },
   {
     questionPropertyEnum: "DESCRIPTION";
     value: string | null;
+    id: number;
   },
   {
     questionPropertyEnum: "SELECTION_TYPE";
     value: string;
+    id: number;
   },
   {
     questionPropertyEnum: "STEP";
     value: number | string;
+    id: number;
   },
   {
     questionPropertyEnum: "SPECTRAL_START";
     value: number | string;
+    id: number;
   },
   {
     questionPropertyEnum: "SPECTRAL_END";
     value: number | string;
+    id: number;
   }
 ];
 

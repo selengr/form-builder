@@ -147,8 +147,7 @@ const propertiesSchema = z
     REQUIRED: z.boolean().default(false),
     optionList: z
       .array(optionsSchema)
-      .min(0, { message: "حداقل باید 2 و حداکثر 10 برچسب وجود داشته باشد" })
-      .max(11, { message: "حداقل باید 2 و حداکثر 10 برچسب وجود داشته باشد" }),
+      .max(10, { message: "حداکثر میتواند 10 برچسب وجود داشته باشد" }),
   })
   .refine((val) => val.SPECTRAL_END >= val.SPECTRAL_START, {
     message: "پایان باید بزرگتر یا مساوی با شروع باشد",

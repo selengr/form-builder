@@ -100,11 +100,15 @@ const optionsSchema = z.object({
     .pipe(
       z
         .string({ invalid_type_error: "الزامی است" })
-        .min(1, { message: "حداقل باید 1 و حداکثر 20 کاراکتر داشته باشد" })
-        .max(20, { message: "حداقل باید 1 و حداکثر 20 کاراکتر داشته باشد" })
+        .min(1, {
+          message: "برچسب باید حداقل 1 و حداکثر 20 کاراکتر باشد",
+        })
+        .max(20, {
+          message: "برچسب باید حداقل 1 و حداکثر 20 کاراکتر باشد",
+        })
     ),
   score: z
-    .number({ invalid_type_error: "الزامی است" })
+    .number({ invalid_type_error: "مکان الزامی است" })
     .min(0, { message: "نمیتواند منفی باشد" })
     .nonnegative({ message: "نمیتواند منفی باشد" }),
 });

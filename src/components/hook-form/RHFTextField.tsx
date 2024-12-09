@@ -51,16 +51,19 @@ export default function RHFTextField({
                 padding: 1,
               },
               "& .MuiInputBase-input::-webkit-inner-spin-button": {
-                "-webkit-appearance": "none",
+                WebkitAppearance: "none",
                 margin: 0,
-                "-moz-appearance": "none",
+                MozAppearance: "none",
                 appearance: "none",
               },
               "& .MuiInputBase-input::-webkit-outer-spin-button": {
-                "-webkit-appearance": "none",
+                WebkitAppearance: "none",
                 margin: 0,
-                "-moz-appearance": "none",
+                MozAppearance: "none",
                 appearance: "none",
+              },
+              "& .MuiFormHelperText-root": {
+                marginX: "0 !important",
               },
             }}
             fullWidth

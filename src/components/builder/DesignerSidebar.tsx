@@ -26,7 +26,7 @@ const DesignerSidebar = memo(function DesignerSidebar() {
         scrollbarWidth: "none",
       }}
     >
-      <div className="flex justify-between items-center gap-1 bg-[#F7F7FF] px-4 py-2 rounded-lg">
+      <div className="flex justify-between items-center gap-1 bg-[#F7F7F7] px-4 py-2 rounded-lg">
         <div className="flex items-baseline">
           <p
             className="text-[16px] text-[#2a2a2a] font-bold"
@@ -96,7 +96,7 @@ const DesignerSidebar = memo(function DesignerSidebar() {
     <Fragment>
       <div
         dir="rtl"
-        className="right-0 w-full flex flex-col lg:bg-white rounded-[10px] select-none gap-2 p-4 bg-[#f7f7ff]"
+        className="right-0 w-full flex flex-col lg:bg-white rounded-[10px] select-none gap-2 p-4 bg-[#f7f7f7]"
       >
         <div className="flex justify-between items-center gap-1">
           <div className="flex items-center">

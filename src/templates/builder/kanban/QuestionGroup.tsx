@@ -8,7 +8,7 @@ import { FormElementInstance } from "../../../types/FormElements";
 import useActionOpenBottomSheet from "@/hooks/useActionOpenBottomSheet";
 import useActionDesigner from "@/hooks/useActionDesigner";
 import { useDroppable } from "@dnd-kit/core";
-import { useResponsive } from "@/hooks/useResponsive";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import GroupPopUpMenu from "./GroupPopUpMenu";
 
 const QuestionGroup = memo(function QuestionGroup({
@@ -20,7 +20,7 @@ const QuestionGroup = memo(function QuestionGroup({
 }) {
   const setOpenBottomSheet = useActionOpenBottomSheet();
   const { setSelectedGroup } = useActionDesigner();
-  const isMobile = useResponsive("down", "md");
+  const isMobile = useMediaQuery("(max-width:1280px)");
   const questionsIds = useMemo(() => {
     return questions?.map((question: any) => question?.questionId);
   }, [questions]);

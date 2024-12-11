@@ -115,8 +115,8 @@ const QuestionMenu = memo(function QuestionMenu({
                 const newQuestion = {
                   ...res.data,
                 };
-                addElement(position, newQuestion);
-                // addElement(position + 1, newQuestion);
+                // addElement(position, newQuestion);
+                addElement(position + 1, newQuestion);
               } catch (error) {
                 toast.error("خطایی رخ داده است");
               } finally {

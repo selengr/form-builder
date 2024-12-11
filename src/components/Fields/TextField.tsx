@@ -560,6 +560,7 @@ function PropertiesComponent({
         questionPropertyEnum: "TEXT_FIELD_PATTERN",
         value: TEXT_FIELD_PATTERN.value,
         id: TEXT_FIELD_PATTERN.id,
+        // id: 3330, // ^ wrong data update with no error then reverts back
       },
       {
         questionPropertyEnum: "REQUIRED",

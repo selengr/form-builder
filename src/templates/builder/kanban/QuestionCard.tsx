@@ -29,7 +29,7 @@ const QuestionCard = memo(function QuestionCard({
       isQuestionElement: true,
     },
     // ^ disable or not to disable in large lists
-    animateLayoutChanges: () => true,
+    // animateLayoutChanges: () => false,
   });
 
   // ? update every single question's position

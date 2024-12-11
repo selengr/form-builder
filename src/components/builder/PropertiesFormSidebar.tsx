@@ -1,5 +1,4 @@
 import { memo } from "react";
-import { Box, Typography } from "@mui/material";
 import {
   ElementsType,
   FormElementInstance,
@@ -21,38 +20,19 @@ const PropertiesFormSidebar = memo(function PropertiesFormSidebar() {
   const questionType = selectedElement!.fieldElement!.questionType;
 
   return (
-    <Box
-      sx={{
-        direction: "rtl",
-        display: "flex",
-        flexDirection: "column",
-        paddingBottom: 3,
-      }}
-      padding={1}
-    >
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "baseline",
-          marginBottom: 3,
-        }}
-      >
-        <Typography
-          variant="body2"
-          component={"p"}
-          sx={{ fontWeight: "bold", textAlign: "center", fontSize: "1.2rem" }}
-        >
+    <div dir="rtl" className="flex flex-col pb-4 p-2">
+      <div className="flex justify-center items-baseline mb-6">
+        <p className="font-bold text-center text-[20px]">
           {questionType === "TitleFieldStart" ||
           questionType === "TitleFieldFinish"
             ? `توضیحات ${fieldLabel}`
             : `سوال ${fieldLabel}`}
-        </Typography>
-      </Box>
+        </p>
+      </div>
       <PropertiesForm
         elementInstance={selectedElement!.fieldElement as FormElementInstance}
       />
-    </Box>
+    </div>
   );
 });
 

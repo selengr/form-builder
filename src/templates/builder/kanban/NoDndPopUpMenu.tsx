@@ -1,10 +1,9 @@
 "use client";
 
-import { Fragment, memo, MouseEvent, useState } from "react";
+import { Fragment, memo, MouseEvent, useCallback, useState } from "react";
 import Menu from "@mui/material/Menu";
 import { LoadingButton } from "@mui/lab";
 import useDesigner from "@/hooks/useDesigner";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { WeuiDeleteOutlined } from "@/../public/images/icons/DeleteIcon";
 import { PhDotsThreeVerticalBold } from "@/../public/images/icons/PhDotsThreeVerticalBold";
@@ -68,26 +67,20 @@ const NoDndPopUpMenu = memo(function NoDndPopUpMenu({
     }
   }
 
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
-  };
+  }, []);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     if (loading) return;
     setAnchorEl(null);
-  };
+  }, []);
 
   return (
     <Fragment>
-      <IconButton
-        id="basic-button"
-        aria-controls={open ? "basic-menu" : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
-        onClick={handleClick}
-      >
-        <PhDotsThreeVerticalBold color="#1758BA" />
-      </IconButton>
+      <button onClick={handleClick}>
+        <PhDotsThreeVerticalBold color="#1758BA" fontSize="1.5rem" />
+      </button>
       {open && (
         <Menu
           sx={{

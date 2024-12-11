@@ -3,7 +3,7 @@
 import { Fragment, memo, MouseEvent, useCallback, useState } from "react";
 import Menu from "@mui/material/Menu";
 import { LoadingButton } from "@mui/lab";
-import { IconButton, Typography } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import { WeuiDeleteOutlined } from "@/../public/images/icons/DeleteIcon";
 import { PhDotsThreeVerticalBold } from "@/../public/images/icons/PhDotsThreeVerticalBold";
 import useDesigner from "@/hooks/useDesigner";
@@ -35,15 +35,9 @@ const GroupPopUpMenu = memo(function GroupPopUpMenu({
 
   return (
     <Fragment>
-      <IconButton
-        id="basic-button"
-        aria-controls={open ? "basic-menu" : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
-        onClick={handleClick}
-      >
-        <PhDotsThreeVerticalBold color="#1758BA" />
-      </IconButton>
+      <button onClick={handleClick}>
+        <PhDotsThreeVerticalBold color="#1758BA" fontSize="1.5rem" />
+      </button>
       {open && (
         <Menu
           sx={{

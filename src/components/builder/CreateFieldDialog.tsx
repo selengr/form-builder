@@ -1,8 +1,8 @@
 "use client";
 
+import { memo, useCallback } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
-import IconButton from "@mui/material/IconButton";
 import { CgClose } from "react-icons/cg";
 import { ImSpinner2 } from "react-icons/im";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";
@@ -11,16 +11,16 @@ import useActionSelectedElement from "@/hooks/useActionSelectedElement";
 import useQuestionLoading from "@/hooks/useQuestionLoading";
 import PropertiesFormSidebar from "./PropertiesFormSidebar";
 
-export default function CreateFieldDialog() {
+const CreateFieldDialog = memo(function CreateFieldDialog() {
   const setOpenDialog = useActionOpenDialog();
   const openDialog = useOpenDialog();
   const setSelectedElement = useActionSelectedElement();
   const questionLoading = useQuestionLoading();
 
-  const handleClose = () => {
-    setOpenDialog(!openDialog);
+  const handleClose = useCallback(() => {
+    setOpenDialog((prev) => !prev);
     setSelectedElement(null);
-  };
+  }, []);
 
   return (
     <Dialog
@@ -43,13 +43,9 @@ export default function CreateFieldDialog() {
         <>
           {!questionLoading && (
             <div className="flex items-center justify-start">
-              <IconButton
-                aria-label="close"
-                onClick={handleClose}
-                sx={{ marginX: 1, marginTop: 1, marginBottom: 0 }}
-              >
-                <CgClose color="#404040" width={25} height={25} />
-              </IconButton>
+              <button className="mx-4 mt-4 mb-0" onClick={handleClose}>
+                <CgClose color="#404040" width={25} height={25} size="1.5rem" />
+              </button>
             </div>
           )}
           <DialogContent
@@ -76,4 +72,6 @@ export default function CreateFieldDialog() {
       )}
     </Dialog>
   );
-}
+});
+
+export default CreateFieldDialog;

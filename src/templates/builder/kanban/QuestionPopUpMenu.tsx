@@ -3,7 +3,7 @@
 import { Fragment, memo, MouseEvent, useCallback, useState } from "react";
 import Menu from "@mui/material/Menu";
 import { LoadingButton } from "@mui/lab";
-import { IconButton, Typography } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import { WeuiDeleteOutlined } from "@/../public/images/icons/DeleteIcon";
 import { IonCopyOutline } from "@/../public/images/icons/CopyIcon";
 import { PhDotsThreeVerticalBold } from "@/../public/images/icons/PhDotsThreeVerticalBold";
@@ -65,20 +65,13 @@ const QuestionMenu = memo(function QuestionMenu({
   const handleClose = useCallback(() => {
     if (loadingDeleteData || loadingDuplicateData) return;
     setAnchorEl(null);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <Fragment>
-      <IconButton
-        id="basic-button"
-        aria-controls={open ? "basic-menu" : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
-        onClick={handleClick}
-      >
-        <PhDotsThreeVerticalBold color="#1758BA" />
-      </IconButton>
+      <button onClick={handleClick}>
+        <PhDotsThreeVerticalBold color="#1758BA" fontSize="1.5rem" />
+      </button>
       {open && (
         <Menu
           sx={{
@@ -123,6 +116,7 @@ const QuestionMenu = memo(function QuestionMenu({
                   ...res.data,
                 };
                 addElement(position, newQuestion);
+                // addElement(position + 1, newQuestion);
               } catch (error) {
                 toast.error("خطایی رخ داده است");
               } finally {

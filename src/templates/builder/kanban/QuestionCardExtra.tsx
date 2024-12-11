@@ -16,13 +16,13 @@ const QuestionCardExtra = memo(function QuestionCardExtra({
   const elements = useElements();
   const questionCurrentIndex = useMemo(
     () => elements.findIndex((el: any) => el.questionId === questionId),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [elements]
   );
 
   return (
-    <div className="flex absolute top-[13px] left-4 flex-row gap-2 items-center">
+    <div className="flex absolute top-[22px] left-4 flex-row gap-2 items-center">
       <Link
+        prefetch={false}
         className="flex justify-center items-center"
         href={`/preview/${id}?question=${questionCurrentIndex}`}
       >

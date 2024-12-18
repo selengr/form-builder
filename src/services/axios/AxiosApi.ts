@@ -1,29 +1,33 @@
 import axios from "axios";
-// import { signIn } from "next-auth/react";
-// import { getServerSession } from "next-auth";
-// import { getSession } from "next-auth/react";
-// import { authOptions } from "../auth/authConfig";
+import { getServerSession } from "next-auth";
+import { getSession, signIn } from "next-auth/react";
+import { authOptions } from "../auth/authConfig";
 
 const AxiosApi = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL + "/psya",
 });
 
-// AxiosApi.interceptors.request.use(async (request) => {
-//   try {
-//     // let session: any;
-//     // if (typeof window === "undefined") {
-//     //   session = await getServerSession(authOptions);
-//     // } else {
-//     //   session = await getSession();
-//     // }
-//     // if (session && session.access_token) {
-//     // }
-//   } catch (error) {
-//     console.error("Error retrieving session:", error);
-//   }
+let cachedSession: any = null;
 
-//   return request;
-// });
+AxiosApi.interceptors.request.use(async (request) => {
+  try {
+    if (!cachedSession) {
+      if (typeof window === "undefined") {
+        cachedSession = await getServerSession(authOptions);
+      } else {
+        cachedSession = await getSession();
+      }
+    }
+
+    if (cachedSession && cachedSession.access_token) {
+      request.headers["Authorization"] = `Bearer ${cachedSession.access_token}`;
+    }
+  } catch (error) {
+    console.error("Error retrieving session:", error);
+  }
+
+  return request;
+});
 
 AxiosApi.interceptors.response.use(
   (response) => {
@@ -38,7 +42,7 @@ AxiosApi.interceptors.response.use(
 
       let errorMessage = `API request error: ${status}`;
       if (status === 401) {
-        // await signIn("authorize");
+        await signIn("authorize");
         errorMessage = "Authentication error occurred";
       } else if (status === 403) {
         errorMessage = "Authorization error occurred";

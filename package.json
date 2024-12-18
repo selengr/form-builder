@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 80",
+    "dev": "next dev -p 80 --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -32,7 +32,7 @@
     "axios": "^1.7.7",
     "framer-motion": "^11.13.1",
     "next": "14.2.18",
-    "next-auth": "^4.24.10",
+    "next-auth": "^4.24.11",
     "nextjs-toploader": "^3.7.15",
     "react": "^18",
     "react-dom": "^18",

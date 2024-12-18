@@ -1,5 +1,5 @@
-import type { OAuthConfig } from "next-auth/providers/oauth";
-import type { NextAuthOptions } from "next-auth";
+import { OAuthConfig } from "next-auth/providers/oauth";
+import { NextAuthOptions } from "next-auth";
 
 const Auth0Provider: OAuthConfig<any> = {
   id: "authorize",

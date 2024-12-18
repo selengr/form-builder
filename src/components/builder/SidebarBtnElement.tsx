@@ -10,10 +10,10 @@ import useActionSelectedElement from "@/hooks/useActionSelectedElement";
 import useActionOpenBottomSheet from "@/hooks/useActionOpenBottomSheet";
 import Image from "next/image";
 import { idGenerator } from "@/lib/idGenerator";
-import { useResponsive } from "@/hooks/useResponsive";
+import { useMediaQuery } from "@mui/material";
 
 function SidebarBtnElement({ formElement }: { formElement: FormElement }) {
-  const isMobile = useResponsive("down", "md");
+  const isMobile = useMediaQuery("(max-width:1280px)");
   const setOpenDialog = useActionOpenDialog();
   const setSelectedElement = useActionSelectedElement();
   const setOpenBottomSheet = useActionOpenBottomSheet();

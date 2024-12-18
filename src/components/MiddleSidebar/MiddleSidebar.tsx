@@ -6,7 +6,6 @@ import { IoIosArrowDown } from "react-icons/io";
 import Link from "next/link";
 
 export default function MiddleSidebar() {
-
   return (
     <div className="min-w-[400px] w-[400px] min-h-screen bg-white px-5 gap-8 flex flex-col py-5">
       <div className="w-full flex flex-col gap-5 items-center">
@@ -45,4 +44,3 @@ export default function MiddleSidebar() {
     </div>
   );
 }
-

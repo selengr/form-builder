@@ -1,16 +1,16 @@
 "use client"
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Box, Button, Container, Stack, TextField, Typography } from "@mui/material";
+import { toast } from "sonner";
+import Keypad from "./Keypad";
 import { LoadingButton } from "@mui/lab";
 import styles from './advancedFormulaEditor.module.css'
-import JSONData from '../../../public/fake-data/response_v1.json'
-import { Element, FnFxItem } from '../../types/formulaEditor';
-import { htmlToFormula } from '../../lib/formulaUtils';
-import Keypad from "./Keypad";
-import AxiosApi from "@/services/axios/AxiosApi";
-import { toast } from "sonner";
+
 import { useParams } from "next/navigation";
+import AxiosApi from "@/services/axios/AxiosApi";
+import { htmlToFormula } from '../../lib/formulaUtils';
+import { Element, FnFxItem } from '../../types/formulaEditor';
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Box, Button, Container, Stack, TextField, Typography } from "@mui/material";
 
 
 const AdvancedFormulaEditor: React.FC<any> = ({questionList}) => {
@@ -18,7 +18,7 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList}) => {
   const [formName, setFormName] = useState<string>("");
   const [cursorIndex, setCursorIndex] = useState<number>(0);
   const [elements, setElements] = useState<Element[]>([]);
-  const [isClient, setIsClient] = useState(false);
+  const [isClient, setIsClient] = useState<boolean>(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -383,6 +383,9 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList}) => {
       toast.error("عملیات ناموفق بود مجددا امتحان فرمایید");
   };
 }
+
+
+
 
   if (!isClient) return null;
 

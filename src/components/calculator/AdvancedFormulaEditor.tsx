@@ -7,7 +7,7 @@ import styles from './advancedFormulaEditor.module.css'
 
 import { useParams } from "next/navigation";
 import AxiosApi from "@/services/axios/AxiosApi";
-import { htmlToFormula } from '../../lib/formulaUtils';
+import { htmlToFormula } from '../../lib/htmlToFormula';
 import { Element, FnFxItem } from '../../types/formulaEditor';
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Box, Button, Container, Stack, TextField, Typography } from "@mui/material";
@@ -383,9 +383,6 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList}) => {
       toast.error("عملیات ناموفق بود مجددا امتحان فرمایید");
   };
 }
-
-
-
 
   if (!isClient) return null;
 

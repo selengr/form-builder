@@ -1,4 +1,5 @@
 import { Element } from '../types/formulaEditor';
+import { insertMissingOperators } from './insertMissingOperators';
 
 export function htmlToFormula(elements: Element[], selectFieldRef: React.MutableRefObject<{ [key: string]: string }>, selectAvgRef: React.MutableRefObject<{ [key: string]: string }>): string {
   let formula = '';
@@ -33,6 +34,7 @@ export function htmlToFormula(elements: Element[], selectFieldRef: React.Mutable
 
   console.clear();
   console.log("html-to-formula ===>", formula);
-  return formula;
+  // return formula;
+  return insertMissingOperators(formula)
 }
 

@@ -13,11 +13,11 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Box, Button, Container, Stack, TextField, Typography } from "@mui/material";
 
 
-const AdvancedFormulaEditor: React.FC<any> = ({questionList}) => {
+const AdvancedFormulaEditor: React.FC<any> = ({questionList,editList=[]}) => {
   const { id } = useParams();
   const [formName, setFormName] = useState<string>("");
   const [cursorIndex, setCursorIndex] = useState<number>(0);
-  const [elements, setElements] = useState<Element[]>([]);
+  const [elements, setElements] = useState<Element[]>(editList);
   const [isClient, setIsClient] = useState<boolean>(false);
 
   useEffect(() => {
@@ -376,7 +376,8 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList}) => {
       const response = await AxiosApi.post(`/calculation`,{
         "name": formName,
         "formBuilderId": id,
-        "theFormula": formula
+        "theFormula": formula,
+        "frontCalcData" : JSON.stringify(elements)
       }); 
        toast.success("محاسبه گر با موفقیت ثبت شد");
     } catch (error) {

@@ -4,7 +4,7 @@ import axios from "axios";
 // import { authOptions } from "../auth/authConfig";
 
 const AxiosApi = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL + "/psya",
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL_PSYA + "/psya",
 });
 
 // let cachedSession: any = null;

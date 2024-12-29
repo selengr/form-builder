@@ -78,7 +78,7 @@ export default function BuilderPage() {
   }
 
   if (error) {
-    notFound();
+    throw new Error("api went wrong");
   }
 
   return <FormBuilder />;

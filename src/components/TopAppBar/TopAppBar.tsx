@@ -3,42 +3,42 @@ import Skeleton from "@mui/material/Skeleton";
 import AppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
-import { signIn, signOut } from "next-auth/react";
+// import { signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import AxiosApi from "@/services/axios/AxiosApi";
+// import { useEffect, useState } from "react";
+// import AxiosApi from "@/services/axios/AxiosApi";
 import { toast } from "sonner";
 
 const TopAppBar = ({ customActions, appBarSx, toolbarSx, imageSx }: any) => {
   const router = useRouter();
-  const [userInfo, setUserInfo] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  // const [userInfo, setUserInfo] = useState<any>(null);
+  // const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchUserData() {
-      try {
-        const res = await AxiosApi({
-          url: "/authorization/front-panel/non-org-user-role/find-user-loggedin-info",
-          baseURL: process.env.NEXT_PUBLIC_BASE_URL,
-        });
+  // useEffect(() => {
+  //   async function fetchUserData() {
+  //     try {
+  //       const res = await AxiosApi({
+  //         url: "/authorization/front-panel/non-org-user-role/find-user-loggedin-info",
+  //         baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+  //       });
 
-        setUserInfo(res.data);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    }
+  //       setUserInfo(res.data);
+  //     } catch (error) {
+  //       console.log(error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
 
-    fetchUserData();
-  }, []);
+  //   fetchUserData();
+  // }, []);
 
-  const goToLoginPage = async () => {
-    await signIn("authorize");
-  };
+  // const goToLoginPage = async () => {
+  //   await signIn("authorize");
+  // };
 
   return (
     <AppBar
@@ -55,7 +55,7 @@ const TopAppBar = ({ customActions, appBarSx, toolbarSx, imageSx }: any) => {
     >
       <Toolbar sx={toolbarSx}>
         <Box sx={{ mr: 0, ...imageSx }}>
-          {loading ? (
+          {true ? (
             <div className="flex items-center">
               <Skeleton variant="circular" width={50} height={50} />
               <div className="ml-4">
@@ -63,20 +63,20 @@ const TopAppBar = ({ customActions, appBarSx, toolbarSx, imageSx }: any) => {
                 <Skeleton width={80} />
               </div>
             </div>
-          ) : userInfo ? (
+          ) : false ? (
             <Link href={"/profile"}>
               <div className="gap-[5px] flex items-center">
                 <div className="w-[50px] h-[50px] bg-neutral-200 border-[1px] border-neutral-400 rounded-[50%]"></div>
                 <div>
                   <Typography variant="body1" color="black">
-                    {userInfo?.user?.fullName}
+                    {/* {userInfo?.user?.fullName} */}
                   </Typography>
                   <p className="text-black">مشاهده پروفایل</p>
                 </div>
               </div>
             </Link>
           ) : (
-            <div onClick={goToLoginPage}>
+            <div onClick={() => {}}>
               <IconButton
                 size="medium"
                 disableRipple
@@ -120,34 +120,34 @@ const TopAppBar = ({ customActions, appBarSx, toolbarSx, imageSx }: any) => {
               height={24}
             />
           </IconButton>
-          {!loading && userInfo ? (
-            <div
-              onClick={async () => {
-                await signOut({ redirect: false });
-                toast.success("خروج با موفقیت انجام شد");
-                location.replace("/");
+          {/* {!loading && userInfo ? ( */}
+          <div
+          // onClick={async () => {
+          //   await signOut({ redirect: false });
+          //   toast.success("خروج با موفقیت انجام شد");
+          //   location.replace("/");
+          // }}
+          >
+            <IconButton
+              size="medium"
+              disableRipple
+              sx={{
+                "&.MuiButtonBase-root": {
+                  display: "flex",
+                  gap: "8px",
+                },
               }}
             >
-              <IconButton
-                size="medium"
-                disableRipple
-                sx={{
-                  "&.MuiButtonBase-root": {
-                    display: "flex",
-                    gap: "8px",
-                  },
-                }}
-              >
-                <Image
-                  className="rotate-180"
-                  src="./images/home-page/login.svg"
-                  alt="خروج"
-                  width={24}
-                  height={24}
-                />
-              </IconButton>
-            </div>
-          ) : null}
+              <Image
+                className="rotate-180"
+                src="./images/home-page/login.svg"
+                alt="خروج"
+                width={24}
+                height={24}
+              />
+            </IconButton>
+          </div>
+          {/* ) : null} */}
         </div>
       </Toolbar>
     </AppBar>

@@ -7,8 +7,8 @@ interface ICalculatorListProps {
   calculators: ICalculator[] | any;
 }
 
-const CalculatorList: React.FC<ICalculatorListProps> = ({ calculators} ) => {
-  console.log("calculators reza :>> ", calculators);
+const CalculatorList: React.FC<ICalculatorListProps> = ({ calculators }) => {
+  console.log("calculators :>> ", calculators);
   return (
     <div
       dir="rtl"

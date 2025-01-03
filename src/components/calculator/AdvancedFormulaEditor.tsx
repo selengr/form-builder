@@ -18,17 +18,37 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+
+
+const fetchEditData = async (id: string) => {
+
+  const url = ``;
+  const response = await AxiosApi.get(url);
+  return response.data;
+};
+
 
 const AdvancedFormulaEditor: React.FC<any> = ({
   questionList,
   editList = [],
   handleClose,
+  isEdit
 }) => {
   const { id } = useParams();
   const [formName, setFormName] = useState<string>("");
   const [cursorIndex, setCursorIndex] = useState<number>(0);
   const [elements, setElements] = useState<Element[]>(editList);
   const [isClient, setIsClient] = useState<boolean>(false);
+
+
+  // const { data, isLoading, error } = useQuery({
+  //   queryKey: ["edit-calc"],
+  //   queryFn: () => fetchEditData(id as string),
+  //   staleTime: 0,
+  //   gcTime: 600000,
+  //   enabled : isEdit
+  // });
 
   useEffect(() => {
     setIsClient(true);

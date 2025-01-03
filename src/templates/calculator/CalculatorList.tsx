@@ -16,7 +16,7 @@ const CalculatorList: React.FC<ICalculatorListProps> = ({ calculators }) => {
         className="bg-[#F7F7FF] rounded-lg p-[10px] w-full flex flex-col gap-3"
       >
         {calculators?.map((calculator: ICalculator) => (
-          <>{calculator.name && <CalculatorCard calculator={calculator} />}</>
+          <CalculatorCard calculator={calculator} />
         ))}
       </div>
       <CreateCalculator />

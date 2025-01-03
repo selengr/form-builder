@@ -1,19 +1,28 @@
-"use client"
+"use client";
 
 import { toast } from "sonner";
 import Keypad from "./Keypad";
 import { LoadingButton } from "@mui/lab";
-import styles from './advancedFormulaEditor.module.css'
+import styles from "./advancedFormulaEditor.module.css";
 
 import { useParams } from "next/navigation";
 import AxiosApi from "@/services/axios/AxiosApi";
-import { htmlToFormula } from '../../lib/htmlToFormula';
-import { Element, FnFxItem } from '../../types/formulaEditor';
+import { htmlToFormula } from "../../lib/htmlToFormula";
+import { Element, FnFxItem } from "../../types/formulaEditor";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Box, Button, Container, Stack, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 
-
-const AdvancedFormulaEditor: React.FC<any> = ({questionList,editList=[]}) => {
+const AdvancedFormulaEditor: React.FC<any> = ({
+  questionList,
+  editList = [],
+}) => {
   const { id } = useParams();
   const [formName, setFormName] = useState<string>("");
   const [cursorIndex, setCursorIndex] = useState<number>(0);
@@ -50,7 +59,9 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList,editList=[]}) => {
         if (newCursorIndex >= editableDiv.childNodes.length) {
           range.setStartAfter(editableDiv.lastChild || editableDiv);
         } else {
-          range.setStartAfter(editableDiv.childNodes[newCursorIndex - 1] || editableDiv);
+          range.setStartAfter(
+            editableDiv.childNodes[newCursorIndex - 1] || editableDiv
+          );
         }
 
         range.collapse(true);
@@ -63,13 +74,17 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList,editList=[]}) => {
 
   const handleOperator = (content: string) => {
     const newElements = [...elements];
-    const operatorTypes = ['-', '+', '*', '/'];
+    const operatorTypes = ["-", "+", "*", "/"];
     let newCursorIndex = cursorIndex;
 
-    if (cursorIndex > 0 && newElements[cursorIndex - 1].type === 'OPERATOR' && operatorTypes.includes(newElements[cursorIndex - 1].content)) {
-      newElements[cursorIndex - 1] = { type: 'OPERATOR', content };
+    if (
+      cursorIndex > 0 &&
+      newElements[cursorIndex - 1].type === "OPERATOR" &&
+      operatorTypes.includes(newElements[cursorIndex - 1].content)
+    ) {
+      newElements[cursorIndex - 1] = { type: "OPERATOR", content };
     } else {
-      newElements.splice(cursorIndex, 0, { type: 'OPERATOR', content });
+      newElements.splice(cursorIndex, 0, { type: "OPERATOR", content });
       newCursorIndex++;
     }
 
@@ -80,10 +95,10 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList,editList=[]}) => {
     const newElements: Element[] = [...elements];
     let newCursorIndex = cursorIndex;
 
-    if (cursorIndex > 0 && newElements[cursorIndex - 1].type === 'NUMBER') {
+    if (cursorIndex > 0 && newElements[cursorIndex - 1].type === "NUMBER") {
       newElements[cursorIndex - 1].content += content;
     } else {
-      newElements.splice(cursorIndex, 0, { type: 'NUMBER', content });
+      newElements.splice(cursorIndex, 0, { type: "NUMBER", content });
       newCursorIndex++;
     }
 
@@ -93,17 +108,15 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList,editList=[]}) => {
   const handleParenthesis = (content: string) => {
     const newElements = [...elements];
     let newCursorIndex = cursorIndex;
-    if (content === '(') {
-      newElements.splice(cursorIndex, 0,
-        { type: 'PARENTHESIS', content: '(' });
-      newElements.splice(cursorIndex + 1, 0,
-        { type: 'PARENTHESIS', content: ')' }
-      );
+    if (content === "(") {
+      newElements.splice(cursorIndex, 0, { type: "PARENTHESIS", content: "(" });
+      newElements.splice(cursorIndex + 1, 0, {
+        type: "PARENTHESIS",
+        content: ")",
+      });
       newCursorIndex++;
-    } else if (content === ')') {
-      newElements.splice(cursorIndex, 0,
-        { type: 'PARENTHESIS', content: ')' }
-      );
+    } else if (content === ")") {
+      newElements.splice(cursorIndex, 0, { type: "PARENTHESIS", content: ")" });
       newCursorIndex++;
     }
     updateElements(newElements, newCursorIndex);
@@ -111,27 +124,35 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList,editList=[]}) => {
 
   const handleDropdownClick = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
-    const optionsContainer = (e.target as HTMLElement).nextElementSibling as HTMLElement;
-    const isHidden = optionsContainer.style.display === 'none';
-    optionsContainer.style.display = isHidden ? 'block' : 'none';
-    (e.target as HTMLElement).setAttribute('data-type', isHidden ? 'up' : 'down');
+    const optionsContainer = (e.target as HTMLElement)
+      .nextElementSibling as HTMLElement;
+    const isHidden = optionsContainer.style.display === "none";
+    optionsContainer.style.display = isHidden ? "block" : "none";
+    (e.target as HTMLElement).setAttribute(
+      "data-type",
+      isHidden ? "up" : "down"
+    );
   };
 
   const handleOptionClick = (item: any, id: string) => {
-    const newElements = elements.map(elem =>
+    const newElements = elements.map((elem) =>
       elem.id === id ? { ...elem, content: item.caption } : elem
     );
     setElements(newElements);
     selectFieldRef.current[id] = item.extMap.UNIC_NAME;
 
-    const optionsContainer = document.querySelector(`[data-id="${id}"] .${styles.optionsContainer}`) as HTMLElement;
+    const optionsContainer = document.querySelector(
+      `[data-id="${id}"] .${styles.optionsContainer}`
+    ) as HTMLElement;
     if (optionsContainer) {
-      optionsContainer.style.display = 'none';
+      optionsContainer.style.display = "none";
     }
 
-    const dropdownButton = document.querySelector(`[data-id="${id}"] .${styles.customDropdown}`) as HTMLElement;
+    const dropdownButton = document.querySelector(
+      `[data-id="${id}"] .${styles.customDropdown}`
+    ) as HTMLElement;
     if (dropdownButton) {
-      dropdownButton.setAttribute('data-type', 'down');
+      dropdownButton.setAttribute("data-type", "down");
     }
   };
 
@@ -141,9 +162,9 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList,editList=[]}) => {
 
     const selectId = `select_${Date.now()}`;
     const newElement: Element = {
-      type: 'NEW_FIELD',
-      content: 'انتخاب سوال',
-      id: selectId
+      type: "NEW_FIELD",
+      content: "انتخاب سوال",
+      id: selectId,
     };
 
     const newElements = [...elements];
@@ -172,7 +193,7 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList,editList=[]}) => {
 
   const renderElements = useCallback(() => {
     return elements.map((elem, index) => {
-      if (elem.type === 'NEW_FIELD') {
+      if (elem.type === "NEW_FIELD") {
         return (
           <div
             key={elem.id}
@@ -188,7 +209,10 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList,editList=[]}) => {
             >
               {elem.content}
             </div>
-            <div className={styles.optionsContainer} style={{ display: 'none' }}>
+            <div
+              className={styles.optionsContainer}
+              style={{ display: "none" }}
+            >
               {questionList.dataList.map((item: any) => (
                 <div
                   key={item.extMap.UNIC_NAME}
@@ -201,7 +225,7 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList,editList=[]}) => {
             </div>
           </div>
         );
-      } else if (elem.type === 'NEW_FnFx') {
+      } else if (elem.type === "NEW_FnFx") {
         return (
           <div
             key={elem.id}
@@ -217,7 +241,10 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList,editList=[]}) => {
             >
               {elem.content}
             </div>
-            <div className={styles.optionsContainer} style={{ display: 'none' }}>
+            <div
+              className={styles.optionsContainer}
+              style={{ display: "none" }}
+            >
               {[{ fnValue: "avg", fnCaption: "میانگین()" }].map((item) => (
                 <div
                   key={item.fnValue}
@@ -248,47 +275,62 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList,editList=[]}) => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (!target.closest(`.${styles.NEW_FIELD}`) && !target.closest(`.${styles.NEW_FnFx}`)) {
-        const allOptionContainers = document.querySelectorAll(`.${styles.optionsContainer}`);
+      if (
+        !target.closest(`.${styles.NEW_FIELD}`) &&
+        !target.closest(`.${styles.NEW_FnFx}`)
+      ) {
+        const allOptionContainers = document.querySelectorAll(
+          `.${styles.optionsContainer}`
+        );
         allOptionContainers.forEach((container: any) => {
-          (container as HTMLElement).style.display = 'none';
+          (container as HTMLElement).style.display = "none";
         });
-        const allDropdowns = document.querySelectorAll(`.${styles.customDropdown}`);
+        const allDropdowns = document.querySelectorAll(
+          `.${styles.customDropdown}`
+        );
         allDropdowns.forEach((dropdown: any) => {
-          dropdown.setAttribute('data-type', 'down');
+          dropdown.setAttribute("data-type", "down");
         });
       }
     };
 
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener("click", handleClickOutside);
     };
   }, [styles]);
 
   const handleFnFXDropdownClick = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
-    const optionsContainer = (e.target as HTMLElement).nextElementSibling as HTMLElement;
-    const isHidden = optionsContainer.style.display === 'none';
-    optionsContainer.style.display = isHidden ? 'block' : 'none';
-    (e.target as HTMLElement).setAttribute('data-type', isHidden ? 'up' : 'down');
+    const optionsContainer = (e.target as HTMLElement)
+      .nextElementSibling as HTMLElement;
+    const isHidden = optionsContainer.style.display === "none";
+    optionsContainer.style.display = isHidden ? "block" : "none";
+    (e.target as HTMLElement).setAttribute(
+      "data-type",
+      isHidden ? "up" : "down"
+    );
   };
 
   const handleFnFXOptionClick = (item: FnFxItem, id: string) => {
-    const newElements = elements.map(elem =>
+    const newElements = elements.map((elem) =>
       elem.id === id ? { ...elem, content: item.fnCaption } : elem
     );
     setElements(newElements);
     selectAvgRef.current[id] = item.fnValue;
 
-    const optionsContainer = document.querySelector(`[data-id="${id}"] .${styles.optionsContainer}`) as HTMLElement;
+    const optionsContainer = document.querySelector(
+      `[data-id="${id}"] .${styles.optionsContainer}`
+    ) as HTMLElement;
     if (optionsContainer) {
-      optionsContainer.style.display = 'none';
+      optionsContainer.style.display = "none";
     }
 
-    const dropdownButton = document.querySelector(`[data-id="${id}"] .${styles.customDropdown}`) as HTMLElement;
+    const dropdownButton = document.querySelector(
+      `[data-id="${id}"] .${styles.customDropdown}`
+    ) as HTMLElement;
     if (dropdownButton) {
-      dropdownButton.setAttribute('data-type', 'down');
+      dropdownButton.setAttribute("data-type", "down");
     }
   };
 
@@ -298,18 +340,24 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList,editList=[]}) => {
 
     const selectId = `select_${Date.now()}`;
     const newElement: Element = {
-      type: 'NEW_FnFx',
-      content: 'میانگین()',
+      type: "NEW_FnFx",
+      content: "میانگین()",
       id: selectId,
     };
 
     const newElements = [...elements];
     newElements.splice(cursorIndex, 0, newElement);
-    newElements.splice(cursorIndex + 1, 0, { type: 'AVG_PARENTHESIS', content: '(' });
-    newElements.splice(cursorIndex + 2, 0, { type: 'AVG_PARENTHESIS', content: ')' });
+    newElements.splice(cursorIndex + 1, 0, {
+      type: "AVG_PARENTHESIS",
+      content: "(",
+    });
+    newElements.splice(cursorIndex + 2, 0, {
+      type: "AVG_PARENTHESIS",
+      content: ")",
+    });
 
     setElements(newElements);
-    selectAvgRef.current[selectId] = '#avgNumber';
+    selectAvgRef.current[selectId] = "#avgNumber";
 
     setTimeout(() => {
       const range = document.createRange();
@@ -331,8 +379,12 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList,editList=[]}) => {
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (!/^[0-9+\-*/().()]$/.test(event.key) &&
-      !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(event.key)) {
+    if (
+      !/^[0-9+\-*/().()]$/.test(event.key) &&
+      !["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(
+        event.key
+      )
+    ) {
       event.preventDefault();
     }
     if (event.key === "Enter") {
@@ -345,89 +397,101 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList,editList=[]}) => {
     if (editableDiv) {
       const range = document.caretRangeFromPoint(e.clientX, e.clientY);
       if (range) {
-        const index = Array.from(editableDiv.childNodes).findIndex((node, index) => index === range.endOffset);
+        const index = Array.from(editableDiv.childNodes).findIndex(
+          (node, index) => index === range.endOffset
+        );
         setCursorIndex(index === -1 ? elements.length : index);
       }
     }
   };
 
-
   const callApi = async () => {
-    let formula = ''
+    let formula = "";
     const newFormula = htmlToFormula(elements, selectFieldRef, selectAvgRef);
-    if(!!!formName) return toast.error("ابتدا نام محاسبه گر را وارد کنید");
-    if(!!!newFormula) return toast.error("هیج محاسبه ای افزوده نشده");
-    if(newFormula.includes("undefined")) return toast.error("سوال انتخاب نشده دارید");
+    if (!!!formName) return toast.error("ابتدا نام محاسبه گر را وارد کنید");
+    if (!!!newFormula) return toast.error("هیج محاسبه ای افزوده نشده");
+    if (newFormula.includes("undefined"))
+      return toast.error("سوال انتخاب نشده دارید");
 
-
-        
-        const avgNum = newFormula.split("#avg")
-        avgNum.map(item => {
-          if (item.includes("Number")) {
-            formula += "#avg" + item?.replaceAll("}{", "},{")
-          } else {
-            formula += item
-          }
-        })
-      
+    const avgNum = newFormula.split("#avg");
+    avgNum.map((item) => {
+      if (item.includes("Number")) {
+        formula += "#avg" + item?.replaceAll("}{", "},{");
+      } else {
+        formula += item;
+      }
+    });
 
     try {
-     
-      const response = await AxiosApi.post(`/calculation`,{
-        "name": formName,
-        "formBuilderId": id,
-        "theFormula": formula,
-        "frontCalcData" : JSON.stringify(elements)
-      }); 
-       toast.success("محاسبه گر با موفقیت ثبت شد");
+      const response = await AxiosApi.post(`/calculation`, {
+        name: formName,
+        formBuilderId: id,
+        theFormula: formula,
+        frontCalcData: JSON.stringify(elements),
+      });
+      toast.success("محاسبه گر با موفقیت ثبت شد");
     } catch (error) {
       toast.error("عملیات ناموفق بود مجددا امتحان فرمایید");
+    }
   };
-}
 
   if (!isClient) return null;
 
   return (
     <Container maxWidth="sm" sx={{ mt: "35px" }}>
-      <Typography variant="subtitle1" sx={{ display: "flex", justifyContent: "center", color: "#404040" }}>محاسبه گر</Typography>
+      <Typography
+        variant="subtitle1"
+        sx={{ display: "flex", justifyContent: "center", color: "#404040" }}
+      >
+        محاسبه گر
+      </Typography>
 
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
           paddingX: 1.5,
-          direction: 'ltr',
-          width: '100%',
+          direction: "ltr",
+          width: "100%",
         }}
       >
         <Stack spacing={1}>
-          <Typography variant="subtitle2" color="#161616">نام:</Typography>
+          <Typography variant="subtitle2" color="#161616">
+            نام:
+          </Typography>
           <TextField
             sx={{
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': {
-                  borderColor: '#DDE1E6',
-                  borderRadius: '8px',
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "#DDE1E6",
+                  borderRadius: "8px",
                 },
-                '&:hover fieldset': {
-                  borderColor: '#DDE1E6',
+                "&:hover fieldset": {
+                  borderColor: "#DDE1E6",
                 },
-                '&.Mui-focused fieldset': {
-                  borderColor: '#DDE1E6',
+                "&.Mui-focused fieldset": {
+                  borderColor: "#DDE1E6",
                 },
               },
-              '& input': {
+              "& input": {
                 padding: 1,
                 height: "50px",
               },
             }}
             name="name"
-            onChange={(e)=>setFormName(e.target.value)}
+            onChange={(e) => setFormName(e.target.value)}
           />
         </Stack>
 
-        <Box sx={{ width: "100%", display: "flex", flexDirection: { xs: "column", sm: "row" }, my: 3 }}>
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            my: 3,
+          }}
+        >
           <Keypad
             handleFnFX={handleFnFX}
             handleNewField={handleNewField}
@@ -438,9 +502,39 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList,editList=[]}) => {
             contentEditable={contentEditable}
           />
 
-          <Box sx={{ width: { xs: "100%", sm: "70%" }, display: "flex", flexDirection: "column", alignItems: "start" }}>
-            <Typography variant="subtitle1" sx={{ display: "flex", justifyContent: "center", color: "#404040", fontWeight: 500 }}>اسکریپت:</Typography>
-            <Stack spacing={4} sx={{ border: '1px solid #DDE1E6', borderRadius: 2, padding: 1, width: "100%", height: "100%", minHeight: 200, display: "flex", flexWrap: "wrap", flexDirection: "row" }}>
+          <Box
+            sx={{
+              width: { xs: "100%", sm: "70%" },
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "start",
+            }}
+          >
+            <Typography
+              variant="subtitle1"
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                color: "#404040",
+                fontWeight: 500,
+              }}
+            >
+              اسکریپت:
+            </Typography>
+            <Stack
+              spacing={4}
+              sx={{
+                border: "1px solid #DDE1E6",
+                borderRadius: 2,
+                padding: 1,
+                width: "100%",
+                height: "100%",
+                minHeight: 200,
+                display: "flex",
+                flexWrap: "wrap",
+                flexDirection: "row",
+              }}
+            >
               <div
                 contentEditable
                 onClick={handleClick}
@@ -455,26 +549,39 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList,editList=[]}) => {
           </Box>
         </Box>
 
-        <Box display="flex" gap={3} width="100%" marginTop={5} marginBottom={2} sx={{ display: "flex", justifyContent: "center" }}>
+        <Box
+          display="flex"
+          gap={3}
+          width="100%"
+          marginBottom={2}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
           <LoadingButton
             type="button"
             onClick={() => {
-              callApi()
+              callApi();
             }}
             variant="contained"
             sx={{
               backgroundColor: "#1758BA",
-              fontWeight: '500',
-              fontSize: '15px',
-              height: '50px',
-              '&.MuiButtonBase-root:hover': {
+              fontWeight: "500",
+              fontSize: "15px",
+              height: "50px",
+              "&.MuiButtonBase-root:hover": {
                 backgroundColor: "#1758BA",
               },
               minWidth: "132px",
-              borderRadius: '8px'
             }}
           >
-            <Typography variant="body2" component={'p'} py={0.5} sx={{ color: "#fff", fontWeight: 500 }}>
+            <Typography
+              variant="body2"
+              component={"p"}
+              py={0.5}
+              sx={{ color: "#fff", fontWeight: 500 }}
+            >
               تایید
             </Typography>
           </LoadingButton>
@@ -482,9 +589,22 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList,editList=[]}) => {
           <Button
             type="button"
             variant="outlined"
-            sx={{ height: '50px', minWidth: "132px", fontWeight: '500', fontSize: '15px', borderColor: "#1758BA", background: "#F7F7FF",borderRadius: '8px' }}
+            sx={{
+              height: "50px",
+              minWidth: "132px",
+              fontWeight: "500",
+              fontSize: "15px",
+              borderColor: "#1758BA",
+              background: "#F7F7FF",
+            }}
           >
-            <Typography variant="body2" component={'p'} py={0.5} color={"#1758BA"} sx={{ fontWeight: 500 }}>
+            <Typography
+              variant="body2"
+              component={"p"}
+              py={0.5}
+              color={"#1758BA"}
+              sx={{ fontWeight: 500 }}
+            >
               انصراف
             </Typography>
           </Button>
@@ -495,4 +615,3 @@ const AdvancedFormulaEditor: React.FC<any> = ({questionList,editList=[]}) => {
 };
 
 export default AdvancedFormulaEditor;
-

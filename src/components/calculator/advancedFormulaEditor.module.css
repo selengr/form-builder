@@ -3,9 +3,9 @@
 .PARENTHESIS,
 .AVG_PARENTHESIS,
 .asNumber {
-  height: 33px;
+  height: 30px;
   display: flex;
-  min-width: 33px;
+  min-width: 30px;
   width: min-content;
   border-radius: 10px;
   align-items: center;
@@ -37,7 +37,7 @@
   content: "";
   right: 0px;
   width: 20px;
-  height: 33px;
+  height: 30px;
   position: absolute;
   background-size: 15px;
   background-color: #e8eef8;
@@ -57,7 +57,7 @@
   content: "";
   left: 6px;
   width: 10px;
-  height: 33px;
+  height: 30px;
   position: absolute;
   background-size: 15px;
   background-position: center;
@@ -71,7 +71,7 @@
 }
 
 .NEW_FIELD .option {
-  min-height: 33px;
+  min-height: 30px;
   width: 100%;
   border-color: none;
   color: #fff;
@@ -90,7 +90,7 @@
 
 .NEW_FIELD,
 .NEW_FnFx {
-  height: 33px;
+  height: 30px;
   width: 145px;
   border-color: none;
   position: relative;
@@ -159,7 +159,7 @@
   color: #fff;
   margin: 4px 0;
   display: flex;
-  min-height: 33px;
+  min-height: 30px;
   padding: 1px 5px;
   border-color: none;
   border-radius: 10px;

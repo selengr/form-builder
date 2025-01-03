@@ -20,27 +20,23 @@ import {
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 
-
 const fetchEditData = async (id: string) => {
-
   const url = ``;
   const response = await AxiosApi.get(url);
   return response.data;
 };
 
-
 const AdvancedFormulaEditor: React.FC<any> = ({
   questionList,
   editList = [],
   handleClose,
-  isEdit
+  isEdit,
 }) => {
   const { id } = useParams();
   const [formName, setFormName] = useState<string>("");
   const [cursorIndex, setCursorIndex] = useState<number>(0);
   const [elements, setElements] = useState<Element[]>(editList);
   const [isClient, setIsClient] = useState<boolean>(false);
-
 
   // const { data, isLoading, error } = useQuery({
   //   queryKey: ["edit-calc"],
@@ -62,38 +58,37 @@ const AdvancedFormulaEditor: React.FC<any> = ({
     if (elements.length === 0 || cursorIndex === 0) return;
 
     if (elements[cursorIndex - 1].type === "AVG_PARENTHESIS") {
-      return
-      }
+      return;
+    }
 
     const newElements = [...elements];
 
     if (elements[cursorIndex - 1].type === "NEW_FnFx") {
       let endIndex = cursorIndex - 1;
       let parenthesisCount = 0;
-      
+
       for (let i = cursorIndex; i < elements.length; i++) {
-      if (elements[i].type === "AVG_PARENTHESIS") {
-      if (elements[i].content === "(") {
-      parenthesisCount++;
-      } else if (elements[i].content === ")") {
-      if (parenthesisCount === 1) {
-      endIndex = i;
-      break;
-      }
-      parenthesisCount--;
-      }
-      }
+        if (elements[i].type === "AVG_PARENTHESIS") {
+          if (elements[i].content === "(") {
+            parenthesisCount++;
+          } else if (elements[i].content === ")") {
+            if (parenthesisCount === 1) {
+              endIndex = i;
+              break;
+            }
+            parenthesisCount--;
+          }
+        }
       }
       newElements.splice(cursorIndex - 1, endIndex - cursorIndex + 2);
-      } else {
+    } else {
       newElements.splice(cursorIndex - 1, 1);
-      }
-      
-      const newCursorIndex = Math.max(0, cursorIndex - 1);
-      
-      updateElements(newElements, newCursorIndex);
-      }, [elements, cursorIndex]);
+    }
 
+    const newCursorIndex = Math.max(0, cursorIndex - 1);
+
+    updateElements(newElements, newCursorIndex);
+  }, [elements, cursorIndex]);
 
   const updateElements = (newElements: Element[], newCursorIndex: number) => {
     setElements(newElements);
@@ -184,8 +179,10 @@ const AdvancedFormulaEditor: React.FC<any> = ({
 
   const handleOptionClick = (item: any, id: string) => {
     const { UNIC_NAME, STICKY_FUNC } = item.extMap;
-    const newElements = elements.map(elem => elem.id === id ? { ...elem,
-    content: item.caption, id: STICKY_FUNC ?? UNIC_NAME } : elem
+    const newElements = elements.map((elem) =>
+      elem.id === id
+        ? { ...elem, content: item.caption, id: STICKY_FUNC ?? UNIC_NAME }
+        : elem
     );
 
     setElements(newElements);
@@ -341,7 +338,7 @@ const AdvancedFormulaEditor: React.FC<any> = ({
       }
     }
 
-    getData();
+    if (isEdit) getData();
   }, []);
 
   useEffect(() => {

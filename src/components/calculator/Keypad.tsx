@@ -70,7 +70,7 @@ const Keypad: React.FC<KeypadProps> = ({
           <Box sx={{ display: "flex", gap: 1 }}>
             <Image
               alt="file preview"
-              src={"/assets/icons/svg/ic_fx.svg"}
+              src={"/images/calc/ic_fx.svg"}
               height={30}
               width={30}
             />

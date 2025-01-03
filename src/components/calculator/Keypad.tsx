@@ -124,6 +124,7 @@ const Keypad: React.FC<KeypadProps> = ({
           border: "1px solid white",
           width: 135,
           height: 30,
+          borderRadius: "8px",
           fontWeight: 600,
           color: "#1758BA",
           backgroundColor: "#1758BA1A",
@@ -165,6 +166,7 @@ const Keypad: React.FC<KeypadProps> = ({
                 color: "#1758BA",
                 backgroundColor: "#1758BA1A",
                 margin: "2px",
+                borderRadius: "8px",
                 fontWeight: 600,
               }}
               onClick={() => handleOperator(op)}
@@ -191,6 +193,7 @@ const Keypad: React.FC<KeypadProps> = ({
                 backgroundColor: "#1758BA1A",
                 margin: "2px",
                 fontWeight: 600,
+                borderRadius: "8px"
               }}
               onClick={() => handleNumber(num)}
             >

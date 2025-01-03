@@ -1,15 +1,18 @@
 "use client";
 
+import { useEffect } from "react";
+import { AxiosResponse } from "axios";
 import { CgClose } from "react-icons/cg";
 import Dialog from "@mui/material/Dialog";
 import { IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import AxiosApi from "@/services/axios/AxiosApi";
 import DialogContent from "@mui/material/DialogContent";
 
 import { ICreateCalculatorDialogProps } from "@/types/calculator";
 import AdvancedFormulaEditor from "@/components/calculator/AdvancedFormulaEditor";
-
-
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 
 const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   direction: "ltr",
@@ -32,11 +35,38 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
+const fetchCalculators = async (id: string) => {
+  const customComboFilterModel = {
+    type: "COMBO",
+    entity: "QUESTIONS",
+    mode: "QUESTIONS_IN_FORM_BUILDER__ALL",
+    input: "",
+    page: 0,
+    rows: 10000,
+    extMap: {
+      formId: id,
+      typeRequest: "QAC_BY_FILTER",
+    },
+  };
+  const url = `/question/q-and-c-custom-combo?customComboFilterModel=${encodeURIComponent(
+    JSON.stringify(customComboFilterModel)
+  )}`;
+  const response = await AxiosApi.get(url);
+  return response.data;
+};
+
 export const CreateCalculatorDialog: React.FC<ICreateCalculatorDialogProps> = ({
   open,
-  setOpen
+  setOpen,
 }) => {
-    
+  const { id } = useParams();
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["calculators"],
+    queryFn: () => fetchCalculators(id as string),
+    staleTime: 0,
+    gcTime: 600000,
+  });
+
   const handleClose = () => {
     setOpen((prev) => !prev);
   };
@@ -55,7 +85,9 @@ export const CreateCalculatorDialog: React.FC<ICreateCalculatorDialogProps> = ({
             />
           </IconButton>
         </div>
-        <AdvancedFormulaEditor />
+        {isLoading && <p>Loading calculators...</p>}
+        {error && <p>Error loading calculators: {(error as Error).message}</p>}
+        {data && <AdvancedFormulaEditor questionList={data} handleClose={handleClose}/>}
       </StyledDialogContent>
     </StyledDialog>
   );

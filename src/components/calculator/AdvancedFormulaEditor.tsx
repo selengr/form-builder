@@ -22,6 +22,7 @@ import {
 const AdvancedFormulaEditor: React.FC<any> = ({
   questionList,
   editList = [],
+  handleClose
 }) => {
   const { id } = useParams();
   const [formName, setFormName] = useState<string>("");
@@ -583,6 +584,7 @@ const AdvancedFormulaEditor: React.FC<any> = ({
               backgroundColor: "#1758BA",
               fontWeight: "500",
               fontSize: "15px",
+              borderRadius: "8px",
               height: "50px",
               "&.MuiButtonBase-root:hover": {
                 backgroundColor: "#1758BA",
@@ -607,10 +609,12 @@ const AdvancedFormulaEditor: React.FC<any> = ({
               height: "50px",
               minWidth: "132px",
               fontWeight: "500",
+              borderRadius: "8px",
               fontSize: "15px",
               borderColor: "#1758BA",
               background: "#F7F7FF",
             }}
+            onClick={handleClose}
           >
             <Typography
               variant="body2"

@@ -22,7 +22,7 @@ import {
 const AdvancedFormulaEditor: React.FC<any> = ({
   questionList,
   editList = [],
-  handleClose
+  handleClose,
 }) => {
   const { id } = useParams();
   const [formName, setFormName] = useState<string>("");
@@ -380,18 +380,25 @@ const AdvancedFormulaEditor: React.FC<any> = ({
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (
-      !/^[0-9+\-*/().()]$/.test(event.key) &&
-      !["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(
-        event.key
-      )
-    ) {
-      event.preventDefault();
-    }
+    // if (
+    //   !/^[0-9+\-*/().()]$/.test(event.key) &&
+    //   !["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(
+    //     event.key
+    //   )
+    // ) {
+    //   event.preventDefault();
+    // }
     if (event.key === "Enter") {
       event.preventDefault();
     }
-  };
+    if (event.key === "Backspace" || event.key === 'Delete') {
+      event.preventDefault();
+      handleUndo()
+      }
+  }
+    
+    
+
 
   const handleClick = (e: React.MouseEvent) => {
     const editableDiv = contentEditable.current;
@@ -435,6 +442,9 @@ const AdvancedFormulaEditor: React.FC<any> = ({
       toast.error("عملیات ناموفق بود مجددا امتحان فرمایید");
     }
   };
+
+
+  
 
   if (!isClient) return null;
 
@@ -635,3 +645,414 @@ const AdvancedFormulaEditor: React.FC<any> = ({
 export default AdvancedFormulaEditor;
 
 // -----------------------------------------------
+
+
+
+
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Box, Button, Container, Stack, TextField, Typography } from
+"@mui/material";
+import { LoadingButton } from "@mui/lab";
+import styles from '@/sections/calculator/advancedFormulaEditor.module.css'
+import JSONData from '../../public/assets/fake-data/response_v1.json'
+import { Element, FnFxItem } from '../types/formulaEditor';
+import { htmlToFormula } from '../utils/htmlToFormula';
+import Keypad from './Keypad';
+import { parseFormula } from "@/utils/formulaParser";
+
+const AdvancedFormulaEditor: React.FC = () => {
+const [cursorIndex, setCursorIndex] = useState(0);
+const [elements, setElements] = useState<Element[]>([]);
+const [error, setError] = useState<string>("");
+const [isClient, setIsClient] = useState<boolean>(false);
+
+useEffect(() => {
+setIsClient(true);
+}, []);
+
+const contentEditable = useRef<HTMLDivElement>(null);
+const selectAvgRef = useRef<{ [key: string]: string }>({});
+const selectFieldRef = useRef<{ [key: string]: string }>({});
+
+const handleUndo = useCallback(() => {
+if (elements.length === 0 || cursorIndex === 0) return;
+
+if (elements[cursorIndex - 1].type === "AVG_PARENTHESIS") {
+return
+}
+
+const newElements = [...elements];
+
+if (elements[cursorIndex - 1].type === "NEW_FnFx") {
+let endIndex = cursorIndex - 1;
+let parenthesisCount = 0;
+
+for (let i = cursorIndex; i < elements.length; i++) {
+if (elements[i].type === "AVG_PARENTHESIS") {
+if (elements[i].content === "(") {
+parenthesisCount++;
+} else if (elements[i].content === ")") {
+if (parenthesisCount === 1) {
+endIndex = i;
+break;
+}
+parenthesisCount--;
+}
+}
+}
+newElements.splice(cursorIndex - 1, endIndex - cursorIndex + 2);
+} else {
+newElements.splice(cursorIndex - 1, 1);
+}
+
+const newCursorIndex = Math.max(0, cursorIndex - 1);
+
+updateElements(newElements, newCursorIndex);
+}, [elements, cursorIndex]);
+
+const updateElements = (newElements: Element[], newCursorIndex?: number) => {
+setElements(newElements);
+setCursorIndex(newCursorIndex);
+setTimeout(() => {
+const editableDiv = contentEditable.current;
+if (editableDiv) {
+const range = document.createRange();
+const sel = window.getSelection();
+
+if (newCursorIndex >= editableDiv.childNodes.length) {
+range.setStartAfter(editableDiv.lastChild || editableDiv);
+} else {
+range.setStartAfter(editableDiv.childNodes[newCursorIndex - 1] || editableDiv);
+}
+
+range.collapse(true);
+sel?.removeAllRanges();
+sel?.addRange(range);
+editableDiv.focus();
+}
+}, 50);
+};
+
+const handleOperator = (content: string) => {
+const newElements = [...elements];
+const operatorTypes = ['-', '+', '*', '/'];
+let newCursorIndex = cursorIndex;
+
+if (cursorIndex > 0 && newElements[cursorIndex - 1].type ===
+'OPERATOR' && operatorTypes.includes(newElements[cursorIndex -
+1].content)) {
+newElements[cursorIndex - 1] = { type: 'OPERATOR', content };
+} else {
+newElements.splice(cursorIndex, 0, { type: 'OPERATOR', content });
+newCursorIndex++;
+}
+
+updateElements(newElements, newCursorIndex);
+};
+
+const handleNumber = (content: string) => {
+const newElements: Element[] = [...elements];
+let newCursorIndex = cursorIndex;
+
+if (cursorIndex > 0 && newElements[cursorIndex - 1].type === 'NUMBER') {
+newElements[cursorIndex - 1].content += content;
+} else {
+newElements.splice(cursorIndex, 0, { type: 'NUMBER', content });
+newCursorIndex++;
+}
+
+updateElements(newElements, newCursorIndex);
+};
+
+const handleParenthesis = (content: string) => {
+const newElements = [...elements];
+let newCursorIndex = cursorIndex;
+if (content === '(') {
+newElements.splice(cursorIndex, 0,
+{ type: 'PARENTHESIS', content: '(' });
+newElements.splice(cursorIndex + 1, 0,
+{ type: 'PARENTHESIS', content: ')' }
+);
+newCursorIndex++;
+} else if (content === ')') {
+newElements.splice(cursorIndex, 0,
+{ type: 'PARENTHESIS', content: ')' }
+);
+newCursorIndex++;
+}
+updateElements(newElements, newCursorIndex);
+};
+
+const handleDropdownClick = (e: React.MouseEvent, id: string) => {
+e.stopPropagation();
+const optionsContainer = (e.target as HTMLElement).nextElementSibling
+as HTMLElement;
+const isHidden = optionsContainer.style.display === 'none';
+optionsContainer.style.display = isHidden ? 'block' : 'none';
+(e.target as HTMLElement).setAttribute('data-type', isHidden ? 'up' : 'down');
+};
+
+const handleOptionClick = (item: any, id: string) => {
+const { UNIC_NAME, STICKY_FUNC } = item.extMap;
+const newElements = elements.map(elem => elem.id === id ? { ...elem,
+content: item.caption, id: STICKY_FUNC ?? UNIC_NAME } : elem
+);
+
+setElements(newElements);
+// if (STICKY_FUNC) {
+selectFieldRef.current[STICKY_FUNC || UNIC_NAME] = STICKY_FUNC || UNIC_NAME;
+// } else {
+// selectFieldRef.current[UNIC_NAME] = UNIC_NAME;
+// }
+
+const optionsContainer = document.querySelector(`[data-id="${id}"]
+.${styles.optionsContainer}`) as HTMLElement;
+if (optionsContainer) {
+optionsContainer.style.display = 'none';
+}
+
+const dropdownButton = document.querySelector(`[data-id="${id}"]
+.${styles.customDropdown}`) as HTMLElement;
+if (dropdownButton) {
+dropdownButton.setAttribute('data-type', 'down');
+}
+};
+
+const handleNewField = () => {
+const editableDiv = contentEditable.current;
+if (!editableDiv) return;
+
+const fieldId = `select_${Date.now()}`;
+const newElement: Element = {
+type: 'NEW_FIELD',
+content: 'انتخاب سوال',
+id: fieldId
+};
+
+const newElements = [...elements];
+newElements.splice(cursorIndex, 0, newElement);
+
+setElements(newElements);
+
+setTimeout(() => {
+const range = document.createRange();
+const sel = window.getSelection();
+
+if (editableDiv.childNodes[cursorIndex]) {
+range.setStartAfter(editableDiv.childNodes[cursorIndex]);
+} else {
+range.setStartAfter(editableDiv.lastChild || editableDiv);
+}
+
+range.collapse(true);
+sel?.removeAllRanges();
+sel?.addRange(range);
+
+setCursorIndex(cursorIndex + 1);
+editableDiv.focus();
+}, 0);
+};
+
+const renderElements = useCallback(() => {
+return elements.map((elem, index) => {
+if (elem.type === 'NEW_FIELD') {
+return (
+<div
+key={elem.id}
+data-id={elem.id}
+contentEditable={false}
+className={`${styles.dynamicbtn} ${styles.NEW_FIELD}`}
+data-type="NEW_FIELD"
+>
+<div
+className={styles.customDropdown}
+data-type="down"
+onClick={(e) => handleDropdownClick(e, elem.id!)}
+>
+{elem.content}
+</div>
+<div className={styles.optionsContainer} style={{ display: 'none' }}>
+{JSONData.dataList.map((item: any) => (
+<div
+key={item.extMap.UNIC_NAME}
+className={styles.option}
+onClick={() => handleOptionClick(item, elem.id!)}
+>
+{item.caption}
+</div>
+))}
+</div>
+</div>
+);
+} else if (elem.type === 'NEW_FnFx') {
+return (
+<div
+key={elem.id}
+data-id={elem.id}
+contentEditable={false}
+className={`${styles.dynamicbtn} ${styles.NEW_FnFx}`}
+data-type="NEW_FnFx"
+>
+<div
+className={styles.customDropdown}
+data-type="down"
+onClick={(e) => handleFnFXDropdownClick(e, elem.id!)}
+>
+{elem.content}
+</div>
+<div className={styles.optionsContainer} style={{ display: 'none' }}>
+{[{ fnValue: "avg", fnCaption: "میانگین()" }].map((item) => (
+<div
+key={item.fnValue}
+className={styles.option}
+onClick={() => handleFnFXOptionClick(item, elem.id!)}
+>
+{item.fnCaption}
+</div>
+))}
+</div>
+</div>
+);
+} else {
+return (
+<div
+key={index}
+contentEditable={false}
+className={`${styles.dynamicbtn} ${styles[elem.type]}`}
+data-type={elem.type}
+>
+{elem.content}
+</div>
+);
+}
+});
+}, [elements, styles]);
+useEffect(() => {
+async function getData() {
+const storedElements = localStorage.getItem("elements");
+if (storedElements) {
+const elements = JSON.parse(storedElements);
+for (const elem of elements) {
+if (elem.type === "NEW_FIELD") {
+JSONData.dataList.forEach((item: any) => {
+const { UNIC_NAME, STICKY_FUNC } = item.extMap;
+if (UNIC_NAME === elem.id || STICKY_FUNC === elem.id) {
+selectFieldRef.current[elem.id] = STICKY_FUNC || UNIC_NAME;
+}
+});
+}
+}
+setElements(elements);
+}
+}
+
+getData();
+}, []);
+
+useEffect(() => {
+const handleClickOutside = (event: MouseEvent) => {
+const target = event.target as HTMLElement;
+if (!target.closest(`.${styles.NEW_FIELD}`) &&
+!target.closest(`.${styles.NEW_FnFx}`)) {
+const allOptionContainers =
+document.querySelectorAll(`.${styles.optionsContainer}`);
+allOptionContainers.forEach((container: any) => {
+(container as HTMLElement).style.display = 'none';
+});
+const allDropdowns = document.querySelectorAll(`.${styles.customDropdown}`);
+allDropdowns.forEach((dropdown: any) => {
+dropdown.setAttribute('data-type', 'down');
+});
+}
+};
+
+document.addEventListener('click', handleClickOutside);
+return () => {
+document.removeEventListener('click', handleClickOutside);
+};
+}, [styles]);
+
+const handleFnFXDropdownClick = (e: React.MouseEvent, id: string) => {
+e.stopPropagation();
+const optionsContainer = (e.target as HTMLElement).nextElementSibling
+as HTMLElement;
+const isHidden = optionsContainer.style.display === 'none';
+optionsContainer.style.display = isHidden ? 'block' : 'none';
+(e.target as HTMLElement).setAttribute('data-type', isHidden ? 'up' : 'down');
+};
+
+const handleFnFXOptionClick = (item: FnFxItem, id: string) => {
+const newElements = elements.map(elem =>
+elem.id === id ? { ...elem, content: item.fnCaption } : elem
+);
+setElements(newElements);
+selectAvgRef.current[id] = item.fnValue;
+
+const optionsContainer = document.querySelector(`[data-id="${id}"]
+.${styles.optionsContainer}`) as HTMLElement;
+if (optionsContainer) {
+optionsContainer.style.display = 'none';
+}
+
+const dropdownButton = document.querySelector(`[data-id="${id}"]
+.${styles.customDropdown}`) as HTMLElement;
+if (dropdownButton) {
+dropdownButton.setAttribute('data-type', 'down');
+}
+};
+
+const handleFnFX = () => {
+const editableDiv = contentEditable.current;
+if (!editableDiv) return;
+
+const fieldId = `select_${Date.now()}`;
+const newElement: Element = {
+type: 'NEW_FnFx',
+content: 'میانگین()',
+id: fieldId,
+};
+
+const newElements = [...elements];
+newElements.splice(cursorIndex, 0, newElement);
+newElements.splice(cursorIndex + 1, 0, { type: 'AVG_PARENTHESIS',
+content: '(' });
+newElements.splice(cursorIndex + 2, 0, { type: 'AVG_PARENTHESIS',
+content: ')' });
+
+setElements(newElements);
+selectAvgRef.current[fieldId] = '#avgNumber';
+
+setTimeout(() => {
+const range = document.createRange();
+const sel = window.getSelection();
+
+if (editableDiv.childNodes[cursorIndex + 1]) {
+range.setStartAfter(editableDiv.childNodes[cursorIndex + 1]);
+} else {
+range.setStartAfter(editableDiv.lastChild || editableDiv);
+}
+
+range.collapse(true);
+sel?.removeAllRanges();
+sel?.addRange(range);
+
+setCursorIndex(cursorIndex + 2);
+editableDiv.focus();
+}, 0);
+};
+
+const handleKeyDown = (event: React.KeyboardEvent) => {
+// if (!/^[0-9+\-*/().()]$/.test(event.key) &&
+// !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight',
+// 'Tab'].includes(event.key)) {
+// event.preventDefault();
+// }
+if (event.key === "Enter") {
+event.preventDefault();
+}
+if (event.key === "Backspace" || event.key === 'Delete') {
+event.preventDefault();
+handleUndo()
+}
+};
+

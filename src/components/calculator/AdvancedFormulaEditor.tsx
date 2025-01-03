@@ -136,11 +136,13 @@ const AdvancedFormulaEditor: React.FC<any> = ({
   };
 
   const handleOptionClick = (item: any, id: string) => {
-    const newElements = elements.map((elem) =>
-      elem.id === id ? { ...elem, content: item.caption } : elem
+    const { UNIC_NAME, STICKY_FUNC } = item.extMap;
+    const newElements = elements.map(elem => elem.id === id ? { ...elem,
+    content: item.caption, id: STICKY_FUNC ?? UNIC_NAME } : elem
     );
+
     setElements(newElements);
-    selectFieldRef.current[id] = item.extMap.UNIC_NAME;
+    selectFieldRef.current[STICKY_FUNC || UNIC_NAME] = STICKY_FUNC || UNIC_NAME;
 
     const optionsContainer = document.querySelector(
       `[data-id="${id}"] .${styles.optionsContainer}`
@@ -280,7 +282,7 @@ const AdvancedFormulaEditor: React.FC<any> = ({
         const elements = JSON.parse(storedElements);
         for (const elem of elements) {
           if (elem.type === "NEW_FIELD") {
-            questionList.forEach((item: any) => {
+            questionList.dataList.forEach((item: any) => {
               const { UNIC_NAME, STICKY_FUNC } = item.extMap;
               if (UNIC_NAME === elem.id || STICKY_FUNC === elem.id) {
                 selectFieldRef.current[elem.id] = STICKY_FUNC || UNIC_NAME;
@@ -661,3 +663,5 @@ const AdvancedFormulaEditor: React.FC<any> = ({
 export default AdvancedFormulaEditor;
 
 // -----------------------------------------------
+
+

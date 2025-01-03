@@ -20,4 +20,7 @@
     calculator: ICalculator | null;
   }
   
-  
+  export interface ICreateCalculatorDialogProps {
+    open: boolean;
+    setOpen: () => void;
+  }

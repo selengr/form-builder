@@ -41,12 +41,39 @@ const AdvancedFormulaEditor: React.FC<any> = ({
   const handleUndo = useCallback(() => {
     if (elements.length === 0 || cursorIndex === 0) return;
 
-    const newElements = [...elements];
-    newElements.splice(cursorIndex - 1, 1);
-    const newCursorIndex = Math.max(0, cursorIndex - 1);
+    if (elements[cursorIndex - 1].type === "AVG_PARENTHESIS") {
+      return
+      }
 
-    updateElements(newElements, newCursorIndex);
-  }, [elements, cursorIndex]);
+    const newElements = [...elements];
+
+    if (elements[cursorIndex - 1].type === "NEW_FnFx") {
+      let endIndex = cursorIndex - 1;
+      let parenthesisCount = 0;
+      
+      for (let i = cursorIndex; i < elements.length; i++) {
+      if (elements[i].type === "AVG_PARENTHESIS") {
+      if (elements[i].content === "(") {
+      parenthesisCount++;
+      } else if (elements[i].content === ")") {
+      if (parenthesisCount === 1) {
+      endIndex = i;
+      break;
+      }
+      parenthesisCount--;
+      }
+      }
+      }
+      newElements.splice(cursorIndex - 1, endIndex - cursorIndex + 2);
+      } else {
+      newElements.splice(cursorIndex - 1, 1);
+      }
+      
+      const newCursorIndex = Math.max(0, cursorIndex - 1);
+      
+      updateElements(newElements, newCursorIndex);
+      }, [elements, cursorIndex]);
+
 
   const updateElements = (newElements: Element[], newCursorIndex: number) => {
     setElements(newElements);
@@ -661,7 +688,3 @@ const AdvancedFormulaEditor: React.FC<any> = ({
 };
 
 export default AdvancedFormulaEditor;
-
-// -----------------------------------------------
-
-

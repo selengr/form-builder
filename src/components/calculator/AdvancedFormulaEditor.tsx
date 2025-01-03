@@ -5,7 +5,7 @@ import Keypad from "./Keypad";
 import { LoadingButton } from "@mui/lab";
 import styles from "./advancedFormulaEditor.module.css";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import AxiosApi from "@/services/axios/AxiosApi";
 import { htmlToFormula } from "../../lib/htmlToFormula";
 import { Element, FnFxItem } from "../../types/formulaEditor";
@@ -19,6 +19,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import { revalidatePath } from "next/cache";
 
 const fetchEditData = async (id: string) => {
   const url = ``;
@@ -37,6 +38,8 @@ const AdvancedFormulaEditor: React.FC<any> = ({
   const [cursorIndex, setCursorIndex] = useState<number>(0);
   const [elements, setElements] = useState<Element[]>(editList);
   const [isClient, setIsClient] = useState<boolean>(false);
+
+  const {refresh} = useRouter()
 
   // const { data, isLoading, error } = useQuery({
   //   queryKey: ["edit-calc"],
@@ -496,12 +499,14 @@ const AdvancedFormulaEditor: React.FC<any> = ({
     });
 
     try {
-      const response = await AxiosApi.post(`/calculation`, {
+       await AxiosApi.post(`/calculation`, {
         name: formName,
         formBuilderId: id,
         theFormula: formula,
         frontCalcData: JSON.stringify(elements),
       });
+      handleClose()
+      refresh()
       toast.success("محاسبه گر با موفقیت ثبت شد");
     } catch (error) {
       toast.error("عملیات ناموفق بود مجددا امتحان فرمایید");
@@ -562,6 +567,7 @@ const AdvancedFormulaEditor: React.FC<any> = ({
               },
             }}
             name="name"
+            onChange={(e) => setFormName(e.target.value)}
           />
         </Stack>
 

@@ -274,6 +274,28 @@ const AdvancedFormulaEditor: React.FC<any> = ({
   }, [elements, styles]);
 
   useEffect(() => {
+    async function getData() {
+      const storedElements = localStorage.getItem("elements");
+      if (storedElements) {
+        const elements = JSON.parse(storedElements);
+        for (const elem of elements) {
+          if (elem.type === "NEW_FIELD") {
+            questionList.forEach((item: any) => {
+              const { UNIC_NAME, STICKY_FUNC } = item.extMap;
+              if (UNIC_NAME === elem.id || STICKY_FUNC === elem.id) {
+                selectFieldRef.current[elem.id] = STICKY_FUNC || UNIC_NAME;
+              }
+            });
+          }
+        }
+        setElements(elements);
+      }
+    }
+
+    getData();
+  }, []);
+
+  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (
@@ -391,14 +413,11 @@ const AdvancedFormulaEditor: React.FC<any> = ({
     if (event.key === "Enter") {
       event.preventDefault();
     }
-    if (event.key === "Backspace" || event.key === 'Delete') {
+    if (event.key === "Backspace" || event.key === "Delete") {
       event.preventDefault();
-      handleUndo()
-      }
-  }
-    
-    
-
+      handleUndo();
+    }
+  };
 
   const handleClick = (e: React.MouseEvent) => {
     const editableDiv = contentEditable.current;
@@ -442,9 +461,6 @@ const AdvancedFormulaEditor: React.FC<any> = ({
       toast.error("عملیات ناموفق بود مجددا امتحان فرمایید");
     }
   };
-
-
-  
 
   if (!isClient) return null;
 
@@ -645,5 +661,3 @@ const AdvancedFormulaEditor: React.FC<any> = ({
 export default AdvancedFormulaEditor;
 
 // -----------------------------------------------
-
-

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { SxProps, Theme, Typography } from "@mui/material";
+import { SxProps, Theme } from "@mui/material";
 import CreateCalculatorDialog from "./CreateCalculatorDialog";
 
 

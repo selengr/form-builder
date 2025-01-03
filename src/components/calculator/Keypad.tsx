@@ -1,8 +1,8 @@
-import React from 'react';
-import { Box, Button, Select, MenuItem, Stack, Grid } from '@mui/material';
-import Image from 'next/image';
-import CalculatorParenthesis from './calculator-parenthesis';
-import CalculatorClear from './calculator-clear';
+import React from "react";
+import Image from "next/image";
+import CalculatorClear from "./calculator-clear";
+import { Box, Button, Select, MenuItem, Stack, Grid2 } from "@mui/material";
+import CalculatorParenthesis from "./calculator-parenthesis";
 
 
 interface KeypadProps {
@@ -22,33 +22,45 @@ const Keypad: React.FC<KeypadProps> = ({
   handleOperator,
   handleNumber,
   handleUndo,
-  contentEditable
+  contentEditable,
 }) => {
-  const operators = ['+', '-', '*', '/'];
-  const numbers = ['0', '.', '7', '8', '9', '4', '5', '6', '1', '2', '3'];
+  const operators = ["+", "-", "*", "/"];
+  const numbers = ["0", ".", "7", "8", "9", "4", "5", "6", "1", "2", "3"];
 
   return (
-    <Box sx={{ width: { xs: "100%", sm: "30%" }, display: "flex", flexDirection: "column", justifyContent: "start", alignItems: "start", mt: 3 }} gap={"3px"}>
+    <Box
+      sx={{
+        width: "26%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "start",
+        alignItems: "start",
+        mt: 3,
+      }}
+      gap={"3px"}
+    >
       <Select
         sx={{
-          '& .MuiSelect-select': {
+          "& .MuiSelect-select": {
             padding: 1,
           },
-          width: 145,
-          height: 33,
+          width: 135,
+          height: 30,
           fontWeight: 500,
           marginBottom: "2px",
           backgroundColor: "#9D2CDF1A",
-          borderRadius: '8px',
+          borderRadius: "8px",
           color: "#9D2CDF",
           borderColor: "none",
-          '&:before, &:after': {
-            border: 'none',
+          "&:before, &:after": {
+            border: "none",
+            padding: 0,
           },
-          '& .MuiOutlinedInput-notchedOutline': {
-            border: 'none',
+          "& .MuiOutlinedInput-notchedOutline": {
+            border: "none",
+            padding: 0,
           },
-          '& .MuiSvgIcon-root': {
+          "& .MuiSvgIcon-root": {
             color: "#9D2CDF",
           },
         }}
@@ -58,7 +70,7 @@ const Keypad: React.FC<KeypadProps> = ({
           <Box sx={{ display: "flex", gap: 1 }}>
             <Image
               alt="file preview"
-              src={"/images/calc/ic_fx.svg"}
+              src={"/assets/icons/svg/ic_fx.svg"}
               height={30}
               width={30}
             />
@@ -67,30 +79,36 @@ const Keypad: React.FC<KeypadProps> = ({
         )}
         MenuProps={{
           PaperProps: {
-            sx: { px: 1, maxHeight: 280, minHeight: 180, mt: "3px" },
+            sx: {
+              px: 1,
+              maxHeight: 280,
+              minHeight: 180,
+              mt: "3px",
+              borderRadius: 2,
+            },
           },
         }}
         onClick={(e: any) => {
           if (e.target.tagName === "LI") {
-            handleFnFX()
+            handleFnFX();
           } else {
-            e.preventDefault()
+            e.preventDefault();
           }
         }}
         onOpen={() => {
           contentEditable.current?.focus();
         }}
       >
-        {["میانگین  ()"].map((option: any) => (
+        {["میانگین ()"].map((option: any) => (
           <MenuItem
             key={option}
             value={option}
             sx={{
               py: 1,
               px: 2,
-              height: 33,
+              height: 30,
               borderRadius: 1.75,
-              typography: 'body2',
+              typography: "body2",
               backgroundColor: "#9D2CDF !important",
               color: "white",
               margin: "5px",
@@ -101,71 +119,88 @@ const Keypad: React.FC<KeypadProps> = ({
         ))}
       </Select>
 
-      <Button 
+      <Button
         sx={{
-          border: '1px solid white',
-          width: 145,
-          height: 33,
-          fontWeight: 500,
-          color: "#1758BA", 
-          borderRadius: '8px',
-          backgroundColor: "#1758BA1A"
+          border: "1px solid white",
+          width: 135,
+          height: 30,
+          fontWeight: 600,
+          color: "#1758BA",
+          backgroundColor: "#1758BA1A",
         }}
         onClick={handleNewField}
       >
         فیلد جدید
       </Button>
 
-      <Stack sx={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-        <Grid gridColumn={3} sx={{ width: "90%", display: "flex", flexDirection: "column" }} >
-          <CalculatorParenthesis operator={'('} handleParenthesis={handleParenthesis} />
+      <Stack
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Grid2
+          gridColumn={3}
+          sx={{
+            width: "79%",
+            display: "flex",
+            flexDirection: "column",
+            marginRight: "4px",
+          }}
+        >
+          <CalculatorParenthesis
+            operator={"("}
+            handleParenthesis={handleParenthesis}
+          />
           {operators.map((op, idx) => (
-            <Button 
+            <Button
               key={idx}
-              sx={{ 
-                border: '1px solid white', 
-                width: 33, 
-                height: 33, 
-                minWidth: 33, 
-                color: "#1758BA", 
-                backgroundColor: "#1758BA1A", 
-                margin: "2px", 
-                fontWeight: 500 ,
-                borderRadius: '8px'
+              sx={{
+                border: "1px solid white",
+                width: 30,
+                height: 30,
+                minWidth: 30,
+                color: "#1758BA",
+                backgroundColor: "#1758BA1A",
+                margin: "2px",
+                fontWeight: 600,
               }}
               onClick={() => handleOperator(op)}
             >
               {op}
             </Button>
           ))}
-        </Grid>
-        <Grid gridColumn={3} sx={{}} spacing={5} gap={5} rowGap={5} columnGap={6}>
-          <CalculatorParenthesis operator={')'} handleParenthesis={handleParenthesis} />
+        </Grid2>
+        <Grid2 gridColumn={3} spacing={5} gap={5} rowGap={5} columnGap={6}>
+          <CalculatorParenthesis
+            operator={")"}
+            handleParenthesis={handleParenthesis}
+          />
           <CalculatorClear handleClear={handleUndo} />
           {numbers.reverse().map((num, idx) => (
-            <Button 
+            <Button
               key={idx}
               sx={{
-                border: '1px solid white', 
-                width: num === "0" ? 70 : 33, 
-                height: 33, 
-                minWidth: num === "0" ? 70 : 33, 
-                color: "#1758BA", 
-                backgroundColor: "#1758BA1A", 
+                border: "1px solid white",
+                width: num === "0" ? 64 : 30,
+                height: 30,
+                minWidth: num === "0" ? 64 : 30,
+                color: "#1758BA",
+                backgroundColor: "#1758BA1A",
                 margin: "2px",
-                fontWeight: 500,
-                borderRadius: '8px'
+                fontWeight: 600,
               }}
               onClick={() => handleNumber(num)}
             >
               {num}
             </Button>
           ))}
-        </Grid>
+        </Grid2>
       </Stack>
     </Box>
   );
 };
 
 export default Keypad;
-

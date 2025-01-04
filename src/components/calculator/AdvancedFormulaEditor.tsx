@@ -31,8 +31,6 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
 
   const {refresh} = useRouter()
 
-  console.log('editList?.name :>> ', editList?.name);
-  // console.log('editList :>> ', editList?.frontCalcData);
 
   useEffect(() => {
     setIsClient(true);

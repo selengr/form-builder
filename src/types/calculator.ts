@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 
 
  export interface ICalculator {
@@ -22,5 +23,6 @@
   
   export interface ICreateCalculatorDialogProps {
     open: boolean;
-    setOpen: () => void;
+    isEdit?: boolean;
+    setOpen: Dispatch<SetStateAction<boolean>>;
   }

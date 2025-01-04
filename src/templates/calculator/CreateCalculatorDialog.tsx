@@ -55,9 +55,20 @@ const fetchCalculators = async (id: string) => {
   return response.data;
 };
 
+
+
+const fetchEditCalculators = async (id: string) => {
+  const url = `/calculation/main-list/find/${id}`;
+  const response = await AxiosApi.get(url);
+  return response.data;
+};
+
+
+
 export const CreateCalculatorDialog: React.FC<ICreateCalculatorDialogProps> = ({
   open,
   setOpen,
+  isEdit
 }) => {
   const { id } = useParams();
   const { data, isLoading, error } = useQuery({
@@ -66,6 +77,16 @@ export const CreateCalculatorDialog: React.FC<ICreateCalculatorDialogProps> = ({
     staleTime: 0,
     gcTime: 600000,
   });
+
+  const { data : editData, isLoading : editLoading, error : errorLoading } = useQuery({
+    queryKey: ["edit-calculators"],
+    queryFn: () => fetchEditCalculators(id as string),
+    staleTime: 0,
+    gcTime: 600000,
+    enabled : isEdit
+  });
+
+  console.log('editData :>> ', editData);
 
   const handleClose = () => {
     setOpen((prev) => !prev);

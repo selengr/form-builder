@@ -55,20 +55,16 @@ const fetchCalculators = async (id: string) => {
   return response.data;
 };
 
-
-
 const fetchEditCalculators = async (calcId: number) => {
   const url = `/calculation/main-list/find/${calcId}`;
   const response = await AxiosApi.get(url);
   return response.data;
 };
 
-
-
 export const EditCalculatorDialog: React.FC<IEditCalculatorDialogProps> = ({
   open,
   setOpen,
-  calcId
+  calcId,
 }) => {
   const { id } = useParams();
   const { data, isLoading, error } = useQuery({
@@ -78,15 +74,16 @@ export const EditCalculatorDialog: React.FC<IEditCalculatorDialogProps> = ({
     gcTime: 0,
   });
 
-  console.log('calcId :>> ', calcId);
-
-  const { data : editData, isLoading : editLoading, error : errorLoading } = useQuery({
+  const {
+    data: editData,
+    isLoading: editLoading,
+    error: errorLoading,
+  } = useQuery({
     queryKey: ["edit-calculators"],
     queryFn: () => fetchEditCalculators(calcId as number),
     staleTime: 0,
-    gcTime: 0
+    gcTime: 0,
   });
-
 
   const handleClose = () => {
     setOpen((prev) => !prev);
@@ -108,7 +105,14 @@ export const EditCalculatorDialog: React.FC<IEditCalculatorDialogProps> = ({
         </div>
         {isLoading && <p>Loading calculators...</p>}
         {error && <p>Error loading calculators: {(error as Error).message}</p>}
-        {data && editData && <AdvancedFormulaEditor questionList={data} handleClose={handleClose} editList={editData} isEdit={true} />}
+        {data && editData && (
+          <AdvancedFormulaEditor
+            questionList={data}
+            handleClose={handleClose}
+            editList={editData}
+            isEdit={true}
+          />
+        )}
       </StyledDialogContent>
     </StyledDialog>
   );

@@ -1,11 +1,11 @@
 import Image from "next/image";
+import { LoadingButton } from "@mui/lab";
+import { SlPencil } from "react-icons/sl";
 import { useCallback, useState } from "react";
+import { Menu, Typography } from "@mui/material";
 import { ICalculatorCardProps } from "@/types/calculator";
 import EditCalculatorDialog from "./EditCalculatorDialog";
 import { PhDotsThreeVerticalBold } from "../../../public/images/icons/PhDotsThreeVerticalBold";
-import { Menu, Typography } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
-import { SlPencil } from "react-icons/sl";
 import { WeuiDeleteOutlined } from "../../../public/images/icons/DeleteIcon";
 
 export function CalculatorCard({ calculator }: ICalculatorCardProps) {
@@ -14,12 +14,11 @@ export function CalculatorCard({ calculator }: ICalculatorCardProps) {
 
   const open = Boolean(anchorEl);
 
-  const handleClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
+  const handleClick = useCallback((event: any) => {
     setAnchorEl(event.currentTarget);
   }, []);
 
   const handleClose = useCallback(() => {
-    // if (loading) return;
     setAnchorEl(null);
   }, []);
 

@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { ICalculatorCardProps } from "@/types/calculator";
-import CreateCalculatorDialog from "./CreateCalculatorDialog";
 import { useState } from "react";
+import { ICalculatorCardProps } from "@/types/calculator";
+import EditCalculatorDialog from "./EditCalculatorDialog";
 
 export function CalculatorCard({ calculator }: ICalculatorCardProps) {
   const [open, setOpen] = useState<boolean>(false);
@@ -48,7 +48,9 @@ justify-center items-center"
           </div>
         </div>
       </div>
-      <CreateCalculatorDialog open={open} setOpen={setOpen} isEdit={true} />
+      {open && (
+        <EditCalculatorDialog open={open} setOpen={setOpen} />
+      )}
     </>
   );
 }

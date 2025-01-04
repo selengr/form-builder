@@ -41,13 +41,8 @@ const AdvancedFormulaEditor: React.FC<any> = ({
 
   const {refresh} = useRouter()
 
-  // const { data, isLoading, error } = useQuery({
-  //   queryKey: ["edit-calc"],
-  //   queryFn: () => fetchEditData(id as string),
-  //   staleTime: 0,
-  //   gcTime: 600000,
-  //   enabled : isEdit
-  // });
+  // console.log('editList :>> ', editList.frontCalcData);
+  console.log('editList :>> ', editList.frontCalcData);
 
   useEffect(() => {
     setIsClient(true);
@@ -324,7 +319,7 @@ const AdvancedFormulaEditor: React.FC<any> = ({
 
   useEffect(() => {
     async function getData() {
-      const storedElements = localStorage.getItem("elements");
+      const storedElements = editList.frontCalcData
       if (storedElements) {
         const elements = JSON.parse(storedElements);
         for (const elem of elements) {

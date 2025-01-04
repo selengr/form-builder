@@ -9,7 +9,7 @@ import { styled } from "@mui/material/styles";
 import AxiosApi from "@/services/axios/AxiosApi";
 import DialogContent from "@mui/material/DialogContent";
 
-import { ICreateCalculatorDialogProps } from "@/types/calculator";
+import { IEditCalculatorDialogProps } from "@/types/calculator";
 import AdvancedFormulaEditor from "@/components/calculator/AdvancedFormulaEditor";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
@@ -55,9 +55,19 @@ const fetchCalculators = async (id: string) => {
   return response.data;
 };
 
-export const CreateCalculatorDialog: React.FC<ICreateCalculatorDialogProps> = ({
+
+
+const fetchEditCalculators = async (id: string) => {
+  const url = `/calculation/main-list/find/${id}`;
+  const response = await AxiosApi.get(url);
+  return response.data;
+};
+
+
+
+export const EditCalculatorDialog: React.FC<IEditCalculatorDialogProps> = ({
   open,
-  setOpen,
+  setOpen
 }) => {
   const { id } = useParams();
   const { data, isLoading, error } = useQuery({
@@ -66,6 +76,14 @@ export const CreateCalculatorDialog: React.FC<ICreateCalculatorDialogProps> = ({
     staleTime: 0,
     gcTime: 600000,
   });
+
+  const { data : editData, isLoading : editLoading, error : errorLoading } = useQuery({
+    queryKey: ["edit-calculators"],
+    queryFn: () => fetchEditCalculators(id as string),
+    staleTime: 0,
+    gcTime: 600000
+  });
+
 
   const handleClose = () => {
     setOpen((prev) => !prev);
@@ -87,10 +105,10 @@ export const CreateCalculatorDialog: React.FC<ICreateCalculatorDialogProps> = ({
         </div>
         {isLoading && <p>Loading calculators...</p>}
         {error && <p>Error loading calculators: {(error as Error).message}</p>}
-        {data && <AdvancedFormulaEditor questionList={data} />}
+        {data && editData && <AdvancedFormulaEditor questionList={data} handleClose={handleClose} editList={editData} isEdit={true} />}
       </StyledDialogContent>
     </StyledDialog>
   );
 };
 
-export default CreateCalculatorDialog;
+export default EditCalculatorDialog;

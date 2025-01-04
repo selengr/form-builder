@@ -9,7 +9,7 @@ export function CalculatorCard({ calculator }: ICalculatorCardProps) {
   return (
     <>
       <div
-        key={calculator.id}
+        key={calculator.formBuilderId}
         className="bg-white rounded-lg p-[10px] h-14
 flex justify-between w-full cursor-pointer border-[1px]
 border-[#1758BA]"
@@ -49,7 +49,11 @@ justify-center items-center"
         </div>
       </div>
       {open && (
-        <EditCalculatorDialog open={open} setOpen={setOpen} />
+        <EditCalculatorDialog
+          open={open}
+          setOpen={setOpen}
+          calcId={calculator.id}
+        />
       )}
     </>
   );

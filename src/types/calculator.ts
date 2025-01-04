@@ -27,14 +27,16 @@ import { Dispatch, SetStateAction } from "react";
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  export interface IEditCalculatorDialogProps extends ICreateCalculatorDialogProps  {}
+  export interface IEditCalculatorDialogProps extends ICreateCalculatorDialogProps  {
+    calcId : number
+  }
 
 
 
   export interface IFrontCalcData {
     type: string; 
     content: string; 
-    id: string; 
+    id?: string; 
 }
 
   export interface ICalculatorFindDataResponse {
@@ -42,7 +44,7 @@ import { Dispatch, SetStateAction } from "react";
       name: string; 
       formBuilderId: number; 
       theFormula: string; 
-      frontCalcData: string; 
+      frontCalcData: IFrontCalcData | string; 
   }
 
 
@@ -85,8 +87,8 @@ export interface IFieldQuestionData {
 
 
 export interface IAdvancedFormulaEditorProps {
-  questionList: IFieldQuestionData[]; 
+  questionList: IFieldQuestionData; 
   handleClose: () => void; 
-  editList?: any; 
+  editList?: ICalculatorFindDataResponse; 
   isEdit?: boolean; 
 }

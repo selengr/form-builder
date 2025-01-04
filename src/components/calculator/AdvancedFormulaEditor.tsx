@@ -20,24 +20,19 @@ import {
 } from "@mui/material";
 import { IAdvancedFormulaEditorProps } from "@/types/calculator";
 
-const fetchEditData = async (id: string) => {
-  const url = ``;
-  const response = await AxiosApi.get(url);
-  return response.data;
-};
-
 
 const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ questionList, handleClose, editList, isEdit }) => {
   const { id } = useParams();
-  const [formName, setFormName] = useState<string>("");
+  const editData = editList?.frontCalcData ? JSON.parse(editList.frontCalcData as string) : []
+  const [formName, setFormName] = useState<string>(editList?.name ?? "");
   const [cursorIndex, setCursorIndex] = useState<number>(0);
-  const [elements, setElements] = useState<Element[]>(editList);
+  const [elements, setElements] = useState<Element[]|[]>(editData);
   const [isClient, setIsClient] = useState<boolean>(false);
 
   const {refresh} = useRouter()
 
-  // console.log('editList :>> ', editList.frontCalcData);
-  console.log('editList :>> ', editList.frontCalcData);
+  console.log('editList?.name :>> ', editList?.name);
+  // console.log('editList :>> ', editList?.frontCalcData);
 
   useEffect(() => {
     setIsClient(true);
@@ -314,15 +309,13 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
 
   useEffect(() => {
     async function getData() {
-      const storedElements = editList.frontCalcData
-      if (storedElements) {
-        const elements = JSON.parse(storedElements);
+      if (elements) {
         for (const elem of elements) {
           if (elem.type === "NEW_FIELD") {
             questionList.dataList.forEach((item: any) => {
               const { UNIC_NAME, STICKY_FUNC } = item.extMap;
               if (UNIC_NAME === elem.id || STICKY_FUNC === elem.id) {
-                selectFieldRef.current[elem.id] = STICKY_FUNC || UNIC_NAME;
+                selectFieldRef.current[elem.id as string] = STICKY_FUNC || UNIC_NAME;
               }
             });
           }
@@ -557,6 +550,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
               },
             }}
             name="name"
+            value={formName}
             onChange={(e) => setFormName(e.target.value)}
           />
         </Stack>

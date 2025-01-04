@@ -18,8 +18,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import { revalidatePath } from "next/cache";
+import { IAdvancedFormulaEditorProps } from "@/types/calculator";
 
 const fetchEditData = async (id: string) => {
   const url = ``;
@@ -27,12 +26,8 @@ const fetchEditData = async (id: string) => {
   return response.data;
 };
 
-const AdvancedFormulaEditor: React.FC<any> = ({
-  questionList,
-  editList = [],
-  handleClose,
-  isEdit,
-}) => {
+
+const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ questionList, handleClose, editList, isEdit }) => {
   const { id } = useParams();
   const [formName, setFormName] = useState<string>("");
   const [cursorIndex, setCursorIndex] = useState<number>(0);

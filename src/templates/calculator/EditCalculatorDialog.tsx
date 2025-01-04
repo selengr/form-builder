@@ -75,7 +75,7 @@ export const EditCalculatorDialog: React.FC<IEditCalculatorDialogProps> = ({
     queryKey: ["calculators"],
     queryFn: () => fetchCalculators(id as string),
     staleTime: 0,
-    gcTime: 600000,
+    gcTime: 0,
   });
 
   console.log('calcId :>> ', calcId);
@@ -84,7 +84,7 @@ export const EditCalculatorDialog: React.FC<IEditCalculatorDialogProps> = ({
     queryKey: ["edit-calculators"],
     queryFn: () => fetchEditCalculators(calcId as number),
     staleTime: 0,
-    gcTime: 600000
+    gcTime: 0
   });
 
 

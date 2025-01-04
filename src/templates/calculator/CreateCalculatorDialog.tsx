@@ -87,7 +87,7 @@ export const CreateCalculatorDialog: React.FC<ICreateCalculatorDialogProps> = ({
         </div>
         {isLoading && <p>Loading calculators...</p>}
         {error && <p>Error loading calculators: {(error as Error).message}</p>}
-        {data && <AdvancedFormulaEditor questionList={data} />}
+        {data && <AdvancedFormulaEditor questionList={data} handleClose={handleClose} />}
       </StyledDialogContent>
     </StyledDialog>
   );

@@ -1,7 +1,6 @@
 import { Fragment, memo } from "react";
 import { FormElements } from "@/types/FormElements";
 import SidebarBtnElement from "./SidebarBtnElement";
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { CodiconEye } from "@/../public/images/home-page/EyeIcon";
 import Link from "next/link";
@@ -10,6 +9,7 @@ import useDesigner from "@/hooks/useDesigner";
 import { IoSettingsOutline } from "react-icons/io5";
 import DesignerBottomSheet from "./DesignerBottomSheet";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import SettingsDialog from "../SettingsDialog/SettingsDialog";
 
 const DesignerSidebar = memo(function DesignerSidebar() {
   const { formName } = useDesigner();
@@ -74,23 +74,7 @@ const DesignerSidebar = memo(function DesignerSidebar() {
           <SidebarBtnElement formElement={FormElements.SPECTRAL} />
         </div>
       </div>
-      <Button
-        variant="contained"
-        sx={{
-          height: "58px",
-          width: "100%",
-          borderRadius: "10px",
-          marginTop: 1,
-          boxShadow: "none",
-          backgroundColor: "#1758BA",
-          "&.MuiButtonBase-root:hover": {
-            backgroundColor: "#1758BA",
-            boxShadow: "none",
-          },
-        }}
-      >
-        <p className="text-white text-[15px] font-bold">ذخیره و انتشار</p>
-      </Button>
+      <SettingsDialog />
     </div>
   ) : (
     <Fragment>
@@ -137,6 +121,7 @@ const DesignerSidebar = memo(function DesignerSidebar() {
               <IoSettingsOutline color="#2A2A2A" />
             </IconButton>
           </div>
+          <SettingsDialog />
         </div>
       </div>
       <DesignerBottomSheet>

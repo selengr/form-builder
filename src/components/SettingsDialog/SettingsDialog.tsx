@@ -7,7 +7,7 @@ import FormProvider, { RHFTextField } from "../hook-form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoadingButton } from "@mui/lab";
-import FieldCheckboxPair from "./FieldCheckBoxPair";
+import FieldSwitchPair from "./FieldSwitchPair";
 
 const limitOptions = [
   { label: "از طریق شماره همراه", value: "telephone" },
@@ -22,6 +22,11 @@ const layoutOptions = [
 const themeOptions = [{ label: "تم 1", value: "theme1" }];
 
 const fieldsConfig = [
+  {
+    name: "start",
+    label: "زمان شروع",
+    type: "time-picker",
+  },
   {
     name: "expire",
     label: "تاریخ انقضا",
@@ -38,12 +43,14 @@ const fieldsConfig = [
     label: "حالت نمایش",
     type: "multi-select",
     options: layoutOptions,
+    disabled: true,
   },
   {
     name: "theme",
     label: "پوسته",
     type: "select",
     options: themeOptions,
+    disabled: true,
   },
 ];
 
@@ -74,6 +81,10 @@ const propertiesSchema = z.object({
     value: z.any(),
     checked: z.boolean(),
   }),
+  start: z.object({
+    value: z.any(),
+    checked: z.boolean(),
+  }),
 });
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
@@ -91,6 +102,7 @@ export default function SettingsDialog() {
     defaultValues: {
       name: "",
       expire: { checked: false, value: "" },
+      start: { checked: false, value: "" },
       limit: { checked: false, value: [] },
       layout: { checked: false, value: [] },
       theme: { checked: false, value: "" },
@@ -205,12 +217,13 @@ export default function SettingsDialog() {
                       />
                     </Stack>
                     {fieldsConfig.map((field) => (
-                      <FieldCheckboxPair
+                      <FieldSwitchPair
                         key={field.name}
                         fieldName={field.name}
                         label={field.label}
                         type={field.type}
                         options={field.options}
+                        disabled={field?.disabled}
                       />
                     ))}
                   </Box>

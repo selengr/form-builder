@@ -27,7 +27,7 @@ const parseDateString = (dateString: string): any => {
   return formatDate(new Date(date));
 };
 
-export default function DatePicker({
+export function DatePicker({
   onChange,
   error,
   value,
@@ -63,7 +63,7 @@ export default function DatePicker({
         onChange={setSelectedDay}
         containerClassName="w-full"
         zIndex={9999}
-        inputClass={`h-[55px] max-w-[500px] w-full px-4 border-[1px] rounded-[10px] text-left p-1 ${
+        inputClass={`h-[55px] max-w-[500px] w-full px-4 border-[1px] rounded-[10px] text-center font-bold p-1 ${
           error
             ? "border-[#f87171] shadow-[0_0_0_4px_#E11D2B33]"
             : "border-neutral-300"

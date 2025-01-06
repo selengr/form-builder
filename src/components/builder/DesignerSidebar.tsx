@@ -121,8 +121,8 @@ const DesignerSidebar = memo(function DesignerSidebar() {
               <IoSettingsOutline color="#2A2A2A" />
             </IconButton>
           </div>
-          <SettingsDialog />
         </div>
+        <SettingsDialog />
       </div>
       <DesignerBottomSheet>
         <div className="flex flex-col w-full gap-3">

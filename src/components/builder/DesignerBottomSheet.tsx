@@ -46,6 +46,9 @@ const DesignerBottomSheet: React.FC<BottomSheetProps> = ({ children }) => {
       <Transition in={openBottomSheet}>
         <Box
           sx={{
+            "&.MuiBox-root:focus-visible": {
+              outline: "none",
+            },
             width: { xs: "100%", md: "70%", sm: "100%", xl: "50%" },
             display: "flex",
             flexDirection: "column",

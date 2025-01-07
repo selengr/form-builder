@@ -5,7 +5,7 @@ const TimePickerStyled = styled(Box)(({ theme }) => ({
     display: "none",
   },
   "& .rmdp-time-picker": {
-    padding: "8px 0",
+    padding: "15px 0 10px 0",
   },
   "& .rmdp-wrapper.rmdp-shadow": {
     borderRadius: "16px",
@@ -14,7 +14,7 @@ const TimePickerStyled = styled(Box)(({ theme }) => ({
     minWidth: "150px !important",
   },
   "& .rmdp-time-picker div input": {
-    fontSize: "15px",
+    fontSize: "16px",
     width: "30px",
   },
   "& .dvdr": {
@@ -29,6 +29,10 @@ const TimePickerStyled = styled(Box)(({ theme }) => ({
   },
   "& .rmdp-container input": {
     textAlign: "center !important",
+  },
+  "& .rmdp-arrow": {
+    height: "8px",
+    width: "8px",
   },
 }));
 

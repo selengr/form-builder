@@ -225,16 +225,16 @@ const ListGrid: React.FC<Props> = ({
             sx={{
               display: "flex",
               justifyContent: "center",
-              gap: "8px",
+              alignItems: "center",
+              gap: "12px",
               width: "100%",
             }}
           >
             <Grid2
-              id="testthis"
               display="flex"
               sx={{
                 width: "100%",
-                maxWidth: "404px",
+                maxWidth: "400px",
                 justifyContent: "space-between",
                 gap: 2,
                 bgcolor: "#ECFAFF",
@@ -253,7 +253,7 @@ const ListGrid: React.FC<Props> = ({
                 {totalData} {textTotal[1]}
               </p>
             </Grid2>
-            <div className="w-[50px] h-full">
+            <div className="min-w-[50px] w-[50px] h-full">
               <CreateFormBtn />
             </div>
           </Box>
@@ -271,27 +271,20 @@ const ListGrid: React.FC<Props> = ({
           >
             <Grid2
               size={{ xs: 12, sm: 12, md: 8, lg: 10 }}
-              sx={{ display: "flex", alignItems: "center" }}
+              sx={{ display: "flex", alignItems: "center", gap: "12px" }}
             >
               <SearchInput />
               {!disableFilter && (
                 <Grid2
-                  sx={{ ml: 2, display: { xs: "flex", lg: "none" } }}
+                  sx={{ display: { xs: "flex", lg: "none" } }}
                   onClick={handleOpen}
                 >
                   <Image
                     src="./images/home-page/FilterAA.svg"
                     width={51}
                     height={51}
-                    alt="Add"
-                    style={{
-                      cursor: "pointer",
-                      marginLeft: "10px",
-                      border: "1px solid #C9C9C9",
-                      margin: "5px",
-                      padding: "7px",
-                      borderRadius: "15px",
-                    }}
+                    alt=""
+                    className="cursor-pointer border-[1px] border-[#c9c9c9] rounded-[15px] p-2"
                   />
                 </Grid2>
               )}

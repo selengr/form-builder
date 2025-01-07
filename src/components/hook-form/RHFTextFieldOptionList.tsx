@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import { BsTrash3 } from "react-icons/bs";
-import { FiPlusCircle } from "react-icons/fi";
+import { FiPlus } from "react-icons/fi";
 
 type PropTypes = {
   name: string;
@@ -177,12 +177,7 @@ const RHFTextFieldOptionList = memo(function RHFTextFieldOptionList({
                 color: "#1758BA",
               }}
             >
-              <FiPlusCircle
-                width={24}
-                height={24}
-                size="1.3rem"
-                color="#1758BA"
-              />
+              <FiPlus width={24} height={24} size="1.4rem" color="#1758BA" />
             </IconButton>
           </Box>
         ) : null}

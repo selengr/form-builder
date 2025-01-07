@@ -50,11 +50,13 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
       aria-labelledby="bottom-sheet-title"
       aria-describedby="bottom-sheet-description"
       closeAfterTransition
-      className="mts-layout"
     >
       <Transition in={open}>
         <Box
           sx={{
+            "&.MuiBox-root:focus-visible": {
+              outline: "none",
+            },
             width: { xs: "100%", sm: "100%", md: "50%", lg: "50%", xl: "50%" },
             display: "flex",
             flexDirection: "column",

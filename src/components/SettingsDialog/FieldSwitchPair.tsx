@@ -74,7 +74,7 @@ const FieldSwitchPair = memo(function FieldCheckboxPair({
             control={control}
             render={({ field }) => (
               <DatePickerCustome
-                min={new Date().setDate(new Date().getDate())}
+                min={new Date().setDate(new Date().getDate() - 1)}
                 onChange={(value) => {
                   field.onChange(value);
                   setValue(`${fieldName}.value`, value);

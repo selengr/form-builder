@@ -1,13 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
 import Dialog from "@mui/material/Dialog";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import DialogContent from "@mui/material/DialogContent";
+import Button from "@mui/material/Button";
 import { CgClose } from "react-icons/cg";
-import { Box, Button, DialogContent, Stack, Typography } from "@mui/material";
 import { z } from "zod";
 import FormProvider, { RHFTextField } from "../hook-form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoadingButton } from "@mui/lab";
 import FieldSwitchPair from "./FieldSwitchPair";
+import { IoSettingsOutline } from "react-icons/io5";
+import { Typography } from "@mui/material";
 
 const limitOptions = [
   { label: "از طریق شماره همراه", value: "telephone" },
@@ -125,24 +130,18 @@ export default function SettingsDialog() {
 
   return (
     <>
-      <Button
+      <IconButton
         onClick={handleOpen}
-        variant="contained"
         sx={{
-          height: "58px",
-          width: "100%",
-          borderRadius: "10px",
-          marginTop: 1,
-          boxShadow: "none",
-          backgroundColor: "#1758BA",
-          "&.MuiButtonBase-root:hover": {
-            backgroundColor: "#1758BA",
-            boxShadow: "none",
-          },
+          height: "40px",
+          width: "40px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <p className="text-white text-[15px] font-bold">ذخیره و انتشار</p>
-      </Button>
+        <IoSettingsOutline color="#2A2A2A" />
+      </IconButton>
       <Dialog
         open={openDialog}
         dir="ltr"
@@ -198,7 +197,7 @@ export default function SettingsDialog() {
                       gap: "20px",
                     }}
                   >
-                    <Stack spacing={1}>
+                    <Box display="flex" flexDirection="column" gap={1}>
                       <Typography
                         variant="subtitle2"
                         fontWeight="600"
@@ -215,7 +214,7 @@ export default function SettingsDialog() {
                           },
                         }}
                       />
-                    </Stack>
+                    </Box>
                     {fieldsConfig.map((field) => (
                       <FieldSwitchPair
                         key={field.name}

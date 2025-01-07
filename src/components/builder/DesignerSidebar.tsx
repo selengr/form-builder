@@ -6,7 +6,6 @@ import { CodiconEye } from "@/../public/images/home-page/EyeIcon";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import useDesigner from "@/hooks/useDesigner";
-import { IoSettingsOutline } from "react-icons/io5";
 import DesignerBottomSheet from "./DesignerBottomSheet";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import SettingsDialog from "../SettingsDialog/SettingsDialog";
@@ -52,17 +51,7 @@ const DesignerSidebar = memo(function DesignerSidebar() {
               <CodiconEye color="#2A2A2A" />
             </IconButton>
           </Link>
-          <IconButton
-            sx={{
-              height: "100%",
-              width: "40px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <IoSettingsOutline color="#2A2A2A" />
-          </IconButton>
+          <SettingsDialog />
         </div>
       </div>
 
@@ -74,7 +63,9 @@ const DesignerSidebar = memo(function DesignerSidebar() {
           <SidebarBtnElement formElement={FormElements.SPECTRAL} />
         </div>
       </div>
-      <SettingsDialog />
+      <button className="h-[58px] w-full rounded-[10px] mt-2 shadow-none bg-[#1758BA]">
+        <p className="text-white text-[15px] font-bold">ذخیره و انتشار</p>
+      </button>
     </div>
   ) : (
     <Fragment>
@@ -109,20 +100,12 @@ const DesignerSidebar = memo(function DesignerSidebar() {
                 <CodiconEye color="#2A2A2A" />
               </IconButton>
             </Link>
-            <IconButton
-              sx={{
-                height: "40px",
-                width: "40px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <IoSettingsOutline color="#2A2A2A" />
-            </IconButton>
+            <SettingsDialog />
           </div>
         </div>
-        <SettingsDialog />
+        <button className="h-[58px] w-full rounded-[10px] mt-2 shadow-none bg-[#1758BA]">
+          <p className="text-white text-[15px] font-bold">ذخیره و انتشار</p>
+        </button>
       </div>
       <DesignerBottomSheet>
         <div className="flex flex-col w-full gap-3">

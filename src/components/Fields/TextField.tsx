@@ -783,7 +783,7 @@ function PropertiesComponent({
           flexDirection="row"
           justifyContent="space-between"
           alignItems="flex-start"
-          marginTop={3}
+          marginTop={1.5}
         >
           <Typography variant="subtitle2" fontWeight="700">
             پاسخ غیر قابل ویرایش
@@ -798,7 +798,7 @@ function PropertiesComponent({
 
         <Stack
           spacing={1}
-          marginTop={1}
+          marginTop={0.5}
           flexDirection="row"
           justifyContent="space-between"
           alignItems="flex-end"
@@ -807,6 +807,7 @@ function PropertiesComponent({
             توضیحات
           </Typography>
           <SwitchButton
+            disableRipple
             onChange={() => setOpenDescriptionSwitch((prev) => !prev)}
             checked={openDescriptionSwitch}
           />

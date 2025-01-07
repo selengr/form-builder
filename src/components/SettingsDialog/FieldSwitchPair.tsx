@@ -132,7 +132,11 @@ const FieldSwitchPair = memo(function FieldCheckboxPair({
         <Typography variant="subtitle2" fontWeight="600" fontSize="15px">
           {!disabled ? label : `${label} (بزودی)`}
         </Typography>
-        <SwitchButton checked={isChecked} onChange={handleChange} />
+        <SwitchButton
+          disableRipple
+          checked={isChecked}
+          onChange={handleChange}
+        />
       </Box>
       {isChecked && renderInput()}
     </Box>

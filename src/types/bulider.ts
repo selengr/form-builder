@@ -108,6 +108,11 @@ export type IQPLSpectral = [
     questionPropertyEnum: "SPECTRAL_END";
     value: number | string;
     id: number;
+  },
+  {
+    id: number;
+    questionPropertyEnum: "EDIT_ANSWER_LOCKED";
+    value: string;
   }
 ];
 
@@ -131,6 +136,11 @@ export type IQPLMultipleChoice = [
     id: number;
     questionPropertyEnum: "DESCRIPTION";
     value: string | null;
+  },
+  {
+    id: number;
+    questionPropertyEnum: "EDIT_ANSWER_LOCKED";
+    value: string;
   }
 ];
 

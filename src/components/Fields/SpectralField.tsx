@@ -74,6 +74,11 @@ const questionPropertyList: IQPLSpectral = [
     value: 100,
     id: 7,
   },
+  {
+    id: 8,
+    questionPropertyEnum: "EDIT_ANSWER_LOCKED",
+    value: "false",
+  },
 ];
 
 const optionList: IFormOptionList[] = [
@@ -166,6 +171,10 @@ const propertiesSchema = z
       id: z.number(),
     }),
     REQUIRED: z.object({
+      value: z.boolean().default(false),
+      id: z.number(),
+    }),
+    EDIT_ANSWER_LOCKED: z.object({
       value: z.boolean().default(false),
       id: z.number(),
     }),
@@ -451,7 +460,10 @@ function PropertiesComponent({
           acc[attribute.questionPropertyEnum] = {};
         }
 
-        if (attribute.questionPropertyEnum === "REQUIRED") {
+        if (
+          attribute.questionPropertyEnum === "REQUIRED" ||
+          attribute.questionPropertyEnum === "EDIT_ANSWER_LOCKED"
+        ) {
           acc[attribute.questionPropertyEnum].value =
             attribute.value === "true";
         } else if (
@@ -506,6 +518,7 @@ function PropertiesComponent({
       SPECTRAL_START,
       SPECTRAL_END,
       optionList,
+      EDIT_ANSWER_LOCKED,
     } = values;
 
     // ? finds whether a field is selected or not
@@ -529,6 +542,11 @@ function PropertiesComponent({
         value:
           openDescriptionSwitch && DESCRIPTION.value ? DESCRIPTION.value : null,
         id: DESCRIPTION.id,
+      },
+      {
+        questionPropertyEnum: "EDIT_ANSWER_LOCKED",
+        value: EDIT_ANSWER_LOCKED ? "true" : "false",
+        id: EDIT_ANSWER_LOCKED.id,
       },
       {
         questionPropertyEnum: "SELECTION_TYPE",
@@ -763,8 +781,25 @@ function PropertiesComponent({
         </Stack>
 
         <Stack
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="flex-start"
+          marginTop={1.5}
+        >
+          <Typography variant="subtitle2" fontWeight="700">
+            پاسخ غیر قابل ویرایش
+          </Typography>
+          <RHFSwitch
+            label=""
+            name="EDIT_ANSWER_LOCKED.value"
+            labelPlacement="start"
+            sx={{ mb: 1, mx: 0, width: 1, justifyContent: "space-between" }}
+          />
+        </Stack>
+
+        <Stack
           spacing={1}
-          marginTop={1}
+          marginTop={0.5}
           flexDirection="row"
           justifyContent="space-between"
           alignItems="flex-end"

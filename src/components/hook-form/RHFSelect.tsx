@@ -156,8 +156,7 @@ export function RHFMultiSelect({
             displayEmpty={!!placeholder}
             labelId={name}
             input={<OutlinedInput fullWidth label={label} error={!!error} />}
-            // @ts-ignore
-            renderValue={renderValues}
+            renderValue={renderValues as any}
             MenuProps={{
               PaperProps: {
                 sx: { px: 1, maxHeight: 280 },

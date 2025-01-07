@@ -68,6 +68,11 @@ const questionPropertyList: IQPLMultipleChoice = [
     questionPropertyEnum: "DESCRIPTION",
     value: "",
   },
+  {
+    id: 5,
+    questionPropertyEnum: "EDIT_ANSWER_LOCKED",
+    value: "false",
+  },
 ];
 
 const optionList: IFormOptionList[] = [
@@ -118,6 +123,10 @@ const propertiesSchema = z.object({
     id: z.number(),
   }),
   REQUIRED: z.object({
+    value: z.boolean().default(false),
+    id: z.number(),
+  }),
+  EDIT_ANSWER_LOCKED: z.object({
     value: z.boolean().default(false),
     id: z.number(),
   }),
@@ -432,7 +441,8 @@ function PropertiesComponent({
         if (
           attribute.questionPropertyEnum === "REQUIRED" ||
           attribute.questionPropertyEnum === "RANDOMIZE_OPTIONS" ||
-          attribute.questionPropertyEnum === "MULTI_SELECT"
+          attribute.questionPropertyEnum === "MULTI_SELECT" ||
+          attribute.questionPropertyEnum === "EDIT_ANSWER_LOCKED"
         ) {
           acc[attribute.questionPropertyEnum].value =
             attribute.value === "true";
@@ -517,6 +527,7 @@ function PropertiesComponent({
       RANDOMIZE_OPTIONS,
       MULTI_SELECT,
       optionList,
+      EDIT_ANSWER_LOCKED,
     } = values;
 
     // ? finds whether a field is selected or not
@@ -539,6 +550,11 @@ function PropertiesComponent({
         questionPropertyEnum: "REQUIRED",
         value: REQUIRED.value ? "true" : "false",
         id: REQUIRED.id,
+      },
+      {
+        questionPropertyEnum: "EDIT_ANSWER_LOCKED",
+        value: EDIT_ANSWER_LOCKED ? "true" : "false",
+        id: EDIT_ANSWER_LOCKED.id,
       },
       {
         questionPropertyEnum: "DESCRIPTION",
@@ -824,6 +840,23 @@ function PropertiesComponent({
           <RHFSwitch
             label=""
             name="RANDOMIZE_OPTIONS.value"
+            labelPlacement="start"
+            sx={{ mb: 1, mx: 0, width: 1, justifyContent: "space-between" }}
+          />
+        </Stack>
+
+        <Stack
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="flex-start"
+          marginTop={1.5}
+        >
+          <Typography variant="subtitle2" fontWeight="700">
+            پاسخ غیر قابل ویرایش
+          </Typography>
+          <RHFSwitch
+            label=""
+            name="EDIT_ANSWER_LOCKED.value"
             labelPlacement="start"
             sx={{ mb: 1, mx: 0, width: 1, justifyContent: "space-between" }}
           />

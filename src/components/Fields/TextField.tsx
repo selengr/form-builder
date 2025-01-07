@@ -68,6 +68,11 @@ const questionPropertyList: IQPLTextField = [
     questionPropertyEnum: "MAXIMUM_LEN",
     value: 250,
   },
+  {
+    id: 6,
+    questionPropertyEnum: "EDIT_ANSWER_LOCKED",
+    value: "false",
+  },
 ];
 
 const fieldPatternOptions: ITextFieldFormPatternOptions = [
@@ -115,6 +120,10 @@ const propertiesSchema = z
       id: z.number(),
     }),
     REQUIRED: z.object({
+      value: z.boolean().default(false),
+      id: z.number(),
+    }),
+    EDIT_ANSWER_LOCKED: z.object({
       value: z.boolean().default(false),
       id: z.number(),
     }),
@@ -507,6 +516,9 @@ function PropertiesComponent({
         } else if (attribute.questionPropertyEnum === "DESCRIPTION") {
           acc[attribute.questionPropertyEnum].value =
             attribute.value === null ? "" : attribute.value;
+        } else if (attribute.questionPropertyEnum === "EDIT_ANSWER_LOCKED") {
+          acc[attribute.questionPropertyEnum].value =
+            attribute.value === "true";
         } else {
           acc[attribute.questionPropertyEnum].value = attribute.value;
         }
@@ -544,6 +556,7 @@ function PropertiesComponent({
       TEXT_FIELD_PATTERN,
       MAXIMUM_LEN,
       MINIMUM_LEN,
+      EDIT_ANSWER_LOCKED,
     } = values;
 
     // finds whether a field is selected or not
@@ -566,6 +579,11 @@ function PropertiesComponent({
         questionPropertyEnum: "REQUIRED",
         value: REQUIRED ? "true" : "false",
         id: REQUIRED.id,
+      },
+      {
+        questionPropertyEnum: "EDIT_ANSWER_LOCKED",
+        value: EDIT_ANSWER_LOCKED ? "true" : "false",
+        id: EDIT_ANSWER_LOCKED.id,
       },
       {
         questionPropertyEnum: "DESCRIPTION",
@@ -756,6 +774,23 @@ function PropertiesComponent({
           <RHFSwitch
             label=""
             name="REQUIRED.value"
+            labelPlacement="start"
+            sx={{ mb: 1, mx: 0, width: 1, justifyContent: "space-between" }}
+          />
+        </Stack>
+
+        <Stack
+          flexDirection="row"
+          justifyContent="space-between"
+          alignItems="flex-start"
+          marginTop={3}
+        >
+          <Typography variant="subtitle2" fontWeight="700">
+            پاسخ غیر قابل ویرایش
+          </Typography>
+          <RHFSwitch
+            label=""
+            name="EDIT_ANSWER_LOCKED.value"
             labelPlacement="start"
             sx={{ mb: 1, mx: 0, width: 1, justifyContent: "space-between" }}
           />

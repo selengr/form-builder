@@ -502,8 +502,8 @@ function PropertiesComponent({
   const handleAddOption = useCallback(() => {
     if (fields.length >= 10) return;
     const random = Math.ceil(Math.random() * 100000);
-    // @ts-ignore
-    append({ id: random, title: "", score: 0 });
+
+    append({ id: random, title: "", score: 0 } as any);
     if (fields.length === 1) {
       clearErrors("optionList");
     }
@@ -692,7 +692,7 @@ function PropertiesComponent({
                     src={`${process.env.NEXT_PUBLIC_BASE_URL}/filemanager${field?.link}`}
                   />
                 ) : (
-                  <Box>
+                  <div>
                     <UppyUploader
                       sx={{}}
                       register={register(`optionList.${index}.title`)}
@@ -704,7 +704,7 @@ function PropertiesComponent({
                       {errors?.optionList &&
                         errors?.optionList[index]?.title?.message}
                     </p>
-                  </Box>
+                  </div>
                 )}
                 <Box
                   display="flex"
@@ -764,7 +764,6 @@ function PropertiesComponent({
             </p>
             <IconButton
               disabled={fields.length >= 10}
-              aria-label="trash"
               onClick={handleAddOption}
               sx={{
                 marginBottom: 0,

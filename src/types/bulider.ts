@@ -63,6 +63,11 @@ export type IQPLTextField = [
     id: number;
     questionPropertyEnum: "MAXIMUM_LEN";
     value: string | number | null;
+  },
+  {
+    id: number;
+    questionPropertyEnum: "EDIT_ANSWER_LOCKED";
+    value: string;
   }
 ];
 

@@ -14,17 +14,9 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import FormProvider from "../../components/hook-form/FormProvider";
-import {
-  RHFMultiSelect,
-  RHFSwitch,
-  RHFTextField,
-} from "../../components/hook-form";
+import { RHFSwitch, RHFTextField } from "../../components/hook-form";
 import FieldDialogActionBottomButtons from "../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons";
-import {
-  IFormElementConstructor,
-  IQPLTextField,
-  ITextFieldFormPatternOptions,
-} from "../../types/bulider";
+import { IFormElementConstructor, IQPLTextField } from "../../types/bulider";
 import AxiosApi from "@/services/axios/AxiosApi";
 import useDesigner from "@/hooks/useDesigner";
 import useElements from "@/hooks/useElements";
@@ -39,6 +31,7 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import "react-multi-date-picker/styles/layouts/mobile.css";
 import { SwitchButton } from "../Switch/SwitchButton";
+import TextFieldPair from "../TextFieldPair/TextFieldPair";
 
 const questionType: ElementsType = "TEXT_FIELD";
 
@@ -73,15 +66,6 @@ const questionPropertyList: IQPLTextField = [
     questionPropertyEnum: "EDIT_ANSWER_LOCKED",
     value: "false",
   },
-];
-
-const fieldPatternOptions: ITextFieldFormPatternOptions = [
-  { value: "SHORT_TEXT", label: "متن ساده" },
-  { value: "LONG_TEXT", label: "متن بلند" },
-  { value: "NUMBER", label: "عددی" },
-  { value: "NATIONAL_CODE", label: "کدملی" },
-  { value: "DATE", label: "تاریخ" },
-  { value: "PHONE", label: "تلفن" },
 ];
 
 const propertiesSchema = z
@@ -468,7 +452,7 @@ function PropertiesComponent({
   elementInstance: FormElementInstance;
 }) {
   const element = elementInstance as CustomInstance;
-  const [showMinMaxProps, setShowMinMaxProps] = useState<boolean>(() => {
+  const [showMinMaxProps] = useState<boolean>(() => {
     const textFieldPatternVal = element.questionPropertyList.find(
       (prop) => prop.questionPropertyEnum === "TEXT_FIELD_PATTERN"
     )?.value;
@@ -500,7 +484,10 @@ function PropertiesComponent({
           acc[attribute.questionPropertyEnum] = {};
         }
 
-        if (attribute.questionPropertyEnum === "REQUIRED") {
+        if (
+          attribute.questionPropertyEnum === "REQUIRED" ||
+          attribute.questionPropertyEnum === "EDIT_ANSWER_LOCKED"
+        ) {
           acc[attribute.questionPropertyEnum].value =
             attribute.value === "true";
         } else if (attribute.questionPropertyEnum === "MINIMUM_LEN") {
@@ -516,9 +503,6 @@ function PropertiesComponent({
         } else if (attribute.questionPropertyEnum === "DESCRIPTION") {
           acc[attribute.questionPropertyEnum].value =
             attribute.value === null ? "" : attribute.value;
-        } else if (attribute.questionPropertyEnum === "EDIT_ANSWER_LOCKED") {
-          acc[attribute.questionPropertyEnum].value =
-            attribute.value === "true";
         } else {
           acc[attribute.questionPropertyEnum].value = attribute.value;
         }
@@ -727,40 +711,11 @@ function PropertiesComponent({
           </Box>
         </Stack>
 
-        <Stack spacing={1} marginTop={2.5}>
-          <Typography variant="subtitle2" fontWeight="700">
-            الگوی فیلد پاسخ:
-          </Typography>
-          <RHFMultiSelect
-            name="TEXT_FIELD_PATTERN.value"
-            options={fieldPatternOptions}
-            setProp={setShowMinMaxProps}
-            clearErros={clearErrors}
-            setValue={setValue}
-          />
-        </Stack>
-
-        {showMinMaxProps ? (
-          <Box
-            display="flex"
-            gap={2}
-            justifyContent="space-between"
-            marginTop={2}
-          >
-            <Box width="100%">
-              <Typography variant="subtitle2" fontWeight="700">
-                حداقل کرکتر:
-              </Typography>
-              <RHFTextField name="MINIMUM_LEN.value" type="number" />
-            </Box>
-            <Box width="100%">
-              <Typography variant="subtitle2" fontWeight="700">
-                حداکثر کرکتر:
-              </Typography>
-              <RHFTextField name="MAXIMUM_LEN.value" type="number" />
-            </Box>
-          </Box>
-        ) : null}
+        <TextFieldPair
+          setValue={setValue}
+          clearErrors={clearErrors}
+          initialShow={showMinMaxProps}
+        />
 
         <Stack
           flexDirection="row"

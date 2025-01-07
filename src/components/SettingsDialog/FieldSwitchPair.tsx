@@ -1,3 +1,5 @@
+"use client";
+
 import { memo, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { Box, Typography } from "@mui/material";
@@ -122,7 +124,7 @@ const FieldSwitchPair = memo(function FieldCheckboxPair({
   };
 
   return (
-    <Box display="flex" flexDirection="column" gap="8px">
+    <div className="flex flex-col gap-2">
       <Box
         display="flex"
         justifyContent="space-between"
@@ -139,7 +141,7 @@ const FieldSwitchPair = memo(function FieldCheckboxPair({
         />
       </Box>
       {isChecked && renderInput()}
-    </Box>
+    </div>
   );
 });
 

@@ -5,6 +5,7 @@ import { TitleFieldFinishFormElement } from "../components/Fields/TitleFieldFini
 import { TitleFieldStartFormElement } from "../components/Fields/TitleFieldStart";
 import { MultipleChoiceFormElement } from "../components/Fields/MultipleChoiceField";
 import { MultipleChoiceImageFormElement } from "../components/Fields/MultipleChoiceImageField";
+import { InfoFieldFormElement } from "@/components/Fields/InfoField";
 
 export type ElementsType =
   | "TEXT_FIELD"
@@ -12,7 +13,8 @@ export type ElementsType =
   | "TitleFieldStart"
   | "TitleFieldFinish"
   | "MULTIPLE_CHOICE_IMAGE"
-  | "SPECTRAL";
+  | "SPECTRAL"
+  | "INFO_FIELD";
 
 export type SubmitFunction = (key: number, value: string) => void;
 
@@ -80,4 +82,5 @@ export const FormElements: FormElementsType = {
   TitleFieldStart: TitleFieldStartFormElement,
   TitleFieldFinish: TitleFieldFinishFormElement,
   MULTIPLE_CHOICE_IMAGE: MultipleChoiceImageFormElement,
+  INFO_FIELD: InfoFieldFormElement,
 };

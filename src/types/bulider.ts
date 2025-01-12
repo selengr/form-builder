@@ -38,6 +38,19 @@ export type ITextFieldFormPatternOptions = {
   label: string;
 }[];
 
+export type IQPLInfoField = [
+  {
+    id: number;
+    questionPropertyEnum: "MESSAGE";
+    value: string;
+  },
+  {
+    id: number;
+    questionPropertyEnum: "THE_END";
+    value: boolean;
+  }
+];
+
 export type IQPLTextField = [
   {
     id: number;

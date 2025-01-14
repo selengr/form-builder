@@ -61,6 +61,7 @@ const DesignerSidebar = memo(function DesignerSidebar() {
           <SidebarBtnElement formElement={FormElements.MULTIPLE_CHOICE} />
           <SidebarBtnElement formElement={FormElements.MULTIPLE_CHOICE_IMAGE} />
           <SidebarBtnElement formElement={FormElements.SPECTRAL} />
+          <SidebarBtnElement formElement={FormElements.INFO_FIELD} />
         </div>
       </div>
       <button className="h-[58px] w-full rounded-[10px] mt-2 shadow-none bg-[#1758BA]">
@@ -113,6 +114,7 @@ const DesignerSidebar = memo(function DesignerSidebar() {
           <SidebarBtnElement formElement={FormElements.MULTIPLE_CHOICE} />
           <SidebarBtnElement formElement={FormElements.MULTIPLE_CHOICE_IMAGE} />
           <SidebarBtnElement formElement={FormElements.SPECTRAL} />
+          <SidebarBtnElement formElement={FormElements.INFO_FIELD} />
         </div>
       </DesignerBottomSheet>
     </Fragment>

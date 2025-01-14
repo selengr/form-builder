@@ -235,7 +235,7 @@ function PropertiesComponent({
     const propertiesData = [
       {
         questionPropertyEnum: "THE_END",
-        value: THE_END,
+        value: THE_END.value,
         id: THE_END.id,
       },
       {

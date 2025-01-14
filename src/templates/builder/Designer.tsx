@@ -4,8 +4,6 @@ import { memo } from "react";
 import CreateFieldDialog from "@/components/builder/CreateFieldDialog";
 import DesignerSidebar from "@/components/builder/DesignerSidebar";
 import KanbanBoard from "./kanban/KanbanBoard";
-import DesignerStartPageElement from "./kanban/DesignerStartPageElement";
-import DesignerFinishPageElement from "./kanban/DesignerFinishPageElement";
 import DesignerTabs from "./TabComponent";
 
 const Designer = memo(function Designer() {
@@ -23,7 +21,7 @@ const Designer = memo(function Designer() {
             <div className="w-full h-full flex-grow flex items-center flex-col justify-start rounded-md gap-4">
               <KanbanBoard />
             </div>
-            <DesignerFinishPageElement />
+            {/* <DesignerFinishPageElement /> */}
           </div>
           <DesignerSidebar />
         </div>

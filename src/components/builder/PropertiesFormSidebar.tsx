@@ -23,9 +23,8 @@ const PropertiesFormSidebar = memo(function PropertiesFormSidebar() {
     <div dir="rtl" className="flex flex-col pb-4 p-2">
       <div className="flex justify-center items-baseline mb-6">
         <p className="font-bold text-center text-[20px]">
-          {questionType === "TitleFieldStart" ||
-          questionType === "TitleFieldFinish"
-            ? `توضیحات ${fieldLabel}`
+          {questionType === "INFO_FIELD"
+            ? `${fieldLabel}`
             : `سوال ${fieldLabel}`}
         </p>
       </div>

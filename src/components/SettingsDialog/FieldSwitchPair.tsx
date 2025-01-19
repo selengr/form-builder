@@ -102,12 +102,12 @@ const FieldSwitchPair = memo(function FieldCheckboxPair({
                 >
                   <DatePicker
                     disableDayPicker
-                    format="HH:mm"
+                    format="HH:mm:ss"
                     inputClass="w-full text-center font-bold"
                     containerClassName="w-full"
-                    plugins={[<TimePicker key="1" hideSeconds />]}
+                    plugins={[<TimePicker key="1" />]}
                     onChange={(value: any) => {
-                      const formattedValue = `${value.hour}:${value.minute}`;
+                      const formattedValue = `${value.hour}:${value.minute}:${value.second}`;
                       field.onChange(value);
                       setValue(`${fieldName}.value`, formattedValue);
                     }}

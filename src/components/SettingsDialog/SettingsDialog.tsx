@@ -13,35 +13,38 @@ import { LoadingButton } from "@mui/lab";
 import FieldSwitchPair from "./FieldSwitchPair";
 import { IoSettingsOutline } from "react-icons/io5";
 import { Typography } from "@mui/material";
+import AxiosApi from "@/services/axios/AxiosApi";
+import { useParams } from "next/navigation";
+import { convertObject } from "@/lib/settingsUtils";
 
-const limitOptions = [
+const responseLimitationOptions = [
   { label: "از طریق شماره همراه", value: "telephone" },
   { label: "از طریق ایمیل", value: "email" },
 ];
 
 const layoutOptions = [
-  { label: "نمایش فهرستی", value: "list" },
-  { label: "نمایش صفحه ای", value: "page" },
+  { label: "نمایش فهرستی", value: "list-view" },
+  { label: "نمایش صفحه ای", value: "page-view" },
 ];
 
-const themeOptions = [{ label: "تم 1", value: "theme1" }];
+const themeOptions = [{ label: "تم 1", value: "theme_1" }];
 
 const fieldsConfig = [
   {
-    name: "start",
+    name: "timeToComplete",
     label: "زمان شروع",
     type: "time-picker",
   },
   {
-    name: "expire",
-    label: "تاریخ انقضا",
+    name: "expireDate",
+    label: "تاریخ فعال سازی و انقضا فرم",
     type: "date-picker",
   },
   {
-    name: "limit",
+    name: "responseLimitation",
     label: "محدودیت پاسخ‌‌دهی",
     type: "multi-select",
-    options: limitOptions,
+    options: responseLimitationOptions,
   },
   {
     name: "layout",
@@ -70,7 +73,7 @@ const propertiesSchema = z.object({
         .min(2, { message: "حداقل باید 2 و حداکثر 100 کاراکتر باشد" })
         .max(100, { message: "حداقل باید 2 و حداکثر 100 کاراکتر باشد" })
     ),
-  limit: z.object({
+  responseLimitation: z.object({
     value: z.array(z.string()),
     checked: z.boolean(),
   }),
@@ -82,11 +85,11 @@ const propertiesSchema = z.object({
     value: z.string(),
     checked: z.boolean(),
   }),
-  expire: z.object({
+  expireDate: z.object({
     value: z.any(),
     checked: z.boolean(),
   }),
-  start: z.object({
+  timeToComplete: z.object({
     value: z.any(),
     checked: z.boolean(),
   }),
@@ -96,9 +99,11 @@ type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
 export default function SettingsDialog() {
   const [openDialog, setOpenDialog] = useState(false);
+  const { id: formId } = useParams();
 
   const handleOpen = useCallback(() => {
     setOpenDialog((prev) => !prev);
+    reset();
   }, []);
 
   const methods = useForm<propertiesFormSchemaType>({
@@ -106,9 +111,9 @@ export default function SettingsDialog() {
     mode: "all",
     defaultValues: {
       name: "",
-      expire: { checked: false, value: "" },
-      start: { checked: false, value: "" },
-      limit: { checked: false, value: [] },
+      expireDate: { checked: false, value: "" },
+      timeToComplete: { checked: false, value: "" },
+      responseLimitation: { checked: false, value: [] },
       layout: { checked: false, value: [] },
       theme: { checked: false, value: "" },
     },
@@ -121,7 +126,17 @@ export default function SettingsDialog() {
   } = methods;
 
   async function onSubmit(values: propertiesFormSchemaType) {
-    console.log("submited: ", values);
+    const body = {
+      ...convertObject(values as any, fieldsConfig),
+      name: values.name,
+    };
+
+    try {
+      const res = await AxiosApi.post(`/form-setting/${formId}`, body as any);
+      handleOpen();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {

@@ -561,12 +561,12 @@ function PropertiesComponent({
       },
       {
         questionPropertyEnum: "REQUIRED",
-        value: REQUIRED ? "true" : "false",
+        value: REQUIRED.value ? "true" : "false",
         id: REQUIRED.id,
       },
       {
         questionPropertyEnum: "EDIT_ANSWER_LOCKED",
-        value: EDIT_ANSWER_LOCKED ? "true" : "false",
+        value: EDIT_ANSWER_LOCKED.value ? "true" : "false",
         id: EDIT_ANSWER_LOCKED.id,
       },
       {
@@ -629,6 +629,10 @@ function PropertiesComponent({
     };
 
     if (!selectedYet) {
+      // ^
+      // const removeId: any = { ...finalFieldData };
+      // delete removeId.questionId;
+
       try {
         const { data }: any = await AxiosApi.post(
           "/question",

@@ -409,7 +409,7 @@ function PropertiesComponent({
       },
       {
         questionPropertyEnum: "EDIT_ANSWER_LOCKED",
-        value: EDIT_ANSWER_LOCKED ? "true" : "false",
+        value: EDIT_ANSWER_LOCKED.value ? "true" : "false",
         id: EDIT_ANSWER_LOCKED.id,
       },
       {

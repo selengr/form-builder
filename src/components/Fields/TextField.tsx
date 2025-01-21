@@ -118,7 +118,7 @@ const propertiesSchema = z
   })
   .refine((val) => val.MAXIMUM_LEN >= val.MINIMUM_LEN, {
     message: "حداکثر باید از حداقل بیشتر باشد",
-    path: ["MAXIMUM_LEN"],
+    path: ["MAXIMUM_LEN.value"],
   })
   .refine(
     (val) => {
@@ -129,7 +129,7 @@ const propertiesSchema = z
     },
     {
       message: "حداکثر طول برای متنی بلند باید 1000 کاراکتر باشد",
-      path: ["MAXIMUM_LEN"],
+      path: ["MAXIMUM_LEN.value"],
     }
   )
   .refine(
@@ -141,7 +141,7 @@ const propertiesSchema = z
     },
     {
       message: "حداکثر طول برای متنی ساده باید 250 کاراکتر باشد",
-      path: ["MAXIMUM_LEN"],
+      path: ["MAXIMUM_LEN.value"],
     }
   );
 

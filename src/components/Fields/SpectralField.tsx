@@ -184,7 +184,7 @@ const propertiesSchema = z
   })
   .refine((val) => val.SPECTRAL_END.value >= val.SPECTRAL_START.value, {
     message: "پایان باید بزرگتر یا مساوی با شروع باشد",
-    path: ["SPECTRAL_END"],
+    path: ["SPECTRAL_END.value"],
   })
   .refine(
     (val) => {
@@ -194,7 +194,7 @@ const propertiesSchema = z
     },
     {
       message: "گام نمیتواند از پایان بیشتر باشد",
-      path: ["STEP"],
+      path: ["STEP.value"],
     }
   )
   .refine(
@@ -211,7 +211,7 @@ const propertiesSchema = z
     },
     {
       message: "برچسب‌ها نمی‌توانند از تعداد گام بین شروع و پایان بیشتر باشند",
-      path: ["optionList"],
+      path: ["optionList.optionList"],
     }
   )
   .refine(
@@ -239,7 +239,7 @@ const propertiesSchema = z
     },
     {
       message: "گام گسسته نمیتواند از 1 کمتر باشد",
-      path: ["STEP"],
+      path: ["STEP.value"],
     }
   );
 
@@ -756,7 +756,10 @@ function PropertiesComponent({
           <RHFTextFieldOptionList
             name="optionList"
             errorMessage={
+              // @ts-ignore
               errors?.optionList?.root?.message ??
+              // @ts-ignore
+              errors?.optionList?.optionList?.message ??
               // @ts-ignore
               errors?.optionList?.score?.message
             }

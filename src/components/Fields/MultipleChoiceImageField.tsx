@@ -539,28 +539,28 @@ function PropertiesComponent({
       {
         questionPropertyEnum: "MULTI_SELECT",
         value: MULTI_SELECT.value ? "true" : "false",
-        id: MULTI_SELECT.id,
+        id: selectedYet ? MULTI_SELECT.id : null,
       },
       {
         questionPropertyEnum: "RANDOMIZE_OPTIONS",
         value: RANDOMIZE_OPTIONS.value ? "true" : "false",
-        id: RANDOMIZE_OPTIONS.id,
+        id: selectedYet ? RANDOMIZE_OPTIONS.id : null,
       },
       {
         questionPropertyEnum: "REQUIRED",
         value: REQUIRED.value ? "true" : "false",
-        id: REQUIRED.id,
+        id: selectedYet ? REQUIRED.id : null,
       },
       {
         questionPropertyEnum: "EDIT_ANSWER_LOCKED",
         value: EDIT_ANSWER_LOCKED.value ? "true" : "false",
-        id: EDIT_ANSWER_LOCKED.id,
+        id: selectedYet ? EDIT_ANSWER_LOCKED.id : null,
       },
       {
         questionPropertyEnum: "DESCRIPTION",
         value:
           openDescriptionSwitch && DESCRIPTION.value ? DESCRIPTION.value : null,
-        id: DESCRIPTION.id,
+        id: selectedYet ? DESCRIPTION.id : null,
       },
     ];
 
@@ -614,11 +614,11 @@ function PropertiesComponent({
     };
 
     if (!selectedYet) {
+      const removeId: any = { ...finalFieldData };
+      delete removeId.questionId;
+
       try {
-        const { data }: any = await AxiosApi.post(
-          "/question",
-          finalFieldData as any
-        );
+        const { data }: any = await AxiosApi.post("/question", removeId as any);
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;

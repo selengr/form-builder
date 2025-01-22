@@ -236,12 +236,12 @@ function PropertiesComponent({
       {
         questionPropertyEnum: "THE_END",
         value: THE_END.value,
-        id: THE_END.id,
+        id: selectedYet ? THE_END.id : null,
       },
       {
         questionPropertyEnum: "MESSAGE",
         value: MESSAGE.value,
-        id: MESSAGE.id,
+        id: selectedYet ? MESSAGE.id : null,
       },
     ];
 
@@ -287,11 +287,11 @@ function PropertiesComponent({
     };
 
     if (!selectedYet) {
+      const removeId: any = { ...finalFieldData };
+      delete removeId.questionId;
+
       try {
-        const { data }: any = await AxiosApi.post(
-          "/question",
-          finalFieldData as any
-        );
+        const { data }: any = await AxiosApi.post("/question", removeId as any);
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;

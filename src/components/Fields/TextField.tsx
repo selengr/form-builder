@@ -556,34 +556,34 @@ function PropertiesComponent({
       {
         questionPropertyEnum: "TEXT_FIELD_PATTERN",
         value: TEXT_FIELD_PATTERN.value,
-        id: TEXT_FIELD_PATTERN.id,
+        id: selectedYet ? TEXT_FIELD_PATTERN.id : null,
         // id: 3330, // ^ wrong data update with no error then reverts back
       },
       {
         questionPropertyEnum: "REQUIRED",
         value: REQUIRED.value ? "true" : "false",
-        id: REQUIRED.id,
+        id: selectedYet ? REQUIRED.id : null,
       },
       {
         questionPropertyEnum: "EDIT_ANSWER_LOCKED",
         value: EDIT_ANSWER_LOCKED.value ? "true" : "false",
-        id: EDIT_ANSWER_LOCKED.id,
+        id: selectedYet ? EDIT_ANSWER_LOCKED.id : null,
       },
       {
         questionPropertyEnum: "DESCRIPTION",
         value:
           openDescriptionSwitch && DESCRIPTION.value ? DESCRIPTION.value : null,
-        id: DESCRIPTION.id,
+        id: selectedYet ? DESCRIPTION.id : null,
       },
       {
         questionPropertyEnum: "MAXIMUM_LEN",
         value: isTextInputsSelected ? MAXIMUM_LEN.value : null,
-        id: MAXIMUM_LEN.id,
+        id: selectedYet ? MAXIMUM_LEN.id : null,
       },
       {
         questionPropertyEnum: "MINIMUM_LEN",
         value: isTextInputsSelected ? MINIMUM_LEN.value : null,
-        id: MINIMUM_LEN.id,
+        id: selectedYet ? MINIMUM_LEN.id : null,
       },
     ];
 
@@ -629,15 +629,11 @@ function PropertiesComponent({
     };
 
     if (!selectedYet) {
-      // ^
-      // const removeId: any = { ...finalFieldData };
-      // delete removeId.questionId;
+      const removeId: any = { ...finalFieldData };
+      delete removeId.questionId;
 
       try {
-        const { data }: any = await AxiosApi.post(
-          "/question",
-          finalFieldData as any
-        );
+        const { data }: any = await AxiosApi.post("/question", removeId as any);
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;

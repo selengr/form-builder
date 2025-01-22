@@ -530,47 +530,47 @@ function PropertiesComponent({
       {
         questionPropertyEnum: "SPECTRAL_TYPE",
         value: SPECTRAL_TYPE.value,
-        id: SPECTRAL_TYPE.id,
+        id: selectedYet ? SPECTRAL_TYPE.id : null,
       },
       {
         questionPropertyEnum: "REQUIRED",
         value: REQUIRED.value ? "true" : "false",
-        id: REQUIRED.id,
+        id: selectedYet ? REQUIRED.id : null,
       },
       {
         questionPropertyEnum: "DESCRIPTION",
         value:
           openDescriptionSwitch && DESCRIPTION.value ? DESCRIPTION.value : null,
-        id: DESCRIPTION.id,
+        id: selectedYet ? DESCRIPTION.id : null,
       },
       {
         questionPropertyEnum: "EDIT_ANSWER_LOCKED",
         value: EDIT_ANSWER_LOCKED.value ? "true" : "false",
-        id: EDIT_ANSWER_LOCKED.id,
+        id: selectedYet ? EDIT_ANSWER_LOCKED.id : null,
       },
       {
         questionPropertyEnum: "SELECTION_TYPE",
         value: SELECTION_TYPE.value,
-        id: SELECTION_TYPE.id,
+        id: selectedYet ? SELECTION_TYPE.id : null,
       },
       {
         questionPropertyEnum: "STEP",
         value: SPECTRAL_TYPE.value !== "CONTINUOUS" ? STEP.value : 0.1,
-        id: STEP.id,
+        id: selectedYet ? STEP.id : null,
       },
       {
         questionPropertyEnum: "SPECTRAL_START",
         value: SPECTRAL_START.value,
-        id: SPECTRAL_START.id,
+        id: selectedYet ? SPECTRAL_START.id : null,
       },
       {
         questionPropertyEnum: "SPECTRAL_END",
         value: SPECTRAL_END.value,
-        id: SPECTRAL_END.id,
+        id: selectedYet ? SPECTRAL_END.id : null,
       },
     ];
 
-    const optionListData = optionList;
+    const optionListData = [...optionList];
 
     const lastIndexOfGroup = elements.findLastIndex(
       (el: any) =>
@@ -615,11 +615,11 @@ function PropertiesComponent({
     };
 
     if (!selectedYet) {
+      const removeId: any = { ...finalFieldData };
+      delete removeId.questionId;
+
       try {
-        const { data }: any = await AxiosApi.post(
-          "/question",
-          finalFieldData as any
-        );
+        const { data }: any = await AxiosApi.post("/question", removeId as any);
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;

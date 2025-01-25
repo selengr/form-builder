@@ -17,7 +17,7 @@ export interface IUploader {
     | 1;
   sx: object;
   getData: any;
-  register: any;
+  register?: any;
 }
 
 export interface IFileRestriction {

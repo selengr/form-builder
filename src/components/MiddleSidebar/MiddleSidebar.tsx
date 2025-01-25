@@ -13,6 +13,26 @@ export default function MiddleSidebar() {
         <div className="flex flex-col items-center w-full gap-5">
           <SidebarRoleSelection />
           <div className="w-full pr-3 flex flex-col gap-3">
+            <div className="gap-4 w-ful border-b-[1px] border-b-[#DDE1E6]">
+              <Link
+                href="/uploader"
+                className="w-full h-full pb-3 flex items-center justify-between "
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <Image src={Additem} alt="" width={32} height={32} />
+                  <p className="text-[14px] text-black font-bold">آپلودر</p>
+                </div>
+                <div>
+                  <IoIosArrowDown
+                    size="1.3rem"
+                    color="#292D32"
+                    width={32}
+                    height={32}
+                    className="rotate-90"
+                  />
+                </div>
+              </Link>
+            </div>
             {[1, 2, 3].map((item) => (
               <div
                 key={item}

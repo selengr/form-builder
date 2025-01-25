@@ -25,7 +25,7 @@ export default function UploaderPage() {
       {!!data && (
         <div className="flex justify-between gap-2">
           <p>لینک:</p>
-          <p className="text-green-500 font-bold">{data}</p>
+          <p className="text-green-500 font-bold">{`${process.env.NEXT_PUBLIC_BASE_URL}/filemanager/${data}`}</p>
         </div>
       )}
     </div>

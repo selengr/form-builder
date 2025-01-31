@@ -8,14 +8,8 @@ export default function PreviewQuestion() {
   const { questions, index, numQuestions, endPage } = usePreview();
   const question = questions.at(index);
 
-  let FormComponent;
-  if (index + 1 > (numQuestions as any)) {
-    FormComponent =
-      FormElements["TitleFieldFinish" as ElementsType]?.formComponent;
-  } else {
-    FormComponent =
-      FormElements[question?.questionType as ElementsType]?.formComponent;
-  }
+  const FormComponent =
+    FormElements[question?.questionType as ElementsType]?.formComponent;
 
   return (
     <motion.div

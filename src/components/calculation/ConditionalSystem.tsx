@@ -5,16 +5,17 @@ import { FormProvider } from "react-hook-form"
 import { SubCondition } from "../../../templates/calculation/SubCondition"
 import { SelectController } from "../components/SelectController"
 import { CircleDivider } from "./CircleDivider"
-import { useGetQacWithOutFilter } from "../hooks/useGetQacWithOutFilter"
-import { useGetOnlyAllQuestions } from "../hooks/useGetOnlyAllQuestions"
-import { useGetOnlyAllCalculation } from "../hooks/useGetOnlyAllCalculation"
-import { SubmitButtons } from "../../../templates/calculation/SubmitButtons"
+
+
 import { formatContainText } from "@/app/condition2/utils/formatContainText"
-import { TConditionFormData } from "../schemas/conditionFormSchema"
+// lib
+import { type TConditionFormData } from "@/lib/ConditionFormSchema"
+// hooks
 import { useConditionalForm } from "@/app/(builder)/builder/[id]/condition/_hooks/useConditionalForm"
-import { useConditionalForm } from "@/app/(builder)/builder/[id]/condition/_hooks/useConditionalForm"
-import { useConditionalForm } from "@/app/(builder)/builder/[id]/condition/_hooks/useConditionalForm"
-import { useConditionalForm } from "@/app/(builder)/builder/[id]/condition/_hooks/useConditionalForm"
+import { useGetQacWithOutFilter } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter"
+import { useGetOnlyAllQuestions } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllQuestions"
+import { useGetOnlyAllCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation"
+import { SubmitButtons } from "./form/SubmitButtons"
 
 export default function ConditionalSystem() {
   const {

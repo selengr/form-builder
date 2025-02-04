@@ -84,7 +84,7 @@ export const SelectController: React.FC<CustomSelectProps> = ({
                   xs: 52,    
                   // sm: 50,    
                   // md: 52 
-                },
+                }
               },
               "& .MuiSelect-icon": {
                 left: "auto",
@@ -105,7 +105,7 @@ export const SelectController: React.FC<CustomSelectProps> = ({
                 value={option.value}
                 sx={{
                   display: "flex",
-                  justifyContent: "end",
+                //   justifyContent: "end",
                   py: 1,
                   px: 2,
                   mx: 1,

@@ -11,11 +11,12 @@ import { SelectController } from "@/components/calculation/form/SelectController
 import { formatContainText } from "@/lib/formatContainText"
 import { type TConditionFormData , TConditionData, TSubConditionData } from "@/lib/conditionFormSchema"
 // hooks
+import { IPostConditionModel, IPostConditionModelList } from "@/types/condition"
 import { useConditionalForm } from "@/app/(builder)/builder/[id]/condition/_hooks/useConditionalForm"
+import { usePostCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/usePostCalculation"
 import { useGetQacWithOutFilter } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter"
 import { useGetOnlyAllQuestions } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllQuestions"
 import { useGetOnlyAllCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation"
-import { IPostConditionModel, IPostConditionModelList } from "@/types/condition"
 
 
 
@@ -38,6 +39,8 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ id }) => 
   const { onlyAllQuestions, onlyAllQuestionsOptions, onlySomeQuestionsOptions, isFetchingOnlyAllQuestions } =
     useGetOnlyAllQuestions()
   const { onlyAllCalculationOptions, isFetchingOnlyAllCalculation } = useGetOnlyAllCalculation()
+
+  const postCalculation = usePostCalculation();
 
   const onSubmit = (input: TConditionFormData) => {
     console.log("Submitted data:", input);
@@ -100,9 +103,10 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ id }) => 
 
         return {
           conditionFormula: conditionFormula,
-          formBuilderId: 81,
-          returnQuestionId: condition.returnQuestionId,
-          elseQuestionId: condition.elseQuestionId,
+          formBuilderId: id,
+          returnQuestionId: parseInt(condition.returnQuestionId.replace(/\D/g, ''), 10),
+          elseQuestionId: parseInt(condition.elseQuestionId.replace(/\D/g, ''), 10),
+          frontConditionData:".....test.........."
         };
       });
     };
@@ -112,7 +116,19 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ id }) => 
       conditionModelList : output
     }
     console.log("output",output);   
-    console.log("postCalculationData",postCalculationData);   
+    console.log("postCalculationData",postCalculationData);  
+    
+    postCalculation.mutate(
+      { data: postCalculationData },
+      {
+        onSuccess: () => {
+          // ...
+        },
+        onError: (error: any) => {
+          // ...
+        },
+      }
+    );
   };
 
   return (

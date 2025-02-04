@@ -17,7 +17,13 @@ import { useGetOnlyAllQuestions } from "@/app/(builder)/builder/[id]/condition/_
 import { useGetOnlyAllCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation"
 
 
-export default function ConditionalSystem() {
+
+
+interface IConditionalSystemProps {
+  id: number;
+}
+
+export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ id }) => {
   const {
     methods,
     conditions,
@@ -35,12 +41,12 @@ export default function ConditionalSystem() {
   const onSubmit = (input: TConditionFormData) => {
     console.log("Submitted data:", input);
 
-    const transformInputToOutput = (input) => {
-      return input.conditions.map((condition) => {
+    const transformInputToOutput = (input : TConditionFormData) => {
+      return input.conditions.map((condition : TConditionData) => {
         const { subConditions, returnQuestionId, elseQuestionId } = condition;
 
         const conditionFormula = subConditions
-          .map((subCondition : any) => {
+          .map((subCondition : TSubConditionData) => {
             const {
               conditionType,
               questionType,
@@ -65,7 +71,7 @@ export default function ConditionalSystem() {
                 conditionType === "!#containAnyText" ||
                 conditionType === "#containAnyText"
               ) {
-                formattedValue = `{${formatContainText(value)}}`;
+                formattedValue = `{${formatContainText(value as string)}}`;
               } else if (
                 conditionType === "#lenEqualText" ||
                 conditionType === "#lenGraterThanText" ||
@@ -73,12 +79,12 @@ export default function ConditionalSystem() {
               ) {
                 formattedValue = `{#v_${value}}`;
               } else {
-                formattedValue = value;
+                formattedValue = value as string;
               }
             } else if (operatorType === "DATE") {
               formattedValue = `{#v_"${value}"}`;
             } else {
-              formattedValue = value;
+              formattedValue = value as string;
             }
 
             const baseCondition = `${conditionType}(${
@@ -101,7 +107,7 @@ export default function ConditionalSystem() {
     };
 
     const output = transformInputToOutput(input);
-    console.log(output);
+    console.log("output",output);
   };
 
   return (

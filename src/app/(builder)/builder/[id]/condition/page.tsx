@@ -1,10 +1,11 @@
+import ConditionalSystem from "@/components/calculation/ConditionalSystem";
 
 
 export default function Page({params}:{params : {id:string} }) {
     return (
-        <div>
-            Condition
-        </div>
+        <>
+            <ConditionalSystem />
+        </>
     );
 }
 

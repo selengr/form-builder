@@ -11,7 +11,7 @@ import TimePicker from "react-multi-date-picker/plugins/analog_time_picker";
 import { GoClock } from "react-icons/go";
 import TimePickerStyled from "./TimePicker.styled";
 
-const FieldSwitchPair = memo(function FieldCheckboxPair({
+const FieldSwitchPair = memo(function FieldSwitchPair({
   fieldName,
   label,
   type,

@@ -1,10 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, useFieldArray } from "react-hook-form"
-import { FormSchema, type FormData } from "../schemas/conditionFormSchemas"
+import { ConditionFormSchema, type TConditionFormData } from "@/lib/ConditionFormSchema"
 
 export const useDependentSelectForm = () => {
-  const methods = useForm<FormData>({
-    resolver: zodResolver(FormSchema),
+  const methods = useForm<TConditionFormData>({
+    resolver: zodResolver(ConditionFormSchema),
     defaultValues: {
       conditions: [
         {
@@ -35,7 +35,7 @@ export const useDependentSelectForm = () => {
     })
   }
 
-  const handleSubmit = methods.handleSubmit((data: FormData) => {
+  const handleSubmit = methods.handleSubmit((data: TConditionFormData) => {
     console.log("Submitted data:", data)
   })
 

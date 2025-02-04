@@ -47,7 +47,7 @@ export type IQPLInfoField = [
   {
     id: number;
     questionPropertyEnum: "THE_END";
-    value: boolean;
+    value: string;
   }
 ];
 

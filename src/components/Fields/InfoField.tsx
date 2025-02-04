@@ -36,7 +36,7 @@ const questionPropertyList: IQPLInfoField = [
   {
     id: 2,
     questionPropertyEnum: "THE_END",
-    value: false,
+    value: "false",
   },
 ];
 
@@ -194,11 +194,12 @@ function PropertiesComponent({
           acc[attribute.questionPropertyEnum] = {};
         }
 
-        if (attribute.questionPropertyEnum === "MESSAGE") {
+        if (attribute.questionPropertyEnum === "THE_END") {
+          acc[attribute.questionPropertyEnum].value =
+            attribute.value === "true";
+        } else if (attribute.questionPropertyEnum === "MESSAGE") {
           acc[attribute.questionPropertyEnum].value =
             attribute.value === null ? "" : attribute.value;
-        } else {
-          acc[attribute.questionPropertyEnum].value = attribute.value;
         }
 
         acc[attribute.questionPropertyEnum].id = attribute.id;
@@ -235,7 +236,7 @@ function PropertiesComponent({
     const propertiesData = [
       {
         questionPropertyEnum: "THE_END",
-        value: THE_END.value,
+        value: THE_END.value ? "true" : "false",
         id: selectedYet ? THE_END.id : null,
       },
       {
@@ -278,6 +279,8 @@ function PropertiesComponent({
       ) + 1;
 
     delete element.temp;
+    delete element.optionList;
+    delete element.spectralPlaceList;
 
     const finalFieldData = {
       ...element,

@@ -39,15 +39,9 @@ export default function PreviewProgress() {
       >
         سوال قبلی
       </Button>
-      {index + 1 <= (numQuestions as number) ? (
-        <Typography fontSize="16px" fontWeight={600}>
-          سوال {numQuestions === 0 ? 0 : index + 1} از {numQuestions}
-        </Typography>
-      ) : (
-        <Typography fontSize="16px" fontWeight={600}>
-          پایان
-        </Typography>
-      )}
+      <Typography fontSize="16px" fontWeight={600}>
+        سوال {numQuestions === 0 ? 0 : index + 1} از {numQuestions}
+      </Typography>
       <Button
         sx={{
           width: "100px",
@@ -59,21 +53,16 @@ export default function PreviewProgress() {
             boxShadow: "none",
           },
         }}
-        disabled={index + 1 > (numQuestions as number) || numQuestions === 0}
+        disabled={index + 1 === (numQuestions as number) || numQuestions === 0}
         variant="contained"
         onClick={() => {
           if (index > (numQuestions as number)) return;
 
-          if (index <= (numQuestions as number) - 1) {
-            router.push(`?question=${index + 1}`);
-            dispatch({ type: "nextQuestion" });
-          } else {
-            router.push(`?question=${index + 1}`);
-            dispatch({ type: "nextQuestion" });
-          }
+          router.push(`?question=${index + 1}`);
+          dispatch({ type: "nextQuestion" });
         }}
       >
-        {index + 1 < (numQuestions as number) ? `سوال بعدی` : `ادامه`}
+        سوال بعدی
       </Button>
     </Box>
   );

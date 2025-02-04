@@ -5,7 +5,7 @@ import usePreview from "@/hooks/usePreview";
 
 export default function PreviewQuestion() {
   const isMobile = useResponsive("down", "md");
-  const { questions, index, numQuestions, endPage } = usePreview();
+  const { questions, index } = usePreview();
   const question = questions.at(index);
 
   const FormComponent =
@@ -30,11 +30,7 @@ export default function PreviewQuestion() {
         border: "1px solid #e5e5e5",
       }}
     >
-      <FormComponent
-        elementInstance={
-          index + 1 > (numQuestions as any) ? (endPage as any) : question
-        }
-      />
+      <FormComponent elementInstance={question} />
     </motion.div>
   );
 }

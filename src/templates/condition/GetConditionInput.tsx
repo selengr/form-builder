@@ -1,9 +1,9 @@
-import { SelectController, MultiSelectController } from "../components/SelectController"
-import { TextFieldController } from "../components/TextFieldController"
-
 import { Box } from "@mui/material";
 import { Controller} from "react-hook-form";
-import { DatePicker as DatePickerCustome } from "../components/DatePicker";
+
+import { DatePicker as DatePickerCustome  } from "@/components/DatePicker/DatePicker";
+import { TextFieldController } from "@/components/calculation/form/TextFieldController";
+import { SelectController, MultiSelectController } from "@/components/calculation/form/SelectController";
 
 
 
@@ -11,7 +11,6 @@ import { DatePicker as DatePickerCustome } from "../components/DatePicker";
 
 
 export const getQuestion = (type: string, values: any) => {
-    console.log(type);
     switch (type?.split("*")[0]) {
       case "MULTIPLE_CHOICE":
         return [
@@ -173,7 +172,7 @@ export const getInput = (
     onlyAllQuestions,
     control,
     setValue,
-  },
+  } : any,
 ) => {
   const combinedKey = `${type?.split("*")[0]}_${operator}_${condition}`
 
@@ -223,13 +222,13 @@ export const getInput = (
       const targetUnicName = typeParts[1];
 
       const targetQuestion = onlyAllQuestions?.find(
-        (item) => item?.extMap?.UNIC_NAME === targetUnicName
+        (item : any) => item?.extMap?.UNIC_NAME === targetUnicName
       );
 
       if (!targetQuestion) return null;
 
       const { OPTIONS: options = {} } = targetQuestion.extMap;
-      const mappedOptions = Object.entries(options).map(([key, value]) => ({
+      const mappedOptions = Object.entries(options).map(([key, value]:any) => ({
         value: key,
         label: value[1],
       }));
@@ -253,12 +252,12 @@ export const getInput = (
       const targetUnicName = typeParts[1];
 
       const targetQuestion = onlyAllQuestions?.find(
-        (item) => item?.extMap?.UNIC_NAME === targetUnicName
+        (item:any) => item?.extMap?.UNIC_NAME === targetUnicName
       );
 
       if (!targetQuestion?.extMap?.OPTIONS) return null;
       const { OPTIONS } = targetQuestion.extMap;
-      const options = Object.entries(OPTIONS).map(([value, data]) => ({
+      const options = Object.entries(OPTIONS).map(([value, data]:any) => ({
         value,
         label: data[1],
       }));

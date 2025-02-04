@@ -1,16 +1,15 @@
 "use client"
-import { Box, Typography, Button } from "@mui/material"
 import { FormProvider } from "react-hook-form"
-// import { useConditionalForm } from "../hooks/useConditionForm"
-import { SubCondition } from "../../../templates/calculation/SubCondition"
+import { Box, Typography, Button } from "@mui/material"
 
+import { SubCondition } from "./SubCondition"
 // components
 import { CircleDivider } from "@/components/calculation/CircleDivider"
 import { SubmitButtons } from "@/components/calculation/form/SubmitButtons"
 import { SelectController } from "@/components/calculation/form/SelectController"
 // lib
 import { formatContainText } from "@/lib/formatContainText"
-import { type TConditionFormData } from "@/lib/conditionFormSchema"
+import { type TConditionFormData , TConditionData, TSubConditionData } from "@/lib/conditionFormSchema"
 // hooks
 import { useConditionalForm } from "@/app/(builder)/builder/[id]/condition/_hooks/useConditionalForm"
 import { useGetQacWithOutFilter } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter"
@@ -41,7 +40,7 @@ export default function ConditionalSystem() {
         const { subConditions, returnQuestionId, elseQuestionId } = condition;
 
         const conditionFormula = subConditions
-          .map((subCondition) => {
+          .map((subCondition : any) => {
             const {
               conditionType,
               questionType,
@@ -49,11 +48,7 @@ export default function ConditionalSystem() {
               value,
               logicalOperator,
             } = subCondition;
-            // console.log(
-            //   "val  formatContainText(value)45645",
-            //   formatContainText(value)
-            // );
-
+    
             let formattedValue: string;
 
             if (operatorType === "OPTION") {

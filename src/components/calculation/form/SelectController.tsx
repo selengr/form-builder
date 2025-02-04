@@ -197,7 +197,7 @@ export function MultiSelectController({
             labelId={name}
             IconComponent={IoIosArrowDown}
             input={<OutlinedInput fullWidth label={label} error={!!error} />}
-            renderValue={renderValues}
+            renderValue={renderValues as any}
             MenuProps={{
               PaperProps: {
                 sx: { px: 1, maxHeight: 280 },

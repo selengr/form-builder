@@ -1,5 +1,6 @@
 
 import AxiosApi from '@/services/axios/AxiosApi';
+import { IConditionQuestionType } from '@/types/condition';
 import { useQuery } from '@tanstack/react-query';
 
 const fetchData = async () => {
@@ -36,7 +37,9 @@ export const useGetOnlyAllCalculation = () => {
     retry: 3
   });
 
-  const onlyAllCalculationOptions = data?.dataList?.map((item) => ({
+
+  
+  const onlyAllCalculationOptions = data?.dataList?.map((item : IConditionQuestionType) => ({
     value: item.extMap.UNIC_NAME,
     label: item.caption,
   }));

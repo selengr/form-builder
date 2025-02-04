@@ -43,4 +43,17 @@
     | { type: 'SET_CONDITION_TYPE'; payload: string }
     | { type: 'SET_INPUT_VALUE'; payload: string | number };
   
+
+
+
+  export interface IPostConditionModel {
+      conditionFormula: string; 
+      formBuilderId: number;    
+      returnQuestionId: number;  
+      elseQuestionId: number | null; 
+      frontConditionData: string; 
+  }
   
+  export interface IPostConditionModelList {
+      conditionModelList: IPostConditionModel[]; 
+  }

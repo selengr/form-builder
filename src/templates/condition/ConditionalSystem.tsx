@@ -15,6 +15,7 @@ import { useConditionalForm } from "@/app/(builder)/builder/[id]/condition/_hook
 import { useGetQacWithOutFilter } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter"
 import { useGetOnlyAllQuestions } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllQuestions"
 import { useGetOnlyAllCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation"
+import { IPostConditionModel, IPostConditionModelList } from "@/types/condition"
 
 
 
@@ -41,7 +42,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ id }) => 
   const onSubmit = (input: TConditionFormData) => {
     console.log("Submitted data:", input);
 
-    const transformInputToOutput = (input : TConditionFormData) => {
+    const transformInputToOutput = (input : TConditionFormData) : any => {
       return input.conditions.map((condition : TConditionData) => {
         const { subConditions, returnQuestionId, elseQuestionId } = condition;
 
@@ -106,8 +107,12 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ id }) => 
       });
     };
 
-    const output = transformInputToOutput(input);
-    console.log("output",output);
+    const output : IPostConditionModel[] = transformInputToOutput(input);
+    const postCalculationData : IPostConditionModelList = {
+      conditionModelList : output
+    }
+    console.log("output",output);   
+    console.log("postCalculationData",postCalculationData);   
   };
 
   return (

@@ -5,9 +5,12 @@ import { IConditionQuestionType } from '@/types/condition';
 
 
 const fetchData = async () => {
-    const url = `question/q-and-c-custom-combo?customComboFilterModel=%7B%22type%22%3A%22COMBO%22%2C%22entity%22%3A%22QUESTIONS%22%2C%22mode%22%3A%22QUESTIONS_IN_FORM_BUILDER__ALL%22%2C%22input%22%3A%22%22%2C%22page%22%3A0%2C%22rows%22%3A10000%2C%22extMap%22%3A%7B%22formId%22%3A81%2C%22typeRequest%22%3A%22QAC_WIHT_OUT_FILTER%22%7D%7D`;
-    const response = await AxiosApi.get(url);
-    return response.data;
+        const customComboFilterModel = {"type":"COMBO","entity":"QUESTIONS","mode":"QUESTIONS_IN_FORM_BUILDER__ALL","input":"","page":0,"rows":10000,"extMap":{"formId":21,"typeRequest":"QAC_WIHT_OUT_FILTER"}}
+        const baseUrl = '/question/q-and-c-custom-combo';
+        const queryString = `?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`;
+        const url = baseUrl + queryString;
+        const response = await AxiosApi.get(url);
+        return response.data;
   };
 
 

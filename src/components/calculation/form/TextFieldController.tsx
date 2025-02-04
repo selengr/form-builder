@@ -13,7 +13,7 @@ export const TextFieldController: React.FC<TextFieldControllerProps> = ({
   ...props
 }) => {
   const { control } = useFormContext();
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (inputRef.current) {

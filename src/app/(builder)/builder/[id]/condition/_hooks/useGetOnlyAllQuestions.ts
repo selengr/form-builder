@@ -1,6 +1,7 @@
 
 import AxiosApi from '@/services/axios/AxiosApi';
 import { useQuery } from '@tanstack/react-query';
+import { IConditionQuestionType } from '@/types/condition';
 
 
 const fetchData = async () => {
@@ -38,7 +39,7 @@ export const useGetOnlyAllQuestions = () => {
     retry: 3
   });
 
-  const onlyAllQuestionsOptions = data?.dataList?.map((item) => ({
+  const onlyAllQuestionsOptions = data?.dataList?.map((item : IConditionQuestionType) => ({
     value: item.extMap.UNIC_NAME,
     label: item.caption,
   }));
@@ -46,7 +47,7 @@ export const useGetOnlyAllQuestions = () => {
 
 
   const onlySomeQuestionsOptions = data?.dataList
-  ?.filter((item) => {
+  ?.filter((item : IConditionQuestionType) => {
     const { TEXT_FIELD_PATTERN, SPECTRAL_TYPE, MULTI_SELECT } = item.extMap;
     const isMultiSelect = MULTI_SELECT === "false";
     const isSpectralSingle = SPECTRAL_TYPE === "SPECTRAL";
@@ -54,7 +55,7 @@ export const useGetOnlyAllQuestions = () => {
     
     return isTextFieldNumber || isMultiSelect || isSpectralSingle;
   })
-  ?.map((item) => ({
+  ?.map((item : IConditionQuestionType) => ({
     value: item.extMap.UNIC_NAME,
     label: item.caption,
   }));

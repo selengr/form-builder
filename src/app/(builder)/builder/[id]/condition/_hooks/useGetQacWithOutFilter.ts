@@ -1,6 +1,7 @@
 
 import AxiosApi from '@/services/axios/AxiosApi';
 import { useQuery } from '@tanstack/react-query';
+import { IConditionQuestionType } from '@/types/condition';
 
 
 const fetchData = async () => {
@@ -22,7 +23,7 @@ export const useGetQacWithOutFilter = () => {
     retry: 3
   });
 
-  const qacWithOutFilterOptions = data?.dataList?.map((item) => {
+  const qacWithOutFilterOptions = data?.dataList?.map((item : IConditionQuestionType) => {
     const isCalculation = item.elementStr === "CALCULATION";
     const isTextFieldDate = item.extMap.TEXT_FIELD_PATTERN === "DATE";
     const isSpectralDouble = item.extMap.SPECTRAL_TYPE === "DOMAIN";

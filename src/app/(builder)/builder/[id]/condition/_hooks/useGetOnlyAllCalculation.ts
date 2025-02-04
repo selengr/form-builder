@@ -1,7 +1,7 @@
 
 import AxiosApi from '@/services/axios/AxiosApi';
-import { IConditionQuestionType } from '@/types/condition';
 import { useQuery } from '@tanstack/react-query';
+import { IConditionQuestionType } from '@/types/condition';
 
 const fetchData = async () => {
     const customComboFilterModel = {

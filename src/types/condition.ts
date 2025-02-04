@@ -4,6 +4,7 @@
     QUESTION_TYPE?: string;
     DESCRIPTION?: string;
     MAXIMUM_LEN?: string;
+    SPECTRAL_TYPE?: string;
     UNIC_NAME?: string;
     REQUIRED?: string;
     MINIMUM_LEN?: string;

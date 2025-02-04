@@ -4,10 +4,10 @@ import { FormProvider } from "react-hook-form"
 // import { useConditionalForm } from "../hooks/useConditionForm"
 import { SubCondition } from "../../../templates/calculation/SubCondition"
 
-
-import { CircleDivider } from "./CircleDivider"
-import { SubmitButtons } from "./form/SubmitButtons"
-import { SelectController } from "./form/SelectController"
+// components
+import { CircleDivider } from "@/components/calculation/CircleDivider"
+import { SubmitButtons } from "@/components/calculation/form/SubmitButtons"
+import { SelectController } from "@/components/calculation/form/SelectController"
 // lib
 import { formatContainText } from "@/lib/formatContainText"
 import { type TConditionFormData } from "@/lib/conditionFormSchema"
@@ -16,6 +16,7 @@ import { useConditionalForm } from "@/app/(builder)/builder/[id]/condition/_hook
 import { useGetQacWithOutFilter } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter"
 import { useGetOnlyAllQuestions } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllQuestions"
 import { useGetOnlyAllCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation"
+
 
 export default function ConditionalSystem() {
   const {

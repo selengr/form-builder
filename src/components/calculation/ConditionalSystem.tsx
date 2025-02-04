@@ -7,6 +7,7 @@ import { SelectController } from "../components/SelectController"
 import { CircleDivider } from "./CircleDivider"
 
 
+import { SubmitButtons } from "./form/SubmitButtons"
 import { formatContainText } from "@/app/condition2/utils/formatContainText"
 // lib
 import { type TConditionFormData } from "@/lib/ConditionFormSchema"
@@ -15,7 +16,6 @@ import { useConditionalForm } from "@/app/(builder)/builder/[id]/condition/_hook
 import { useGetQacWithOutFilter } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter"
 import { useGetOnlyAllQuestions } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllQuestions"
 import { useGetOnlyAllCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation"
-import { SubmitButtons } from "./form/SubmitButtons"
 
 export default function ConditionalSystem() {
   const {

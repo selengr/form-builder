@@ -43,7 +43,7 @@ const fieldsConfig = [
   {
     name: "responseLimitation",
     label: "محدودیت پاسخ‌‌دهی",
-    type: "multi-select",
+    type: "select",
     options: responseLimitationOptions,
   },
   {

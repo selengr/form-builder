@@ -1,6 +1,6 @@
 
 
-const Page = () => {
+export default function Page({params}:{params : {id:string} }) {
     return (
         <div>
             Condition
@@ -8,4 +8,3 @@ const Page = () => {
     );
 }
 
-export default Page;

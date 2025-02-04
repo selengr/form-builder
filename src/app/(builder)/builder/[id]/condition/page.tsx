@@ -1,4 +1,4 @@
-import ConditionalSystem from "@/components/calculation/ConditionalSystem";
+import ConditionalSystem from "@/templates/condition/ConditionalSystem";
 
 
 export default function Page({params}:{params : {id:string} }) {

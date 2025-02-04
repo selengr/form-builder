@@ -1,7 +1,7 @@
 import Image from "next/image"
 import { useFormContext, useWatch } from "react-hook-form"
 import { Box, IconButton, Typography } from "@mui/material"
-import { getInput , getQuestion, getCondition } from "../../app/condition3/components/GetConditionInput"
+import { getInput , getQuestion, getCondition } from "./GetConditionInput"
 import { SelectController } from "@/components/calculation/form/SelectController"
 
 

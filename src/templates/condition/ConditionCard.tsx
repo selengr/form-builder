@@ -8,7 +8,7 @@ import { ConditionalSystem } from "./ConditionalSystem";
 import { PhDotsThreeVerticalBold } from "../../../public/images/icons/PhDotsThreeVerticalBold";
 import { WeuiDeleteOutlined } from "../../../public/images/icons/DeleteIcon";
 
-export function ConditionCard(condition : IGetCondition) {
+export function ConditionCard({condition} : {condition : IGetCondition}) {
   const [openDialog, setOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 

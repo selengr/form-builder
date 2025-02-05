@@ -1,6 +1,7 @@
 "use client";
 
 import { IGetCondition } from "@/types/condition";
+import { ConditionCard } from "./ConditionCard";
 
 
 interface IConditionListProps {
@@ -16,8 +17,7 @@ const ConditionList: React.FC<IConditionListProps> = ({ conditions }) => {
       >
         {conditions?.map((condition: IGetCondition) => (
           // eslint-disable-next-line react/jsx-key
-          // <ConditionCard condition={condition} />
-          <></>
+          <ConditionCard condition={condition} />
         ))}
       </div>
       {/* <CreateCondition /> */}

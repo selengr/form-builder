@@ -67,12 +67,15 @@ import { Dispatch, SetStateAction } from "react";
 
 
 
-export interface IConditionalSystemProps {
+export interface ICreateConditionDialogProps {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  export interface IEditCalculatorDialogProps extends IConditionalSystemProps  {
+  export interface IConditionalSystemProps {
+    handleClose: () => void; 
+  }
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  export interface IEditConditionDialogProps extends IConditionalSystemProps  {
     calcId : number
   }

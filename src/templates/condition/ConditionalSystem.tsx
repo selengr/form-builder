@@ -11,7 +11,7 @@ import { SelectController } from "@/components/calculation/form/SelectController
 import { formatContainText } from "@/lib/formatContainText"
 import { type TConditionFormData , TConditionData, TSubConditionData } from "@/lib/conditionFormSchema"
 // hooks
-import { IPostConditionModel, IPostConditionModelList } from "@/types/condition"
+import { IConditionalSystemProps } from "@/types/condition"
 import { useConditionalForm } from "@/app/(builder)/builder/[id]/condition/_hooks/useConditionalForm"
 import { usePostCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/usePostCalculation"
 import { useGetQacWithOutFilter } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter"
@@ -23,9 +23,7 @@ import { useParams } from "next/navigation"
 
 
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
-  open,
-  setOpen,
-  calcId,
+  handleClose
 }) => {
   const { id } = useParams();
   const {

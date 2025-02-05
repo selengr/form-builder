@@ -1,20 +1,20 @@
 "use client";
 
-// import { ICondition } from "@/types/calculator";
+import { IPostCondition as IGetCondition } from "@/types/condition";
 
 
 interface IConditionListProps {
-  conditions: any;
+  conditions: IGetCondition[];
 }
 
-const ConditionList: React.FC<any> = ({ conditions }) => {
+const ConditionList: React.FC<IConditionListProps> = ({ conditions }) => {
   return (
     <div className="w-full max-w-md flex flex-col">
       <div
         dir="rtl"
         className="bg-[#F7F7FF] rounded-lg p-[10px] w-full flex flex-col gap-3"
       >
-        {conditions?.map((condition: any) => (
+        {conditions?.map((condition: IGetCondition) => (
           // eslint-disable-next-line react/jsx-key
           // <ConditionCard condition={condition} />
           <></>

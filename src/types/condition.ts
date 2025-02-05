@@ -46,7 +46,7 @@
 
 
 
-  export interface IPostConditionModel {
+  export interface IPostCondition {
       conditionFormula: string; 
       formBuilderId: number;    
       returnQuestionId: number;  
@@ -54,6 +54,3 @@
       frontConditionData: string; 
   }
   
-  export interface IPostConditionModelList {
-      conditionModelList: IPostConditionModel[]; 
-  }

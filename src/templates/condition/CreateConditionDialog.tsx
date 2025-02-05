@@ -1,19 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
-import { AxiosResponse } from "axios";
 import { CgClose } from "react-icons/cg";
 import Dialog from "@mui/material/Dialog";
 import { IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import AxiosApi from "@/services/axios/AxiosApi";
 import DialogContent from "@mui/material/DialogContent";
 
-import { ICreateConditionDialogProps } from "@/types/condition";
-import AdvancedFormulaEditor from "@/components/calculator/AdvancedFormulaEditor";
-import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
 import { ConditionalSystem } from "./ConditionalSystem";
+import { ICreateConditionDialogProps } from "@/types/condition";
 
 const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   direction: "ltr",
@@ -21,6 +15,7 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   scrollbarWidth: "thin",
   maxWidth: "100%",
   padding : "8px",
+  overflowX : "hidden",
   paddingTop: theme.spacing(2.8),
   paddingBottom: theme.spacing(2.8),
 }));
@@ -31,6 +26,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiPaper-root": {
     borderRadius: "24px",
     margin: "10px",
+    width: "1010px",
   },
   "& .MuiDialog-container": {
     backdropFilter: "blur(4px)",
@@ -43,14 +39,13 @@ export const CreateConditionDialog: React.FC<ICreateConditionDialogProps> = ({
   open,
   setOpen,
 }) => {
-  const { id } = useParams();
  
   const handleClose = () => {
     setOpen((prev) => !prev);
   };
 
   return (
-    <StyledDialog open={open} maxWidth="md">
+    <StyledDialog open={open} maxWidth="xl">
       <StyledDialogContent>
         <div className="flex items-center justify-end h-6">
           <IconButton edge="end">

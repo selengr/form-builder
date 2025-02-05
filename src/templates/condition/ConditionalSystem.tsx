@@ -175,21 +175,21 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
                   name={`conditions.${index}.returnQuestionId`}
                   options={onlyAllQuestionsOptions}
                   isLoading={isFetchingOnlyAllQuestions}
-                  sx={{ minWidth: 230, ml: 5 }}
+                  sx={{ minWidth: 220, ml: 2.5 }}
                 />
-                <Typography sx={{ color: "#393939", fontSize: "14px", mr: 4 }}>در غیر اینصورت برو به:</Typography>
+                <Typography sx={{ color: "#393939", fontSize: "14px", mr: 1 }}>در غیر اینصورت برو به:</Typography>
                 <SelectController
                   name={`conditions.${index}.elseQuestionId`}
                   options={onlyAllQuestionsOptions}
                   isLoading={isFetchingOnlyAllQuestions}
-                  sx={{ minWidth: 300, width: 350 }}
+                  sx={{ minWidth: 300, width: 360 }}
                 />
                 {index !== 0 && (
                 <Button
                   onClick={() => handleRemoveCondition(index)}
                   sx={{
                     width: 113,
-                    height: "52px",
+                    height: "50px",
                     bgcolor: "#FA4D560D",
                     borderRadius: "8px",
                     border: "1px solid #FA4D56",
@@ -208,7 +208,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
             onClick={handleAddCondition}
             sx={{
               ml: 2,
-              height: 52,
+              height: 50,
               maxWidth: 155,
               color: "white",
               bgcolor: "#1758BA",

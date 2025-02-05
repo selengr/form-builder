@@ -74,7 +74,7 @@ const propertiesSchema = z.object({
         .max(100, { message: "حداقل باید 2 و حداکثر 100 کاراکتر باشد" })
     ),
   responseLimitation: z.object({
-    value: z.array(z.string()),
+    value: z.string(),
     checked: z.boolean(),
   }),
   layout: z.object({
@@ -113,7 +113,7 @@ export default function SettingsDialog() {
       name: "",
       expireDate: { checked: false, value: "" },
       timeToComplete: { checked: false, value: "" },
-      responseLimitation: { checked: false, value: [] },
+      responseLimitation: { checked: false, value: "" },
       layout: { checked: false, value: [] },
       theme: { checked: false, value: "" },
     },

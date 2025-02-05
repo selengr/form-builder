@@ -8,7 +8,7 @@ import { ConditionalSystem } from "./ConditionalSystem";
 import { PhDotsThreeVerticalBold } from "../../../public/images/icons/PhDotsThreeVerticalBold";
 import { WeuiDeleteOutlined } from "../../../public/images/icons/DeleteIcon";
 
-export function ConditionCard({condition} : {condition : IGetCondition}) {
+export function ConditionCard({ condition }: { condition: IGetCondition }) {
   const [openDialog, setOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -38,12 +38,8 @@ justify-center items-center"
             {condition.id}
           </div>
           <div className="flex flex-col">
-            <h3 className="text-[#161616] text-sm">
-              { "--"}
-            </h3>
-            <span className="text-[#393939] text-xs">
-              { "--"}
-            </span>
+            <h3 className="text-[#161616] text-sm">{"--"}</h3>
+            <span className="text-[#393939] text-xs">{"--"}</span>
           </div>
         </div>
         <div className="flex justify-center items-center gap-[10px]">
@@ -128,6 +124,7 @@ justify-center items-center"
       </div>
       {openDialog && (
         <ConditionalSystem
+          handleClose={handleClose}
           // open={openDialog}
           // setOpen={setOpen}
           // calcId={condition.id}

@@ -31,7 +31,7 @@ export const SubmitButtons: React.FC<ISubmitButtonsProps> = ({
         sx={{
           backgroundColor: "#1758BA",
           borderRadius: "8px",
-          height: "52px",
+          height: "50px",
           "&.MuiButtonBase-root:hover": {
             backgroundColor: "#1758BA",
           },
@@ -47,7 +47,7 @@ export const SubmitButtons: React.FC<ISubmitButtonsProps> = ({
         type="button"
         variant="outlined"
         sx={{
-          height: "52px",
+          height: "50px",
           minWidth: 113,
           borderRadius: "8px",
           borderColor: "#1758BA",

@@ -17,7 +17,7 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   padding : "8px",
   overflowX : "hidden",
   paddingTop: theme.spacing(2.8),
-  paddingBottom: theme.spacing(2.8),
+  paddingBottom: theme.spacing(1.8),
 }));
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({

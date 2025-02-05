@@ -2,15 +2,15 @@ import Box from "@mui/material/Box";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 export default function ActionButtons({
-  prevAction,
-  nextAction,
+  prevAction = () => {},
+  nextAction = () => {},
   disablePrev = false,
   disableNext = false,
   loadingPrev = false,
   loadingNext = false,
 }: {
-  prevAction: () => void;
-  nextAction: () => void;
+  prevAction?: () => void;
+  nextAction?: () => void;
   disablePrev?: boolean;
   disableNext?: boolean;
   loadingPrev?: boolean;

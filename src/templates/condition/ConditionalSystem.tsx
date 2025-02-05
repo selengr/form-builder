@@ -217,7 +217,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
           >
             افزودن شرط جدید
           </Button>
-          <SubmitButtons />
+          <SubmitButtons isLoading={postCalculation.isPending} handleClose={handleClose}/>
         </form>
       </FormProvider>
     </Box>

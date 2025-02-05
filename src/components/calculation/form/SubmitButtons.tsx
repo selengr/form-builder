@@ -1,7 +1,17 @@
 import { LoadingButton } from "@mui/lab"
 import { Box, Typography, Button } from "@mui/material"
 
-export function SubmitButtons() {
+
+interface ISubmitButtonsProps {
+  isLoading : boolean
+  handleClose : () => void
+}
+
+export const SubmitButtons: React.FC<ISubmitButtonsProps> = ({
+  isLoading,
+  handleClose
+}) => {
+
   return (
     <Box
       display="flex"
@@ -15,6 +25,7 @@ export function SubmitButtons() {
       }}
     >
       <LoadingButton
+        loading={isLoading}
         type="submit"
         variant="contained"
         sx={{
@@ -32,6 +43,7 @@ export function SubmitButtons() {
         </Typography>
       </LoadingButton>
       <Button
+        onClick={handleClose}
         type="button"
         variant="outlined"
         sx={{

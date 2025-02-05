@@ -1,6 +1,6 @@
 "use client";
 
-import { IPostCondition as IGetCondition } from "@/types/condition";
+import { IGetCondition } from "@/types/condition";
 
 
 interface IConditionListProps {

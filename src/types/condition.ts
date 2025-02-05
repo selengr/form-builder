@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 
   
   export interface IConditionExtMap {
@@ -54,3 +55,24 @@
       frontConditionData: string; 
   }
   
+  
+  export interface IGetCondition {
+    id : number
+    conditionFormula: string; 
+    formBuilderId: number;    
+    returnQuestionId: number;  
+    elseQuestionId: number | null; 
+    frontConditionData: string; 
+}
+
+
+
+export interface IConditionalSystemProps {
+    open: boolean;
+    setOpen: Dispatch<SetStateAction<boolean>>;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  export interface IEditCalculatorDialogProps extends IConditionalSystemProps  {
+    calcId : number
+  }

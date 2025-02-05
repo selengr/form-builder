@@ -17,15 +17,17 @@ import { usePostCalculation } from "@/app/(builder)/builder/[id]/condition/_hook
 import { useGetQacWithOutFilter } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter"
 import { useGetOnlyAllQuestions } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllQuestions"
 import { useGetOnlyAllCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation"
+import { useParams } from "next/navigation"
 
 
 
 
-interface IConditionalSystemProps {
-  id: number;
-}
-
-export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ id }) => {
+export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
+  open,
+  setOpen,
+  calcId,
+}) => {
+  const { id } = useParams();
   const {
     methods,
     conditions,

@@ -17,7 +17,7 @@ import { usePostCalculation } from "@/app/(builder)/builder/[id]/condition/_hook
 import { useGetQacWithOutFilter } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter"
 import { useGetOnlyAllQuestions } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllQuestions"
 import { useGetOnlyAllCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 
 
 
@@ -26,6 +26,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
   handleClose
 }) => {
   const { id } = useParams();
+  const {refresh} = useRouter()
   const {
     methods,
     conditions,
@@ -119,7 +120,8 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
       { data: output },
       {
         onSuccess: () => {
-          // ...
+          handleClose()
+          refresh()
         },
         onError: (error: any) => {
           // ...

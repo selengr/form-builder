@@ -11,7 +11,7 @@ import { SelectController } from "@/components/calculation/form/SelectController
 import { formatContainText } from "@/lib/formatContainText"
 import { type TConditionFormData , TConditionData, TSubConditionData } from "@/lib/conditionFormSchema"
 // hooks
-import { IConditionalSystemProps } from "@/types/condition"
+import { IConditionalSystemProps, IPostCondition } from "@/types/condition"
 import { useConditionalForm } from "@/app/(builder)/builder/[id]/condition/_hooks/useConditionalForm"
 import { usePostCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/usePostCalculation"
 import { useGetQacWithOutFilter } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter"
@@ -111,15 +111,12 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
       });
     };
 
-    const output : IPostConditionModel[] = transformInputToOutput(input);
-    const postCalculationData : IPostConditionModelList = {
-      conditionModelList : output
-    }
-    console.log("output",output);   
-    console.log("postCalculationData",postCalculationData);  
+    const output : IPostCondition[] = transformInputToOutput(input);
+  
+    console.log("output",output);    
     
     postCalculation.mutate(
-      { data: postCalculationData },
+      { data: output },
       {
         onSuccess: () => {
           // ...

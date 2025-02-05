@@ -51,7 +51,7 @@ export const TextFieldController: React.FC<TextFieldControllerProps> = ({
                 borderColor: "#FA4D56",
               },
               height: {
-                xs: 52,    
+                xs: 50  ,    
                 // sm: 50,    
                 // md: 52 
               },

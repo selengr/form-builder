@@ -132,7 +132,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
 
   return (
     <Box
-      sx={{ width: "100%", p: 3, display: "flex", flexDirection: "column", justifyContent: "center", direction: "ltr" }}
+      sx={{ width: "100%",  display: "flex", flexDirection: "column", justifyContent: "center", direction: "ltr" }}
     >
       <Typography
         variant="subtitle1"
@@ -175,14 +175,14 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
                   name={`conditions.${index}.returnQuestionId`}
                   options={onlyAllQuestionsOptions}
                   isLoading={isFetchingOnlyAllQuestions}
-                  sx={{ minWidth: 240, ml: 5 }}
+                  sx={{ minWidth: 230, ml: 5 }}
                 />
                 <Typography sx={{ color: "#393939", fontSize: "14px", mr: 4 }}>در غیر اینصورت برو به:</Typography>
                 <SelectController
                   name={`conditions.${index}.elseQuestionId`}
                   options={onlyAllQuestionsOptions}
                   isLoading={isFetchingOnlyAllQuestions}
-                  sx={{ minWidth: 300, width: 360 }}
+                  sx={{ minWidth: 300, width: 350 }}
                 />
                 {index !== 0 && (
                 <Button

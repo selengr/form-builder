@@ -20,7 +20,9 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   maxHeight: "75vh",
   scrollbarWidth: "thin",
   maxWidth: "100%",
-  padding: theme.spacing(3.8),
+  padding : "8px",
+  paddingTop: theme.spacing(2.8),
+  paddingBottom: theme.spacing(2.8),
 }));
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({

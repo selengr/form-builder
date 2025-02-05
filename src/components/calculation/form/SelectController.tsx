@@ -88,9 +88,9 @@ export const SelectController: React.FC<CustomSelectProps> = ({
               },
               "& .MuiSelect-icon": {
                 left: "auto",
-                right: "16px",
+                right: "12px",
                 color: error ? "#FA4D56" : "#1758BA",
-                fontSize: "1.5rem",
+                fontSize: "1.2rem",
               },
               "& .MuiOutlinedInput-notchedOutline": {
                 border: "none",
@@ -222,9 +222,9 @@ export function MultiSelectController({
               },
               "& .MuiSelect-icon": {
                 left: "auto",
-                right: "16px",
+                right: "12px",
                 color: error ? "#FA4D56" : "#1758BA",
-                fontSize: "1.5rem",
+                fontSize: "1.2rem",
               },
               "& .MuiOutlinedInput-notchedOutline": {
                 border: "none",

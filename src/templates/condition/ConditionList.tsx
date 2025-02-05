@@ -2,6 +2,7 @@
 
 import { IGetCondition } from "@/types/condition";
 import { ConditionCard } from "./ConditionCard";
+import CreateCondition from "./CreateCondition";
 
 
 interface IConditionListProps {
@@ -20,7 +21,7 @@ const ConditionList: React.FC<IConditionListProps> = ({ conditions }) => {
           <ConditionCard condition={condition} />
         ))}
       </div>
-      {/* <CreateCondition /> */}
+      <CreateCondition />
     </div>
   );
 };

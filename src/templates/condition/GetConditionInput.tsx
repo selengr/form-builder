@@ -201,7 +201,7 @@ export const getInput = (
           name={field.name}
           options={onlySomeQuestionsOptions}
           isLoading={isFetchingOnlyAllQuestions}
-          sx={{ minWidth: 174 }}
+          sx={{ minWidth: 194 }}
         />
       );
 
@@ -215,7 +215,7 @@ export const getInput = (
           name={field.name}
           options={onlyAllCalculationOptions}
           isLoading={isFetchingOnlyAllCalculation}
-          sx={{ minWidth: 174 }}
+          sx={{ minWidth: 194 }}
         />
       );
 
@@ -245,7 +245,7 @@ export const getInput = (
           key={targetUnicName}
           name={field.name}
           options={mappedOptions}
-          sx={{ minWidth: 174 }}
+          sx={{ minWidth: 194 }}
         />
       );
     }
@@ -275,7 +275,7 @@ export const getInput = (
           name={field.name}
           options={options}
           sx={{
-            maxWidth: 174,
+            maxWidth: 194,
             maxHeight: 50,
           }}
           aria-label={`Multi-select ${targetUnicName}`}
@@ -316,7 +316,7 @@ export const getInput = (
           name={field.name}
           options={onlySomeQuestionsOptions}
           isLoading={isFetchingOnlyAllQuestions}
-          sx={{ minWidth: 174 }}
+          sx={{ minWidth: 194 }}
         />
       );
 
@@ -330,7 +330,7 @@ export const getInput = (
           name={field.name}
           options={onlyAllCalculationOptions}
           isLoading={isFetchingOnlyAllCalculation}
-          sx={{ minWidth: 174 }}
+          sx={{ minWidth: 194 }}
         />
       );
 
@@ -374,7 +374,7 @@ export const getInput = (
           name={field.name}
           options={onlySomeQuestionsOptions}
           isLoading={isFetchingOnlyAllQuestions}
-          sx={{ minWidth: 174 }}
+          sx={{ minWidth: 194 }}
         />
       );
 
@@ -395,7 +395,7 @@ export const getInput = (
           name={field.name}
           options={onlySomeQuestionsOptions}
           isLoading={isFetchingOnlyAllQuestions}
-          sx={{ minWidth: 174 }}
+          sx={{ minWidth: 194 }}
         />
       );
     
@@ -408,7 +408,7 @@ export const getInput = (
           name={field.name}
           options={onlyAllCalculationOptions}
           isLoading={isFetchingOnlyAllCalculation}
-          sx={{ minWidth: 174 }}
+          sx={{ minWidth: 194 }}
         />
       );
 
@@ -431,7 +431,7 @@ export const getInput = (
           name={field.name}
           options={onlySomeQuestionsOptions}
           isLoading={isFetchingOnlyAllQuestions}
-          sx={{ minWidth: 174 }}
+          sx={{ minWidth: 194 }}
         />
       );
 
@@ -446,7 +446,7 @@ export const getInput = (
           name={field.name}
           options={onlyAllCalculationOptions}
           isLoading={isFetchingOnlyAllCalculation}
-          sx={{ minWidth: 174 }}
+          sx={{ minWidth: 194 }}
         />
       );
 

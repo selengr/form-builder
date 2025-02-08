@@ -158,8 +158,8 @@ export function MultiSelectController({
   const { control } = useFormContext();
 
   const renderValues = (selectedIds: string[]) => {
-    const selectedItems = options.filter((item) =>
-      selectedIds.includes(item.value)
+    const selectedItems = options.filter((item,index) =>
+      selectedIds[index]?.split("@")[0].includes(item.value)
     );
 
     if (!selectedItems.length && placeholder) {
@@ -249,13 +249,13 @@ export function MultiSelectController({
               </MenuItem>
             )}
 
-            {options?.map((option) => {
-              const selected = field.value?.includes(option.value);
+              {options?.map((option,index) => {
+              const selected = field.value[index]?.split("@")[0].includes(option.value);
 
               return (
                 <MenuItem
                   key={option.value}
-                  value={option.value}
+                  value={option.value.includes("@")?option.value:option.value+"@"+option.label}
                   sx={{
                     py: 1,
                     px: 2,

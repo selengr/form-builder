@@ -89,7 +89,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
           isLoading={isFetchingQacWithOutFilter}
           sx={{
             width: { sm: "100%", md: "100%" },
-            minWidth: 220,
+            minWidth: 240,
             flexShrink: 0,
           }}
           onChange={() => {
@@ -115,7 +115,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
           )}
           sx={{
             width: { sm: "100%", md: "22%" },
-            minWidth: 136,
+            minWidth: 156,
             flexShrink: 0,
           }}
           onChange={() => {
@@ -140,7 +140,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
           )}
           sx={{
             width: { sm: "100%", md: "22%" },
-            minWidth: 136,
+            minWidth: 156,
             flexShrink: 0,
           }}
           onChange={() => {

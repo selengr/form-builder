@@ -24,6 +24,7 @@ interface CustomSelectProps extends Omit<SelectProps, "sx" | "name"> {
   name: string;
   onChange?: any;
   disabled?: boolean;
+  isOperator?: boolean;
   isLoading?: boolean;
 }
 
@@ -33,6 +34,7 @@ export const SelectController: React.FC<CustomSelectProps> = ({
   name,
   onChange,
   disabled = false,
+  isOperator = false,
   isLoading = false,
   ...props
 }) => {
@@ -65,9 +67,9 @@ export const SelectController: React.FC<CustomSelectProps> = ({
                   />
                 );
               }
-              const selectedOption = options?.find(
-                (option) => option.value === selected
-              );
+              const selectedValue = isOperator ? selected?.split("@")[0] : selected;
+              const selectedOption = options?.find(option => option?.value === selectedValue);
+
               return selectedOption ? selectedOption.label : "";
             }}
             sx={{
@@ -102,10 +104,9 @@ export const SelectController: React.FC<CustomSelectProps> = ({
             {options?.map((option) => (
               <MenuItem
                 key={option.value}
-                value={option.value}
+                value={!isOperator ?option.value:option.value+"@"+option.label}
                 sx={{
                   display: "flex",
-                //   justifyContent: "end",
                   py: 1,
                   px: 2,
                   mx: 1,

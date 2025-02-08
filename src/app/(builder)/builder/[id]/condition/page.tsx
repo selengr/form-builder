@@ -13,61 +13,61 @@ export default async function Calculator({params}:{params : {id:string} }) {
  const {data : {content}} = conditions
 
 
- let dataList =  {
-  condition : [
-      {
-        elseQuestionId : "{#q_1403}@تاریخ.........سیبیس",
-          returnQuestionId : "{#q_1403}@تاریخ.........سیبیس",
-          subConditions : [
-            {
-              conditionType : "!#equalMultiChoiceSingle@نابرابر با",
-              id : 8325,
-              logicalOperator : "",
-              operatorType : "OPTION@گزینه",
-              questionType : "MULTIPLE_CHOICE*{#q_30}@چند گزینه تک",
-              value : "#op_5@گزینه 1"        
-            }
-          ]
-      },
-      {
-          elseQuestionId : "{#q_1403}@تاریخ.........سیبیس",
-          returnQuestionId : "{#q_1403}@تاریخ.........سیبیس",
-          subConditions : [
-              {
-                  conditionType: "#lenGraterThanText@طول متن بیشتر از",
-                  id : "b1f5e17a-d1bc-41ba-8601-1b75239f322b",
-                  logicalOperator : "",
-                  operatorType : "VALUE@ارزش",
-                  questionType : "TEXT_FIELD*{#q_101}@متی",
-                  value : "33"
-              },
-              {
-                  conditionType: "#lenGraterThanText@طول متن بیشتر از",
-                  id : "b1f5e17a-d1bc-41ba-8601-1b75239f322b",
-                  logicalOperator : "&&@&&",
-                  operatorType : "VALUE@ارزش",
-                  questionType : "TEXT_FIELD*{#q_101}@متی",
-                  value : "33"
-              },
-              {
-                  conditionType: "#lenGraterThanText@طول متن بیشتر از",
-                  id : "b1f5e17a-d1bc-41ba-8601-1b75239f322b",
-                  logicalOperator : "&&@&&",
-                  operatorType : "VALUE@ارزش",
-                  questionType : "TEXT_FIELD*{#q_101}@متی",
-                  value : "33"
-              },
+//  let dataList =  {
+//   condition : [
+//       {
+//         elseQuestionId : "{#q_1403}@تاریخ.........سیبیس",
+//           returnQuestionId : "{#q_1403}@تاریخ.........سیبیس",
+//           subConditions : [
+//             {
+//               conditionType : "!#equalMultiChoiceSingle@نابرابر با",
+//               id : 8325,
+//               logicalOperator : "",
+//               operatorType : "OPTION@گزینه",
+//               questionType : "MULTIPLE_CHOICE*{#q_30}@چند گزینه تک",
+//               value : "#op_5@گزینه 1"        
+//             }
+//           ]
+//       },
+//       {
+//           elseQuestionId : "{#q_1403}@تاریخ.........سیبیس",
+//           returnQuestionId : "{#q_1403}@تاریخ.........سیبیس",
+//           subConditions : [
+//               {
+//                   conditionType: "#lenGraterThanText@طول متن بیشتر از",
+//                   id : "b1f5e17a-d1bc-41ba-8601-1b75239f322b",
+//                   logicalOperator : "",
+//                   operatorType : "VALUE@ارزش",
+//                   questionType : "TEXT_FIELD*{#q_101}@متی",
+//                   value : "33"
+//               },
+//               {
+//                   conditionType: "#lenGraterThanText@طول متن بیشتر از",
+//                   id : "b1f5e17a-d1bc-41ba-8601-1b75239f322b",
+//                   logicalOperator : "&&@&&",
+//                   operatorType : "VALUE@ارزش",
+//                   questionType : "TEXT_FIELD*{#q_101}@متی",
+//                   value : "33"
+//               },
+//               {
+//                   conditionType: "#lenGraterThanText@طول متن بیشتر از",
+//                   id : "b1f5e17a-d1bc-41ba-8601-1b75239f322b",
+//                   logicalOperator : "&&@&&",
+//                   operatorType : "VALUE@ارزش",
+//                   questionType : "TEXT_FIELD*{#q_101}@متی",
+//                   value : "33"
+//               },
           
-          ]
-      },
+//           ]
+//       },
 
-  ]
-}
+//   ]
+// }
 
  
   return (
     <div className="container mx-auto py-8 flex justify-center items-start h-screen bg-white">
-        <ConditionList conditions={dataList.condition}/>
+        <ConditionList conditions={content}/>
     </div>
   )
 }

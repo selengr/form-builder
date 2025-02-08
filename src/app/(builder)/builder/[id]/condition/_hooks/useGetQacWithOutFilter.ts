@@ -46,7 +46,7 @@ export const useGetQacWithOutFilter = () => {
       : `${item.extMap.QUESTION_TYPE}*${item.extMap.UNIC_NAME || ""}`;
 
     return {
-      value: questionType,
+      value: `${questionType}@${item.caption}`,
       label: item.caption,
     };
   });

@@ -1,7 +1,7 @@
-import { v4 as uuidv4 } from "uuid"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, useFieldArray } from "react-hook-form"
 import { ConditionFormSchema, type TConditionFormData } from "@/lib/conditionFormSchema"
+import { idGenerator } from "@/lib/idGenerator"
 
 
 
@@ -11,7 +11,7 @@ export const createNewSubCondition = () => ({
     operatorType: "",
     conditionType: "",
     value: "",
-    id: uuidv4(),
+    id: idGenerator(),
   })
   
   export const createNewCondition = () => ({
@@ -33,7 +33,7 @@ export const useConditionalForm = () => {
   const {
     control,
     // handleSubmit,
-    formState: { errors },
+    // formState: { errors },
     getValues,
   } = methods
 
@@ -67,7 +67,7 @@ export const useConditionalForm = () => {
         operatorType: "",
         conditionType: "",
         value: "",
-        id: uuidv4(),
+        id: idGenerator(),
       },
       ...clonedCondition.subConditions.slice(subIndex + 1),
     ]

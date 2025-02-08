@@ -175,7 +175,13 @@ export const getInput = (
     setValue,
   } : any,
 ) => {
-  const combinedKey = `${type?.split("*")[0]}_${operator.split("@")[0]}`;
+  const combinedKey = `${type?.split("*")[0]}_${operator?.split("@")[0]}_${condition?.split("@")[0]}`
+
+   
+  console.log("combinedKey", combinedKey)
+  console.log("condition-------", condition?.split("@")[0])
+  console.log("combinedKey==================", combinedKey)
+
 
   switch (combinedKey) {
       

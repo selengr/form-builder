@@ -128,6 +128,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
               ""
             );
           }}
+          isOperator={true}
           disabled={!Boolean(currentValues.questionType)}
         />
         <SelectController
@@ -148,6 +149,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
               ""
             );
           }}
+          isOperator={true}
           disabled={!Boolean(currentValues.operatorType)}
         />
         {getInput(

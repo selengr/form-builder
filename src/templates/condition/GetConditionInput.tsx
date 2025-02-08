@@ -4,6 +4,7 @@ import { Controller} from "react-hook-form";
 import { DatePicker as DatePickerCustome  } from "@/components/DatePicker/DatePicker";
 import { TextFieldController } from "@/components/condition/form/TextFieldController";
 import { SelectController, MultiSelectController } from "@/components/condition/form/SelectController";
+import { IConditionQuestionType } from "@/types/condition";
 
 
 
@@ -201,7 +202,7 @@ export const getInput = (
           name={field.name}
           options={onlySomeQuestionsOptions}
           isLoading={isFetchingOnlyAllQuestions}
-          sx={{ minWidth: 194 }}
+          sx={{ minWidth: 215 }}
         />
       );
 
@@ -215,7 +216,7 @@ export const getInput = (
           name={field.name}
           options={onlyAllCalculationOptions}
           isLoading={isFetchingOnlyAllCalculation}
-          sx={{ minWidth: 194 }}
+          sx={{ minWidth: 215 }}
         />
       );
 
@@ -225,18 +226,17 @@ export const getInput = (
     case "MULTIPLE_CHOICE_OPTION_#lessThanMultiChoiceSingle":
     case "MULTIPLE_CHOICE_OPTION_!#lessThanMultiChoiceSingle": {
       const typeParts = type.split("*");
-      if (typeParts.length < 2) return null;
-      const targetUnicName = typeParts[1];
-
+      
+      const targetUnicName = typeParts[1]?.split("@")[0];
       const targetQuestion = onlyAllQuestions?.find(
-        (item : any) => item?.extMap?.UNIC_NAME === targetUnicName
+        (item:IConditionQuestionType) => item?.extMap?.UNIC_NAME === targetUnicName
       );
 
       if (!targetQuestion) return null;
 
       const { OPTIONS: options = {} } = targetQuestion.extMap;
       const mappedOptions = Object.entries(options).map(([key, value]:any) => ({
-        value: key,
+        value: key+"@"+value[1] as string,
         label: value[1],
       }));
 
@@ -245,7 +245,8 @@ export const getInput = (
           key={targetUnicName}
           name={field.name}
           options={mappedOptions}
-          sx={{ minWidth: 194 }}
+          sx={{ minWidth: 215 }}
+          
         />
       );
     }
@@ -255,11 +256,11 @@ export const getInput = (
     case "MULTIPLE_CHOICE_MULTI_SELECT_OPTION_!#equalThanMultiChoiceMulti":
     case "MULTIPLE_CHOICE_MULTI_SELECT_OPTION_#equalThanMultiChoiceMulti": {
       const typeParts = type.split("*");
-      if (typeParts.length < 2) return null;
-      const targetUnicName = typeParts[1];
+      // if (typeParts.length < 3) return null;
+      const targetUnicName = typeParts[1]?.split("@")[0];
 
       const targetQuestion = onlyAllQuestions?.find(
-        (item:any) => item?.extMap?.UNIC_NAME === targetUnicName
+        (item:IConditionQuestionType) => item?.extMap?.UNIC_NAME === targetUnicName
       );
 
       if (!targetQuestion?.extMap?.OPTIONS) return null;
@@ -275,7 +276,7 @@ export const getInput = (
           name={field.name}
           options={options}
           sx={{
-            maxWidth: 194,
+            minWidth: 215,
             maxHeight: 50,
           }}
           aria-label={`Multi-select ${targetUnicName}`}
@@ -316,7 +317,7 @@ export const getInput = (
           name={field.name}
           options={onlySomeQuestionsOptions}
           isLoading={isFetchingOnlyAllQuestions}
-          sx={{ minWidth: 194 }}
+          sx={{ minWidth: 215 }}
         />
       );
 
@@ -330,7 +331,7 @@ export const getInput = (
           name={field.name}
           options={onlyAllCalculationOptions}
           isLoading={isFetchingOnlyAllCalculation}
-          sx={{ minWidth: 194 }}
+          sx={{ minWidth: 215 }}
         />
       );
 
@@ -374,7 +375,7 @@ export const getInput = (
           name={field.name}
           options={onlySomeQuestionsOptions}
           isLoading={isFetchingOnlyAllQuestions}
-          sx={{ minWidth: 194 }}
+          sx={{ minWidth: 215 }}
         />
       );
 
@@ -395,7 +396,7 @@ export const getInput = (
           name={field.name}
           options={onlySomeQuestionsOptions}
           isLoading={isFetchingOnlyAllQuestions}
-          sx={{ minWidth: 194 }}
+          sx={{ minWidth: 215 }}
         />
       );
     
@@ -408,7 +409,7 @@ export const getInput = (
           name={field.name}
           options={onlyAllCalculationOptions}
           isLoading={isFetchingOnlyAllCalculation}
-          sx={{ minWidth: 194 }}
+          sx={{ minWidth: 215 }}
         />
       );
 
@@ -431,7 +432,7 @@ export const getInput = (
           name={field.name}
           options={onlySomeQuestionsOptions}
           isLoading={isFetchingOnlyAllQuestions}
-          sx={{ minWidth: 194 }}
+          sx={{ minWidth: 215 }}
         />
       );
 
@@ -446,7 +447,7 @@ export const getInput = (
           name={field.name}
           options={onlyAllCalculationOptions}
           isLoading={isFetchingOnlyAllCalculation}
-          sx={{ minWidth: 194 }}
+          sx={{ minWidth: 215 }}
         />
       );
 

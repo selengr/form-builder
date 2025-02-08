@@ -175,14 +175,14 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
                   name={`conditions.${index}.returnQuestionId`}
                   options={onlyAllQuestionsOptions}
                   isLoading={isFetchingOnlyAllQuestions}
-                  sx={{ minWidth: 220, ml: 2.5 }}
+                  sx={{ minWidth: 240, ml: 2.5 }}
                 />
-                <Typography sx={{ color: "#393939", fontSize: "14px", mr: 1 }}>در غیر اینصورت برو به:</Typography>
+                <Typography sx={{ color: "#393939", fontSize: "14px", mr: 3.5 }}>در غیر اینصورت برو به:</Typography>
                 <SelectController
                   name={`conditions.${index}.elseQuestionId`}
                   options={onlyAllQuestionsOptions}
                   isLoading={isFetchingOnlyAllQuestions}
-                  sx={{ minWidth: 300, width: 360 }}
+                  sx={{ minWidth: 300, width: 380 }}
                 />
                 {index !== 0 && (
                 <Button

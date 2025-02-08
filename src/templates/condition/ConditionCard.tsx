@@ -100,9 +100,10 @@
         {openDialog && (
           <ConditionalSystem
             handleClose={handleClose}
-            // open={openDialog}
-            // setOpen={setOpen}
-            // calcId={condition.id}
+            open={openDialog}
+            setOpen={setOpen}
+            // conditionId={condition.id}
+            condition
           />
         )}
       </div>

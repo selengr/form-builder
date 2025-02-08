@@ -22,11 +22,12 @@ export const createNewSubCondition = () => ({
 
 
 
-export const useConditionalForm = ({isEdit,condition}:{isEdit : boolean,condition:TConditionData}) => {
+export const useConditionalForm = (condition:{condition:TConditionData}) => {
+
   const methods = useForm<TConditionFormData>({
     resolver: zodResolver(ConditionFormSchema),
     defaultValues: {
-      conditions: [isEdit ? condition : createNewCondition()],
+      conditions: [condition??createNewCondition()],
     },
   })
 

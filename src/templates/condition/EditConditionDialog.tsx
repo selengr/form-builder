@@ -14,7 +14,7 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   maxHeight: "75vh",
   scrollbarWidth: "thin",
   maxWidth: "100%",
-  padding : "8px",
+  padding : "16px",
   overflowX : "hidden",
   paddingTop: theme.spacing(2.8),
   paddingBottom: theme.spacing(1.8),
@@ -26,7 +26,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiPaper-root": {
     borderRadius: "24px",
     margin: "10px",
-    width: "1010px",
+    width: "1050px",
   },
   "& .MuiDialog-container": {
     backdropFilter: "blur(4px)",

@@ -36,7 +36,8 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
     handleRemoveCondition,
     handleAddSubCondition,
     handleRemoveSubCondition,
-  } = useConditionalForm(isEdit, condition)
+  } = useConditionalForm(condition)
+  console.log("condition======",condition)
 
   const { qacWithOutFilter, qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter()
   const { onlyAllQuestions, onlyAllQuestionsOptions, onlySomeQuestionsOptions, isFetchingOnlyAllQuestions } =
@@ -205,7 +206,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
               <CircleDivider />
             </Box>
           ))}
-          {isEdit && (
+          {!isEdit && (
             <Button
             variant="outlined"
             onClick={handleAddCondition}

@@ -8,9 +8,6 @@ import { IConditionQuestionType } from "@/types/condition";
 
 
 
-
-
-
 export const getQuestion = (type: string, values: any) => {
     switch (type?.split("*")[0]) {
       case "MULTIPLE_CHOICE":
@@ -160,7 +157,6 @@ export const getQuestion = (type: string, values: any) => {
 
 
 
-
 export const getInput = (
   type: string,
   operator: string,
@@ -177,12 +173,6 @@ export const getInput = (
   } : any,
 ) => {
   const combinedKey = `${type?.split("*")[0]}_${operator?.split("@")[0]}_${condition?.split("@")[0]}`
-
-   
-  console.log("combinedKey", combinedKey)
-  console.log("condition-------", condition?.split("@")[0])
-  console.log("combinedKey==================", combinedKey)
-
 
   switch (combinedKey) {
       

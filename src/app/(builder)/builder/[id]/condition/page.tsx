@@ -12,10 +12,39 @@ export default async function Calculator({params}:{params : {id:string} }) {
  const conditions : AxiosResponse<any> = await AxiosApi.get(url);
  const {data : {content}} = conditions
 
+
+ let dataList =  {
+  condition : [
+      {
+          elseQuestionId : "",
+          returnQuestionId : "{#q_1403}@تاریخ.........سیبیس",
+          subConditions : [
+              {
+                  conditionType: "#lenGraterThanText@طول متن بیشتر از",
+                  id : "b1f5e17a-d1bc-41ba-8601-1b75239f322b",
+                  logicalOperator : "",
+                  operatorType : "VALUE@ارزش",
+                  questionType : "TEXT_FIELD*{#q_101}@متی",
+                  value : "33"
+              },
+              {
+                  conditionType: "#lenGraterThanText@طول متن بیشتر از",
+                  id : "b1f5e17a-d1bc-41ba-8601-1b75239f322b",
+                  logicalOperator : "&&@&&",
+                  operatorType : "VALUE@ارزش",
+                  questionType : "TEXT_FIELD*{#q_101}@متی",
+                  value : "33"
+              },
+          
+          ]
+      }
+  ]
+}
+
  
   return (
     <div className="container mx-auto py-8 flex justify-center items-start h-screen bg-white">
-        <ConditionList conditions={content}/>
+        <ConditionList conditions={dataList.condition}/>
     </div>
   )
 }

@@ -11,6 +11,7 @@ import { idGenerator } from '../../lib/idGenerator';
 
 
 export function ConditionCard({ condition } : { condition : TConditionData} ) {
+  console.log("1111111",condition)
   const [openDialog, setOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -25,37 +26,20 @@ export function ConditionCard({ condition } : { condition : TConditionData} ) {
   }, []);
 
   return (
-    <>
-      <div
-        className="bg-white rounded-lg p-[10px] h-14
-flex justify-between w-full cursor-pointer border-[1px]
-border-[#1758BA]"
-      >
-        <div className="flex justify-center items-center gap-[10px]">
-        <div className="flex flex-col">
-          {condition?.subConditions?.map((item)=>(
-             <div key={item.id} className="flex flex-row ">
-             <span className="text-[#161616] text-sm">{item.logicalOperator?.split("@")[1] ?? "اگر"}</span>
-             <span className="text-[#1758BA] text-sm">{item.questionType.split("@")[1]}</span>
-             <span className="text-[#161616] text-sm">{item.conditionType.split("@")[1]}</span>
-             <span className="text-[#1758BA] text-sm">{item.value}</span>
-            </div>
-          ))}
-           <span className="text-[#0dff15] text-sm"><span>در اینصورت برو به: </span> {condition.returnQuestionId.split("@")[1]}</span>
-           <span className="text-[#161616] text-sm"><span>در غیر اینصورت برو به:</span> {condition.elseQuestionId.split("@")[1]}</span>
-        </div>
-        </div>
-        <div className="flex justify-center items-center gap-[10px]">
-          <button className="bg-[#F7F7FF] h-8 w-8 rounded-[10px] flex justify-center items-center">
-            <Image
-              src={"/images/calc/math.svg"}
-              width={25}
-              height={25}
-              alt="math"
-            />
-          </button>
+    <div className="bg-[#F7F7FF] rounded-lg flex">
+
+     
+
+          <div className="flex flex-col justify-start items-center gap-[10px] pl-[10px]">
           <div
-            className="bg-[#F7F7FF] h-8 w-8 rounded-[10px] flex
+            className="bg-white h-8 w-8 rounded-[10px] flex
+justify-center items-center"
+          >
+            1
+          </div>
+        
+          <div
+            className="bg-white h-8 w-8 rounded-[10px] flex
 justify-center items-center"
           >
             <button onClick={handleClick}>
@@ -124,6 +108,33 @@ justify-center items-center"
             )}
           </div>
         </div>
+
+      <div
+        className="rounded-lg p-[10px] 
+flex justify-between w-full cursor-pointer border-[1px]
+border-[#1758BA] bg-[#fff]"
+      >
+        <div className="flex justify-center items-center gap-[10px]">
+        <div className="flex flex-col">
+          {condition?.subConditions?.map((item)=>(
+             <div key={item.id} className="flex flex-row gap-2">
+             <span className="text-[#161616] text-sm">{item.logicalOperator?.split("@")[1] ?? "اگر"}</span>
+             <span className="text-[#1758BA] text-sm">{item.questionType?.split("@")[1]}</span>
+             <span className="text-[#161616] text-sm">{item.conditionType?.split("@")[1]}</span>
+             <span className="text-[#1758BA] text-sm">{item.value}</span>
+            </div>
+          ))}
+           <span className="text-[#161616] text-sm"><span>در اینصورت برو به: </span> 
+           <span className="text-[#1758BA]">{condition.returnQuestionId.toString()?.split("@")[1]}</span>
+           </span>
+          {condition.elseQuestionId && <span className="text-[#161616] text-sm"><span>در غیر اینصورت برو به:</span> 
+           <span className="text-[#1758BA]">
+           {condition.elseQuestionId.toString()?.split("@")[1]}
+            </span></span>
+}
+        </div>
+        </div>
+       
       </div>
       {openDialog && (
         <ConditionalSystem
@@ -133,6 +144,6 @@ justify-center items-center"
           // calcId={condition.id}
         />
       )}
-    </>
+    </div>
   );
 }

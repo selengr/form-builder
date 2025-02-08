@@ -30,7 +30,7 @@ export const createNewSubCondition = () => ({
           const conditionType = subCondition.conditionType?.split("@")[0];
           const questionType = subCondition.questionType?.split("@")[0];
           const operatorType = subCondition.operatorType?.split("@")[0];
-          const value = typeof subCondition.value !== 'object' ? subCondition.value?.split("@")[0] : subCondition.value;
+          const value = subCondition.value.toString()?.split("@")[0];
           const logicalOperator = subCondition.logicalOperator?.split("@")[0];
   
 
@@ -46,7 +46,7 @@ export const createNewSubCondition = () => ({
 
 
       return {
-        returnQuestionId: returnQuestionId?.split("@")[0],
+        returnQuestionId: "#q_1403",
         elseQuestionId: elseQuestionId?.split("@")[0],
         subConditions : SubConditionsData
       };
@@ -59,9 +59,11 @@ export const useConditionalForm = (condition: TConditionData) => {
   const methods = useForm<TConditionFormData>({
     resolver: zodResolver(ConditionFormSchema),
     defaultValues: {
-      conditions: [transformOutputToInput(condition)??createNewCondition()],
+      conditions: [!!condition ? transformOutputToInput(condition):createNewCondition()],
     },
   })
+
+  // console.log("=====================",transformOutputToInput(condition))
 
   const {
     control,

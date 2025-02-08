@@ -69,7 +69,7 @@ export const SelectController: React.FC<CustomSelectProps> = ({
               }
               const selectedValue = isOperator ? selected?.split("@")[0] : selected;
               const selectedOption = options?.find(option => option?.value === selectedValue);
-
+                console.log("selectedOption",selectedOption)
               return selectedOption ? selectedOption.label : "";
             }}
             sx={{

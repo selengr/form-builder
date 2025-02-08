@@ -3,19 +3,25 @@ import { useMutation } from '@tanstack/react-query';
 import { IPostCondition } from '@/types/condition';
 
 
-const postCalculation = async (data : IPostCondition[]) => {
+enum HttpMethod {
+  POST = 'post',
+  PUT = 'put',
+}
+
+const postCalculation = async (data : IPostCondition[], method: HttpMethod) => {
     const url = `/condition`;
-    const response = await AxiosApi.post(url,data);
+    const response = await AxiosApi[method](url,data);
     return response.data;
   };
 
 
-export const usePostCalculation = () => {
+export const usePostCalculation = (isEdit:boolean) => {
+  const method = isEdit ? HttpMethod.PUT : HttpMethod.POST;
 
   const mutation = useMutation({
     mutationKey: ['post-condition'],
     mutationFn: ({ data }: { data: IPostCondition[] }) =>
-        postCalculation(data),
+        postCalculation(data, method),
 
     onSuccess: (data) => {},
     onError: () => {},

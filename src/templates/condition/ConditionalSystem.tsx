@@ -44,7 +44,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
     useGetOnlyAllQuestions()
   const { onlyAllCalculationOptions, isFetchingOnlyAllCalculation } = useGetOnlyAllCalculation()
 
-  const postCalculation = usePostCalculation();
+  const postCalculation = usePostCalculation(isEdit);
 
   const onSubmit = (input: TConditionFormData) => {
     console.log("Submitted data:", input);

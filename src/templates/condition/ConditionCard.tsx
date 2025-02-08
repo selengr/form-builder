@@ -2,8 +2,8 @@
   import { SlPencil } from "react-icons/sl";
   import { useCallback, useState } from "react";
   import { Menu, Typography } from "@mui/material";
-  import { ConditionalSystem } from "./ConditionalSystem";
-  import { TConditionData } from "@/lib/conditionFormSchema";
+  import { EditConditionDialog } from "./EditConditionDialog";
+  // import { TConditionData } from "@/lib/conditionFormSchema";
   import { ConditionCardOperator } from './ConditionCardOperator'; 
   import { WeuiDeleteOutlined } from "../../../public/images/icons/DeleteIcon";
   import { PhDotsThreeVerticalBold } from "../../../public/images/icons/PhDotsThreeVerticalBold";
@@ -98,12 +98,12 @@
           </div>
         </div>
         {openDialog && (
-          <ConditionalSystem
-            handleClose={handleClose}
+          <EditConditionDialog
+            // handleClose={handleClose}
             open={openDialog}
             setOpen={setOpen}
             // conditionId={condition.id}
-            condition
+            condition={condition}
           />
         )}
       </div>

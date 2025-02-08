@@ -23,7 +23,9 @@ import { useParams, useRouter } from "next/navigation"
 
 
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
-  handleClose
+  handleClose,
+  condition,
+  isEdit = false
 }) => {
   const { id } = useParams();
   const {refresh} = useRouter()
@@ -34,7 +36,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
     handleRemoveCondition,
     handleAddSubCondition,
     handleRemoveSubCondition,
-  } = useConditionalForm()
+  } = useConditionalForm(isEdit, condition)
 
   const { qacWithOutFilter, qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter()
   const { onlyAllQuestions, onlyAllQuestionsOptions, onlySomeQuestionsOptions, isFetchingOnlyAllQuestions } =
@@ -203,7 +205,8 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
               <CircleDivider />
             </Box>
           ))}
-          <Button
+          {isEdit && (
+            <Button
             variant="outlined"
             onClick={handleAddCondition}
             sx={{
@@ -217,6 +220,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
           >
             افزودن شرط جدید
           </Button>
+          )}
           <SubmitButtons isLoading={postCalculation.isPending} handleClose={handleClose}/>
         </form>
       </FormProvider>

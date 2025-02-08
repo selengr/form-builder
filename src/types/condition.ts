@@ -73,7 +73,8 @@ export interface ICreateConditionDialogProps {
     setOpen: Dispatch<SetStateAction<boolean>>;
   }
 export interface IEditConditionDialogProps extends ICreateConditionDialogProps{
-  condition : TConditionData
+    condition : TConditionData
+    // handleClose?: () => void; 
   }
 
   export interface IConditionalSystemProps {

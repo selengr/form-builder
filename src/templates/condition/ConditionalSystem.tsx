@@ -52,18 +52,18 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
 
         const conditionFormula = subConditions
           .map((subCondition : TSubConditionData) => {
-            const {
-              conditionType,
-              questionType,
-              operatorType,
-              value,
-              logicalOperator,
-            } = subCondition;
+            const conditionType = subCondition.conditionType?.split("@")[0];
+            const questionType = subCondition.questionType?.split("@")[0];
+            const operatorType = subCondition.operatorType?.split("@")[0];
+            const value = typeof subCondition.value !== 'object' ? subCondition.value?.split("@")[0] : subCondition.value;
+            const logicalOperator = subCondition.logicalOperator?.split("@")[0];
     
             let formattedValue: string;
 
             if (operatorType === "OPTION") {
-              formattedValue = `{${value}}`;
+              if(typeof subCondition.value === 'object'){
+                formattedValue = `{${Array.isArray(value) && value?.map((item:string)=>item?.split("@")[0])}}`
+              } else formattedValue = `{${value}}`;
             } else if (operatorType === "VALUE") {
               formattedValue = `{#v_${value}}`;
             } else if (operatorType === "TEXT") {
@@ -105,9 +105,9 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
         return {
           conditionFormula: conditionFormula,
           formBuilderId: id,
-          returnQuestionId: parseInt(condition.returnQuestionId.replace(/\D/g, ''), 10),
-          elseQuestionId: parseInt(condition.elseQuestionId.replace(/\D/g, ''), 10),
-          frontConditionData:".....test.........."
+          returnQuestionId: parseInt(returnQuestionId.replace(/\D/g, ''), 10),
+          elseQuestionId: parseInt(elseQuestionId.replace(/\D/g, ''), 10),
+          frontConditionData: JSON.stringify(input)
         };
       });
     };

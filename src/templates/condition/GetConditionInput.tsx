@@ -2,8 +2,8 @@ import { Box } from "@mui/material";
 import { Controller} from "react-hook-form";
 
 import { DatePicker as DatePickerCustome  } from "@/components/DatePicker/DatePicker";
-import { TextFieldController } from "@/components/calculation/form/TextFieldController";
-import { SelectController, MultiSelectController } from "@/components/calculation/form/SelectController";
+import { TextFieldController } from "@/components/condition/form/TextFieldController";
+import { SelectController, MultiSelectController } from "@/components/condition/form/SelectController";
 
 
 
@@ -66,7 +66,8 @@ export const getQuestion = (type: string, values: any) => {
   };
 
   export const getCondition = (type: string, operator: string, values: any) => {
-    const combinedKey = `${type?.split("*")[0]}_${operator}`;
+    const combinedKey = `${type?.split("*")[0]}_${operator.split("@")[0]}`;
+   
     switch (combinedKey) {
       case "MULTIPLE_CHOICE_VALUE":
       case "MULTIPLE_CHOICE_OPTION":
@@ -174,7 +175,7 @@ export const getInput = (
     setValue,
   } : any,
 ) => {
-  const combinedKey = `${type?.split("*")[0]}_${operator}_${condition}`
+  const combinedKey = `${type?.split("*")[0]}_${operator.split("@")[0]}`;
 
   switch (combinedKey) {
       

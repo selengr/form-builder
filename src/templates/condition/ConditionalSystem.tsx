@@ -4,9 +4,9 @@ import { Box, Typography, Button } from "@mui/material"
 
 import { SubCondition } from "./SubCondition"
 // components
-import { CircleDivider } from "@/components/calculation/CircleDivider"
-import { SubmitButtons } from "@/components/calculation/form/SubmitButtons"
-import { SelectController } from "@/components/calculation/form/SelectController"
+import { CircleDivider } from "@/components/condition/CircleDivider"
+import { SubmitButtons } from "@/components/condition/form/SubmitButtons"
+import { SelectController } from "@/components/condition/form/SelectController"
 // lib
 import { formatContainText } from "@/lib/formatContainText"
 import { type TConditionFormData , TConditionData, TSubConditionData } from "@/lib/conditionFormSchema"

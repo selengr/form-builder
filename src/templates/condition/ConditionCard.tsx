@@ -1,51 +1,34 @@
-import Image from "next/image";
-import { LoadingButton } from "@mui/lab";
-import { SlPencil } from "react-icons/sl";
-import { useCallback, useState } from "react";
-import { Menu, Typography } from "@mui/material";
-import { ConditionalSystem } from "./ConditionalSystem";
-import { PhDotsThreeVerticalBold } from "../../../public/images/icons/PhDotsThreeVerticalBold";
-import { WeuiDeleteOutlined } from "../../../public/images/icons/DeleteIcon";
-import { TConditionData } from "@/lib/conditionFormSchema";
-import { idGenerator } from '../../lib/idGenerator';
-
-
-export function ConditionCard({ condition } : { condition : TConditionData} ) {
-  console.log("1111111",condition)
-  const [openDialog, setOpen] = useState<boolean>(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-  const open = Boolean(anchorEl);
-
-  const handleClick = useCallback((event: any) => {
-    setAnchorEl(event.currentTarget);
-  }, []);
-
-  const handleClose = useCallback(() => {
-    setAnchorEl(null);
-  }, []);
-
-  return (
-    <div className="bg-[#F7F7FF] rounded-lg flex">
-
-     
-
-          <div className="flex flex-col justify-start items-center gap-[10px] pl-[10px]">
-          <div
-            className="bg-white h-8 w-8 rounded-[10px] flex
-justify-center items-center"
-          >
-            1
-          </div>
-        
-          <div
-            className="bg-white h-8 w-8 rounded-[10px] flex
-justify-center items-center"
-          >
+  import { LoadingButton } from "@mui/lab";
+  import { SlPencil } from "react-icons/sl";
+  import { useCallback, useState } from "react";
+  import { Menu, Typography } from "@mui/material";
+  import { ConditionalSystem } from "./ConditionalSystem";
+  import { TConditionData } from "@/lib/conditionFormSchema";
+  import { ConditionCardOperator } from './ConditionCardOperator'; 
+  import { WeuiDeleteOutlined } from "../../../public/images/icons/DeleteIcon";
+  import { PhDotsThreeVerticalBold } from "../../../public/images/icons/PhDotsThreeVerticalBold";
+  
+  export function ConditionCard({ condition, index }: { condition: TConditionData, index : number }) {
+    const [openDialog, setOpen] = useState<boolean>(false);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+  
+    const handleClick = useCallback((event: any) => {
+      setAnchorEl(event.currentTarget);
+    }, []);
+  
+    const handleClose = useCallback(() => {
+      setAnchorEl(null);
+    }, []);
+  
+    return (
+      <div className="bg-[#F7F7FF] rounded-lg flex">
+        <div className="flex flex-col justify-start items-center gap-[10px] pl-[10px]">
+          <div className="bg-white h-8 w-8 rounded-[10px] flex justify-center items-center">{index+1}</div>
+          <div className="bg-white h-8 w-8 rounded-[10px] flex justify-center items-center">
             <button onClick={handleClick}>
               <PhDotsThreeVerticalBold color="#1758BA" fontSize="1.5rem" />
             </button>
-
             {open && (
               <Menu
                 sx={{
@@ -108,42 +91,28 @@ justify-center items-center"
             )}
           </div>
         </div>
-
-      <div
-        className="rounded-lg p-[10px] 
-flex justify-between w-full cursor-pointer border-[1px]
-border-[#1758BA] bg-[#fff]"
-      >
-        <div className="flex justify-center items-center gap-[10px]">
-        <div className="flex flex-col">
-          {condition?.subConditions?.map((item)=>(
-             <div key={item.id} className="flex flex-row gap-2">
-             <span className="text-[#161616] text-sm">{item.logicalOperator?.split("@")[1] ?? "اگر"}</span>
-             <span className="text-[#1758BA] text-sm">{item.questionType?.split("@")[1]}</span>
-             <span className="text-[#161616] text-sm">{item.conditionType?.split("@")[1]}</span>
-             <span className="text-[#1758BA] text-sm">{item.value}</span>
-            </div>
-          ))}
-           <span className="text-[#161616] text-sm"><span>در اینصورت برو به: </span> 
-           <span className="text-[#1758BA]">{condition.returnQuestionId.toString()?.split("@")[1]}</span>
-           </span>
-          {condition.elseQuestionId && <span className="text-[#161616] text-sm"><span>در غیر اینصورت برو به:</span> 
-           <span className="text-[#1758BA]">
-           {condition.elseQuestionId.toString()?.split("@")[1]}
-            </span></span>
-}
+  
+        <div className="rounded-lg p-[10px] flex justify-between w-full cursor-pointer border-[1px] border-[#1758BA] bg-[#fff]">
+          <div className="flex justify-center items-center gap-[10px]">
+            <ConditionCardOperator condition={condition} /> {/* Use the new component here */}
+          </div>
         </div>
-        </div>
-       
+        {openDialog && (
+          <ConditionalSystem
+            handleClose={handleClose}
+            // open={openDialog}
+            // setOpen={setOpen}
+            // calcId={condition.id}
+          />
+        )}
       </div>
-      {openDialog && (
-        <ConditionalSystem
-          handleClose={handleClose}
-          // open={openDialog}
-          // setOpen={setOpen}
-          // calcId={condition.id}
-        />
-      )}
-    </div>
-  );
-}
+    );
+  }
+  
+
+
+
+
+
+
+

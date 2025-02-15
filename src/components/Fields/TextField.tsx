@@ -81,9 +81,7 @@ const propertiesSchema = z
           .max(100, { message: "حداقل باید 1 و حداکثر 100 کاراکتر باشد" })
       ),
     MINIMUM_LEN: z.object({
-      value: z
-        .number({ invalid_type_error: "اجباری است" })
-        .min(1, { message: "حداقل باید 1 کاراکتر باشد" }),
+      value: z.number({ invalid_type_error: "اجباری است" }).min(0),
       id: z.number(),
     }),
     MAXIMUM_LEN: z.object({
@@ -174,56 +172,19 @@ const DesignerComponent = memo(function DesignerComponent({
   );
 });
 
-export const TextFieldFormElement: FormElement = {
-  questionType,
-  construct: ({
-    questionId,
-    questionGroupId,
-    formId,
-    title,
-    position,
-  }: IFormElementConstructor) => ({
-    questionId,
-    questionGroupId,
-    formId,
-    title,
-    questionType,
-    position,
-    questionPropertyList: questionPropertyList,
-  }),
-  designerBtnElement: {
-    label: "متنی",
-    icon: TextBlockIcon,
-  },
-  designerComponent: DesignerComponent,
-  formComponent: FormComponent,
-  propertiesComponent: PropertiesComponent,
-
-  validate: (
-    formElement: FormElementInstance,
-    currentValue: string
-  ): boolean => {
-    const element = formElement as CustomInstance;
-    if (element.questionPropertyList.required) {
-      return currentValue.length > 0;
-    }
-
-    return true;
-  },
-};
-
-type CustomInstance = FormElementInstance & {
-  questionPropertyList: typeof questionPropertyList;
-};
-
-function FormComponent({
+const FormComponent = memo(function FormComponent({
   elementInstance,
+  value,
+  onChange,
+  error,
 }: {
   elementInstance: FormElementInstance;
+  value: string;
+  onChange: (value: string) => void;
+  error: string;
 }) {
   const element = elementInstance as CustomInstance;
   const isMobile = useResponsive("down", "sm");
-  const [calendarValue, setCalendarValue] = useState(new Date());
   const fieldPattern = element.questionPropertyList.find(
     (el) => el.questionPropertyEnum === "TEXT_FIELD_PATTERN"
   )?.value;
@@ -239,11 +200,20 @@ function FormComponent({
 
   let content;
 
+  const handleLocalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    onChange(newValue);
+  };
+
   switch (fieldPattern) {
     case "LONG_TEXT":
       content = (
         <Fragment>
           <TextField
+            value={value}
+            onChange={handleLocalChange}
+            error={!!error}
+            helperText={error}
             rows={4}
             multiline
             type="text"
@@ -264,6 +234,10 @@ function FormComponent({
       content = (
         <Fragment>
           <TextField
+            value={value}
+            onChange={handleLocalChange}
+            error={!!error}
+            helperText={error}
             type="text"
             sx={{
               "& .MuiInputBase-root": {
@@ -282,6 +256,10 @@ function FormComponent({
       content = (
         <Fragment>
           <TextField
+            value={value}
+            onChange={handleLocalChange}
+            error={!!error}
+            helperText={error}
             type="text"
             sx={{
               "& .MuiInputBase-root": {
@@ -328,6 +306,10 @@ function FormComponent({
       content = (
         <Fragment>
           <TextField
+            value={value}
+            onChange={handleLocalChange}
+            error={!!error}
+            helperText={error}
             placeholder="2981859878"
             type="text"
             sx={{
@@ -356,6 +338,10 @@ function FormComponent({
       content = (
         <Fragment>
           <TextField
+            value={value}
+            onChange={handleLocalChange}
+            error={!!error}
+            helperText={error}
             type="text"
             placeholder="09358956545"
             slotProps={{
@@ -397,14 +383,19 @@ function FormComponent({
               shadow={false}
               calendar={persian}
               locale={persian_fa}
-              value={calendarValue}
-              onChange={(e: any) => setCalendarValue(e)}
+              // value={calendarValue}
+              // onChange={(e: any) => setCalendarValue(e)}
+              value={value}
+              onChange={handleLocalChange as any}
               className={isMobile ? "rmdp-mobile" : ""}
               zIndex={9999}
-              inputClass="h-[50px] px-4 border-[1px] w-full border-neutral-300 rounded-xl text-left p-1"
+              inputClass={`h-[50px] px-4 border-[1px] w-full border-neutral-300 rounded-xl text-left p-1 ${
+                !!error ? "border-red-500" : ""
+              }`}
               highlightToday
               portal
             />
+            {!!error && <Typography color="#f44336">{error}</Typography>}
           </Box>
         </Fragment>
       );
@@ -443,7 +434,49 @@ function FormComponent({
       )}
     </Box>
   );
-}
+});
+
+export const TextFieldFormElement: FormElement = {
+  questionType,
+  construct: ({
+    questionId,
+    questionGroupId,
+    formId,
+    title,
+    position,
+  }: IFormElementConstructor) => ({
+    questionId,
+    questionGroupId,
+    formId,
+    title,
+    questionType,
+    position,
+    questionPropertyList: questionPropertyList,
+  }),
+  designerBtnElement: {
+    label: "متنی",
+    icon: TextBlockIcon,
+  },
+  designerComponent: DesignerComponent,
+  formComponent: FormComponent,
+  propertiesComponent: PropertiesComponent,
+
+  validate: (
+    formElement: FormElementInstance,
+    currentValue: string
+  ): boolean => {
+    const element = formElement as CustomInstance;
+    if (element.questionPropertyList.required) {
+      return currentValue.length > 0;
+    }
+
+    return true;
+  },
+};
+
+type CustomInstance = FormElementInstance & {
+  questionPropertyList: typeof questionPropertyList;
+};
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 function PropertiesComponent({

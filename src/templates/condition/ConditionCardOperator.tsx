@@ -9,7 +9,7 @@ interface IConditionCardOperatorProps {
 export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ condition }) => {
   const parseCondition : TConditionData[] = JSON.parse(condition?.frontConditionData).conditions
 
-  const val = (item:TSubConditionData) => {
+  const formattedValue = (item:TSubConditionData) => {
     if (item.operatorType?.split("@")[0] === "OPTION" && item.questionType?.split("*")[0] === "MULTIPLE_CHOICE_MULTI_SELECT") {
       const op : string[] = []
       if(Array.isArray(item.value)){
@@ -28,7 +28,7 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
             <span className="text-[#161616] text-sm">{item.logicalOperator?.split("@")[1] ?? "اگر"}</span>
             <span className="text-[#1758BA] text-sm">{item.questionType?.split("@")[1]}</span>
             <span className="text-[#161616] text-sm">{item.conditionType?.split("@")[1]}</span>
-            <span className="text-[#1758BA] text-sm">{val(item)}</span>
+            <span className="text-[#1758BA] text-sm">{formattedValue(item)}</span>
           </div>
         )
       })}

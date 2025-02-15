@@ -13,7 +13,7 @@ import { type TConditionFormData , TConditionData, TSubConditionData } from "@/l
 // hooks
 import { IConditionalSystemProps, IPostCondition } from "@/types/condition"
 import { useConditionalForm } from "@/app/(builder)/builder/[id]/condition/_hooks/useConditionalForm"
-import { usePostCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/usePostCalculation"
+import { usePostCondition } from "@/app/(builder)/builder/[id]/condition/_hooks/usePostCondition"
 import { useGetQacWithOutFilter } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter"
 import { useGetOnlyAllQuestions } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllQuestions"
 import { useGetOnlyAllCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation"
@@ -44,7 +44,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
     useGetOnlyAllQuestions()
   const { onlyAllCalculationOptions, isFetchingOnlyAllCalculation } = useGetOnlyAllCalculation()
 
-  const postCalculation = usePostCalculation(isEdit);
+  const postCondition = usePostCondition(isEdit);
 
   const onSubmit = (input: TConditionFormData) => {
     console.log("Submitted data:", input);
@@ -119,7 +119,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
   
     console.log("output",output);    
     
-    postCalculation.mutate(
+    postCondition.mutate(
       { data: output },
       {
         onSuccess: () => {
@@ -222,7 +222,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
             افزودن شرط جدید
           </Button>
           )}
-          <SubmitButtons isLoading={postCalculation.isPending} handleClose={handleClose}/>
+          <SubmitButtons isLoading={postCondition.isPending} handleClose={handleClose}/>
         </form>
       </FormProvider>
     </Box>

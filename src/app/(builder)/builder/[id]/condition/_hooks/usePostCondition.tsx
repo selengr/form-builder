@@ -15,7 +15,7 @@ const postCalculation = async (data : IPostCondition[], method: HttpMethod) => {
   };
 
 
-export const usePostCalculation = (isEdit:boolean) => {
+export const usePostCondition = (isEdit:boolean) => {
   const method = isEdit ? HttpMethod.PUT : HttpMethod.POST;
 
   const mutation = useMutation({

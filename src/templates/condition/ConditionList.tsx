@@ -18,7 +18,9 @@ const ConditionList: React.FC<IConditionListProps> = ({ conditions }) => {
         >
           {conditions?.map((condition: IGetCondition, index: number) => (
             // eslint-disable-next-line react/jsx-key
-            <ConditionCard condition={condition} index={index} />
+            <> 
+            {index < 2 && <ConditionCard condition={condition} index={index} />}
+            </>
           ))}
         </div>
       )}

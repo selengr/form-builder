@@ -21,7 +21,7 @@ export const createNewSubCondition = () => ({
   })
 
 
-  const transformOutputToInput = (condition : TConditionData) : TConditionData => {
+  const transformOutputToInput = (condition : TConditionData) : TConditionData => {debugger
    
       const { subConditions, returnQuestionId, elseQuestionId } = condition;
 

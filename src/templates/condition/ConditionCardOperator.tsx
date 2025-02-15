@@ -1,6 +1,6 @@
 import { IGetCondition } from "@/types/condition";
 import { TConditionData, TSubConditionData } from "@/lib/conditionFormSchema";
-import { SubCondition } from './SubCondition';
+
 
 interface IConditionCardOperatorProps {
   condition: IGetCondition;
@@ -8,7 +8,18 @@ interface IConditionCardOperatorProps {
 
 export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ condition }) => {
   const parseCondition : TConditionData[] = JSON.parse(condition?.frontConditionData).conditions
-  console.log('parseCondition :>> ', condition);
+  console.log('parseCondition :>> ', parseCondition[0]);
+
+  const val = (item:TSubConditionData) => {
+    if (item.operatorType?.split("@")[0] === "OPTION" && item.questionType?.split("*")[0] === "MULTIPLE_CHOICE_MULTI_SELECT") {
+      const op : string[] = []
+      if(Array.isArray(item.value)){
+            item.value?.map((item:string)=>op.push(item?.toString()?.split("@")[1]))
+      } 
+      return op.join(" , ");      
+    } else return item.value?.toString()?.split("@")[0];  
+}
+
 
   return (
     <div className="flex flex-col">
@@ -18,19 +29,19 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
             <span className="text-[#161616] text-sm">{item.logicalOperator?.split("@")[1] ?? "اگر"}</span>
             <span className="text-[#1758BA] text-sm">{item.questionType?.split("@")[1]}</span>
             <span className="text-[#161616] text-sm">{item.conditionType?.split("@")[1]}</span>
-            <span className="text-[#1758BA] text-sm">{item.value}</span>
+            <span className="text-[#1758BA] text-sm">{val(item)}</span>
           </div>
         )
       })}
       <span className="text-[#161616] text-sm">
         <span>در اینصورت برو به: </span>
-        <span className="text-[#1758BA]">{condition.returnQuestionId.toString()?.split("@")[1]}</span>
+        <span className="text-[#1758BA]">{parseCondition[0].returnQuestionId.toString()?.split("@")[1]}</span>
       </span>
-      {condition.elseQuestionId && (
+      {parseCondition[0].elseQuestionId && (
         <span className="text-[#161616] text-sm">
           <span>در غیر اینصورت برو به:</span>
           <span className="text-[#1758BA]">
-            {condition.elseQuestionId.toString()?.split("@")[1]}
+            {parseCondition[0].elseQuestionId.toString()?.split("@")[1]}
           </span>
         </span>
       )}

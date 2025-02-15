@@ -21,7 +21,7 @@ export const usePostCalculation = (isEdit:boolean) => {
   const mutation = useMutation({
     mutationKey: ['post-condition'],
     mutationFn: ({ data }: { data: IPostCondition[] }) =>
-        postCalculation(data, method),
+        postCalculation(data, method  ),
 
     onSuccess: (data) => {},
     onError: () => {},

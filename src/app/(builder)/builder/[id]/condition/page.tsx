@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic'
 import { AxiosResponse } from 'axios';
 import AxiosApi from '@/services/axios/AxiosApi';
+import DesignerTabs from '@/templates/builder/TabComponent';
 
 
 const ConditionList = dynamic(() => import('@/templates/condition/ConditionList'), { ssr: false })
@@ -30,44 +31,49 @@ export default async function Calculator({params}:{params : {id:string} }) {
 //           ]
 //       },
 //       {
-//           elseQuestionId : "{#q_1403}@تاریخ.........سیبیس",
-//           returnQuestionId : "{#q_1403}@تاریخ.........سیبیس",
+//           elseQuestionId : "{#q_33}@تاریخ.........سیبیس",
+//           returnQuestionId : "{#q_34}@تاریخ.........سیبیس",
 //           subConditions : [
 //               {
 //                   conditionType: "#lenGraterThanText@طول متن بیشتر از",
-//                   id : "b1f5e17a-d1bc-41ba-8601-1b75239f322b",
+//                   id : 656456,
 //                   logicalOperator : "",
 //                   operatorType : "VALUE@ارزش",
-//                   questionType : "TEXT_FIELD*{#q_101}@متی",
-//                   value : "33"
+//                   questionType : "TEXT_FIELD*{#q_21}@متی",
+//                   value : "23456"
 //               },
 //               {
-//                   conditionType: "#lenGraterThanText@طول متن بیشتر از",
-//                   id : "b1f5e17a-d1bc-41ba-8601-1b75239f322b",
-//                   logicalOperator : "&&@&&",
-//                   operatorType : "VALUE@ارزش",
-//                   questionType : "TEXT_FIELD*{#q_101}@متی",
-//                   value : "33"
+//                 conditionType : "!#equalMultiChoiceSingle@نابرابر با",
+//                 id : 3214,
+//                 logicalOperator : "&&",
+//                 operatorType : "OPTION@گزینه",
+//                 questionType : "MULTIPLE_CHOICE*{#q_30}@چند گزینه تک",
+//                 value : "#op_6@گزینه 2",
 //               },
 //               {
-//                   conditionType: "#lenGraterThanText@طول متن بیشتر از",
-//                   id : "b1f5e17a-d1bc-41ba-8601-1b75239f322b",
-//                   logicalOperator : "&&@&&",
-//                   operatorType : "VALUE@ارزش",
-//                   questionType : "TEXT_FIELD*{#q_101}@متی",
-//                   value : "33"
-//               },
-          
-//           ]
+//                     conditionType : "!#containMultiChoiceMulti@شامل نشدن",
+//                     id : 9091,
+//                     logicalOperator : "||",
+//                     operatorType : "OPTION@گزینه",
+//                     questionType : "MULTIPLE_CHOICE_MULTI_SELECT*{#q_31}@چند گزینه چند",
+//                     value : ['#op_7@گزینه 1', '#op_8@گزینه 2']
+                              
+//               }
+//             ]
 //       },
 
 //   ]
 // }
 
+console.log('content :>> ', content);
+
  
   return (
-    <div className="container mx-auto py-8 flex justify-center items-start h-screen bg-white">
+    <div className="w-full min-h-full px-4 py-4 bg-[#f7f7f7]">
+    <div className="container mx-auto flex flex-col justify-start items-center min-w-screen h-full bg-white rounded-xl w-full">
+        <DesignerTabs />
         <ConditionList conditions={content}/>
+    </div>
     </div>
   )
 }

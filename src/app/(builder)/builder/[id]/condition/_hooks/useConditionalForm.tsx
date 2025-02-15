@@ -30,9 +30,19 @@ export const createNewSubCondition = () => ({
           const conditionType = subCondition.conditionType?.split("@")[0];
           const questionType = subCondition.questionType?.split("@")[0];
           const operatorType = subCondition.operatorType?.split("@")[0];
-          const value = subCondition.value.toString()?.split("@")[0];
           const logicalOperator = subCondition.logicalOperator?.split("@")[0];
+          let value : string | string[]
   
+
+          // if(questionType === "MULTIPLE_CHOICE_MULTI_SELECT_OPTION"){}
+          
+          if (operatorType === "OPTION" && questionType?.split("*")[0] === "MULTIPLE_CHOICE_MULTI_SELECT") {
+              const op : string[] = []
+              if(Array.isArray(subCondition.value)){
+                    subCondition.value?.map((item:string)=>op.push(item?.toString()?.split("@")[0]))
+                    value = op
+              }
+          } else value = subCondition.value.toString()?.split("@")[0];
 
           return {
             id : subCondition.id,
@@ -44,9 +54,8 @@ export const createNewSubCondition = () => ({
           }
         });
 
-
       return {
-        returnQuestionId: "#q_1403",
+        returnQuestionId: returnQuestionId?.split("@")[0],
         elseQuestionId: elseQuestionId?.split("@")[0],
         subConditions : SubConditionsData
       };

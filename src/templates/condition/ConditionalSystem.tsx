@@ -74,7 +74,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
                 conditionType === "#startWithText" ||
                 conditionType === "#endWithText"
               ) {
-                formattedValue = `{"${value}"}`;
+                formattedValue = `{'${value}'}`;
               } else if (
                 conditionType === "!#containAnyText" ||
                 conditionType === "#containAnyText"
@@ -90,7 +90,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
                 formattedValue = value as string;
               }
             } else if (operatorType === "DATE") {
-              formattedValue = `{#v_"${value}"}`;
+              formattedValue = `{#v_'${value}'}`;
             } else {
               formattedValue = value as string;
             }
@@ -107,9 +107,9 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
 
         return {
           conditionFormula: conditionFormula,
-          formBuilderId: id,
-          returnQuestionId: parseInt(returnQuestionId.replace(/\D/g, ''), 10),
-          elseQuestionId: parseInt(elseQuestionId.replace(/\D/g, ''), 10),
+          formBuilderId: Number(id),
+          returnQuestionId: Number(returnQuestionId.replace(/\D/g, ''), 10),
+          elseQuestionId: Number(elseQuestionId.replace(/\D/g, ''), 10),
           frontConditionData: JSON.stringify(input)
         };
       });
@@ -123,8 +123,8 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
       { data: output },
       {
         onSuccess: () => {
-          handleClose()
           refresh()
+          handleClose()
         },
         onError: (error: any) => {
           // ...

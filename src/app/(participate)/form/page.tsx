@@ -102,18 +102,30 @@ export default function ParticipateFormPage() {
       const requiredData = res.data.questionPropertyList?.find(
         (prop: any) => prop.questionPropertyEnum === "REQUIRED"
       )?.value;
-      const minLengthData = res.data.res.data.questionPropertyList?.find(
+      const startData = res.data.questionPropertyList.find(
+        (prop: any) => prop.questionPropertyEnum === "SPECTRAL_START"
+      )?.value;
+      const endData = res.data.questionPropertyList.find(
+        (prop: any) => prop.questionPropertyEnum === "SPECTRAL_END"
+      )?.value;
+      const selectionTypeData = res.data.questionPropertyList.find(
+        (prop: any) => prop.questionPropertyEnum === "SELECTION_TYPE"
+      )?.value;
+      const minLengthData = res.data.questionPropertyList?.find(
         (prop: any) => prop.questionPropertyEnum === "MINIMUM_LEN"
       )?.value;
 
-      // if (res.data.questionType === "SPECTRAL") {
-      //   setFormData("");
-      // } else {
-      //   setFormData("");
-      // }
+      if (res.data.questionType === "SPECTRAL") {
+        setFormData(
+          selectionTypeData === "DOMAIN"
+            ? [Number(startData), Number(endData)]
+            : Number(startData)
+        );
+      } else {
+        setFormData("");
+      }
 
-      setFormData("");
-      setIsValid(false);
+      setIsValid(!requiredData);
       setQuestion(res.data);
     } catch (error) {
       console.log(error);

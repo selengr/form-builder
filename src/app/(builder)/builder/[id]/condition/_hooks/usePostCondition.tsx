@@ -1,3 +1,4 @@
+import { toast } from 'sonner';
 import AxiosApi from '@/services/axios/AxiosApi';
 import { useMutation } from '@tanstack/react-query';
 import { IPostCondition } from '@/types/condition';
@@ -23,8 +24,12 @@ export const usePostCondition = (isEdit:boolean) => {
     mutationFn: ({ data }: { data: IPostCondition[] }) =>
         postCalculation(data, method  ),
 
-    onSuccess: (data) => {},
-    onError: () => {},
+    onSuccess: (data) => {
+      toast.success(`شرط با موفقیت ${isEdit ? "ویرایش" : "ایجاد"} شد`);
+    },
+    onError: () => {
+      toast.error("عملیات ناموفق بود مجددا تلاش کنید");
+    },
     
   });
 

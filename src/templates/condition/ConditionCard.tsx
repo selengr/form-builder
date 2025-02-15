@@ -24,7 +24,7 @@ import { useDeleteCondition } from '../../app/(builder)/builder/[id]/condition/_
       setAnchorEl(null);
     }, []);
   
-    const handleDelete = useCallback((id : number) => {
+    const handleDelete = useCallback((id : string) => {
       deleteCondition(Number(id))
     }, []);
   
@@ -85,12 +85,13 @@ import { useDeleteCondition } from '../../app/(builder)/builder/[id]/condition/_
                     justifyContent: "space-between",
                     color: "#FA4D56",
                   }}
+                  loading={isPending}
                   onClick={async (e) => {
                     e.stopPropagation();
-                    handleDelete(condition?.id)
+                    handleDelete(condition.id!)
                   }}
                   fullWidth
-                  disabled={true}
+                  disabled={isPending}
                 >
                   <Typography>حذف</Typography>
                   <WeuiDeleteOutlined fontSize="1.32rem" />

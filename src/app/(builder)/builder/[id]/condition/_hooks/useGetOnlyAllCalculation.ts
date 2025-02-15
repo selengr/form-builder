@@ -40,7 +40,7 @@ export const useGetOnlyAllCalculation = () => {
 
   
   const onlyAllCalculationOptions = data?.dataList?.map((item : IConditionQuestionType) => ({
-    value: item.extMap.UNIC_NAME,
+    value: `${item?.extMap.UNIC_NAME}@${item.caption}`,
     label: item.caption,
   }));
 

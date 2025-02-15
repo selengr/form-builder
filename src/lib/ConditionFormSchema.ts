@@ -9,7 +9,7 @@ const SubConditionSchema = z.object({
     z.string().min(1, { message: "اين فيلد الزامي است" }),
     z.array(z.string().min(1, { message: "اين فيلد الزامي است" })),
   ]),
-  id: z.string().optional(),
+  id: z.number(),
 })
 
 const ConditionSchema = z.object({

@@ -1,3 +1,5 @@
+import { TConditionData } from "@/lib/conditionFormSchema";
+import { Dispatch, SetStateAction } from "react";
 
   
   export interface IConditionExtMap {
@@ -46,7 +48,7 @@
 
 
 
-  export interface IPostConditionModel {
+  export interface IPostCondition {
       conditionFormula: string; 
       formBuilderId: number;    
       returnQuestionId: number;  
@@ -54,6 +56,33 @@
       frontConditionData: string; 
   }
   
-  export interface IPostConditionModelList {
-      conditionModelList: IPostConditionModel[]; 
+  
+  export interface IGetCondition {
+    id : number
+    conditionFormula: string; 
+    formBuilderId: number;    
+    returnQuestionId: number;  
+    elseQuestionId: number | null; 
+    frontConditionData: string; 
+}
+
+
+
+export interface ICreateConditionDialogProps {
+    open: boolean;
+    setOpen: Dispatch<SetStateAction<boolean>>;
+  }
+export interface IEditConditionDialogProps extends ICreateConditionDialogProps{
+    condition : TConditionData
+    // handleClose?: () => void; 
+  }
+
+  export interface IConditionalSystemProps {
+    handleClose: () => void; 
+    condition? : TConditionData
+    isEdit? : boolean
+  }
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+  export interface IEditConditionDialogProps extends IConditionalSystemProps  {
+    calcId : number
   }

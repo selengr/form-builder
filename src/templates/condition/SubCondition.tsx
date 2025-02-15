@@ -2,7 +2,7 @@ import Image from "next/image"
 import { useFormContext, useWatch } from "react-hook-form"
 import { Box, IconButton, Typography } from "@mui/material"
 import { getInput , getQuestion, getCondition } from "./GetConditionInput"
-import { SelectController } from "@/components/calculation/form/SelectController"
+import { SelectController } from "@/components/condition/form/SelectController"
 
 
 type SubConditionProps = {
@@ -54,7 +54,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
             sx={{
               color: "#393939",
               fontSize: "14px",
-              width: {xs: 22,md : 83},
+              width: {xs: 22,md : 63},
               pt: 2,
             }}
           >
@@ -68,7 +68,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
               { value: "&&", label: "و" },
               { value: "||", label: "یا" },
             ]}
-            sx={{ minWidth: 78,mr: 1 }}
+            sx={{ minWidth: 58,mr: 1, ml : "-4px" }}
           />
         )}
       </Box>
@@ -128,6 +128,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
               ""
             );
           }}
+          isOperator={true}
           disabled={!Boolean(currentValues.questionType)}
         />
         <SelectController
@@ -148,6 +149,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
               ""
             );
           }}
+          isOperator={true}
           disabled={!Boolean(currentValues.operatorType)}
         />
         {getInput(
@@ -176,8 +178,8 @@ export const SubCondition: React.FC<SubConditionProps> = ({
           <IconButton
             onClick={onAddSubCondition}
             sx={{
-              width: "52px",
-              height: "52px",
+              width: "50px",
+              height: "50px",
               bgcolor: "#1758BA0D",
               borderRadius: "10px",
               border: "1px solid #1758BA",
@@ -194,8 +196,8 @@ export const SubCondition: React.FC<SubConditionProps> = ({
             <IconButton
             onClick={onRemoveSubCondition}
               sx={{
-                width: "52px",
-                height: "52px",
+                width: "50px",
+                height: "50px",
                 bgcolor: "#FA4D560D",
                 borderRadius: "10px",
                 border: "1px solid #FA4D56",

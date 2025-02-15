@@ -4,28 +4,31 @@ import { Box, Typography, Button } from "@mui/material"
 
 import { SubCondition } from "./SubCondition"
 // components
-import { CircleDivider } from "@/components/calculation/CircleDivider"
-import { SubmitButtons } from "@/components/calculation/form/SubmitButtons"
-import { SelectController } from "@/components/calculation/form/SelectController"
+import { CircleDivider } from "@/components/condition/CircleDivider"
+import { SubmitButtons } from "@/components/condition/form/SubmitButtons"
+import { SelectController } from "@/components/condition/form/SelectController"
 // lib
 import { formatContainText } from "@/lib/formatContainText"
 import { type TConditionFormData , TConditionData, TSubConditionData } from "@/lib/conditionFormSchema"
 // hooks
-import { IPostConditionModel, IPostConditionModelList } from "@/types/condition"
+import { IConditionalSystemProps, IPostCondition } from "@/types/condition"
 import { useConditionalForm } from "@/app/(builder)/builder/[id]/condition/_hooks/useConditionalForm"
 import { usePostCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/usePostCalculation"
 import { useGetQacWithOutFilter } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter"
 import { useGetOnlyAllQuestions } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllQuestions"
 import { useGetOnlyAllCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation"
+import { useParams, useRouter } from "next/navigation"
 
 
 
 
-interface IConditionalSystemProps {
-  id: number;
-}
-
-export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ id }) => {
+export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
+  handleClose,
+  condition,
+  isEdit = false
+}) => {
+  const { id } = useParams();
+  const {refresh} = useRouter()
   const {
     methods,
     conditions,
@@ -33,14 +36,15 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ id }) => 
     handleRemoveCondition,
     handleAddSubCondition,
     handleRemoveSubCondition,
-  } = useConditionalForm()
+  } = useConditionalForm(condition)
+  console.log("condition======",condition)
 
   const { qacWithOutFilter, qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter()
   const { onlyAllQuestions, onlyAllQuestionsOptions, onlySomeQuestionsOptions, isFetchingOnlyAllQuestions } =
     useGetOnlyAllQuestions()
   const { onlyAllCalculationOptions, isFetchingOnlyAllCalculation } = useGetOnlyAllCalculation()
 
-  const postCalculation = usePostCalculation();
+  const postCalculation = usePostCalculation(isEdit);
 
   const onSubmit = (input: TConditionFormData) => {
     console.log("Submitted data:", input);
@@ -51,18 +55,18 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ id }) => 
 
         const conditionFormula = subConditions
           .map((subCondition : TSubConditionData) => {
-            const {
-              conditionType,
-              questionType,
-              operatorType,
-              value,
-              logicalOperator,
-            } = subCondition;
+            const conditionType = subCondition.conditionType?.split("@")[0];
+            const questionType = subCondition.questionType?.split("@")[0];
+            const operatorType = subCondition.operatorType?.split("@")[0];
+            const value = typeof subCondition.value !== 'object' ? subCondition.value?.split("@")[0] : subCondition.value;
+            const logicalOperator = subCondition.logicalOperator?.split("@")[0];
     
             let formattedValue: string;
 
             if (operatorType === "OPTION") {
-              formattedValue = `{${value}}`;
+              if(typeof subCondition.value === 'object'){
+                formattedValue = `{${Array.isArray(value) && value?.map((item:string)=>item?.split("@")[0])}}`
+              } else formattedValue = `{${value}}`;
             } else if (operatorType === "VALUE") {
               formattedValue = `{#v_${value}}`;
             } else if (operatorType === "TEXT") {
@@ -104,25 +108,23 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ id }) => 
         return {
           conditionFormula: conditionFormula,
           formBuilderId: id,
-          returnQuestionId: parseInt(condition.returnQuestionId.replace(/\D/g, ''), 10),
-          elseQuestionId: parseInt(condition.elseQuestionId.replace(/\D/g, ''), 10),
-          frontConditionData:".....test.........."
+          returnQuestionId: parseInt(returnQuestionId.replace(/\D/g, ''), 10),
+          elseQuestionId: parseInt(elseQuestionId.replace(/\D/g, ''), 10),
+          frontConditionData: JSON.stringify(input)
         };
       });
     };
 
-    const output : IPostConditionModel[] = transformInputToOutput(input);
-    const postCalculationData : IPostConditionModelList = {
-      conditionModelList : output
-    }
-    console.log("output",output);   
-    console.log("postCalculationData",postCalculationData);  
+    const output : IPostCondition[] = transformInputToOutput(input);
+  
+    console.log("output",output);    
     
     postCalculation.mutate(
-      { data: postCalculationData },
+      { data: output },
       {
         onSuccess: () => {
-          // ...
+          handleClose()
+          refresh()
         },
         onError: (error: any) => {
           // ...
@@ -133,7 +135,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ id }) => 
 
   return (
     <Box
-      sx={{ width: "100%", p: 3, display: "flex", flexDirection: "column", justifyContent: "center", direction: "ltr" }}
+      sx={{ width: "100%",  display: "flex", flexDirection: "column", justifyContent: "center", direction: "ltr" }}
     >
       <Typography
         variant="subtitle1"
@@ -176,21 +178,21 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ id }) => 
                   name={`conditions.${index}.returnQuestionId`}
                   options={onlyAllQuestionsOptions}
                   isLoading={isFetchingOnlyAllQuestions}
-                  sx={{ minWidth: 240, ml: 5 }}
+                  sx={{ minWidth: 240, ml: 2.5 }}
                 />
-                <Typography sx={{ color: "#393939", fontSize: "14px", mr: 4 }}>در غیر اینصورت برو به:</Typography>
+                <Typography sx={{ color: "#393939", fontSize: "14px", mr: 3.5 }}>در غیر اینصورت برو به:</Typography>
                 <SelectController
                   name={`conditions.${index}.elseQuestionId`}
                   options={onlyAllQuestionsOptions}
                   isLoading={isFetchingOnlyAllQuestions}
-                  sx={{ minWidth: 300, width: 360 }}
+                  sx={{ minWidth: 300, width: 380 }}
                 />
                 {index !== 0 && (
                 <Button
                   onClick={() => handleRemoveCondition(index)}
                   sx={{
                     width: 113,
-                    height: "52px",
+                    height: "50px",
                     bgcolor: "#FA4D560D",
                     borderRadius: "8px",
                     border: "1px solid #FA4D56",
@@ -204,12 +206,13 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ id }) => 
               <CircleDivider />
             </Box>
           ))}
-          <Button
+          {!isEdit && (
+            <Button
             variant="outlined"
             onClick={handleAddCondition}
             sx={{
               ml: 2,
-              height: 52,
+              height: 50,
               maxWidth: 155,
               color: "white",
               bgcolor: "#1758BA",
@@ -218,7 +221,8 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ id }) => 
           >
             افزودن شرط جدید
           </Button>
-          <SubmitButtons />
+          )}
+          <SubmitButtons isLoading={postCalculation.isPending} handleClose={handleClose}/>
         </form>
       </FormProvider>
     </Box>

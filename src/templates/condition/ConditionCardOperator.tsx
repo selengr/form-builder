@@ -8,7 +8,6 @@ interface IConditionCardOperatorProps {
 
 export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ condition }) => {
   const parseCondition : TConditionData[] = JSON.parse(condition?.frontConditionData).conditions
-  console.log('parseCondition :>> ', parseCondition[0]);
 
   const val = (item:TSubConditionData) => {
     if (item.operatorType?.split("@")[0] === "OPTION" && item.questionType?.split("*")[0] === "MULTIPLE_CHOICE_MULTI_SELECT") {

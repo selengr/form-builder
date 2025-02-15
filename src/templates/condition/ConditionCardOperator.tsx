@@ -9,7 +9,7 @@ interface IConditionCardOperatorProps {
 export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ condition }) => {
   const parseCondition : TConditionData[] = JSON.parse(condition?.frontConditionData).conditions
 
-  const formattedValue = (item:TSubConditionData) => {
+  const formatValue = (item:TSubConditionData) => {
     if (item.operatorType?.split("@")[0] === "OPTION" && item.questionType?.split("*")[0] === "MULTIPLE_CHOICE_MULTI_SELECT") {
       const op : string[] = []
       if(Array.isArray(item.value)){
@@ -24,15 +24,16 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
     <div className="flex flex-col">
       {parseCondition[0]?.subConditions?.map((item:TSubConditionData) => {
           const logicalOperator = item.logicalOperator?.split("@")[1] ?? "اگر";
-          const questionType = item.questionType?.split("@")[1];
           const conditionType = item.conditionType?.split("@")[1];
+          const questionType = item.questionType?.split("@")[1];
+          const formattedValue = formatValue(item);
 
         return (
           <div key={item.id} className="flex flex-row gap-2">
             <span className="text-[#161616] text-sm">{logicalOperator}</span>
             <span className="text-[#1758BA] text-sm">{questionType}</span>
             <span className="text-[#161616] text-sm">{conditionType}</span>
-            <span className="text-[#1758BA] text-sm">{formattedValue(item)}</span>
+            <span className="text-[#1758BA] text-sm">{formattedValue}</span>
           </div>
         )
       })}

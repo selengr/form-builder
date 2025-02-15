@@ -23,11 +23,15 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
   return (
     <div className="flex flex-col">
       {parseCondition[0]?.subConditions?.map((item:TSubConditionData) => {
+          const logicalOperator = item.logicalOperator?.split("@")[1] ?? "اگر";
+          const questionType = item.questionType?.split("@")[1];
+          const conditionType = item.conditionType?.split("@")[1];
+
         return (
           <div key={item.id} className="flex flex-row gap-2">
-            <span className="text-[#161616] text-sm">{item.logicalOperator?.split("@")[1] ?? "اگر"}</span>
-            <span className="text-[#1758BA] text-sm">{item.questionType?.split("@")[1]}</span>
-            <span className="text-[#161616] text-sm">{item.conditionType?.split("@")[1]}</span>
+            <span className="text-[#161616] text-sm">{logicalOperator}</span>
+            <span className="text-[#1758BA] text-sm">{questionType}</span>
+            <span className="text-[#161616] text-sm">{conditionType}</span>
             <span className="text-[#1758BA] text-sm">{formattedValue(item)}</span>
           </div>
         )

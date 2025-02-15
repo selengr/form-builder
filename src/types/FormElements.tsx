@@ -39,9 +39,9 @@ export type FormElement = {
   }>;
   formComponent: React.FC<{
     elementInstance: FormElementInstance;
-    submitValue?: SubmitFunction;
-    isInvalid?: boolean;
-    defaultValue?: string;
+    value: string;
+    onChange: (value: string) => void;
+    error: string;
   }>;
   propertiesComponent: React.FC<{
     elementInstance: FormElementInstance;

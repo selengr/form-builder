@@ -3,15 +3,18 @@
   import { useCallback, useState } from "react";
   import { Menu, Typography } from "@mui/material";
   import { EditConditionDialog } from "./EditConditionDialog";
-  // import { TConditionData } from "@/lib/conditionFormSchema";
   import { ConditionCardOperator } from './ConditionCardOperator'; 
   import { WeuiDeleteOutlined } from "../../../public/images/icons/DeleteIcon";
   import { PhDotsThreeVerticalBold } from "../../../public/images/icons/PhDotsThreeVerticalBold";
+import { useDeleteCondition } from '../../app/(builder)/builder/[id]/condition/_hooks/useDeleteCondition';
+import { IGetCondition } from "@/types/condition";
   
-  export function ConditionCard({ condition, index }: { condition: TConditionData, index : number }) {
+  export function ConditionCard({ condition, index }: { condition: IGetCondition, index : number }) {
     const [openDialog, setOpen] = useState<boolean>(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+
+    const { mutate: deleteCondition, isPending } = useDeleteCondition();
   
     const handleClick = useCallback((event: any) => {
       setAnchorEl(event.currentTarget);
@@ -20,6 +23,11 @@
     const handleClose = useCallback(() => {
       setAnchorEl(null);
     }, []);
+  
+    const handleDelete = useCallback((id : number) => {
+      deleteCondition(Number(id))
+    }, []);
+
   
     return (
       <div className="bg-[#F7F7FF] rounded-lg flex">
@@ -78,11 +86,13 @@
                     justifyContent: "space-between",
                     color: "#FA4D56",
                   }}
+                  loading={isPending}
                   onClick={async (e) => {
                     e.stopPropagation();
+                    handleDelete(condition.id!)
                   }}
                   fullWidth
-                  disabled={true}
+                  disabled={isPending}
                 >
                   <Typography>حذف</Typography>
                   <WeuiDeleteOutlined fontSize="1.32rem" />

@@ -13,7 +13,7 @@ import { type TConditionFormData , TConditionData, TSubConditionData } from "@/l
 // hooks
 import { IConditionalSystemProps, IPostCondition } from "@/types/condition"
 import { useConditionalForm } from "@/app/(builder)/builder/[id]/condition/_hooks/useConditionalForm"
-import { usePostCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/usePostCalculation"
+import { usePostCondition } from "@/app/(builder)/builder/[id]/condition/_hooks/usePostCondition"
 import { useGetQacWithOutFilter } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter"
 import { useGetOnlyAllQuestions } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllQuestions"
 import { useGetOnlyAllCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation"
@@ -44,7 +44,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
     useGetOnlyAllQuestions()
   const { onlyAllCalculationOptions, isFetchingOnlyAllCalculation } = useGetOnlyAllCalculation()
 
-  const postCalculation = usePostCalculation(isEdit);
+  const postCondition = usePostCondition(isEdit);
 
   const onSubmit = (input: TConditionFormData) => {
     console.log("Submitted data:", input);
@@ -74,7 +74,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
                 conditionType === "#startWithText" ||
                 conditionType === "#endWithText"
               ) {
-                formattedValue = `{"${value}"}`;
+                formattedValue = `{'${value}'}`;
               } else if (
                 conditionType === "!#containAnyText" ||
                 conditionType === "#containAnyText"
@@ -90,7 +90,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
                 formattedValue = value as string;
               }
             } else if (operatorType === "DATE") {
-              formattedValue = `{#v_"${value}"}`;
+              formattedValue = `{#v_'${value}'}`;
             } else {
               formattedValue = value as string;
             }
@@ -107,9 +107,9 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
 
         return {
           conditionFormula: conditionFormula,
-          formBuilderId: id,
-          returnQuestionId: parseInt(returnQuestionId.replace(/\D/g, ''), 10),
-          elseQuestionId: parseInt(elseQuestionId.replace(/\D/g, ''), 10),
+          formBuilderId: Number(id),
+          returnQuestionId: Number(returnQuestionId.replace(/\D/g, ''), 10),
+          elseQuestionId: Number(elseQuestionId.replace(/\D/g, ''), 10),
           frontConditionData: JSON.stringify(input)
         };
       });
@@ -119,12 +119,12 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
   
     console.log("output",output);    
     
-    postCalculation.mutate(
+    postCondition.mutate(
       { data: output },
       {
         onSuccess: () => {
-          handleClose()
           refresh()
+          handleClose()
         },
         onError: (error: any) => {
           // ...
@@ -222,7 +222,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
             افزودن شرط جدید
           </Button>
           )}
-          <SubmitButtons isLoading={postCalculation.isPending} handleClose={handleClose}/>
+          <SubmitButtons isLoading={postCondition.isPending} handleClose={handleClose}/>
         </form>
       </FormProvider>
     </Box>

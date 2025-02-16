@@ -246,13 +246,12 @@ export const getInput = (
     case "MULTIPLE_CHOICE_MULTI_SELECT_OPTION_!#equalThanMultiChoiceMulti":
     case "MULTIPLE_CHOICE_MULTI_SELECT_OPTION_#equalThanMultiChoiceMulti": {
       const typeParts = type.split("*");
-      // if (typeParts.length < 3) return null;
       const targetUnicName = typeParts[1]?.split("@")[0];
-
+    
+      if (!!!onlyAllQuestions) return null;
       const targetQuestion = onlyAllQuestions?.find(
         (item:IConditionQuestionType) => item?.extMap?.UNIC_NAME === targetUnicName
       );
-
       if (!targetQuestion?.extMap?.OPTIONS) return null;
       const { OPTIONS } = targetQuestion.extMap;
       const options = Object.entries(OPTIONS).map(([value, data]:any) => ({

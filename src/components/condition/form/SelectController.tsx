@@ -68,8 +68,17 @@ export const SelectController: React.FC<CustomSelectProps> = ({
                 );
               }
               const selectedValue = isOperator ? selected?.split("@")[0] : selected;
-              const selectedOption = options?.find(option => option?.value === selectedValue);
+              const selectedOption = options?.find(option => {
+               const val = option?.value?.includes("@") ? option?.value?.split("@")[0] : option?.value
+                console.log("selectedOption========**********222",val.trim() , selectedValue)
+                console.log("selectedOption========**********444",val.trim() === selectedValue)
+                return  option?.value?.split("@")[0] === selectedValue?.split("@")[0]
+              });
                 console.log("selectedOption",selectedOption)
+                
+              
+                console.log("selectedOption",options)
+                console.log("selectedValue",selectedValue)
               return selectedOption ? selectedOption.label : "";
             }}
             sx={{
@@ -158,8 +167,12 @@ export function MultiSelectController({
   const { control } = useFormContext();
 
   const renderValues = (selectedIds: string[]) => {
-    const selectedItems = options.filter((item,index) =>
-      selectedIds[index]?.split("@")[0].includes(item.value)
+    const selectedItems = options.filter((item,index) =>{
+      console.log('***selectedIds[index]?.split("@")[0].includes(item.value) :>> ',   selectedIds[index]?.split("@")[0].includes(item.value));    
+      console.log('***selectedIds :>> ', selectedIds);
+      console.log('***item.value :>> ', item.value);
+      return selectedIds[index]?.split("@")[0].includes(item.value)
+     }
     );
 
     if (!selectedItems.length && placeholder) {
@@ -182,6 +195,7 @@ export function MultiSelectController({
 
     return selectedItems.map((item) => item.label).join(", ");
   };
+  console.log('***renderValues :>> ', renderValues);
 
   return (
     <Controller
@@ -251,7 +265,7 @@ export function MultiSelectController({
 
               {options?.map((option,index) => {
               const selected = field.value[index]?.split("@")[0].includes(option.value);
-
+              console.log('***field.value :>> ', field.value);
               return (
                 <MenuItem
                   key={option.value}

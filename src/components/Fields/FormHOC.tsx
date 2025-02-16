@@ -20,25 +20,36 @@ const withValidation = <Div extends WrappedComponentProps>(
     const { elementInstance, onValidationUpdate } = props;
     const [error, setError] = useState<string>("");
 
-    const validationRules = {
-      // ^ Fix
-      required: elementInstance?.questionPropertyList?.some(
+    const minLength = elementInstance?.questionPropertyList?.find(
+      (prop: any) => prop.questionPropertyEnum === "MINIMUM_LEN"
+    )?.value;
+    const maxLength = elementInstance?.questionPropertyList?.find(
+      (prop: any) => prop.questionPropertyEnum === "MAXIMUM_LEN"
+    )?.value;
+    const requiredField =
+      elementInstance?.questionPropertyList?.find(
         (prop: any) => prop.questionPropertyEnum === "REQUIRED"
-      ),
-      minLength: elementInstance?.questionPropertyList?.find(
-        (prop: any) => prop.questionPropertyEnum === "MINIMUM_LEN"
-      )?.value,
-      maxLength: elementInstance?.questionPropertyList?.find(
-        (prop: any) => prop.questionPropertyEnum === "MAXIMUM_LEN"
-      )?.value,
+      )?.value === "true";
+
+    const validationRules = {
+      required: requiredField,
+      minLength: minLength ? Number(minLength) : null,
+      maxLength: maxLength ? Number(maxLength) : null,
     };
 
     const validate = (newValue: any) => {
       let isValid = true;
       let errorMessage = "";
+      let val;
 
-      // ^ Fix me later: array type
-      const val = newValue.trimStart();
+      if (elementInstance.questionType === "TEXT_FIELD") {
+        const fieldPattern = elementInstance?.questionPropertyList?.find(
+          (el: any) => el.questionPropertyEnum === "TEXT_FIELD_PATTERN"
+        )?.value;
+        if (fieldPattern === "SHORT_TEXT" || fieldPattern === "LONG_TEXT") {
+          val = newValue.trimStart();
+        }
+      }
 
       if (validationRules.required && !val) {
         isValid = false;

@@ -30,7 +30,7 @@ export default function ParticipateFormPage() {
   const [isValid, setIsValid] = useState(false);
   const [takePartId, setTakePartId] = useState<any>(null);
   const [formData, setFormData] = useState<any>("");
-  // const [finishPage, setFinishPage] = useState<boolean>(false);
+  const [finishPage, setFinishPage] = useState<boolean>(false);
   const [limitation, setLimitation] = useState<ILimitation>({
     isLimited: false,
     limitationType: "",
@@ -197,12 +197,12 @@ export default function ParticipateFormPage() {
         ],
       });
 
-      // if (!res.data.questionId) {
-      //   setFinishPage(true);
-      // } else {
-      addNewQuestion(res);
-      setQuestion(res.data);
-      // }
+      if (!res.data.questionId) {
+        setFinishPage(true);
+      } else {
+        addNewQuestion(res);
+        setQuestion(res.data);
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -218,13 +218,13 @@ export default function ParticipateFormPage() {
     return withValidation(FormComponent);
   }, [FormComponent]);
 
-  // if (finishPage) {
-  //   return (
-  //     <ResponsiveContainer>
-  //       <p>خدانگهدار</p>
-  //     </ResponsiveContainer>
-  //   );
-  // }
+  if (finishPage) {
+    return (
+      <ResponsiveContainer>
+        <p>موفق باشید</p>
+      </ResponsiveContainer>
+    );
+  }
 
   if (firstLoading) {
     return (

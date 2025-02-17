@@ -36,6 +36,60 @@ export default function ParticipateFormPage() {
     limitationType: "",
   });
 
+  function addNewQuestion(response: any) {
+    const requiredData =
+      extractProperty(
+        response.data.questionModel.questionPropertyList,
+        "REQUIRED"
+      ) === "true";
+    const startData = extractProperty(
+      response.data.questionModel.questionPropertyList,
+      "SPECTRAL_START"
+    );
+    const endData = extractProperty(
+      response.data.questionModel.questionPropertyList,
+      "SPECTRAL_END"
+    );
+    const selectionTypeData = extractProperty(
+      response.data.questionModel.questionPropertyList,
+      "SELECTION_TYPE"
+    );
+    const minLengthData = extractProperty(
+      response.data.questionModelquestionPropertyList,
+      "MINIMUM_LEN"
+    );
+    const textFieldPatternData = extractProperty(
+      response.data.questionModelquestionPropertyList,
+      "TEXT_FIELD_PATTERN"
+    );
+
+    if (response.data.questionModel.questionType === "SPECTRAL") {
+      setFormData(
+        selectionTypeData === "DOMAIN"
+          ? [Number(startData), Number(endData)]
+          : Number(startData)
+      );
+    } else {
+      setFormData("");
+    }
+
+    if (requiredData) {
+      setIsValid(false);
+    } else if (
+      response.data.questionModel.questionType === "TEXT_FIELD" &&
+      (textFieldPatternData === "SHORT_TEXT" ||
+        textFieldPatternData === "LONG_TEXT")
+    ) {
+      if (Number(minLengthData) > 0) {
+        setIsValid(false);
+      } else {
+        setIsValid(true);
+      }
+    } else {
+      setIsValid(true);
+    }
+  }
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -46,6 +100,21 @@ export default function ParticipateFormPage() {
             link: "public-e3b1018b-52cf-4016-b79e-36e647119872",
           }
         );
+
+        if (res?.data?.loggedInStatus === false) {
+          if (res?.data?.responseLimitation) {
+            setLimitation({
+              isLimited: true,
+              limitationType: res.data.responseLimitation,
+            });
+          } else {
+            setLimitation({
+              isLimited: false,
+              limitationType: "",
+            });
+          }
+        } else {
+        }
 
         if (res?.data?.responseLimitation) {
           setLimitation({
@@ -68,40 +137,9 @@ export default function ParticipateFormPage() {
           username: null,
         });
 
-        const requiredData =
-          extractProperty(
-            response.data.questionModel.questionPropertyList,
-            "REQUIRED"
-          ) === "true";
-        const startData = extractProperty(
-          response.data.questionModel.questionPropertyList,
-          "SPECTRAL_START"
-        );
-        const endData = extractProperty(
-          response.data.questionModel.questionPropertyList,
-          "SPECTRAL_END"
-        );
-        const selectionTypeData = extractProperty(
-          response.data.questionModel.questionPropertyList,
-          "SELECTION_TYPE"
-        );
-        const minLengthData = extractProperty(
-          response.data.questionModelquestionPropertyList,
-          "MINIMUM_LEN"
-        );
-
-        if (response.data.questionModel.questionType === "SPECTRAL") {
-          setFormData(
-            selectionTypeData === "DOMAIN"
-              ? [Number(startData), Number(endData)]
-              : Number(startData)
-          );
-        } else {
-          setFormData("");
-        }
+        addNewQuestion(response);
 
         setFirstLoading(false);
-        setIsValid(!requiredData);
         setTakePartId(response.data.takePart);
         setQuestion(response.data.questionModel);
       } catch (error) {
@@ -140,36 +178,7 @@ export default function ParticipateFormPage() {
       // if (!res.data.questionId) {
       //   setFinishPage(true);
       // } else {
-      const requiredData =
-        extractProperty(res.data.questionPropertyList, "REQUIRED") === "true";
-      const startData = extractProperty(
-        res.data.questionPropertyList,
-        "SPECTRAL_START"
-      );
-      const endData = extractProperty(
-        res.data.questionPropertyList,
-        "SPECTRAL_END"
-      );
-      const selectionTypeData = extractProperty(
-        res.data.questionPropertyList,
-        "SELECTION_TYPE"
-      );
-      const minLengthData = extractProperty(
-        res.data.questionPropertyList,
-        "MINIMUM_LEN"
-      );
-
-      if (res.data.questionType === "SPECTRAL") {
-        setFormData(
-          selectionTypeData === "DOMAIN"
-            ? [Number(startData), Number(endData)]
-            : Number(startData)
-        );
-      } else {
-        setFormData("");
-      }
-
-      setIsValid(!requiredData);
+      addNewQuestion(res);
       setQuestion(res.data);
       // }
     } catch (error) {

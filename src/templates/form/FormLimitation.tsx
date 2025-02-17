@@ -19,10 +19,12 @@ export default function FormLimitation({
   type,
   setLimitation,
   setQuestion,
+  addQuestion,
 }: {
   type: string;
   setLimitation: Dispatch<SetStateAction<ILimitation>>;
   setQuestion: Dispatch<any>;
+  addQuestion: (data: any) => void;
 }) {
   const [formValue, setFormValue] = useState("");
   const [error, setError] = useState(false);
@@ -76,9 +78,14 @@ export default function FormLimitation({
     try {
       setLoading(true);
       const response = await AxiosApi.post(
-        "/take-part/6c37faec-870b-4ca9-a96b-900e12d384a4",
-        {}
+        "/take-part/check-answer-to-form-before",
+        {
+          formId: null,
+          link: null,
+          username: formValue,
+        }
       );
+      addQuestion(response);
       setQuestion(response.data);
       setLimitation({
         isLimited: false,

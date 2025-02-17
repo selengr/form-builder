@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import ActionButtons from "@/templates/form/ActionButtons";
@@ -36,7 +36,7 @@ export default function ParticipateFormPage() {
     limitationType: "",
   });
 
-  function addNewQuestion(response: any) {
+  const addNewQuestion = useCallback((response: any) => {
     const requiredData =
       extractProperty(
         response.data.questionModel.questionPropertyList,
@@ -88,7 +88,7 @@ export default function ParticipateFormPage() {
     } else {
       setIsValid(true);
     }
-  }
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -112,18 +112,19 @@ export default function ParticipateFormPage() {
               isLimited: false,
               limitationType: "",
             });
+            takePartApi();
           }
         } else {
+          if (res?.data?.responseLimitation) {
+            checkAnswerFormBefore();
+          } else {
+            setLimitation({
+              isLimited: false,
+              limitationType: "",
+            });
+            takePartApi();
+          }
         }
-
-        if (res?.data?.responseLimitation) {
-          setLimitation({
-            isLimited: true,
-            limitationType: res.data.responseLimitation,
-          });
-        }
-
-        takePartApi();
       } catch (error) {
         console.log(error);
       }
@@ -132,10 +133,31 @@ export default function ParticipateFormPage() {
     async function takePartApi() {
       try {
         const response = await AxiosApi.post("/take-part", {
-          formId: null,
           link: "public-e3b1018b-52cf-4016-b79e-36e647119872",
+          formId: null,
           username: null,
         });
+
+        addNewQuestion(response);
+
+        setFirstLoading(false);
+        setTakePartId(response.data.takePart);
+        setQuestion(response.data.questionModel);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    async function checkAnswerFormBefore() {
+      try {
+        const response = await AxiosApi.post(
+          "/take-part/check-answer-to-form-before",
+          {
+            formId: null,
+            link: null,
+            username: null,
+          }
+        );
 
         addNewQuestion(response);
 
@@ -221,6 +243,7 @@ export default function ParticipateFormPage() {
           type={limitation.limitationType}
           setLimitation={setLimitation}
           setQuestion={setQuestion}
+          addQuestion={addNewQuestion}
         />
       </ResponsiveContainer>
     );

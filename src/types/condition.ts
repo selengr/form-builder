@@ -1,4 +1,4 @@
-import { TConditionData } from "@/lib/conditionFormSchema";
+// import { TConditionData } from "@/lib/conditionFormSchema";
 import { Dispatch, SetStateAction } from "react";
 
   
@@ -72,17 +72,19 @@ export interface ICreateConditionDialogProps {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
   }
-export interface IEditConditionDialogProps extends ICreateConditionDialogProps{
-    condition : TConditionData
+export interface  IEditConditionDialogProps {
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  condition : any
     // handleClose?: () => void; 
   }
 
   export interface IConditionalSystemProps {
     handleClose: () => void; 
-    condition? : TConditionData
+    condition? : any
     isEdit? : boolean
   }
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  export interface IEditConditionDialogProps extends IConditionalSystemProps  {
-    calcId : number
-  }
+  // export interface IEditConditionDialogProps extends IConditionalSystemProps  {
+  //   calcId : number
+  // }

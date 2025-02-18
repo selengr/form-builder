@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, useFieldArray } from "react-hook-form"
-import { ConditionFormSchema, TConditionData, TSubConditionData, type TConditionFormData } from "@/lib/conditionFormSchema"
+import { ConditionFormSchema, TConditionData, TSubConditionData, type TConditionFormData } from "@/lib/ConditionFormSchema"
 import { idGenerator } from "@/lib/idGenerator"
 
 
@@ -21,7 +21,7 @@ export const createNewSubCondition = () => ({
   })
 
 
-  const transformOutputToInput = (condition : TConditionData) : TConditionData => {debugger
+  const transformOutputToInput = (condition : TConditionData ) : TConditionData => {
    
       const { subConditions, returnQuestionId, elseQuestionId } = condition;
 
@@ -64,7 +64,7 @@ export const createNewSubCondition = () => ({
   };
 
 
-export const useConditionalForm = (condition: TConditionData) => {
+export const useConditionalForm = (condition: TConditionData  | undefined) => {
 
   const methods = useForm<TConditionFormData>({
     resolver: zodResolver(ConditionFormSchema),

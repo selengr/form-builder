@@ -25,13 +25,14 @@ export const createNewSubCondition = () => ({
    
       const { subConditions, returnQuestionId, elseQuestionId } = condition;
 
-      const SubConditionsData : TSubConditionData = subConditions
+      const SubConditionsData : TSubConditionData[] = subConditions
         .map((subCondition : TSubConditionData) => {
           const conditionType = subCondition.conditionType?.split("@")[0];
           const questionType = subCondition.questionType?.split("@")[0];
           const operatorType = subCondition.operatorType?.split("@")[0];
           const logicalOperator = subCondition.logicalOperator?.split("@")[0];
-          let value : string | string[]
+          // const id = subCondition.id
+          let value : string | string[] = ""
   
 
           // if(questionType === "MULTIPLE_CHOICE_MULTI_SELECT_OPTION"){}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
 import ActionButtons from "@/templates/form/ActionButtons";
@@ -17,12 +17,16 @@ export interface ILimitation {
   limitationType: "" | "phone" | "email";
 }
 
+const extractProperty = (questionPropertyList: any[], propertyEnum: string) => {
+  return questionPropertyList?.find(
+    (prop: any) => prop.questionPropertyEnum === propertyEnum
+  )?.value;
+};
+
 export default function ParticipateFormPage() {
   const [question, setQuestion] = useState<any>(null);
   const [firstLoading, setFirstLoading] = useState(false);
   const [questionLoading, setQuestionLoading] = useState(false);
-  // ^ if is required by default is false if not its true
-  // ^ for the first initial click
   const [isValid, setIsValid] = useState(false);
   const [takePartId, setTakePartId] = useState<any>(null);
   const [formData, setFormData] = useState<any>("");
@@ -31,6 +35,60 @@ export default function ParticipateFormPage() {
     isLimited: false,
     limitationType: "",
   });
+
+  const addNewQuestion = useCallback((response: any) => {
+    const requiredData =
+      extractProperty(
+        response.data.questionModel.questionPropertyList,
+        "REQUIRED"
+      ) === "true";
+    const startData = extractProperty(
+      response.data.questionModel.questionPropertyList,
+      "SPECTRAL_START"
+    );
+    const endData = extractProperty(
+      response.data.questionModel.questionPropertyList,
+      "SPECTRAL_END"
+    );
+    const selectionTypeData = extractProperty(
+      response.data.questionModel.questionPropertyList,
+      "SELECTION_TYPE"
+    );
+    const minLengthData = extractProperty(
+      response.data.questionModelquestionPropertyList,
+      "MINIMUM_LEN"
+    );
+    const textFieldPatternData = extractProperty(
+      response.data.questionModelquestionPropertyList,
+      "TEXT_FIELD_PATTERN"
+    );
+
+    if (response.data.questionModel.questionType === "SPECTRAL") {
+      setFormData(
+        selectionTypeData === "DOMAIN"
+          ? [Number(startData), Number(endData)]
+          : Number(startData)
+      );
+    } else {
+      setFormData("");
+    }
+
+    if (requiredData) {
+      setIsValid(false);
+    } else if (
+      response.data.questionModel.questionType === "TEXT_FIELD" &&
+      (textFieldPatternData === "SHORT_TEXT" ||
+        textFieldPatternData === "LONG_TEXT")
+    ) {
+      if (Number(minLengthData) > 0) {
+        setIsValid(false);
+      } else {
+        setIsValid(true);
+      }
+    } else {
+      setIsValid(true);
+    }
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -43,14 +101,30 @@ export default function ParticipateFormPage() {
           }
         );
 
-        if (res?.data?.responseLimitation) {
-          setLimitation({
-            isLimited: true,
-            limitationType: res.data.responseLimitation,
-          });
+        if (res?.data?.loggedInStatus === false) {
+          if (res?.data?.responseLimitation) {
+            setLimitation({
+              isLimited: true,
+              limitationType: res.data.responseLimitation,
+            });
+          } else {
+            setLimitation({
+              isLimited: false,
+              limitationType: "",
+            });
+            takePartApi();
+          }
+        } else {
+          if (res?.data?.responseLimitation) {
+            checkAnswerFormBefore();
+          } else {
+            setLimitation({
+              isLimited: false,
+              limitationType: "",
+            });
+            takePartApi();
+          }
         }
-
-        await takePartApi();
       } catch (error) {
         console.log(error);
       }
@@ -59,10 +133,33 @@ export default function ParticipateFormPage() {
     async function takePartApi() {
       try {
         const response = await AxiosApi.post("/take-part", {
-          formId: null,
           link: "public-e3b1018b-52cf-4016-b79e-36e647119872",
+          formId: null,
           username: null,
         });
+
+        addNewQuestion(response);
+
+        setFirstLoading(false);
+        setTakePartId(response.data.takePart);
+        setQuestion(response.data.questionModel);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    async function checkAnswerFormBefore() {
+      try {
+        const response = await AxiosApi.post(
+          "/take-part/check-answer-to-form-before",
+          {
+            formId: null,
+            link: null,
+            username: null,
+          }
+        );
+
+        addNewQuestion(response);
 
         setFirstLoading(false);
         setTakePartId(response.data.takePart);
@@ -103,33 +200,7 @@ export default function ParticipateFormPage() {
       // if (!res.data.questionId) {
       //   setFinishPage(true);
       // } else {
-      const requiredData = res.data.questionPropertyList?.find(
-        (prop: any) => prop.questionPropertyEnum === "REQUIRED"
-      )?.value;
-      const startData = res.data.questionPropertyList.find(
-        (prop: any) => prop.questionPropertyEnum === "SPECTRAL_START"
-      )?.value;
-      const endData = res.data.questionPropertyList.find(
-        (prop: any) => prop.questionPropertyEnum === "SPECTRAL_END"
-      )?.value;
-      const selectionTypeData = res.data.questionPropertyList.find(
-        (prop: any) => prop.questionPropertyEnum === "SELECTION_TYPE"
-      )?.value;
-      const minLengthData = res.data.questionPropertyList?.find(
-        (prop: any) => prop.questionPropertyEnum === "MINIMUM_LEN"
-      )?.value;
-
-      if (res.data.questionType === "SPECTRAL") {
-        setFormData(
-          selectionTypeData === "DOMAIN"
-            ? [Number(startData), Number(endData)]
-            : Number(startData)
-        );
-      } else {
-        setFormData("");
-      }
-
-      setIsValid(!requiredData);
+      addNewQuestion(res);
       setQuestion(res.data);
       // }
     } catch (error) {
@@ -172,6 +243,7 @@ export default function ParticipateFormPage() {
           type={limitation.limitationType}
           setLimitation={setLimitation}
           setQuestion={setQuestion}
+          addQuestion={addNewQuestion}
         />
       </ResponsiveContainer>
     );

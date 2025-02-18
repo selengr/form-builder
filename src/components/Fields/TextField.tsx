@@ -114,7 +114,7 @@ const propertiesSchema = z
       id: z.number(),
     }),
   })
-  .refine((val) => val.MAXIMUM_LEN >= val.MINIMUM_LEN, {
+  .refine((val) => val.MAXIMUM_LEN.value >= val.MINIMUM_LEN.value, {
     message: "حداکثر باید از حداقل بیشتر باشد",
     path: ["MAXIMUM_LEN.value"],
   })

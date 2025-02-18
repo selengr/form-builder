@@ -20,7 +20,7 @@ export default function HomePage() {
 
       <div className="flex flex-col md:flex-row justify-start md:pt-20">
         <section className="px-4 text-center md:text-right relative">
-        <div
+          <div
             className="absolute -top-12 -right-4 w-52 h-64 bg-[#0066FF] rounded-full
 opacity-[8%] blur-xl"
             aria-hidden="true"
@@ -106,10 +106,10 @@ relative"
     >
       <h3 className="text-md font-bold mb-4">فرم ساز</h3>
       <p className="mb-6 text-xs">ساخت حرفه‌ای فرم با قابلیت درگ اند دراپ</p>
-      <Button
-        className="w-full justify-center absolute -bottom-4"
-      >
-        <Link href="#" className="text-[9px] text-white">ورود به فرم ساز</Link>
+      <Button className="w-full justify-center absolute -bottom-4">
+        <Link href="#" className="text-[9px] text-white">
+          ورود به فرم ساز
+        </Link>
       </Button>
     </div>
   );
@@ -117,19 +117,17 @@ relative"
 
 function PublicFormsCard() {
   return (
-    <div
-      className="bg-white rounded-[45px] shadow-lg pt-8 w-[131px] md:w-[161px] h-[159px] md:h-[189px] relative"
-    >
+    <div className="bg-white rounded-[45px] shadow-lg pt-8 w-[131px] md:w-[161px] h-[159px] md:h-[189px] relative">
       <h3 className="text-md font-bold text-[#1758BA] pr-4 mb-2">
         فرم‌های عمومی
       </h3>
       <p className="text-[#2A2A2A] mb-6 text-xs pr-3 pl-4">
         مجموعه‌ای از فرم‌های منتشر شده عمومی در سامانه امرسالت
       </p>
-      <Button
-        className="w-full justify-center absolute -bottom-3 right-6"
-      >
-        <Link href="#" className="text-[9px] text-[#2A2A2A]">مشاهده</Link>
+      <Button className="w-full justify-center absolute -bottom-3 right-6">
+        <Link href="#" className="text-[9px] text-[#2A2A2A]">
+          مشاهده
+        </Link>
       </Button>
     </div>
   );

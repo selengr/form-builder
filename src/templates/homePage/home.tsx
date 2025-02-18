@@ -57,12 +57,12 @@ md:w-[60%] relative flex justify-center items-center"
         >
           <div
             className="absolute top-0 left-0 w-24 h-24 bg-[#0066FF] rounded-full
-opacity-20 blur-lg"
+opacity-20 blur-2xl"
             aria-hidden="true"
           ></div>
           <div
-            className="absolute bottom-0 right-0 w-16 h-16 bg-[#9900FF]
-rounded-full opacity-20 blur-lg"
+            className="absolute bottom-0 md:bottom-10 right-0 w-16 h-16 bg-[#9900FF]
+rounded-full opacity-20 blur-2xl"
             aria-hidden="true"
           ></div>
           <div

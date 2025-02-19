@@ -32,6 +32,9 @@ import persian_fa from "react-date-object/locales/persian_fa";
 import "react-multi-date-picker/styles/layouts/mobile.css";
 import { SwitchButton } from "../Switch/SwitchButton";
 import TextFieldPair from "../TextFieldPair/TextFieldPair";
+import TimePickerStyled from "../SettingsDialog/TimePicker.styled";
+import TimePicker from "react-multi-date-picker/plugins/analog_time_picker";
+import { GoClock } from "react-icons/go";
 
 const questionType: ElementsType = "TEXT_FIELD";
 
@@ -202,7 +205,7 @@ const FormComponent = memo(function FormComponent({
 
   const handleLocalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    onChange(newValue);
+    onChange?.(newValue);
   };
 
   switch (fieldPattern) {
@@ -383,8 +386,6 @@ const FormComponent = memo(function FormComponent({
               shadow={false}
               calendar={persian}
               locale={persian_fa}
-              // value={calendarValue}
-              // onChange={(e: any) => setCalendarValue(e)}
               value={value}
               onChange={handleLocalChange as any}
               className={isMobile ? "rmdp-mobile" : ""}
@@ -395,6 +396,37 @@ const FormComponent = memo(function FormComponent({
               highlightToday
               portal
             />
+            {!!error && <Typography color="#f44336">{error}</Typography>}
+          </Box>
+        </Fragment>
+      );
+    case "TIME":
+      content = (
+        <Fragment>
+          <Box display="flex" justifyContent="flex-start" alignItems="center">
+            <TimePickerStyled>
+              <Box
+                display="flex"
+                alignItems="center"
+                height="56px"
+                borderRadius="10px"
+                border="1px solid #d4d4d4"
+                textAlign="center"
+              >
+                <DatePicker
+                  disableDayPicker
+                  format="HH:mm"
+                  inputClass="w-full text-center font-bold"
+                  containerClassName="w-full"
+                  plugins={[<TimePicker key="1" hideSeconds />]}
+                  onChange={(value: any) => {
+                    const formattedValue = `${value.hour}:${value.minute}`;
+                    onChange?.(formattedValue);
+                  }}
+                />
+                <GoClock size="2rem" className="ml-2" color="#424242" />
+              </Box>
+            </TimePickerStyled>
             {!!error && <Typography color="#f44336">{error}</Typography>}
           </Box>
         </Fragment>

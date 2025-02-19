@@ -11,6 +11,7 @@ import AxiosApi from "@/services/axios/AxiosApi";
 import { toast } from "sonner";
 import ConfirmDialog from "../confirm-dialog";
 import { useRouter } from "next/navigation";
+import PublishSettingsDialog from "../PublishSettingsDialog/PublishSettingsDialog";
 
 const formTypePersian: any = {
   TEST: "آزمون",
@@ -120,6 +121,7 @@ export default function ListCard(props: any) {
           >
             <Image src={TrashIcon} alt="" width={24} height={24} />
           </IconButton>
+          {/* <PublishSettingsDialog /> */}
           <IconButton onClick={handleCopy} disabled={loadingInvalidData}>
             <Image src={CopyIcon} alt="" width={24} height={24} />
           </IconButton>

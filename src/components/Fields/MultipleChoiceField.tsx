@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import {
   ElementsType,
   FormElement,
@@ -235,14 +235,21 @@ type CustomInstance = FormElementInstance & {
 
 function FormComponent({
   elementInstance,
+  onChange,
+  error,
 }: {
   elementInstance: FormElementInstance;
+  onChange: (value: string) => void;
+  error: string;
 }) {
   const element = elementInstance as CustomInstance;
   const isMultipleChoiceSelectionAllowed =
     element?.questionPropertyList?.find(
       (el: any) => el?.questionPropertyEnum === "MULTI_SELECT"
     )?.value === "true";
+  const [selectedValue, setSelectedValue] = useState<any[] | any>(
+    !isMultipleChoiceSelectionAllowed ? null : []
+  );
   const description = element?.questionPropertyList?.find(
     (el) => el?.questionPropertyEnum === "DESCRIPTION"
   )?.value;
@@ -256,6 +263,26 @@ function FormComponent({
       ? shuffleArray(element?.optionList).slice()
       : element?.optionList.slice()
   );
+
+  const handleChange = (event: any) => {
+    const { value } = event.target;
+
+    if (Array.isArray(selectedValue)) {
+      setSelectedValue((prevSelected: any) => {
+        if (prevSelected.includes(value)) {
+          return prevSelected.filter((id: any) => id !== value);
+        } else {
+          return [...prevSelected, value];
+        }
+      });
+    } else {
+      setSelectedValue(value);
+    }
+  };
+
+  useEffect(() => {
+    onChange?.(selectedValue);
+  }, [selectedValue, onChange]);
 
   return (
     <FormControl sx={{ maxWidth: "750px" }}>
@@ -281,26 +308,43 @@ function FormComponent({
         </Typography>
       )}
       {isMultipleChoiceSelectionAllowed ? (
-        <FormGroup>
-          {newOptionList?.map((option: any) => (
-            <FormControlLabel
-              key={option?.id}
-              control={<Checkbox />}
-              label={option?.title}
-            />
-          ))}
-        </FormGroup>
+        <>
+          <FormGroup>
+            {newOptionList?.map((option: any) => (
+              <FormControlLabel
+                key={option?.id}
+                value={option?.id}
+                onChange={handleChange}
+                control={
+                  <Checkbox
+                  // checked={selectedValue?.includes(String(option.id))}
+                  />
+                }
+                label={option?.title}
+              />
+            ))}
+          </FormGroup>
+          {!!error && <Typography color="#f44336">{error}</Typography>}
+        </>
       ) : (
-        <RadioGroup name={String(element?.questionId)}>
-          {newOptionList?.map((option: any) => (
-            <FormControlLabel
-              key={option?.id}
-              value={option?.id}
-              control={<Radio />}
-              label={option?.title}
-            />
-          ))}
-        </RadioGroup>
+        <>
+          <RadioGroup name={String(element?.questionId)}>
+            {newOptionList?.map((option: any) => (
+              <FormControlLabel
+                key={option?.id}
+                value={option?.id}
+                onChange={handleChange}
+                control={
+                  <Radio
+                  // checked={selectedValue?.includes(String(option.id))}
+                  />
+                }
+                label={option?.title}
+              />
+            ))}
+          </RadioGroup>
+          {!!error && <Typography color="#f44336">{error}</Typography>}
+        </>
       )}
     </FormControl>
   );

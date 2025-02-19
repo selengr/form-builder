@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import {
   ElementsType,
   FormElement,
@@ -222,8 +222,12 @@ type CustomInstance = FormElementInstance & {
 
 function FormComponent({
   elementInstance,
+  onChange,
+  error,
 }: {
   elementInstance: FormElementInstance;
+  onChange: (value: string) => void;
+  error: string;
 }) {
   const element = elementInstance as CustomInstance;
   const isMultipleChoiceSelectionAllowed: boolean =
@@ -263,6 +267,10 @@ function FormComponent({
     }
   };
 
+  useEffect(() => {
+    onChange?.(selectedValue);
+  }, [selectedValue, onChange]);
+
   return (
     <FormControl
       sx={{
@@ -290,111 +298,121 @@ function FormComponent({
         </Typography>
       )}
       {isMultipleChoiceSelectionAllowed ? (
-        <FormGroup
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            gap: 4,
-            "& .MuiCheckbox-root": {
-              display: "none",
-            },
-          }}
-        >
-          {newOptionList?.map((option: any) => (
-            <FormControlLabel
-              sx={{
-                "& img": {
-                  width: { xs: "105px", sm: "164px" },
-                  height: { xs: "105px", sm: "164px" },
-                  borderRadius: "12px",
-                },
-              }}
-              key={option?.id}
-              control={
-                <Checkbox
-                  checked={selectedValue?.includes(String(option.id))}
-                  onChange={handleChange}
-                  value={option.id}
-                />
-              }
-              label={
-                <div
-                  style={{
-                    borderRadius: "10px",
-                    outline: selectedValue?.includes(String(option.id))
-                      ? "3px solid #1758BA"
-                      : "3px solid transparent",
-                    transition: "outline 0.5s ease",
-                  }}
-                >
-                  <Image
-                    width={64}
-                    height={64}
-                    alt=""
-                    src={
-                      process.env.NEXT_PUBLIC_BASE_URL +
-                      "/filemanager" +
-                      option?.link
-                    }
+        <>
+          <FormGroup
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              gap: 4,
+              "& .MuiCheckbox-root": {
+                display: "none",
+              },
+            }}
+          >
+            {newOptionList?.map((option: any) => (
+              <FormControlLabel
+                sx={{
+                  "& img": {
+                    width: { xs: "105px", sm: "164px" },
+                    height: { xs: "105px", sm: "164px" },
+                    borderRadius: "12px",
+                  },
+                }}
+                key={option?.id}
+                value={option.id}
+                onChange={handleChange}
+                control={
+                  <Checkbox
+                  // checked={selectedValue?.includes(String(option.id))}
                   />
-                </div>
-              }
-            />
-          ))}
-        </FormGroup>
-      ) : (
-        <RadioGroup
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            gap: 4,
-            "& .MuiRadio-root": {
-              display: "none",
-            },
-          }}
-          onChange={handleChange}
-          name={String(element?.questionId)}
-        >
-          {newOptionList?.map((option: any) => (
-            <FormControlLabel
-              key={option?.id}
-              value={option?.id}
-              control={<Radio />}
-              sx={{
-                "& img": {
-                  width: { xs: "105px", sm: "164px" },
-                  height: { xs: "105px", sm: "164px" },
-                  borderRadius: "12px",
-                },
-              }}
-              label={
-                <div
-                  style={{
-                    borderRadius: "10px",
-                    outline:
-                      Number(selectedValue) === option.id
+                }
+                label={
+                  <div
+                    style={{
+                      borderRadius: "10px",
+                      outline: selectedValue?.includes(String(option.id))
                         ? "3px solid #1758BA"
                         : "3px solid transparent",
-                    transition: "outline 0.5s ease",
-                  }}
-                >
-                  <Image
-                    width={64}
-                    height={64}
-                    alt=""
-                    src={
-                      process.env.NEXT_PUBLIC_BASE_URL +
-                      "/filemanager" +
-                      option?.link
-                    }
+                      transition: "outline 0.5s ease",
+                    }}
+                  >
+                    <Image
+                      width={64}
+                      height={64}
+                      alt=""
+                      src={
+                        process.env.NEXT_PUBLIC_BASE_URL +
+                        "/filemanager" +
+                        option?.link
+                      }
+                    />
+                  </div>
+                }
+              />
+            ))}
+          </FormGroup>
+          {!!error && <Typography color="#f44336">{error}</Typography>}
+        </>
+      ) : (
+        <>
+          <RadioGroup
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              gap: 4,
+              "& .MuiRadio-root": {
+                display: "none",
+              },
+            }}
+            onChange={handleChange}
+            name={String(element?.questionId)}
+          >
+            {newOptionList?.map((option: any) => (
+              <FormControlLabel
+                key={option?.id}
+                value={option?.id}
+                control={
+                  <Radio
+                  // checked={selectedValue?.includes(String(option.id))}
                   />
-                </div>
-              }
-            />
-          ))}
-        </RadioGroup>
+                }
+                sx={{
+                  "& img": {
+                    width: { xs: "105px", sm: "164px" },
+                    height: { xs: "105px", sm: "164px" },
+                    borderRadius: "12px",
+                  },
+                }}
+                label={
+                  <div
+                    style={{
+                      borderRadius: "10px",
+                      outline:
+                        Number(selectedValue) === option.id
+                          ? "3px solid #1758BA"
+                          : "3px solid transparent",
+                      transition: "outline 0.5s ease",
+                    }}
+                  >
+                    <Image
+                      width={64}
+                      height={64}
+                      alt=""
+                      src={
+                        process.env.NEXT_PUBLIC_BASE_URL +
+                        "/filemanager" +
+                        option?.link
+                      }
+                    />
+                  </div>
+                }
+              />
+            ))}
+          </RadioGroup>
+          {!!error && <Typography color="#f44336">{error}</Typography>}
+        </>
       )}
     </FormControl>
   );

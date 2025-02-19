@@ -32,6 +32,8 @@ export default function PublishSettingsTabValue() {
           TabIndicatorProps={{ style: { backgroundColor: "#2CDFC9" } }}
           value={value}
           onChange={handleChange}
+          scrollButtons
+          variant="scrollable"
           sx={{
             "&.MuiTabs-root": {
               width: "100%",
@@ -54,9 +56,9 @@ export default function PublishSettingsTabValue() {
           }}
         >
           <Tab disableRipple label="عمومی" />
-          <Tab disableRipple disabled label="اعضای ام‌رسالت" />
           <Tab disableRipple disabled label="انفرادی" />
-          {/* <Tab disableRipple disabled label="گروهی" /> */}
+          <Tab disableRipple disabled label="گروهی" />
+          <Tab disableRipple disabled label="اعضای ام‌رسالت" />
         </Tabs>
       </Box>
     </Box>

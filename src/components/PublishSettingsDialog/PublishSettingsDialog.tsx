@@ -174,7 +174,10 @@ export default function PublishSettingsDialog() {
                         bgcolor: "#1758BA",
                         height: "50px",
                         color: "white",
-                        fontSize: "16px",
+                        fontSize: {
+                          xs: "12px",
+                          sm: "16px",
+                        },
                         fontWeight: "700",
                         borderRadius: "10px",
                         boxShadow: "none",

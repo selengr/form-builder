@@ -225,9 +225,9 @@ function FormComponent({
   onChange,
   error,
 }: {
-  elementInstance: FormElementInstance;
-  onChange: (value: string) => void;
-  error: string;
+  elementInstance?: FormElementInstance;
+  onChange?: (value: string) => void;
+  error?: string;
 }) {
   const element = elementInstance as CustomInstance;
   const isMultipleChoiceSelectionAllowed: boolean =

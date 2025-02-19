@@ -140,7 +140,7 @@ type CustomInstance = FormElementInstance & {
 function FormComponent({
   elementInstance,
 }: {
-  elementInstance: FormElementInstance;
+  elementInstance?: FormElementInstance;
 }) {
   const element = elementInstance as CustomInstance;
   const message = element.questionPropertyList.find(

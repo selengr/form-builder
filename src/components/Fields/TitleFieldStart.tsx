@@ -86,7 +86,7 @@ export const TitleFieldStartFormElement: FormElement = {
 function FormComponent({
   elementInstance,
 }: {
-  elementInstance: FormElementInstance;
+  elementInstance?: FormElementInstance;
 }) {
   return <p className="text-xl"></p>;
 }

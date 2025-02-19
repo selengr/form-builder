@@ -322,10 +322,10 @@ function FormComponent({
   onChange,
   error,
 }: {
-  elementInstance: FormElementInstance;
-  value: string;
-  onChange: (value: string) => void;
-  error: string;
+  elementInstance?: FormElementInstance;
+  value?: string;
+  onChange?: (value: string) => void;
+  error?: string;
 }) {
   const element = elementInstance as CustomInstance;
 

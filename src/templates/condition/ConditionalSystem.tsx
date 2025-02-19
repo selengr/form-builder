@@ -9,7 +9,7 @@ import { SubmitButtons } from "@/components/condition/form/SubmitButtons"
 import { SelectController } from "@/components/condition/form/SelectController"
 // lib
 import { formatContainText } from "@/lib/formatContainText"
-import { type TConditionFormData , TConditionData, TSubConditionData } from "@/lib/conditionFormSchema"
+import { type TConditionFormData , TConditionData, TSubConditionData } from "@/lib/ConditionFormSchema"
 // hooks
 import { IConditionalSystemProps, IPostCondition } from "@/types/condition"
 import { useConditionalForm } from "@/app/(builder)/builder/[id]/condition/_hooks/useConditionalForm"
@@ -108,8 +108,10 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
         return {
           conditionFormula: conditionFormula,
           formBuilderId: Number(id),
-          returnQuestionId: Number(returnQuestionId.replace(/\D/g, ''), 10),
-          elseQuestionId: Number(elseQuestionId.replace(/\D/g, ''), 10),
+          // returnQuestionId: Number(returnQuestionId.replace(/\D/g, ''), 10),
+          // elseQuestionId: Number(elseQuestionId.replace(/\D/g, ''), 10),
+          returnQuestionId: Number(returnQuestionId.replace(/\D/g, '')),
+          elseQuestionId: Number(elseQuestionId.replace(/\D/g, '')),
           frontConditionData: JSON.stringify(input)
         };
       });

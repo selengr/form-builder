@@ -1,6 +1,6 @@
-import { Snackbar, SnackbarCloseReason } from '@mui/material';
-import { useState, type FC } from 'react';
-import { GrCircleInformation } from 'react-icons/gr';
+import { Snackbar, SnackbarCloseReason } from "@mui/material";
+import { useState, type FC } from "react";
+import { GrCircleInformation } from "react-icons/gr";
 
 const ShareController: FC<Props> = ({
   children,
@@ -30,7 +30,7 @@ const ShareController: FC<Props> = ({
     event: React.SyntheticEvent | Event,
     reason?: SnackbarCloseReason
   ) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
@@ -46,16 +46,16 @@ const ShareController: FC<Props> = ({
         message={
           <div className="flex gap-2 items-center">
             <GrCircleInformation strokeWidth={0.5} size="1.4rem" />
-            <p>امکان دسترسی وجود ندارد لطفا از راه های دیگر اقدام فرمایید</p>
+            <p>مرورگر شما از این ویژگی پشتیبانی نمی کند</p>
           </div>
         }
         ContentProps={{
           style: {
-            backgroundColor: '#dc2626',
-            color: '#FFF',
+            backgroundColor: "#dc2626",
+            color: "#FFF",
           },
         }}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
         autoHideDuration={2500}
         onClose={handleClose}
         open={openError}

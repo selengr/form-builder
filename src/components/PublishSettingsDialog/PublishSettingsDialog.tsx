@@ -10,12 +10,16 @@ import {
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CgClose } from "react-icons/cg";
-import { IoSettingsOutline } from "react-icons/io5";
+import { IoSettingsOutline, IoShareOutline } from "react-icons/io5";
 import { z } from "zod";
 import FormProvider, { RHFTextField } from "../hook-form";
 import { LoadingButton } from "@mui/lab";
 import AxiosApi from "@/services/axios/AxiosApi";
 import PublishSettingsTabValue from "./PublishSettingsTabValue";
+import CopyToClipboardButton from "../clipboard-button/CopyToClipBoardButton";
+import { BsShare } from "react-icons/bs";
+import Share from "../share-media/Share";
+import { FiRefreshCcw } from "react-icons/fi";
 
 const propertiesSchema = z.object({
   name: z
@@ -133,14 +137,10 @@ export default function PublishSettingsDialog() {
                       gap: "20px",
                     }}
                   >
-                    {/* <Box display="flex" flexDirection="column" gap={1}>
-                      <Typography
-                        variant="subtitle2"
-                        fontWeight="600"
-                        fontSize="15px"
-                      >
-                        نام پرسشنامه:
-                      </Typography>
+                    <Box display="flex" gap={1} mt={4}>
+                      <IconButton>
+                        <FiRefreshCcw size="1.25rem" color="#1758BA" />
+                      </IconButton>
                       <RHFTextField
                         name="name"
                         sx={{
@@ -150,7 +150,29 @@ export default function PublishSettingsDialog() {
                           },
                         }}
                       />
-                    </Box> */}
+                      <CopyToClipboardButton
+                        text="https://psya.ir"
+                        icon={<BsShare size="2rem" color="#1758BA" />}
+                      />
+                      <Box
+                        sx={{
+                          padding: "8px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Share
+                          shareData={{
+                            title: "لینک سایا",
+                            text: "لینک سایا",
+                            url: "https://psya.ir",
+                          }}
+                        >
+                          <IoShareOutline size="1.5rem" color="#1758BA" />
+                        </Share>
+                      </Box>
+                    </Box>
                   </Box>
                   <Box
                     sx={{
@@ -175,7 +197,7 @@ export default function PublishSettingsDialog() {
                         height: "50px",
                         color: "white",
                         fontSize: {
-                          xs: "12px",
+                          xs: "13px",
                           sm: "16px",
                         },
                         fontWeight: "700",

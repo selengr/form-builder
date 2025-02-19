@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { ReactNode, useState } from 'react';
-import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import { GrCircleInformation } from 'react-icons/gr';
+import { ReactNode, useState } from "react";
+import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import { GrCircleInformation } from "react-icons/gr";
 
 const CopyToClipboardButton = ({
   text,
@@ -18,7 +18,7 @@ const CopyToClipboardButton = ({
   labelColor?: string;
 }) => {
   const [open, setOpen] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>('کپی شد');
+  const [message, setMessage] = useState<string>("کپی شد");
   const [isError, setIsError] = useState<boolean>(false);
 
   const handleClick = () => {
@@ -26,17 +26,17 @@ const CopyToClipboardButton = ({
       navigator.clipboard
         .writeText(text)
         .then(() => {
-          setMessage('کپی شد');
+          setMessage("کپی شد");
           setIsError(false);
           setOpen(true);
         })
         .catch(() => {
-          setMessage('کپی ناموفق بود');
+          setMessage("کپی ناموفق بود");
           setIsError(true);
           setOpen(true);
         });
     } else {
-      setMessage('کپی ناموفق بود');
+      setMessage("مرورگر شما از این ویژگی پشتیبانی نمی کند");
       setIsError(true);
       setOpen(true);
     }
@@ -46,7 +46,7 @@ const CopyToClipboardButton = ({
     event: React.SyntheticEvent | Event,
     reason?: SnackbarCloseReason
   ) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
@@ -59,13 +59,13 @@ const CopyToClipboardButton = ({
         onClick={handleClick}
         color="primary"
         sx={{
-          gap: '10px',
-          minWidth: '10px',
+          gap: "10px",
+          minWidth: "10px",
         }}
       >
         {icon}
         {label && (
-          <Typography fontSize="13px" color={labelColor ?? '#6366f1'}>
+          <Typography fontSize="13px" color={labelColor ?? "#6366f1"}>
             {label}
           </Typography>
         )}
@@ -79,11 +79,11 @@ const CopyToClipboardButton = ({
         }
         ContentProps={{
           style: {
-            backgroundColor: isError ? '#dc2626' : '#323232',
-            color: '#FFF',
+            backgroundColor: isError ? "#dc2626" : "#323232",
+            color: "#FFF",
           },
         }}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
         autoHideDuration={2500}
         onClose={handleClose}
         open={open}

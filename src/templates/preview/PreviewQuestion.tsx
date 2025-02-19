@@ -30,7 +30,13 @@ export default function PreviewQuestion() {
         border: "1px solid #e5e5e5",
       }}
     >
-      <FormComponent elementInstance={question} />
+      <FormComponent
+        elementInstance={question}
+        // ^ check
+        onChange={null as any}
+        error=""
+        value=""
+      />
     </motion.div>
   );
 }

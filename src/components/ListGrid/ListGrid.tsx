@@ -140,6 +140,7 @@ const ListGrid: React.FC<Props> = ({
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.length === 10 ? allPages.length : undefined;
     },
+    refetchOnWindowFocus: false,
   });
 
   const handleRefreshGrid = () => {

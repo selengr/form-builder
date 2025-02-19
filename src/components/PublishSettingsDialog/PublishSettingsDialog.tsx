@@ -10,16 +10,21 @@ import {
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CgClose } from "react-icons/cg";
-import { IoSettingsOutline, IoShareOutline } from "react-icons/io5";
+import { IoSettingsOutline } from "react-icons/io5";
 import { z } from "zod";
-import FormProvider, { RHFTextField } from "../hook-form";
+import FormProvider, {
+  RHFCheckBox,
+  RHFSwitch,
+  RHFTextField,
+} from "../hook-form";
 import { LoadingButton } from "@mui/lab";
 import AxiosApi from "@/services/axios/AxiosApi";
 import PublishSettingsTabValue from "./PublishSettingsTabValue";
 import CopyToClipboardButton from "../clipboard-button/CopyToClipBoardButton";
-import { BsShare } from "react-icons/bs";
 import Share from "../share-media/Share";
-import { FiRefreshCcw } from "react-icons/fi";
+import { LuRefreshCcw } from "react-icons/lu";
+import { LuCopy } from "react-icons/lu";
+import { IoShareSocialSharp } from "react-icons/io5";
 
 const propertiesSchema = z.object({
   name: z
@@ -110,7 +115,7 @@ export default function PublishSettingsDialog() {
                 maxHeight: "75vh",
                 scrollbarWidth: "thin",
                 maxWidth: "100%",
-                width: "450px",
+                width: "600px",
                 paddingX: 1,
                 paddingTop: 0,
               }}
@@ -134,13 +139,25 @@ export default function PublishSettingsDialog() {
                       paddingX: 1.5,
                       direction: "ltr",
                       width: "100%",
-                      gap: "20px",
+                      gap: "6px",
                     }}
                   >
                     <Box display="flex" gap={1} mt={4}>
-                      <IconButton>
-                        <FiRefreshCcw size="1.25rem" color="#1758BA" />
-                      </IconButton>
+                      <Box
+                        sx={{
+                          padding: {
+                            xs: "8px",
+                            sm: "8px 15px",
+                          },
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          border: "1px solid #1758BA",
+                          borderRadius: "10px",
+                        }}
+                      >
+                        <LuRefreshCcw size="1.5rem" color="#1758BA" />
+                      </Box>
                       <RHFTextField
                         name="name"
                         sx={{
@@ -150,16 +167,35 @@ export default function PublishSettingsDialog() {
                           },
                         }}
                       />
-                      <CopyToClipboardButton
-                        text="https://psya.ir"
-                        icon={<BsShare size="2rem" color="#1758BA" />}
-                      />
                       <Box
                         sx={{
-                          padding: "8px",
+                          padding: {
+                            xs: "8px",
+                            sm: "8px 15px",
+                          },
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
+                          border: "1px solid #1758BA",
+                          borderRadius: "10px",
+                        }}
+                      >
+                        <CopyToClipboardButton
+                          text="https://psya.ir"
+                          icon={<LuCopy size="1.5rem" color="#1758BA" />}
+                        />
+                      </Box>
+                      <Box
+                        sx={{
+                          padding: {
+                            xs: "8px",
+                            sm: "8px 15px",
+                          },
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          border: "1px solid #1758BA",
+                          borderRadius: "10px",
                         }}
                       >
                         <Share
@@ -169,8 +205,88 @@ export default function PublishSettingsDialog() {
                             url: "https://psya.ir",
                           }}
                         >
-                          <IoShareOutline size="1.5rem" color="#1758BA" />
+                          <IoShareSocialSharp size="1.5rem" color="#1758BA" />
                         </Share>
+                      </Box>
+                    </Box>
+                    <Box
+                      display="flex"
+                      flexDirection={{ xs: "column", sm: "column", md: "row" }}
+                      alignItems="center"
+                      justifyContent="center"
+                      gap={2}
+                      mt={0.5}
+                    >
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        gap={1}
+                        width="100%"
+                      >
+                        <Typography fontWeight="700" fontSize="14px">
+                          ظرفیت:{" "}
+                          <Typography
+                            component="span"
+                            fontWeight="400"
+                            fontSize="12px"
+                          >
+                            ظرفیت از پیش موجود 100 نفر
+                          </Typography>
+                        </Typography>
+                        <RHFTextField
+                          type="number"
+                          name="name"
+                          sx={{
+                            "& .MuiInputBase-root": {
+                              borderRadius: "10px",
+                              fontWeight: "600",
+                            },
+                          }}
+                        />
+                      </Box>
+                      <Typography
+                        fontSize="10px"
+                        width="100%"
+                        textAlign="justify"
+                      >
+                        دسترسی به پرسشنامه از طریق پیوند به مقدار ظرفیت تعیین
+                        شده برای عموم آزاد است و پس از اتمام ظرفیت تعیین شده،
+                        دسترسی به پرسشنامه تا زمان افزودن ظرفیت مجدد، محدود
+                        خواهد شد.
+                      </Typography>
+                    </Box>
+                    <Box display="flex" flexDirection="column">
+                      <Box display="flex" gap="4px" alignItems="center">
+                        <RHFCheckBox label="" name="" />
+                        <Typography fontSize="12px" color="#161616">
+                          در صفحه عمومی سایا قابل مشاهده باشد.
+                        </Typography>
+                      </Box>
+                      <Box
+                        display="flex"
+                        flexDirection="row"
+                        justifyContent="space-between"
+                        alignItems="center"
+                      >
+                        <Typography
+                          variant="subtitle2"
+                          fontWeight="500"
+                          color="#393939"
+                          fontSize="14px"
+                        >
+                          نمایش نتیجه به پاسخ دهنده
+                        </Typography>
+                        <RHFSwitch
+                          label=""
+                          name="REQUIRED"
+                          labelPlacement="start"
+                          sx={{
+                            mb: 1,
+                            mx: 0,
+                            width: 1,
+                            justifyContent: "space-between",
+                          }}
+                        />
                       </Box>
                     </Box>
                   </Box>
@@ -194,7 +310,7 @@ export default function PublishSettingsDialog() {
                       disableRipple
                       sx={{
                         bgcolor: "#1758BA",
-                        height: "50px",
+                        height: "54px",
                         color: "white",
                         fontSize: {
                           xs: "13px",
@@ -218,7 +334,7 @@ export default function PublishSettingsDialog() {
                       fullWidth
                       className="text-[16px] text-[#1758BA]"
                       sx={{
-                        height: "50px",
+                        height: "54px",
                         fontWeight: "700",
                         borderRadius: "10px",
                         fontSize: "16px",

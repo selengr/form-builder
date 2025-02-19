@@ -3,8 +3,8 @@
 import { ReactNode, useState } from "react";
 import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import { GrCircleInformation } from "react-icons/gr";
+import { Box } from "@mui/material";
 
 const CopyToClipboardButton = ({
   text,
@@ -55,13 +55,11 @@ const CopyToClipboardButton = ({
 
   return (
     <>
-      <Button
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
         onClick={handleClick}
-        color="primary"
-        sx={{
-          gap: "10px",
-          minWidth: "10px",
-        }}
       >
         {icon}
         {label && (
@@ -69,7 +67,7 @@ const CopyToClipboardButton = ({
             {label}
           </Typography>
         )}
-      </Button>
+      </Box>
       <Snackbar
         message={
           <div className="flex gap-2 items-center">

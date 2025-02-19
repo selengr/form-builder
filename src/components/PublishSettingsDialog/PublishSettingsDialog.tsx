@@ -154,6 +154,7 @@ export default function PublishSettingsDialog() {
                           justifyContent: "center",
                           border: "1px solid #1758BA",
                           borderRadius: "10px",
+                          cursor: "pointer",
                         }}
                       >
                         <LuRefreshCcw size="1.5rem" color="#1758BA" />
@@ -178,6 +179,7 @@ export default function PublishSettingsDialog() {
                           justifyContent: "center",
                           border: "1px solid #1758BA",
                           borderRadius: "10px",
+                          cursor: "pointer",
                         }}
                       >
                         <CopyToClipboardButton
@@ -196,6 +198,7 @@ export default function PublishSettingsDialog() {
                           justifyContent: "center",
                           border: "1px solid #1758BA",
                           borderRadius: "10px",
+                          cursor: "pointer",
                         }}
                       >
                         <Share
@@ -298,7 +301,7 @@ export default function PublishSettingsDialog() {
                       gap: "16px",
                       paddingX: "16px",
                       width: "100%",
-                      marginTop: "38px",
+                      marginTop: "24px",
                     }}
                   >
                     <LoadingButton

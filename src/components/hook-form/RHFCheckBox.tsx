@@ -26,7 +26,18 @@ export default function RHFCheckBox({ name, helperText, ...other }: Props) {
                 marginX: 0,
               },
             }}
-            control={<Checkbox {...field} checked={field.value} />}
+            control={
+              <Checkbox
+                sx={{
+                  "& .MuiSvgIcon-root": {
+                    color: "#1758BA",
+                    bgcolor: "white",
+                  },
+                }}
+                {...field}
+                checked={field.value}
+              />
+            }
             {...other}
           />
 

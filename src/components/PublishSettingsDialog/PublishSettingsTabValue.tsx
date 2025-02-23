@@ -1,23 +1,38 @@
 import { useState } from "react";
 import { Box, Tab, Tabs } from "@mui/material";
+import GeneralSettings from "../GeneralSettings/GeneralSettings";
 
-export default function PublishSettingsTabValue() {
-  const [value, setValue] = useState(0);
+export type TabValues = "general" | "individual" | "group" | "mresalat";
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+function CustomTabPanel(props: any) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <div>{children}</div>}
+    </div>
+  );
+}
+
+export default function PublishSettingsTabValue({
+  handleOpen,
+}: {
+  handleOpen: () => void;
+}) {
+  const [value, setValue] = useState<TabValues>("general");
+
+  const handleChange = (event: React.SyntheticEvent, newValue: TabValues) => {
     setValue(newValue);
   };
 
   return (
-    <Box
-      width="100%"
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        mt: "4px",
-        paddingX: "16px",
-      }}
-    >
+    <>
       <Box
         sx={{
           borderBottom: 1,
@@ -51,16 +66,28 @@ export default function PublishSettingsTabValue() {
               display: "flex",
               justifyContent: "space-between",
               width: "100%",
-              // overflowX: "auto",
             },
           }}
         >
-          <Tab disableRipple label="عمومی" />
-          <Tab disableRipple disabled label="انفرادی" />
-          <Tab disableRipple disabled label="گروهی" />
-          <Tab disableRipple disabled label="اعضای ام‌رسالت" />
+          <Tab disableRipple label="عمومی" value="general" />
+          <Tab disableRipple disabled label="انفرادی" value="individual" />
+          <Tab disableRipple disabled label="گروهی" value="group" />
+          <Tab disableRipple disabled label="اعضای ام‌رسالت" value="mresalat" />
         </Tabs>
       </Box>
-    </Box>
+
+      <CustomTabPanel value={value} index="general">
+        {value === "general" && <GeneralSettings handleOpen={handleOpen} />}
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index="individual">
+        {value === "individual" && <></>}
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index="group">
+        {value === "group" && <></>}
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index="mresalat">
+        {value === "mresalat" && <></>}
+      </CustomTabPanel>
+    </>
   );
 }

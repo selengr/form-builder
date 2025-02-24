@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import { Box, Tab, Tabs } from "@mui/material";
 import GeneralSettings from "../GeneralSettings/GeneralSettings";
 import IndividualSettings from "../IndividualSettings/IndividualSettings";
 import MresalatUsersSettings from "../MresalatUsersSettings/MresalatUsersSettings";
+import GroupSettings from "../GroupSettings/GroupSettings";
 
 export type TabValues = "general" | "individual" | "group" | "mresalat";
 
@@ -29,7 +30,7 @@ export default function PublishSettingsTabValue({
 }) {
   const [value, setValue] = useState<TabValues>("general");
 
-  const handleChange = (event: React.SyntheticEvent, newValue: TabValues) => {
+  const handleChange = (_: SyntheticEvent, newValue: TabValues) => {
     setValue(newValue);
   };
 
@@ -72,21 +73,21 @@ export default function PublishSettingsTabValue({
           }}
         >
           <Tab disableRipple label="عمومی" value="general" />
-          <Tab disableRipple label="انفرادی" value="individual" />
           <Tab disableRipple disabled label="گروهی" value="group" />
+          <Tab disableRipple label="انفرادی" value="individual" />
           <Tab disableRipple label="اعضای ام‌رسالت" value="mresalat" />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index="general">
         {value === "general" && <GeneralSettings handleOpen={handleOpen} />}
       </CustomTabPanel>
+      <CustomTabPanel value={value} index="group">
+        {value === "group" && <GroupSettings handleOpen={handleOpen} />}
+      </CustomTabPanel>
       <CustomTabPanel value={value} index="individual">
         {value === "individual" && (
           <IndividualSettings handleOpen={handleOpen} />
         )}
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index="group">
-        {value === "group" && <></>}
       </CustomTabPanel>
       <CustomTabPanel value={value} index="mresalat">
         {value === "mresalat" && (

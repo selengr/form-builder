@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Box, Tab, Tabs } from "@mui/material";
 import GeneralSettings from "../GeneralSettings/GeneralSettings";
+import IndividualSettings from "../IndividualSettings/IndividualSettings";
+import MresalatUsersSettings from "../MresalatUsersSettings/MresalatUsersSettings";
 
 export type TabValues = "general" | "individual" | "group" | "mresalat";
 
@@ -70,23 +72,26 @@ export default function PublishSettingsTabValue({
           }}
         >
           <Tab disableRipple label="عمومی" value="general" />
-          <Tab disableRipple disabled label="انفرادی" value="individual" />
+          <Tab disableRipple label="انفرادی" value="individual" />
           <Tab disableRipple disabled label="گروهی" value="group" />
-          <Tab disableRipple disabled label="اعضای ام‌رسالت" value="mresalat" />
+          <Tab disableRipple label="اعضای ام‌رسالت" value="mresalat" />
         </Tabs>
       </Box>
-
       <CustomTabPanel value={value} index="general">
         {value === "general" && <GeneralSettings handleOpen={handleOpen} />}
       </CustomTabPanel>
       <CustomTabPanel value={value} index="individual">
-        {value === "individual" && <></>}
+        {value === "individual" && (
+          <IndividualSettings handleOpen={handleOpen} />
+        )}
       </CustomTabPanel>
       <CustomTabPanel value={value} index="group">
         {value === "group" && <></>}
       </CustomTabPanel>
       <CustomTabPanel value={value} index="mresalat">
-        {value === "mresalat" && <></>}
+        {value === "mresalat" && (
+          <MresalatUsersSettings handleOpen={handleOpen} />
+        )}
       </CustomTabPanel>
     </>
   );

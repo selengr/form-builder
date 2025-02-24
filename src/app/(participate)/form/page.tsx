@@ -164,7 +164,7 @@ export default function ParticipateFormPage() {
 
         // ^ chec this out
         console.log(response.data);
-        addNewQuestion(response.data);
+        addNewQuestion(response.data.questionModel);
 
         setFirstLoading(false);
         setTakePartId(response.data.takePart);
@@ -277,6 +277,9 @@ export default function ParticipateFormPage() {
       </ResponsiveContainer>
     );
   }
+
+  // ^ Check For isLocked Status
+  // ^ If True Disable the input
 
   return (
     <ResponsiveContainer>

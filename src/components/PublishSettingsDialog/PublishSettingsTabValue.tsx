@@ -73,7 +73,7 @@ export default function PublishSettingsTabValue({
           }}
         >
           <Tab disableRipple label="عمومی" value="general" />
-          <Tab disableRipple disabled label="گروهی" value="group" />
+          <Tab disableRipple label="گروهی" value="group" />
           <Tab disableRipple label="انفرادی" value="individual" />
           <Tab disableRipple label="اعضای ام‌رسالت" value="mresalat" />
         </Tabs>

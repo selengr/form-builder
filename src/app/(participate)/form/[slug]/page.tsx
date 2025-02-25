@@ -11,6 +11,7 @@ import AxiosApi from "@/services/axios/AxiosApi";
 import { ElementsType, FormElements } from "@/types/FormElements";
 import withValidation from "@/components/Fields/FormHOC";
 import { toast } from "sonner";
+import { useParams } from "next/navigation";
 
 export interface ILimitation {
   isLimited: boolean;
@@ -21,6 +22,10 @@ const extractProperty = (questionPropertyList: any[], propertyEnum: string) => {
   return questionPropertyList?.find(
     (prop: any) => prop.questionPropertyEnum === propertyEnum
   )?.value;
+};
+
+type SlugParams = {
+  slug: string;
 };
 
 export default function ParticipateFormPage() {
@@ -35,6 +40,8 @@ export default function ParticipateFormPage() {
     isLimited: false,
     limitationType: "",
   });
+
+  const { slug } = useParams<SlugParams>();
 
   const addNewQuestion = useCallback((response: any) => {
     const requiredData =
@@ -98,8 +105,8 @@ export default function ParticipateFormPage() {
         const res = await AxiosApi.post(
           "/take-part/check-response-limitation-form",
           {
-            id: null,
-            link: "public-e3b1018b-52cf-4016-b79e-36e647119872",
+            link: slug.startsWith("public-") ? slug : null,
+            id: slug.startsWith("form-") ? slug : null,
           }
         );
 
@@ -136,8 +143,8 @@ export default function ParticipateFormPage() {
     async function takePartApi() {
       try {
         const response = await AxiosApi.post("/take-part", {
-          link: "public-e3b1018b-52cf-4016-b79e-36e647119872",
-          formId: null,
+          link: slug.startsWith("public-") ? slug : null,
+          formId: slug.startsWith("form-") ? slug : null,
           username: null,
         });
 

@@ -11,6 +11,7 @@ const fieldPatternOptions: ITextFieldFormPatternOptions = [
   { value: "NUMBER", label: "عددی" },
   { value: "NATIONAL_CODE", label: "کدملی" },
   { value: "DATE", label: "تاریخ" },
+  // { value: "TIME", label: "زمان" },
   { value: "PHONE", label: "تلفن" },
 ];
 

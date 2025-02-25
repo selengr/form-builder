@@ -24,7 +24,7 @@ const extractProperty = (questionPropertyList: any[], propertyEnum: string) => {
   )?.value;
 };
 
-type SlugParams = {
+export type SlugParams = {
   slug: string;
 };
 

@@ -3,7 +3,8 @@ import AnimatedBox from "./AnimatedBox";
 import ActionButtons from "./ActionButtons";
 import { Dispatch, SetStateAction, useState } from "react";
 import AxiosApi from "@/services/axios/AxiosApi";
-import { ILimitation } from "@/app/(participate)/form/page";
+import { ILimitation, SlugParams } from "@/app/(participate)/form/[slug]/page";
+import { useParams } from "next/navigation";
 
 const validatePhone = (phone: string) => {
   const re = /^09\d{9}$/;
@@ -30,6 +31,8 @@ export default function FormLimitation({
   const [error, setError] = useState(false);
   const [helperText, setHelperText] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const { slug } = useParams<SlugParams>();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -80,8 +83,8 @@ export default function FormLimitation({
       const response = await AxiosApi.post(
         "/take-part/check-answer-to-form-before",
         {
-          formId: null,
-          link: null,
+          link: slug.startsWith("public-") ? slug : null,
+          formId: slug.startsWith("form-") ? slug : null,
           username: formValue,
         }
       );

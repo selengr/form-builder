@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import ConfirmDialog from "../confirm-dialog";
 import { useRouter } from "next/navigation";
 import PublishSettingsDialog from "../PublishSettingsDialog/PublishSettingsDialog";
+import { IoStatsChartOutline } from "react-icons/io5";
 
 const formTypePersian: any = {
   TEST: "آزمون",
@@ -128,6 +129,11 @@ export default function ListCard(props: any) {
           <IconButton disabled={loadingInvalidData}>
             <Link href={`/builder/${props.data.id}`}>
               <Image src={EditIcon} alt="" width={24} height={24} />
+            </Link>
+          </IconButton>
+          <IconButton disabled={loadingInvalidData}>
+            <Link href={`/stats/${props.data.id}`} className="h-full w-full">
+              <IoStatsChartOutline color="#424242" />
             </Link>
           </IconButton>
         </div>

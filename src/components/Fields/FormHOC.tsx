@@ -40,7 +40,7 @@ const withValidation = <Div extends WrappedComponentProps>(
     const validate = (newValue: any) => {
       let isValid = true;
       let errorMessage = "";
-      let val;
+      let val = newValue;
 
       if (elementInstance.questionType === "TEXT_FIELD") {
         const fieldPattern = elementInstance?.questionPropertyList?.find(

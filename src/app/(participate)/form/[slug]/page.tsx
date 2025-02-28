@@ -11,6 +11,7 @@ import AxiosApi from "@/services/axios/AxiosApi";
 import { ElementsType, FormElements } from "@/types/FormElements";
 import withValidation from "@/components/Fields/FormHOC";
 import { toast } from "sonner";
+import { useParams } from "next/navigation";
 
 export interface ILimitation {
   isLimited: boolean;
@@ -23,6 +24,10 @@ const extractProperty = (questionPropertyList: any[], propertyEnum: string) => {
   )?.value;
 };
 
+export type SlugParams = {
+  slug: string;
+};
+
 export default function ParticipateFormPage() {
   const [question, setQuestion] = useState<any>(null);
   const [firstLoading, setFirstLoading] = useState(false);
@@ -30,53 +35,56 @@ export default function ParticipateFormPage() {
   const [isValid, setIsValid] = useState(false);
   const [takePartId, setTakePartId] = useState<any>(null);
   const [formData, setFormData] = useState<any>("");
-  // const [finishPage, setFinishPage] = useState<boolean>(false);
+  const [finishPage, setFinishPage] = useState<boolean>(false);
   const [limitation, setLimitation] = useState<ILimitation>({
     isLimited: false,
     limitationType: "",
   });
 
+  const { slug } = useParams<SlugParams>();
+
   const addNewQuestion = useCallback((response: any) => {
     const requiredData =
-      extractProperty(
-        response.data.questionModel.questionPropertyList,
-        "REQUIRED"
-      ) === "true";
+      extractProperty(response.questionPropertyList, "REQUIRED") === "true";
     const startData = extractProperty(
-      response.data.questionModel.questionPropertyList,
+      response.questionPropertyList,
       "SPECTRAL_START"
     );
     const endData = extractProperty(
-      response.data.questionModel.questionPropertyList,
+      response.questionPropertyList,
       "SPECTRAL_END"
     );
     const selectionTypeData = extractProperty(
-      response.data.questionModel.questionPropertyList,
+      response.questionPropertyList,
       "SELECTION_TYPE"
     );
     const minLengthData = extractProperty(
-      response.data.questionModelquestionPropertyList,
+      response.questionPropertyList,
       "MINIMUM_LEN"
     );
     const textFieldPatternData = extractProperty(
-      response.data.questionModelquestionPropertyList,
+      response.questionPropertyList,
       "TEXT_FIELD_PATTERN"
     );
 
-    if (response.data.questionModel.questionType === "SPECTRAL") {
+    if (response.questionType === "SPECTRAL") {
+      // ^ Previos data saves
+      // ^ spectral
       setFormData(
         selectionTypeData === "DOMAIN"
           ? [Number(startData), Number(endData)]
           : Number(startData)
       );
     } else {
+      // ^ Previos data saves
+      // ^ spectral
       setFormData("");
     }
 
     if (requiredData) {
       setIsValid(false);
     } else if (
-      response.data.questionModel.questionType === "TEXT_FIELD" &&
+      response.questionType === "TEXT_FIELD" &&
       (textFieldPatternData === "SHORT_TEXT" ||
         textFieldPatternData === "LONG_TEXT")
     ) {
@@ -93,11 +101,12 @@ export default function ParticipateFormPage() {
   useEffect(() => {
     async function fetchData() {
       try {
+        setFirstLoading(true);
         const res = await AxiosApi.post(
           "/take-part/check-response-limitation-form",
           {
-            id: null,
-            link: "public-e3b1018b-52cf-4016-b79e-36e647119872",
+            link: slug.startsWith("public-") ? slug : null,
+            id: slug.startsWith("form-") ? slug : null,
           }
         );
 
@@ -107,6 +116,7 @@ export default function ParticipateFormPage() {
               isLimited: true,
               limitationType: res.data.responseLimitation,
             });
+            setQuestionLoading(false);
           } else {
             setLimitation({
               isLimited: false,
@@ -133,12 +143,12 @@ export default function ParticipateFormPage() {
     async function takePartApi() {
       try {
         const response = await AxiosApi.post("/take-part", {
-          link: "public-e3b1018b-52cf-4016-b79e-36e647119872",
-          formId: null,
+          link: slug.startsWith("public-") ? slug : null,
+          formId: slug.startsWith("form-") ? slug : null,
           username: null,
         });
 
-        addNewQuestion(response);
+        addNewQuestion(response.data.questionModel);
 
         setFirstLoading(false);
         setTakePartId(response.data.takePart);
@@ -159,7 +169,9 @@ export default function ParticipateFormPage() {
           }
         );
 
-        addNewQuestion(response);
+        // ^ chec this out
+        console.log(response.data);
+        addNewQuestion(response.data.questionModel);
 
         setFirstLoading(false);
         setTakePartId(response.data.takePart);
@@ -184,25 +196,49 @@ export default function ParticipateFormPage() {
     }
 
     setQuestionLoading(true);
+
+    const answerList = [
+      {
+        optionId: question.questionType !== "TEXT_FIELD" ? formData : null,
+        answer: question.questionType === "TEXT_FIELD" ? formData : null,
+      },
+    ];
+
     try {
       const res = await AxiosApi.post(`/take-part/insert-answer`, {
         formId: question.formId,
         takePartId: takePartId,
         questionId: question.questionId,
-        answerList: [
-          {
-            answer: formData,
-            optionId: null,
-          },
-        ],
+        answerList,
       });
 
-      // if (!res.data.questionId) {
-      //   setFinishPage(true);
-      // } else {
-      addNewQuestion(res);
-      setQuestion(res.data);
-      // }
+      if (!res.data.questionId) {
+        setFinishPage(true);
+      } else {
+        addNewQuestion(res.data);
+        setQuestion(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setQuestionLoading(false);
+    }
+  };
+
+  const handlePrev = async () => {
+    try {
+      setQuestionLoading(true);
+      const res = await AxiosApi.post(`/question/previous-question`, {
+        takePartId,
+      });
+
+      addNewQuestion(res.data.questionModel);
+      setQuestion(res.data.questionModel);
+      setIsValid(true);
+      setFormData(
+        res.data.userAnswerModel.answersModel[0].answer ??
+          res.data.userAnswerModel.answersModel[0].optionId
+      );
     } catch (error) {
       console.log(error);
     } finally {
@@ -218,13 +254,13 @@ export default function ParticipateFormPage() {
     return withValidation(FormComponent);
   }, [FormComponent]);
 
-  // if (finishPage) {
-  //   return (
-  //     <ResponsiveContainer>
-  //       <p>خدانگهدار</p>
-  //     </ResponsiveContainer>
-  //   );
-  // }
+  if (finishPage) {
+    return (
+      <ResponsiveContainer>
+        <p>موفق باشید</p>
+      </ResponsiveContainer>
+    );
+  }
 
   if (firstLoading) {
     return (
@@ -249,6 +285,9 @@ export default function ParticipateFormPage() {
     );
   }
 
+  // ^ Check For isLocked Status
+  // ^ If True Disable the input
+
   return (
     <ResponsiveContainer>
       <AnimatedBox key={question?.questionId}>
@@ -263,9 +302,10 @@ export default function ParticipateFormPage() {
       </AnimatedBox>
       <ActionButtons
         loadingNext={questionLoading}
-        disablePrev={questionLoading}
+        // ^ check
+        disablePrev={questionLoading || question?.position === 0}
         nextAction={handleNext}
-        prevAction={() => {}}
+        prevAction={handlePrev}
       />
     </ResponsiveContainer>
   );

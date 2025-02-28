@@ -38,10 +38,11 @@ export type FormElement = {
     elementInstance: FormElementInstance;
   }>;
   formComponent: React.FC<{
-    elementInstance: FormElementInstance;
-    value: string;
-    onChange: (value: string) => void;
-    error: string;
+    elementInstance?: FormElementInstance;
+    value?: string;
+    onChange?: (value: string) => void;
+    error?: string;
+    isPreview?: boolean;
   }>;
   propertiesComponent: React.FC<{
     elementInstance: FormElementInstance;

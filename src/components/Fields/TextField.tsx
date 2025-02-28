@@ -32,6 +32,10 @@ import persian_fa from "react-date-object/locales/persian_fa";
 import "react-multi-date-picker/styles/layouts/mobile.css";
 import { SwitchButton } from "../Switch/SwitchButton";
 import TextFieldPair from "../TextFieldPair/TextFieldPair";
+import TimePickerStyled from "../SettingsDialog/TimePicker.styled";
+import TimePicker from "react-multi-date-picker/plugins/analog_time_picker";
+import { GoClock } from "react-icons/go";
+import { BsCalendarDate } from "react-icons/bs";
 
 const questionType: ElementsType = "TEXT_FIELD";
 
@@ -54,7 +58,7 @@ const questionPropertyList: IQPLTextField = [
   {
     id: 4,
     questionPropertyEnum: "MINIMUM_LEN",
-    value: 1,
+    value: 0,
   },
   {
     id: 5,
@@ -177,11 +181,13 @@ const FormComponent = memo(function FormComponent({
   value,
   onChange,
   error,
+  isPreview = false,
 }: {
-  elementInstance: FormElementInstance;
-  value: string;
-  onChange: (value: string) => void;
-  error: string;
+  elementInstance?: FormElementInstance;
+  value?: string;
+  onChange?: (value: string) => void;
+  error?: string;
+  isPreview?: boolean;
 }) {
   const element = elementInstance as CustomInstance;
   const isMobile = useResponsive("down", "sm");
@@ -202,7 +208,7 @@ const FormComponent = memo(function FormComponent({
 
   const handleLocalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    onChange(newValue);
+    onChange?.(newValue);
   };
 
   switch (fieldPattern) {
@@ -210,8 +216,8 @@ const FormComponent = memo(function FormComponent({
       content = (
         <Fragment>
           <TextField
-            value={value}
-            onChange={handleLocalChange}
+            value={isPreview ? undefined : value}
+            onChange={isPreview ? undefined : handleLocalChange}
             error={!!error}
             helperText={error}
             rows={4}
@@ -234,8 +240,8 @@ const FormComponent = memo(function FormComponent({
       content = (
         <Fragment>
           <TextField
-            value={value}
-            onChange={handleLocalChange}
+            value={isPreview ? undefined : value}
+            onChange={isPreview ? undefined : handleLocalChange}
             error={!!error}
             helperText={error}
             type="text"
@@ -256,8 +262,8 @@ const FormComponent = memo(function FormComponent({
       content = (
         <Fragment>
           <TextField
-            value={value}
-            onChange={handleLocalChange}
+            value={isPreview ? undefined : value}
+            onChange={isPreview ? undefined : handleLocalChange}
             error={!!error}
             helperText={error}
             type="text"
@@ -306,8 +312,8 @@ const FormComponent = memo(function FormComponent({
       content = (
         <Fragment>
           <TextField
-            value={value}
-            onChange={handleLocalChange}
+            value={isPreview ? undefined : value}
+            onChange={isPreview ? undefined : handleLocalChange}
             error={!!error}
             helperText={error}
             placeholder="2981859878"
@@ -338,8 +344,8 @@ const FormComponent = memo(function FormComponent({
       content = (
         <Fragment>
           <TextField
-            value={value}
-            onChange={handleLocalChange}
+            value={isPreview ? undefined : value}
+            onChange={isPreview ? undefined : handleLocalChange}
             error={!!error}
             helperText={error}
             type="text"
@@ -371,7 +377,7 @@ const FormComponent = memo(function FormComponent({
         <Fragment>
           <Box
             display="flex"
-            justifyContent="center"
+            justifyContent="flex-start"
             alignItems="center"
             sx={{
               "& .rmdp-wrapper.rmdp-border": {
@@ -379,22 +385,65 @@ const FormComponent = memo(function FormComponent({
               },
             }}
           >
-            <DatePicker
-              shadow={false}
-              calendar={persian}
-              locale={persian_fa}
-              // value={calendarValue}
-              // onChange={(e: any) => setCalendarValue(e)}
-              value={value}
-              onChange={handleLocalChange as any}
-              className={isMobile ? "rmdp-mobile" : ""}
-              zIndex={9999}
-              inputClass={`h-[50px] px-4 border-[1px] w-full border-neutral-300 rounded-xl text-left p-1 ${
-                !!error ? "border-red-500" : ""
-              }`}
-              highlightToday
-              portal
-            />
+            <Box
+              display="flex"
+              alignItems="center"
+              height="56px"
+              borderRadius="10px"
+              border={!error ? "1px solid #d4d4d4" : "1px solid #f44336"}
+              textAlign="center"
+            >
+              <DatePicker
+                shadow={false}
+                calendar={persian}
+                locale={persian_fa}
+                value={isPreview ? undefined : value}
+                onChange={isPreview ? (undefined as any) : handleLocalChange}
+                className={isMobile ? "rmdp-mobile" : ""}
+                zIndex={9999}
+                inputClass={`h-[50px] px-4 border-none outline-none w-full rounded-xl text-center p-1`}
+                highlightToday
+                portal
+              />
+              <BsCalendarDate size="1.6rem" className="ml-2" color="#424242" />
+            </Box>
+            {!!error && <Typography color="#f44336">{error}</Typography>}
+          </Box>
+        </Fragment>
+      );
+      break;
+    case "TIME":
+      content = (
+        <Fragment>
+          <Box display="flex" justifyContent="flex-start" alignItems="center">
+            <TimePickerStyled>
+              <Box
+                display="flex"
+                alignItems="center"
+                height="56px"
+                borderRadius="10px"
+                border={!error ? "1px solid #d4d4d4" : "1px solid #f44336"}
+                textAlign="center"
+              >
+                <DatePicker
+                  disableDayPicker
+                  format="HH:mm"
+                  inputClass="w-full text-center font-bold"
+                  containerClassName="w-full"
+                  plugins={[<TimePicker key="1" hideSeconds />]}
+                  value={isPreview ? undefined : value}
+                  onChange={
+                    isPreview
+                      ? undefined
+                      : (value: any) => {
+                          const formattedValue = `${value.hour}:${value.minute}`;
+                          onChange?.(formattedValue);
+                        }
+                  }
+                />
+                <GoClock size="2rem" className="ml-2" color="#424242" />
+              </Box>
+            </TimePickerStyled>
             {!!error && <Typography color="#f44336">{error}</Typography>}
           </Box>
         </Fragment>

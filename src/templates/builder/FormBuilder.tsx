@@ -35,7 +35,7 @@ const FormBuilder = memo(function FormBuilder() {
       sensors={sensors}
       // autoScroll={{ layoutShiftCompensation: false }}
     >
-      <div dir="ltr" className="flex w-full flex-grow mx-auto h-full">
+      <div dir="ltr" className="flex w-full mx-auto h-full">
         <main className="flex flex-col w-full">
           <div className="flex w-full items-start justify-center relative h-full bg-[#f7f7f7]">
             <Designer />

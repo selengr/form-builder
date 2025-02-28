@@ -318,8 +318,14 @@ type CustomInstance = FormElementInstance & {
 
 function FormComponent({
   elementInstance,
+  value,
+  onChange,
+  error,
 }: {
-  elementInstance: FormElementInstance;
+  elementInstance?: FormElementInstance;
+  value?: string;
+  onChange?: (value: string) => void;
+  error?: string;
 }) {
   const element = elementInstance as CustomInstance;
 
@@ -343,10 +349,6 @@ function FormComponent({
     (el) => el.questionPropertyEnum === "SELECTION_TYPE"
   )?.value;
 
-  const [sliderValue, setSliderValue] = useState<number[] | number>(
-    selectionType === "DOMAIN" ? [start, end] : start
-  );
-
   const spectralType = element.questionPropertyList.find(
     (el) => el.questionPropertyEnum === "SPECTRAL_TYPE"
   )?.value;
@@ -358,6 +360,8 @@ function FormComponent({
   const description = element.questionPropertyList.find(
     (el) => el.questionPropertyEnum === "DESCRIPTION"
   )?.value;
+
+  const [sliderVal, setSliderVal] = useState(value);
 
   const CustomValueLabel = ({ value }: { value: number }) => {
     const isMark = marks.some((mark) => mark.value === value);
@@ -373,7 +377,8 @@ function FormComponent({
   };
 
   const handleChange = (event: Event, newValue: number | number[]) => {
-    setSliderValue(newValue as number[] | number);
+    setSliderVal(newValue as any);
+    onChange?.(newValue as any);
   };
 
   return (
@@ -396,29 +401,35 @@ function FormComponent({
         </Typography>
       )}
       {selectionType === "SPECTRAL" ? (
-        <MyRangeSlider
-          valueLabelFormat={(value: any) => <CustomValueLabel value={value} />}
-          valueLabelDisplay="auto"
-          value={sliderValue}
-          step={step}
-          onChange={handleChange}
-          min={start}
-          max={end}
-          marks={marks}
-        />
+        <>
+          <MyRangeSlider
+            valueLabelFormat={(val: any) => <CustomValueLabel value={val} />}
+            valueLabelDisplay="auto"
+            value={sliderVal as any}
+            step={step}
+            onChange={handleChange}
+            min={start}
+            max={end}
+            marks={marks}
+          />
+          {!!error && <Typography color="#f44336">{error}</Typography>}
+        </>
       ) : (
-        <MyRangeSlider
-          valueLabelFormat={(value: any) => <CustomValueLabel value={value} />}
-          value={sliderValue}
-          onChange={handleChange}
-          size="medium"
-          valueLabelDisplay="auto"
-          step={spectralType === "DISCRETE" ? step : 0.1}
-          min={start}
-          max={end}
-          marks={marks}
-          disableSwap
-        />
+        <>
+          <MyRangeSlider
+            valueLabelFormat={(val: any) => <CustomValueLabel value={val} />}
+            value={sliderVal as any}
+            onChange={handleChange}
+            size="medium"
+            valueLabelDisplay="auto"
+            step={spectralType === "DISCRETE" ? step : 0.1}
+            min={start}
+            max={end}
+            marks={marks}
+            disableSwap
+          />
+          {!!error && <Typography color="#f44336">{error}</Typography>}
+        </>
       )}
     </Box>
   );

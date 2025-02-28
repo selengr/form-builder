@@ -41,8 +41,8 @@ lg:mb-5 lg:mx-2"
             </h2>
           </div>
           <p
-            className="text-[14px] text-[#4A4A4A] mx-auto lg:mx-0
-leading-relaxed mb-4 px-[20px] lg:px-0 max-w-72"
+            className="text-[14px] text-[#4A4A4A] mx-auto lg:mx-0 text-justify
+leading-relaxed mb-4 px-[20px] lg:px-0 max-w-72 xs:max-w-[80%] md:max-w-72"
           >
             سایا سکویی برای ساخت، اجرا و تحلیل آزمون‌های روان‌شناختی است. این
             سکو با رابط کاربری ساده و یکپارچه، امکان ایجاد فرم‌های برخط و
@@ -69,7 +69,7 @@ leading-relaxed mb-4 px-[20px] lg:px-0 max-w-72"
             alt="سایا لوگو"
             width={100}
             height={100}
-            className="w-full lg:min-h-[300px] h-full absolute  lg:-top-6 -left-[55px] lg:-left-36"
+            className="w-full lg:min-h-[300px] h-full absolute  lg:-top-6 -left-[35px] xs:-left-[30%] lg:-left-36"
           />
           <Image
             src="/images/home-page/Oval2.svg"
@@ -83,14 +83,14 @@ leading-relaxed mb-4 px-[20px] lg:px-0 max-w-72"
             alt="object"
             width={50}
             height={28}
-            className="w-[40%] h-[40%] lg:w-[50%] lg:h-[50%] absolute -top-[35px] -left-[80px] lg:-left-[165px]"
+            className="w-[40%] h-[40%] lg:w-[50%] lg:h-[50%] absolute -top-[65px] -left-[35px] xs:-left-[15%]  lg:-left-[155px]"
           />
           <Image
             src="/images/home-page/Oval3.svg"
             alt="object"
             width={50}
             height={28}
-            className="w-[60%] h-[60%] absolute -bottom-[65px] -left-[105px]"
+            className="w-[60%] h-[60%] absolute -bottom-[65px] -left-[35px] xs:-left-[15%] lg:-left-[105px]"
           />
           <Image
             src="/images/home-page/Oval4.svg"
@@ -145,11 +145,11 @@ function FormBuilderCard() {
     <div className="bg-[linear-gradient(233.47deg,_#2CDFC9_-51.3%,_#1758BA_86.56%)] text-white relative rounded-[45px] h-[190px] shadow-xl pt-8 pr-4 w-full xs:w-[170px]">
       <h3 className="text-md font-bold mb-4">فرم ساز</h3>
       <p className="mb-6 text-xs">ساخت حرفه‌ای فرم با قابلیت درگ اند دراپ</p>
-      <Button className="w-full justify-center absolute -bottom-2 left-2 text-white">
-        <Link className="text-white text-[10px]" href="#" >ورود به فرم ساز</Link>
-        <div className="bg-[#fff] rounded-[8px] md:rounded-[12px] w-[26px] md:w-[30px] h-[26px] md:h-[30px] flex items-center justify-center mr-2">
+      <Button className="w-full justify-center absolute -bottom-2 left-0 text-white">
+        <span className="text-white text-[10px]">ورود به فرم ساز</span>
+        <Link  href="/builder" className="bg-[#fff] z-50 rounded-[8px] md:rounded-[12px] w-[26px] md:w-[30px] h-[26px] md:h-[30px] flex items-center justify-center mr-2">
           <ArrowLeft />
-        </div>
+        </Link >
       </Button>
     </div>
   );

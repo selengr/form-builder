@@ -15,7 +15,7 @@ const allLinks = [
   { id: 2, title: "فرم‌های عمومی", icon: MusicPlaylist, link: "/public-form" },
   {
     id: 2,
-    title: "ارزیابی‌های عمومی",
+    title: "ارزیابی‌های من",
     icon: MusicPlaylist,
     link: "/my-assessments",
   },

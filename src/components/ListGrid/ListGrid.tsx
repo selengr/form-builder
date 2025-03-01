@@ -39,6 +39,7 @@ interface Props {
   disableFilter: boolean | undefined;
   textTotal?: any;
   searchQueryFilter: any;
+  showCreateButton?: boolean;
 }
 
 let totalData: any = null;
@@ -84,6 +85,7 @@ const ListGrid: React.FC<Props> = ({
   refreshGrid,
   disableFilter,
   searchQueryFilter,
+  showCreateButton = false,
   textTotal = ["", "عدد"],
 }) => {
   const { ref, inView } = useInView();
@@ -254,9 +256,11 @@ const ListGrid: React.FC<Props> = ({
                 {totalData} {textTotal[1]}
               </p>
             </Grid2>
-            <div className="min-w-[50px] w-[50px] h-full">
-              <CreateFormBtn />
-            </div>
+            {showCreateButton && (
+              <div className="min-w-[50px] w-[50px] h-full">
+                <CreateFormBtn />
+              </div>
+            )}
           </Box>
 
           <Grid2

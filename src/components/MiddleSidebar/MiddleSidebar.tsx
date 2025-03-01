@@ -11,13 +11,20 @@ import ShoppingCart from "@/../public/images/home-page/menu/shopping-cart.svg";
 import Wallet from "@/../public/images/home-page/menu/wallet-minus.svg";
 
 const allLinks = [
-  { id: 1, title: "فرم‌ها", icon: Additem, link: "/builder" },
-  { id: 2, title: "ارزیابی‌های من", icon: MusicPlaylist, link: "" },
-  { id: 3, title: "گزارش‌ها", icon: ChartSquare, link: "" },
-  { id: 4, title: "گروه‌ها", icon: GroupSquare, link: "" },
+  { id: 1, title: "ساخت فرم", icon: Additem, link: "/builder" },
+  { id: 2, title: "فرم‌های عمومی", icon: MusicPlaylist, link: "/public-form" },
+  {
+    id: 2,
+    title: "ارزیابی‌های عمومی",
+    icon: MusicPlaylist,
+    link: "/my-assessments",
+  },
+  { id: 3, title: "آموزش", icon: ChartSquare, link: "" },
+  { id: 4, title: "ارتباط با ما", icon: GroupSquare, link: "" },
   { id: 5, title: "تراکنش‌ها", icon: Wallet, link: "" },
-  { id: 6, title: "سبد خرید", icon: ShoppingCart, link: "" },
-  { id: 7, title: "آپلودر", icon: Additem, link: "/uploader" },
+  { id: 6, title: "سوالات پرتکرار", icon: ShoppingCart, link: "" },
+  { id: 7, title: "قوانین و مقررات", icon: Wallet, link: "" },
+  { id: 8, title: "آپلودر", icon: Additem, link: "/uploader" },
 ];
 
 export default function MiddleSidebar() {
@@ -27,7 +34,7 @@ export default function MiddleSidebar() {
         <Image priority src={Logo} width={111} height={38} alt="Psya-Logo" />
         <div className="flex flex-col items-center w-full gap-5">
           <SidebarRoleSelection />
-          <div className="w-full pr-3 flex flex-col gap-3">
+          <div className="w-full pr-3 flex flex-col gap-4">
             {allLinks.map((item) => (
               <div
                 key={item.id}
@@ -35,7 +42,7 @@ export default function MiddleSidebar() {
               >
                 <Link
                   href={item.link}
-                  className="w-full h-full pb-3 flex items-center justify-between "
+                  className="w-full h-full pb-4 flex items-center justify-between "
                 >
                   <div className="flex items-center justify-between gap-2">
                     <Image src={item.icon} alt="" width={32} height={32} />

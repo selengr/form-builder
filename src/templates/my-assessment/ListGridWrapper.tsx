@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import ListGrid from "@/components/ListGrid/ListGrid";
-import ListCard from "@/components/ListGrid/ListCard";
 import {
   Button,
   FormControl,
@@ -15,6 +14,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import FilterIcon from "@/../public/images/home-page/filter-icon.svg";
+import ListCard from "./ListCard";
 
 export default function ListGridWrapper() {
   const [refreshGrid, setRefreshGrid] = useState(false);
@@ -49,7 +49,6 @@ export default function ListGridWrapper() {
 
   return (
     <ListGrid
-      showCreateButton
       searchBoxList={searchBoxList}
       filterBoxList={filterBoxList}
       url="/form/main-list/"
@@ -101,24 +100,14 @@ export default function ListGridWrapper() {
                       label="همه"
                     />
                     <FormControlLabel
-                      value="COMPETITION"
+                      value="assessment"
                       control={<Radio />}
-                      label="مسابقه"
+                      label="فرم ارزیابی"
                     />
                     <FormControlLabel
-                      value="QUESTION"
+                      value="survey"
                       control={<Radio />}
-                      label="پرسشنامه"
-                    />
-                    <FormControlLabel
-                      value="SURVEY"
-                      control={<Radio />}
-                      label="نظرسنجی"
-                    />
-                    <FormControlLabel
-                      value="TEST"
-                      control={<Radio />}
-                      label="آزمون"
+                      label="تحقیقات کاربر"
                     />
                   </RadioGroup>
                 </FormControl>
@@ -145,7 +134,7 @@ export default function ListGridWrapper() {
                     }}
                     id="demo-controlled-radio-buttons-group"
                   >
-                    بر اساس دسترسی
+                    بر اساس وضعیت
                   </FormLabel>
                   <RadioGroup
                     aria-labelledby="demo-controlled-radio-buttons-group"
@@ -159,14 +148,14 @@ export default function ListGridWrapper() {
                       label="همه"
                     />
                     <FormControlLabel
-                      value="PUBLIC"
+                      value="done"
                       control={<Radio />}
-                      label="عمومی"
+                      label="انجام شده"
                     />
                     <FormControlLabel
-                      value="PRIVATE"
+                      value="unfinished"
                       control={<Radio />}
-                      label="خصوصی"
+                      label="انجام نشده"
                     />
                   </RadioGroup>
                 </FormControl>
@@ -233,9 +222,7 @@ export default function ListGridWrapper() {
           </div>
         </div>
       }
-      CartComponent={(item: any) => (
-        <ListCard setRefreshGrid={setRefreshGrid} {...item} />
-      )}
+      CartComponent={(item: any) => <ListCard {...item} />}
       disableFilter={false}
       refreshGrid={refreshGrid}
       searchQueryFilter={formType}

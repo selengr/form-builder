@@ -19,6 +19,12 @@ const allLinks = [
     icon: MusicPlaylist,
     link: "/my-assessments",
   },
+  {
+    id: 2,
+    title: "گزارش ها",
+    icon: MusicPlaylist,
+    link: "/reports",
+  },
   { id: 3, title: "آموزش", icon: ChartSquare, link: "" },
   { id: 4, title: "ارتباط با ما", icon: GroupSquare, link: "" },
   { id: 5, title: "تراکنش‌ها", icon: Wallet, link: "" },

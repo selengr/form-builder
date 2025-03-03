@@ -274,6 +274,8 @@ export default function StatsPage() {
               justifyContent: "space-between",
               paddingX: 2,
               paddingY: 1,
+              gap: 1,
+              flexWrap: "wrap",
             }}
           >
             <Box display="flex" gap={1} alignItems="center">

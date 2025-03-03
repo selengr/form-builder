@@ -4,7 +4,11 @@ import { CgClose } from "react-icons/cg";
 import { IoSettingsOutline } from "react-icons/io5";
 import PublishSettingsTabValue from "./PublishSettingsTabValue";
 
-export default function PublishSettingsDialog() {
+export default function PublishSettingsDialog({
+  formId,
+}: {
+  formId: string | number;
+}) {
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleOpen = useCallback(() => {
@@ -65,7 +69,10 @@ export default function PublishSettingsDialog() {
                     تنظیمات انتشار
                   </p>
                 </div>
-                <PublishSettingsTabValue handleOpen={handleOpen} />
+                <PublishSettingsTabValue
+                  handleOpen={handleOpen}
+                  formId={formId as any}
+                />
               </div>
             </DialogContent>
           </>

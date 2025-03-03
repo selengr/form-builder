@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import AxiosApi from "@/services/axios/AxiosApi";
 
 const propertiesSchema = z.object({
-  name: z
+  link: z
     .string()
     .trim()
     .transform((value) => value.replace(/\s+/g, " "))
@@ -25,20 +25,28 @@ const propertiesSchema = z.object({
         .min(2, { message: "حداقل باید 2 و حداکثر 100 کاراکتر باشد" })
         .max(100, { message: "حداقل باید 2 و حداکثر 100 کاراکتر باشد" })
     ),
+  PublicationMainPageMethod: z.boolean().default(false),
+  capacityPublicLink: z.number(),
+  showUser: z.boolean().default(false),
 });
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
 export default function GeneralSettings({
   handleOpen,
+  formId,
 }: {
   handleOpen: () => void;
+  formId: string | number;
 }) {
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     mode: "all",
     defaultValues: {
-      name: "",
+      link: "",
+      PublicationMainPageMethod: false,
+      capacityPublicLink: 0,
+      showUser: false,
     },
   });
 
@@ -50,7 +58,11 @@ export default function GeneralSettings({
 
   async function onSubmit(values: propertiesFormSchemaType) {
     try {
-      const res = await AxiosApi.post(`/form-setting`, values as any);
+      const res = await AxiosApi.post(`/form-publish-setting/public-method`, {
+        formId,
+        PublicationMainPageMethod: values.PublicationMainPageMethod,
+        capacityPublicLink: values.capacityPublicLink,
+      });
       handleOpen();
       reset();
     } catch (error) {
@@ -89,7 +101,7 @@ export default function GeneralSettings({
             <LuRefreshCcw size="1.5rem" color="#1758BA" />
           </Box>
           <RHFTextField
-            name="name"
+            name="link"
             sx={{
               "& .MuiInputBase-root": {
                 borderRadius: "10px",
@@ -158,7 +170,7 @@ export default function GeneralSettings({
             </Typography>
             <RHFTextField
               type="number"
-              name="name"
+              name="capacityPublicLink"
               sx={{
                 "& .MuiInputBase-root": {
                   borderRadius: "10px",
@@ -175,7 +187,7 @@ export default function GeneralSettings({
         </Box>
         <Box display="flex" flexDirection="column">
           <Box display="flex" gap="4px" alignItems="center">
-            <RHFCheckBox label="" name="" />
+            <RHFCheckBox label="" name="PublicationMainPageMethod" />
             <Typography fontSize="12px" color="#161616">
               در صفحه عمومی سایا قابل مشاهده باشد.
             </Typography>
@@ -196,7 +208,7 @@ export default function GeneralSettings({
             </Typography>
             <RHFSwitch
               label=""
-              name="REQUIRED"
+              name="showUser"
               labelPlacement="start"
               sx={{
                 mb: 1,

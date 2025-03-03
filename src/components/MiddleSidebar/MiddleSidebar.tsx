@@ -35,7 +35,12 @@ const allLinks = [
 
 export default function MiddleSidebar() {
   return (
-    <div className="min-w-[400px] w-[400px] min-h-screen bg-white px-5 gap-8 flex flex-col py-5">
+    <div
+      className="min-w-[400px] w-[400px] min-h-screen bg-white px-5 gap-8 flex flex-col py-5 overflow-y-auto"
+      style={{
+        scrollbarWidth: "thin",
+      }}
+    >
       <div className="w-full flex flex-col gap-5 items-center">
         <Image priority src={Logo} width={111} height={38} alt="Psya-Logo" />
         <div className="flex flex-col items-center w-full gap-5">

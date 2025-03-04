@@ -55,7 +55,7 @@ const TopAppBar = ({ customActions, appBarSx, toolbarSx, imageSx }: any) => {
     >
       <Toolbar sx={toolbarSx}>
         <Box sx={{ mr: 0, ...imageSx }}>
-          {true ? (
+          {loading ? (
             <div className="flex items-center">
               <Skeleton variant="circular" width={50} height={50} />
               <div className="ml-4">
@@ -63,20 +63,20 @@ const TopAppBar = ({ customActions, appBarSx, toolbarSx, imageSx }: any) => {
                 <Skeleton width={80} />
               </div>
             </div>
-          ) : false ? (
-            <Link href={"/profile"}>
+          ) : !!userInfo ? (
+            <Link href="">
               <div className="gap-[5px] flex items-center">
                 <div className="w-[50px] h-[50px] bg-neutral-200 border-[1px] border-neutral-400 rounded-[50%]"></div>
                 <div>
                   <Typography variant="body1" color="black">
-                    {/* {userInfo?.user?.fullName} */}
+                    {userInfo?.user?.fullName}
                   </Typography>
                   <p className="text-black">مشاهده پروفایل</p>
                 </div>
               </div>
             </Link>
           ) : (
-            <div onClick={() => {}}>
+            <div onClick={goToLoginPage}>
               <IconButton
                 size="medium"
                 disableRipple

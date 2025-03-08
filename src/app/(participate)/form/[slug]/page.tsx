@@ -197,12 +197,48 @@ export default function ParticipateFormPage() {
 
     setQuestionLoading(true);
 
-    const answerList = [
-      {
-        optionId: question.questionType !== "TEXT_FIELD" ? formData : null,
-        answer: question.questionType === "TEXT_FIELD" ? formData : null,
-      },
-    ];
+    let shouldFillOptionId = null;
+
+    if (
+      question.questionType === "MULTIPLE_CHOICE" ||
+      question.questionType === "MULTIPLE_CHOICE_IMAGE" ||
+      question.questionType === "SPECTRAL"
+    ) {
+      const isMultiSelect = extractProperty(
+        question.questionPropertyList,
+        "MULTI_SELECT"
+      );
+      const selectionTypeData = extractProperty(
+        question.questionPropertyList,
+        "SPECTRAL_TYPE"
+      );
+
+      if (isMultiSelect === "true") {
+        shouldFillOptionId = true;
+      } else if (selectionTypeData === "DOMAIN") {
+        shouldFillOptionId = true;
+      }
+    }
+
+    let optionIdObj = null;
+
+    if (shouldFillOptionId) {
+      optionIdObj = formData.map((data: any) => {
+        return {
+          optionId: question.questionType === "SPECTRAL" ? null : data,
+          answer: data,
+        };
+      });
+    }
+
+    const answerList = shouldFillOptionId
+      ? optionIdObj
+      : [
+          {
+            optionId: null,
+            answer: formData,
+          },
+        ];
 
     try {
       const res = await AxiosApi.post(`/take-part/insert-answer`, {
@@ -235,10 +271,62 @@ export default function ParticipateFormPage() {
       addNewQuestion(res.data.questionModel);
       setQuestion(res.data.questionModel);
       setIsValid(true);
-      setFormData(
-        res.data.userAnswerModel.answersModel[0].answer ??
-          res.data.userAnswerModel.answersModel[0].optionId
-      );
+
+      let shouldFillOptionId = null;
+
+      if (
+        res.data.questionModel.questionType === "MULTIPLE_CHOICE" ||
+        res.data.questionModel.questionType === "MULTIPLE_CHOICE_IMAGE" ||
+        res.data.questionModel.questionType === "SPECTRAL"
+      ) {
+        const isMultiSelect = extractProperty(
+          res.data.questionModel.questionPropertyList,
+          "MULTI_SELECT"
+        );
+        const selectionTypeData = extractProperty(
+          res.data.questionModel.questionPropertyList,
+          "SPECTRAL_TYPE"
+        );
+
+        if (isMultiSelect === "true") {
+          shouldFillOptionId = true;
+        } else if (selectionTypeData === "DOMAIN") {
+          shouldFillOptionId = true;
+        }
+      }
+
+      let optionIdObj = null;
+
+      if (shouldFillOptionId) {
+        optionIdObj = res.data.userAnswerModel.answersModel.map((data: any) => {
+          if (
+            res.data.questionModel.questionType === "MULTIPLE_CHOICE" ||
+            res.data.questionModel.questionType === "MULTIPLE_CHOICE_IMAGE" ||
+            res.data.questionModel.questionType === "SPECTRAL"
+          ) {
+            const isMultiSelect = extractProperty(
+              res.data.questionModel.questionPropertyList,
+              "MULTI_SELECT"
+            );
+            const selectionTypeData = extractProperty(
+              res.data.questionModel.questionPropertyList,
+              "SPECTRAL_TYPE"
+            );
+
+            if (isMultiSelect === "true") {
+              return Number(data.optionId);
+            } else if (selectionTypeData === "DOMAIN") {
+              return Number(data.answer);
+            }
+          }
+        });
+      }
+
+      if (shouldFillOptionId) {
+        setFormData(optionIdObj);
+      } else {
+        setFormData(res.data.userAnswerModel.answersModel[0].answer);
+      }
     } catch (error) {
       console.log(error);
     } finally {

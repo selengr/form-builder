@@ -54,7 +54,8 @@ import { Dispatch, SetStateAction } from "react";
       returnQuestionId: number;  
       elseQuestionId: number | null; 
       frontConditionData: string; 
-  }
+      id? : number
+   }
   
   
   export interface IGetCondition {

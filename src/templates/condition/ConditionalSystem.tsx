@@ -1,5 +1,6 @@
 "use client"
 import { FormProvider } from "react-hook-form"
+import { useParams, useRouter } from "next/navigation"
 import { Box, Typography, Button } from "@mui/material"
 
 import { SubCondition } from "./SubCondition"
@@ -17,7 +18,6 @@ import { usePostCondition } from "@/app/(builder)/builder/[id]/condition/_hooks/
 import { useGetQacWithOutFilter } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter"
 import { useGetOnlyAllQuestions } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllQuestions"
 import { useGetOnlyAllCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation"
-import { useParams, useRouter } from "next/navigation"
 
 
 
@@ -37,9 +37,8 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
     handleAddSubCondition,
     handleRemoveSubCondition,
   } = useConditionalForm(condition)
-  console.log("condition======",condition)
 
-  const { qacWithOutFilter, qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter()
+  const { qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter()
   const { onlyAllQuestions, onlyAllQuestionsOptions, onlySomeQuestionsOptions, isFetchingOnlyAllQuestions } =
     useGetOnlyAllQuestions()
   const { onlyAllCalculationOptions, isFetchingOnlyAllCalculation } = useGetOnlyAllCalculation()
@@ -47,10 +46,9 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
   const postCondition = usePostCondition(isEdit);
 
   const onSubmit = (input: TConditionFormData) => {
-    console.log("Submitted data:", input);
 
     const transformInputToOutput = (input : TConditionFormData) : any => {
-      return input.conditions.map((condition : TConditionData) => {
+      return input.conditions.map((condition : TConditionData,index) => {
         const { subConditions, returnQuestionId, elseQuestionId } = condition;
 
         const conditionFormula = subConditions
@@ -104,22 +102,19 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
               : baseCondition;
           })
           .join("");
-
+          
         return {
-          conditionFormula: conditionFormula,
           formBuilderId: Number(id),
-          // returnQuestionId: Number(returnQuestionId.replace(/\D/g, ''), 10),
-          // elseQuestionId: Number(elseQuestionId.replace(/\D/g, ''), 10),
+          conditionFormula: conditionFormula,
+          elseQuestionId: Number(elseQuestionId.replace(/\D/g, '')) !== 0 ? Number(elseQuestionId.replace(/\D/g, '')) : null,
           returnQuestionId: Number(returnQuestionId.replace(/\D/g, '')),
-          elseQuestionId: Number(elseQuestionId.replace(/\D/g, '')),
-          frontConditionData: JSON.stringify(input)
+          frontConditionData: JSON.stringify(input.conditions[index]),
+          ...(isEdit && { id: Number(condition.id) }) 
         };
       });
     };
 
     const output : IPostCondition[] = transformInputToOutput(input);
-  
-    console.log("output",output);    
     
     postCondition.mutate(
       { data: output },

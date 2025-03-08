@@ -7,7 +7,7 @@ interface IConditionCardOperatorProps {
 }
 
 export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ condition }) => {
-  const parseCondition : TConditionData[] = JSON.parse(condition?.frontConditionData).conditions
+  const parseCondition : TConditionData = JSON.parse(condition?.frontConditionData)
 
   const formatValue = (item:TSubConditionData) => {
     if (item.operatorType?.split("@")[0] === "OPTION" && item.questionType?.split("*")[0] === "MULTIPLE_CHOICE_MULTI_SELECT") {
@@ -22,7 +22,7 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
 
   return (
     <div className="flex flex-col">
-      {parseCondition[0]?.subConditions?.map((item:TSubConditionData) => {
+      {parseCondition?.subConditions?.map((item:TSubConditionData) => {
           const logicalOperator = item.logicalOperator?.split("@")[1] ?? "اگر";
           const conditionType = item.conditionType?.split("@")[1];
           const questionType = item.questionType?.split("@")[1];
@@ -39,13 +39,13 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
       })}
       <span className="text-[#161616] text-sm">
         <span>در اینصورت برو به: </span>
-        <span className="text-[#1758BA]">{parseCondition[0].returnQuestionId.toString()?.split("@")[1]}</span>
+        <span className="text-[#1758BA]">{parseCondition?.returnQuestionId?.split("@")[1]}</span>
       </span>
-      {parseCondition[0].elseQuestionId && (
+      {parseCondition?.elseQuestionId && (
         <span className="text-[#161616] text-sm">
           <span>در غیر اینصورت برو به:</span>
           <span className="text-[#1758BA]">
-            {parseCondition[0].elseQuestionId.toString()?.split("@")[1]}
+            {parseCondition?.elseQuestionId.toString()?.split("@")[1]}
           </span>
         </span>
       )}

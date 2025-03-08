@@ -11,8 +11,8 @@ enum HttpMethod {
   PUT = 'put',
 }
 
-const postCalculation = async (data : IPostCondition[], method: HttpMethod) => {
-    const url = `/condition`;
+const postCalculation = async (data : IPostCondition[], method: HttpMethod, isEdit : boolean) => {
+    const url = isEdit ? `/condition/${data[0].id}` : `/condition`;
     const response = await AxiosApi[method](url,data);
     return response.data;
   };
@@ -25,7 +25,7 @@ export const usePostCondition = (isEdit:boolean) => {
   const mutation = useMutation({
     mutationKey: ['post-condition'],
     mutationFn: ({ data }: { data: IPostCondition[] }) =>
-        postCalculation(data, method  ),
+        postCalculation(data, method, isEdit ),
 
     onSuccess: (data) => {
       toast.success(`شرط با موفقیت ${isEdit ? "ویرایش" : "ایجاد"} شد`);

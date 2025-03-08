@@ -25,9 +25,9 @@ const propertiesSchema = z.object({
         .min(2, { message: "حداقل باید 2 و حداکثر 100 کاراکتر باشد" })
         .max(100, { message: "حداقل باید 2 و حداکثر 100 کاراکتر باشد" })
     ),
-  PublicationMainPageMethod: z.boolean().default(false),
+  PublicationMainPageMethod: z.boolean(),
   capacityPublicLink: z.number(),
-  showUser: z.boolean().default(false),
+  showUser: z.boolean(),
 });
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;

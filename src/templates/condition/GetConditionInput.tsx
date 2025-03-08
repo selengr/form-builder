@@ -347,16 +347,17 @@ export const getInput = (
             >
               <DatePickerCustome
                 min={new Date().setDate(new Date().getDate() - 1)}
-                value={value ? value : new Date()}
+                value={value}
                 onChange={(date) => {
                   setValue(field?.name, date);
                 }}
+                inputClass="h-[52px] min-w-[215px] w-full border-[1px] border-[#DDE1E6] rounded-[10px] text-center"
               />
             </Box>
           )}
         />
       );
-    // need to change the list
+
     case "TEXT_FIELD_DATE_QUESTION_#beforeDate":
     case "TEXT_FIELD_DATE_QUESTION_#afterDate":
       return (

@@ -16,6 +16,7 @@ const ConditionSchema = z.object({
   subConditions: z.array(SubConditionSchema),
   returnQuestionId: z.string().min(1, { message: "اين فيلد الزامي است" }),
   elseQuestionId: z.string(),
+  id: z.number().optional(),
 })
 
 export const ConditionFormSchema = z.object({

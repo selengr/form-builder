@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, useFieldArray } from "react-hook-form"
 import { ConditionFormSchema, TConditionData, TSubConditionData, type TConditionFormData } from "@/lib/ConditionFormSchema"
 import { idGenerator } from "@/lib/idGenerator"
+import { IGetCondition } from "@/types/condition"
 
 
 
@@ -21,19 +22,20 @@ export const createNewSubCondition = () => ({
   })
 
 
-  const transformOutputToInput = (condition : TConditionData ) : TConditionData => {
+  const transformOutputToInput = (conditionJson : IGetCondition ) : TConditionData => {
    
-      const { subConditions, returnQuestionId, elseQuestionId } = condition;
+      const { frontConditionData } = conditionJson;
+      const  conditions = JSON.parse(frontConditionData);
+      const { subConditions, returnQuestionId, elseQuestionId   } = conditions
 
       const SubConditionsData : TSubConditionData[] = subConditions
-        .map((subCondition : TSubConditionData) => {
+        ?.map((subCondition : TSubConditionData) => {
+          const id = subCondition.id
           const conditionType = subCondition.conditionType?.split("@")[0];
           const questionType = subCondition.questionType?.split("@")[0];
           const operatorType = subCondition.operatorType?.split("@")[0];
           const logicalOperator = subCondition.logicalOperator?.split("@")[0];
-          // const id = subCondition.id
           let value : string | string[] = ""
-  
 
           // if(questionType === "MULTIPLE_CHOICE_MULTI_SELECT_OPTION"){}
           
@@ -56,6 +58,7 @@ export const createNewSubCondition = () => ({
         });
 
       return {
+        id : conditionJson.id,
         returnQuestionId: returnQuestionId?.split("@")[0],
         elseQuestionId: elseQuestionId?.split("@")[0],
         subConditions : SubConditionsData
@@ -64,7 +67,7 @@ export const createNewSubCondition = () => ({
   };
 
 
-export const useConditionalForm = (condition: TConditionData  | undefined) => {
+export const useConditionalForm = (condition: IGetCondition  | undefined) => {
 
   const methods = useForm<TConditionFormData>({
     resolver: zodResolver(ConditionFormSchema),
@@ -72,8 +75,6 @@ export const useConditionalForm = (condition: TConditionData  | undefined) => {
       conditions: [!!condition ? transformOutputToInput(condition):createNewCondition()],
     },
   })
-
-  // console.log("=====================",transformOutputToInput(condition))
 
   const {
     control,

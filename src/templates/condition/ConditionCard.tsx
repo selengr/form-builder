@@ -1,13 +1,14 @@
-  import { LoadingButton } from "@mui/lab";
-  import { SlPencil } from "react-icons/sl";
-  import { useCallback, useState } from "react";
+import { LoadingButton } from "@mui/lab";
+import { SlPencil } from "react-icons/sl";
+import { useCallback, useState } from "react";
+import { IGetCondition } from "@/types/condition";
   import { Menu, Typography } from "@mui/material";
   import { EditConditionDialog } from "./EditConditionDialog";
   import { ConditionCardOperator } from './ConditionCardOperator'; 
   import { WeuiDeleteOutlined } from "../../../public/images/icons/DeleteIcon";
   import { PhDotsThreeVerticalBold } from "../../../public/images/icons/PhDotsThreeVerticalBold";
 import { useDeleteCondition } from '../../app/(builder)/builder/[id]/condition/_hooks/useDeleteCondition';
-import { IGetCondition } from "@/types/condition";
+
   
   export function ConditionCard({ condition, index }: { condition: IGetCondition, index : number }) {
     const [openDialog, setOpen] = useState<boolean>(false);
@@ -24,9 +25,10 @@ import { IGetCondition } from "@/types/condition";
       setAnchorEl(null);
     }, []);
   
-    const handleDelete = useCallback((id : number) => {
+    const handleDelete = (id : number) => {
       deleteCondition(Number(id))
-    }, []);
+      handleClose()
+    };
 
   
     return (

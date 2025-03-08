@@ -1,4 +1,5 @@
 import { toast } from 'sonner';
+import { useRouter } from "next/navigation";
 import { useParams } from 'next/navigation';
 import AxiosApi from '@/services/axios/AxiosApi';
 import { useMutation } from '@tanstack/react-query';
@@ -14,15 +15,20 @@ const deleteCalculation = async (id : number) => {
 
 export const useDeleteCondition = () => {
   const { id } = useParams();
+  const {refresh} = useRouter()
 
   const mutation = useMutation({
     mutationKey: ['delete-condition'],
     mutationFn: (id:number) => deleteCalculation(id),
 
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [`/builder/${id}/condition`],
       });
+      toast.success(`شرط با موفقیت حذف شد`);
+      setTimeout(() => {
+         refresh()
+      }, 500);
     },
     onError: () => {
       toast.error("عملیات ناموفق بود مجددا تلاش کنید");

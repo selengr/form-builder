@@ -3,6 +3,7 @@
 import { IGetCondition } from "@/types/condition";
 import { ConditionCard } from "./ConditionCard";
 import CreateCondition from "./CreateCondition";
+import { idGenerator } from "@/lib/idGenerator";
 
 interface IConditionListProps {
   conditions: IGetCondition[];
@@ -18,9 +19,9 @@ const ConditionList: React.FC<IConditionListProps> = ({ conditions }) => {
         >
           {conditions?.map((condition: IGetCondition, index: number) => (
             // eslint-disable-next-line react/jsx-key
-            <> 
-            {index < 2 && <ConditionCard condition={condition} index={index} />}
-            </>
+            <div  key={idGenerator()}> 
+              {condition.id > 114 && <ConditionCard condition={condition} index={index} />}
+            </div>
           ))}
         </div>
       )}

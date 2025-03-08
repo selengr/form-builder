@@ -106,7 +106,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
         return {
           formBuilderId: Number(id),
           conditionFormula: conditionFormula,
-          elseQuestionId: Number(elseQuestionId.replace(/\D/g, '')),
+          elseQuestionId: Number(elseQuestionId.replace(/\D/g, '')) !== 0 ? Number(elseQuestionId.replace(/\D/g, '')) : null,
           returnQuestionId: Number(returnQuestionId.replace(/\D/g, '')),
           frontConditionData: JSON.stringify(input.conditions[index]),
           ...(isEdit && { id: Number(condition.id) }) 

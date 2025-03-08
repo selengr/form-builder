@@ -224,19 +224,19 @@ function FormComponent({
   elementInstance,
   onChange,
   error,
+  value,
 }: {
   elementInstance?: FormElementInstance;
   onChange?: (value: string) => void;
   error?: string;
+  value?: any;
 }) {
   const element = elementInstance as CustomInstance;
   const isMultipleChoiceSelectionAllowed: boolean =
     element?.questionPropertyList?.find(
       (el: any) => el?.questionPropertyEnum === "MULTI_SELECT"
     )?.value === "true";
-  const [selectedValue, setSelectedValue] = useState<any[] | any>(
-    !isMultipleChoiceSelectionAllowed ? null : []
-  );
+  const [selectedValue, setSelectedValue] = useState<any>(value);
   const description = element?.questionPropertyList?.find(
     (el) => el.questionPropertyEnum === "DESCRIPTION"
   )?.value;
@@ -324,7 +324,7 @@ function FormComponent({
                 onChange={handleChange}
                 control={
                   <Checkbox
-                  // checked={selectedValue?.includes(String(option.id))}
+                    checked={selectedValue?.includes(String(option.id))}
                   />
                 }
                 label={
@@ -373,11 +373,7 @@ function FormComponent({
               <FormControlLabel
                 key={option?.id}
                 value={option?.id}
-                control={
-                  <Radio
-                  // checked={selectedValue?.includes(String(option.id))}
-                  />
-                }
+                control={<Radio checked={selectedValue == option.id} />}
                 sx={{
                   "& img": {
                     width: { xs: "105px", sm: "164px" },

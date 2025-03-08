@@ -66,18 +66,27 @@ export default function ParticipateFormPage() {
       response.questionPropertyList,
       "TEXT_FIELD_PATTERN"
     );
+    const isMultiSelect = extractProperty(
+      response.questionPropertyList,
+      "MULTI_SELECT"
+    );
 
     if (response.questionType === "SPECTRAL") {
-      // ^ Previos data saves
-      // ^ spectral
       setFormData(
         selectionTypeData === "DOMAIN"
           ? [Number(startData), Number(endData)]
           : Number(startData)
       );
+    } else if (
+      response.questionType === "MULTIPLE_CHOICE" ||
+      response.questionType === "MULTIPLE_CHOICE_IMAGE"
+    ) {
+      if (isMultiSelect === "true") {
+        setFormData([]);
+      } else {
+        setFormData("");
+      }
     } else {
-      // ^ Previos data saves
-      // ^ spectral
       setFormData("");
     }
 

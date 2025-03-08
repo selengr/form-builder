@@ -68,7 +68,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
               { value: "&&", label: "و" },
               { value: "||", label: "یا" },
             ]}
-            sx={{ minWidth: 58,mr: 1, ml : "-4px" }}
+            sx={{ minWidth: 58,maxWidth: 58,mr: 1, ml : "-4px",pr: "10px" }}
           />
         )}
       </Box>

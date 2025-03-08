@@ -8,14 +8,27 @@ interface IConditionCardOperatorProps {
 
 export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ condition }) => {
   const parseCondition : TConditionData = JSON.parse(condition?.frontConditionData)
-  const formatValue = (item:TSubConditionData) => {
+  const formatValue = (item:TSubConditionData) => {debugger
     if (item.operatorType?.split("@")[0] === "OPTION" && item.questionType?.split("*")[0] === "MULTIPLE_CHOICE_MULTI_SELECT") {
       const op : string[] = []
       if(Array.isArray(item.value)){
             item.value?.map((item:string)=>op.push(item?.toString()?.split("@")[1]))
       } 
       return op.join(" , ");      
-    } else return item.value?.toString()?.split("@")[0];  
+    } else if (item.operatorType?.split("@")[0] === "OPTION" && item.questionType?.split("*")[0] === "MULTIPLE_CHOICE") {
+        return (item?.operatorType?.split("@")[1])
+    }
+     else if (item.operatorType?.split("@")[0] === "QUESTION" || item.operatorType?.split("@")[0] === "CALCULATION"  && item.questionType?.split("*")[0] === "MULTIPLE_CHOICE") {
+        return (item?.operatorType?.split("@")[1])
+    }
+    
+     else if (item.operatorType?.split("@")[0] === "QUESTION" || item.operatorType?.split("@")[0] === "CALCULATION" && item.questionType?.split("*")[0] === "TEXT_FIELD_NUMBER") {
+        return (item?.operatorType?.split("@")[1])
+    }
+     else if (item.operatorType?.split("@")[0] === "CALCULATION" && item.questionType?.split("*")[0] === "SPECTRAL") {
+        return (item?.operatorType?.split("@")[1])
+    }
+     else return item.value?.toString()?.split("@")[0];  
 }
 
   const logicalOperatorMap: Record<string, string> = {

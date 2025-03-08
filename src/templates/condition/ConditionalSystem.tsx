@@ -102,7 +102,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
               : baseCondition;
           })
           .join("");
-          debugger
+          
         return {
           formBuilderId: Number(id),
           conditionFormula: conditionFormula,

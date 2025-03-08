@@ -12,27 +12,19 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
 const formatValue = (item: TSubConditionData) => {
   const operatorType = item.operatorType?.split("@")[0];
   const questionType = item.questionType?.split("*")[0];
-
-  // Handle multiple choice multi-select
   if (operatorType === "OPTION" && questionType === "MULTIPLE_CHOICE_MULTI_SELECT") {
     return Array.isArray(item.value)
       ? item.value.map((val: string) => val.split("@")[1]).join(" , ")
       : "";
   }
-
-  // Define a mapping for operator and question types
   const operatorMapping: Record<string, string[]> = {
     "OPTION": ["MULTIPLE_CHOICE", "TEXT_FIELD_NUMBER"],
     "QUESTION": ["MULTIPLE_CHOICE", "TEXT_FIELD_NUMBER","TEXT_FIELD_DATE","CALCULATION","SPECTRAL"],
     "CALCULATION": ["MULTIPLE_CHOICE", "TEXT_FIELD_NUMBER", "SPECTRAL", "CALCULATION"],
   };
-
-  // Check if the operatorType and questionType match the mapping
   if (operatorMapping[operatorType]?.includes(questionType)) {
     return item.operatorType?.split("@")[1] || "";
   }
-
-  // Fallback for other cases
   return item.value?.toString()?.split("@")[0] || "";
 };
 

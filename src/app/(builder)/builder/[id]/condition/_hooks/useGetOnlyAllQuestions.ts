@@ -60,10 +60,22 @@ export const useGetOnlyAllQuestions = () => {
     label: item.caption,
   }));
 
+
+  const onlyAllDateOptions = data?.dataList
+  ?.filter((item : IConditionQuestionType) => {
+    const isTextFieldDate = item.extMap.TEXT_FIELD_PATTERN === "DATE";
+    return isTextFieldDate
+  })
+  ?.map((item : IConditionQuestionType) => ({
+    value: `${item?.extMap.UNIC_NAME}@${item.caption}`,
+    label: item.caption,
+  }));
+
   return {
     isFetchingOnlyAllQuestions: isFetching,
     onlyAllQuestions: data?.dataList,
     onlyAllQuestionsOptions,
     onlySomeQuestionsOptions,
+    onlyAllDateOptions
   };
 };

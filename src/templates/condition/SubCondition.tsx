@@ -17,6 +17,7 @@ type SubConditionProps = {
   onlyAllCalculationOptions: any[]
   isFetchingOnlyAllCalculation: boolean
   onlyAllQuestions: any[]
+  onlyAllDateOptions: any[]
 }
 
 export const SubCondition: React.FC<SubConditionProps> = ({
@@ -31,6 +32,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
   onlyAllCalculationOptions,
   isFetchingOnlyAllCalculation,
   onlyAllQuestions,
+  onlyAllDateOptions
 }) => {
   const { control, setValue } = useFormContext()
   const currentValues = useWatch({
@@ -165,6 +167,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
           onlyAllCalculationOptions,
           isFetchingOnlyAllCalculation,
           onlyAllQuestions,
+          onlyAllDateOptions,
           control,
           setValue,
         },

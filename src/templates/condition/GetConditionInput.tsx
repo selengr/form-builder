@@ -168,6 +168,7 @@ export const getInput = (
     onlyAllCalculationOptions,
     isFetchingOnlyAllCalculation,
     onlyAllQuestions,
+    onlyAllDateOptions,
     control,
     setValue,
   } : any,
@@ -363,7 +364,7 @@ export const getInput = (
       return (
         <SelectController
           name={field.name}
-          options={onlySomeQuestionsOptions}
+          options={onlyAllDateOptions}
           isLoading={isFetchingOnlyAllQuestions}
           sx={{ minWidth: 215 }}
         />

@@ -39,8 +39,13 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
   } = useConditionalForm(condition)
 
   const { qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter()
-  const { onlyAllQuestions, onlyAllQuestionsOptions, onlySomeQuestionsOptions, isFetchingOnlyAllQuestions } =
-    useGetOnlyAllQuestions()
+  const {
+     onlyAllQuestions,
+     onlyAllDateOptions, 
+     onlyAllQuestionsOptions,
+      onlySomeQuestionsOptions,
+       isFetchingOnlyAllQuestions
+       } = useGetOnlyAllQuestions()
   const { onlyAllCalculationOptions, isFetchingOnlyAllCalculation } = useGetOnlyAllCalculation()
 
   const postCondition = usePostCondition(isEdit);
@@ -158,6 +163,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
                   onlyAllCalculationOptions={onlyAllCalculationOptions}
                   isFetchingOnlyAllCalculation={isFetchingOnlyAllCalculation}
                   onlyAllQuestions={onlyAllQuestions}
+                  onlyAllDateOptions={onlyAllDateOptions}
                 />
               ))}
               <Box

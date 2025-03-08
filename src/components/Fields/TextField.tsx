@@ -27,8 +27,6 @@ import useActionDesigner from "@/hooks/useActionDesigner";
 import { useResponsive } from "@/hooks/useResponsive";
 import TextBlockIcon from "@/../public/images/home-page/text-block.svg";
 import DatePicker from "react-multi-date-picker";
-import persian from "react-date-object/calendars/persian";
-import persian_fa from "react-date-object/locales/persian_fa";
 import "react-multi-date-picker/styles/layouts/mobile.css";
 import { SwitchButton } from "../Switch/SwitchButton";
 import TextFieldPair from "../TextFieldPair/TextFieldPair";
@@ -36,6 +34,7 @@ import TimePickerStyled from "../SettingsDialog/TimePicker.styled";
 import TimePicker from "react-multi-date-picker/plugins/analog_time_picker";
 import { GoClock } from "react-icons/go";
 import { BsCalendarDate } from "react-icons/bs";
+import { DatePicker as DatePickerCustome } from "../DatePicker/DatePicker";
 
 const questionType: ElementsType = "TEXT_FIELD";
 
@@ -190,7 +189,7 @@ const FormComponent = memo(function FormComponent({
   isPreview?: boolean;
 }) {
   const element = elementInstance as CustomInstance;
-  const isMobile = useResponsive("down", "sm");
+
   const fieldPattern = element.questionPropertyList.find(
     (el) => el.questionPropertyEnum === "TEXT_FIELD_PATTERN"
   )?.value;
@@ -207,8 +206,12 @@ const FormComponent = memo(function FormComponent({
   let content;
 
   const handleLocalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    onChange?.(newValue);
+    if (fieldPattern === "DATE") {
+      onChange?.(e as any);
+    } else {
+      const newValue = e?.target?.value;
+      onChange?.(newValue);
+    }
   };
 
   switch (fieldPattern) {
@@ -393,17 +396,10 @@ const FormComponent = memo(function FormComponent({
               border={!error ? "1px solid #d4d4d4" : "1px solid #f44336"}
               textAlign="center"
             >
-              <DatePicker
-                shadow={false}
-                calendar={persian}
-                locale={persian_fa}
-                value={isPreview ? undefined : value}
-                onChange={isPreview ? (undefined as any) : handleLocalChange}
-                className={isMobile ? "rmdp-mobile" : ""}
-                zIndex={9999}
-                inputClass={`h-[50px] px-4 border-none outline-none w-full rounded-xl text-center p-1`}
-                highlightToday
-                portal
+              <DatePickerCustome
+                inputClass="h-[50px] px-4 border-none outline-none w-full rounded-xl text-center p-1"
+                value={value}
+                onChange={handleLocalChange as any}
               />
               <BsCalendarDate size="1.6rem" className="ml-2" color="#424242" />
             </Box>

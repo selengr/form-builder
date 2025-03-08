@@ -56,7 +56,7 @@ export default function ParticipateFormPage() {
     );
     const selectionTypeData = extractProperty(
       response.questionPropertyList,
-      "SELECTION_TYPE"
+      "SPECTRAL_TYPE"
     );
     const minLengthData = extractProperty(
       response.questionPropertyList,

@@ -361,7 +361,9 @@ function FormComponent({
     (el) => el.questionPropertyEnum === "DESCRIPTION"
   )?.value;
 
-  const [sliderVal, setSliderVal] = useState(value);
+  const [sliderVal, setSliderVal] = useState(
+    value ? value : spectralType === "SPECTRAL" ? start : [start, end]
+  );
 
   const CustomValueLabel = ({ value }: { value: number }) => {
     const isMark = marks.some((mark) => mark.value === value);
@@ -400,7 +402,7 @@ function FormComponent({
           {description}
         </Typography>
       )}
-      {selectionType === "SPECTRAL" ? (
+      {spectralType === "SPECTRAL" ? (
         <>
           <MyRangeSlider
             valueLabelFormat={(val: any) => <CustomValueLabel value={val} />}
@@ -422,7 +424,7 @@ function FormComponent({
             onChange={handleChange}
             size="medium"
             valueLabelDisplay="auto"
-            step={spectralType === "DISCRETE" ? step : 0.1}
+            step={selectionType === "DISCRETE" ? step : 0.1}
             min={start}
             max={end}
             marks={marks}

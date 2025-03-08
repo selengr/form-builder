@@ -19,6 +19,7 @@ interface Props {
   value?: string;
   min?: any;
   max?: any;
+  inputClass?: any;
   disabled?: boolean;
 }
 
@@ -33,6 +34,7 @@ export function DatePicker({
   value,
   min,
   max,
+  inputClass,
   disabled = false,
 }: Props) {
   const [selectedDay, setSelectedDay] = useState<any>(
@@ -63,10 +65,14 @@ export function DatePicker({
         onChange={setSelectedDay}
         containerClassName="w-full"
         zIndex={9999}
-        inputClass={`h-[55px] max-w-[500px] w-full px-4 border-[1px] rounded-[10px] text-center font-bold p-1 ${
+        inputClass={`${
           error
             ? "border-[#f87171] shadow-[0_0_0_4px_#E11D2B33]"
             : "border-neutral-300"
+        } ${
+          inputClass
+            ? inputClass
+            : "h-[55px] max-w-[500px] w-full px-4 border-[1px] rounded-[10px] text-center font-bold p-1"
         }`}
         value={selectedDay}
         calendar={persian}

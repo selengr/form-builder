@@ -37,6 +37,7 @@ export default function ListGridWrapper() {
 
   return (
     <ListGrid
+      title="گزارش ها"
       searchBoxList={searchBoxList}
       filterBoxList={filterBoxList}
       url="/form/main-list/"

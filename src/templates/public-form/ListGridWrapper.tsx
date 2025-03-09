@@ -28,6 +28,7 @@ export default function ListGridWrapper() {
       CartComponent={(item: any) => <ListCard {...item} />}
       disableFilter
       searchQueryFilter={formType}
+      title="فرم‌های عمومی"
     />
   );
 }

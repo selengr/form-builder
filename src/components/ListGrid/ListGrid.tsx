@@ -40,6 +40,7 @@ interface Props {
   textTotal?: any;
   searchQueryFilter: any;
   showCreateButton?: boolean;
+  title: string;
 }
 
 let totalData: any = null;
@@ -86,6 +87,7 @@ const ListGrid: React.FC<Props> = ({
   disableFilter,
   searchQueryFilter,
   showCreateButton = false,
+  title,
   textTotal = ["", "عدد"],
 }) => {
   const { ref, inView } = useInView();
@@ -220,7 +222,7 @@ const ListGrid: React.FC<Props> = ({
               <MdOutlineKeyboardArrowRight color="#292D32" />
             </IconButton>
             <p className="text-[16px] text-center font-bold text-[#161616]">
-              فرم‌های من
+              {title}
             </p>
           </div>
 

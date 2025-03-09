@@ -43,7 +43,7 @@ export default function ListCard(props: any) {
           <button
             className="bg-[#1758BA] hover:bg-[#216ee1] transition-all duration-200 max-w-[200px] px-2 h-[36px] w-full text-[14px] rounded-lg text-white"
             onClick={() => {
-              // router.push(`/preview/${props.data.id}`);
+              router.push(`/form/${props.data.id}`);
             }}
           >
             شرکت در آزمون

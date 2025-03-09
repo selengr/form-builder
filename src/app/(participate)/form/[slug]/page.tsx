@@ -115,7 +115,7 @@ export default function ParticipateFormPage() {
           "/take-part/check-response-limitation-form",
           {
             link: slug.startsWith("public-") ? slug : null,
-            id: slug.startsWith("form-") ? slug : null,
+            id: !slug.startsWith("public-") ? slug : null,
           }
         );
 
@@ -153,7 +153,7 @@ export default function ParticipateFormPage() {
       try {
         const response = await AxiosApi.post("/take-part", {
           link: slug.startsWith("public-") ? slug : null,
-          formId: slug.startsWith("form-") ? slug : null,
+          formId: !slug.startsWith("public-") ? slug : null,
           username: null,
         });
 

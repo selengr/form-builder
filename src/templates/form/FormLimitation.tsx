@@ -84,7 +84,7 @@ export default function FormLimitation({
         "/take-part/check-answer-to-form-before",
         {
           link: slug.startsWith("public-") ? slug : null,
-          formId: slug.startsWith("form-") ? slug : null,
+          formId: !slug.startsWith("public-") ? slug : null,
           username: formValue,
         }
       );

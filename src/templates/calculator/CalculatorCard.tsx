@@ -42,7 +42,8 @@ justify-center items-center"
               {calculator.name ?? "--"}
             </h3>
             <span className="text-[#393939] text-xs">
-              {calculator.theFormula ?? "--"}
+              {/* {calculator.theFormula ?? "--"} */}
+              #محاسبه گر
             </span>
           </div>
         </div>

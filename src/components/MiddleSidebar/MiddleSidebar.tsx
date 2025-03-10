@@ -14,23 +14,23 @@ const allLinks = [
   { id: 1, title: "ساخت فرم", icon: Additem, link: "/builder" },
   { id: 2, title: "فرم‌های عمومی", icon: MusicPlaylist, link: "/public-form" },
   {
-    id: 2,
+    id: 3,
     title: "ارزیابی‌های من",
     icon: MusicPlaylist,
     link: "/my-assessments",
   },
   {
-    id: 2,
+    id: 4,
     title: "گزارش ها",
     icon: MusicPlaylist,
     link: "/reports",
   },
-  { id: 3, title: "آموزش", icon: ChartSquare, link: "" },
-  { id: 4, title: "ارتباط با ما", icon: GroupSquare, link: "" },
-  { id: 5, title: "تراکنش‌ها", icon: Wallet, link: "" },
-  { id: 6, title: "سوالات پرتکرار", icon: ShoppingCart, link: "" },
-  { id: 7, title: "قوانین و مقررات", icon: Wallet, link: "" },
-  { id: 8, title: "آپلودر", icon: Additem, link: "/uploader" },
+  { id: 5, title: "آموزش", icon: ChartSquare, link: "" },
+  { id: 6, title: "ارتباط با ما", icon: GroupSquare, link: "" },
+  { id: 7, title: "تراکنش‌ها", icon: Wallet, link: "" },
+  { id: 8, title: "سوالات پرتکرار", icon: ShoppingCart, link: "" },
+  { id: 9, title: "قوانین و مقررات", icon: Wallet, link: "" },
+  { id: 10, title: "آپلودر", icon: Additem, link: "/uploader" },
 ];
 
 export default function MiddleSidebar() {

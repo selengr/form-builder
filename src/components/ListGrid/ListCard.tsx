@@ -21,6 +21,11 @@ const formTypePersian: any = {
   COMPETITION: "مسابقه",
 };
 
+const formStatusPersian: any = {
+  CREATE: "ساخته شده",
+  PUBLISH: "انتشار یافته",
+};
+
 export default function ListCard(props: any) {
   const [loadingInvalidData, setLoadingInvalidData] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
@@ -105,15 +110,23 @@ export default function ListCard(props: any) {
           <span className="text-[14px]">تعداد گویه:</span>
           <p className="text-[14px] font-bold">{props.data.questionListSize}</p>
         </div>
+        <div className="flex gap-1 text-[#393939]">
+          <span className="text-[14px]">وضعیت:</span>
+          <p className="text-[14px] font-bold">
+            {formStatusPersian[props.data.status]}
+          </p>
+        </div>
         <div className="flex w-full gap-2 justify-center">
-          <button
-            className="bg-[#1758BA] hover:bg-[#216ee1] transition-all duration-200 max-w-[350px] px-2 h-[36px] w-full text-[14px] rounded-lg text-white"
-            onClick={() => {
-              router.push(`/preview/${props.data.id}`);
-            }}
-          >
-            مشاهده
-          </button>
+          {props.data.status !== "CREATE" && (
+            <button
+              className="bg-[#1758BA] hover:bg-[#216ee1] transition-all duration-200 max-w-[350px] px-2 h-[36px] w-full text-[14px] rounded-lg text-white"
+              onClick={() => {
+                router.push(`/preview/${props.data.id}`);
+              }}
+            >
+              مشاهده
+            </button>
+          )}
           <IconButton
             onClick={() => {
               setOpenConfirmDialog((prev) => !prev);
@@ -126,11 +139,13 @@ export default function ListCard(props: any) {
           <IconButton onClick={handleCopy} disabled={loadingInvalidData}>
             <Image src={CopyIcon} alt="" width={24} height={24} />
           </IconButton>
-          <IconButton disabled={loadingInvalidData}>
-            <Link href={`/builder/${props.data.id}`}>
-              <Image src={EditIcon} alt="" width={24} height={24} />
-            </Link>
-          </IconButton>
+          {props.data.status === "CREATE" && (
+            <IconButton disabled={loadingInvalidData}>
+              <Link href={`/builder/${props.data.id}`}>
+                <Image src={EditIcon} alt="" width={24} height={24} />
+              </Link>
+            </IconButton>
+          )}
           <IconButton disabled={loadingInvalidData}>
             <Link href={`/stats/${props.data.id}`} className="h-full w-full">
               <IoStatsChartOutline color="#424242" />

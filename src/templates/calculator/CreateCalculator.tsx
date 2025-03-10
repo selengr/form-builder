@@ -10,7 +10,7 @@ const buttonSx: SxProps<Theme> = {
   color: "#6F6F6F",
   cursor: "pointer",
   marginTop: "10px",
-  marginBottom: "50px",
+  marginBottom: "20px",
   alignItems: "center",
   justifyContent: "center",
   border: "1px dashed #DDE1E6",

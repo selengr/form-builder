@@ -201,7 +201,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
     };
 
     const newElements = [...elements];
-    newElements.splice(cursorIndex, 0, newElement);
+    newElements.splice(cursorIndex, 1, newElement);
 
     setElements(newElements);
 

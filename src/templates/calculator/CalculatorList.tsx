@@ -11,10 +11,11 @@ interface ICalculatorListProps {
 const CalculatorList: React.FC<ICalculatorListProps> = ({ calculators }) => {
   return (
     <div className="w-full max-w-md flex flex-col p-[13px]">
+      <CreateCalculator />
       {calculators.length > 0 && (
         <div
           dir="rtl"
-          className="bg-[#F7F7FF] rounded-lg p-[10px] w-full flex flex-col gap-3"
+          className="bg-[#F7F7FF] rounded-lg p-[10px] w-full flex flex-col gap-3 pb-10 mb-10"
         >
           {calculators?.map((calculator: ICalculator) => (
             // eslint-disable-next-line react/jsx-key
@@ -22,7 +23,6 @@ const CalculatorList: React.FC<ICalculatorListProps> = ({ calculators }) => {
           ))}
         </div>
       )}
-      <CreateCalculator />
     </div>
   );
 };

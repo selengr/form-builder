@@ -120,7 +120,6 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
     };
 
     const output : IPostCondition[] = transformInputToOutput(input);
-    
     postCondition.mutate(
       { data: output },
       {

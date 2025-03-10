@@ -10,6 +10,7 @@ export function insertMissingOperators(formula: string): string {
     correctedFormula = correctedFormula.replace(/#avgNumber$$(.*?)$$/g, (match, p1) => {
       return '#avgNumber(' + p1.replace(/,/g, '*') + ')';
     });
+    
   // new v of code for adding * between missing op
     console.log("html-to-formula-with-insert-missing-operators ===>", correctedFormula);
     return correctedFormula;

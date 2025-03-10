@@ -2,9 +2,10 @@
 import AxiosApi from '@/services/axios/AxiosApi';
 import { useQuery } from '@tanstack/react-query';
 import { IConditionQuestionType } from '@/types/condition';
+import { useParams } from 'next/navigation';
 
 
-const fetchData = async () => {
+const fetchData = async (id:string | string[]) => {
     const customComboFilterModel = {
         type: "COMBO",
         entity: "QUESTIONS",
@@ -13,7 +14,7 @@ const fetchData = async () => {
         page: 0,
         rows: 10000,
         extMap: {
-          formId: 21,
+          formId: id,
           typeRequest: "ONLY_ALL_QUESTIONS" 
         }
     }
@@ -28,10 +29,10 @@ const fetchData = async () => {
 
 
 export const useGetOnlyAllQuestions = () => {
-
+  const { id } = useParams();
   const { data, isFetching } = useQuery({
     queryKey: ['ONLY_ALL_QUESTIONS'],
-    queryFn: () => fetchData(),
+    queryFn: () => fetchData(id),
     staleTime: 0,
     gcTime: 600000,
     refetchOnWindowFocus: true,

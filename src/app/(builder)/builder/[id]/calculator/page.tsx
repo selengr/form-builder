@@ -22,7 +22,7 @@ export default async function Calculator({
 
   return (
     <div className="w-full min-h-full px-4 py-4 bg-[#f7f7f7]">
-      <div className="container mx-auto flex flex-col justify-start items-center h-screen bg-white rounded-xl w-full">
+      <div className="container mx-auto flex flex-col justify-start items-center h-full bg-white rounded-xl w-full">
         <DesignerTabs />
         <CalculatorList calculators={content} />
       </div>

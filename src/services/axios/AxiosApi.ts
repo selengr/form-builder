@@ -2,6 +2,7 @@ import axios from "axios";
 import { getServerSession } from "next-auth";
 import { getSession, signIn } from "next-auth/react";
 import { authOptions } from "../auth/authConfig";
+import { toast } from "sonner";
 
 const AxiosApi = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL_PSYA + "/psya",
@@ -50,6 +51,7 @@ AxiosApi.interceptors.response.use(
         errorMessage = "Bad Request";
       } else if (status === 409) {
         errorMessage = "Conflict";
+        toast.error(response.data.message[0].title);
       }
 
       console.error(errorMessage);

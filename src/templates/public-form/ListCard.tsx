@@ -7,6 +7,11 @@ const formTypePersian: any = {
   COMPETITION: "مسابقه",
 };
 
+const formStatusPersian: any = {
+  CREATE: "ساخته شده",
+  PUBLISH: "انتشار یافته",
+};
+
 export default function ListCard(props: any) {
   const router = useRouter();
 
@@ -37,7 +42,9 @@ export default function ListCard(props: any) {
         </div>
         <div className="flex gap-1 text-[#393939]">
           <span className="text-[14px]">وضعیت:</span>
-          <p className="text-[14px] font-bold">انجام نشده</p>
+          <p className="text-[14px] font-bold">
+            {formStatusPersian[props.data.status]}
+          </p>
         </div>
         <div className="flex w-full gap-2">
           <button

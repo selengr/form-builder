@@ -1,110 +1,72 @@
 "use client"
 
-import { useState } from "react"
-
-interface CartItemType {
-  id: string
-  title: string
-  quantity: number
-  price: number
-  type: string
-}
+import { useEffect, useState } from "react"
 
 
 import Image from "next/image";
 import { LoadingButton } from "@mui/lab";
-import { CartItem } from "@/templates/shopping-cart/invoice-item"
-import { InvoiceItem } from "@/templates/shopping-cart/cart-item"
+// import { CartItem } from "@/templates/shopping-cart/invoice-item"
+// import { InvoiceItem } from "@/templates/shopping-cart/cart-item"
+import { useGetPurchaseOrder } from "./_hook/useGetPurchaseOrder"
+import { CartItem } from "@/templates/shopping-cart/cart-item";
+import { InvoiceItem } from "@/templates/shopping-cart/invoice-item";
+import BuilderLoading from "../(builder)/builder/[id]/loading";
 
 
 export default function ShoppingCartPage() {
-  const [cartItems, setCartItems] = useState<CartItemType[]>([
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const {data:purchaseOrder,isLoading,error} = useGetPurchaseOrder()
 
-    {
-      id: "345",
-      title: "انتشار عمومی - فرم نظرسنجی دانشگاه",
-      quantity: 370,
-      price: 751000,
-      type: "ظرفیت"
-    },
-    {
-      id: "11",
-      title: "انتشار عمومی - فرم نظرسنجی دانشگاه",
-      quantity: 3,
-      price: 456000,
-      type: "ظرفیت"
-    },
-    {
-      id: "22",
-      title: "انتشار عمومی - فرم نظرسنجی دانشگاه",
-      quantity: 31,
-      price: 654000,
-      type: "ظرفیت"
-    },
-    {
-      id: "33",
-      title: "انتشار عمومی - فرم نظرسنجی دانشگاه",
-      quantity: 40,
-      price: 655000,
-      type: "ظرفیت"
-    },
-    {
-      id: "44",
-      title: "انتشار عمومی - فرم نظرسنجی دانشگاه",
-      quantity: 10,
-      price: 732000,
-      type: "ظرفیت"
-    },
-    {
-      id: "55",
-      title: "انتشار عمومی - فرم نظرسنجی دانشگاه",
-      quantity: 35,
-      price: 755000,
-      type: "ظرفیت"
-    },
-    {
-      id: "66",
-      title: "انتشار عمومی - فرم نظرسنجی دانشگاه",
-      quantity: 38,
-      price: 800000,
-      type: "ظرفیت"
-    },
-    {
-      id: "77",
-      title: "انتشار عمومی - فرم نظرسنجی دانشگاه",
-      quantity: 39,
-      price: 700000,
-      type: "ظرفیت"
-    },
-    {
-      id: "88",
-      title: "انتشار عمومی - فرم نظرسنجی دانشگاه",
-      quantity: 11,
-      price: 790000,
-      type: "ظرفیت"
-    },
-    {
-      id: "99",
-      title: "انتشار عمومی - فرم نظرسنجی دانشگاه",
-      quantity: 30,
-      price: 700000,
-      type: "ظرفیت"
-    },
-  ])
+  
+  useEffect(() => {
+    if (purchaseOrder && purchaseOrder.purchaseOrderDetailModels.length > 0) {
+      setSelectedIndex(0)
+    }
+  }, [purchaseOrder])
 
-  const handleRemoveItem = (id: string) => {
-    setCartItems(cartItems.filter((item) => item.id !== id))
+  const handleRemoveDetail = (index: number) => {
+    if (!purchaseOrder) return
+
+    const updatedPurchaseOrder = { ...purchaseOrder }
+    const updatedDetails = [...updatedPurchaseOrder.purchaseOrderDetailModels]
+    updatedDetails.splice(index, 1)
+
+    if (selectedIndex >= updatedDetails.length) {
+      setSelectedIndex(Math.max(0, updatedDetails.length - 1))
+    } else if (index === selectedIndex && updatedDetails.length > 0) {
+      setSelectedIndex(Math.min(selectedIndex, updatedDetails.length - 1))
+    }
+
   }
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price, 0)
-  const tax = Math.round(subtotal * 0.1) 
-  const total = subtotal + tax
+  const handleSelectItem = (index: number) => {
+    setSelectedIndex(index)
+  }
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("fa-IR").format(amount / 1000) + " هزار تومان"
   }
 
+  const subtotal = purchaseOrder?.totalAmount || 0
+  const tax = purchaseOrder?.tax || 0
+  const total = purchaseOrder?.payAble ?? subtotal + tax
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <BuilderLoading />
+        <span className="mr-2">در حال بارگذاری...</span>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen text-red-500">
+        <p>خطا در بارگذاری اطلاعات: {error.message}</p>
+      </div>
+    )
+  }
 
 
   return (
@@ -118,14 +80,21 @@ export default function ShoppingCartPage() {
         </div>
         <div className="w-full  justify-center items-center overflow-y-auto h-[calc(100%-80px)]">
           <div className="px-16 h-full">
-            {cartItems.length > 0 &&
+          {purchaseOrder && purchaseOrder.purchaseOrderDetailModels.length > 0 ? (
                 <div className="space-y-3 px-2 md:px-8">
-                {cartItems.map((item) => (
-                  <CartItem key={item.id} item={item} onRemove={() => handleRemoveItem(item.id)} />
+                 {purchaseOrder.purchaseOrderDetailModels.map((detail, index) => (
+                  <CartItem
+                    key={index}
+                    detail={detail}
+                    index={index}
+                    isSelected={index === selectedIndex}
+                    onSelect={() => handleSelectItem(index)}
+                    onRemove={() => handleRemoveDetail(index)}
+                  />
                 ))}
               </div>
-              }
-            {cartItems.length === 0 && (
+              
+            ) : (
               <div className="w-full h-[80%] justify-center items-center flex flex-col">
                 <Image
                   src="/images/home-page/empty-shopping-cart.svg"
@@ -149,10 +118,16 @@ export default function ShoppingCartPage() {
         </div>
         <div className="mb-3 overflow-y-auto flex-grow">
         <div className="space-y-2">
-                {cartItems.map((item, index) => (
-                  <InvoiceItem key={item.id} index={index + 1} item={item} />
-                ))}
-              </div>
+        {purchaseOrder &&
+              purchaseOrder.purchaseOrderDetailModels.length > 0 &&
+              selectedIndex < purchaseOrder.purchaseOrderDetailModels.length && (
+                <InvoiceItem
+                  key={selectedIndex}
+                  index={selectedIndex + 1}
+                  detail={purchaseOrder.purchaseOrderDetailModels[selectedIndex]}
+                />
+              )}
+           </div>
         </div>
         <div>
           <div className="bg-[#F7F7FF] rounded-[20px] w-ful text-center] my-[6px] mx-1 flex justify-center items-center flex-col p-4">

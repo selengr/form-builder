@@ -166,15 +166,16 @@ export function MultiSelectController({
 }: RHFMultiSelectProps) {
   const { control } = useFormContext();
 
-  const renderValues = (selectedIds: string[]) => {
-    const selectedItems = options.filter((item,index) =>{
-      console.log('***selectedIds[index]?.split("@")[0].includes(item.value) :>> ',   selectedIds[index]?.split("@")[0].includes(item.value));    
-      console.log('***selectedIds :>> ', selectedIds);
-      console.log('***item.value :>> ', item.value);
-      return selectedIds[index]?.split("@")[0].includes(item.value)
-     }
-    );
+  const renderValues = (selectedIds: string) => {
+      const selectedItems = options.filter((item) =>{
+          const updateValue : any[] = []
+          selectedIds?.split(",").map((item2:any)=>{
+          return updateValue.push(item2?.split("@")[0]);
+      })
 
+        return updateValue.includes(item.value)
+      }
+    );
     if (!selectedItems.length && placeholder) {
       return (
         <Box component="em" sx={{ color: "text.disabled" }}>
@@ -263,13 +264,15 @@ export function MultiSelectController({
               </MenuItem>
             )}
 
-              {options?.map((option,index) => {
-              const selected = field.value[index]?.split("@")[0].includes(option.value);
-              console.log('***field.value :>> ', field.value);
+              {options?.map((option,index) => {debugger
+              const selected = field.value.split(",")?.map((item:any)=>{
+                  return item.includes(option.value);
+              })
               return (
                 <MenuItem
                   key={option.value}
-                  value={option.value.includes("@")?option.value:option.value+"@"+option.label}
+                  // value={option.value.includes("@")?option.value:option.value+"@"+option.label}
+                  value={option.value}
                   sx={{
                     py: 1,
                     px: 2,

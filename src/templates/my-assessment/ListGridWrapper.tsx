@@ -52,7 +52,7 @@ export default function ListGridWrapper() {
       title="ارزیابی‌های من"
       searchBoxList={searchBoxList}
       filterBoxList={filterBoxList}
-      url="/form/main-list/"
+      url="/user/form/main-list/"
       filterComponent={
         <div className="flex h-full w-full flex-col items-center justify-between">
           <div className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4">
@@ -101,14 +101,24 @@ export default function ListGridWrapper() {
                       label="همه"
                     />
                     <FormControlLabel
-                      value="assessment"
+                      value="COMPETITION"
                       control={<Radio />}
-                      label="فرم ارزیابی"
+                      label="مسابقه"
                     />
                     <FormControlLabel
-                      value="survey"
+                      value="QUESTION"
                       control={<Radio />}
-                      label="تحقیقات کاربر"
+                      label="پرسشنامه"
+                    />
+                    <FormControlLabel
+                      value="SURVEY"
+                      control={<Radio />}
+                      label="نظرسنجی"
+                    />
+                    <FormControlLabel
+                      value="TEST"
+                      control={<Radio />}
+                      label="آزمون"
                     />
                   </RadioGroup>
                 </FormControl>
@@ -135,7 +145,7 @@ export default function ListGridWrapper() {
                     }}
                     id="demo-controlled-radio-buttons-group"
                   >
-                    بر اساس وضعیت
+                    بر اساس دسترسی
                   </FormLabel>
                   <RadioGroup
                     aria-labelledby="demo-controlled-radio-buttons-group"
@@ -149,14 +159,14 @@ export default function ListGridWrapper() {
                       label="همه"
                     />
                     <FormControlLabel
-                      value="done"
+                      value="PUBLIC"
                       control={<Radio />}
-                      label="انجام شده"
+                      label="عمومی"
                     />
                     <FormControlLabel
-                      value="unfinished"
+                      value="PRIVATE"
                       control={<Radio />}
-                      label="انجام نشده"
+                      label="خصوصی"
                     />
                   </RadioGroup>
                 </FormControl>

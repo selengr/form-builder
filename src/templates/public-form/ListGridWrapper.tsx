@@ -23,7 +23,7 @@ export default function ListGridWrapper() {
     <ListGrid
       searchBoxList={searchBoxList}
       filterBoxList={filterBoxList}
-      url="/form/main-list/"
+      url="/public-page/form/main-list/"
       filterComponent={null}
       CartComponent={(item: any) => <ListCard {...item} />}
       disableFilter

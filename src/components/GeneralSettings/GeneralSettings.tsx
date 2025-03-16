@@ -25,7 +25,7 @@ const propertiesSchema = z.object({
         .min(2, { message: "حداقل باید 2 و حداکثر 100 کاراکتر باشد" })
         .max(100, { message: "حداقل باید 2 و حداکثر 100 کاراکتر باشد" })
     ),
-  PublicationMainPageMethod: z.boolean(),
+  publicationMainPageMethod: z.boolean(),
   capacityPublicLink: z.number(),
   showUser: z.boolean(),
 });
@@ -44,7 +44,7 @@ export default function GeneralSettings({
     mode: "all",
     defaultValues: {
       link: "",
-      PublicationMainPageMethod: false,
+      publicationMainPageMethod: false,
       capacityPublicLink: 0,
       showUser: false,
     },
@@ -60,7 +60,7 @@ export default function GeneralSettings({
     try {
       const res = await AxiosApi.post(`/form-publish-setting/public-method`, {
         formId,
-        PublicationMainPageMethod: values.PublicationMainPageMethod,
+        publicationMainPageMethod: values.publicationMainPageMethod,
         capacityPublicLink: values.capacityPublicLink,
       });
       handleOpen();
@@ -187,7 +187,7 @@ export default function GeneralSettings({
         </Box>
         <Box display="flex" flexDirection="column">
           <Box display="flex" gap="4px" alignItems="center">
-            <RHFCheckBox label="" name="PublicationMainPageMethod" />
+            <RHFCheckBox label="" name="publicationMainPageMethod" />
             <Typography fontSize="12px" color="#161616">
               در صفحه عمومی سایا قابل مشاهده باشد.
             </Typography>

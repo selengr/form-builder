@@ -51,7 +51,7 @@ const withValidation = <Div extends WrappedComponentProps>(
         }
       }
 
-      if (validationRules.required && !val) {
+      if (validationRules.required && (!val || val.length === 0)) {
         isValid = false;
         errorMessage = "الزامی است";
       }

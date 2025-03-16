@@ -44,8 +44,10 @@ export default function ParticipateFormPage() {
   const { slug } = useParams<SlugParams>();
 
   const addNewQuestion = useCallback((response: any) => {
-    const requiredData =
-      extractProperty(response.questionPropertyList, "REQUIRED") === "true";
+    const requiredData = extractProperty(
+      response.questionPropertyList,
+      "REQUIRED"
+    );
     const startData = extractProperty(
       response.questionPropertyList,
       "SPECTRAL_START"
@@ -90,7 +92,7 @@ export default function ParticipateFormPage() {
       setFormData("");
     }
 
-    if (requiredData) {
+    if (requiredData === "true") {
       setIsValid(false);
     } else if (
       response.questionType === "TEXT_FIELD" &&
@@ -399,8 +401,7 @@ export default function ParticipateFormPage() {
       </AnimatedBox>
       <ActionButtons
         loadingNext={questionLoading}
-        // ^ check
-        disablePrev={questionLoading || question?.position === 0}
+        disablePrev={questionLoading}
         nextAction={handleNext}
         prevAction={handlePrev}
       />

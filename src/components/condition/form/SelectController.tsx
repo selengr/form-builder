@@ -70,15 +70,8 @@ export const SelectController: React.FC<CustomSelectProps> = ({
               const selectedValue = isOperator ? selected?.split("@")[0] : selected;
               const selectedOption = options?.find(option => {
                const val = option?.value?.includes("@") ? option?.value?.split("@")[0] : option?.value
-                console.log("selectedOption========**********222",val.trim() , selectedValue)
-                console.log("selectedOption========**********444",val.trim() === selectedValue)
                 return  option?.value?.split("@")[0] === selectedValue?.split("@")[0]
               });
-                console.log("selectedOption",selectedOption)
-                
-              
-                console.log("selectedOption",options)
-                console.log("selectedValue",selectedValue)
               return selectedOption ? selectedOption.label : "";
             }}
             sx={{
@@ -166,16 +159,10 @@ export function MultiSelectController({
 }: RHFMultiSelectProps) {
   const { control } = useFormContext();
 
-  const renderValues = (selectedIds: string) => {
-      const selectedItems = options.filter((item) =>{
-          const updateValue : any[] = []
-          selectedIds?.split(",").map((item2:any)=>{
-          return updateValue.push(item2?.split("@")[0]);
-      })
+  const renderValues = (selectedIds: string[]) => {
+    const selectedItems = options.filter(item => selectedIds.includes(`${item.value}@${item.label}`));
+    
 
-        return updateValue.includes(item.value)
-      }
-    );
     if (!selectedItems.length && placeholder) {
       return (
         <Box component="em" sx={{ color: "text.disabled" }}>
@@ -193,10 +180,8 @@ export function MultiSelectController({
         </Box>
       );
     }
-
     return selectedItems.map((item) => item.label).join(", ");
   };
-  console.log('***renderValues :>> ', renderValues);
 
   return (
     <Controller
@@ -247,7 +232,19 @@ export function MultiSelectController({
               },
             }}
             {...other}
-            value={field.value || []}
+            value={!!!field.value ? [] : Array.isArray(field.value) ? field.value : field.value.split(",") || []}
+            onChange={(event) => {
+              const {
+                target: { value },
+              } = event;
+              const selectedValues = typeof value === 'string' ? value.split(',') : value;
+              const formattedValues = selectedValues.map(val => {
+                const option = options.find(option => option.value === val);
+                return option ? `${option.value}@${option.label}` : val;
+              });
+              field.onChange(formattedValues);
+            }}
+            {...other}
           >
             {placeholder && (
               <MenuItem
@@ -264,15 +261,14 @@ export function MultiSelectController({
               </MenuItem>
             )}
 
-              {options?.map((option,index) => {debugger
-              const selected = field.value.split(",")?.map((item:any)=>{
-                  return item.includes(option.value);
-              })
+              {options?.map((option) => {
+                const selected = Array.isArray(field.value) ? field.value.includes(`${option.value}@${option.label}`) : false;
+
               return (
                 <MenuItem
                   key={option.value}
                   // value={option.value.includes("@")?option.value:option.value+"@"+option.label}
-                  value={option.value}
+                  value={`${option.value}@${option.label}`}
                   sx={{
                     py: 1,
                     px: 2,
@@ -280,6 +276,8 @@ export function MultiSelectController({
                     typography: "body2",
                     ...(selected && {
                       fontWeight: "fontWeightMedium",
+                      color : "red",
+                      backdropFilter : "red",
                     }),
                     ...(checkbox && {
                       p: 0.25,

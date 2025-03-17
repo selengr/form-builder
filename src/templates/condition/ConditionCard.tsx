@@ -106,7 +106,7 @@ import { useDeleteCondition } from '../../app/(builder)/builder/[id]/condition/_
   
         <div className="rounded-lg p-[10px] flex justify-between w-full cursor-pointer border-[1px] border-[#1758BA] bg-[#fff]">
           <div className="flex justify-center items-center gap-[10px]">
-            <ConditionCardOperator condition={condition} /> {/* Use the new component here */}
+            <ConditionCardOperator condition={condition} />
           </div>
         </div>
         {openDialog && (

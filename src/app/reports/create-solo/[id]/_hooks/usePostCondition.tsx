@@ -2,7 +2,7 @@ import { toast } from 'sonner';
 import { useParams } from 'next/navigation';
 import AxiosApi from '@/services/axios/AxiosApi';
 import { useMutation } from '@tanstack/react-query';
-import { IPostCondition } from '@/types/condition';
+import { IPostCondition } from '@/types/conditionReportSolo';
 import { queryClient } from '@/lib/react-query.config';
 
 
@@ -12,7 +12,7 @@ enum HttpMethod {
 }
 
 const postCalculation = async (data : IPostCondition[], method: HttpMethod, isEdit : boolean) => {
-    const url = isEdit ? `/condition/${data[0].id}` : `/condition`;
+    const url = isEdit ? `/report/solo/${data[0].id}` : `/report/solo`;
     const response = await AxiosApi[method](url,data);
     return response.data;
   };
@@ -28,7 +28,7 @@ export const usePostCondition = (isEdit:boolean) => {
         postCalculation(data, method, isEdit ),
 
     onSuccess: (data) => {
-      toast.success(`شرط با موفقیت ${isEdit ? "ویرایش" : "ایجاد"} شد`);
+      toast.success(`خرده‌گزارش با موفقیت ${isEdit ? "ویرایش" : "ایجاد"} شد`);
       queryClient.invalidateQueries({
         queryKey: [`/builder/${id}/condition`],
       });

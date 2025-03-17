@@ -51,12 +51,12 @@ const formatValue = (item: TSubConditionData) => {
         )
       })}
       <span className="text-[#161616] text-sm">
-        <span>در اینصورت برو به: </span>
+        <span>در اینصورت نمایش بده: </span>
         <span className="text-[#1758BA]">{parseCondition?.returnText}</span>
       </span>
       {parseCondition?.elseReturnText && (
         <span className="text-[#161616] text-sm">
-          <span>در غیر اینصورت برو به:</span>
+          <span>در غیر اینصورت نمایش بده:</span>
           <span className="text-[#1758BA]">
             {parseCondition?.elseReturnText}
           </span>

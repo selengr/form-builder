@@ -1,6 +1,6 @@
 "use client";
 
-import { IGetCondition } from "@/types/condition";
+import { IGetCondition } from "@/types/conditionReportSolo";
 import { ConditionCard } from "./ConditionCard";
 import CreateCondition from "./CreateCondition";
 import { idGenerator } from "@/lib/idGenerator";

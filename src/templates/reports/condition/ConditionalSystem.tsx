@@ -7,7 +7,7 @@ import { SubCondition } from "./SubCondition"
 // components
 import { CircleDivider } from "@/components/condition/CircleDivider"
 import { SubmitButtons } from "@/components/condition/form/SubmitButtons"
-import { SelectController } from "@/components/condition/form/SelectController"
+import { TextFieldController } from "@/components/condition/form/TextFieldController"
 // lib
 import { formatContainText } from "@/lib/formatContainText"
 import { type TConditionFormData , TConditionData, TSubConditionData } from "@/lib/ConditionFormSchema"
@@ -18,7 +18,6 @@ import { usePostCondition } from "@/app/(builder)/builder/[id]/condition/_hooks/
 import { useGetQacWithOutFilter } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter"
 import { useGetOnlyAllQuestions } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllQuestions"
 import { useGetOnlyAllCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation"
-import { TextFieldController } from "@/components/condition/form/TextFieldController"
 
 
 
@@ -193,7 +192,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
                     "&:hover": { bgcolor: "#FA4D560D" },
                   }}
                 >
-                  <Typography sx={{ color: "#FA4D56", fontSize: "14px" }}>حذف این شرط</Typography>
+                  <Typography sx={{ color: "#FA4D56", fontSize: "14px" }}>حذف این خرده‌گزارش</Typography>
                 </Button>
             )}
               </Box>
@@ -213,7 +212,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
               borderRadius: "8px",
             }}
           >
-            افزودن شرط جدید
+            افزودن خرده‌گزارش جدید
           </Button>
           )}
           <SubmitButtons isLoading={postCondition.isPending} handleClose={handleClose}/>

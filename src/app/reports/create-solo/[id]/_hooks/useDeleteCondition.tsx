@@ -25,7 +25,7 @@ export const useDeleteCondition = () => {
       queryClient.invalidateQueries({
         queryKey: [`/builder/${id}/condition`],
       });
-      toast.success(`شرط با موفقیت حذف شد`);
+      toast.success(`خرده‌گزارش با موفقیت حذف شد`);
       setTimeout(() => {
          refresh()
       }, 500);

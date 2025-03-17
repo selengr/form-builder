@@ -25,7 +25,7 @@ export default async function Calculator({
     <div className="w-full min-h-screen px-4 py-4 bg-[#f7f7f7]">
       <div className="container mx-auto flex p-3 flex-col justify-start items-center min-w-screen h-full bg-white rounded-xl w-full">
         <div className="relative flex w-full justify-center items-center h-[52px] rounded-lg bg-[#F7F7FF]">
-          <Link href={`/builder/`} className="absolute right-4">
+          <Link href={`/reports`} className="absolute right-4">
             <IconButton
               sx={{
                 borderRadius: "9999px",

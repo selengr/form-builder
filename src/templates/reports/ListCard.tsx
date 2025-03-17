@@ -40,8 +40,8 @@ export default function ListCard(props: any) {
         <button className="bg-[#1758BA] hover:bg-[#216ee1] transition-all duration-200 max-w-[200px] px-2 h-[36px] w-full text-[14px] rounded-lg text-white">
           مشاهده نتایج
         </button>
-        <Link href={`/create-solo${props.id}`}>
-          <button className="bg-[#2CDFC9] hover:opacity-90 hover:shadow-md transition-all duration-200 max-w-[200px] px-2 h-[36px] w-full text-[14px] rounded-lg text-white">
+        <Link href={`/reports/create-solo/${props?.data?.id}`}>
+          <button className="bg-[#2CDFC9]  hover:opacity-90 hover:shadow-md transition-all duration-200 max-w-[200px] px-12 h-[36px] w-full text-[14px] rounded-lg text-white">
             ساخت گزارش
           </button>
         </Link>

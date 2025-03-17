@@ -105,26 +105,23 @@ const ListGrid: React.FC<Props> = ({
 
   const handleClose = () => setOpen(false);
 
-  const deleteItem = (filterBoxList: any) => {
-    const arrayTemp: any = [];
-    filterBoxList.forEach((item: any) => {
-      if (item.fieldValue != null) arrayTemp.push(item);
-    });
-    return arrayTemp;
-  };
+  // const deleteItem = (filterBoxList: any) => {
+  //   const arrayTemp: any = [];
+  //   filterBoxList.forEach((item: any) => {
+  //     if (item.fieldValue != null) arrayTemp.push(item);
+  //   });
+  //   return arrayTemp;
+  // };
 
-  const deleteEmpty = (searchBoxList: any) => {
-    const arrayTemp: any = [];
-    if (query != "") return searchBoxList;
-    return arrayTemp;
-  };
+  // const deleteEmpty = (searchBoxList: any) => {
+  //   const arrayTemp: any = [];
+  //   if (query != "") return searchBoxList;
+  //   return arrayTemp;
+  // };
 
   const searchFilterBoxList = [
     {
-      restrictionList: deleteItem(filterBoxList),
-    },
-    {
-      restrictionList: deleteEmpty(searchBoxList),
+      restrictionList: searchBoxList,
     },
   ];
 

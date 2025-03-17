@@ -1,3 +1,4 @@
+import { formStatusPersian } from "@/components/ListGrid/ListCard";
 import { useRouter } from "next/navigation";
 
 const formTypePersian: any = {
@@ -5,11 +6,6 @@ const formTypePersian: any = {
   QUESTION: "پرسشنامه",
   SURVEY: "نظرسنجی",
   COMPETITION: "مسابقه",
-};
-
-const formStatusPersian: any = {
-  CREATE: "ساخته شده",
-  PUBLISH: "انتشار یافته",
 };
 
 export default function ListCard(props: any) {

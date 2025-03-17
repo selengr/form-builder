@@ -11,7 +11,8 @@ import AxiosApi from "@/services/axios/AxiosApi";
 import { ElementsType, FormElements } from "@/types/FormElements";
 import withValidation from "@/components/Fields/FormHOC";
 import { toast } from "sonner";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { Button } from "@mui/material";
 
 export interface ILimitation {
   isLimited: boolean;
@@ -41,6 +42,7 @@ export default function ParticipateFormPage() {
     limitationType: "",
   });
 
+  const { replace } = useRouter();
   const { slug } = useParams<SlugParams>();
 
   const addNewQuestion = useCallback((response: any) => {
@@ -356,7 +358,29 @@ export default function ParticipateFormPage() {
   if (finishPage) {
     return (
       <ResponsiveContainer>
-        <p>موفق باشید</p>
+        <div className="flex gap-4 flex-col justify-center items-center">
+          <p className="text-center font-bold">موفق باشید 🌹</p>
+          <Button
+            sx={{
+              width: "150px",
+              height: "52px",
+              borderRadius: "10px",
+              backgroundColor: "#1758BA",
+              boxShadow: "none",
+              "& .MuiButtonBase-root, &.MuiButtonBase-root:hover, &.MuiButtonBase-root:active":
+                {
+                  backgroundColor: "#1758BA",
+                  boxShadow: "none",
+                },
+            }}
+            variant="contained"
+            onClick={() => {
+              replace("/");
+            }}
+          >
+            بازگشت
+          </Button>
+        </div>
       </ResponsiveContainer>
     );
   }

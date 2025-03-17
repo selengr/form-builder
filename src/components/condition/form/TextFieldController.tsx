@@ -5,11 +5,13 @@ import { TextField, type TextFieldProps } from "@mui/material";
 interface TextFieldControllerProps extends Omit<TextFieldProps, "name"> {
   name: string;
   type?: string;
+  sx? : any
 }
 
 export const TextFieldController: React.FC<TextFieldControllerProps> = ({
   name,
   type,
+  sx,
   ...props
 }) => {
   const { control } = useFormContext();
@@ -56,6 +58,7 @@ export const TextFieldController: React.FC<TextFieldControllerProps> = ({
                 // md: 52 
               },
             },
+            ...sx
           }}
           {...props}
         />

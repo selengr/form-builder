@@ -176,23 +176,11 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
                   flexDirection: { xs: "column", md: "row" },
                 }}
               >
-                <Typography sx={{  minWidth: 240, ml: 0,color: "#393939", fontSize: "14px" }}>نمایش بده:</Typography>
-                {/* <SelectController
-                  name={`conditions.${index}.returnQuestionId`}
-                  options={onlyAllQuestionsOptions}
-                  isLoading={isFetchingOnlyAllQuestions}
-                  sx={{ minWidth: 240, ml: 2.5 }}
-                /> */}
-                <TextFieldController name={`conditions.${index}.returnText`} type="string" />
-                <Typography sx={{color: "#393939", fontSize: "14px", mr: 3.5 }}>در غیر اینصورت نمایش بده:</Typography>
-                {/* <SelectController
-                  name={`conditions.${index}.elseQuestionId`}
-                  options={onlyAllQuestionsOptions}
-                  isLoading={isFetchingOnlyAllQuestions}
-                  sx={{ minWidth: 300, width: 380 }}
-                /> */}
+                <Typography sx={{ color: "#393939", fontSize: "14px",ml:-1.3 }}>نمایش بده:</Typography>
+                <TextFieldController  sx={{ minWidth: 240, ml: 0 }} name={`conditions.${index}.returnText`} type="string" />
+                <Typography sx={{color: "#393939", fontSize: "14px", mr: 0 }}>در غیر اینصورت نمایش بده:</Typography>
                 
-                <TextFieldController name={`conditions.${index}.elseReturnText`} type="string" />
+                <TextFieldController sx={{ minWidth: 300, width: 380 }} name={`conditions.${index}.elseReturnText`} type="string" />
                 {index !== 0 && (
                 <Button
                   onClick={() => handleRemoveCondition(index)}

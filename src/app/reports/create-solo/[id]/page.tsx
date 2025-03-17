@@ -39,5 +39,5 @@ export default async function Calculator({
         <ConditionList conditions={content} />
       </div>
     </div>
-  );
+  );    
 }

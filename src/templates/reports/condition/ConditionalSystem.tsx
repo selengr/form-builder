@@ -10,9 +10,9 @@ import { SubmitButtons } from "@/components/condition/form/SubmitButtons"
 import { TextFieldController } from "@/components/condition/form/TextFieldController"
 // lib
 import { formatContainText } from "@/lib/formatContainText"
-import { type TConditionFormData , TConditionData, TSubConditionData } from "@/lib/ConditionFormSchema"
+import { type TConditionFormData , TConditionData, TSubConditionData } from "@/lib/CreateSoloReportSchema"
 // hooks
-import { IConditionalSystemProps, IPostCondition } from "@/types/condition"
+import { IConditionalSystemProps, IPostCondition } from "@/types/conditionReportSolo"
 import { useConditionalForm } from "@/app/(builder)/builder/[id]/condition/_hooks/useConditionalForm"
 import { usePostCondition } from "@/app/(builder)/builder/[id]/condition/_hooks/usePostCondition"
 import { useGetQacWithOutFilter } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter"
@@ -54,7 +54,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
 
     const transformInputToOutput = (input : TConditionFormData) : any => {
       return input.conditions.map((condition : TConditionData,index) => {
-        const { subConditions, returnQuestionId, elseQuestionId } = condition;
+        const { subConditions, returnText, elseReturnText } = condition;
 
         const conditionFormula = subConditions
           .map((subCondition : TSubConditionData) => {
@@ -111,8 +111,8 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
         return {
           formBuilderId: Number(id),
           conditionFormula: conditionFormula,
-          elseQuestionId: Number(elseQuestionId.replace(/\D/g, '')) !== 0 ? Number(elseQuestionId.replace(/\D/g, '')) : null,
-          returnQuestionId: Number(returnQuestionId.replace(/\D/g, '')),
+          elseReturnText,
+          returnText,
           frontConditionData: JSON.stringify(input.conditions[index]),
           ...(isEdit && { id: Number(condition.id) }) 
         };
@@ -212,7 +212,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
               borderRadius: "8px",
             }}
           >
-            افزودن خرده‌گزارش جدید
+            افزودن شرط جدید
           </Button>
           )}
           <SubmitButtons isLoading={postCondition.isPending} handleClose={handleClose}/>

@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, useFieldArray } from "react-hook-form"
-import { ConditionFormSchema, TConditionData, TSubConditionData, type TConditionFormData } from "@/lib/ConditionFormSchema"
+import { ConditionFormSchema, TConditionData, TSubConditionData, type TConditionFormData } from "@/lib/CreateSoloReportSchema"
 import { idGenerator } from "@/lib/idGenerator"
 import { IGetCondition } from "@/types/condition"
 

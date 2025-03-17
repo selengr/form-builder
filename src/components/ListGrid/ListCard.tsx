@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import ConfirmDialog from "../confirm-dialog";
 import { useRouter } from "next/navigation";
 import PublishSettingsDialog from "../PublishSettingsDialog/PublishSettingsDialog";
-import { IoStatsChartOutline } from "react-icons/io5";
+import { AiOutlinePieChart } from "react-icons/ai";
 
 const formTypePersian: any = {
   TEST: "آزمون",
@@ -21,25 +21,26 @@ const formTypePersian: any = {
   COMPETITION: "مسابقه",
 };
 
-const formStatusPersian: any = {
-  CREATE: "ساخته شده",
+export const formStatusPersian: any = {
+  CREATE: "ایجاد شده",
   PUBLISH: "انتشار یافته",
+  UN_PUBLISH: "عدم انتشار",
 };
 
 export default function ListCard(props: any) {
-  const [loadingInvalidData, setLoadingInvalidData] = useState(false);
+  const [loadingPublishStatus, setLoadingPublishStatus] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const router = useRouter();
 
-  async function handleInvalid(e: any) {
+  async function handlePublishStatus(e: any) {
     try {
-      setLoadingInvalidData(true);
-      const res: any = await AxiosApi.put("/form/invalid", {
-        id: props.data.id,
-        invalid: !e.target.checked,
+      setLoadingPublishStatus(true);
+      const res: any = await AxiosApi.put("/form/change-status", {
+        formId: props.data.id,
+        formBuilderStatusEnum:
+          props.data.status === "PUBLISH" ? "UN_PUBLISH" : "PUBLISH",
       });
       if (res.data) {
-        console.log(res.data);
         toast.success("عملیات با موفقیت انجام شد");
         props.setRefreshGrid((prev: any) => !prev);
       }
@@ -47,13 +48,13 @@ export default function ListCard(props: any) {
       console.log(error);
       toast.error("عملیات ناموفق بود مجددا امتحان فرمایید");
     } finally {
-      setLoadingInvalidData(false);
+      setLoadingPublishStatus(false);
     }
   }
 
   async function handleCopy() {
     try {
-      setLoadingInvalidData(true);
+      setLoadingPublishStatus(true);
       const res: any = await AxiosApi.post(`/form/${props.data.id}/duplicate`);
 
       if (res.data) {
@@ -64,7 +65,7 @@ export default function ListCard(props: any) {
       console.log(error);
       toast.error("خطایی رخ داده است");
     } finally {
-      setLoadingInvalidData(false);
+      setLoadingPublishStatus(false);
     }
   }
 
@@ -84,13 +85,15 @@ export default function ListCard(props: any) {
               {props.data.name}
             </p>
           </div>
-          <div>
-            <SwitchButton
-              disabled={loadingInvalidData}
-              checked={!props.data.invalid}
-              onChange={handleInvalid}
-            />
-          </div>
+          {props.data.status !== "CREATE" && (
+            <div>
+              <SwitchButton
+                disabled={loadingPublishStatus}
+                checked={props.data.status === "PUBLISH"}
+                onChange={handlePublishStatus}
+              />
+            </div>
+          )}
         </div>
         <div className="flex gap-1 text-[#393939]">
           <span className="text-[14px]">نوع:</span>
@@ -131,24 +134,24 @@ export default function ListCard(props: any) {
             onClick={() => {
               setOpenConfirmDialog((prev) => !prev);
             }}
-            disabled={loadingInvalidData}
+            disabled={loadingPublishStatus}
           >
             <Image src={TrashIcon} alt="" width={24} height={24} />
           </IconButton>
           <PublishSettingsDialog formId={props.data.id as any} />
-          <IconButton onClick={handleCopy} disabled={loadingInvalidData}>
+          <IconButton onClick={handleCopy} disabled={loadingPublishStatus}>
             <Image src={CopyIcon} alt="" width={24} height={24} />
           </IconButton>
           {props.data.status === "CREATE" && (
-            <IconButton disabled={loadingInvalidData}>
+            <IconButton disabled={loadingPublishStatus}>
               <Link href={`/builder/${props.data.id}`}>
                 <Image src={EditIcon} alt="" width={24} height={24} />
               </Link>
             </IconButton>
           )}
-          <IconButton disabled={loadingInvalidData}>
+          <IconButton disabled={loadingPublishStatus}>
             <Link href={`/stats/${props.data.id}`} className="h-full w-full">
-              <IoStatsChartOutline color="#424242" />
+              <AiOutlinePieChart color="#424242" />
             </Link>
           </IconButton>
         </div>
@@ -157,7 +160,7 @@ export default function ListCard(props: any) {
         content="آیا از عملیات حذف کامل فرم اطمینان دارید؟"
         open={openConfirmDialog}
         title={`حذف فرم (${props.data.name})`}
-        loading={loadingInvalidData}
+        loading={loadingPublishStatus}
         onClose={() => setOpenConfirmDialog(false)}
         cancelText="انصراف"
         action={
@@ -166,7 +169,7 @@ export default function ListCard(props: any) {
             fullWidth
             disableRipple
             variant="contained"
-            loading={loadingInvalidData}
+            loading={loadingPublishStatus}
             sx={{
               fontWeight: "400",
               fontSize: "15px",
@@ -178,7 +181,7 @@ export default function ListCard(props: any) {
             }}
             onClick={async () => {
               try {
-                setLoadingInvalidData(true);
+                setLoadingPublishStatus(true);
                 const res: any = await AxiosApi.delete(
                   `/form/${props.data.id}`
                 );
@@ -190,7 +193,7 @@ export default function ListCard(props: any) {
                 console.log(error);
                 toast.error("خطایی رخ داده است");
               } finally {
-                setLoadingInvalidData(false);
+                setLoadingPublishStatus(false);
               }
             }}
           >

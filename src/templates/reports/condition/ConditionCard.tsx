@@ -7,8 +7,7 @@ import { IGetCondition } from "@/types/conditionReportSolo";
   import { ConditionCardOperator } from './ConditionCardOperator'; 
   import { WeuiDeleteOutlined } from "../../../../public/images/icons/DeleteIcon";
   import { PhDotsThreeVerticalBold } from "../../../../public/images/icons/PhDotsThreeVerticalBold";
-import { useDeleteCondition } from '../../../app/(builder)/builder/[id]/condition/_hooks/useDeleteCondition';
-
+import { useDeleteCondition } from "@/app/reports/create-solo/[id]/_hooks/useDeleteCondition";
   
   export function ConditionCard({ condition, index }: { condition: IGetCondition, index : number }) {
     const [openDialog, setOpen] = useState<boolean>(false);

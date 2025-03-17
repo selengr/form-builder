@@ -23,7 +23,7 @@ export const useDeleteCondition = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [`/builder/${id}/condition`],
+        queryKey: [`/reports/create-solo/${id}`],
       });
       toast.success(`خرده‌گزارش با موفقیت حذف شد`);
       setTimeout(() => {

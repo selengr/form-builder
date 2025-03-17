@@ -30,7 +30,7 @@ export const usePostCondition = (isEdit:boolean) => {
     onSuccess: (data) => {
       toast.success(`خرده‌گزارش با موفقیت ${isEdit ? "ویرایش" : "ایجاد"} شد`);
       queryClient.invalidateQueries({
-        queryKey: [`/builder/${id}/condition`],
+        queryKey: [`/reports/create-solo/${id}`],
       });
     },
     onError: () => {

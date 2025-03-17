@@ -51,8 +51,8 @@ import { Dispatch, SetStateAction } from "react";
   export interface IPostCondition {
       conditionFormula: string; 
       formBuilderId: number;    
-      returnQuestionId: number;  
-      elseQuestionId: number | null; 
+      returnText: string;  
+      elseReturnText: string; 
       frontConditionData: string; 
       id? : number
    }
@@ -62,8 +62,8 @@ import { Dispatch, SetStateAction } from "react";
     id : number
     conditionFormula: string; 
     formBuilderId: number;    
-    returnQuestionId: number;  
-    elseQuestionId: number | null; 
+    returnText: string;  
+    elseReturnText: string; 
     frontConditionData: string; 
 }
 

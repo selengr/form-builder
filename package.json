@@ -36,6 +36,8 @@
     "next-auth": "^4.24.11",
     "nextjs-toploader": "^3.7.15",
     "react": "^18",
+    "react-auth-code-input": "^3.2.1",
+    "react-countdown": "^2.3.6",
     "react-dom": "^18",
     "react-hook-form": "^7.53.2",
     "react-hot-toast": "^2.4.1",

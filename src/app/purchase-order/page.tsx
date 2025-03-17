@@ -5,15 +5,15 @@ import { useEffect, useState } from "react"
 
 import Image from "next/image";
 import { LoadingButton } from "@mui/lab";
-// import { CartItem } from "@/templates/shopping-cart/invoice-item"
-// import { InvoiceItem } from "@/templates/shopping-cart/cart-item"
-import { useGetPurchaseOrder } from "./_hook/useGetPurchaseOrder"
-import { CartItem } from "@/templates/shopping-cart/cart-item";
-import { InvoiceItem } from "@/templates/shopping-cart/invoice-item";
+import { useRouter } from "next/navigation";
 import BuilderLoading from "../(builder)/builder/[id]/loading";
+import { CartItem } from "@/templates/purchase-order/cart-item";
+import { useGetPurchaseOrder } from "./_hook/useGetPurchaseOrder"
+import { InvoiceItem } from "@/templates/purchase-order/invoice-item";
 
 
 export default function ShoppingCartPage() {
+  const { push } = useRouter()
   const [selectedIndex, setSelectedIndex] = useState(0)
   const {data:purchaseOrder,isLoading,error} = useGetPurchaseOrder()
 
@@ -74,7 +74,7 @@ export default function ShoppingCartPage() {
       dir="rtl"
       className="container mx-auto flex justify-center h-screen overflow-hidden py-4"
     >
-      <div className="w-[70%] bg-red-400 rounded-[20px] mx-[6px] p-2 ">
+      <div className="w-[70%] bg-white rounded-[20px] mx-[6px] p-2 ">
         <div className="bg-[#F7F7FF] rounded-lg w-ful h-[52px] text-center] mb-8  flex justify-center items-center ">
           <h3 className="text-[#161616] font-bold text-base">سبد خرید</h3>
         </div>
@@ -112,7 +112,7 @@ export default function ShoppingCartPage() {
         </div>
       </div>
 
-      <div className="w-[30%] bg-yellow-500 rounded-[20px] p-2 flex flex-col justify-between ml-2">
+      <div className="w-[30%] bg-white rounded-[20px] p-2 flex flex-col justify-between ml-2">
         <div className="bg-[#F7F7FF] rounded-lg w-full min-h-[52px] text-center mb-3 flex justify-center items-center ">
           <h3 className="text-[#161616] font-bold text-base">صورتحساب</h3>
         </div>
@@ -151,7 +151,7 @@ export default function ShoppingCartPage() {
             </div>
           </div>
           <LoadingButton
-            type="submit"
+            type="button"
             variant="contained"
             sx={{
               backgroundColor: "#1758BA",
@@ -163,6 +163,12 @@ export default function ShoppingCartPage() {
               "&.MuiButtonBase-root:hover": {
                 backgroundColor: "#1758BA",
               },
+            }}
+            onClick={()=>{
+              if(purchaseOrder?.purchaseOrderId){
+                const id : string = JSON.stringify(purchaseOrder.purchaseOrderId)
+                push(`/purchase-order/${id}/gateway`)
+              }
             }}
           >
             <span className="text-[14px] font-[500px]">پرداخت صورت حساب</span>

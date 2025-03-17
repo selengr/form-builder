@@ -238,7 +238,7 @@ export function MultiSelectController({
                 target: { value },
               } = event;
               const selectedValues = typeof value === 'string' ? value.split(',') : value;
-              const formattedValues = selectedValues.map(val => {
+              const formattedValues = selectedValues.map((val :any) => {
                 const option = options.find(option => option.value === val);
                 return option ? `${option.value}@${option.label}` : val;
               });

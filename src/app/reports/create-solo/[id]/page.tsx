@@ -1,7 +1,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { AxiosResponse } from "axios";
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import AxiosApi from "@/services/axios/AxiosApi";
 import { IoIosArrowForward } from "react-icons/io";
 

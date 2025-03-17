@@ -1,5 +1,5 @@
-import { IGetCondition } from "@/types/condition";
-import { TConditionData, TSubConditionData } from "@/lib/ConditionFormSchema";
+import { IGetCondition } from "@/types/conditionReportSolo";
+import { TConditionData, TSubConditionData } from "@/lib/CreateSoloReportSchema";
 
 
 interface IConditionCardOperatorProps {
@@ -52,13 +52,13 @@ const formatValue = (item: TSubConditionData) => {
       })}
       <span className="text-[#161616] text-sm">
         <span>در اینصورت برو به: </span>
-        <span className="text-[#1758BA]">{parseCondition?.returnQuestionId?.split("@")[1]}</span>
+        <span className="text-[#1758BA]">{parseCondition?.returnText}</span>
       </span>
-      {parseCondition?.elseQuestionId && (
+      {parseCondition?.elseReturnText && (
         <span className="text-[#161616] text-sm">
           <span>در غیر اینصورت برو به:</span>
           <span className="text-[#1758BA]">
-            {parseCondition?.elseQuestionId.toString()?.split("@")[1]}
+            {parseCondition?.elseReturnText}
           </span>
         </span>
       )}

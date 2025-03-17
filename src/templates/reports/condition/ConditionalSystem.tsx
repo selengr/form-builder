@@ -18,6 +18,7 @@ import { usePostCondition } from "@/app/(builder)/builder/[id]/condition/_hooks/
 import { useGetQacWithOutFilter } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter"
 import { useGetOnlyAllQuestions } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllQuestions"
 import { useGetOnlyAllCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation"
+import { TextFieldController } from "@/components/condition/form/TextFieldController"
 
 
 
@@ -175,20 +176,23 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
                   flexDirection: { xs: "column", md: "row" },
                 }}
               >
-                <Typography sx={{ color: "#393939", fontSize: "14px" }}>برو به:</Typography>
-                <SelectController
+                <Typography sx={{  minWidth: 240, ml: 0,color: "#393939", fontSize: "14px" }}>نمایش بده:</Typography>
+                {/* <SelectController
                   name={`conditions.${index}.returnQuestionId`}
                   options={onlyAllQuestionsOptions}
                   isLoading={isFetchingOnlyAllQuestions}
                   sx={{ minWidth: 240, ml: 2.5 }}
-                />
-                <Typography sx={{ color: "#393939", fontSize: "14px", mr: 3.5 }}>در غیر اینصورت برو به:</Typography>
-                <SelectController
+                /> */}
+                <TextFieldController name={`conditions.${index}.returnText`} type="string" />
+                <Typography sx={{color: "#393939", fontSize: "14px", mr: 3.5 }}>در غیر اینصورت نمایش بده:</Typography>
+                {/* <SelectController
                   name={`conditions.${index}.elseQuestionId`}
                   options={onlyAllQuestionsOptions}
                   isLoading={isFetchingOnlyAllQuestions}
                   sx={{ minWidth: 300, width: 380 }}
-                />
+                /> */}
+                
+                <TextFieldController name={`conditions.${index}.elseReturnText`} type="string" />
                 {index !== 0 && (
                 <Button
                   onClick={() => handleRemoveCondition(index)}

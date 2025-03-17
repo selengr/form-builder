@@ -1,8 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, useFieldArray } from "react-hook-form"
-import { ConditionFormSchema, TConditionData, TSubConditionData, type TConditionFormData } from "@/lib/CreateSoloReportSchema"
+import { ConditionFormSchema, TConditionData, TSubConditionData, type TConditionFormData } from "@/lib/ConditionFormSchema"
 import { idGenerator } from "@/lib/idGenerator"
-import { IGetCondition } from "@/types/conditionReportSolo"
+import { IGetCondition } from "@/types/condition"
 
 
 
@@ -17,8 +17,8 @@ export const createNewSubCondition = () => ({
   
   export const createNewCondition = () => ({
     subConditions: [createNewSubCondition()],
-    elseReturnText: "",
-    returnText: "",
+    elseQuestionId: "",
+    returnQuestionId: "",
   })
 
 
@@ -26,7 +26,7 @@ export const createNewSubCondition = () => ({
    
       const { frontConditionData } = conditionJson;
       const  conditions = JSON.parse(frontConditionData);
-      const { subConditions, returnText, elseReturnText   } = conditions
+      const { subConditions, returnQuestionId, elseQuestionId   } = conditions
 
       const SubConditionsData : TSubConditionData[] = subConditions
         ?.map((subCondition : TSubConditionData) => {
@@ -59,8 +59,8 @@ export const createNewSubCondition = () => ({
 
       return {
         id : conditionJson.id,
-        returnText,
-        elseReturnText,
+        returnQuestionId: returnQuestionId,
+        elseQuestionId: elseQuestionId,
         subConditions : SubConditionsData
       };
    

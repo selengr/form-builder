@@ -13,13 +13,11 @@ import { formatContainText } from "@/lib/formatContainText"
 import { type TConditionFormData , TConditionData, TSubConditionData } from "@/lib/CreateSoloReportSchema"
 // hooks
 import { IConditionalSystemProps, IPostCondition } from "@/types/conditionReportSolo"
-import { useConditionalForm } from "@/app/(builder)/builder/[id]/condition/_hooks/useConditionalForm"
-import { usePostCondition } from "@/app/(builder)/builder/[id]/condition/_hooks/usePostCondition"
-import { useGetQacWithOutFilter } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter"
-import { useGetOnlyAllQuestions } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllQuestions"
-import { useGetOnlyAllCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation"
-
-
+import { useConditionalForm } from "@/app/reports/create-solo/[id]/_hooks/useConditionalForm"
+import { useGetQacWithOutFilter } from "@/app/reports/create-solo/[id]/_hooks/useGetQacWithOutFilter"
+import { useGetOnlyAllQuestions } from "@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllQuestions"
+import { useGetOnlyAllCalculation } from "@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllCalculation"
+import { usePostCondition } from "@/app/reports/create-solo/[id]/_hooks/usePostCondition"
 
 
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
@@ -221,4 +219,3 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
     </Box>
   )
 }
-

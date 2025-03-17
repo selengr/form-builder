@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -22,7 +22,6 @@ import { IoIosArrowForward } from "react-icons/io";
 import { IoStatsChartOutline } from "react-icons/io5";
 import { LuUserRoundPlus } from "react-icons/lu";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
-import AxiosApi from "@/services/axios/AxiosApi";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -81,37 +80,9 @@ const rows = [
   createData(4, "عباس بوعذار", "خیر", "خیر", "کارمند", "87.000"),
 ];
 
-// const filter = {
-//   searchFilterBoxList: [
-//     {
-//       restrictionList: [
-//         {
-//           fieldName: "formSetting.statusEnum",
-//           fieldOperation: "NOT_EQUAL",
-//           fieldValue: "CREATE",
-//           nextConditionOperator: "AND",
-//         },
-//       ],
-//     },
-//   ],
-//   sortList: [{ fieldName: "id", type: "DSC" }],
-//   page: 0,
-//   rows: 1000,
-// };
-
 export default function StatsPage() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  useEffect(() => {
-    async function fetchData() {
-      const res = await AxiosApi.get(
-        "/form/main-list/ALL/ALL%7B%22searchFilterBoxList%22%3A%5B%7B%22restrictionList%22%3A%5B%7B%22fieldName%22%3A%22formSetting.statusEnum%22%2C%22fieldOperation%22%3A%22NOT_EQUAL%22%2C%22fieldValue%22%3A%22CREATE%22%2C%22nextConditionOperator%22%3A%22AND%22%7D%5D%7D%5D%2C%22sortList%22%3A%5B%7B%22fieldName%22%3A%22id%22%2C%22type%22%3A%22DSC%22%7D%5D%2C%22page%22%3A0%2C%22rows%22%3A1000%7D"
-      );
-    }
-
-    fetchData();
-  }, []);
 
   return (
     <Box bgcolor="#fff" width="100%" padding={2}>

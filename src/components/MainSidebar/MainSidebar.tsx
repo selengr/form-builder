@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Box from "@mui/material/Box";
 import MenuSidebar from "@/components/SideBar/MenuSidebar";
-import MiddleSidebar from "../MiddleSidebar/MiddleSidebar";
+// import { MiddleSidebar } from '../MiddleSidebar/MiddleSidebar';
 import MresalatLogo from "@/../public/images/home-page/mresalat_logo.svg";
 import ProfileLogo from "@/../public/images/home-page/profile.webp";
 import LogoutIcon from "@/../public/images/home-page/logout.svg";
@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { signIn, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import AxiosApi from "@/services/axios/AxiosApi";
+import MiddleSidebar from '../MiddleSidebar/MiddleSidebar';
 
 export default function MainSidebar() {
   const [userInfo, setUserInfo] = useState(null);

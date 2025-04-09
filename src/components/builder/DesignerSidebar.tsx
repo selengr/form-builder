@@ -9,11 +9,34 @@ import useDesigner from "@/hooks/useDesigner";
 import DesignerBottomSheet from "./DesignerBottomSheet";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import SettingsDialog from "../SettingsDialog/SettingsDialog";
+import AxiosApi from "@/services/axios/AxiosApi";
+import { Button, Typography } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const DesignerSidebar = memo(function DesignerSidebar() {
   const { formName } = useDesigner();
   const { id } = useParams();
   const isDesktop = useMediaQuery("(min-width:1280px)");
+
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const response = await AxiosApi.put(`/form/ready-to-publish/${id}`);
+      return response.data;
+    },
+    onSuccess: () => {
+      toast.success("عملیات با موفقیت انجام شد");
+    },
+    onError: () => {
+      toast.error("عملیات ناموفق بود مجددا تلاش کنید");
+    },
+  });
+
+  const handle_publish = () => {
+    mutation.mutate();
+  };
+
 
   return isDesktop ? (
     <div
@@ -64,9 +87,28 @@ const DesignerSidebar = memo(function DesignerSidebar() {
           <SidebarBtnElement formElement={FormElements.INFO_FIELD} />
         </div>
       </div>
-      <button className="h-[58px] w-full rounded-[10px] mt-2 shadow-none bg-[#1758BA]">
-        <p className="text-white text-[15px] font-bold">ذخیره و انتشار</p>
-      </button>
+
+                <LoadingButton
+                          type="button"
+                          onClick={handle_publish}
+                          variant="contained"
+                          sx={{
+                            backgroundColor: "#1758BA",
+                            fontWeight: "500",
+                            fontSize: "15px",
+                            borderRadius: "10px",
+                            marginTop : "8px",
+                            height: "58px",
+                            "&.MuiButtonBase-root:hover": {
+                              backgroundColor: "#1758BA",
+                            },
+                            minWidth: "132px",
+                          }}
+                          loading={mutation.isPending} 
+                          disabled={mutation.isPending}
+                        >
+                         <p className="text-white text-[15px] font-bold">آماده برای انتشار</p>  
+                        </LoadingButton>
     </div>
   ) : (
     <Fragment>
@@ -104,9 +146,41 @@ const DesignerSidebar = memo(function DesignerSidebar() {
             <SettingsDialog />
           </div>
         </div>
-        <button className="h-[58px] w-full rounded-[10px] mt-2 shadow-none bg-[#1758BA]">
-          <p className="text-white text-[15px] font-bold">ذخیره و انتشار</p>
-        </button>
+        <LoadingButton
+                          type="button"
+                          onClick={handle_publish}
+                          variant="contained"
+                          sx={{
+                            backgroundColor: "#1758BA",
+                            fontWeight: "500",
+                            fontSize: "15px",
+                            borderRadius: "10px",
+                            marginTop : "8px",
+                            height: "58px",
+                            "&.MuiButtonBase-root:hover": {
+                              backgroundColor: "#1758BA",
+                            },
+                            minWidth: "132px",
+                          }}
+                          loading={mutation.isPending}
+                          disabled={mutation.isPending}
+                        >
+                         <p className="text-white text-[15px] font-bold">آماده برای انتشار</p>  
+                        </LoadingButton>
+
+        <Button
+                disableRipple
+                sx={{
+                  "&.MuiButtonBase-root": {
+                    borderRadius: "10px",
+                    border: "1px solid #1758BA",
+                    paddingX: "5px",
+                    width: "30px",
+                  },
+                }}
+              >
+                <p className="text-white text-[15px] font-bold">آماده برای انتشار</p>                
+              </Button>
       </div>
       <DesignerBottomSheet>
         <div className="flex flex-col w-full gap-3">

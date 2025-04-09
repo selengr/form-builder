@@ -4,6 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import Box from "@mui/material/Box";
 import MenuSidebar from "@/components/SideBar/MenuSidebar";
+<<<<<<< HEAD
+=======
+// import { MiddleSidebar } from '../MiddleSidebar/MiddleSidebar';
+>>>>>>> 4b03acfc1bdbf97aad677d8ab565d588ece34a79
 import MresalatLogo from "@/../public/images/home-page/mresalat_logo.svg";
 import ProfileLogo from "@/../public/images/home-page/profile.webp";
 import LogoutIcon from "@/../public/images/home-page/logout.svg";

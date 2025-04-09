@@ -26,10 +26,14 @@ function CustomTabPanel(props: any) {
 export default function PublishSettingsTabValue({
   handleOpen,
   formId,
+  formData
 }: {
   handleOpen: () => void;
   formId: string | number;
+  formData : any;
 }) {
+  console.log("formdata",formData);
+  
   const [value, setValue] = useState<TabValues>("general");
 
   const handleChange = (_: SyntheticEvent, newValue: TabValues) => {
@@ -82,7 +86,7 @@ export default function PublishSettingsTabValue({
       </Box>
       <CustomTabPanel value={value} index="general">
         {value === "general" && (
-          <GeneralSettings handleOpen={handleOpen} formId={formId as any} />
+          <GeneralSettings handleOpen={handleOpen} formData={formData} formId={formId as any} />
         )}
       </CustomTabPanel>
       <CustomTabPanel value={value} index="group">

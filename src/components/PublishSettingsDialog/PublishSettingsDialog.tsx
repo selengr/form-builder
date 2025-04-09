@@ -6,8 +6,10 @@ import PublishSettingsTabValue from "./PublishSettingsTabValue";
 
 export default function PublishSettingsDialog({
   formId,
+  formData
 }: {
   formId: string | number;
+  formData : any
 }) {
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -72,6 +74,7 @@ export default function PublishSettingsDialog({
                 <PublishSettingsTabValue
                   handleOpen={handleOpen}
                   formId={formId as any}
+                  formData={formData}
                 />
               </div>
             </DialogContent>

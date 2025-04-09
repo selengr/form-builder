@@ -35,15 +35,17 @@ type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 export default function GeneralSettings({
   handleOpen,
   formId,
+  formData,
 }: {
   handleOpen: () => void;
   formId: string | number;
+  formData : any;
 }) {
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     mode: "all",
     defaultValues: {
-      link: "",
+      link: formData.publicLink,
       publicationMainPageMethod: false,
       capacityPublicLink: 0,
       showUser: false,
@@ -255,7 +257,7 @@ export default function GeneralSettings({
             },
           }}
         >
-          کسر از ظرفیت و انتشار
+          افزودن به سبد خرید
         </LoadingButton>
         <Button
           disabled={isSubmitting}

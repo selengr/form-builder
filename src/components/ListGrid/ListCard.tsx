@@ -138,7 +138,7 @@ export default function ListCard(props: any) {
           >
             <Image src={TrashIcon} alt="" width={24} height={24} />
           </IconButton>
-          <PublishSettingsDialog formId={props.data.id as any} />
+          <PublishSettingsDialog formData={props.data as any} formId={props.data.id as any} />
           <IconButton onClick={handleCopy} disabled={loadingPublishStatus}>
             <Image src={CopyIcon} alt="" width={24} height={24} />
           </IconButton>

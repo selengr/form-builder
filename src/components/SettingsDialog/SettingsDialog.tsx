@@ -18,8 +18,8 @@ import { useParams } from "next/navigation";
 import { convertObject } from "@/lib/settingsUtils";
 
 const responseLimitationOptions = [
-  { label: "از طریق شماره همراه", value: "telephone" },
-  { label: "از طریق ایمیل", value: "email" },
+  { label: "از طریق شماره همراه", value: "PHONE_NUMBER" },
+  { label: "از طریق ایمیل", value: "EMAIL" },
 ];
 
 const layoutOptions = [

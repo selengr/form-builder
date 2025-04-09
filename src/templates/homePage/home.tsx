@@ -164,12 +164,14 @@ function PublicFormsCard() {
       <p className="text-[#2A2A2A] mb-6 text-xs pr-3 pl-4">
         مجموعه‌ای از فرم‌های منتشر شده عمومی در سامانه امرسالت
       </p>
-      <Button className="w-full justify-center absolute bottom-0 -left-6 text-[#1758BA]">
-        <Link href="#" className="text-[11px]">مشاهده</Link>
-        <div className="bg-[#1758BA] rounded-[8px] md:rounded-[12px] w-[26px] md:w-[30px] h-[26px] md:h-[30px] flex items-center justify-center mr-2">
+      <div className="w-full  z-10 justify-center absolute bottom-4 left-6 text-[#1758BA]">
+        <Link href="/public-form" className="text-[11px] flex flex-row items-center justify-end">
+        <span className="text-[#2A2A2A] text-[10px]">مشاهده</span>
+        <div className="bg-[#1758BA] cursor-pointer rounded-[8px] md:rounded-[12px] w-[26px] md:w-[30px] h-[26px] md:h-[30px] flex items-center justify-center mr-2">
           <ArrowLeft className="text-[#fff]" fill="#fff" stroke="#fff" />
         </div>
-      </Button>
+        </Link>
+      </div>
     </div>
   );
 }

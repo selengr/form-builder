@@ -9,7 +9,7 @@ import {
 } from "@/providers";
 import { Toaster } from "sonner";
 import MainPanel from "@/templates/layout/MainPanel";
-// import { SessionProvider } from "next-auth/react";
+import { SessionProvider } from "next-auth/react";
 
 type TRootProvider = {
   readonly children: ReactNode;
@@ -17,7 +17,7 @@ type TRootProvider = {
 
 const RootProvider: FC<TRootProvider> = ({ children }) => {
   return (
-    // <SessionProvider>
+    <SessionProvider>
     <MuiThemeProvider>
       <ReactQueryClientProvider>
         <Toaster richColors closeButton dir="rtl" />
@@ -28,7 +28,7 @@ const RootProvider: FC<TRootProvider> = ({ children }) => {
         </NetworkProvider>
       </ReactQueryClientProvider>
     </MuiThemeProvider>
-    // </SessionProvider>
+     </SessionProvider>
   );
 };
 

@@ -8,9 +8,10 @@ import GroupSquare from "@/../public/images/home-page/menu/group-square.svg";
 import MusicPlaylist from "@/../public/images/home-page/menu/music-playlist.svg";
 import ShoppingCart from "@/../public/images/home-page/menu/shopping-cart.svg";
 import Wallet from "@/../public/images/home-page/menu/wallet-minus.svg";
-import AxiosApi from "@/services/axios/AxiosApi";
-import { IMenuResponseData } from "./MiddleSidebar";
+import AxiosApi from "../../services/axios/AxiosApi";
+import { IMenuResponseData, IACLItem } from "./type";
 import { useEffect, useState } from "react";
+
 
 const allLinks = [
   // { id: 1, title: "ساخت فرم", icon: Additem, link: "/builder" },

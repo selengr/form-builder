@@ -10,7 +10,7 @@ import DesignerBottomSheet from "./DesignerBottomSheet";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import SettingsDialog from "../SettingsDialog/SettingsDialog";
 import AxiosApi from "@/services/axios/AxiosApi";
-import { Button, Typography } from "@mui/material";
+import { Button } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";

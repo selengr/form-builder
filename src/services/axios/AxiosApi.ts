@@ -22,6 +22,7 @@ AxiosApi.interceptors.request.use(async (request) => {
 
     if (cachedSession && cachedSession.access_token) {
       request.headers["Authorization"] = `Bearer ${cachedSession.access_token}`;
+      // request.headers["Authorization"] = `Bearer eyJraWQiOiJzaGFyZS1rZXktaWQiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIwOTU1MDAwMDAwNyIsImF1ZCI6InNzb0NsaWVudC0yIiwibmJmIjoxNzQ0MDYwNDI2LCJpc3MiOiJodHRwOi8vMTcyLjE2LjExLjI0OjgwODAvc3NvIiwiaWQiOiI3IiwiZXhwIjoxNzc0MDYwNDI2LCJpYXQiOjE3NDQwNjA0MjYsImp0aSI6IjFjMTY4ZmYwLTA5YjQtNGEzYy1hMDRiLWM1Y2EyNWNlNzAzNyJ9.laT7pUnDdkQFhDbza5Y8w_herhkDDfn2OAGMMiSqt53qNE_UGTQSEa-VfgCkqVRroYplIZjbNsoFxhNq1qslJGpmyFcKfhs0QSuig7ol7-jssaFRRStSl2V8Vch51ocflt8QM25Aid84hbH3YzoPECzSfanxLuo3IyEGkH9baQttjS7jQ8BY6E9J4qmMWzzxQkzUpOSmpJMNatY73tipsSLvZ6TDuHEvM2VXYXGyKKccQ199y-r4wLVVLaYA4ZlW5nOKSxTmCxdW8TcB1h1LnrwYenBywGx3Dp9LNC3_pz1g8JVdOvRqmf0wkPzloXZuZZwTDVXoZag3rMVPrQCHDA`
     }
   } catch (error) {
     console.error("Error retrieving session:", error);

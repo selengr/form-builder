@@ -25,7 +25,9 @@ export default function PrerequestHeader({
       container
       // direction="column"
       sx={{
-        // height: "100vh",
+        height:"100vh",
+        borderRadius: "0.625rem",
+        justifyContent:"center",display:"flex",
         backgroundColor: "white",
         width: "inherit",
         position: "relative",
@@ -34,14 +36,14 @@ export default function PrerequestHeader({
       <Grid2
         // item
         sx={{
-          bgcolor: "#F7F7FF",
+          // bgcolor: "#F7F7FF",
           zIndex: 1,
           display: "flex",
           flexDirection: "column",
           p: 1.2,
-          paddingBottom: hasTab ? 0 : "auto",
+          paddingBottom: -15,
           position: "sticky",
-          top: 0,
+          paddingTop: 5,
           width: "100%",
           borderRadius: "0.625rem",
         }}
@@ -49,7 +51,7 @@ export default function PrerequestHeader({
         <Grid2
           // item
           // xs={12}
-          sx={{ bgcolor: "#F7F7FF", display: "flex", flexDirection: "row" }}
+          sx={{ display: "flex", flexDirection: "row",justifyContent:"center" }}
         >
           <Grid2
           //  item
@@ -63,7 +65,7 @@ export default function PrerequestHeader({
             display={"flex"}
             alignItems={"center"}
             width={"100%"}
-            justifyContent={leftComponent ? "space-between" : "flex-start"}
+            justifyContent={"center"}
           >
             <Typography color={"#2A2A2A"}>{title}</Typography>
             {leftComponent}

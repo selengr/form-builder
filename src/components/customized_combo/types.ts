@@ -21,5 +21,5 @@ export type TUICustomizedCombo = {
   placeholder: string;
   label?: string;
   account: TAccount[] | [];
-  selectedCredits: (value: TAccount[]) => void;
+  selectedCredits: (value: TAccount) => void;
 };

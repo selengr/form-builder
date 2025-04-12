@@ -197,7 +197,7 @@ export default function UICustomizedCombo({
   });
 
   React.useEffect(() => {
-    selectedCredits(value);
+    selectedCredits(value[0]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 

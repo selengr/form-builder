@@ -15,7 +15,7 @@ import { connectToGateway } from "./actions";
 import { confirmPayment } from "./actions";
 // import CustomHeader from "@/components/header/customHeader";
 import { SelectedCreditCard } from "./SelectedCreditCard";
-// import Autocomplete from "@/components/Autocomplete";
+import Autocomplete from "@/components/Autocomplete";
 import TwoFABottomSheet, { type OTPResponseType } from "@/components/2FA";
 // import BottomSheet from "@/components/BottomSheetModal";
 // import MhesamEmptyCartPage from "@/../public/img/MhesamEmptyCartPage.svg";
@@ -113,7 +113,6 @@ useEffect(() => {
   });
 
   function handleAddCredit(credit: UserCreditListResponse | null) {
-    console.log('credit :>> ', credit);
     
     if (credit === null) return;
     if (
@@ -121,10 +120,10 @@ useEffect(() => {
         (item) => item.accountId === credit.accountId
       ) === -1 &&
       remainedAmount > 0
-    ) {debugger
+    ) {
       setSelectedCreditAmount((prev) => {
-        let totalCredit = prev + credit.availableAmount;
-        let remained = +data?.totalAmount - totalCredit;
+        const totalCredit = prev + credit.availableAmount;
+        const remained = +data?.totalAmount - totalCredit;
         setRemainedAmount(Math.max(remained, 0));
         return totalCredit;
       });
@@ -143,8 +142,8 @@ useEffect(() => {
 
   function handleRemoveCredit(credit: UserCreditListResponse): void {
     setSelectedCreditAmount((prev) => {
-      let totalCredit = prev - credit.availableAmount;
-      let remained = +data?.totalAmount - totalCredit;
+      const totalCredit = prev - credit.availableAmount;
+      const remained = +data?.totalAmount - totalCredit;
       setRemainedAmount(Math.max(remained, 0));
       return totalCredit;
     });
@@ -338,7 +337,7 @@ useEffect(() => {
               <Typography variant="body2" marginBottom="0.7rem">
                 انتخاب اعتبار
               </Typography>
-              {/* <Autocomplete<UserCreditListResponse>
+              <Autocomplete<UserCreditListResponse>
                 variant="data"
                 value={null}
                 key={selectedCredits.length}
@@ -347,24 +346,23 @@ useEffect(() => {
                 getOptionLabel={(option) =>
                   option?.creditTypeValue +
                   " - " +
-                  // formatNumberWithCommas(option?.availableAmount.toString()) +
-                  1111111 +
+                  formatNumberWithCommas(option?.availableAmount.toString()) +
                   " تومان"
                 }
                 onChange={(event, value) =>
                   handleAddCredit(value as UserCreditListResponse)
                 }
-              /> */}
+              />
 
 
-
+{/* 
 
           <UICustomizedCombo
             account={creditList}
             placeholder={'جستجوی اعتبار'}
             label="لطفا اعتبارات خود را انتخاب نمائید"
             selectedCredits={handleAddCredit}
-          />
+          /> */}
   
               
             </Box>

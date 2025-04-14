@@ -4,7 +4,7 @@ import Image from "next/image";
 import { formatNumberWithCommas } from "@/lib/numberFormatter";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import type { SelectedCreditCardProps } from "./types";
-// import TrashIcon from "@/../public/img/trashMts.svg";
+import TrashIcon from "@/../public/images/purchase-order/trashMts.svg";
 
 export function SelectedCreditCard({
   availableAmount = 0,
@@ -52,7 +52,7 @@ export function SelectedCreditCard({
           {formatNumberWithCommas(remainedCredit.toString())} تومان
         </Typography>
         <IconButton onClick={() => onDelete()} sx={{ marginLeft: "auto" }}>
-          {/* <Image src={TrashIcon} alt="trash" /> */}
+          <Image src={TrashIcon} alt="trash" />
         </IconButton>
       </Box>
     </Box>

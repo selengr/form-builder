@@ -11,14 +11,14 @@ import type {
   ConfirmPaymentRequestBody,
   UserCreditListResponse,
 } from "./types";
-import { connectToGateway } from "./actions";
+// import { connectToGateway } from "./actions";
 import { confirmPayment } from "./actions";
 // import CustomHeader from "@/components/header/customHeader";
 import { SelectedCreditCard } from "./SelectedCreditCard";
 import Autocomplete from "@/components/Autocomplete";
 import TwoFABottomSheet, { type OTPResponseType } from "@/components/2FA";
 // import BottomSheet from "@/components/BottomSheetModal";
-// import MhesamEmptyCartPage from "@/../public/img/MhesamEmptyCartPage.svg";
+import MhesamEmptyCartPage from "@/../public/images/purchase-order/MhesamEmptyCartPage.svg";
 // import PrerequestHeader from "../../components/PrerequestHeader";
 import { BiChevronRight } from "react-icons/bi";
 // import { useTranslation } from "@/services/i18n/client";
@@ -28,8 +28,8 @@ import PrerequestHeader from "@/templates/purchase-order/PrerequestHeader";
 import { ApiRequest } from "@/services/apiRequest";
 import { useGetPurchaseOrder } from "../../_hook/useGetPurchaseOrder";
 import AxiosApi from "@/services/axios/AxiosApi";
-import { issueRequest, serviceCost, userCreditList } from "./_api/getIssueRequest";
-import UICustomizedCombo from "@/components/customized_combo";
+import { connectToGateway, issueRequest, serviceCost, userCreditList } from "./_api/getIssueRequest";
+import { toast } from "sonner";
 
 
 
@@ -218,18 +218,12 @@ useEffect(() => {
 
   const { mutate: connectToGatewayMutation } = useMutation({
     mutationFn: (amount: number) => {
-      debugger;
-      console.log(
-        "🚀 ~ pathname:",
-        window.location.href.replace("/gateway", "/service-cost")
-      );
       return connectToGateway(
         window.location.href.replace("/gateway", "/service-cost"),
         amount
       );
     },
     onSuccess: (response) => {
-      debugger;
       if (response.message) {
         // enqueueSnackbar(JSON.parse(response.message).message[0].title, {
         //   variant: "error",
@@ -238,8 +232,9 @@ useEffect(() => {
         //     vertical: "top",
         //   },
         // });
+        toast.error(JSON.parse(response.message).message[0].title)
       } else {
-        let newUrl = response.gatewayUrl.replace("www.", "");
+        const newUrl = response.gatewayUrl.replace("www.", "");
         const param = {
           redirectUrl: response.redirectUrl,
           token: response.token,
@@ -283,7 +278,6 @@ useEffect(() => {
   }, []);
 
   const handleOnClickPay = () => {
-    debugger;
     if (remainedAmount > 0) {
       connectToGatewayMutation(remainedAmount);
     } else {
@@ -354,17 +348,6 @@ useEffect(() => {
                 }
               />
 
-
-{/* 
-
-          <UICustomizedCombo
-            account={creditList}
-            placeholder={'جستجوی اعتبار'}
-            label="لطفا اعتبارات خود را انتخاب نمائید"
-            selectedCredits={handleAddCredit}
-          /> */}
-  
-              
             </Box>
             {selectedCredits.map((credit, index) => (
               <SelectedCreditCard
@@ -376,11 +359,11 @@ useEffect(() => {
               />
             ))}
 
-            {/* <Image
+            <Image
               src={MhesamEmptyCartPage}
               alt="لیست اعتبارات"
               style={{ margin: "2rem auto" }}
-            /> */}
+            />
             <Box bgcolor="#F2F4F8" padding="1rem" borderRadius="12px">
               <Box display="flex" justifyContent="space-between">
                 <Typography variant="body2">مبلغ کل استفاده شده</Typography>

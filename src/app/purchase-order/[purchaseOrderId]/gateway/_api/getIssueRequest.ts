@@ -73,6 +73,42 @@ import axios from "axios";
     }
   }
 
+  export async function connectToGateway(redirectUrl: string, amount: number) {
+    try {
+      // const baseUrl = '/mhesam/profile/credit/before-gateway';
+      // const response = await AxiosApi.post<any>(baseUrl,{ redirectUrl, amount, failedRedirectUrl: redirectUrl });
+      
+      
+
+      const response = await axios.post("http://172.16.11.24:8080/mhesam/profile/credit/before-gateway",
+         { redirectUrl, amount : 20, failedRedirectUrl: redirectUrl },
+         {
+       
+          headers: {
+            Authorization: `Bearer eyJraWQiOiJzaGFyZS1rZXktaWQiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIwOTU1MDAwMDAwNyIsImF1ZCI6InNzb0NsaWVudC0yIiwibmJmIjoxNzQ0MDYwNDI2LCJpc3MiOiJodHRwOi8vMTcyLjE2LjExLjI0OjgwODAvc3NvIiwiaWQiOiI3IiwiZXhwIjoxNzc0MDYwNDI2LCJpYXQiOjE3NDQwNjA0MjYsImp0aSI6IjFjMTY4ZmYwLTA5YjQtNGEzYy1hMDRiLWM1Y2EyNWNlNzAzNyJ9.laT7pUnDdkQFhDbza5Y8w_herhkDDfn2OAGMMiSqt53qNE_UGTQSEa-VfgCkqVRroYplIZjbNsoFxhNq1qslJGpmyFcKfhs0QSuig7ol7-jssaFRRStSl2V8Vch51ocflt8QM25Aid84hbH3YzoPECzSfanxLuo3IyEGkH9baQttjS7jQ8BY6E9J4qmMWzzxQkzUpOSmpJMNatY73tipsSLvZ6TDuHEvM2VXYXGyKKccQ199y-r4wLVVLaYA4ZlW5nOKSxTmCxdW8TcB1h1LnrwYenBywGx3Dp9LNC3_pz1g8JVdOvRqmf0wkPzloXZuZZwTDVXoZag3rMVPrQCHDA`
+          }
+         }
+      );
+
+
+      // const response = ApiRequestNew(
+      //   "Post",
+      //   {},
+      //   { redirectUrl, amount, failedRedirectUrl: redirectUrl },
+      //   `/mhesam/profile/credit/before-gateway`,
+      //   true,
+      //   false
+      // );
+      // if (response.message) {
+      //   console.log("🚀 ~ connectToGateway ~ response:", response.message);
+      // }
+      return response.data;
+    } catch (error: any) {
+      return Promise.resolve(JSON.parse(error.message));
+    }
+  }
+  
+
 
 //   export async function serviceCost(planId: number) {
 //     try {
@@ -110,3 +146,4 @@ import axios from "axios";
 //       return Promise.resolve(JSON.parse(error.message));
 //     }
 //   }
+

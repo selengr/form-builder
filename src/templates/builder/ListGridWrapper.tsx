@@ -28,7 +28,7 @@ export default function ListGridWrapper() {
   const filterBoxList: any = [];
   const searchBoxList: any = [
     {
-      fieldName: "name",
+      fieldName: "formSetting.name",
       fieldOperation: "MATCH",
       fieldValue: "",
       nextConditionOperator: "OR",

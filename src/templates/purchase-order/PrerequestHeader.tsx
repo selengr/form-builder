@@ -31,6 +31,7 @@ export default function PrerequestHeader({
         backgroundColor: "white",
         width: "inherit",
         position: "relative",
+        overflowX : "hidden"
       }}
     >
       <Grid2

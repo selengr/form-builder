@@ -8,6 +8,7 @@ export async function twoFARequestHandler(
   body: object = {},
   method: RequestMethodsType = "Get"
 ) {debugger
+  console.log('url====================================================== :>> ', url);
   try {
     const response = await ApiRequest(method, {}, body, url, true);
     return response;

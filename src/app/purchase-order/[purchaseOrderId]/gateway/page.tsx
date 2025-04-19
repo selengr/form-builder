@@ -130,7 +130,7 @@ useEffect(() => {
       if (
         typeof credit.expireDate === "string" ||
         Object.keys(credit.expireDate ?? {}).length === 0
-      ) {debugger
+      ) {
         delete credit.expireDate;
       }
       setSelectedCredits((prev) => [...prev, credit]);
@@ -192,7 +192,7 @@ useEffect(() => {
     },
   });
 
-  const handleConfirmOtp = (res: OTPResponseType<{}>) => {
+  const handleConfirmOtp = (res: OTPResponseType<{}>) => {debugger
     let body: ConfirmPaymentRequestBody = {
       issueRequestId: +issueReques?.issueRequestId!,
       otpCode: res.otpCode ?? "",
@@ -219,7 +219,7 @@ useEffect(() => {
   const { mutate: connectToGatewayMutation } = useMutation({
     mutationFn: (amount: number) => {
       return connectToGateway(
-        window.location.href.replace("/gateway", "/service-cost"),
+        window.location.href.replace("/gateway", "/purchaseOrderId"),
         amount
       );
     },
@@ -233,7 +233,8 @@ useEffect(() => {
         //   },
         // });
         toast.error(JSON.parse(response.message).message[0].title)
-      } else {
+      } else {debugger
+        // const newUrl = response.gatewayUrl.replace("www.", "");
         const newUrl = response.gatewayUrl.replace("www.", "");
         const param = {
           redirectUrl: response.redirectUrl,
@@ -242,6 +243,22 @@ useEffect(() => {
         const url = `${newUrl}?${new URLSearchParams(param)}`;
         window.location.href = url;
       }
+
+      // =================connectToGateway
+      // body:{ redirectUrl:"", amount:321321, failedRedirectUrl: ""}
+      // Post
+      // /mhesam/profile/credit/before-gateway
+      
+      
+      // response =>
+      // param : {
+      //           redirectUrl: response.redirectUrl,
+      //           token: response.token,
+      //         }
+      // //==>url = response.gatewayUrl + param 
+      // redirect to url
+      // window.loaction.href = url;
+
     },
   });
 
@@ -292,7 +309,7 @@ useEffect(() => {
 
   return (
     creditList && (
-      <Box sx={{justifyContent:"center",display:"flex",width:"100%",m:2}}>
+      <Box sx={{justifyContent:"center",display:"flex",width:"100%",m:0}}>
         <PrerequestHeader
           title={"سبد خرید"}
           icon={<BiChevronRight size="1.7rem" color={"#292D32"} />}
@@ -309,6 +326,7 @@ useEffect(() => {
                 background:
                   "linear-gradient(10deg, #2CDFC9 120.72%, #1758BA 97.32%)",
                 color: palette.common.white,
+                
               }}
             >
               <Typography variant="h6" component="p" fontSize="1rem">
@@ -445,7 +463,7 @@ useEffect(() => {
           isLoadingConfirmation={isPending}
           sendOtpInfo={{
             url: (nationalCode) =>
-              `/send-otp?nationalcode=${nationalCode}&issueRequestId=${issueReques?.issueRequestId}`,
+              `/send-otp?nationalcode=${nationalCode}&issueRequestId=${issueRequestData?.issueRequestId}`,
           }}
           resendOtpInfo={{
             body: (data) => ({

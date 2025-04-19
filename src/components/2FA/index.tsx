@@ -15,13 +15,14 @@ import type {
   ICheckNationalCodeResponse,
   TwoFABottomSheetProps,
 } from "./types";
-import { twoFARequestHandler } from "./actions";
+// import { twoFARequestHandler } from "./actions";
 // import BottomSheet from "@/components/BottomSheetModal";
 
 import NationalCardIcon from "@/../public/images/purchase-order/NationalCard.svg";
 import TwoFAIcon from "@/../public/images/purchase-order/TwoFAIcon.svg";
 import BottomSheet from "../BottomSheet/BottomSheet";
 import FormTextInput from "./text-input/form-text-input";
+import { twoFARequestHandler } from "@/app/purchase-order/[purchaseOrderId]/gateway/_api/getIssueRequest";
 
 const NationalCodeSchema = z.object({
   nationalCode: z
@@ -68,6 +69,7 @@ export default function TwoFABottomSheet<T>({
     isPending: isPendingCheckNationalCode,
   } = useMutation({
     mutationFn: (nationalCode: string) => {
+      
       const url =
         typeof sendOtpInfo.url === "string"
           ? sendOtpInfo.url
@@ -79,13 +81,14 @@ export default function TwoFABottomSheet<T>({
             ? sendOtpInfo.body
             : sendOtpInfo.body(nationalCode);
       }
+      debugger
       return twoFARequestHandler(url, body, sendOtpInfo.method);
     },
-    onSuccess: (response: OTPResponseType<T>) => {
+    onSuccess: (response: OTPResponseType<T>) => {debugger
       console.log("🚀 ~ responseOTPPPPPPPPPPPPPP:", response);
       if (response.message) {
         toast.error(response.message[0].title);
-      } else {
+      } else {debugger
         setSendOtpResponse(response);
         setCurrentActiveBottomSheet("OTP");
         setTimer(2 * 60 * 1000 + Date.now());

@@ -37,9 +37,11 @@ export default function ListCard(props: any) {
         <p className="text-[14px] font-bold">انجام نشده</p>
       </div>
       <div className="flex w-full gap-2 flex-row">
+      <Link href={`/stats/${props.data.id}`} >
         <button className="bg-[#1758BA] hover:bg-[#216ee1] transition-all duration-200 max-w-[200px] px-2 h-[36px] w-full text-[14px] rounded-lg text-white">
           مشاهده نتایج
         </button>
+        </Link>
         <Link href={`/reports/create-solo/${props?.data?.id}`}>
           <button className="bg-[#2CDFC9]  hover:opacity-90 hover:shadow-md transition-all duration-200 max-w-[200px] px-12 h-[36px] w-full text-[14px] rounded-lg text-white">
             ساخت گزارش

@@ -100,6 +100,7 @@ type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 export default function SettingsDialog() {
   const [openDialog, setOpenDialog] = useState(false);
   const { id: formId } = useParams();
+  const { name: name} = useParams();
 
   const handleOpen = useCallback(() => {
     setOpenDialog((prev) => !prev);
@@ -110,7 +111,7 @@ export default function SettingsDialog() {
     resolver: zodResolver(propertiesSchema),
     mode: "all",
     defaultValues: {
-      name: "",
+      name: name,
       expireDate: { checked: false, value: "" },
       timeToComplete: { checked: false, value: "" },
       responseLimitation: { checked: false, value: "" },

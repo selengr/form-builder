@@ -25,9 +25,12 @@ export const formStatusPersian: any = {
   CREATE: "ایجاد شده",
   PUBLISH: "انتشار یافته",
   UN_PUBLISH: "عدم انتشار",
+  READY_TO_PUBLISH: "آماده برای انتشار",
 };
 
 export default function ListCard(props: any) {
+  console.log(props.data.status);
+
   const [loadingPublishStatus, setLoadingPublishStatus] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const router = useRouter();
@@ -120,16 +123,15 @@ export default function ListCard(props: any) {
           </p>
         </div>
         <div className="flex w-full gap-2 justify-center">
-          {props.data.status !== "CREATE" && (
-            <button
-              className="bg-[#1758BA] hover:bg-[#216ee1] transition-all duration-200 max-w-[350px] px-2 h-[36px] w-full text-[14px] rounded-lg text-white"
-              onClick={() => {
-                router.push(`/preview/${props.data.id}`);
-              }}
-            >
-              مشاهده
-            </button>
-          )}
+          <button
+            className="bg-[#1758BA] hover:bg-[#216ee1] transition-all duration-200 max-w-[350px] px-2 h-[36px] w-full text-[14px] rounded-lg text-white"
+            onClick={() => {
+              router.push(`/preview/${props.data.id}`);
+            }}
+          >
+            مشاهده
+          </button>
+
           <IconButton
             onClick={() => {
               setOpenConfirmDialog((prev) => !prev);
@@ -138,10 +140,16 @@ export default function ListCard(props: any) {
           >
             <Image src={TrashIcon} alt="" width={24} height={24} />
           </IconButton>
-          <PublishSettingsDialog formData={props.data as any} formId={props.data.id as any} />
+          {props.data.status === "READY_TO_PUBLISH" && (
+            <PublishSettingsDialog
+              formData={props.data as any}
+              formId={props.data.id as any}
+            />
+          )}
           <IconButton onClick={handleCopy} disabled={loadingPublishStatus}>
             <Image src={CopyIcon} alt="" width={24} height={24} />
           </IconButton>
+
           {props.data.status === "CREATE" && (
             <IconButton disabled={loadingPublishStatus}>
               <Link href={`/builder/${props.data.id}`}>

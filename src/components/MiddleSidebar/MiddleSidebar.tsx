@@ -83,7 +83,7 @@ export default function MiddleSidebar() {
                   <div className="flex items-center justify-between gap-2">
                     <Image src={`/images/home-page/menu/${item.icon}`} alt="" width={32} height={32} />
                     <p className="text-[14px] text-black font-bold">
-                      {item.data.langId}
+                      {item.text}
                     </p>
                   </div>
                   <div>

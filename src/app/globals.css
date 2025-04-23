@@ -1,15 +1,14 @@
+@import "../../public/fonts/font.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: IranSans;
-  display: swap;
-  src: url("../../public/fonts/IRANSansMobile(FaNum).ttf");
-}
-
 html body * {
-  font-family: IranSans !important;
+  font-family: IranSans, serif !important;
+  -moz-font-feature-settings: "ss01";
+  -webkit-font-feature-settings: "ss01";
+  font-feature-settings: "ss01";
+  scroll-behavior: smooth;
 }
 
 body {
@@ -21,3 +20,4 @@ body {
   background-image: url("../../public/images/home-page/bg-pattern.svg");
   background-repeat: repeat;
 }
+

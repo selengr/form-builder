@@ -53,9 +53,9 @@ export default function MiddleSidebar() {
           console.error('Error fetching data:', error);
       }
   };
-  
+
   fetchData();
-  
+
   },[])
 
 
@@ -67,7 +67,7 @@ export default function MiddleSidebar() {
       }}
     >
       <div className="w-full flex flex-col gap-5 items-center">
-        <Image priority src={Logo} width={111} height={38} alt="Psya-Logo" />
+        <Image fetchPriority="high" src={Logo} width={111} height={38} alt="Psya-Logo" />
         <div className="flex flex-col items-center w-full gap-5">
           <SidebarRoleSelection />
           <div className="w-full pr-3 flex flex-col gap-4">

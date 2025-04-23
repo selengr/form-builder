@@ -1,0 +1,32 @@
+@font-face {
+    font-family: 'IranSans';
+    src: url('IRANSansXV.woff') format('woff2-variations'),
+    url('IRANSansXV.woff') format('woff'),
+    url('IRANSansXV.woff2') format('woff2');
+    font-display: fallback;
+}
+
+.ss01 {
+    -moz-font-feature-settings: "ss01";
+    -webkit-font-feature-settings: "ss01";
+    font-feature-settings: "ss01";
+}
+
+.ss02 {
+    -moz-font-feature-settings: "ss02";
+    -webkit-font-feature-settings: "ss02";
+    font-feature-settings: "ss02";
+}
+
+.ss03 {
+    -moz-font-feature-settings: "ss03";
+    -webkit-font-feature-settings: "ss03";
+    font-feature-settings: "ss03";
+}
+
+.ss04 {
+    -moz-font-feature-settings: "ss04";
+    -webkit-font-feature-settings: "ss04";
+    font-feature-settings: "ss04";
+}
+

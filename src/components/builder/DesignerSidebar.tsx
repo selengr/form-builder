@@ -74,7 +74,7 @@ const DesignerSidebar = memo(function DesignerSidebar() {
               <CodiconEye color="#2A2A2A" />
             </IconButton>
           </Link>
-          <SettingsDialog />
+          <SettingsDialog formName={formName}/>
         </div>
       </div>
 
@@ -104,10 +104,10 @@ const DesignerSidebar = memo(function DesignerSidebar() {
                             },
                             minWidth: "132px",
                           }}
-                          loading={mutation.isPending} 
+                          loading={mutation.isPending}
                           disabled={mutation.isPending}
                         >
-                         <p className="text-white text-[15px] font-bold">آماده برای انتشار</p>  
+                         <p className="text-white text-[15px] font-bold">آماده برای انتشار</p>
                         </LoadingButton>
     </div>
   ) : (
@@ -143,7 +143,7 @@ const DesignerSidebar = memo(function DesignerSidebar() {
                 <CodiconEye color="#2A2A2A" />
               </IconButton>
             </Link>
-            <SettingsDialog />
+            <SettingsDialog formName={formName}/>
           </div>
         </div>
         <LoadingButton
@@ -165,7 +165,7 @@ const DesignerSidebar = memo(function DesignerSidebar() {
                           loading={mutation.isPending}
                           disabled={mutation.isPending}
                         >
-                         <p className="text-white text-[15px] font-bold">آماده برای انتشار</p>  
+                         <p className="text-white text-[15px] font-bold">آماده برای انتشار</p>
                         </LoadingButton>
 
         <Button
@@ -179,7 +179,7 @@ const DesignerSidebar = memo(function DesignerSidebar() {
                   },
                 }}
               >
-                <p className="text-white text-[15px] font-bold">آماده برای انتشار</p>                
+                <p className="text-white text-[15px] font-bold">آماده برای انتشار</p>
               </Button>
       </div>
       <DesignerBottomSheet>

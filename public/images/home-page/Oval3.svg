@@ -1,0 +1,21 @@
+<svg width="116" height="116" viewBox="0 0 116 116" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_d_13005_17804)">
+<path d="M59 30C59 38.8366 51.8366 46 43 46C34.1634 46 27 38.8366 27 30C27 21.1634 34.1634 14 43 14C51.8366 14 59 21.1634 59 30Z" fill="url(#paint0_radial_13005_17804)"/>
+</g>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M49.2512 39.2932C49.6456 38.8992 50.277 38.9027 50.6671 39.3011L53.8178 42.5181L56.9684 39.3011C57.1572 39.1083 57.4133 39 57.6804 39C57.9474 39 58.2035 39.1083 58.3923 39.3011L61.5429 42.5181L64.6936 39.3011C64.8824 39.1083 65.1385 39 65.4055 39C65.6725 39 65.9286 39.1083 66.1174 39.3011L69.2681 42.5181L72.4187 39.3011C72.6075 39.1083 72.8636 39 73.1306 39C73.3976 39 73.6537 39.1083 73.8425 39.3011L77.7051 43.245C78.0983 43.6465 78.0983 44.2974 77.7051 44.6989C77.3119 45.1004 76.6744 45.1004 76.2813 44.6989L73.1306 41.4819L69.98 44.6989C69.7912 44.8917 69.5351 45 69.2681 45C69.001 45 68.7449 44.8917 68.5561 44.6989L65.4055 41.4819L62.2548 44.6989C62.066 44.8917 61.8099 45 61.5429 45C61.2759 45 61.0198 44.8917 60.831 44.6989L57.6804 41.4819L54.5297 44.6989C54.3409 44.8917 54.0848 45 53.8178 45C53.5508 45 53.2947 44.8917 53.1059 44.6989L49.9474 41.4739L46.7109 44.7068C46.3134 45.1039 45.676 45.0967 45.2871 44.6909C44.8983 44.285 44.9053 43.6341 45.3028 43.2371L49.2512 39.2932Z" fill="black"/>
+<defs>
+<filter id="filter0_d_13005_17804" x="0" y="0" width="116" height="116" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="15" dy="28"/>
+<feGaussianBlur stdDeviation="21"/>
+<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 0.517647 0 0 0 0 0.0901961 0 0 0 0.648957 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_13005_17804"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_13005_17804" result="shape"/>
+</filter>
+<radialGradient id="paint0_radial_13005_17804" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(47.8647 21.1807) rotate(122.865) scale(29.5486 28.878)">
+<stop stop-color="#FEDA75"/>
+<stop offset="1" stop-color="#FF6F00"/>
+</radialGradient>
+</defs>
+</svg>

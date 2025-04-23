@@ -1,0 +1,17 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="vuesax/linear/additem">
+<g id="vuesax/linear/additem_2">
+<g id="additem" clip-path="url(#clip0_12581_78543)">
+<path id="Vector" d="M10.666 21.3337H7.23935C4.18602 21.3337 2.66602 19.8137 2.66602 16.7603V7.24033C2.66602 4.18699 4.18602 2.66699 7.23935 2.66699H13.3327C16.386 2.66699 17.906 4.18699 17.906 7.24033" stroke="#292D32" style="stroke:#292D32;stroke:color(display-p3 0.1608 0.1765 0.1961);stroke-opacity:1;" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M24.7604 29.3337H18.6671C15.6138 29.3337 14.0938 27.8137 14.0938 24.7603V15.2403C14.0938 12.187 15.6138 10.667 18.6671 10.667H24.7604C27.8138 10.667 29.3338 12.187 29.3338 15.2403V24.7603C29.3338 27.8137 27.8138 29.3337 24.7604 29.3337Z" stroke="#292D32" style="stroke:#292D32;stroke:color(display-p3 0.1608 0.1765 0.1961);stroke-opacity:1;" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_3" d="M19.8262 20H24.1728" stroke="#292D32" style="stroke:#292D32;stroke:color(display-p3 0.1608 0.1765 0.1961);stroke-opacity:1;" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_4" d="M22 22.1738V17.8271" stroke="#292D32" style="stroke:#292D32;stroke:color(display-p3 0.1608 0.1765 0.1961);stroke-opacity:1;" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_12581_78543">
+<rect width="32" height="32" fill="white" style="fill:white;fill-opacity:1;"/>
+</clipPath>
+</defs>
+</svg>

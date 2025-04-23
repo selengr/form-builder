@@ -1,0 +1,350 @@
+{
+
+    "dataList": [
+  
+      {
+  
+        "value": "102",
+  
+        "caption": "عددی",
+  
+        "elementStr": "QUESTION",
+  
+        "extMap": {
+  
+          "QUESTION_TYPE": "TEXT_FIELD",
+  
+          "DESCRIPTION": "",
+  
+          "MAXIMUM_LEN": "",
+  
+          "UNIC_NAME": "{#q_102}",
+  
+          "REQUIRED": "false",
+  
+          "MINIMUM_LEN": "",
+  
+          "TEXT_FIELD_PATTERN": "NUMBER"
+  
+        }
+  
+      },
+  
+      {
+  
+        "value": "105",
+  
+        "caption": "چند گزینه تک انتخاب",
+  
+        "elementStr": "QUESTION",
+  
+        "extMap": {
+  
+          "RANDOMIZE_OPTIONS": "false",
+  
+          "QUESTION_TYPE": "MULTIPLE_CHOICE",
+  
+          "DESCRIPTION": "",
+  
+          "UNIC_NAME": "{#q_105}",
+  
+          "REQUIRED": "false",
+  
+          "MULTI_SELECT": "false",
+  
+          "OPTIONS": {
+  
+            "OP_2": [
+  
+              0,
+  
+              "گزینه 2"
+  
+            ],
+  
+            "OP_1": [
+  
+              0,
+  
+              "گزینه 1"
+  
+            ]
+  
+          },
+  
+          "OPTIONS_SIZE": 2
+  
+        }
+  
+      },
+  
+      {
+  
+        "value": "106",
+  
+        "caption": "چندگزینه چند انتخابی",
+  
+        "elementStr": "QUESTION",
+  
+        "extMap": {
+  
+          "RANDOMIZE_OPTIONS": "false",
+  
+          "QUESTION_TYPE": "MULTIPLE_CHOICE",
+  
+          "DESCRIPTION": "",
+  
+          "UNIC_NAME": "{#q_106}",
+  
+          "REQUIRED": "false",
+  
+          "MULTI_SELECT": "true",
+  
+          "OPTIONS": {
+  
+            "OP_2": [
+  
+              0,
+  
+              "گزینه 2"
+  
+            ],
+  
+            "OP_1": [
+  
+              0,
+  
+              "گزینه 1"
+  
+            ]
+  
+          },
+  
+          "OPTIONS_SIZE": 2
+  
+        }
+  
+      },
+  
+      {
+  
+        "value": "107",
+  
+        "caption": "چند گزینه تصویری تک",
+  
+        "elementStr": "QUESTION",
+  
+        "extMap": {
+  
+          "RANDOMIZE_OPTIONS": "false",
+  
+          "QUESTION_TYPE": "MULTIPLE_CHOICE_IMAGE",
+  
+          "DESCRIPTION": "",
+  
+          "UNIC_NAME": "{#q_107}",
+  
+          "REQUIRED": "false",
+  
+          "MULTI_SELECT": "false",
+  
+          "OPTIONS": {
+  
+            "OP_2": [
+  
+              0,
+  
+              "67459dfd9030b64edf433558"
+  
+            ],
+  
+            "OP_1": [
+  
+              0,
+  
+              "67459df89030b64edf433556"
+  
+            ]
+  
+          },
+  
+          "OPTIONS_SIZE": 2
+  
+        }
+  
+      },
+  
+      {
+  
+        "value": "108",
+  
+        "caption": "چند گزینه تصویری چند",
+  
+        "elementStr": "QUESTION",
+  
+        "extMap": {
+  
+          "RANDOMIZE_OPTIONS": "false",
+  
+          "QUESTION_TYPE": "MULTIPLE_CHOICE_IMAGE",
+  
+          "DESCRIPTION": "",
+  
+          "UNIC_NAME": "{#q_108}",
+  
+          "REQUIRED": "false",
+  
+          "MULTI_SELECT": "true",
+  
+          "OPTIONS": {
+  
+            "OP_2": [
+  
+              0,
+  
+              "67459dfd9030b64edf433558"
+  
+            ],
+  
+            "OP_1": [
+  
+              0,
+  
+              "67459df89030b64edf433556"
+  
+            ]
+  
+          },
+  
+          "OPTIONS_SIZE": 2
+  
+        }
+  
+      },
+  
+      {
+  
+        "value": "109",
+  
+        "caption": "طیفی تک",
+  
+        "elementStr": "QUESTION",
+  
+        "extMap": {
+  
+          "SPECTRAL_START": "0",
+  
+          "SPECTRAL_TYPE": "DISCRETE",
+  
+          "QUESTION_TYPE": "SPECTRAL",
+  
+          "DESCRIPTION": "",
+  
+          "UNIC_NAME": "{#q_109}",
+  
+          "REQUIRED": "false",
+  
+          "SELECTION_TYPE": "SPECTRAL",
+  
+          "STEP": "1",
+  
+          "SPECTRAL_END": "100"
+  
+        }
+  
+      },
+  
+      {
+  
+        "value": "110",
+  
+        "caption": "طیفی دونقطه",
+  
+        "elementStr": "QUESTION",
+  
+        "extMap": {
+  
+          "SPECTRAL_START": "0",
+  
+          "SPECTRAL_TYPE": "DISCRETE",
+  
+          "QUESTION_TYPE": "SPECTRAL",
+  
+          "DESCRIPTION": "",
+  
+          "UNIC_NAME": "{#q_110}",
+  
+          "REQUIRED": "false",
+  
+          "SELECTION_TYPE": "DOMAIN",
+  
+          "STEP": "1",
+  
+          "SPECTRAL_END": "100"
+  
+        }
+  
+      },
+  
+      {
+  
+        "value": "23",
+  
+        "caption": "محاسبه گر شماره2",
+  
+        "elementStr": "CALCULATION",
+  
+        "extMap": {
+  
+          "UNIC_NAME": "{#calc_23}",
+  
+          "FORMULA": "{#q_102}+{#q_109}"
+  
+        }
+  
+      },
+  
+      {
+  
+        "value": "2",
+  
+        "caption": "محاسبه گر اول",
+  
+        "elementStr": "CALCULATION",
+  
+        "extMap": {
+  
+          "FORMULA": "#avgNumber({{#q_1},{#q_21},{#v_5},{#v_8}})",
+          "UNIC_NAME": "#avgNumber({{#q_1},{#q_21},{#v_5},{#v_8}})"
+  
+        }
+  
+      },
+  
+      {
+  
+        "value": "101",
+  
+        "caption": "محاسبه گر آخر",
+  
+        "elementStr": "CALCULATION",
+  
+        "extMap": {
+  
+          "FORMULA": "{#q_110}+{#q_107}+{#calc_2}",
+          "UNIC_NAME": "{#q_110}+{#q_107}+{#calc_2}"
+  
+        }
+  
+      }
+  
+    ],
+  
+    "totalCount": 10,
+  
+    "page": 0,
+  
+    "rows": 1000
+  
+  }
+  

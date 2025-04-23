@@ -17,6 +17,9 @@ import AxiosApi from "@/services/axios/AxiosApi";
 import { useParams } from "next/navigation";
 import { convertObject } from "@/lib/settingsUtils";
 
+interface Props {
+  formName:string
+}
 const responseLimitationOptions = [
   { label: "از طریق شماره همراه", value: "PHONE_NUMBER" },
   { label: "از طریق ایمیل", value: "EMAIL" },
@@ -24,7 +27,7 @@ const responseLimitationOptions = [
 
 const layoutOptions = [
   { label: "نمایش فهرستی", value: "list-view" },
-  { label: "نمایش صفحه ای", value: "page-view" },
+  { label: "نمایش صفحه‌ای", value: "page-view" },
 ];
 
 const themeOptions = [{ label: "تم 1", value: "theme_1" }];
@@ -97,10 +100,11 @@ const propertiesSchema = z.object({
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
-export default function SettingsDialog() {
+export default function SettingsDialog({ formName }: Props) {
   const [openDialog, setOpenDialog] = useState(false);
+  const [formFieldName, setFormFieldName] = useState<string>(formName);
   const { id: formId } = useParams();
-  const { name: name} = useParams();
+  // const { name: name} = useParams();
 
   const handleOpen = useCallback(() => {
     setOpenDialog((prev) => !prev);
@@ -111,7 +115,7 @@ export default function SettingsDialog() {
     resolver: zodResolver(propertiesSchema),
     mode: "all",
     defaultValues: {
-      name: name,
+      name: formFieldName,
       expireDate: { checked: false, value: "" },
       timeToComplete: { checked: false, value: "" },
       responseLimitation: { checked: false, value: "" },
@@ -129,7 +133,7 @@ export default function SettingsDialog() {
   async function onSubmit(values: propertiesFormSchemaType) {
     const body = {
       ...convertObject(values as any, fieldsConfig),
-      name: values.name,
+      name: formFieldName,
     };
 
     try {
@@ -223,6 +227,8 @@ export default function SettingsDialog() {
                       </Typography>
                       <RHFTextField
                         name="name"
+                        value={formFieldName}
+                        onChange={event => setFormFieldName(event.target.value)}
                         sx={{
                           "& .MuiInputBase-root": {
                             borderRadius: "10px",

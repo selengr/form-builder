@@ -32,7 +32,7 @@
     "axios": "^1.7.7",
     "framer-motion": "^11.13.1",
     "moment-jalaali": "^0.10.4",
-    "next": "14.2.20",
+    "next": "^14.2.28",
     "next-auth": "^4.24.11",
     "nextjs-toploader": "^3.7.15",
     "react": "^18",

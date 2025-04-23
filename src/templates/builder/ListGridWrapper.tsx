@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import ListGrid from "@/components/ListGrid/ListGrid";
 import ListCard from "@/components/ListGrid/ListCard";
 import {
@@ -55,7 +55,8 @@ export default function ListGridWrapper() {
       filterBoxList={filterBoxList}
       url="/form/main-list/"
       filterComponent={
-        <div className="flex h-full w-full flex-col items-center justify-between">
+        <div className="flex h-[calc(100vh-50px)] w-full flex-col">
+          {/* هدر فیلتر */}
           <div className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4">
             <div className="flex items-center w-full justify-center gap-2">
               <Image src={FilterIcon} width={30} height={30} alt="filter" />
@@ -64,173 +65,184 @@ export default function ListGridWrapper() {
               </p>
             </div>
           </div>
-          <div className="flex flex-col gap-4 w-full">
-            <div className="flex flex-col gap-4">
-              <div className="w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3">
-                <FormControl
-                  sx={{
-                    "& .MuiTypography-root": {
-                      fontSize: "14px",
-                      color: "#393939",
-                      fontWeight: 400,
-                    },
-                  }}
-                >
-                  <FormLabel
+
+          {/* محتوای فیلترها */}
+          <div className="flex-1 overflow-y-auto pb-4">
+            <div className="flex flex-col gap-4 w-full">
+              <div className="flex flex-col gap-4">
+                {/* بخش نوع فیلتر */}
+                <div className="w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3">
+                  <FormControl
                     sx={{
-                      fontSize: "15px",
-                      color: "#161616",
-                      fontWeight: 700,
-                      mb: "8px",
-                      "&.Mui-focused": {
-                        color: "#161616",
+                      "& .MuiTypography-root": {
+                        fontSize: "14px",
+                        color: "#393939",
+                        fontWeight: 400,
                       },
                     }}
-                    id="demo-controlled-radio-buttons-group"
                   >
-                    بر اساس نوع
-                  </FormLabel>
-                  <RadioGroup
-                    aria-labelledby="demo-controlled-radio-buttons-group"
-                    name="controlled-radio-buttons-group"
-                    value={formType.type}
-                    onChange={handleTypeChange}
-                  >
-                    <FormControlLabel
-                      value="ALL"
-                      control={<Radio />}
-                      label="همه"
-                    />
-                    <FormControlLabel
-                      value="COMPETITION"
-                      control={<Radio />}
-                      label="مسابقه"
-                    />
-                    <FormControlLabel
-                      value="QUESTION"
-                      control={<Radio />}
-                      label="پرسشنامه"
-                    />
-                    <FormControlLabel
-                      value="SURVEY"
-                      control={<Radio />}
-                      label="نظرسنجی"
-                    />
-                    <FormControlLabel
-                      value="TEST"
-                      control={<Radio />}
-                      label="آزمون"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </div>
-              <div className="w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3">
-                <FormControl
-                  sx={{
-                    "& .MuiTypography-root": {
-                      fontSize: "14px",
-                      color: "#393939",
-                      fontWeight: 400,
-                    },
-                  }}
-                >
-                  <FormLabel
-                    sx={{
-                      fontSize: "15px",
-                      color: "#161616",
-                      fontWeight: 700,
-                      mb: "8px",
-                      "&.Mui-focused": {
+                    <FormLabel
+                      sx={{
+                        fontSize: "15px",
                         color: "#161616",
+                        fontWeight: 700,
+                        mb: "8px",
+                        "&.Mui-focused": {
+                          color: "#161616",
+                        },
+                      }}
+                      id="demo-controlled-radio-buttons-group"
+                    >
+                      بر اساس نوع
+                    </FormLabel>
+                    <RadioGroup
+                      aria-labelledby="demo-controlled-radio-buttons-group"
+                      name="controlled-radio-buttons-group"
+                      value={formType.type}
+                      onChange={handleTypeChange}
+                    >
+                      <FormControlLabel
+                        value="ALL"
+                        control={<Radio />}
+                        label="همه"
+                      />
+                      <FormControlLabel
+                        value="COMPETITION"
+                        control={<Radio />}
+                        label="مسابقه"
+                      />
+                      <FormControlLabel
+                        value="QUESTION"
+                        control={<Radio />}
+                        label="پرسشنامه"
+                      />
+                      <FormControlLabel
+                        value="SURVEY"
+                        control={<Radio />}
+                        label="نظرسنجی"
+                      />
+                      <FormControlLabel
+                        value="TEST"
+                        control={<Radio />}
+                        label="آزمون"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </div>
+
+                {/* بخش دسترسی فیلتر */}
+                <div className="w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3">
+                  <FormControl
+                    sx={{
+                      "& .MuiTypography-root": {
+                        fontSize: "14px",
+                        color: "#393939",
+                        fontWeight: 400,
                       },
                     }}
-                    id="demo-controlled-radio-buttons-group"
                   >
-                    بر اساس دسترسی
-                  </FormLabel>
-                  <RadioGroup
-                    aria-labelledby="demo-controlled-radio-buttons-group"
-                    name="controlled-radio-buttons-group"
-                    value={formType.status}
-                    onChange={handleStatusChange}
-                  >
-                    <FormControlLabel
-                      value="ALL"
-                      control={<Radio />}
-                      label="همه"
-                    />
-                    <FormControlLabel
-                      value="PUBLIC"
-                      control={<Radio />}
-                      label="عمومی"
-                    />
-                    <FormControlLabel
-                      value="PRIVATE"
-                      control={<Radio />}
-                      label="خصوصی"
-                    />
-                  </RadioGroup>
-                </FormControl>
+                    <FormLabel
+                      sx={{
+                        fontSize: "15px",
+                        color: "#161616",
+                        fontWeight: 700,
+                        mb: "8px",
+                        "&.Mui-focused": {
+                          color: "#161616",
+                        },
+                      }}
+                      id="demo-controlled-radio-buttons-group"
+                    >
+                      بر اساس دسترسی
+                    </FormLabel>
+                    <RadioGroup
+                      aria-labelledby="demo-controlled-radio-buttons-group"
+                      name="controlled-radio-buttons-group"
+                      value={formType.status}
+                      onChange={handleStatusChange}
+                    >
+                      <FormControlLabel
+                        value="ALL"
+                        control={<Radio />}
+                        label="همه"
+                      />
+                      <FormControlLabel
+                        value="PUBLIC"
+                        control={<Radio />}
+                        label="عمومی"
+                      />
+                      <FormControlLabel
+                        value="PRIVATE"
+                        control={<Radio />}
+                        label="خصوصی"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </div>
               </div>
             </div>
           </div>
-          <div className="flex gap-4 items-center justify-between w-full mt-8">
-            <Button
-              sx={{
-                height: "52px",
-                bgcolor: "#1758BA",
-                boxShadow: "none",
-                borderRadius: "8px",
-                color: "white",
-                fontSize: "14px",
-                fontWeight: 700,
-                "&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active": {
+
+          {/* دکمه‌های ثابت در پایین */}
+          <div className="sticky bottom-0 bg-white pt-4 pb-2">
+            <div className="flex gap-4 items-center justify-between w-full">
+              <Button
+                sx={{
+                  height: "52px",
                   bgcolor: "#1758BA",
                   boxShadow: "none",
-                },
-              }}
-              fullWidth
-              variant="contained"
-              onClick={() => {
-                const params = new URLSearchParams(searchParams);
-                if (params.size) {
-                  params.delete("query");
-                }
-                push(`${pathname}?${params.toString()}`);
-                setRefreshGrid((prev) => !prev);
-              }}
-            >
-              اعمال فیلتر
-            </Button>
-            <Button
-              sx={{
-                height: "52px",
-                bgcolor: "white",
-                border: "1px solid #1758BA",
-                boxShadow: "none",
-                borderRadius: "8px",
-                color: "#1758BA",
-                fontSize: "14px",
-                fontWeight: 700,
-                "&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active": {
-                  bgcolor: "transparent",
+                  borderRadius: "8px",
+                  color: "white",
+                  fontSize: "14px",
+                  fontWeight: 700,
+                  "&.MuiButtonBase-root:hover": {
+                    bgcolor: "#1758BA",
+                    boxShadow: "none",
+                  },
+                }}
+                fullWidth
+                variant="contained"
+                onClick={() => {
+                  const params = new URLSearchParams(searchParams);
+                  if (params.size) {
+                    params.delete("query");
+                  }
+                  push(`${pathname}?${params.toString()}`);
+                  setRefreshGrid((prev) => !prev);
+                }}
+              >
+                اعمال فیلتر
+              </Button>
+              <Button
+                sx={{
+                  height: "52px",
+                  bgcolor: "white",
+                  border: "1px solid #1758BA",
                   boxShadow: "none",
-                },
-              }}
-              fullWidth
-              variant="outlined"
-              onClick={() => {
-                const params = new URLSearchParams(searchParams);
-                if (params.size) {
-                  params.delete("query");
-                }
-                push(`${pathname}?${params.toString()}`);
-                setFormType({ type: "ALL", status: "ALL" });
-                setRefreshGrid((prev) => !prev);
-              }}
-            >
-              حذف فیلتر
-            </Button>
+                  borderRadius: "8px",
+                  color: "#1758BA",
+                  fontSize: "14px",
+                  fontWeight: 700,
+                  "&.MuiButtonBase-root:hover": {
+                    bgcolor: "transparent",
+                    boxShadow: "none",
+                  },
+                }}
+                fullWidth
+                variant="outlined"
+                onClick={() => {
+                  const params = new URLSearchParams(searchParams);
+                  if (params.size) {
+                    params.delete("query");
+                  }
+                  push(`${pathname}?${params.toString()}`);
+                  setFormType({ type: "ALL", status: "ALL" });
+                  setRefreshGrid((prev) => !prev);
+                }}
+              >
+                حذف فیلتر
+              </Button>
+            </div>
           </div>
         </div>
       }

@@ -7,7 +7,7 @@ export async function serviceCost() {
   try {
       const baseUrl = '/purchase-order/invoice';
       const response = await AxiosApi.get<IPurchaseOrder>(baseUrl);
-      return response.data.totalAmount
+      return response.data
   } catch (error: any) {
     return Promise.resolve(JSON.parse(error.message));
   }

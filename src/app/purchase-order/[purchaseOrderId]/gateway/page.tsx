@@ -185,16 +185,8 @@ export default function PayWithMHesam() {
     },
     onSuccess: (response) => {
       if (response.message) {
-        // enqueueSnackbar(JSON.parse(response.message).message[0].title, {
-        //   variant: "error",
-        //   anchorOrigin: {
-        //     horizontal: "center",
-        //     vertical: "top",
-        //   },
-        // });
         toast.error(JSON.parse(response.message).message[0].title)
       } else {
-        // const newUrl = response.gatewayUrl.replace("www.", "");
         const newUrl = response.gatewayUrl.replace("www.", "");
         const param = {
           redirectUrl: response.redirectUrl,
@@ -203,22 +195,6 @@ export default function PayWithMHesam() {
         const url = `${newUrl}?${new URLSearchParams(param)}`;
         window.location.href = url;
       }
-
-      // =================connectToGateway
-      // body:{ redirectUrl:"", amount:321321, failedRedirectUrl: ""}
-      // Post
-      // /mhesam/profile/credit/before-gateway
-      
-      
-      // response =>
-      // param : {
-      //           redirectUrl: response.redirectUrl,
-      //           token: response.token,
-      //         }
-      // //==>url = response.gatewayUrl + param 
-      // redirect to url
-      // window.loaction.href = url;
-
     },
   });
 
@@ -228,14 +204,8 @@ export default function PayWithMHesam() {
     }
   }, [creditListData]);
 
-  // useEffect(() => {
-  //   if (data) {
-  //     setRemainedAmount(+data?.serviceCost);
-  //   }
-  // }, [data]);
 
   useEffect(() => {
-    // debugger;
     if (issueRequestData) {
       setIssueRequest(issueRequestData);
     }
@@ -262,18 +232,13 @@ export default function PayWithMHesam() {
     }
   };
 
-  console.log("🚀 ~ creditList:", creditList);
-  const selectedCredits2 = (value:  undefined | any) => {
-    setChosenCredits(value);
-  };
-
   return (
     creditList && (
       <Box sx={{justifyContent:"center",display:"flex",width:"100%",m:0}}>
         <PrerequestHeader
           title={"سبد خرید"}
           icon={<BiChevronRight size="1.7rem" color={"#292D32"} />}
-          CB_onClick={() => router.push("/prerequest-loan/create")}
+          CB_onClick={() => router.push("/purchase-order")}
         >
           <Box padding="1rem">
             <Box

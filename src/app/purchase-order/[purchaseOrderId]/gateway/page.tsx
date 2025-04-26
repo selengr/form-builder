@@ -6,13 +6,12 @@ import { Box, Button, Divider, MenuItem, Select, Typography, useTheme } from "@m
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { formatNumberWithCommas } from "@/lib/numberFormatter";
 import { useParams, usePathname, useRouter } from "next/navigation";
-// import { enqueueSnackbar } from "notistack";
 import type {
   ConfirmPaymentRequestBody,
   UserCreditListResponse,
 } from "./types";
 // import { connectToGateway } from "./actions";
-import { confirmPayment } from "./actions";
+// import { confirmPayment } from "./actions";
 // import CustomHeader from "@/components/header/customHeader";
 import { SelectedCreditCard } from "./SelectedCreditCard";
 import Autocomplete from "@/components/Autocomplete";
@@ -28,7 +27,7 @@ import PrerequestHeader from "@/templates/purchase-order/PrerequestHeader";
 import { ApiRequest } from "@/services/apiRequest";
 import { useGetPurchaseOrder } from "../../_hook/useGetPurchaseOrder";
 import AxiosApi from "@/services/axios/AxiosApi";
-import { connectToGateway, issueRequest, serviceCost, userCreditList } from "./_api/getIssueRequest";
+import { confirmPayment, connectToGateway, issueRequest, serviceCost, userCreditList } from "./_api/getIssueRequest";
 import { toast } from "sonner";
 
 
@@ -192,9 +191,9 @@ useEffect(() => {
     },
   });
 
-  const handleConfirmOtp = (res: OTPResponseType<{}>) => {debugger
-    let body: ConfirmPaymentRequestBody = {
-      issueRequestId: +issueReques?.issueRequestId!,
+  const handleConfirmOtp = (res: OTPResponseType<any>) => {
+    const body: ConfirmPaymentRequestBody = {
+      issueRequestId: +issueReques!.issueRequestId!,
       otpCode: res.otpCode ?? "",
       otpId: res.id ?? "",
       userCreditModelList: selectedCredits,
@@ -233,7 +232,7 @@ useEffect(() => {
         //   },
         // });
         toast.error(JSON.parse(response.message).message[0].title)
-      } else {debugger
+      } else {
         // const newUrl = response.gatewayUrl.replace("www.", "");
         const newUrl = response.gatewayUrl.replace("www.", "");
         const param = {

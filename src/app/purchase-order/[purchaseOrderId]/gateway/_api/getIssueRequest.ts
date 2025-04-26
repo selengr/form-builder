@@ -1,8 +1,7 @@
-import { RequestMethodsType } from "@/components/2FA/types";
-import { ApiRequest } from "@/services/apiRequest";
 import AxiosApi from "@/services/axios/AxiosApi";
 import { IPurchaseOrder } from "@/types/shoppingCart";
 import axios from "axios";
+import { ConfirmPaymentRequestBody } from "../types";
 
  export const issueRequest = async () => {
     try {
@@ -121,6 +120,31 @@ export async function twoFARequestHandler(
   try {
       const response = await AxiosApi.post(`/check-nationalCode-send-code`,{nationalCode})
     return response.data
+  } catch (error: any) {
+    return Promise.resolve(JSON.parse(error.message));
+  }
+}
+
+
+
+export async function confirmPayment(body: ConfirmPaymentRequestBody) {
+  try {
+    const userCreditModelList = body.userCreditModelList.map((item) => ({
+      accountId: item.accountId,
+      creditType: item.creditType,
+      creditTypeEnum: item.creditTypeEnum,
+      totalAmount: item.totalAmount,
+      availableAmount: item.availableAmount,
+      order: item.order,
+    }));
+    const temp = {
+      issueRequestId: +body.issueRequestId,
+      otpCode: body.otpCode,
+      otpId: body.otpId,
+      userCreditModelList,
+    };
+    const response = await AxiosApi.put("/communitycharge/service-cost/confirm",{temp});
+    return response;
   } catch (error: any) {
     return Promise.resolve(JSON.parse(error.message));
   }

@@ -14,8 +14,6 @@ import type {
   UserCreditListResponse,
   ConfirmPaymentRequestBody,
 } from "./types";
-// services
-import AxiosApi from "@/services/axios/AxiosApi";
 // components
 import Autocomplete from "@/components/Autocomplete";
 import { SelectedCreditCard } from "./SelectedCreditCard";

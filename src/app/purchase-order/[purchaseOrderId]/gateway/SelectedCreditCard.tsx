@@ -14,7 +14,7 @@ export function SelectedCreditCard({
 }: SelectedCreditCardProps) {
   const { palette } = useTheme();
 
-  return (
+  return (  
     <Box
       border="1px solid #DDE1E6"
       padding="0.7rem 0.6rem"

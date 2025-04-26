@@ -1,25 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import { Box, Button, Grid, Typography, useTheme } from "@mui/material";
-import { FormProvider, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
-import AuthCode from "react-auth-code-input";
 import { toast } from 'sonner';
+import Image from "next/image";
 import Countdown from "react-countdown";
 import { BiAlarm } from "react-icons/bi";
+import { useEffect, useState } from "react";
+import AuthCode from "react-auth-code-input";
+import { useMutation } from "@tanstack/react-query";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FormProvider, useForm } from "react-hook-form";
+import { Box, Button, Typography, useTheme } from "@mui/material";
 import type {
-  ICheckNationalCodeResponse,
   TwoFABottomSheetProps,
+  ICheckNationalCodeResponse,
 } from "./types";
-// import { twoFARequestHandler } from "./actions";
-// import BottomSheet from "@/components/BottomSheetModal";
-
-import NationalCardIcon from "@/../public/images/purchase-order/NationalCard.svg";
+// image
 import TwoFAIcon from "@/../public/images/purchase-order/TwoFAIcon.svg";
+import NationalCardIcon from "@/../public/images/purchase-order/NationalCard.svg";
+// components
 import BottomSheet from "../BottomSheet/BottomSheet";
 import FormTextInput from "./text-input/form-text-input";
 import { twoFARequestHandler } from "@/app/purchase-order/[purchaseOrderId]/gateway/_api/getIssueRequest";
@@ -61,9 +60,9 @@ export default function TwoFABottomSheet<T>({
     "NATIONAL_CODE" | "OTP"
   >("NATIONAL_CODE");
   const [sendOtpResponse, setSendOtpResponse] = useState<OTPResponseType<T>>();
+  const [timer, setTimer] = useState<number>(0);
   const [otpCode, setOtpCode] = useState<string>("");
   const [otpError, setOtpError] = useState<string>("");
-  const [timer, setTimer] = useState(0);
 
   const {
     mutate: mutateCheckNationalCode,
@@ -86,7 +85,7 @@ export default function TwoFABottomSheet<T>({
     onSuccess: (response: OTPResponseType<T>) => {
       if (response.message) {
         toast.error(response.message[0].title);
-      } else {debugger
+      } else {
         setSendOtpResponse(response);
         setCurrentActiveBottomSheet("OTP");
         setTimer(2 * 60 * 1000 + Date.now());
@@ -98,7 +97,6 @@ export default function TwoFABottomSheet<T>({
     useMutation({
       mutationFn: () => {
         const nationalCode = methods.getValues("nationalCode");
-        debugger
         const url =
           typeof resendOtpInfo.url === "string"
             ? resendOtpInfo.url

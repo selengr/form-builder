@@ -111,7 +111,7 @@ export default function SettingsDialog() {
     resolver: zodResolver(propertiesSchema),
     mode: "all",
     defaultValues: {
-      name: name,
+      name: Array.isArray(name) ? name[0] : name,
       expireDate: { checked: false, value: "" },
       timeToComplete: { checked: false, value: "" },
       responseLimitation: { checked: false, value: "" },

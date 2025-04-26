@@ -24,6 +24,7 @@ import BottomSheet from "../BottomSheet/BottomSheet";
 import FormTextInput from "./text-input/form-text-input";
 import { twoFARequestHandler } from "@/app/purchase-order/[purchaseOrderId]/gateway/_api/getIssueRequest";
 
+
 const NationalCodeSchema = z.object({
   nationalCode: z
     .string()
@@ -69,7 +70,6 @@ export default function TwoFABottomSheet<T>({
     isPending: isPendingCheckNationalCode,
   } = useMutation({
     mutationFn: (nationalCode: string) => {
-      
       const url =
         typeof sendOtpInfo.url === "string"
           ? sendOtpInfo.url
@@ -81,11 +81,9 @@ export default function TwoFABottomSheet<T>({
             ? sendOtpInfo.body
             : sendOtpInfo.body(nationalCode);
       }
-      debugger
-      return twoFARequestHandler(url, body, sendOtpInfo.method);
+      return twoFARequestHandler(nationalCode);
     },
-    onSuccess: (response: OTPResponseType<T>) => {debugger
-      console.log("🚀 ~ responseOTPPPPPPPPPPPPPP:", response);
+    onSuccess: (response: OTPResponseType<T>) => {
       if (response.message) {
         toast.error(response.message[0].title);
       } else {debugger
@@ -100,6 +98,7 @@ export default function TwoFABottomSheet<T>({
     useMutation({
       mutationFn: () => {
         const nationalCode = methods.getValues("nationalCode");
+        debugger
         const url =
           typeof resendOtpInfo.url === "string"
             ? resendOtpInfo.url
@@ -111,7 +110,7 @@ export default function TwoFABottomSheet<T>({
               ? resendOtpInfo.body
               : resendOtpInfo.body({ nationalCode, ...(sendOtpResponse as T) });
         }
-        return twoFARequestHandler(url, body, resendOtpInfo.method);
+        return twoFARequestHandler(url);
       },
       onSuccess: (response: OTPResponseType<T>) => {
         console.log("🚀 ~ responsessssssssssssssssssssss:", response);

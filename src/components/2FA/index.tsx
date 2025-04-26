@@ -68,18 +68,7 @@ export default function TwoFABottomSheet<T>({
     mutate: mutateCheckNationalCode,
     isPending: isPendingCheckNationalCode,
   } = useMutation({
-    mutationFn: (nationalCode: string) => {
-      const url =
-        typeof sendOtpInfo.url === "string"
-          ? sendOtpInfo.url
-          : sendOtpInfo.url(nationalCode);
-      let body = {};
-      if (sendOtpInfo.body) {
-        body =
-          typeof sendOtpInfo.body === "object"
-            ? sendOtpInfo.body
-            : sendOtpInfo.body(nationalCode);
-      }
+      mutationFn: (nationalCode: string) => {
       return twoFARequestHandler(nationalCode);
     },
     onSuccess: (response: OTPResponseType<T>) => {
@@ -111,7 +100,6 @@ export default function TwoFABottomSheet<T>({
         return twoFARequestHandler(url);
       },
       onSuccess: (response: OTPResponseType<T>) => {
-        console.log("🚀 ~ responsessssssssssssssssssssss:", response);
         if (response.message) {
           toast.error(response.message[0].title);
         } else {

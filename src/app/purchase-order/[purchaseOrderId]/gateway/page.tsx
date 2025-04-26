@@ -1,55 +1,42 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Box, Button, Divider, MenuItem, Select, Typography, useTheme } from "@mui/material";
+import { toast } from "sonner";
+import { useEffect, useState } from "react";
+import { BiChevronRight } from "react-icons/bi";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { formatNumberWithCommas } from "@/lib/numberFormatter";
 import { useParams, usePathname, useRouter } from "next/navigation";
+import { Box, Button, Divider, Typography, useTheme } from "@mui/material";
+
+// types
 import type {
-  ConfirmPaymentRequestBody,
   UserCreditListResponse,
+  ConfirmPaymentRequestBody,
 } from "./types";
-// import { connectToGateway } from "./actions";
-// import { confirmPayment } from "./actions";
-// import CustomHeader from "@/components/header/customHeader";
-import { SelectedCreditCard } from "./SelectedCreditCard";
-import Autocomplete from "@/components/Autocomplete";
-import TwoFABottomSheet, { type OTPResponseType } from "@/components/2FA";
-// import BottomSheet from "@/components/BottomSheetModal";
-import MhesamEmptyCartPage from "@/../public/images/purchase-order/MhesamEmptyCartPage.svg";
-// import PrerequestHeader from "../../components/PrerequestHeader";
-import { BiChevronRight } from "react-icons/bi";
-// import { useTranslation } from "@/services/i18n/client";
-import { RHFSelect } from "@/components/hook-form";
-import BottomSheet from "@/components/BottomSheet/BottomSheet";
-import PrerequestHeader from "@/templates/purchase-order/PrerequestHeader";
-import { ApiRequest } from "@/services/apiRequest";
-import { useGetPurchaseOrder } from "../../_hook/useGetPurchaseOrder";
+// services
 import AxiosApi from "@/services/axios/AxiosApi";
+// components
+import Autocomplete from "@/components/Autocomplete";
+import { SelectedCreditCard } from "./SelectedCreditCard";
+import BottomSheet from "@/components/BottomSheet/BottomSheet";
+import TwoFABottomSheet, { type OTPResponseType } from "@/components/2FA";
+// templates
+import PrerequestHeader from "@/templates/purchase-order/PrerequestHeader";
+// public
+import MhesamEmptyCartPage from "@/../public/images/purchase-order/MhesamEmptyCartPage.svg";
+// apis
 import { confirmPayment, connectToGateway, issueRequest, serviceCost, userCreditList } from "./_api/getIssueRequest";
-import { toast } from "sonner";
 
 
 
-export type TAccount = {
-  accountId: number;
-  creditType: string;
-  creditTypeEnum: string | 'MHESAM_DONATION' | 'MHESAM_NORMAL';
-  totalAmount: number;
-  availableAmount: number;
-  order: number;
-  expireDate: null | object | any;
-};
-
+// -------------------------------------------------
 
 export default function PayWithMHesam() {
   const params = useParams();
   const router = useRouter();
   const pathname = usePathname();
   const { palette } = useTheme();
-
-  // const { t } = useTranslation(["gateway"]);
   const [selectedCredits, setSelectedCredits] = useState<
     UserCreditListResponse[]
   >([]);
@@ -60,10 +47,7 @@ export default function PayWithMHesam() {
   const [issueReques, setIssueRequest] = useState<{ issueRequestId: number }>();
   const [prevServiceCost, setPrevServiceCost] = useState<number>();
 
-  const [chosenCredits, setChosenCredits] = useState<TAccount[] | 0>(0);
-  const [account, setAccount] = useState<TAccount[]>();
 
-  //  const {data:purchaseOrder,isLoading} = useGetPurchaseOrder()
 
   const { data, mutate: getServiceCost } = useMutation({
     mutationFn: () => serviceCost(+params.purchaseOrderId),

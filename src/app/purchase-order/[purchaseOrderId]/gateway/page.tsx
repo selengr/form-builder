@@ -60,23 +60,18 @@ export default function PayWithMHesam() {
     },
   });
   
-useEffect(() => {
-  const issueRequest = async () => {
-    try {
-      const response = await AxiosApi.post("/purchase-order/createIssueRequest"
-      );
-      console.log("🚀 ~ issueRequest ~ response:", response);
-      return response;
-    } catch (error) {
-      console.error("Error occurred while issuing request:", error);
-      // Handle error appropriately, e.g., show a notification or set an error state
-      return Promise.resolve("");
-    }
-  };
-
-  issueRequest();
-}, [])
-  console.log('issueRequestData :>> ', +issueRequestData?.issueRequestId);
+    // useEffect(() => {
+    //   const issueRequest = async () => {
+    //     try {
+    //       const response = await AxiosApi.post("/purchase-order/createIssueRequest"
+    //       );
+    //       return response;
+    //     } catch (error) {
+    //       return Promise.resolve("");
+    //     }
+    //   };
+    //   issueRequest();
+    // }, [])
 
   const { data: creditListData } = useQuery({
     queryKey: ["userCreditList"],
@@ -145,20 +140,11 @@ useEffect(() => {
   const { mutate, isPending } = useMutation({
     mutationFn: (body: ConfirmPaymentRequestBody) => confirmPayment(body),
     onSuccess: (response) => {
-      console.log("🚀 ~ response:", response);
       if (response.message) {
-        // enqueueSnackbar(JSON.parse(response.message).message[0].title, {
-        //   variant: "error",
-        //   anchorOrigin: {
-        //     vertical: "top",
-        //     horizontal: "center",
-        //   },
-        // });
+        toast.error(JSON.parse(response.message).message[0].title)
       } else {
         setOpenModal(undefined);
-        // enqueueSnackbar("عضویت شما با موفقیت به‌روزرسانی شد.", {
-        //   variant: "success",
-        // });
+        toast.success("عضویت شما با موفقیت به‌روزرسانی شد.")
         router.push(
           `${pathname.replace("gateway", "signature")}?uu-id=${issueReques?.issueRequestId}`
         );

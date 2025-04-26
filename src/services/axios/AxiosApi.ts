@@ -12,7 +12,6 @@ let cachedSession: any = null;
 
 AxiosApi.interceptors.request.use(async (request) => {
   try {
-    // debugger
     if (!cachedSession) {
       if (typeof window === "undefined") {
         cachedSession = await getServerSession(authOptions);

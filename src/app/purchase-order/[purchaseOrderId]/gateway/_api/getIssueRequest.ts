@@ -23,28 +23,58 @@ export async function serviceCost() {
   };
 
 
- export const userCreditList = async (issueRequestId: number) => {
+  export const userCreditList = async (issueRequestId: number) => {
     try {
-      let body = {
+      const body = {
         issueRequestId,
       };
-      const response = await axios.post("https://newpl1api.qhami.com/mhesam/profile/credit/user-credit-list",
-        body,
-         {
-       
-          headers: {
-            Authorization: `Bearer eyJraWQiOiJzaGFyZS1rZXktaWQiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIwOTM4MjczMDgxOCIsImF1ZCI6InNzb0NsaWVudC0yIiwibmJmIjoxNzQ1MzUxNzI3LCJpc3MiOiJodHRwOi8vc3NvLXNlcnZpY2UubmV3cGwxLnN2Yzo4MDgwIiwiaWQiOiIxMTI2NDkiLCJleHAiOjE3NzUzNTE3MjcsImlhdCI6MTc0NTM1MTcyNywianRpIjoiMzRiMjAxZWEtMGJiZC00ODNhLThkMzQtZGNiMTNiOTRhZDVlIn0.KhUZ6IN3HDkfoIcUSHL9-EnAY32V4nLdzRokOqceXyRqbIfv7SSl2Rw9kmo_Id7ij2VkgXIgb_4yiE3xcnkasfO4--ILoLROLAuqobKBvoANyl-6tFb6rwj6xn7VZQHC0Oig8DpigbHQyriH02nN80Uy6S-iwToai7GSYkUShz1sprkF3ExIRwIbariJ27IHug4McrZ6ycYqvl6FkNEBqgia5ct53j47AmMtOn1HtyL5ZDvMizTV4P9hzXmw2v3co97KqbCSSwhMMgTq1CoZGJbl1d5aEQR1LrVTPsaNu22s6pTldUkC3miIsO2qUjyNlxFnRHs1-2IKg3wb0imO8A`
-          }
-         }
-      );
-      console.log("🚀 ~ issueRequest ~ response:", response);
+      const response = await AxiosApi.post("/mhesam/profile/credit/user-credit-list",
+        body,{
+          baseURL: process.env.NEXT_PUBLIC_BASE_URL_PSYA,
+      })
       return response.data;
     } catch (error) {
-      console.error("Error occurred while issuing request:", error);
-      // Handle error appropriately, e.g., show a notification or set an error state
       return Promise.resolve("");
     }
   };
+
+  export async function confirmPayment(body: ConfirmPaymentRequestBody) {
+    try {
+      const userCreditModelList = body.userCreditModelList.map((item) => ({
+        accountId: item.accountId,
+        creditType: item.creditType,
+        creditTypeEnum: item.creditTypeEnum,
+        totalAmount: item.totalAmount,
+        availableAmount: item.availableAmount,
+        order: item.order,
+      }));
+      const temp = {
+        issueRequestId: +body.issueRequestId,
+        otpCode: body.otpCode,
+        otpId: body.otpId,
+        userCreditModelList,
+      };
+      const response = await AxiosApi.put("/communitycharge/service-cost/confirm",{temp});
+      return response;
+    } catch (error: any) {
+      return Promise.resolve(JSON.parse(error.message));
+    }
+  }
+
+  export async function connectToGateway(redirectUrl: string, amount: number) {
+    try {
+      const baseUrl = '/mhesam/profile/credit/before-gateway';
+      const response = await AxiosApi.post(baseUrl,
+        { redirectUrl, amount, failedRedirectUrl: redirectUrl },
+        {
+          baseURL: process.env.NEXT_PUBLIC_BASE_URL_PSYA,
+       })
+      return response.data;
+    } catch (error: any) {
+      return Promise.resolve(JSON.parse(error.message));
+    }
+  }
+
 
 
   // export async function userCreditList(issueRequestId: number) {
@@ -68,42 +98,6 @@ export async function serviceCost() {
 
   
 
-
-  export async function connectToGateway(redirectUrl: string, amount: number) {
-    try {
-      // const baseUrl = '/mhesam/profile/credit/before-gateway';
-      // const response = await AxiosApi.post<any>(baseUrl,{ redirectUrl, amount, failedRedirectUrl: redirectUrl });
-      
-      
-
-      // const response = await axios.post("https://newpl1api.qhami.com/mhesam/profile/credit/before-gateway",
-      const response = await axios.post("https://newpl1api.qhami.com/mhesam/profile/credit/before-gateway",
-         { redirectUrl, amount:100, failedRedirectUrl: redirectUrl },
-         {
-       
-          headers: {
-            Authorization: `Bearer eyJraWQiOiJzaGFyZS1rZXktaWQiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIwOTU1MDAwMDAwNyIsImF1ZCI6InNzb0NsaWVudC0yIiwibmJmIjoxNzQ1MDgwMDU5LCJpc3MiOiJodHRwOi8vMTcyLjE2LjExLjI0OjgwODAvc3NvIiwiaWQiOiI3IiwiZXhwIjoxNzc1MDgwMDU5LCJpYXQiOjE3NDUwODAwNTksImp0aSI6IjMxZjBkMzU4LTkwNzMtNGRlNi05ZjQ4LWY5YzIyNmNkZWZmZCJ9.d6t1H4u8s2VzzpFNS7mOJFC-njhAP70CX731oYgDo-4B3ta6sJbHmnvEXFkZ4Nz1DQwnDj6KY6cqNknMqtOmCWGUqRwVSpOwjTICKZA714IMJp8poFzzfJDPbAVhHlq0TxqywsCeKF2dmwYyG1B9yLRdG1TBg48Xb0OQBiEe96RVINkzlVtxEWaAY5bIcOpx_Y1uqsCISaqptIFC4iguXNcYBvwpbQE61KjnqbByT6eWAO4X-wgM5j327YlCR7jEH4D3tx3ZovN7CaH4Qxf2CDylMv_K3Xpm8_7tbMG93BdMWTNuc4cwCE63dUppX_mPZKzdJAOgavFBBGyTU0lwCQ`
-          }
-         }
-      );
-
-
-      // const response = ApiRequestNew(
-      //   "Post",
-      //   {},
-      //   { redirectUrl, amount, failedRedirectUrl: redirectUrl },
-      //   `/mhesam/profile/credit/before-gateway`,
-      //   true,
-      //   false
-      // );
-      // if (response.message) {
-      //   console.log("🚀 ~ connectToGateway ~ response:", response.message);
-      // }
-      return response.data;
-    } catch (error: any) {
-      return Promise.resolve(JSON.parse(error.message));
-    }
-  }
   
 
   
@@ -121,28 +115,7 @@ export async function twoFARequestHandler(
 
 
 
-export async function confirmPayment(body: ConfirmPaymentRequestBody) {
-  try {
-    const userCreditModelList = body.userCreditModelList.map((item) => ({
-      accountId: item.accountId,
-      creditType: item.creditType,
-      creditTypeEnum: item.creditTypeEnum,
-      totalAmount: item.totalAmount,
-      availableAmount: item.availableAmount,
-      order: item.order,
-    }));
-    const temp = {
-      issueRequestId: +body.issueRequestId,
-      otpCode: body.otpCode,
-      otpId: body.otpId,
-      userCreditModelList,
-    };
-    const response = await AxiosApi.put("/communitycharge/service-cost/confirm",{temp});
-    return response;
-  } catch (error: any) {
-    return Promise.resolve(JSON.parse(error.message));
-  }
-}
+
 
 
 

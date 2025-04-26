@@ -1,18 +1,24 @@
-import AxiosApi from "@/services/axios/AxiosApi";
-import { IPurchaseOrder } from "@/types/shoppingCart";
 import axios from "axios";
+import AxiosApi from "@/services/axios/AxiosApi";
 import { ConfirmPaymentRequestBody } from "../types";
+import { IPurchaseOrder } from "@/types/shoppingCart";
+
+export async function serviceCost() {
+  try {
+      const baseUrl = '/purchase-order/invoice';
+      const response = await AxiosApi.get<IPurchaseOrder>(baseUrl);
+      return response.data.totalAmount
+  } catch (error: any) {
+    return Promise.resolve(JSON.parse(error.message));
+  }
+}
 
  export const issueRequest = async () => {
     try {
-      const {data} = await AxiosApi.post("/purchase-order/createIssueRequest"
-      );
-      
+      const {data} = await AxiosApi.post("/purchase-order/createIssueRequest");
       return data
     } catch (error) {
-      console.error("Error occurred while issuing request:", error);
-      // Handle error appropriately, e.g., show a notification or set an error state
-      return Promise.resolve("");
+       return Promise.resolve("");
     }
   };
 
@@ -60,20 +66,8 @@ import { ConfirmPaymentRequestBody } from "../types";
   // }
 
 
-
-
   
-  export async function serviceCost(planId: number) {
-    try {
-        const baseUrl = '/purchase-order/invoice';
-        const response = await AxiosApi.get<IPurchaseOrder>(baseUrl);
-        // debugger
-        const test ={ totalAmount: 20 }
-        return test;
-    } catch (error: any) {
-      return Promise.resolve(JSON.parse(error.message));
-    }
-  }
+
 
   export async function connectToGateway(redirectUrl: string, amount: number) {
     try {

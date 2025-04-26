@@ -40,29 +40,20 @@ export default function PayWithMHesam() {
   const [selectedCredits, setSelectedCredits] = useState<
     UserCreditListResponse[]
   >([]);
-  const [creditList, setCreditList] = useState<UserCreditListResponse[]>([]);
-  const [selectedCreditAmount, setSelectedCreditAmount] = useState(0);
+  const [remainedAmount, setRemainedAmount] = useState<number>(0);
   const [openModal, setOpenModal] = useState<"rules" | "2fa">();
-  const [remainedAmount, setRemainedAmount] = useState(0);
-  const [issueReques, setIssueRequest] = useState<{ issueRequestId: number }>();
   const [prevServiceCost, setPrevServiceCost] = useState<number>();
+  const [creditList, setCreditList] = useState<UserCreditListResponse[]>([]);
+  const [selectedCreditAmount, setSelectedCreditAmount] = useState<number>(0);
+  const [issueReques, setIssueRequest] = useState<{ issueRequestId: number }>();
 
 
 
   const { data, mutate: getServiceCost } = useMutation({
-    mutationFn: () => serviceCost(+params.purchaseOrderId),
+    mutationFn: () => serviceCost(),
   });
   
-  console.log('data :>> ', data);
-  console.log('data.id :>> ', params.purchaseOrderId);
-
-  // const { data } = useQuery({
-  //   queryKey: ["serviceCost"],
-  //   queryFn: () => serviceCost(+params.purchaseOrderId),
-  // });
-  // console.log("🚀 ~ data:", data);
-
-  const { data: issueRequestData, error } = useQuery({
+  const { data: issueRequestData } = useQuery({
     queryKey: ["issueRequest"],
     queryFn: () => {
       return issueRequest();

@@ -7,10 +7,11 @@ import { signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Typography } from "@mui/material";
+import {Typography} from "@mui/material";
 import { useEffect, useState } from "react";
 import AxiosApi from "@/services/axios/AxiosApi";
 import { toast } from "sonner";
+import Avatar from '../Avatar/Avatar';
 
 const TopAppBar = ({ customActions, appBarSx, toolbarSx, imageSx }: any) => {
   const router = useRouter();
@@ -48,7 +49,7 @@ const TopAppBar = ({ customActions, appBarSx, toolbarSx, imageSx }: any) => {
         pt: 2,
         height: "100px",
         color: "black",
-        backgroundColor: "#F7F7FF",
+        backgroundColor: "#fff",
         mb: 0,
         ...appBarSx,
       }}
@@ -66,12 +67,15 @@ const TopAppBar = ({ customActions, appBarSx, toolbarSx, imageSx }: any) => {
           ) : !!userInfo ? (
             <Link href="">
               <div className="gap-[5px] flex items-center">
-                <div className="w-[50px] h-[50px] bg-neutral-200 border-[1px] border-neutral-400 rounded-[50%]"></div>
+                <Avatar size={"sm"} name={userInfo?.user?.fullName} />
+                {/*<div className="w-[50px] h-[50px] bg-neutral-200 border-[1px] border-neutral-400 rounded-[50%]"></div>*/}
                 <div>
                   <Typography variant="body1" color="black">
                     {userInfo?.user?.fullName}
                   </Typography>
-                  <p className="text-black">مشاهده پروفایل</p>
+                  <Typography variant="caption" color="black">
+                    مشاهده پروفایل
+                  </Typography>
                 </div>
               </div>
             </Link>

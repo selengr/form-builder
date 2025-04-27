@@ -3,14 +3,16 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import Loading from "./loading";
-import { IoIosArrowForward } from "react-icons/io";
 import usePreview from "@/hooks/usePreview";
 import { useResponsive } from "@/hooks/useResponsive";
 import PreviewProgress from "@/templates/preview/PreviewProgress";
 import PreviewQuestion from "@/templates/preview/PreviewQuestion";
+import {router} from "next/client";
+import {IconButton} from "@mui/material";
+import {MdOutlineKeyboardArrowRight} from "react-icons/md";
+import React from "react";
 
 function PreviewPage() {
   const isMobile = useResponsive("down", "md");
@@ -29,7 +31,7 @@ function PreviewPage() {
     return (
       <div className="flex justify-center h-[calc(100%-48px)] md:my-[20px] md:mx-[10px] m-[20px]">
         <div className="flex w-full h-full flex-col items-center justify-center gap-4">
-          <h2 className="text-destructive text-3xl text-center">
+          <h2 className="text-destructive text-3xl text-center font-semibold">
             هنوز سوالی ساخته نشده است
           </h2>
           <Button
@@ -41,9 +43,8 @@ function PreviewPage() {
                 bgcolor: "#222",
               },
             }}
-          >
-            <Link href={`/builder/${paramId}`}>بازگشت به فرم ساز</Link>
-          </Button>
+            onClick={()=>router.push(`/builder/${paramId}`)}
+          >بازگشت به فرم ساز</Button>
         </div>
       </div>
     );
@@ -86,21 +87,12 @@ function PreviewPage() {
             }}
             borderRadius="10px"
           >
-            <Link href={`/builder/${paramId}`}>
-              <Button
-                disableRipple
-                sx={{
-                  "&.MuiButtonBase-root": {
-                    borderRadius: "10px",
-                    border: "1px solid #1758BA",
-                    paddingX: "5px",
-                    width: "30px",
-                  },
-                }}
-              >
-                <IoIosArrowForward fontSize="1.5rem" color="#000" />
-              </Button>
-            </Link>
+            <IconButton
+              onClick={()=>router.back()
+              }
+            >
+              <MdOutlineKeyboardArrowRight color="#292D32"/>
+            </IconButton>
             <Box sx={{ display: "flex", alignItems: "baseline" }}>
               <Typography
                 variant="subtitle1"

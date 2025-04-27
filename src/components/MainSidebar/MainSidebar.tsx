@@ -8,14 +8,15 @@ import MresalatLogo from "@/../public/images/home-page/mresalat_logo.svg";
 import ProfileLogo from "@/../public/images/home-page/profile.webp";
 import LogoutIcon from "@/../public/images/home-page/logout.svg";
 import InfoIcon from "@/../public/images/home-page/info-icon.svg";
-import { toast } from "sonner";
-import { signIn, signOut } from "next-auth/react";
-import { useEffect, useState } from "react";
+import {toast} from "sonner";
+import {signIn, signOut} from "next-auth/react";
+import {useEffect, useState} from "react";
 import AxiosApi from "@/services/axios/AxiosApi";
 import MiddleSidebar from '../MiddleSidebar/MiddleSidebar';
+import Avatar from "@/components/Avatar/Avatar";
 
 export default function MainSidebar() {
-  const [userInfo, setUserInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -63,20 +64,26 @@ export default function MainSidebar() {
               height={15}
             />
           </Link>
-          <Image
-            src={ProfileLogo}
-            alt="Profile_Logo"
-            width={64}
-            height={64}
-            className="rounded-full border-[2px] border-[#1758BA]"
-          />
+          {isLoading ? (
+            <Image
+              src={ProfileLogo}
+              alt="Profile_Logo"
+              width={64}
+              height={64}
+              className="rounded-full border-[2px] border-[#1758BA]"
+            />
+          ) : (
+            <Avatar size={"lg"} name={userInfo?.user?.fullName}/>
+          )}
+
+
         </div>
         <div className="h-[520px] min-h-[520px] w-[80px] bg-cover bg-[url('/images/home-page/right_sidebar_bg.svg')]">
-          <MenuSidebar />
+          <MenuSidebar/>
         </div>
         <div className="flex flex-col gap-6 items-start pr-5 justify-center p-4">
           <button>
-            <Image src={InfoIcon} alt="Logout" width={24} height={24} />
+            <Image src={InfoIcon} alt="Logout" width={24} height={24}/>
           </button>
           {!isLoading ? (
             <button
@@ -84,7 +91,7 @@ export default function MainSidebar() {
                 if (!userInfo) {
                   await signIn("authorize");
                 } else {
-                  await signOut({ redirect: false });
+                  await signOut({redirect: false});
                   toast.success("خروج با موفقیت انجام شد");
                   location.replace("/");
                 }
@@ -107,7 +114,7 @@ export default function MainSidebar() {
           )}
         </div>
       </Box>
-      <MiddleSidebar />
+      <MiddleSidebar/>
     </>
   );
 }

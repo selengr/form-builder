@@ -67,7 +67,7 @@ const TopAppBar = ({ customActions, appBarSx, toolbarSx, imageSx }: any) => {
           ) : !!userInfo ? (
             <Link href="">
               <div className="gap-[5px] flex items-center">
-                <Avatar size={"sm"} name={userInfo?.user?.fullName} />
+                <Avatar size={"sm"} name={"userInfo?.user?.fullName"} />
                 {/*<div className="w-[50px] h-[50px] bg-neutral-200 border-[1px] border-neutral-400 rounded-[50%]"></div>*/}
                 <div>
                   <Typography variant="body1" color="black">

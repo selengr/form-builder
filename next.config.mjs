@@ -2,9 +2,6 @@
 const nextConfig = {
     reactStrictMode: true,
     output: "standalone",
-    productionBrowserSourceMaps: false,
-    compress: true,
-    swcMinify: true,
     images: {
         remotePatterns: [
             {
@@ -21,6 +18,7 @@ const nextConfig = {
             },
         ],
     },
+    productionBrowserSourceMaps: false,
 };
 
 export default nextConfig;

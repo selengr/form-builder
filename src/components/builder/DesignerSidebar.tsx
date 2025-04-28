@@ -1,25 +1,23 @@
-import { Fragment, memo } from "react";
-import { FormElements } from "@/types/FormElements";
+import {Fragment, memo, useState} from "react";
+import {Button, IconButton, useMediaQuery} from "@mui/material";
+import {FormElements} from "@/types/FormElements";
+import AxiosApi from "@/services/axios/AxiosApi";
 import SidebarBtnElement from "./SidebarBtnElement";
-import IconButton from "@mui/material/IconButton";
-import { CodiconEye } from "@/../public/images/home-page/EyeIcon";
+import {CodiconEye} from "@/../public/images/home-page/EyeIcon";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import {useParams} from "next/navigation";
 import useDesigner from "@/hooks/useDesigner";
 import DesignerBottomSheet from "./DesignerBottomSheet";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import SettingsDialog from "../SettingsDialog/SettingsDialog";
-import AxiosApi from "@/services/axios/AxiosApi";
-import { Button } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
+import {LoadingButton} from "@mui/lab";
+import {useMutation} from "@tanstack/react-query";
+import {toast} from "sonner";
 
 const DesignerSidebar = memo(function DesignerSidebar() {
-  const { formName } = useDesigner();
-  const { id } = useParams();
+  const {formName} = useDesigner();
+  const {id} = useParams();
   const isDesktop = useMediaQuery("(min-width:1280px)");
-
+  const [formTitle, setFormTitle] = useState<string>(formName)
   const mutation = useMutation({
     mutationFn: async () => {
       const response = await AxiosApi.put(`/form/ready-to-publish/${id}`);
@@ -57,7 +55,7 @@ const DesignerSidebar = memo(function DesignerSidebar() {
               whiteSpace: "pre-wrap",
             }}
           >
-            {formName}
+            {formTitle}
           </p>
         </div>
         <div className="flex gap-2">
@@ -71,44 +69,44 @@ const DesignerSidebar = memo(function DesignerSidebar() {
                 alignItems: "center",
               }}
             >
-              <CodiconEye color="#2A2A2A" />
+              <CodiconEye color="#2A2A2A"/>
             </IconButton>
           </Link>
-          <SettingsDialog formName={formName}/>
+          <SettingsDialog formName={formTitle} onChangeName={setFormTitle}/>
         </div>
       </div>
 
       <div className="p-4 rounded-lg h-full flex flex-col justify-between gap-4">
         <div className="flex flex-col w-full bg-white gap-2">
-          <SidebarBtnElement formElement={FormElements.TEXT_FIELD} />
-          <SidebarBtnElement formElement={FormElements.MULTIPLE_CHOICE} />
-          <SidebarBtnElement formElement={FormElements.MULTIPLE_CHOICE_IMAGE} />
-          <SidebarBtnElement formElement={FormElements.SPECTRAL} />
-          <SidebarBtnElement formElement={FormElements.INFO_FIELD} />
+          <SidebarBtnElement formElement={FormElements.TEXT_FIELD}/>
+          <SidebarBtnElement formElement={FormElements.MULTIPLE_CHOICE}/>
+          <SidebarBtnElement formElement={FormElements.MULTIPLE_CHOICE_IMAGE}/>
+          <SidebarBtnElement formElement={FormElements.SPECTRAL}/>
+          <SidebarBtnElement formElement={FormElements.INFO_FIELD}/>
         </div>
       </div>
 
-                <LoadingButton
-                          type="button"
-                          onClick={handle_publish}
-                          variant="contained"
-                          sx={{
-                            backgroundColor: "#1758BA",
-                            fontWeight: "500",
-                            fontSize: "15px",
-                            borderRadius: "10px",
-                            marginTop : "8px",
-                            height: "58px",
-                            "&.MuiButtonBase-root:hover": {
-                              backgroundColor: "#1758BA",
-                            },
-                            minWidth: "132px",
-                          }}
-                          loading={mutation.isPending}
-                          disabled={mutation.isPending}
-                        >
-                         <p className="text-white text-[15px] font-bold">آماده برای انتشار</p>
-                        </LoadingButton>
+      <LoadingButton
+        type="button"
+        onClick={handle_publish}
+        variant="contained"
+        sx={{
+          backgroundColor: "#1758BA",
+          fontWeight: "500",
+          fontSize: "15px",
+          borderRadius: "10px",
+          marginTop: "8px",
+          height: "58px",
+          "&.MuiButtonBase-root:hover": {
+            backgroundColor: "#1758BA",
+          },
+          minWidth: "132px",
+        }}
+        loading={mutation.isPending}
+        disabled={mutation.isPending}
+      >
+        <p className="text-white text-[15px] font-bold">آماده برای انتشار</p>
+      </LoadingButton>
     </div>
   ) : (
     <Fragment>
@@ -140,55 +138,55 @@ const DesignerSidebar = memo(function DesignerSidebar() {
                   alignItems: "center",
                 }}
               >
-                <CodiconEye color="#2A2A2A" />
+                <CodiconEye color="#2A2A2A"/>
               </IconButton>
             </Link>
-            <SettingsDialog formName={formName}/>
+            <SettingsDialog formName={formName} onChangeName={setFormTitle}/>
           </div>
         </div>
         <LoadingButton
-                          type="button"
-                          onClick={handle_publish}
-                          variant="contained"
-                          sx={{
-                            backgroundColor: "#1758BA",
-                            fontWeight: "500",
-                            fontSize: "15px",
-                            borderRadius: "10px",
-                            marginTop : "8px",
-                            height: "58px",
-                            "&.MuiButtonBase-root:hover": {
-                              backgroundColor: "#1758BA",
-                            },
-                            minWidth: "132px",
-                          }}
-                          loading={mutation.isPending}
-                          disabled={mutation.isPending}
-                        >
-                         <p className="text-white text-[15px] font-bold">آماده برای انتشار</p>
-                        </LoadingButton>
+          type="button"
+          onClick={handle_publish}
+          variant="contained"
+          sx={{
+            backgroundColor: "#1758BA",
+            fontWeight: "500",
+            fontSize: "15px",
+            borderRadius: "10px",
+            marginTop: "8px",
+            height: "58px",
+            "&.MuiButtonBase-root:hover": {
+              backgroundColor: "#1758BA",
+            },
+            minWidth: "132px",
+          }}
+          loading={mutation.isPending}
+          disabled={mutation.isPending}
+        >
+          <p className="text-white text-[15px] font-bold">آماده برای انتشار</p>
+        </LoadingButton>
 
         <Button
-                disableRipple
-                sx={{
-                  "&.MuiButtonBase-root": {
-                    borderRadius: "10px",
-                    border: "1px solid #1758BA",
-                    paddingX: "5px",
-                    width: "30px",
-                  },
-                }}
-              >
-                <p className="text-white text-[15px] font-bold">آماده برای انتشار</p>
-              </Button>
+          disableRipple
+          sx={{
+            "&.MuiButtonBase-root": {
+              borderRadius: "10px",
+              border: "1px solid #1758BA",
+              paddingX: "5px",
+              width: "30px",
+            },
+          }}
+        >
+          <p className="text-white text-[15px] font-bold">آماده برای انتشار</p>
+        </Button>
       </div>
       <DesignerBottomSheet>
         <div className="flex flex-col w-full gap-3">
-          <SidebarBtnElement formElement={FormElements.TEXT_FIELD} />
-          <SidebarBtnElement formElement={FormElements.MULTIPLE_CHOICE} />
-          <SidebarBtnElement formElement={FormElements.MULTIPLE_CHOICE_IMAGE} />
-          <SidebarBtnElement formElement={FormElements.SPECTRAL} />
-          <SidebarBtnElement formElement={FormElements.INFO_FIELD} />
+          <SidebarBtnElement formElement={FormElements.TEXT_FIELD}/>
+          <SidebarBtnElement formElement={FormElements.MULTIPLE_CHOICE}/>
+          <SidebarBtnElement formElement={FormElements.MULTIPLE_CHOICE_IMAGE}/>
+          <SidebarBtnElement formElement={FormElements.SPECTRAL}/>
+          <SidebarBtnElement formElement={FormElements.INFO_FIELD}/>
         </div>
       </DesignerBottomSheet>
     </Fragment>

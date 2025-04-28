@@ -187,7 +187,7 @@ const ListGrid: React.FC<Props> = ({
           <IconButton
             sx={{position: "absolute", left: "8px"}}
             onClick={() => {
-              router.back();
+              router.push("/");
             }}
           >
             <MdOutlineKeyboardArrowRight color="#292D32"/>
@@ -269,7 +269,7 @@ const ListGrid: React.FC<Props> = ({
               <Typography>موردی یافت نشد</Typography>) : (datas.pages.map((page, pageIndex) => page.map((data: any, index: number) => {
               const key = `${pageIndex}-${index}`;
               return (
-                <Grid2 sx={{width: 1,mx: "auto" }} key={key} size={{xs: 12, md: 10, lg: 6, xl:5}}>
+                <Grid2 sx={{width: 1,mx: "auto" }} key={key} size={{xs: 12, md: 10, lg:8, xl:6, }}>
                 <CartComponent
                   onCheck={(id: any, checked: any) => onCheck(id, checked)}
                   data={data}

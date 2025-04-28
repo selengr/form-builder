@@ -36,7 +36,6 @@ border-[#1758BA]"
 justify-center items-center"
           >
             {calculator.id}
-
           </div>
           <div className="flex flex-col">
             <h3 className="text-[#161616] text-sm">
@@ -44,7 +43,7 @@ justify-center items-center"
             </h3>
             <span className="text-[#393939] text-xs">
               {/* {calculator.theFormula ?? "--"} */}
-              #محاسبه‌گر
+              #محاسبه گر
             </span>
           </div>
         </div>

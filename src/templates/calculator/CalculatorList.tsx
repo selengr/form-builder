@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { ICalculator } from "@/types/calculator";
 import { CalculatorCard } from "./CalculatorCard";
 import CreateCalculator from "./CreateCalculator";

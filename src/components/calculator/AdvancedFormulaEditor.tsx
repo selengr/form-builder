@@ -149,12 +149,9 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
     };
 
     const canAddNumber = (content: string): boolean => {
-        // همیشه می‌توان عدد اضافه کرد اگر در حال ویرایش عدد موجود هستیم
         if (cursorIndex > 0 && elements[cursorIndex - 1].type === "NUMBER") {
             return true;
         }
-
-        // شرایط دیگر برای شروع عدد جدید
         if (elements.length === 0) return true;
         if (cursorIndex === 0 && elements[0]?.type !== "OPERATOR") return true;
 
@@ -171,11 +168,9 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         const newElements = [...elements];
         let newCursorIndex = cursorIndex;
 
-        // اگر در حال ویرایش عدد موجود هستیم
         if (cursorIndex > 0 && newElements[cursorIndex - 1].type === "NUMBER") {
             const currentNumber = newElements[cursorIndex - 1].content;
 
-            // مدیریت ممیز اعشار
             if (content === ".") {
                 if (currentNumber.includes(".")) {
                     toast.error("عدد نمی‌تواند بیش از یک ممیز اعشار داشته باشد");
@@ -183,22 +178,17 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                 }
                 newElements[cursorIndex - 1].content += content;
             }
-            // مدیریت صفر ابتدایی
             else if (currentNumber === "0" && content !== ".") {
                 newElements[cursorIndex - 1].content = content;
             }
-            // مدیریت نقطه اعشار در ابتدا
             else if (currentNumber === ".") {
                 newElements[cursorIndex - 1].content = `0.${content}`;
             }
-            // حالت عادی - اضافه کردن رقم جدید
             else {
                 newElements[cursorIndex - 1].content += content;
             }
         }
-        // اگر عدد جدید اضافه می‌کنیم
         else {
-            // مدیریت نقطه اعشار در ابتدای عدد جدید
             if (content === ".") {
                 newElements.splice(cursorIndex, 0, {type: "NUMBER", content: "0."});
             } else {
@@ -244,15 +234,12 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         const {UNIC_NAME, STICKY_FUNC} = item.extMap;
         const finalId = STICKY_FUNC ?? UNIC_NAME;
 
-        // پیدا کردن المان dropdown مربوطه
         const elementIndex = elements.findIndex(elem => elem.id === dropdownId);
 
         if (elementIndex === -1) {
             toast.error("مشکلی در یافتن فیلد مورد نظر پیش آمده");
             return;
         }
-
-        // آپدیت المان موجود بدون بررسی تکراری
         const newElements = [...elements];
         newElements[elementIndex] = {
             ...newElements[elementIndex],
@@ -265,7 +252,6 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         selectFieldRef.current[finalId] = finalId;
         closeDropdown(dropdownId);
 
-        // به روزرسانی موقعیت کرسر
         setCursorIndex(elementIndex + 1);
         updateCursorPosition(elementIndex + 1);
     };

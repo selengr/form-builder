@@ -1,36 +1,38 @@
-import { useCallback, useEffect, useState } from "react";
+import {useCallback, useEffect, useState} from "react";
 import Dialog from "@mui/material/Dialog";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import DialogContent from "@mui/material/DialogContent";
 import Button from "@mui/material/Button";
-import { CgClose } from "react-icons/cg";
-import { z } from "zod";
-import FormProvider, { RHFTextField } from "../hook-form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LoadingButton } from "@mui/lab";
+import {CgClose} from "react-icons/cg";
+import {z} from "zod";
+import FormProvider, {RHFTextField} from "../hook-form";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {LoadingButton} from "@mui/lab";
 import FieldSwitchPair from "./FieldSwitchPair";
-import { IoSettingsOutline } from "react-icons/io5";
-import { Typography } from "@mui/material";
+import {IoSettingsOutline} from "react-icons/io5";
+import {Typography} from "@mui/material";
 import AxiosApi from "@/services/axios/AxiosApi";
-import { useParams } from "next/navigation";
-import { convertObject } from "@/lib/settingsUtils";
+import {useParams} from "next/navigation";
+import {convertObject} from "@/lib/settingsUtils";
 
 interface Props {
-  formName:string
+  formName: string
+  onChangeName: (newName: string) => void
 }
+
 const responseLimitationOptions = [
-  { label: "از طریق شماره همراه", value: "PHONE_NUMBER" },
-  { label: "از طریق ایمیل", value: "EMAIL" },
+  {label: "از طریق شماره همراه", value: "PHONE_NUMBER"},
+  {label: "از طریق ایمیل", value: "EMAIL"},
 ];
 
 const layoutOptions = [
-  { label: "نمایش فهرستی", value: "list-view" },
-  { label: "نمایش صفحه‌ای", value: "page-view" },
+  {label: "نمایش فهرستی", value: "list-view"},
+  {label: "نمایش صفحه‌ای", value: "page-view"},
 ];
 
-const themeOptions = [{ label: "تم 1", value: "theme_1" }];
+const themeOptions = [{label: "تم 1", value: "theme_1"}];
 
 const fieldsConfig = [
   {
@@ -73,8 +75,8 @@ const propertiesSchema = z.object({
     .pipe(
       z
         .string()
-        .min(2, { message: "حداقل باید 2 و حداکثر 100 کاراکتر باشد" })
-        .max(100, { message: "حداقل باید 2 و حداکثر 100 کاراکتر باشد" })
+        .min(2, {message: "حداقل باید 2 و حداکثر 100 کاراکتر باشد"})
+        .max(100, {message: "حداقل باید 2 و حداکثر 100 کاراکتر باشد"})
     ),
   responseLimitation: z.object({
     value: z.string(),
@@ -100,10 +102,10 @@ const propertiesSchema = z.object({
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
-export default function SettingsDialog({ formName }: Props) {
+export default function SettingsDialog({formName, onChangeName}: Props) {
   const [openDialog, setOpenDialog] = useState(false);
   const [formFieldName, setFormFieldName] = useState<string>(formName);
-  const { id: formId } = useParams();
+  const {id: formId} = useParams();
   // const { name: name} = useParams();
 
   const handleOpen = useCallback(() => {
@@ -116,29 +118,30 @@ export default function SettingsDialog({ formName }: Props) {
     mode: "all",
     defaultValues: {
       name: formFieldName,
-      expireDate: { checked: false, value: "" },
-      timeToComplete: { checked: false, value: "" },
-      responseLimitation: { checked: false, value: "" },
-      layout: { checked: false, value: [] },
-      theme: { checked: false, value: "" },
+      expireDate: {checked: false, value: ""},
+      timeToComplete: {checked: false, value: ""},
+      responseLimitation: {checked: false, value: ""},
+      layout: {checked: false, value: []},
+      theme: {checked: false, value: ""},
     },
   });
 
   const {
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    formState: {isSubmitting},
   } = methods;
 
   async function onSubmit(values: propertiesFormSchemaType) {
     const body = {
       ...convertObject(values as any, fieldsConfig),
-      name: formFieldName,
+      name: formFieldName
     };
 
     try {
       const res = await AxiosApi.post(`/form-setting/${formId}`, body as any);
       handleOpen();
+      onChangeName(formFieldName)
     } catch (error) {
       console.log(error);
     }
@@ -160,7 +163,7 @@ export default function SettingsDialog({ formName }: Props) {
           alignItems: "center",
         }}
       >
-        <IoSettingsOutline color="#2A2A2A" />
+        <IoSettingsOutline color="#2A2A2A"/>
       </IconButton>
       <Dialog
         open={openDialog}
@@ -182,7 +185,7 @@ export default function SettingsDialog({ formName }: Props) {
           <>
             <div className="flex items-center justify-start">
               <button className="mx-4 mt-4 mb-0" onClick={handleOpen}>
-                <CgClose color="#404040" width={25} height={25} size="1.5rem" />
+                <CgClose color="#404040" width={25} height={25} size="1.5rem"/>
               </button>
             </div>
             <DialogContent

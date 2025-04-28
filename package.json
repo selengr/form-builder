@@ -1,11 +1,11 @@
 {
   "name": "psya",
-  "version": "4.2.8",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev -p 80 --turbo",
     "build": "next build",
-    "start": "next start -p 80",
+    "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
@@ -29,12 +29,12 @@
     "@uppy/progress-bar": "^4.0.1",
     "@uppy/react": "^4.0.3",
     "@uppy/tus": "^4.1.4",
-    "axios": "^1.9.0",
+    "axios": "^1.7.7",
     "framer-motion": "^11.13.1",
     "moment-jalaali": "^0.10.4",
     "next": "^14.2.28",
     "next-auth": "^4.24.11",
-    "nextjs-toploader": "^3.8.16",
+    "nextjs-toploader": "^3.7.15",
     "react": "^18",
     "react-auth-code-input": "^3.2.1",
     "react-countdown": "^2.3.6",

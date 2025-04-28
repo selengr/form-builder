@@ -14,15 +14,13 @@ export async function ApiRequestNew(
 ): Promise<any> {
   const session = await getServerSession(authOptions);
 
-  let headers: { [key: string]: string } = {
+  const headers: { [key: string]: string } = {
     "Content-Type": "application/json",
   };
 
-  if (hasToken) {
-    headers["Authorization"] = `Bearer ${session?.access_token}`;
+  if (session && "access_token" in session) {
+    headers["Authorization"] = `Bearer ${session.access_token}`;
   }
-  console.log("🚀 ~ session?.access_token:", session?.access_token);
-
   const options: RequestInit = {
     // method: method,
     headers,

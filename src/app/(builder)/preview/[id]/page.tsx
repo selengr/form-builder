@@ -3,26 +3,26 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { useParams } from "next/navigation";
+import {useParams, useRouter} from "next/navigation";
 import Loading from "./loading";
 import usePreview from "@/hooks/usePreview";
-import { useResponsive } from "@/hooks/useResponsive";
+import {useResponsive} from "@/hooks/useResponsive";
 import PreviewProgress from "@/templates/preview/PreviewProgress";
 import PreviewQuestion from "@/templates/preview/PreviewQuestion";
-import {router} from "next/client";
 import {IconButton} from "@mui/material";
 import {MdOutlineKeyboardArrowRight} from "react-icons/md";
 import React from "react";
 
 function PreviewPage() {
   const isMobile = useResponsive("down", "md");
-  const { id: paramId } = useParams();
-  const { status, title } = usePreview();
+  const {id: paramId} = useParams();
+  const {status, title} = usePreview();
+  const router = useRouter();
 
   if (status === "loading") {
     return (
       <div className="flex justify-center items-center h-screen">
-        <Loading />
+        <Loading/>
       </div>
     );
   }
@@ -43,7 +43,7 @@ function PreviewPage() {
                 bgcolor: "#222",
               },
             }}
-            onClick={()=>router.push(`/builder/${paramId}`)}
+            onClick={() => router.push(`/builder/${paramId}`)}
           >بازگشت به فرم ساز</Button>
         </div>
       </div>
@@ -53,7 +53,7 @@ function PreviewPage() {
   if (status === "ready") {
     return (
       <Box
-        sx={{ userSelect: "none" }}
+        sx={{userSelect: "none"}}
         display="flex"
         justifyContent="center"
         margin={isMobile ? "20px 10px" : 2.5}
@@ -61,7 +61,7 @@ function PreviewPage() {
         <Box
           maxWidth="1200px"
           width="100%"
-          sx={{ direction: "ltr" }}
+          sx={{direction: "ltr"}}
           display="flex"
           justifyContent="center"
           alignItems="center"
@@ -88,12 +88,11 @@ function PreviewPage() {
             borderRadius="10px"
           >
             <IconButton
-              onClick={()=>router.back()
-              }
+              onClick={() => router.back()}
             >
               <MdOutlineKeyboardArrowRight color="#292D32"/>
             </IconButton>
-            <Box sx={{ display: "flex", alignItems: "baseline" }}>
+            <Box sx={{display: "flex", alignItems: "baseline"}}>
               <Typography
                 variant="subtitle1"
                 component={"h3"}
@@ -106,8 +105,8 @@ function PreviewPage() {
             </Box>
             <Box></Box>
           </Box>
-          <PreviewQuestion />
-          <PreviewProgress />
+          <PreviewQuestion/>
+          <PreviewProgress/>
         </Box>
       </Box>
     );

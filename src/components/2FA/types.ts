@@ -6,14 +6,14 @@ type OTPBodyType<T> = (data: T) => object | object;
 
 export type RequestMethodsType = "Get" | "Post" | "Put";
 
-type IResendOtpInfo<T = {}> = Partial<T> &
+type IResendOtpInfo<T = any> = Partial<T> &
   Partial<ICheckNationalCodeResponse> & {
     nationalCode?: string;
   };
 
 type ReSendOTPUrlType<T> = ((otpInfo: T) => string) | string;
 
-export interface TwoFABottomSheetProps<ApiResponseType = {}> {
+export interface TwoFABottomSheetProps<ApiResponseType = any> {
   open: boolean;
   sendOtpInfo: {
     url: SendOTPUrlType;

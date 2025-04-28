@@ -1,6 +1,6 @@
 // import { authOptions } from "@/services/authBP/ssoConfiguration";
-import { getServerSession } from "next-auth";
-import { signIn } from "next-auth/react";
+import {signIn} from "next-auth/react";
+
 export async function FetchWithAuthNew(
   method: "Get" | "Post" | "Put" | "Patch" | "Delete" = "Get",
   url: string,
@@ -42,7 +42,8 @@ export async function FetchWithAuthNew(
     const response = await fetch(request);
     if (!response.ok) {
       const { status } = response;
-      const errorText = await response.text(); // Extract error text from the response
+      const errorResponse = await response.json();
+      const errorText = errorResponse.message || "Unknown error";
 
       let errorMessage = `API request error: ${status}`;
       if (status === 401) {
@@ -55,16 +56,15 @@ export async function FetchWithAuthNew(
       } else if (status === 409) {
         errorMessage = "Conflict";
       }
+
       throw {
         message: errorText || errorMessage,
         status: response.status,
         statusText: response.statusText,
-        extraData: response.extraData,
+        extraData: errorResponse.extraData,
       };
     }
-    const data = await response.json();
-
-    return data;
+    return await response.json();
   } catch (error) {
     console.error("Error fetching data:", error);
     throw error;

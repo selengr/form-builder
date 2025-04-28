@@ -73,7 +73,7 @@ export default function MainSidebar() {
               className="rounded-full border-[2px] border-[#1758BA]"
             />
           ) : (
-            <Avatar size={"lg"} name={userInfo?.user?.fullName}/>
+            <Avatar size={"lg"} name={"userInfo?.user?.fullName"}/>
           )}
 
 

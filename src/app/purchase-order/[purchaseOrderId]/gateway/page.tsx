@@ -1,108 +1,75 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Box, Button, Divider, MenuItem, Select, Typography, useTheme } from "@mui/material";
+import { toast } from "sonner";
+import { useEffect, useState } from "react";
+import { BiChevronRight } from "react-icons/bi";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { formatNumberWithCommas } from "@/lib/numberFormatter";
 import { useParams, usePathname, useRouter } from "next/navigation";
-// import { enqueueSnackbar } from "notistack";
+import { Box, Button, Divider, Typography, useTheme } from "@mui/material";
+
+// types
 import type {
-  ConfirmPaymentRequestBody,
   UserCreditListResponse,
+  ConfirmPaymentRequestBody,
 } from "./types";
-// import { connectToGateway } from "./actions";
-import { confirmPayment } from "./actions";
-// import CustomHeader from "@/components/header/customHeader";
-import { SelectedCreditCard } from "./SelectedCreditCard";
+// components
 import Autocomplete from "@/components/Autocomplete";
-import TwoFABottomSheet, { type OTPResponseType } from "@/components/2FA";
-// import BottomSheet from "@/components/BottomSheetModal";
-import MhesamEmptyCartPage from "@/../public/images/purchase-order/MhesamEmptyCartPage.svg";
-// import PrerequestHeader from "../../components/PrerequestHeader";
-import { BiChevronRight } from "react-icons/bi";
-// import { useTranslation } from "@/services/i18n/client";
-import { RHFSelect } from "@/components/hook-form";
+import { SelectedCreditCard } from "./SelectedCreditCard";
 import BottomSheet from "@/components/BottomSheet/BottomSheet";
+import TwoFABottomSheet, { type OTPResponseType } from "@/components/2FA";
+// templates
 import PrerequestHeader from "@/templates/purchase-order/PrerequestHeader";
-import { ApiRequest } from "@/services/apiRequest";
-import { useGetPurchaseOrder } from "../../_hook/useGetPurchaseOrder";
-import AxiosApi from "@/services/axios/AxiosApi";
-import { connectToGateway, issueRequest, serviceCost, userCreditList } from "./_api/getIssueRequest";
-import { toast } from "sonner";
+// public
+import MhesamEmptyCartPage from "@/../public/images/purchase-order/MhesamEmptyCartPage.svg";
+// apis
+import { confirmPayment, connectToGateway, issueRequest, serviceCost, userCreditList } from "./_api/getIssueRequest";
 
 
 
-export type TAccount = {
-  accountId: number;
-  creditType: string;
-  creditTypeEnum: string | 'MHESAM_DONATION' | 'MHESAM_NORMAL';
-  totalAmount: number;
-  availableAmount: number;
-  order: number;
-  expireDate: null | object | any;
-};
-
+// -------------------------------------------------
 
 export default function PayWithMHesam() {
   const params = useParams();
   const router = useRouter();
   const pathname = usePathname();
   const { palette } = useTheme();
-
-  // const { t } = useTranslation(["gateway"]);
   const [selectedCredits, setSelectedCredits] = useState<
     UserCreditListResponse[]
   >([]);
-  const [creditList, setCreditList] = useState<UserCreditListResponse[]>([]);
-  const [selectedCreditAmount, setSelectedCreditAmount] = useState(0);
+  const [remainedAmount, setRemainedAmount] = useState<number>(0);
   const [openModal, setOpenModal] = useState<"rules" | "2fa">();
-  const [remainedAmount, setRemainedAmount] = useState(0);
-  const [issueReques, setIssueRequest] = useState<{ issueRequestId: number }>();
   const [prevServiceCost, setPrevServiceCost] = useState<number>();
+  const [creditList, setCreditList] = useState<UserCreditListResponse[]>([]);
+  const [selectedCreditAmount, setSelectedCreditAmount] = useState<number>(0);
+  const [issueReques, setIssueRequest] = useState<{ issueRequestId: number }>();
 
-  const [chosenCredits, setChosenCredits] = useState<TAccount[] | 0>(0);
-  const [account, setAccount] = useState<TAccount[]>();
 
-  //  const {data:purchaseOrder,isLoading} = useGetPurchaseOrder()
 
   const { data, mutate: getServiceCost } = useMutation({
-    mutationFn: () => serviceCost(+params.purchaseOrderId),
+    mutationFn: () => serviceCost(),
   });
   
-  console.log('data :>> ', data);
-  console.log('data.id :>> ', params.purchaseOrderId);
-
-  // const { data } = useQuery({
-  //   queryKey: ["serviceCost"],
-  //   queryFn: () => serviceCost(+params.purchaseOrderId),
-  // });
-  // console.log("🚀 ~ data:", data);
-
-  const { data: issueRequestData, error } = useQuery({
+  const { data: issueRequestData } = useQuery({
     queryKey: ["issueRequest"],
     queryFn: () => {
       return issueRequest();
     },
   });
   
-useEffect(() => {
-  const issueRequest = async () => {
-    try {
-      const response = await AxiosApi.post("/purchase-order/createIssueRequest"
-      );
-      console.log("🚀 ~ issueRequest ~ response:", response);
-      return response;
-    } catch (error) {
-      console.error("Error occurred while issuing request:", error);
-      // Handle error appropriately, e.g., show a notification or set an error state
-      return Promise.resolve("");
-    }
-  };
-
-  issueRequest();
-}, [])
-  console.log('issueRequestData :>> ', +issueRequestData?.issueRequestId);
+    // useEffect(() => {
+    //   const issueRequest = async () => {
+    //     try {
+    //       const response = await AxiosApi.post("/purchase-order/createIssueRequest"
+    //       );
+    //       return response;
+    //     } catch (error) {
+    //       return Promise.resolve("");
+    //     }
+    //   };
+    //   issueRequest();
+    // }, [])
 
   const { data: creditListData } = useQuery({
     queryKey: ["userCreditList"],
@@ -171,20 +138,11 @@ useEffect(() => {
   const { mutate, isPending } = useMutation({
     mutationFn: (body: ConfirmPaymentRequestBody) => confirmPayment(body),
     onSuccess: (response) => {
-      console.log("🚀 ~ response:", response);
       if (response.message) {
-        // enqueueSnackbar(JSON.parse(response.message).message[0].title, {
-        //   variant: "error",
-        //   anchorOrigin: {
-        //     vertical: "top",
-        //     horizontal: "center",
-        //   },
-        // });
+        toast.error(JSON.parse(response.message).message[0].title)
       } else {
         setOpenModal(undefined);
-        // enqueueSnackbar("عضویت شما با موفقیت به‌روزرسانی شد.", {
-        //   variant: "success",
-        // });
+        toast.success("عضویت شما با موفقیت به‌روزرسانی شد.")
         router.push(
           `${pathname.replace("gateway", "signature")}?uu-id=${issueReques?.issueRequestId}`
         );
@@ -192,9 +150,9 @@ useEffect(() => {
     },
   });
 
-  const handleConfirmOtp = (res: OTPResponseType<{}>) => {debugger
-    let body: ConfirmPaymentRequestBody = {
-      issueRequestId: +issueReques?.issueRequestId!,
+  const handleConfirmOtp = (res: OTPResponseType<any>) => {
+    const body: ConfirmPaymentRequestBody = {
+      issueRequestId: +issueReques!.issueRequestId!,
       otpCode: res.otpCode ?? "",
       otpId: res.id ?? "",
       userCreditModelList: selectedCredits,
@@ -225,16 +183,8 @@ useEffect(() => {
     },
     onSuccess: (response) => {
       if (response.message) {
-        // enqueueSnackbar(JSON.parse(response.message).message[0].title, {
-        //   variant: "error",
-        //   anchorOrigin: {
-        //     horizontal: "center",
-        //     vertical: "top",
-        //   },
-        // });
         toast.error(JSON.parse(response.message).message[0].title)
-      } else {debugger
-        // const newUrl = response.gatewayUrl.replace("www.", "");
+      } else {
         const newUrl = response.gatewayUrl.replace("www.", "");
         const param = {
           redirectUrl: response.redirectUrl,
@@ -243,22 +193,6 @@ useEffect(() => {
         const url = `${newUrl}?${new URLSearchParams(param)}`;
         window.location.href = url;
       }
-
-      // =================connectToGateway
-      // body:{ redirectUrl:"", amount:321321, failedRedirectUrl: ""}
-      // Post
-      // /mhesam/profile/credit/before-gateway
-      
-      
-      // response =>
-      // param : {
-      //           redirectUrl: response.redirectUrl,
-      //           token: response.token,
-      //         }
-      // //==>url = response.gatewayUrl + param 
-      // redirect to url
-      // window.loaction.href = url;
-
     },
   });
 
@@ -268,14 +202,8 @@ useEffect(() => {
     }
   }, [creditListData]);
 
-  // useEffect(() => {
-  //   if (data) {
-  //     setRemainedAmount(+data?.serviceCost);
-  //   }
-  // }, [data]);
 
   useEffect(() => {
-    // debugger;
     if (issueRequestData) {
       setIssueRequest(issueRequestData);
     }
@@ -302,18 +230,13 @@ useEffect(() => {
     }
   };
 
-  console.log("🚀 ~ creditList:", creditList);
-  const selectedCredits2 = (value:  undefined | any) => {
-    setChosenCredits(value);
-  };
-
   return (
     creditList && (
       <Box sx={{justifyContent:"center",display:"flex",width:"100%",m:0}}>
         <PrerequestHeader
           title={"سبد خرید"}
           icon={<BiChevronRight size="1.7rem" color={"#292D32"} />}
-          CB_onClick={() => router.push("/prerequest-loan/create")}
+          CB_onClick={() => router.push("/purchase-order")}
         >
           <Box padding="1rem">
             <Box

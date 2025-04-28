@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import type { SelectedCreditCardProps } from "./types";
 import { formatNumberWithCommas } from "@/lib/numberFormatter";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
-import type { SelectedCreditCardProps } from "./types";
 import TrashIcon from "@/../public/images/purchase-order/trashMts.svg";
 
 export function SelectedCreditCard({
@@ -14,7 +14,7 @@ export function SelectedCreditCard({
 }: SelectedCreditCardProps) {
   const { palette } = useTheme();
 
-  return (
+  return (  
     <Box
       border="1px solid #DDE1E6"
       padding="0.7rem 0.6rem"

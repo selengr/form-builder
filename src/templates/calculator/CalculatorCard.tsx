@@ -8,7 +8,7 @@ import EditCalculatorDialog from "./EditCalculatorDialog";
 import { PhDotsThreeVerticalBold } from "../../../public/images/icons/PhDotsThreeVerticalBold";
 import { WeuiDeleteOutlined } from "../../../public/images/icons/DeleteIcon";
 
-export function CalculatorCard({ calculator,index }: ICalculatorCardProps) {
+export function CalculatorCard({ calculator }: ICalculatorCardProps) {
   const [openDialog, setOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -35,7 +35,8 @@ border-[#1758BA]"
             className="bg-[#F7F7FF] h-8 w-8 rounded-[10px] flex
 justify-center items-center"
           >
-            {index + 1}
+            {calculator.id}
+
           </div>
           <div className="flex flex-col">
             <h3 className="text-[#161616] text-sm">

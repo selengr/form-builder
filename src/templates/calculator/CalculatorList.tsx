@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { ICalculator } from "@/types/calculator";
 import { CalculatorCard } from "./CalculatorCard";
 import CreateCalculator from "./CreateCalculator";
@@ -17,8 +18,9 @@ const CalculatorList: React.FC<ICalculatorListProps> = ({ calculators }) => {
           dir="rtl"
           className="bg-[#F7F7FF] rounded-lg p-[10px] w-full flex flex-col gap-3 pb-10 mb-10"
         >
-          {calculators?.map((calculator: ICalculator,index:number) => (
-            <CalculatorCard index={index} calculator={calculator} key={index}/>
+          {calculators?.map((calculator: ICalculator) => (
+            // eslint-disable-next-line react/jsx-key
+            <CalculatorCard calculator={calculator} />
           ))}
         </div>
       )}

@@ -11,7 +11,6 @@ import { Dispatch, SetStateAction } from "react";
 
   export interface ICalculatorCardProps {
     calculator: ICalculator;
-    index:number;
   }
 
   export interface ICalculatorListProps {

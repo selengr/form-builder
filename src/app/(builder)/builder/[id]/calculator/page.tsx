@@ -1,3 +1,5 @@
+'use client';
+
 import dynamic from "next/dynamic";
 import { AxiosResponse } from "axios";
 import AxiosApi from "@/services/axios/AxiosApi";

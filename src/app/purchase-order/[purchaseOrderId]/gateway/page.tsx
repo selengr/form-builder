@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { BiChevronRight } from "react-icons/bi";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { formatNumberWithCommas } from "@/lib/numberFormatter";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Box, Button, Divider, Typography, useTheme } from "@mui/material";
 
 // types
@@ -31,7 +31,6 @@ import { confirmPayment, connectToGateway, issueRequest, serviceCost, userCredit
 // -------------------------------------------------
 
 export default function PayWithMHesam() {
-  const params = useParams();
   const router = useRouter();
   const pathname = usePathname();
   const { palette } = useTheme();
@@ -47,7 +46,7 @@ export default function PayWithMHesam() {
 
 
 
-  const { data, mutate: getServiceCost } = useMutation({
+  const { data, mutate: getServiceCost,isPendingIssueRequest } = useMutation({
     mutationFn: () => serviceCost(),
   });
   
@@ -230,8 +229,11 @@ export default function PayWithMHesam() {
     }
   };
 
+  if(!data) return null
+  if(isPendingIssueRequest) return "loading..."
+
   return (
-    creditList && (
+    // creditList && (
       <Box sx={{justifyContent:"center",display:"flex",width:"100%",m:0}}>
         <PrerequestHeader
           title={"سبد خرید"}
@@ -261,7 +263,7 @@ export default function PayWithMHesam() {
                 component="p"
                 fontWeight="bold"
               >
-                {formatNumberWithCommas(data?.totalAmount)} تومان
+                {isPendingIssueRequest ? "---" : formatNumberWithCommas(data?.totalAmount) + "تومان"}
               </Typography>
             </Box>
             <Typography marginTop="1.5rem" paddingX="0.5rem">
@@ -277,6 +279,8 @@ export default function PayWithMHesam() {
                 value={null}
                 key={selectedCredits.length}
                 disabled={remainedAmount <= 0}
+                loading={true}
+                loadingText={true}
                 options={creditList || []}
                 getOptionLabel={(option) =>
                   option?.creditTypeValue +
@@ -397,6 +401,6 @@ export default function PayWithMHesam() {
           }}
         />
       </Box>
-    )
+    // )
   );
 }

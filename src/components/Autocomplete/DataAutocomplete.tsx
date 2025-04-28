@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import {
+  Box,
+  Popper,
+  IconButton,
+  Typography,
   Autocomplete,
   AutocompleteRenderInputParams,
-  Box,
-  IconButton,
-  Popper,
-  Typography,
 } from "@mui/material";
 import { IoIosArrowDown } from "react-icons/io";
 import { type IDataAutocomplete } from "./types";
@@ -38,7 +38,7 @@ function DataAutocomplete<T>(props: IDataAutocomplete<T>) {
             >
               <IoIosArrowDown size="1rem" />
             </IconButton>
-            <Input ref={InputProps.ref} {...rest} />
+            <Input ref={InputProps.ref} {...rest}/>
           </Box>
         );
       }}

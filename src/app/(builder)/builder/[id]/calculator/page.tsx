@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import { AxiosResponse } from "axios";
 import AxiosApi from "@/services/axios/AxiosApi";
 import DesignerTabs from "@/templates/builder/TabComponent";
+// import CalculatorList from '@/templates/calculator/CalculatorList';
 
 const CalculatorList = dynamic(
   () => import("@/templates/calculator/CalculatorList"),
@@ -14,21 +15,10 @@ export default async function Calculator({
   params: { id: string };
 }) {
   const url = `/calculation/main-list/${params.id}?searchFilterModel=%7B%22searchFilterBoxList%22%3A%5B%7B%22restrictionList%22%3A%5B%5D%7D%5D%2C%22sortList%22%3A%5B%7B%22fieldName%22%3A%22id%22%2C%22type%22%3A%22DSC%22%7D%5D%2C%22page%22%3A0%2C%22rows%22%3A1000%7D`;
-
-  let calculators: AxiosResponse<any>;
-
-  try {
-    calculators = await AxiosApi.get(url);
-  } catch (err) {
-    console.error("Failed to fetch calculators", err);
-    throw new Error("Failed to fetch calculators");
-  }
-
-  const { data: { content } = {} } = calculators;
-
-  if (!content || !Array.isArray(content)) {
-    throw new Error("Invalid content data received from API.");
-  }
+  const calculators: AxiosResponse<any> = await AxiosApi.get(url);
+  const {
+    data: { content },
+  } = calculators;
 
   return (
     <div className="w-full min-h-full px-4 py-4 bg-[#f7f7f7]">

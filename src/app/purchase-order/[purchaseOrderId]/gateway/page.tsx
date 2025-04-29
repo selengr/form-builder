@@ -44,7 +44,6 @@ export default function PayWithMHesam() {
   const [selectedCreditAmount, setSelectedCreditAmount] = useState<number>(0);
   const [issueReques, setIssueRequest] = useState<{ issueRequestId: number }>();
 
-
   // @ts-ignore
   const { data, mutate: getServiceCost,isPendingIssueRequest } = useMutation({
     mutationFn: () => serviceCost(),

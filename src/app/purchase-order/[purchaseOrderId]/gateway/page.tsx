@@ -45,18 +45,18 @@ export default function PayWithMHesam() {
   const [issueReques, setIssueRequest] = useState<{ issueRequestId: number }>();
 
 
-
+  // @ts-ignore
   const { data, mutate: getServiceCost,isPendingIssueRequest } = useMutation({
     mutationFn: () => serviceCost(),
   });
-  
+
   const { data: issueRequestData } = useQuery({
     queryKey: ["issueRequest"],
     queryFn: () => {
       return issueRequest();
     },
   });
-  
+
     // useEffect(() => {
     //   const issueRequest = async () => {
     //     try {
@@ -79,7 +79,7 @@ export default function PayWithMHesam() {
   });
 
   function handleAddCredit(credit: UserCreditListResponse | null) {
-    
+
     if (credit === null) return;
     if (
       selectedCredits.findIndex(
@@ -251,7 +251,7 @@ export default function PayWithMHesam() {
                 background:
                   "linear-gradient(10deg, #2CDFC9 120.72%, #1758BA 97.32%)",
                 color: palette.common.white,
-                
+
               }}
             >
               <Typography variant="h6" component="p" fontSize="1rem">

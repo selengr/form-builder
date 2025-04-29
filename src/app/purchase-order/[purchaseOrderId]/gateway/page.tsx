@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { BiChevronRight } from "react-icons/bi";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { formatNumberWithCommas } from "@/lib/numberFormatter";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Box, Button, Divider, Typography, useTheme } from "@mui/material";
 
 // types
@@ -31,7 +31,6 @@ import { confirmPayment, connectToGateway, issueRequest, serviceCost, userCredit
 // -------------------------------------------------
 
 export default function PayWithMHesam() {
-  const params = useParams();
   const router = useRouter();
   const pathname = usePathname();
   const { palette } = useTheme();
@@ -46,18 +45,18 @@ export default function PayWithMHesam() {
   const [issueReques, setIssueRequest] = useState<{ issueRequestId: number }>();
 
 
-
-  const { data, mutate: getServiceCost } = useMutation({
+  // @ts-ignore
+  const { data, mutate: getServiceCost,isPendingIssueRequest } = useMutation({
     mutationFn: () => serviceCost(),
   });
-  
+
   const { data: issueRequestData } = useQuery({
     queryKey: ["issueRequest"],
     queryFn: () => {
       return issueRequest();
     },
   });
-  
+
     // useEffect(() => {
     //   const issueRequest = async () => {
     //     try {
@@ -80,7 +79,7 @@ export default function PayWithMHesam() {
   });
 
   function handleAddCredit(credit: UserCreditListResponse | null) {
-    
+
     if (credit === null) return;
     if (
       selectedCredits.findIndex(
@@ -230,8 +229,11 @@ export default function PayWithMHesam() {
     }
   };
 
+  if(!data) return null
+  if(isPendingIssueRequest) return "loading..."
+
   return (
-    creditList && (
+    // creditList && (
       <Box sx={{justifyContent:"center",display:"flex",width:"100%",m:0}}>
         <PrerequestHeader
           title={"سبد خرید"}
@@ -249,7 +251,7 @@ export default function PayWithMHesam() {
                 background:
                   "linear-gradient(10deg, #2CDFC9 120.72%, #1758BA 97.32%)",
                 color: palette.common.white,
-                
+
               }}
             >
               <Typography variant="h6" component="p" fontSize="1rem">
@@ -261,7 +263,7 @@ export default function PayWithMHesam() {
                 component="p"
                 fontWeight="bold"
               >
-                {formatNumberWithCommas(data?.totalAmount)} تومان
+                {isPendingIssueRequest ? "---" : formatNumberWithCommas(data?.totalAmount) + "تومان"}
               </Typography>
             </Box>
             <Typography marginTop="1.5rem" paddingX="0.5rem">
@@ -277,6 +279,8 @@ export default function PayWithMHesam() {
                 value={null}
                 key={selectedCredits.length}
                 disabled={remainedAmount <= 0}
+                loading={true}
+                loadingText={true}
                 options={creditList || []}
                 getOptionLabel={(option) =>
                   option?.creditTypeValue +
@@ -397,6 +401,6 @@ export default function PayWithMHesam() {
           }}
         />
       </Box>
-    )
+    // )
   );
 }

@@ -11,6 +11,7 @@ export interface ICalculator {
 
 export interface ICalculatorCardProps {
   calculator: ICalculator;
+  index:number;
 }
 
 export interface ICalculatorListProps {

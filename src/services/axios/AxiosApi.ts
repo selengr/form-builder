@@ -1,63 +1,98 @@
-import axios from "axios";
-import { getServerSession } from "next-auth";
-import { getSession, signIn } from "next-auth/react";
-import { authOptions } from "../auth/authConfig";
-import { toast } from "sonner";
+import axios, {AxiosError, AxiosHeaders, InternalAxiosRequestConfig} from "axios";
+import {getSession, signIn} from "next-auth/react";
+import {getServerSession} from "next-auth";
+import {authOptions} from "../auth/authConfig";
+import {toast} from "sonner";
 
-const AxiosApi = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_BASE_URL_PSYA + "/psya",
+enum HttpStatus {
+    BAD_REQUEST = 400,
+    UNAUTHORIZED = 401,
+    FORBIDDEN = 403,
+    NOT_FOUND = 404,
+    REQUEST_TIMEOUT = 408,
+    CONFLICT = 409,
+    UNSUPPORTED_MEDIA = 415,
+    TOO_MANY_REQUESTS = 429,
+    INTERNAL_SERVER_ERROR = 500,
+    BAD_GATEWAY = 502,
+    SERVICE_UNAVAILABLE = 503,
+    GATEWAY_TIMEOUT = 504,
+}
+
+const errorMessages: Record<HttpStatus, string> = {
+    [HttpStatus.BAD_REQUEST]: "درخواست نامعتبر بود.",
+    [HttpStatus.UNAUTHORIZED]: "احراز هویت انجام نشد.",
+    [HttpStatus.FORBIDDEN]: "شما مجوز لازم را ندارید.",
+    [HttpStatus.NOT_FOUND]: "موردی یافت نشد.",
+    [HttpStatus.REQUEST_TIMEOUT]: "درخواست بیش از حد طول کشید.",
+    [HttpStatus.CONFLICT]: "تعارض در اطلاعات ارسالی.",
+    [HttpStatus.UNSUPPORTED_MEDIA]: "فرمت داده پشتیبانی نمی‌شود.",
+    [HttpStatus.TOO_MANY_REQUESTS]: "تعداد درخواست بیش از حد مجاز است.",
+    [HttpStatus.INTERNAL_SERVER_ERROR]: "خطای داخلی سرور.",
+    [HttpStatus.BAD_GATEWAY]: "درگاه ارتباطی خراب است.",
+    [HttpStatus.SERVICE_UNAVAILABLE]: "سرویس موقتاً غیرفعال است.",
+    [HttpStatus.GATEWAY_TIMEOUT]: "پاسخی از سرور دریافت نشد.",
+};
+
+export const AxiosApi = axios.create({
+    baseURL: `${process.env.NEXT_PUBLIC_BASE_URL_PSYA}/psya`,
+    timeout: 15000,
+    headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Methods": "GET, POST, DELETE, PUT",
+        "content-encoding": "gzip, br, deflate, zstd",
+    },
+    withCredentials: true,
+    decompress: true,
 });
 
 let cachedSession: any = null;
 
-AxiosApi.interceptors.request.use(async (request) => {
+async function getAccessToken(): Promise<string | null> {
     try {
         if (!cachedSession) {
-            if (typeof window === "undefined") {
-                cachedSession = await getServerSession(authOptions);
-            } else {
-                cachedSession = await getSession();
-            }
+            cachedSession = typeof window === "undefined"
+              ? await getServerSession(authOptions)
+              : await getSession();
         }
-
-        // if (cachedSession && cachedSession.access_token) {
-        request.headers["Authorization"] = `Bearer ${cachedSession.access_token}`;
-        // request.headers["Authorization"] = `Bearer eyJraWQiOiJzaGFyZS1rZXktaWQiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIwOTU1MDAwMDAwNyIsImF1ZCI6InNzb0NsaWVudC0yIiwibmJmIjoxNzQ1MDgwMDU5LCJpc3MiOiJodHRwOi8vMTcyLjE2LjExLjI0OjgwODAvc3NvIiwiaWQiOiI3IiwiZXhwIjoxNzc1MDgwMDU5LCJpYXQiOjE3NDUwODAwNTksImp0aSI6IjMxZjBkMzU4LTkwNzMtNGRlNi05ZjQ4LWY5YzIyNmNkZWZmZCJ9.d6t1H4u8s2VzzpFNS7mOJFC-njhAP70CX731oYgDo-4B3ta6sJbHmnvEXFkZ4Nz1DQwnDj6KY6cqNknMqtOmCWGUqRwVSpOwjTICKZA714IMJp8poFzzfJDPbAVhHlq0TxqywsCeKF2dmwYyG1B9yLRdG1TBg48Xb0OQBiEe96RVINkzlVtxEWaAY5bIcOpx_Y1uqsCISaqptIFC4iguXNcYBvwpbQE61KjnqbByT6eWAO4X-wgM5j327YlCR7jEH4D3tx3ZovN7CaH4Qxf2CDylMv_K3Xpm8_7tbMG93BdMWTNuc4cwCE63dUppX_mPZKzdJAOgavFBBGyTU0lwCQ`
-        // }
-    } catch (error) {
-        console.error("Error retrieving session:", error);
+        return cachedSession?.access_token ?? null;
+    } catch (err) {
+        console.error("❌ Error fetching session:", err);
+        return null;
     }
+}
 
-    return request;
-});
+AxiosApi.interceptors.request.use(
+  async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
+      const token = await getAccessToken();
+      if (token) {
+          const headers: AxiosHeaders = new AxiosHeaders(config.headers); // تبدیل به AxiosHeaders
+          headers.set("Authorization", `Bearer ${token}`);
+          config.headers = headers;
+      }
+      return config;
+  }
+);
 
 AxiosApi.interceptors.response.use(
-  (response) => {
-      return response;
-  },
-  async (error) => {
-      const { response } = error;
+  (response) => response,
+  async (error: AxiosError) => {
+      const status: HttpStatus | undefined = error.response?.status;
+      const msg = status ? errorMessages[status] || "خطای ناشناخته‌ای رخ داده است." : "خطا در ارتباط با سرور";
 
-      if (response && !response.ok) {
-          const { status } = response;
-          const errorText = (await response.data) || response.statusText;
-
-          let errorMessage = `API request error: ${status}`;
-          if (status === 401) {
-              await signIn("authorize");
-              errorMessage = "Authentication error occurred";
-          } else if (status === 403) {
-              errorMessage = "Authorization error occurred";
-          } else if (status === 400) {
-              errorMessage = "Bad Request";
-          } else if (status === 409) {
-              errorMessage = "Conflict";
-              toast.error(response.data.message[0].title);
-          }
-
-          console.error(errorMessage);
-          throw new Error(errorText);
+      if (status === HttpStatus.UNAUTHORIZED) {
+          toast.error("لطفاً دوباره وارد شوید.");
+          await signIn("authorize");
+      } else {
+          toast.error(msg);
       }
+
+      console.error("🚨 API Error:", {
+          url: error.config?.url,
+          method: error.config?.method,
+          status,
+          data: error.response?.data,
+      });
 
       return Promise.reject(error);
   }

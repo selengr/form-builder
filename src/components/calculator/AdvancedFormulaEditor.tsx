@@ -20,6 +20,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                                                                       }) => {
     const {id} = useParams();
     const {refresh} = useRouter();
+    const mainIndex = useRef<number>(-2);
 
     // State initialization
     const editData = editList?.frontCalcData ? JSON.parse(editList.frontCalcData as string) : [];
@@ -36,7 +37,6 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
     // Constants
     const OPERATOR_TYPES = ["-", "+", "*", "/"];
     const FN_FX_OPTIONS = [{fnValue: "avg", fnCaption: "میانگین()"}];
-
     // Effects
     useEffect(() => {
         setIsClient(true);
@@ -78,17 +78,28 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
             const range = document.createRange();
             const sel = window.getSelection();
 
+            // اگر در انتهای لیست هستیم
             if (newCursorIndex >= editableDiv.childNodes.length) {
-                range.setStartAfter(editableDiv.lastChild || editableDiv);
-            } else {
-                range.setStartAfter(editableDiv.childNodes[newCursorIndex - 1] || editableDiv);
+                if (editableDiv.lastChild) {
+                    range.setStartAfter(editableDiv.lastChild);
+                } else {
+                    range.setStart(editableDiv, 0);
+                }
+            }
+            // اگر در میان لیست هستیم
+            else {
+                const targetNode = editableDiv.childNodes[newCursorIndex];
+                range.setStartBefore(targetNode);
             }
 
             range.collapse(true);
             sel?.removeAllRanges();
             sel?.addRange(range);
             editableDiv.focus();
-        }, 0);
+
+            // اضافه کردن استایل برای نمایش بهتر کرسر
+            editableDiv.style.caretColor = '#1758BA';
+        }, 10);
     };
 
     const updateElements = (newElements: Element[], newCursorIndex: number) => {
@@ -122,6 +133,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                 }
             }
             newElements.splice(cursorIndex - 1, endIndex - cursorIndex + 2);
+            mainIndex.current += -2
         } else {
             newElements.splice(cursorIndex - 1, 1);
         }
@@ -133,14 +145,51 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         const newElements = [...elements];
         let newCursorIndex = cursorIndex;
 
-        if (cursorIndex === 0) {
-            toast.error("فرمول نمی‌تواند با عملگر شروع شود.");
+        if (!isValidCursorPosition(cursorIndex, true)) {
+            toast.error("امکان اضافه کردن عملگر در این موقعیت وجود ندارد");
             return;
         }
 
-        if (cursorIndex > 0 && newElements[cursorIndex - 1].type === "OPERATOR" && OPERATOR_TYPES.includes(newElements[cursorIndex - 1].content)) {
+        if (cursorIndex === 0) {
+            toast.error("فرمول نمی‌تواند با عملگر شروع شود");
+            return;
+        }
+
+        const prevElement = cursorIndex > 0 ? elements[cursorIndex - 1] : null;
+        const nextElement = cursorIndex < elements.length ? elements[cursorIndex] : null;
+
+        if (prevElement) {
+            if (prevElement.type === "OPERATOR") {
+                toast.error("عملگر نمی‌تواند بعد از عملگر دیگر قرار گیرد");
+                return;
+            }
+
+            if ((prevElement.type === "PARENTHESIS" || prevElement.type === "AVG_PARENTHESIS") &&
+              prevElement.content === "(") {
+                toast.error("عملگر نمی‌تواند بلافاصله بعد از پرانتز باز قرار گیرد");
+                return;
+            }
+        }
+
+        if (nextElement) {
+            if ((nextElement.type === "PARENTHESIS" || nextElement.type === "AVG_PARENTHESIS") &&
+              nextElement.content === ")") {
+                toast.error("عملگر نمی‌تواند بلافاصله قبل از پرانتز بسته قرار گیرد");
+                return;
+            }
+
+            if (nextElement.type === "OPERATOR") {
+                toast.error("دو عملگر نمی‌توانند پشت سر هم قرار گیرند");
+                return;
+            }
+        }
+
+        if (cursorIndex > 0 &&
+          newElements[cursorIndex - 1].type === "OPERATOR" &&
+          OPERATOR_TYPES.includes(newElements[cursorIndex - 1].content)) {
             newElements[cursorIndex - 1].content = content;
-        } else {
+        }
+        else {
             newElements.splice(cursorIndex, 0, {type: "OPERATOR", content});
             newCursorIndex++;
         }
@@ -149,33 +198,46 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
     };
 
     const canAddNumber = (content: string): boolean => {
-        // همیشه می‌توان عدد اضافه کرد اگر در حال ویرایش عدد موجود هستیم
         if (cursorIndex > 0 && elements[cursorIndex - 1].type === "NUMBER") {
             return true;
         }
 
-        // شرایط دیگر برای شروع عدد جدید
-        if (elements.length === 0) return true;
-        if (cursorIndex === 0 && elements[0]?.type !== "OPERATOR") return true;
+        const prevElement = cursorIndex > 0 ? elements[cursorIndex - 1] : null;
+        const nextElement = cursorIndex < elements.length ? elements[cursorIndex] : null;
 
-        const prevElement = elements[cursorIndex - 1];
-        return (prevElement?.type === "PARENTHESIS" && prevElement?.content === "(" || prevElement?.type === "AVG_PARENTHESIS" && prevElement?.content === "(" || prevElement?.type === "OPERATOR" || cursorIndex === 0);
+        if (prevElement) {
+            if (prevElement.type === "NUMBER") {
+                return false;
+            }
+
+            if (!(prevElement.type === "OPERATOR" ||
+              (prevElement.type === "PARENTHESIS" && prevElement.content === "(") ||
+              (prevElement.type === "AVG_PARENTHESIS" && prevElement.content === "("))) {
+                return false;
+            }
+        }
+
+        if (nextElement) {
+            if (nextElement.type === "NUMBER") {
+                return false;
+            }
+        }
+
+        return true;
     };
 
     const handleNumber = (content: string) => {
         if (!canAddNumber(content)) {
-            toast.error("عدد جدید فقط می‌تواند بعد از پرانتز باز یا عملگر اضافه شود");
+            toast.error("امکان اضافه کردن عدد در این موقعیت وجود ندارد");
             return;
         }
 
         const newElements = [...elements];
         let newCursorIndex = cursorIndex;
 
-        // اگر در حال ویرایش عدد موجود هستیم
         if (cursorIndex > 0 && newElements[cursorIndex - 1].type === "NUMBER") {
             const currentNumber = newElements[cursorIndex - 1].content;
 
-            // مدیریت ممیز اعشار
             if (content === ".") {
                 if (currentNumber.includes(".")) {
                     toast.error("عدد نمی‌تواند بیش از یک ممیز اعشار داشته باشد");
@@ -183,22 +245,17 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                 }
                 newElements[cursorIndex - 1].content += content;
             }
-            // مدیریت صفر ابتدایی
             else if (currentNumber === "0" && content !== ".") {
                 newElements[cursorIndex - 1].content = content;
             }
-            // مدیریت نقطه اعشار در ابتدا
             else if (currentNumber === ".") {
                 newElements[cursorIndex - 1].content = `0.${content}`;
             }
-            // حالت عادی - اضافه کردن رقم جدید
             else {
                 newElements[cursorIndex - 1].content += content;
             }
         }
-        // اگر عدد جدید اضافه می‌کنیم
         else {
-            // مدیریت نقطه اعشار در ابتدای عدد جدید
             if (content === ".") {
                 newElements.splice(cursorIndex, 0, {type: "NUMBER", content: "0."});
             } else {
@@ -217,7 +274,6 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
 
         if (content === "(") {
             newElements.splice(cursorIndex, 0, {type: "PARENTHESIS", content: "("});
-            newElements.splice(cursorIndex + 1, 0, {type: "PARENTHESIS", content: ")"});
             newCursorIndex++;
         } else if (content === ")") {
             newElements.splice(cursorIndex, 0, {type: "PARENTHESIS", content: ")"});
@@ -233,43 +289,45 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         element.setAttribute("data-type", isHidden ? "up" : "down");
     };
 
-    const handleDropdownClick = (e: React.MouseEvent, id: string) => {
+    const handleDropdownClick = (e: React.MouseEvent, id: string,index:any) => {
         e.stopPropagation();
         const target = e.target as HTMLElement;
         const isHidden = target.getAttribute("data-type") === "down";
         toggleDropdown(target, isHidden);
+        console.log("element id= >>>",id )
+        console.log("element index= >>>",index )
     };
 
-    const handleOptionClick = (item: any, dropdownId: string) => {
+    const handleOptionClick = (item: any, dropdownId: string,element:any) => {
         const {UNIC_NAME, STICKY_FUNC} = item.extMap;
         const finalId = STICKY_FUNC ?? UNIC_NAME;
 
-        // پیدا کردن المان dropdown مربوطه
         const elementIndex = elements.findIndex(elem => elem.id === dropdownId);
-
-        if (elementIndex === -1) {
-            toast.error("مشکلی در یافتن فیلد مورد نظر پیش آمده");
-            return;
-        }
-
-        // آپدیت المان موجود بدون بررسی تکراری
+        if (elementIndex === -1) return;
         const newElements = [...elements];
+
         newElements[elementIndex] = {
-            ...newElements[elementIndex],
             type: "NEW_FIELD",
             content: item.caption,
-            id: finalId
+            id: finalId,
+            mainIndex:element.mainIndex
         };
-
-        setElements(newElements);
+        console.log("item = >>>>", element.index)
+         setElements(newElements);
         selectFieldRef.current[finalId] = finalId;
         closeDropdown(dropdownId);
 
-        // به روزرسانی موقعیت کرسر
         setCursorIndex(elementIndex + 1);
         updateCursorPosition(elementIndex + 1);
     };
 
+    const removeDuplicateFields = (elements: Element[], newId: string, currentIndex: number) => {
+        return elements.filter((elem, index) => {
+            if (elem.type !== "NEW_FIELD") return true;
+            if (elem.id !== newId) return true;
+            return index === currentIndex;
+        });
+    };
     const closeDropdown = (id: string) => {
         const optionsContainer = document.querySelector(`[data-id="${id}"] .${styles.optionsContainer}`) as HTMLElement;
         const dropdownButton = document.querySelector(`[data-id="${id}"] .${styles.customDropdown}`) as HTMLElement;
@@ -281,24 +339,47 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
     const canAddField = (): boolean => {
         if (elements.length === 0) return true;
 
-        if (cursorIndex === 0 && elements[0]?.type !== "OPERATOR") return true;
+        const prevElement = cursorIndex > 0 ? elements[cursorIndex - 1] : null;
+        const nextElement = cursorIndex < elements.length ? elements[cursorIndex] : null;
 
-        const prevElement = elements[cursorIndex - 1];
+        if (prevElement) {
+            if (prevElement.type === "NEW_FIELD" ||
+              prevElement.type === "NUMBER" ||
+              prevElement.type === "NEW_FnFx") {
+                return false;
+            }
+        }
 
-        return (prevElement?.type === "PARENTHESIS" && prevElement?.content === "(" || prevElement?.type === "AVG_PARENTHESIS" && prevElement?.content === "(" || prevElement?.type === "OPERATOR" || cursorIndex === 0);
+        if (nextElement) {
+            if (nextElement.type === "NEW_FIELD" ||
+              nextElement.type === "NUMBER" ||
+              nextElement.type === "NEW_FnFx") {
+                return false;
+            }
+        }
+
+        return true;
     };
 
     const handleNewField = () => {
+
+        if (!isValidCursorPosition(cursorIndex, true)) {
+            toast.error("امکان اضافه کردن فیلد در این موقعیت وجود ندارد");
+            return;
+        }
+
         if (!canAddField()) {
             toast.error("فیلد جدید فقط می‌تواند بعد از پرانتز باز یا عملگر اضافه شود");
             return;
         }
-
+        mainIndex.current += 2
+        console.log("main index = >>>", mainIndex)
         const selectId = `select_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
         const newElement: Element = {
             type: "NEW_FIELD",
             content: "انتخاب سوال",
             id: selectId,
+            mainIndex: mainIndex.current
         };
 
         const newElements = [...elements];
@@ -357,11 +438,42 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         const editableDiv = contentEditable.current;
         if (!editableDiv) return;
 
+        // محاسبه دقیق موقعیت کلیک
         const range = document.caretRangeFromPoint(e.clientX, e.clientY);
-        if (range) {
-            const index = Array.from(editableDiv.childNodes).findIndex((_, index) => index === range.endOffset);
-            setCursorIndex(index === -1 ? elements.length : index);
+        if (!range) return;
+
+        // پیدا کردن المان دقیقی که روی آن کلیک شده
+        const clickedElement = e.target as HTMLElement;
+        const allElements = Array.from(editableDiv.children);
+        const clickedIndex = allElements.findIndex(el => el.contains(clickedElement));
+
+        // اگر المان معتبری پیدا شد
+        if (clickedIndex !== -1) {
+            setCursorIndex(clickedIndex);
+            updateCursorPosition(clickedIndex);
+        } else {
+            // اگر کلیک در فضای خالی بود، کرسر را به انتها ببر
+            setCursorIndex(allElements.length);
+            updateCursorPosition(allElements.length);
         }
+    };
+
+    const isValidCursorPosition = (index: number, forInsertion: boolean = false): boolean => {
+        const prevElement = index > 0 ? elements[index - 1] : null;
+        const nextElement = index < elements.length ? elements[index] : null;
+
+        if (!forInsertion) {
+            return !(prevElement?.type === "OPERATOR" && nextElement?.type === "OPERATOR");
+        }
+
+        if (prevElement?.type === "OPERATOR" && nextElement?.type === "OPERATOR") {
+            return false;
+        }
+
+        return !(prevElement?.type === "PARENTHESIS" && prevElement?.content === "(" &&
+          nextElement?.type === "OPERATOR");
+
+
     };
 
     const callApi = async () => {
@@ -399,15 +511,37 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         }
     };
 
+    const generateStableKey = (elem: Element, index: number) => {
+        // اگر المان شناسه منحصربفرد دارد از آن استفاده کنید
+        if (elem.mainIndex) return `${elem.type}_${elem.id}`;
+
+        // برای المان‌های بدون شناسه، از ترکیب نوع + محتوا + موقعیت استفاده کنید
+        const contentHash = hashCode(elem.content || '');
+        return `${elem.type}_${contentHash}_${index}`;
+    };
+
+// تابع کمکی برای ایجاد هش از محتوا
+    const hashCode = (str: string) => {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash |= 0; // تبدیل به عدد 32 بیتی
+        }
+        return hash;
+    };
+
     // Render functions
     const renderElement = (elem: Element, index: number) => {
-        const elementKey = `${elem.type}_${elem.id || index}`;
+
+        const elementKey = generateStableKey(elem, index);
+
 
         switch (elem.type) {
             case "NEW_FIELD":
                 return (<div
                     key={elementKey}
-                    data-id={elem.id}
+                    data-id={elem.mainIndex}
                     contentEditable={false}
                     className={`${styles.dynamicbtn} ${styles.NEW_FIELD}`}
                     data-type="NEW_FIELD"
@@ -415,7 +549,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                     <div
                         className={styles.customDropdown}
                         data-type="down"
-                        onClick={(e) => handleDropdownClick(e, elem.id!)}
+                        onClick={(e) => handleDropdownClick(e, elem.id!,index)}
                     >
                         {elem.content}
                     </div>
@@ -423,7 +557,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                         {questionList.dataList.map((item: any, index: number) => (<div
                             key={index}
                             className={styles.option}
-                            onClick={() => handleOptionClick(item, elem.id!)}
+                            onClick={() => handleOptionClick(item, elem.id!,elem)}
                         >
                             {item.caption}
                         </div>))}

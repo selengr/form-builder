@@ -1,56 +1,55 @@
 import { Dispatch, SetStateAction } from "react";
 
 
- export interface ICalculator {
-    id: number;
-    name: string;
-    formBuilderId: number;
-    theFormula: string;
-    frontCalcData: string;
+export interface ICalculator {
+  id: number;
+  name: string;
+  formBuilderId: number;
+  theFormula: string;
+  frontCalcData: string;
 }
 
-  export interface ICalculatorCardProps {
-    calculator: ICalculator;
-    index:number;
-  }
-
-  export interface ICalculatorListProps {
-    calculators: ICalculator[];
-  }
-
-  export interface ICalculatorModalProps {
-    calculator: ICalculator | null;
-  }
-
-  export interface ICreateCalculatorDialogProps {
-    open: boolean;
-    setOpen: Dispatch<SetStateAction<boolean>>;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  export interface IEditCalculatorDialogProps extends ICreateCalculatorDialogProps  {
-    calcId : number
-  }
-
-
-
-  export interface IFrontCalcData {
-    type: string;
-    content: string;
-    id?: string;
+export interface ICalculatorCardProps {
+  calculator: ICalculator;
 }
 
-  export interface ICalculatorFindDataResponse {
-      id: number;
-      name: string;
-      formBuilderId: number;
-      theFormula: string;
-      frontCalcData: IFrontCalcData | string;
-  }
+export interface ICalculatorListProps {
+  calculators: ICalculator[];
+}
+
+export interface ICalculatorModalProps {
+  calculator: ICalculator | null;
+}
+
+export interface ICreateCalculatorDialogProps {
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface IEditCalculatorDialogProps extends ICreateCalculatorDialogProps  {
+  calcId : number
+}
 
 
 
- interface IOptions {
+export interface IFrontCalcData {
+  type: string;
+  content: string;
+  id?: string;
+}
+
+export interface ICalculatorFindDataResponse {
+  id: number;
+  name: string;
+  formBuilderId: number;
+  theFormula: string;
+  frontCalcData: IFrontCalcData | string;
+}
+
+
+
+interface IOptions {
   [key: string]: [number, string];
 }
 

@@ -7,11 +7,11 @@ import MenuSidebar from "@/components/SideBar/MenuSidebar";
 import MresalatLogo from "@/../public/images/home-page/mresalat_logo.svg";
 import LogoutIcon from "@/../public/images/home-page/logout.svg";
 import InfoIcon from "@/../public/images/home-page/info-icon.svg";
-import {toast} from "sonner";
-import {signIn, signOut} from "next-auth/react";
-import {useEffect, useState} from "react";
+import { toast } from "sonner";
+import { signIn, signOut } from "next-auth/react";
+import { useEffect, useState } from "react";
 import AxiosApi from "@/services/axios/AxiosApi";
-import MiddleSidebar from '../MiddleSidebar/MiddleSidebar';
+import MiddleSidebar from "../MiddleSidebar/MiddleSidebar";
 import Avatar from "@/components/Avatar/Avatar";
 
 export default function MainSidebar() {
@@ -19,105 +19,101 @@ export default function MainSidebar() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        async function fetchUserData() {
+        const fetchUserData = async () => {
             try {
                 setIsLoading(true);
-
                 const res = await AxiosApi({
                     url: "/authorization/front-panel/non-org-user-role/find-user-loggedin-info",
                     baseURL: process.env.NEXT_PUBLIC_BASE_URL,
                 });
-
                 setUserInfo(res.data);
             } catch (error) {
-                console.log(error);
+                console.error("Error fetching user info:", error);
             } finally {
                 setIsLoading(false);
             }
-        }
+        };
 
         fetchUserData();
     }, []);
 
+    const handleAuthAction = async () => {
+        if (!userInfo) {
+            await signIn("authorize");
+        } else {
+            await signOut({ redirect: false });
+            toast.success("خروج با موفقیت انجام شد");
+            location.replace("/");
+        }
+    };
+
     return (
-        <>
-            <Box
-                sx={{
-                    "&::-webkit-scrollbar": {
-                        display: "none",
-                    },
-                    overflowY: "auto",
-                    minWidth: "100px",
-                }}
-                display="flex"
-                flexDirection="column"
-                justifyContent="space-between"
-                bgcolor="white"
-            >
-                <div className="flex flex-col gap-4 items-center pt-4">
-                    <Link href="/">
+      <>
+          <Box
+            sx={{
+                "&::-webkit-scrollbar": { display: "none" },
+                overflowY: "auto",
+                minWidth: "100px",
+            }}
+            display="flex"
+            flexDirection="column"
+            justifyContent="space-between"
+            bgcolor="white"
+          >
+              {/* بالا - لوگو و آواتار */}
+              <div className="flex flex-col gap-4 items-center pt-4">
+                  <Link href="/">
+                      <Image
+                        src={MresalatLogo}
+                        loading="lazy"
+                        alt="Mresalat_Logo"
+                        width={64}
+                        height={15}
+                      />
+                  </Link>
+
+                  {isLoading ? (
+                    <div className="w-16 h-16 bg-neutral-200 border-2 border-blue-600 rounded-full" />
+                  ) : userInfo?.user?.fullName ? (
+                    <Avatar size="lg" name={userInfo.user.fullName} />
+                  ) : (
+                    <div className="w-16 h-16 bg-neutral-200 border-2 border-blue-600 rounded-full" />
+                  )}
+              </div>
+
+              {/* وسط - منو */}
+              <div className="h-[520px] min-h-[520px] w-[80px] bg-cover bg-[url('/images/home-page/right_sidebar_bg.svg')]">
+                  <MenuSidebar />
+              </div>
+
+              {/* پایین - دکمه‌ها */}
+              <div className="flex flex-col gap-6 items-start pr-5 justify-center p-4">
+                  <button>
+                      <Image src={InfoIcon} alt="Info" width={24} height={24} />
+                  </button>
+
+                  {!isLoading && (
+                    <button
+                      onClick={handleAuthAction}
+                      className="flex flex-col items-center gap-1"
+                    >
                         <Image
-                            src={MresalatLogo}
-                            loading={"lazy"}
-                            alt="Mresalat_Logo"
-                            width={64}
-                            height={15}
+                          className={userInfo ? "rotate-180" : ""}
+                          src={LogoutIcon}
+                          alt={userInfo ? "Logout" : "Login"}
+                          width={24}
+                          height={24}
                         />
-                    </Link>
-                    {isLoading ? (
-                        <div className="w-16 h-16 bg-neutral-200 border-2 border-blue-600 rounded-full"/>
-
-                    ) : (
-                        <>
-                            {
-                                userInfo?.user?.fullName ?
-                                    <Avatar size={"lg"} name={userInfo?.user?.fullName}/>
-                                    :
-                                    <div className="w-16 h-16 bg-neutral-200 border-2 border-blue-600 rounded-full"/>
-                            }
-                        </>
-                    )}
-
-
-                </div>
-                <div
-                    className="h-[520px] min-h-[520px] w-[80px] bg-cover bg-[url('/images/home-page/right_sidebar_bg.svg')]">
-                    <MenuSidebar/>
-                </div>
-                <div className="flex flex-col gap-6 items-start pr-5 justify-center p-4">
-                    <button>
-                        <Image src={InfoIcon} alt="Logout" width={24} height={24}/>
-                    </button>
-                    {!isLoading ? (
-                        <button
-                            onClick={async () => {
-                                if (!userInfo) {
-                                    await signIn("authorize");
-                                } else {
-                                    await signOut({redirect: false});
-                                    toast.success("خروج با موفقیت انجام شد");
-                                    location.replace("/");
-                                }
-                            }}
-                            className="flex items-baseline justify-center flex-col gap-1"
-                        >
-                            <Image
-                                className={userInfo ? "rotate-180" : "rotate-0"}
-                                src={LogoutIcon}
-                                alt="Logout"
-                                width={24}
-                                height={24}
-                            />
-                            <span className="text-[10px] text-black font-bold flex items-center justify-center">
+                        <span className="text-[10px] text-black font-bold">
                 {userInfo ? "خروج" : "ورود"}
               </span>
-                        </button>
-                    ) : (
-                        <></>
-                    )}
-                </div>
-            </Box>
-            <MiddleSidebar/>
-        </>
+                    </button>
+                  )}
+              </div>
+          </Box>
+
+          {/* سایدبار وسط */}
+          <MiddleSidebar />
+      </>
     );
 }

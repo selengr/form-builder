@@ -22,22 +22,19 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
     const {refresh} = useRouter();
     const mainIndex = useRef<number>(-2);
 
-    // State initialization
     const editData = editList?.frontCalcData ? JSON.parse(editList.frontCalcData as string) : [];
     const [formName, setFormName] = useState<string>(editList?.name ?? "");
     const [cursorIndex, setCursorIndex] = useState<number>(0);
     const [elements, setElements] = useState<Element[]>(editData);
     const [isClient, setIsClient] = useState<boolean>(false);
 
-    // Refs
     const contentEditable = useRef<HTMLDivElement>(null);
     const selectAvgRef = useRef<Record<string, string>>({});
     const selectFieldRef = useRef<Record<string, string>>({});
 
-    // Constants
     const OPERATOR_TYPES = ["-", "+", "*", "/"];
     const FN_FX_OPTIONS = [{fnValue: "avg", fnCaption: "میانگین()"}];
-    // Effects
+
     useEffect(() => {
         setIsClient(true);
     }, []);
@@ -48,7 +45,6 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         }
     }, [isEdit]);
 
-    // Helper functions
     const initializeFieldRefs = () => {
         if (!elements) return;
 
@@ -78,7 +74,6 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
             const range = document.createRange();
             const sel = window.getSelection();
 
-            // اگر در انتهای لیست هستیم
             if (newCursorIndex >= editableDiv.childNodes.length) {
                 if (editableDiv.lastChild) {
                     range.setStartAfter(editableDiv.lastChild);
@@ -86,7 +81,6 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                     range.setStart(editableDiv, 0);
                 }
             }
-            // اگر در میان لیست هستیم
             else {
                 const targetNode = editableDiv.childNodes[newCursorIndex];
                 range.setStartBefore(targetNode);
@@ -96,8 +90,6 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
             sel?.removeAllRanges();
             sel?.addRange(range);
             editableDiv.focus();
-
-            // اضافه کردن استایل برای نمایش بهتر کرسر
             editableDiv.style.caretColor = '#1758BA';
         }, 10);
     };
@@ -108,7 +100,28 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         updateCursorPosition(newCursorIndex);
     };
 
-    // Event handlers
+    const isValidParenthesisPosition = (content: string): boolean => {
+        if (content === "(") {
+            if (cursorIndex === 0) return true;
+            const prevElement = elements[cursorIndex - 1];
+            return (
+              prevElement.type === "OPERATOR" ||
+              (prevElement.type === "PARENTHESIS" && prevElement.content === "(") ||
+              (prevElement.type === "AVG_PARENTHESIS" && prevElement.content === "(")
+            );
+        } else {
+            if (cursorIndex === 0) return false;
+            const prevElement = elements[cursorIndex - 1];
+            return (
+              prevElement.type === "NEW_FIELD" ||
+              prevElement.type === "NUMBER" ||
+              prevElement.type === "NEW_FnFx" ||
+              (prevElement.type === "PARENTHESIS" && prevElement.content === ")") ||
+              (prevElement.type === "AVG_PARENTHESIS" && prevElement.content === ")")
+            );
+        }
+    };
+
     const handleUndo = useCallback(() => {
         if (elements.length === 0 || cursorIndex === 0) return;
         if (elements[cursorIndex - 1].type === "AVG_PARENTHESIS") return;
@@ -267,8 +280,12 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         updateElements(newElements, newCursorIndex);
     };
 
-
     const handleParenthesis = (content: string) => {
+        if (!isValidParenthesisPosition(content)) {
+            toast.error(`امکان اضافه کردن پرانتز "${content}" در این موقعیت وجود ندارد`);
+            return;
+        }
+
         const newElements = [...elements];
         let newCursorIndex = cursorIndex;
 
@@ -294,11 +311,9 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         const target = e.target as HTMLElement;
         const isHidden = target.getAttribute("data-type") === "down";
         toggleDropdown(target, isHidden);
-        console.log("element id= >>>",id )
-        console.log("element index= >>>",index )
     };
 
-    const handleOptionClick = (item: any, dropdownId: string,element:any) => {
+    const handleOptionClick = (item: any, dropdownId: string, element: any) => {
         const {UNIC_NAME, STICKY_FUNC} = item.extMap;
         const finalId = STICKY_FUNC ?? UNIC_NAME;
 
@@ -310,10 +325,10 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
             type: "NEW_FIELD",
             content: item.caption,
             id: finalId,
-            mainIndex:element.mainIndex
+            mainIndex: element.mainIndex
         };
-        console.log("item = >>>>", element.index)
-         setElements(newElements);
+
+        setElements(newElements);
         selectFieldRef.current[finalId] = finalId;
         closeDropdown(dropdownId);
 
@@ -321,13 +336,6 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         updateCursorPosition(elementIndex + 1);
     };
 
-    const removeDuplicateFields = (elements: Element[], newId: string, currentIndex: number) => {
-        return elements.filter((elem, index) => {
-            if (elem.type !== "NEW_FIELD") return true;
-            if (elem.id !== newId) return true;
-            return index === currentIndex;
-        });
-    };
     const closeDropdown = (id: string) => {
         const optionsContainer = document.querySelector(`[data-id="${id}"] .${styles.optionsContainer}`) as HTMLElement;
         const dropdownButton = document.querySelector(`[data-id="${id}"] .${styles.customDropdown}`) as HTMLElement;
@@ -362,7 +370,6 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
     };
 
     const handleNewField = () => {
-
         if (!isValidCursorPosition(cursorIndex, true)) {
             toast.error("امکان اضافه کردن فیلد در این موقعیت وجود ندارد");
             return;
@@ -372,8 +379,8 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
             toast.error("فیلد جدید فقط می‌تواند بعد از پرانتز باز یا عملگر اضافه شود");
             return;
         }
-        mainIndex.current += 2
-        console.log("main index = >>>", mainIndex)
+
+        mainIndex.current += 2;
         const selectId = `select_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
         const newElement: Element = {
             type: "NEW_FIELD",
@@ -425,6 +432,11 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
     };
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key.length === 1 && !event.ctrlKey && !event.metaKey) {
+            event.preventDefault();
+            return;
+        }
+
         if (event.key === "Enter") {
             event.preventDefault();
         }
@@ -438,23 +450,36 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         const editableDiv = contentEditable.current;
         if (!editableDiv) return;
 
-        // محاسبه دقیق موقعیت کلیک
-        const range = document.caretRangeFromPoint(e.clientX, e.clientY);
-        if (!range) return;
+        const clickX = e.clientX;
+        const clickY = e.clientY;
+        const elements = Array.from(editableDiv.children);
 
-        // پیدا کردن المان دقیقی که روی آن کلیک شده
-        const clickedElement = e.target as HTMLElement;
-        const allElements = Array.from(editableDiv.children);
-        const clickedIndex = allElements.findIndex(el => el.contains(clickedElement));
+        let closestElement = null;
+        let closestDistance = Infinity;
+        let closestIndex = -1;
 
-        // اگر المان معتبری پیدا شد
-        if (clickedIndex !== -1) {
-            setCursorIndex(clickedIndex);
-            updateCursorPosition(clickedIndex);
+        elements.forEach((element, index) => {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const distance = Math.sqrt(
+              Math.pow(clickX - centerX, 2) + Math.pow(clickY - centerY, 2));
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestElement = element;
+                closestIndex = index;
+            }
+        });
+
+        if (closestElement && closestIndex !== -1) {
+            // @ts-ignore
+            const rect = closestElement.getBoundingClientRect();
+            const isClickOnRightHalf = clickX > rect.left + rect.width / 2;
+            setCursorIndex(isClickOnRightHalf ? closestIndex + 1 : closestIndex);
+            updateCursorPosition(isClickOnRightHalf ? closestIndex + 1 : closestIndex);
         } else {
-            // اگر کلیک در فضای خالی بود، کرسر را به انتها ببر
-            setCursorIndex(allElements.length);
-            updateCursorPosition(allElements.length);
+            setCursorIndex(elements.length);
+            updateCursorPosition(elements.length);
         }
     };
 
@@ -472,8 +497,6 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
 
         return !(prevElement?.type === "PARENTHESIS" && prevElement?.content === "(" &&
           nextElement?.type === "OPERATOR");
-
-
     };
 
     const callApi = async () => {
@@ -512,52 +535,36 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
     };
 
     const generateStableKey = (elem: Element, index: number) => {
-        // اگر المان شناسه منحصربفرد دارد از آن استفاده کنید
-        if (elem.mainIndex) return `${elem.type}_${elem.id}`;
-
-        // برای المان‌های بدون شناسه، از ترکیب نوع + محتوا + موقعیت استفاده کنید
-        const contentHash = hashCode(elem.content || '');
-        return `${elem.type}_${contentHash}_${index}`;
-    };
-
-// تابع کمکی برای ایجاد هش از محتوا
-    const hashCode = (str: string) => {
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-            const char = str.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash |= 0; // تبدیل به عدد 32 بیتی
+        if (elem.mainIndex !== undefined) {
+            return `${elem.type}_${elem.mainIndex}`;
         }
-        return hash;
+        return `${elem.type}_${index}`;
     };
 
-    // Render functions
     const renderElement = (elem: Element, index: number) => {
-
         const elementKey = generateStableKey(elem, index);
-
 
         switch (elem.type) {
             case "NEW_FIELD":
                 return (<div
-                    key={elementKey}
-                    data-id={elem.mainIndex}
-                    contentEditable={false}
-                    className={`${styles.dynamicbtn} ${styles.NEW_FIELD}`}
-                    data-type="NEW_FIELD"
+                  key={elementKey}
+                  data-id={elem.mainIndex}
+                  contentEditable={false}
+                  className={`${styles.dynamicbtn} ${styles.NEW_FIELD}`}
+                  data-type="NEW_FIELD"
                 >
                     <div
-                        className={styles.customDropdown}
-                        data-type="down"
-                        onClick={(e) => handleDropdownClick(e, elem.id!,index)}
+                      className={styles.customDropdown}
+                      data-type="down"
+                      onClick={(e) => handleDropdownClick(e, elem.id!,index)}
                     >
                         {elem.content}
                     </div>
                     <div className={styles.optionsContainer} style={{display: "none"}}>
                         {questionList.dataList.map((item: any, index: number) => (<div
-                            key={index}
-                            className={styles.option}
-                            onClick={() => handleOptionClick(item, elem.id!,elem)}
+                          key={index}
+                          className={styles.option}
+                          onClick={() => handleOptionClick(item, elem.id!,elem)}
                         >
                             {item.caption}
                         </div>))}
@@ -566,24 +573,24 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
 
             case "NEW_FnFx":
                 return (<div
-                    key={elem.id}
-                    data-id={elem.id}
-                    contentEditable={false}
-                    className={`${styles.dynamicbtn} ${styles.NEW_FnFx}`}
-                    data-type="NEW_FnFx"
+                  key={elem.id}
+                  data-id={elem.id}
+                  contentEditable={false}
+                  className={`${styles.dynamicbtn} ${styles.NEW_FnFx}`}
+                  data-type="NEW_FnFx"
                 >
                     <div
-                        className={styles.customDropdown}
-                        data-type="down"
-                        onClick={(e) => handleFnFXDropdownClick(e, elem.id!)}
+                      className={styles.customDropdown}
+                      data-type="down"
+                      onClick={(e) => handleFnFXDropdownClick(e, elem.id!)}
                     >
                         {elem.content}
                     </div>
                     <div className={styles.optionsContainer} style={{display: "none"}}>
                         {FN_FX_OPTIONS.map((item) => (<div
-                            key={item.fnValue}
-                            className={styles.option}
-                            onClick={() => handleFnFXOptionClick(item, elem.id!)}
+                          key={item.fnValue}
+                          className={styles.option}
+                          onClick={() => handleFnFXOptionClick(item, elem.id!)}
                         >
                             {item.fnCaption}
                         </div>))}
@@ -592,10 +599,10 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
 
             default:
                 return (<div
-                    key={index}
-                    contentEditable={false}
-                    className={`${styles.dynamicbtn} ${styles[elem.type]}`}
-                    data-type={elem.type}
+                  key={index}
+                  contentEditable={false}
+                  className={`${styles.dynamicbtn} ${styles[elem.type]}`}
+                  data-type={elem.type}
                 >
                     {elem.content}
                 </div>);
@@ -607,161 +614,161 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
     if (!isClient) return null;
 
     return (
-        <Container
-            maxWidth="sm"
-            sx={{padding: "0px !important", marginTop: "-15px !important"}}
-        >
-            <Typography
-                variant="subtitle1"
-                sx={{
-                    display: "flex", justifyContent: "center", color: "#404040", fontWeight: 700,
-                }}
-            >
-                محاسبه‌گر
-            </Typography>
+      <Container
+        maxWidth="sm"
+        sx={{padding: "0px !important", marginTop: "-15px !important"}}
+      >
+          <Typography
+            variant="subtitle1"
+            sx={{
+                display: "flex", justifyContent: "center", color: "#404040", fontWeight: 700,
+            }}
+          >
+              محاسبه‌گر
+          </Typography>
 
-            <Box
-                sx={{
-                    display: "flex", flexDirection: "column", height: "100%", direction: "ltr", width: "100%",
-                }}
-            >
-                <Stack spacing={1}>
-                    <Typography variant="subtitle2" color="#161616">
-                        نام:
-                    </Typography>
-                    <TextField
-                        sx={{
-                            "& .MuiOutlinedInput-root": {
-                                "& fieldset": {
-                                    borderColor: "#DDE1E6", borderRadius: "8px",
-                                }, "&:hover fieldset": {
-                                    borderColor: "#DDE1E6",
-                                }, "&.Mui-focused fieldset": {
-                                    borderColor: "#DDE1E6",
-                                },
-                            }, "& input": {
-                                paddingX: 1, paddingY: 0, height: "50px",
-                            },
-                        }}
-                        value={formName}
-                        onChange={(e) => setFormName(e.target.value)}
-                    />
-                </Stack>
-
-                <Box
+          <Box
+            sx={{
+                display: "flex", flexDirection: "column", height: "100%", direction: "ltr", width: "100%",
+            }}
+          >
+              <Stack spacing={1}>
+                  <Typography variant="subtitle2" color="#161616">
+                      نام:
+                  </Typography>
+                  <TextField
                     sx={{
-                        width: "100%", display: "flex", flexDirection: {xs: "column", sm: "row"}, my: 3,
-                    }}
-                >
-                    <Keypad
-                        handleFnFX={handleFnFX}
-                        handleNewField={handleNewField}
-                        handleParenthesis={handleParenthesis}
-                        handleOperator={handleOperator}
-                        handleNumber={handleNumber}
-                        handleUndo={handleUndo}
-                        contentEditable={contentEditable}
-                    />
-
-                    <Box
-                        sx={{
-                            width: {xs: "100%", sm: "73%"},
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "start",
-                        }}
-                    >
-                        <Typography
-                            variant="subtitle1"
-                            sx={{
-                                display: "flex", justifyContent: "center", color: "#404040", fontWeight: 500,
-                            }}
-                        >
-                            اسکریپت:
-                        </Typography>
-                        <Stack
-                            sx={{
-                                border: "1px solid #DDE1E6",
-                                borderRadius: 2,
-                                padding: 1,
-                                width: "100%",
-                                height: "100%",
-                                minHeight: 200,
-                                display: "flex",
-                                flexWrap: "wrap",
-                                flexDirection: "row",
-                            }}
-                        >
-                            <div
-                                contentEditable
-                                onClick={handleClick}
-                                ref={contentEditable}
-                                onKeyDown={handleKeyDown}
-                                suppressContentEditableWarning
-                                className={styles.ContentEditable}
-                            >
-                                {renderElements()}
-                            </div>
-                        </Stack>
-                    </Box>
-                </Box>
-
-                <Box
-                    display="flex"
-                    gap={3}
-                    width="100%"
-                    marginBottom={2}
-                    sx={{justifyContent: "center"}}
-                >
-                    <LoadingButton
-                        onClick={callApi}
-                        variant="contained"
-                        sx={{
-                            backgroundColor: "#1758BA",
-                            fontWeight: "500",
-                            fontSize: "15px",
-                            borderRadius: "8px",
-                            height: "50px",
-                            "&.MuiButtonBase-root:hover": {
-                                backgroundColor: "#1758BA",
+                        "& .MuiOutlinedInput-root": {
+                            "& fieldset": {
+                                borderColor: "#DDE1E6", borderRadius: "8px",
+                            }, "&:hover fieldset": {
+                                borderColor: "#DDE1E6",
+                            }, "&.Mui-focused fieldset": {
+                                borderColor: "#DDE1E6",
                             },
-                            minWidth: "132px",
-                        }}
-                    >
-                        <Typography
-                            variant="body2"
-                            py={0.5}
-                            sx={{color: "#fff", fontWeight: 500}}
-                        >
-                            تایید
-                        </Typography>
-                    </LoadingButton>
+                        }, "& input": {
+                            paddingX: 1, paddingY: 0, height: "50px",
+                        },
+                    }}
+                    value={formName}
+                    onChange={(e) => setFormName(e.target.value)}
+                  />
+              </Stack>
 
-                    <Button
-                        variant="outlined"
+              <Box
+                sx={{
+                    width: "100%", display: "flex", flexDirection: {xs: "column", sm: "row"}, my: 3,
+                }}
+              >
+                  <Keypad
+                    handleFnFX={handleFnFX}
+                    handleNewField={handleNewField}
+                    handleParenthesis={handleParenthesis}
+                    handleOperator={handleOperator}
+                    handleNumber={handleNumber}
+                    handleUndo={handleUndo}
+                    contentEditable={contentEditable}
+                  />
+
+                  <Box
+                    sx={{
+                        width: {xs: "100%", sm: "73%"},
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "start",
+                    }}
+                  >
+                      <Typography
+                        variant="subtitle1"
                         sx={{
-                            height: "50px",
-                            minWidth: "132px",
-                            fontWeight: "500",
-                            borderRadius: "8px",
-                            fontSize: "15px",
-                            borderColor: "#1758BA",
-                            background: "#F7F7FF",
+                            display: "flex", justifyContent: "center", color: "#404040", fontWeight: 500,
                         }}
-                        onClick={handleClose}
-                    >
-                        <Typography
-                            variant="body2"
-                            py={0.5}
-                            color="#1758BA"
-                            sx={{fontWeight: 500}}
-                        >
-                            انصراف
-                        </Typography>
-                    </Button>
-                </Box>
-            </Box>
-        </Container>
+                      >
+                          اسکریپت:
+                      </Typography>
+                      <Stack
+                        sx={{
+                            border: "1px solid #DDE1E6",
+                            borderRadius: 2,
+                            padding: 1,
+                            width: "100%",
+                            height: "100%",
+                            minHeight: 200,
+                            display: "flex",
+                            flexWrap: "wrap",
+                            flexDirection: "row",
+                        }}
+                      >
+                          <div
+                            contentEditable
+                            onClick={handleClick}
+                            ref={contentEditable}
+                            onKeyDown={handleKeyDown}
+                            suppressContentEditableWarning
+                            className={styles.ContentEditable}
+                          >
+                              {renderElements()}
+                          </div>
+                      </Stack>
+                  </Box>
+              </Box>
+
+              <Box
+                display="flex"
+                gap={3}
+                width="100%"
+                marginBottom={2}
+                sx={{justifyContent: "center"}}
+              >
+                  <LoadingButton
+                    onClick={callApi}
+                    variant="contained"
+                    sx={{
+                        backgroundColor: "#1758BA",
+                        fontWeight: "500",
+                        fontSize: "15px",
+                        borderRadius: "8px",
+                        height: "50px",
+                        "&.MuiButtonBase-root:hover": {
+                            backgroundColor: "#1758BA",
+                        },
+                        minWidth: "132px",
+                    }}
+                  >
+                      <Typography
+                        variant="body2"
+                        py={0.5}
+                        sx={{color: "#fff", fontWeight: 500}}
+                      >
+                          تایید
+                      </Typography>
+                  </LoadingButton>
+
+                  <Button
+                    variant="outlined"
+                    sx={{
+                        height: "50px",
+                        minWidth: "132px",
+                        fontWeight: "500",
+                        borderRadius: "8px",
+                        fontSize: "15px",
+                        borderColor: "#1758BA",
+                        background: "#F7F7FF",
+                    }}
+                    onClick={handleClose}
+                  >
+                      <Typography
+                        variant="body2"
+                        py={0.5}
+                        color="#1758BA"
+                        sx={{fontWeight: 500}}
+                      >
+                          انصراف
+                      </Typography>
+                  </Button>
+              </Box>
+          </Box>
+      </Container>
     );
 };
 

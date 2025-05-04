@@ -17,7 +17,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
+  background-color: #F2F4F8 !important;
   background-image: url("../../public/images/home-page/bg-pattern.svg");
   background-repeat: repeat;
 }
-

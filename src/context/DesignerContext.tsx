@@ -7,7 +7,7 @@ import {  Dispatch,
   useMemo,
   useState,
 } from "react";
-import { FormElementInstance } from "../types/FormElements";
+import { FormElementInstance } from "@/types/FormElements";
 import {
   ActionElementsContext,
   ActionOpenBottomSheetContext,
@@ -53,6 +53,7 @@ export type ActionDesignerContextType = {
 
   setSelectedGroup: Dispatch<SetStateAction<number | null>>;
   setFormName: Dispatch<SetStateAction<string>>;
+  setFormSetting: Dispatch<SetStateAction<any>>;
 };
 
 export type DesignerContextType = {
@@ -61,6 +62,7 @@ export type DesignerContextType = {
   questionGroups: number[];
   selectedGroup: null | number;
   formName: string;
+  formSetting: any;
 };
 
 export default function DesignerContextProvider({
@@ -81,6 +83,7 @@ export default function DesignerContextProvider({
   const [selectedGroup, setSelectedGroup] = useState<null | number>(null);
   const [questionLoading, setQuestionLoading] = useState<boolean>(false);
   const [formName, setFormName] = useState<string>("");
+  const [formSetting, setFormSetting] = useState<string>("");
 
   const addFinishPage = useCallback((element: FormElementInstance) => {
     setFinishPage(element);
@@ -156,10 +159,11 @@ export default function DesignerContextProvider({
       finishPage,
       selectedGroup,
       formName,
+      formSetting
     }),
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [questionGroups, startPage, finishPage, selectedGroup, formName]
+    [questionGroups, startPage, finishPage, selectedGroup, formName, formSetting]
   );
 
   const memoizedFuncs = useMemo(
@@ -167,6 +171,7 @@ export default function DesignerContextProvider({
       setFormName,
       setSelectedGroup,
       setQuestionGroups,
+      setFormSetting,
 
       addElement,
       removeElement,

@@ -4,12 +4,15 @@ import { IGetCondition } from "@/types/condition";
 import { ConditionCard } from "./ConditionCard";
 import CreateCondition from "./CreateCondition";
 import { idGenerator } from "@/lib/idGenerator";
+import useDesigner from "@/hooks/useDesigner";
 
 interface IConditionListProps {
   conditions: IGetCondition[];
 }
 
 const ConditionList: React.FC<IConditionListProps> = ({ conditions }) => {
+  const {formSetting} = useDesigner();
+
   return (
     <div className="w-full max-w-md flex flex-col pt-4">
       <CreateCondition />
@@ -20,8 +23,8 @@ const ConditionList: React.FC<IConditionListProps> = ({ conditions }) => {
         >
           {conditions?.map((condition: IGetCondition, index: number) => (
             // eslint-disable-next-line react/jsx-key
-            <div  key={idGenerator()}> 
-                 <ConditionCard condition={condition} index={index} />
+            <div  key={idGenerator()}>
+                 <ConditionCard condition={condition} index={index} disable={formSetting.formStatus !== "CREATE"} />
             </div>
           ))}
         </div>

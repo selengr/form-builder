@@ -19,13 +19,13 @@ import {
   ElementsType,
   FormElementInstance,
   FormElements,
-} from "../../../types/FormElements";
+} from "@/types/FormElements";
 import { useParams } from "next/navigation";
 import {
   IChangeOrMovePositionApi,
   IFormElementConstructor,
-} from "../../../types/bulider";
-import { idGenerator } from "../../../lib/idGenerator";
+} from "@/types/bulider";
+import { idGenerator } from "@/lib/idGenerator";
 import useElements from "@/hooks/useElements";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";
 import useActionElements from "@/hooks/useActionElements";
@@ -39,7 +39,7 @@ const KanbanBoard = memo(function KanbanBoard() {
   const setOpenDialog = useActionOpenDialog();
   const setElements = useActionElements();
   const setSelectedElement = useActionSelectedElement();
-  const { questionGroups } = useDesigner();
+  const {questionGroups, formSetting} = useDesigner();
   const [snapshot, setSnapshot] = useState<[] | FormElementInstance[]>([]);
   const itemsByGroup = useMemo(() => {
     return elements?.reduce((acc: any, question: any) => {
@@ -344,10 +344,11 @@ const KanbanBoard = memo(function KanbanBoard() {
             key={group}
             group={group}
             questions={itemsByGroup[group]}
+            disabled={formSetting.formStatus !== "CREATE"}
           />
         ))}
       </div>
-      <CreateGroupBtn />
+      {/*<CreateGroupBtn />*/}
     </Fragment>
   );
 });

@@ -1,136 +1,119 @@
 import Image from "next/image";
 import { LoadingButton } from "@mui/lab";
 import { SlPencil } from "react-icons/sl";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { Menu, Typography } from "@mui/material";
 import { ICalculatorCardProps } from "@/types/calculator";
 import EditCalculatorDialog from "./EditCalculatorDialog";
 import { PhDotsThreeVerticalBold } from "../../../public/images/icons/PhDotsThreeVerticalBold";
 import { WeuiDeleteOutlined } from "../../../public/images/icons/DeleteIcon";
 
-export function CalculatorCard({ calculator,index }: ICalculatorCardProps) {
-  const [openDialog, setOpen] = useState<boolean>(false);
+export function CalculatorCard({ calculator, index, disabled = false }: ICalculatorCardProps) {
+  const [openDialog, setOpenDialog] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const open = Boolean(anchorEl);
+  const isMenuOpen = Boolean(anchorEl);
 
-  const handleClick = useCallback((event: any) => {
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+    if (disabled) return;
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
-  }, []);
+  };
 
-  const handleClose = useCallback(() => {
+  const handleCloseMenu = () => {
     setAnchorEl(null);
-  }, []);
+  };
+
+  const handleOpenEditDialog = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+    setOpenDialog(true);
+    handleCloseMenu();
+  };
 
   return (
     <>
       <div
-        key={calculator.formBuilderId}
-        className="bg-white rounded-lg p-[10px] h-14
-flex justify-between w-full cursor-pointer border-[1px]
-border-[#1758BA]"
+        className={`bg-white rounded-lg p-[10px] h-14 flex justify-between w-full border border-[#1758BA] ${
+          disabled ? "opacity-50 pointer-events-none" : "cursor-pointer"
+        }`}
       >
-        <div className="flex justify-center items-center gap-[10px]">
-          <div
-            className="bg-[#F7F7FF] h-8 w-8 rounded-[10px] flex
-justify-center items-center"
-          >
+        <div className="flex items-center gap-2.5">
+          <div className="bg-[#F7F7FF] h-8 w-8 rounded-[10px] flex justify-center items-center">
             {index + 1}
           </div>
           <div className="flex flex-col">
-            <h3 className="text-[#161616] text-sm">
-              {calculator.name ?? "--"}
-            </h3>
-            <span className="text-[#393939] text-xs">
-              {/* {calculator.theFormula ?? "--"} */}
-              #محاسبه‌گر
-            </span>
+            <h3 className="text-[#161616] text-sm">{calculator.name ?? "--"}</h3>
+            <span className="text-[#393939] text-xs">#محاسبه‌گر</span>
           </div>
         </div>
-        <div className="flex justify-center items-center gap-[10px]">
-          <button className="bg-[#F7F7FF] h-8 w-8 rounded-[10px] flex justify-center items-center">
-            <Image
-              src={"/images/calc/math.svg"}
-              width={25}
-              height={25}
-              alt="math"
-            />
-          </button>
-          <div
-            className="bg-[#F7F7FF] h-8 w-8 rounded-[10px] flex
-justify-center items-center"
+
+        <div className="flex items-center gap-2.5">
+          <button
+            className="bg-[#F7F7FF] h-8 w-8 rounded-[10px] flex justify-center items-center"
+            disabled={disabled}
           >
-            <button onClick={handleClick}>
+            <Image src="/images/calc/math.svg" width={25} height={25} alt="math" />
+          </button>
+
+          <div className="bg-[#F7F7FF] h-8 w-8 rounded-[10px] flex justify-center items-center">
+            <button onClick={handleOpenMenu} disabled={disabled}>
               <PhDotsThreeVerticalBold color="#1758BA" fontSize="1.5rem" />
             </button>
 
-            {open && (
-              <Menu
+            <Menu
+              anchorEl={anchorEl}
+              open={isMenuOpen}
+              onClose={handleCloseMenu}
+              sx={{
+                "& .MuiPaper-root": {
+                  borderRadius: "15px",
+                  width: "125px",
+                  touchAction: "none",
+                },
+              }}
+              MenuListProps={{
+                "aria-labelledby": "calculator-menu-button",
+              }}
+            >
+              <LoadingButton
                 sx={{
-                  "& .MuiPaper-root.MuiPaper-elevation": {
-                    borderRadius: "15px",
-                  },
-                  "& .MuiPaper-root": {
-                    touchAction: "none",
-                    width: "125px",
-                  },
-                  "& .MuiLoadingButton-label": {
-                    width: "100%",
-                  },
+                  px: 2,
+                  height: 36,
+                  borderRadius: "10px",
+                  width: "100%",
+                  flexDirection: "row-reverse",
+                  justifyContent: "space-between",
+                  color: "#1758BA",
                 }}
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                  "aria-labelledby": "basic-button",
-                }}
+                onClick={handleOpenEditDialog}
+                disabled={disabled}
               >
-                <LoadingButton
-                  sx={{
-                    paddingX: "10px",
-                    height: "36px",
-                    borderRadius: "10px",
-                    width: "100%",
-                    display: "flex",
-                    flexDirection: "row-reverse",
-                    justifyContent: "space-between",
-                    color: "#1758BA",
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setOpen(true);
-                    handleClose();
-                  }}
-                >
-                  <Typography>ویرایش</Typography>
-                  <SlPencil size="1.18rem" />
-                </LoadingButton>
-                <LoadingButton
-                  sx={{
-                    paddingX: "10px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    color: "#FA4D56",
-                  }}
-                  onClick={async (e) => {
-                    e.stopPropagation();
-                  }}
-                  fullWidth
-                  disabled={true}
-                >
-                  <Typography>حذف</Typography>
-                  <WeuiDeleteOutlined fontSize="1.32rem" />
-                </LoadingButton>
-              </Menu>
-            )}
+                <Typography>ویرایش</Typography>
+                <SlPencil size="1.18rem" />
+              </LoadingButton>
+
+              <LoadingButton
+                sx={{
+                  px: 2,
+                  justifyContent: "space-between",
+                  color: "#FA4D56",
+                }}
+                onClick={(e) => e.stopPropagation()}
+                fullWidth
+                disabled
+              >
+                <Typography>حذف</Typography>
+                <WeuiDeleteOutlined fontSize="1.32rem" />
+              </LoadingButton>
+            </Menu>
           </div>
         </div>
       </div>
+
       {openDialog && (
         <EditCalculatorDialog
           open={openDialog}
-          setOpen={setOpen}
+          setOpen={setOpenDialog}
           calcId={calculator.id}
         />
       )}

@@ -12,6 +12,7 @@ export interface ICalculator {
 export interface ICalculatorCardProps {
   calculator: ICalculator;
   index:number;
+  disabled?:boolean
 }
 
 export interface ICalculatorListProps {

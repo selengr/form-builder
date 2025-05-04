@@ -11,8 +11,14 @@ import useActionOpenBottomSheet from "@/hooks/useActionOpenBottomSheet";
 import Image from "next/image";
 import { idGenerator } from "@/lib/idGenerator";
 import { useMediaQuery } from "@mui/material";
+import clsx from "clsx";
 
-function SidebarBtnElement({ formElement }: { formElement: FormElement }) {
+interface SidebarBtnElementProps {
+  formElement: FormElement;
+  disabled?: boolean;
+}
+
+function SidebarBtnElement({ formElement, disabled = false }: SidebarBtnElementProps) {
   const isMobile = useMediaQuery("(max-width:1280px)");
   const setOpenDialog = useActionOpenDialog();
   const setSelectedElement = useActionSelectedElement();
@@ -29,53 +35,41 @@ function SidebarBtnElement({ formElement }: { formElement: FormElement }) {
     },
   });
 
-  return isMobile ? (
+  const handleClick = () => {
+    if (disabled || !questionGroups.length) return;
+
+    const targetGroupId = isMobile
+      ? questionGroups.find(group => group === selectedGroup)
+      : questionGroups[questionGroups.length - 1];
+
+    if (!targetGroupId) return;
+
+    const newElement = FormElements[formElement.questionType].construct({
+      questionId: idGenerator(),
+      questionGroupId: targetGroupId,
+      formId: id as any,
+      title: "",
+      position: null,
+    } as IFormElementConstructor);
+
+    if (isMobile) setOpenBottomSheet(false);
+    setOpenDialog(true);
+    setSelectedElement({ fieldElement: newElement, position: null });
+  };
+
+  return (
     <button
-      onClick={() => {
-        if (questionGroups.length) {
-          const newElement = FormElements[formElement.questionType].construct({
-            questionId: idGenerator(),
-            questionGroupId:
-              questionGroups[
-                questionGroups.findIndex(
-                  (group: any) => group === selectedGroup
-                )
-              ],
-            formId: id as any,
-            title: "",
-            position: null,
-          } as IFormElementConstructor);
-          setOpenBottomSheet(false);
-          setOpenDialog(true);
-          setSelectedElement({ fieldElement: newElement, position: null });
-        }
-      }}
-      className="w-full bg-[#f7f7f7] text-[#424242] flex justify-start h-[52px] items-center rounded-lg pr-2"
-    >
-      <span className="bg-slate-50 rounded-xl h-[32px] w-[32px] flex justify-center items-center">
-        <Image src={icon} width={24} height={24} alt="" />
-      </span>
-      <p className="p-2 font-bold text-right text-[14px]">{label}</p>
-    </button>
-  ) : (
-    <button
-      onClick={() => {
-        if (questionGroups.length) {
-          const newElement = FormElements[formElement.questionType].construct({
-            questionId: idGenerator(),
-            questionGroupId: questionGroups[questionGroups.length - 1],
-            formId: id as any,
-            title: "",
-            position: null,
-          } as IFormElementConstructor);
-          setOpenDialog(true);
-          setSelectedElement({ fieldElement: newElement, position: null });
-        }
-      }}
-      ref={draggable.setNodeRef}
-      {...draggable.listeners}
-      {...draggable.attributes}
-      className="bg-[#f7f7f7] text-[#424242] flex justify-start rounded-[16px] h-[52px] items-center pr-2"
+      onClick={handleClick}
+      ref={!isMobile ? draggable.setNodeRef : undefined}
+      {...(!isMobile ? draggable.listeners : {})}
+      {...(!isMobile ? draggable.attributes : {})}
+      disabled={disabled}
+      className={clsx(
+        "w-full flex justify-start h-[52px] items-center rounded-lg pr-2",
+        "bg-[#f7f7f7] text-[#424242]",
+        "hover:cursor-pointer",
+        disabled && "opacity-50 cursor-not-allowed"
+      )}
     >
       <span className="bg-slate-50 rounded-xl h-[32px] w-[32px] flex justify-center items-center">
         <Image src={icon} width={24} height={24} alt="" />
@@ -85,19 +79,13 @@ function SidebarBtnElement({ formElement }: { formElement: FormElement }) {
   );
 }
 
-export function SidebarBtnElementDragOverlay({
-  formElement,
-}: {
-  formElement: FormElement;
-}) {
+export function SidebarBtnElementDragOverlay({ formElement }: { formElement: FormElement }) {
   const { label, icon } = formElement.designerBtnElement;
 
   return (
     <button
       dir="rtl"
-      style={{
-        outline: "1px solid #1758BA",
-      }}
+      style={{ outline: "1px solid #1758BA" }}
       className="text-[#424242] outline-1 outline-[#1758BA] w-full flex justify-start box-border rounded-[16px] h-[52px] items-center pr-2 bg-[#f7f7f7]"
     >
       <span className="bg-slate-50 rounded-xl h-[32px] w-[32px] flex justify-center items-center">

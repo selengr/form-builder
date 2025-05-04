@@ -54,7 +54,7 @@ export async function serviceCost() {
         otpId: body.otpId,
         userCreditModelList,
       };
-      const response = await AxiosApi.post("/purchase-order/updateAndDeliveryIssueRequest",{temp});
+      const response = await AxiosApi.post("/purchase-order/updateAndDeliveryIssueRequest", temp);
       return response;
     } catch (error: any) {
       return Promise.resolve(JSON.parse(error.message));

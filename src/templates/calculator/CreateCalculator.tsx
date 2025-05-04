@@ -3,6 +3,7 @@ import { useState } from "react";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { SxProps, Theme } from "@mui/material";
 import CreateCalculatorDialog from "./CreateCalculatorDialog";
+import useDesigner from "@/hooks/useDesigner";
 
 const buttonSx: SxProps<Theme> = {
   height: 52,
@@ -22,9 +23,12 @@ const buttonSx: SxProps<Theme> = {
 
 const CreateCalculator = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const {formSetting} = useDesigner();
+
 
   return (
     <>
+      {formSetting.formStatus === "CREATE" &&
       <LoadingButton
         variant="text"
         onClick={() => setOpen(true)}
@@ -34,7 +38,7 @@ const CreateCalculator = () => {
       >
         ایجاد محاسبه‌گر
       </LoadingButton>
-
+      }
       <CreateCalculatorDialog open={open} setOpen={setOpen} />
     </>
   );

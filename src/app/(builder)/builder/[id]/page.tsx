@@ -1,85 +1,69 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {useCallback, useEffect, useState} from "react";
 import useActionDesigner from "@/hooks/useActionDesigner";
 import useActionElements from "@/hooks/useActionElements";
-import { idGenerator } from "@/lib/idGenerator";
+import {idGenerator} from "@/lib/idGenerator";
 import AxiosApi from "@/services/axios/AxiosApi";
 import FormBuilder from "@/templates/builder/FormBuilder";
-import { FormElementInstance } from "@/types/FormElements";
-import { notFound, useParams } from "next/navigation";
+import {FormElementInstance} from "@/types/FormElements";
+import {useParams} from "next/navigation";
 import BuilderLoading from "./loading";
 
 export default function BuilderPage() {
-  const { id } = useParams();
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const {id} = useParams();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
   const setElements = useActionElements();
-  const { setQuestionGroups, addStartPage, addFinishPage, setFormName } =
-    useActionDesigner();
+  const {setQuestionGroups, addStartPage, addFinishPage, setFormName, setFormSetting} = useActionDesigner();
+
+  const fetchFormData = useCallback(async () => {
+    try {
+      const {data} = await AxiosApi.get(`/form/${id}`);
+      const questionGroupIds = data?.questionGroups?.map((group: any) => group.questionGroupId) || [];
+      setQuestionGroups(questionGroupIds);
+      setFormSetting(data.formSettingModel)
+      const allQuestions = data?.questionGroups?.flatMap((group: any) => group.questions) || [];
+      const cleanedQuestions = allQuestions.map((q: FormElementInstance) => {
+        const {questionPropertyList, optionList, spectralPlaceList, ...rest} = q;
+        return rest;
+      });
+      setElements(cleanedQuestions);
+
+      if (data?.startPageMsg) {
+        addStartPage({
+          questionId: idGenerator(),
+          questionType: "TitleFieldStart",
+          startPageMsg: data.startPageMsg,
+        } as FormElementInstance);
+      }
+
+      if (data?.endPageList?.length > 0) {
+        const endPage = data.endPageList[0];
+        const {endPageId, ...rest} = endPage;
+        addFinishPage({
+          questionId: endPageId,
+          questionType: "TitleFieldFinish",
+          ...rest,
+        } as FormElementInstance);
+      }
+
+      setFormName(data.name);
+    } catch (err) {
+      console.error("Error fetching form data:", err);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  }, [id, addFinishPage, addStartPage, setElements, setFormName, setQuestionGroups]);
 
   useEffect(() => {
-    const fetchFormData = async () => {
-      try {
-        const response = await AxiosApi.get(`/form/${id}`);
+    fetchFormData().then(r => r);
+  }, [fetchFormData]);
 
-        const allQuestionGroups = response?.data?.questionGroups?.map(
-          (group: any) => group?.questionGroupId
-        );
-        setQuestionGroups(allQuestionGroups);
+  if (loading) return <BuilderLoading/>;
+  if (error) throw new Error("Form not found");
 
-        const allQuestions = response?.data?.questionGroups
-          ?.map((group: any) => group?.questions)
-          .flat();
-        const newQuestions = allQuestions.map(
-          (question: FormElementInstance) => {
-            delete question.questionPropertyList;
-            delete question.optionList;
-            delete question.spectralPlaceList;
-            return question;
-          }
-        );
-        setElements(newQuestions);
-
-        if (response?.data?.startPageMsg) {
-          const startPage = {
-            startPageMsg: response?.data?.startPageMsg,
-            questionId: idGenerator(),
-            questionType: "TitleFieldStart",
-          };
-          addStartPage(startPage as FormElementInstance);
-        }
-
-        if (response?.data?.endPageList?.length) {
-          const endPage: any = response?.data?.endPageList[0];
-          const newEndPage = {
-            ...endPage,
-            questionId: endPage.endPageId,
-            questionType: "TitleFieldFinish",
-          };
-          delete newEndPage.endPageId;
-          addFinishPage(newEndPage as any);
-        }
-
-        setFormName(response?.data.name);
-      } catch (err) {
-        console.log(err);
-        setError("Form not found");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFormData();
-  }, []);
-
-  if (loading) {
-    return <BuilderLoading />;
-  }
-
-  if (error) {
-    throw new Error("api went wrong");
-  }
-
-  return <FormBuilder />;
+  return <FormBuilder/>;
 }

@@ -1,4 +1,5 @@
 "use client"
+
 import { useEffect, useState } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -7,36 +8,43 @@ import { useRouter, usePathname } from "next/navigation";
 
 export default function DesignerTabs() {
   const [value, setValue] = useState(0);
-  const router = useRouter()
-  const pathname = usePathname()
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue)
-    const builderId = pathname.split("/")[2] 
-    switch (newValue) {
-      case 2:
-        router.push(`/builder/${builderId}`)
-        break
-      case 0:
-        router.push(`/builder/${builderId}/condition`)
-        break
-      case 1:
-        router.push(`/builder/${builderId}/calculator`)
-        break
-    }
-  }
+  const segments = pathname.split("/").filter(Boolean);
+  const builderIndex = segments.indexOf("builder");
+  const builderId = builderIndex !== -1 ? segments[builderIndex + 1] : "";
 
+  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+
+    if (!builderId) return;
+
+    const tabRoutes = [
+      `/builder/${builderId}/condition`,
+      `/builder/${builderId}/calculator`,
+      `/builder/${builderId}`,
+    ];
+
+    router.push(tabRoutes[newValue]);
+  };
 
   useEffect(() => {
-    if (pathname.includes("/condition")) {
-      setValue(0)
-    } else if (pathname.includes("/calculator")) {
-      setValue(1)
-    } else {
-      setValue(2)
-    }
-  }, [pathname])
+    const lastSegment = segments.at(-1);
 
+    switch (lastSegment) {
+      case "condition":
+        setValue(0);
+        break;
+      case "calculator":
+        setValue(1);
+        break;
+      case "builder":
+      default:
+        setValue(2);
+        break;
+    }
+  }, [pathname]);
 
   return (
     <Box
@@ -45,7 +53,7 @@ export default function DesignerTabs() {
         display: "flex",
         justifyContent: "center",
         mt: "4px",
-        paddingX: "16px",
+        px: "16px",
       }}
     >
       <Box
@@ -59,13 +67,13 @@ export default function DesignerTabs() {
         }}
       >
         <Tabs
-          TabIndicatorProps={{ style: { backgroundColor: "#2CDFC9" } }}
           value={value}
           onChange={handleChange}
+          TabIndicatorProps={{ style: { backgroundColor: "#2CDFC9" } }}
           sx={{
             "&.MuiTabs-root": {
               width: "100%",
-              paddingX: { md: "10px", lg: "40px" },
+              px: { md: "10px", lg: "40px" },
             },
             "& .MuiTabs-indicator": {
               height: "3px",

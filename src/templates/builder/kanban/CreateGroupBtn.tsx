@@ -1,3 +1,4 @@
+"use client";
 import { memo, useCallback, useState } from "react";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useParams } from "next/navigation";

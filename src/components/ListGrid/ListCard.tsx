@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { SwitchButton } from "@/components/Switch/SwitchButton";
 import { IconButton } from "@mui/material";

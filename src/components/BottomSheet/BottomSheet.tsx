@@ -1,3 +1,4 @@
+"use client";
 import { forwardRef, ReactElement, Ref } from "react";
 import {
   Box,

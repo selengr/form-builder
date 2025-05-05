@@ -1,3 +1,4 @@
+"use client";
 import { SyntheticEvent, useState } from "react";
 import { Box, Tab, Tabs } from "@mui/material";
 import GeneralSettings from "../GeneralSettings/GeneralSettings";

@@ -1,3 +1,4 @@
+"use client";
 import { formStatusPersian } from "@/components/ListGrid/ListCard";
 import { useRouter } from "next/navigation";
 

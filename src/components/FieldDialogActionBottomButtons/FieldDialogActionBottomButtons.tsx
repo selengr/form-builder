@@ -1,3 +1,4 @@
+"use client";
 import { memo } from "react";
 import Button from "@mui/material/Button";
 import LoadingButton from "@mui/lab/LoadingButton";

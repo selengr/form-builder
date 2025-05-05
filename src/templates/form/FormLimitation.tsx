@@ -1,3 +1,4 @@
+"use client";
 import { Box, TextField, Typography } from "@mui/material";
 import AnimatedBox from "./AnimatedBox";
 import ActionButtons from "./ActionButtons";

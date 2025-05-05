@@ -1,3 +1,4 @@
+"use client";
 import { useMemo, memo } from "react";
 import {
   SortableContext,

@@ -2,7 +2,7 @@
 const nextConfig = {
     reactStrictMode: true,
     output: "standalone",
-    productionBrowserSourceMaps: false,
+    productionBrowserSourceMaps: true,
     compress: true,
     swcMinify: true,
     images: {

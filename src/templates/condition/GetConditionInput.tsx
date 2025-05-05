@@ -1,3 +1,4 @@
+"use client";
 import { Box } from "@mui/material";
 import { Controller} from "react-hook-form";
 

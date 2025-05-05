@@ -1,3 +1,4 @@
+"use client";
 import { Dialog, DialogContent, IconButton } from "@mui/material";
 import { useCallback, useState } from "react";
 import { CgClose } from "react-icons/cg";

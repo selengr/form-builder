@@ -1,3 +1,4 @@
+"use client";
 import {LoadingButton} from "@mui/lab";
 import {SlPencil} from "react-icons/sl";
 import {useCallback, useState} from "react";

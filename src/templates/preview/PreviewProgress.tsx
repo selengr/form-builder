@@ -1,3 +1,4 @@
+"use client";
 import usePreview from "@/hooks/usePreview";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";

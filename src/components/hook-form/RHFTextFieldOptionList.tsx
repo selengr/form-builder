@@ -1,3 +1,4 @@
+"use client";
 import { Fragment, memo } from "react";
 import { useFormContext, useFieldArray, Controller } from "react-hook-form";
 import Box from "@mui/material/Box";

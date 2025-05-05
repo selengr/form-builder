@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image"
 import { useFormContext, useWatch } from "react-hook-form"
 import { Box, IconButton, Typography } from "@mui/material"

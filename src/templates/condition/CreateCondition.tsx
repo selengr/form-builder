@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { SxProps, Theme } from "@mui/material";

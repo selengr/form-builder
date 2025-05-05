@@ -1,3 +1,4 @@
+"use client";
 import { Snackbar, SnackbarCloseReason } from "@mui/material";
 import { useState, type FC } from "react";
 import { GrCircleInformation } from "react-icons/gr";

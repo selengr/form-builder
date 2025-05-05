@@ -1,3 +1,4 @@
+"use client";
 import { LoadingButton } from "@mui/lab"
 import { Box, Typography, Button } from "@mui/material"
 

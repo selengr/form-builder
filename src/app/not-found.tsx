@@ -4,7 +4,7 @@ import {useEffect} from "react";
 import Link from "next/link";
 import Button from "@mui/material/Button";
 
-export default function BuilderErrorPage({error}: { error: Error }) {
+export default function NotFound({error}: { error: Error }) {
   useEffect(() => {
     console.error(error);
   }, [error]);

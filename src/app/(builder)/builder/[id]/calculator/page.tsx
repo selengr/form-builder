@@ -12,5 +12,7 @@ export default async function Calculator({
     data: { content },
   } = res;
 
-  return <ClientView calculators={content} />;
+  return null ;
+  // <ClientView calculators={content} />
+
 }

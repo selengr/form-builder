@@ -1,8 +1,7 @@
 "use client";
 
 import {Fragment, memo, useCallback, useMemo, useState,} from "react";
-import {IconButton, useMediaQuery,} from "@mui/material";
-import {LoadingButton} from "@mui/lab";
+import {Button, IconButton, useMediaQuery,} from "@mui/material";
 import {useMutation} from "@tanstack/react-query";
 import {useParams} from "next/navigation";
 import Link from "next/link";
@@ -60,7 +59,7 @@ const DesignerSidebar = memo(() => {
   );
 
   const PublishButton = (
-    <LoadingButton
+    <Button
       onClick={handlePublish}
       variant="contained"
       loading={isPending}
@@ -81,7 +80,7 @@ const DesignerSidebar = memo(() => {
       <p className="text-white font-bold text-[15px]">
         {formSetting.formStatus === "CREATE" ? "آماده برای انتشار" : "منتشر شده"}
       </p>
-    </LoadingButton>
+    </Button>
   );
 
   if (isDesktop) {

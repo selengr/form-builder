@@ -1,6 +1,5 @@
 "use client";
-import { LoadingButton } from "@mui/lab"
-import { Box, Typography, Button } from "@mui/material"
+import {Box, Button, Typography} from "@mui/material"
 
 
 interface ISubmitButtonsProps {
@@ -25,7 +24,7 @@ export const SubmitButtons: React.FC<ISubmitButtonsProps> = ({
         justifyContent: "center",
       }}
     >
-      <LoadingButton
+      <Button
         loading={isLoading}
         type="submit"
         variant="contained"
@@ -42,7 +41,7 @@ export const SubmitButtons: React.FC<ISubmitButtonsProps> = ({
         <Typography variant="body2" component={"p"} py={0.5} sx={{ color: "#fff", fontWeight: 500 }}>
           تایید
         </Typography>
-      </LoadingButton>
+      </Button>
       <Button
         onClick={handleClose}
         type="button"

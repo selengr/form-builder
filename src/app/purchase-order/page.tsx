@@ -1,15 +1,15 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import {useEffect, useState} from "react"
 
 
 import Image from "next/image";
-import { LoadingButton } from "@mui/lab";
-import { useRouter } from "next/navigation";
+import {useRouter} from "next/navigation";
 import BuilderLoading from "../(builder)/builder/[id]/loading";
-import { CartItem } from "@/templates/purchase-order/cart-item";
-import { useGetPurchaseOrder } from "./_hook/useGetPurchaseOrder"
-import { InvoiceItem } from "@/templates/purchase-order/invoice-item";
+import {CartItem} from "@/templates/purchase-order/cart-item";
+import {useGetPurchaseOrder} from "./_hook/useGetPurchaseOrder"
+import {InvoiceItem} from "@/templates/purchase-order/invoice-item";
+import {Button} from "@mui/material";
 
 
 export default function ShoppingCartPage() {
@@ -17,7 +17,7 @@ export default function ShoppingCartPage() {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const {data:purchaseOrder,isLoading,error} = useGetPurchaseOrder()
 
-  
+
   useEffect(() => {
     if (purchaseOrder && purchaseOrder.purchaseOrderDetailModels.length > 0) {
       setSelectedIndex(0)
@@ -93,7 +93,7 @@ export default function ShoppingCartPage() {
                   />
                 ))}
               </div>
-              
+
             ) : (
               <div className="w-full h-[80%] justify-center items-center flex flex-col">
                 <Image
@@ -150,7 +150,7 @@ export default function ShoppingCartPage() {
               <span className="font-bold text-[#393939]">{formatCurrency(total)}</span>
             </div>
           </div>
-          <LoadingButton
+          <Button
             type="button"
             variant="contained"
             sx={{
@@ -172,7 +172,7 @@ export default function ShoppingCartPage() {
             }}
           >
             <span className="text-[14px] font-[500px]">پرداخت صورت حساب</span>
-          </LoadingButton>
+          </Button>
         </div>
       </div>
     </div>

@@ -1,19 +1,18 @@
 "use client";
-import { useState } from "react";
-import { SwitchButton } from "@/components/Switch/SwitchButton";
-import { IconButton } from "@mui/material";
+import {useState} from "react";
+import {SwitchButton} from "@/components/Switch/SwitchButton";
+import {Button, IconButton} from "@mui/material";
 import Image from "next/image";
 import EditIcon from "@/../public/images/home-page/edit-2.svg";
 import TrashIcon from "@/../public/images/home-page/trash.svg";
 import CopyIcon from "@/../public/images/home-page/copy.svg";
 import Link from "next/link";
-import { LoadingButton } from "@mui/lab";
 import AxiosApi from "@/services/axios/AxiosApi";
-import { toast } from "sonner";
+import {toast} from "sonner";
 import ConfirmDialog from "../confirm-dialog";
-import { useRouter } from "next/navigation";
+import {useRouter} from "next/navigation";
 import PublishSettingsDialog from "../PublishSettingsDialog/PublishSettingsDialog";
-import { AiOutlinePieChart } from "react-icons/ai";
+import {AiOutlinePieChart} from "react-icons/ai";
 
 const formTypePersian: any = {
   TEST: "آزمون",
@@ -173,7 +172,7 @@ export default function ListCard(props: any) {
         onClose={() => setOpenConfirmDialog(false)}
         cancelText="انصراف"
         action={
-          <LoadingButton
+          <Button
             type="submit"
             fullWidth
             disableRipple
@@ -207,7 +206,7 @@ export default function ListCard(props: any) {
             }}
           >
             تایید
-          </LoadingButton>
+          </Button>
         }
       />
     </>

@@ -1,17 +1,17 @@
 "use client";
 
-import { Fragment, memo, MouseEvent, useCallback, useState } from "react";
+import {Fragment, memo, MouseEvent, useCallback, useState} from "react";
 import Menu from "@mui/material/Menu";
-import { LoadingButton } from "@mui/lab";
 import Typography from "@mui/material/Typography";
-import { WeuiDeleteOutlined } from "@/../public/images/icons/DeleteIcon";
-import { PhDotsThreeVerticalBold } from "@/../public/images/icons/PhDotsThreeVerticalBold";
+import {WeuiDeleteOutlined} from "@/../public/images/icons/DeleteIcon";
+import {PhDotsThreeVerticalBold} from "@/../public/images/icons/PhDotsThreeVerticalBold";
 import useDesigner from "@/hooks/useDesigner";
-import { PiWarningOctagonFill } from "react-icons/pi";
+import {PiWarningOctagonFill} from "react-icons/pi";
 import useActionDesigner from "@/hooks/useActionDesigner";
 import ConfirmDialog from "@/components/confirm-dialog";
-import { toast } from "sonner";
+import {toast} from "sonner";
 import AxiosApi from "@/services/axios/AxiosApi";
+import {Button} from "@mui/material";
 
 const GroupPopUpMenu = memo(function GroupPopUpMenu({
   groupId,
@@ -57,7 +57,7 @@ const GroupPopUpMenu = memo(function GroupPopUpMenu({
             "aria-labelledby": "basic-button",
           }}
         >
-          <LoadingButton
+          <Button
             sx={{
               display: "flex",
               justifyContent: "space-between",
@@ -76,7 +76,7 @@ const GroupPopUpMenu = memo(function GroupPopUpMenu({
           >
             <Typography>حذف گروه</Typography>
             <WeuiDeleteOutlined width={20} height={20} />
-          </LoadingButton>
+          </Button>
         </Menu>
       )}
       {openConfirmDialog && (
@@ -110,7 +110,7 @@ const GroupPopUpMenu = memo(function GroupPopUpMenu({
           onClose={() => setOpenConfirmDialog(false)}
           cancelText="انصراف"
           action={
-            <LoadingButton
+            <Button
               type="submit"
               fullWidth
               disableRipple
@@ -149,7 +149,7 @@ const GroupPopUpMenu = memo(function GroupPopUpMenu({
               }}
             >
               تایید
-            </LoadingButton>
+            </Button>
           }
         />
       )}

@@ -10,7 +10,6 @@ import {z} from "zod";
 import FormProvider, {RHFTextField} from "../hook-form";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {LoadingButton} from "@mui/lab";
 import FieldSwitchPair from "./FieldSwitchPair";
 import {IoSettingsOutline} from "react-icons/io5";
 import {Typography} from "@mui/material";
@@ -263,7 +262,7 @@ export default function SettingsDialog({formName, onChangeName}: Props) {
                       marginTop: "38px",
                     }}
                   >
-                    <LoadingButton
+                    <Button
                       type="submit"
                       fullWidth
                       variant="contained"
@@ -286,7 +285,7 @@ export default function SettingsDialog({formName, onChangeName}: Props) {
                       }}
                     >
                       ثبت
-                    </LoadingButton>
+                    </Button>
                     <Button
                       disabled={isSubmitting}
                       type="button"

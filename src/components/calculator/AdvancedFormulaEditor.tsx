@@ -2,7 +2,6 @@
 
 import {toast} from "sonner";
 import Keypad from "./Keypad";
-import {LoadingButton} from "@mui/lab";
 import styles from "./advancedFormulaEditor.module.css";
 import {useParams, useRouter} from "next/navigation";
 import AxiosApi from "@/services/axios/AxiosApi";
@@ -720,7 +719,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                 marginBottom={2}
                 sx={{justifyContent: "center"}}
               >
-                  <LoadingButton
+                  <Button
                     onClick={callApi}
                     variant="contained"
                     sx={{
@@ -742,7 +741,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                       >
                           تایید
                       </Typography>
-                  </LoadingButton>
+                  </Button>
 
                   <Button
                     variant="outlined"

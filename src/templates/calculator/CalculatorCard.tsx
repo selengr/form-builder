@@ -1,13 +1,12 @@
 "use client";
 import Image from "next/image";
-import { LoadingButton } from "@mui/lab";
-import { SlPencil } from "react-icons/sl";
-import { useState } from "react";
-import { Menu, Typography } from "@mui/material";
-import { ICalculatorCardProps } from "@/types/calculator";
+import {SlPencil} from "react-icons/sl";
+import {useState} from "react";
+import {Button, Menu, Typography} from "@mui/material";
+import {ICalculatorCardProps} from "@/types/calculator";
 import EditCalculatorDialog from "./EditCalculatorDialog";
-import { PhDotsThreeVerticalBold } from "../../../public/images/icons/PhDotsThreeVerticalBold";
-import { WeuiDeleteOutlined } from "../../../public/images/icons/DeleteIcon";
+import {PhDotsThreeVerticalBold} from "../../../public/images/icons/PhDotsThreeVerticalBold";
+import {WeuiDeleteOutlined} from "../../../public/images/icons/DeleteIcon";
 
 export function CalculatorCard({ calculator, index, disabled = false }: ICalculatorCardProps) {
   const [openDialog, setOpenDialog] = useState(false);
@@ -76,7 +75,7 @@ export function CalculatorCard({ calculator, index, disabled = false }: ICalcula
                 "aria-labelledby": "calculator-menu-button",
               }}
             >
-              <LoadingButton
+              <Button
                 sx={{
                   px: 2,
                   height: 36,
@@ -91,9 +90,9 @@ export function CalculatorCard({ calculator, index, disabled = false }: ICalcula
               >
                 <Typography>ویرایش</Typography>
                 <SlPencil size="1.18rem" />
-              </LoadingButton>
+              </Button>
 
-              <LoadingButton
+              <Button
                 sx={{
                   px: 2,
                   justifyContent: "space-between",
@@ -105,7 +104,7 @@ export function CalculatorCard({ calculator, index, disabled = false }: ICalcula
               >
                 <Typography>حذف</Typography>
                 <WeuiDeleteOutlined fontSize="1.32rem" />
-              </LoadingButton>
+              </Button>
             </Menu>
           </div>
         </div>

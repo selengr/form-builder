@@ -1,20 +1,20 @@
 "use client";
 
-import { Fragment, memo, MouseEvent, useCallback, useState } from "react";
+import {Fragment, memo, MouseEvent, useCallback, useState} from "react";
 import Menu from "@mui/material/Menu";
-import { LoadingButton } from "@mui/lab";
 import useDesigner from "@/hooks/useDesigner";
 import Typography from "@mui/material/Typography";
-import { WeuiDeleteOutlined } from "@/../public/images/icons/DeleteIcon";
-import { PhDotsThreeVerticalBold } from "@/../public/images/icons/PhDotsThreeVerticalBold";
-import { toast } from "react-hot-toast";
-import { SlPencil } from "react-icons/sl";
-import { useParams } from "next/navigation";
-import { FormElementInstance } from "../../../types/FormElements";
+import {WeuiDeleteOutlined} from "@/../public/images/icons/DeleteIcon";
+import {PhDotsThreeVerticalBold} from "@/../public/images/icons/PhDotsThreeVerticalBold";
+import {toast} from "react-hot-toast";
+import {SlPencil} from "react-icons/sl";
+import {useParams} from "next/navigation";
+import {FormElementInstance} from "../../../types/FormElements";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";
 import useActionSelectedElement from "@/hooks/useActionSelectedElement";
 import useActionDesigner from "@/hooks/useActionDesigner";
 import AxiosApi from "@/services/axios/AxiosApi";
+import {Button} from "@mui/material";
 
 const NoDndPopUpMenu = memo(function NoDndPopUpMenu({
   element,
@@ -103,7 +103,7 @@ const NoDndPopUpMenu = memo(function NoDndPopUpMenu({
             "aria-labelledby": "basic-button",
           }}
         >
-          <LoadingButton
+          <Button
             disabled={loading}
             sx={{
               paddingX: "10px",
@@ -125,8 +125,8 @@ const NoDndPopUpMenu = memo(function NoDndPopUpMenu({
           >
             <Typography>ویرایش</Typography>
             <SlPencil size="1.18rem" />
-          </LoadingButton>
-          <LoadingButton
+          </Button>
+          <Button
             sx={{
               paddingX: "10px",
               display: "flex",
@@ -143,7 +143,7 @@ const NoDndPopUpMenu = memo(function NoDndPopUpMenu({
           >
             <Typography>حذف</Typography>
             <WeuiDeleteOutlined fontSize="1.32rem" />
-          </LoadingButton>
+          </Button>
         </Menu>
       )}
     </Fragment>

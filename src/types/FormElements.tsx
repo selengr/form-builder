@@ -1,3 +1,4 @@
+"use client";
 import { IFormElementConstructor, IFormOptionList, tempObj } from "./bulider";
 import { SpectralFormElement } from "../components/Fields/SpectralField";
 import { TextFieldFormElement } from "../components/Fields/TextField";

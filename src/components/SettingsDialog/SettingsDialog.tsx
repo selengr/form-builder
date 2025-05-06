@@ -1,3 +1,4 @@
+"use client";
 import {useCallback, useEffect, useState} from "react";
 import Dialog from "@mui/material/Dialog";
 import Box from "@mui/material/Box";

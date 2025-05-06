@@ -1,3 +1,4 @@
+"use client";
 import Box from "@mui/material/Box";
 import LoadingButton from "@mui/lab/LoadingButton";
 

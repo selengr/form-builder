@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import { FooterData } from "./Footer.constant";
 import { usePathname, useRouter } from "next/navigation";

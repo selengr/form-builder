@@ -1,7 +1,9 @@
+"use client";
 import { useState } from "react";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { SxProps, Theme } from "@mui/material";
 import CreateConditionDialog from "./CreateConditionDialog";
+import useDesigner from "@/hooks/useDesigner";
 
 const buttonSx: SxProps<Theme> = {
   height: 52,
@@ -22,10 +24,12 @@ const buttonSx: SxProps<Theme> = {
 
 const CreateCondition = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const {formSetting} = useDesigner();
 
   return (
     <>
-      <LoadingButton
+      {formSetting.formStatus === "CREATE" &&
+        <LoadingButton
         variant="text"
         onClick={() => setOpen(true)}
         // loading={}
@@ -34,7 +38,7 @@ const CreateCondition = () => {
       >
          ایجاد شرط
       </LoadingButton>
-
+      }
       <CreateConditionDialog open={open} setOpen={setOpen} />
     </>
   );

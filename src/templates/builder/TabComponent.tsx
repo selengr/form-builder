@@ -1,42 +1,48 @@
-"use client"
+"use client";
+
 import { useEffect, useState } from "react";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
+import {Box,Tabs,Tab} from "@mui/material";
 import { useRouter, usePathname } from "next/navigation";
 
 export default function DesignerTabs() {
-  const [value, setValue] = useState(0);
-  const router = useRouter()
-  const pathname = usePathname()
+  const [value, setValue] = useState<number>(2);
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue)
-    const builderId = pathname.split("/")[2] 
-    switch (newValue) {
-      case 2:
-        router.push(`/builder/${builderId}`)
-        break
-      case 0:
-        router.push(`/builder/${builderId}/condition`)
-        break
-      case 1:
-        router.push(`/builder/${builderId}/calculator`)
-        break
+  const segments = pathname ? pathname.split("/").filter(Boolean) : [];
+  const builderIndex = segments.indexOf("builder");
+  const builderId = builderIndex !== -1 ? segments[builderIndex + 1] : null;
+
+  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
+    if (newValue < 0 || newValue > 2) return;
+
+    setValue(newValue);
+
+    if (!builderId) return;
+
+    const tabRoutes = [
+      `/builder/${builderId}/condition`,
+      `/builder/${builderId}/calculator`,
+      `/builder/${builderId}`,
+    ];
+
+    const targetRoute = tabRoutes[newValue];
+    if (targetRoute) {
+      router.push(targetRoute);
     }
-  }
-
+  };
 
   useEffect(() => {
-    if (pathname.includes("/condition")) {
-      setValue(0)
-    } else if (pathname.includes("/calculator")) {
-      setValue(1)
-    } else {
-      setValue(2)
-    }
-  }, [pathname])
+    if (!pathname) return;
 
+    const lastSegment = segments.at(-1);
+    let tabValue = 2;
+
+    if (lastSegment === "condition") tabValue = 0;
+    else if (lastSegment === "calculator") tabValue = 1;
+
+    setValue(tabValue);
+  }, [pathname]);
 
   return (
     <Box
@@ -45,7 +51,7 @@ export default function DesignerTabs() {
         display: "flex",
         justifyContent: "center",
         mt: "4px",
-        paddingX: "16px",
+        px: "16px",
       }}
     >
       <Box
@@ -59,14 +65,11 @@ export default function DesignerTabs() {
         }}
       >
         <Tabs
-          TabIndicatorProps={{ style: { backgroundColor: "#2CDFC9" } }}
           value={value}
           onChange={handleChange}
+          TabIndicatorProps={{ style: { backgroundColor: "#2CDFC9" } }}
           sx={{
-            "&.MuiTabs-root": {
-              width: "100%",
-              paddingX: { md: "10px", lg: "40px" },
-            },
+            "&.MuiTabs-root": { width: "100%", px: { md: "10px", lg: "40px" } },
             "& .MuiTabs-indicator": {
               height: "3px",
               borderRadius: "3px 3px 0 0",

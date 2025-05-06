@@ -1,27 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
-const PROTECTED_PATHS = ['/builder','/my-assessments','/reports', '/purchase-order','/transactions'];
-
 export async function middleware(req: NextRequest) {
-  console.log("🔹 Middleware triggered for:", req.nextUrl.pathname);
-
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  const start = Date.now();
   const pathname = req.nextUrl.pathname;
+  const ip = req.ip ?? req.headers.get("x-forwarded-for") ?? "unknown";
+  const userAgent = req.headers.get("user-agent") ?? "unknown";
 
-  console.log("🔹 Token:", token ? "Exists" : "Missing");
+  console.log(`📥 Incoming request:
+    ▫️ Path: ${pathname}
+    ▫️ IP: ${ip}
+    ▫️ User-Agent: ${userAgent}
+    ▫️ Time: ${new Date().toISOString()}
+  `);
 
-  const isProtected = PROTECTED_PATHS.some(path => pathname.startsWith(path));
+  try {
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    const isProtected = ['/builder','/my-assessments','/reports', '/purchase-order','/transactions'].some(path =>
+      pathname.startsWith(path)
+    );
 
-  if (isProtected && !token) {
-    console.log("⛔️ Unauthorized access to:", pathname);
-    return NextResponse.redirect(new URL('/', req.url));
+    if (isProtected && !token) {
+      console.warn(`⛔ Unauthorized access attempt to ${pathname}`);
+      return NextResponse.redirect(new URL('/', req.url));
+    }
+
+    return NextResponse.next();
+  } catch (err) {
+    console.error(`❌ Middleware error on ${pathname}`, err);
+    return NextResponse.next();
+  } finally {
+    const duration = Date.now() - start;
+    console.log(`✅ Done: ${pathname} in ${duration}ms`);
   }
-
-  console.log("✅ Authorized access to:", pathname);
-  return NextResponse.next();
 }
-
-export const config = {
-  matcher: ['/builder/:path*','/my-assessments/:path*','/reports/:path*', '/purchase-order/:path*','/transactions/:path*'],
-};

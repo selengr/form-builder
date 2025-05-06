@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
+import {Box,Tabs,Tab} from "@mui/material";
 import { useRouter, usePathname } from "next/navigation";
 
 export default function DesignerTabs() {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState<number>(2);
   const router = useRouter();
   const pathname = usePathname();
 
-  const segments = pathname.split("/").filter(Boolean);
+  const segments = pathname ? pathname.split("/").filter(Boolean) : [];
   const builderIndex = segments.indexOf("builder");
-  const builderId = builderIndex !== -1 ? segments[builderIndex + 1] : "";
+  const builderId = builderIndex !== -1 ? segments[builderIndex + 1] : null;
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
+    if (newValue < 0 || newValue > 2) return;
+
     setValue(newValue);
 
     if (!builderId) return;
@@ -26,24 +26,22 @@ export default function DesignerTabs() {
       `/builder/${builderId}`,
     ];
 
-    router.push(tabRoutes[newValue]);
+    const targetRoute = tabRoutes[newValue];
+    if (targetRoute) {
+      router.push(targetRoute);
+    }
   };
 
   useEffect(() => {
-    const lastSegment = segments.at(-1);
+    if (!pathname) return;
 
-    switch (lastSegment) {
-      case "condition":
-        setValue(0);
-        break;
-      case "calculator":
-        setValue(1);
-        break;
-      case "builder":
-      default:
-        setValue(2);
-        break;
-    }
+    const lastSegment = segments.at(-1);
+    let tabValue = 2;
+
+    if (lastSegment === "condition") tabValue = 0;
+    else if (lastSegment === "calculator") tabValue = 1;
+
+    setValue(tabValue);
   }, [pathname]);
 
   return (
@@ -71,10 +69,7 @@ export default function DesignerTabs() {
           onChange={handleChange}
           TabIndicatorProps={{ style: { backgroundColor: "#2CDFC9" } }}
           sx={{
-            "&.MuiTabs-root": {
-              width: "100%",
-              px: { md: "10px", lg: "40px" },
-            },
+            "&.MuiTabs-root": { width: "100%", px: { md: "10px", lg: "40px" } },
             "& .MuiTabs-indicator": {
               height: "3px",
               borderRadius: "3px 3px 0 0",

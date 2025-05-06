@@ -90,10 +90,10 @@ AxiosApi.interceptors.response.use(
 
     if (token) {
       if (status === HttpStatus.UNAUTHORIZED) {
-        toast.error("لطفاً دوباره وارد شوید.");
+        // toast.error("لطفاً دوباره وارد شوید.");
         await signIn("authorize");
       } else {
-        toast.error(msg);
+        // toast.error(msg);
       }
     }
 

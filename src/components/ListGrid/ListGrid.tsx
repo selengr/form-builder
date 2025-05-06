@@ -1,18 +1,18 @@
 "use client";
 
-import React, {ReactNode, useEffect, useState} from "react";
+import React, { ReactNode, useEffect, useState, useCallback } from "react";
 import Image from "next/image";
-import {useInfiniteQuery} from "@tanstack/react-query";
-import {useInView} from "react-intersection-observer";
-import {useRouter, useSearchParams} from "next/navigation";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInView } from "react-intersection-observer";
+import { useRouter, useSearchParams } from "next/navigation";
 import SearchInput from "./SearchInput";
-import {Box, Grid2, IconButton, LinearProgress, Typography,} from "@mui/material";
+import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from "@mui/material";
 import TotalGrid from "@/../public/images/home-page/total-grid.svg";
-import {clientFetch} from "./clientFetch";
+import { clientFetch } from "./clientFetch";
 import BottomSheet from "../BottomSheet/BottomSheet";
 import CreateFormBtn from "../CreateFormBtn/CreateFormBtn";
-import {MdOutlineKeyboardArrowRight} from "react-icons/md";
-import {toast} from "sonner";
+import { MdOutlineKeyboardArrowRight } from "react-icons/md";
+import { toast } from "sonner";
 
 interface SearchBoxItem {
   fieldName: string;
@@ -26,38 +26,49 @@ interface Props {
   filterBoxList: SearchBoxItem[];
   filterComponent: ReactNode;
   url: string;
-  onCheck?: any;
-  onDelete?: any;
-  CartComponent?: any;
+  onCheck?: (id: any, checked: any) => void;
+  onDelete?: () => void;
+  CartComponent?: React.ComponentType<{
+    data: any;
+    onCheck?: (id: any, checked: any) => void;
+    refreshGrid?: () => void;
+  }>;
   refreshData?: () => void;
   refreshGrid?: boolean;
-  disableFilter: boolean | undefined;
-  textTotal?: any;
-  searchQueryFilter: any;
+  disableFilter?: boolean;
+  textTotal?: [string, string];
+  searchQueryFilter?: { type: string; status: string };
   showCreateButton?: boolean;
   title: string;
 }
 
-let totalData: any = null;
+const PAGE_SIZE = 10;
+const DEFAULT_SEARCH_FILTER = { type: "ALL", status: "PUBLIC" };
 
-async function getdatas({pageParam = 0}: { pageParam: number }, searchFilterBoxList: any, url: string, searchQueryFilter: any = {
-  type: "ALL", status: "PUBLIC"
-}) {
+async function fetchData(
+  { pageParam = 0 }: { pageParam: number },
+  searchFilterBoxList: any,
+  url: string,
+  searchQueryFilter = DEFAULT_SEARCH_FILTER
+) {
   const params = {
-    searchFilterBoxList, sortList: [{
-      fieldName: "id", type: "DSC",
-    },], page: pageParam, rows: 10,
+    searchFilterBoxList,
+    sortList: [{ fieldName: "id", type: "DSC" }],
+    page: pageParam,
+    rows: PAGE_SIZE,
   };
 
-  const res = await clientFetch(`${url}${searchQueryFilter.type}/${searchQueryFilter.status}?searchFilterModel=`, params);
+  const endpoint = `${url}${searchQueryFilter.type}/${searchQueryFilter.status}?searchFilterModel=`;
+  const response = await clientFetch(endpoint, params);
 
-  if (!res) {
+  if (!response) {
     throw new Error("خطا در ارتباط با سرور");
   }
 
-  totalData = res.data.totalElements;
-
-  return res.data.content;
+  return {
+    data: response.data.content,
+    total: response.data.totalElements,
+  };
 }
 
 const ListGrid: React.FC<Props> = ({
@@ -69,251 +80,306 @@ const ListGrid: React.FC<Props> = ({
                                      onCheck,
                                      refreshGrid,
                                      disableFilter,
-                                     searchQueryFilter,
+                                     searchQueryFilter = DEFAULT_SEARCH_FILTER,
                                      showCreateButton = false,
                                      title,
                                      textTotal = ["", "عدد"],
                                    }) => {
-  const {ref, inView} = useInView();
+  const [totalData, setTotalData] = useState<number | null>(null);
+  const { ref, inView } = useInView();
   const searchParams = useSearchParams();
   const query = searchParams.get("query")?.toString() || "";
   const [queryState, setQueryState] = useState(query);
-  const [open, setOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const router = useRouter();
 
-  const handleOpen = () => {
-    if (!disableFilter) {
-      setOpen(true);
-    }
-  };
-
-  const handleClose = () => setOpen(false);
-
-  // const deleteItem = (filterBoxList: any) => {
-  //   const arrayTemp: any = [];
-  //   filterBoxList.forEach((item: any) => {
-  //     if (item.fieldValue != null) arrayTemp.push(item);
-  //   });
-  //   return arrayTemp;
-  // };
-
-  // const deleteEmpty = (searchBoxList: any) => {
-  //   const arrayTemp: any = [];
-  //   if (query != "") return searchBoxList;
-  //   return arrayTemp;
-  // };
-
-  const searchFilterBoxList = [{
-    restrictionList: searchBoxList,
-  },];
+  const searchFilterBoxList = [{ restrictionList: searchBoxList }];
 
   const {
-    data: datas, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, refetch,
+    data: pages,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    refetch,
   } = useInfiniteQuery({
     queryKey: ["datas", queryState],
-    queryFn: ({pageParam}) => getdatas({pageParam}, searchFilterBoxList, url, searchQueryFilter),
+    queryFn: ({ pageParam }) =>
+      fetchData({ pageParam }, searchFilterBoxList, url, searchQueryFilter),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
-      return lastPage.length === 10 ? allPages.length : undefined;
+      return lastPage.data.length === PAGE_SIZE ? allPages.length : undefined;
     },
     refetchOnWindowFocus: false,
   });
 
-  const handleRefreshGrid = () => {
-    if (open) {
-      setOpen(false);
+  const handleRefreshGrid = useCallback(() => {
+    if (isFilterOpen) {
+      setIsFilterOpen(false);
     }
-    refetch().then(r => r);
-  };
+    refetch();
+  }, [isFilterOpen, refetch]);
 
+  const handleFilterToggle = useCallback(() => {
+    if (!disableFilter) {
+      setIsFilterOpen((prev) => !prev);
+    }
+  }, [disableFilter]);
+
+  // Effects
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage();
     }
-  }, [inView, fetchNextPage, hasNextPage]);
+  }, [inView, hasNextPage, fetchNextPage]);
 
-  useEffect(() => {
-    searchBoxList.forEach((item) => (item.fieldValue = query));
-    setQueryState(query);
-  }, [query]);
+  // useEffect(() => {
+  //   searchBoxList.forEach((item) => (item.fieldValue = query));
+  //   setQueryState(query);
+  // }, [query, searchBoxList]);
 
   useEffect(() => {
     handleRefreshGrid();
-  }, [refreshGrid]);
+  }, [refreshGrid, handleRefreshGrid]);
 
+  useEffect(() => {
+    if (pages?.pages?.[0]?.total) {
+      setTotalData(pages.pages[0].total);
+    }
+  }, [pages]);
+
+  // Loading and error states
   if (isFetching && !isFetchingNextPage) {
-    return (<Box sx={{width: "100%"}}>
-      <LinearProgress/>
-    </Box>);
+    return (
+      <Box sx={{ width: "100%" }}>
+        <LinearProgress />
+      </Box>
+    );
   }
 
   if (error) {
-    toast.error(error.message, {})
+    toast.error(error.message);
   }
 
-  return (<Grid2
-    width="100%"
-    display="flex"
-    sx={{
-      height: "100vh" ,
-      overflowY:"hidden",
-      userSelect: "none",
-    }}
-  >
-    <Grid2
-      width="100%"
-      display="flex"
-      flexDirection="column"
-      justifyContent="flex-start"
-      alignItems="center"
-      container
-      sx={{
-        bgcolor: "white",
-        height: "100vh",
-        flexDirection: "column",
-        alignItems: "flex-end",
-        p: 2,
-        mx: 1,
-        borderRadius: "16px",
-        maxWidth: "100%",
-        overflowY: "hidden",
-      }}
-    >
-      <Grid2
-        container
-        sx={{width: "100%", justifyContent: "center", mx: "auto"}}
+  // Helper render functions
+  const renderHeader = () => (
+    <div className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative">
+      <IconButton
+        sx={{ position: "absolute", left: "8px" }}
+        onClick={() => router.push("/")}
       >
-        <div className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative">
-          <IconButton
-            sx={{position: "absolute", left: "8px"}}
-            onClick={() => {
-              router.push("/");
-            }}
-          >
-            <MdOutlineKeyboardArrowRight color="#292D32"/>
-          </IconButton>
-          <p className="text-[16px] text-center font-bold text-[#161616]">
-            {title}
-          </p>
-        </div>
+        <MdOutlineKeyboardArrowRight color="#292D32" />
+      </IconButton>
+      <p className="text-[16px] text-center font-bold text-[#161616]">
+        {title}
+      </p>
+    </div>
+  );
 
-        <Box
-          sx={{
-            display: "flex", justifyContent: "center", alignItems: "center", gap: "12px", width: "100%",
-          }}
-        >
-          <Grid2
-            display="flex"
-            sx={{
-              width: "100%",
-              maxWidth: "400px",
-              justifyContent: "space-between",
-              gap: 2,
-              bgcolor: "#ECFAFF",
-              borderRadius: "16px",
-              paddingX: "10px",
-              paddingY: "16px",
-            }}
-          >
-            <Box display="flex" justifyItems="center" gap="10px">
-              <Image src={TotalGrid} width={20} height={20} alt="filter"/>
-              <Typography color="#393939" fontSize="14px">
-                تعداد کل فرم‌ها {textTotal[0]}:
-              </Typography>
-            </Box>
-            <p className="flex items-center text-[14px] text-[#393939] font-bold">
-              {totalData} {textTotal[1]}
-            </p>
-          </Grid2>
-          {showCreateButton && (<div className="min-w-[50px] w-[50px] h-full">
-            <CreateFormBtn/>
-          </div>)}
-        </Box>
-
-        <Grid2
-          id="testthis"
-          display="flex"
-          sx={{
-            width: "100%", maxWidth: "550px", justifyContent: "center", mt: 1, gap: 2,
-          }}
-        >
-          <Grid2
-            size={{xs: 12, sm: 10}}
-            sx={{display: "flex", alignItems: "center", gap: "12px", mx: "auto"}}
-          >
-            <SearchInput/>
-            {!disableFilter && (<Grid2
-              sx={{display: {xs: "flex", lg: "none"}}}
-              onClick={handleOpen}
-            >
-              <Image
-                src="./images/home-page/FilterAA.svg"
-                width={51}
-                height={51}
-                alt=""
-                className="cursor-pointer border-[1px] border-[#c9c9c9] rounded-[15px] p-2"
-              />
-            </Grid2>)}
-          </Grid2>
-        </Grid2>
-
-        <Grid2
-          id={"content"}
-          container
-          size={{xs: 12}}
-          flexWrap={"nowrap"}
-          className={"flex-1"}
-          sx={{width: "100%", mx: "auto", mt: 1, mb: 5, flexDirection: "column", gap: 2, overflowY: "auto",  height: "calc(100vh - 210px)"}}
-        >
-            {datas?.pages ? (datas?.pages[0]?.length === 0 ? (
-              <Typography>موردی یافت نشد</Typography>) : (datas.pages.map((page, pageIndex) => page.map((data: any, index: number) => {
-              const key = `${pageIndex}-${index}`;
-              return (
-                <Grid2 sx={{width: 1,mx: "auto" }} key={key} size={{xs: 12, md: 10, lg:8, xl:6, }}>
-                <CartComponent
-                  onCheck={(id: any, checked: any) => onCheck(id, checked)}
-                  data={data}
-                  refreshGrid={handleRefreshGrid}
-                />
-                {index === 8 && (<>
-                  <Typography
-                    component="h1"
-                    ref={ref}
-                    sx={{height: 0}}
-                  />{" "}
-                  <Box sx={{width: "100%"}}>
-                    {isFetchingNextPage ? <LinearProgress/> : null}
-                  </Box>
-                </>)}
-              </Grid2>);
-            })))) : (<Grid2></Grid2>)}
-          </Grid2>
-        </Grid2>
-      <BottomSheet open={open} onClose={handleClose}>
-        <Grid2>{filterComponent}</Grid2>
-      </BottomSheet>
-    </Grid2>
-    {filterComponent && (<Grid2
-      width="100%"
-      display={{
-        xs: "none", md: "none", sm: "none", lg: "flex", xl: "flex",
-      }}
-      flexDirection="column"
-      justifyContent="flex-start"
-      alignItems="center"
+  const renderTotalCount = () => (
+    <Grid
+      display="flex"
       sx={{
-        backgroundColor: "white", borderRadius: "16px", gap: 1, m: 1, ml: 0, p: 2, maxWidth: "300px",
+        width: "100%",
+        maxWidth: "400px",
+        justifyContent: "space-between",
+        gap: 2,
+        bgcolor: "#ECFAFF",
+        borderRadius: "16px",
+        paddingX: "10px",
+        paddingY: "16px",
       }}
     >
-      <Grid2
+      <Box display="flex" alignItems="center" gap="10px">
+        <Image src={TotalGrid} width={20} height={20} alt="filter" />
+        <Typography color="#393939" fontSize="14px">
+          تعداد کل فرم‌ها {textTotal[0]}:
+        </Typography>
+      </Box>
+      <p className="flex items-center text-[14px] text-[#393939] font-bold">
+        {totalData} {textTotal[1]}
+      </p>
+    </Grid>
+  );
+
+  const renderSearchAndFilter = () => (
+    <Grid
+      display="flex"
+      sx={{
+        width: "100%",
+        maxWidth: "550px",
+        justifyContent: "center",
+        mt: 1,
+        gap: 2,
+      }}
+    >
+      <Grid
+        size={{ xs: 12, sm: 10 }}
+        sx={{ display: "flex", alignItems: "center", gap: "12px", mx: "auto" }}
+      >
+        <SearchInput />
+        {!disableFilter && (
+          <Grid
+            sx={{ display: { xs: "flex", lg: "none" } }}
+            onClick={handleFilterToggle}
+          >
+            <Image
+              src="./images/home-page/FilterAA.svg"
+              width={51}
+              height={51}
+              alt=""
+              className="cursor-pointer border-[1px] border-[#c9c9c9] rounded-[15px] p-2"
+            />
+          </Grid>
+        )}
+      </Grid>
+    </Grid>
+  );
+
+  const renderContent = () => {
+    if (!pages?.pages) return <Grid />;
+
+    if (pages.pages[0]?.data?.length === 0) {
+      return <Typography>موردی یافت نشد</Typography>;
+    }
+
+    return pages.pages.map((page, pageIndex) =>
+      page.data.map((data: any, index: number) => {
+        const key = `${pageIndex}-${index}`;
+        const isLastItem = index === 8;
+
+        return (
+          <Grid
+            sx={{ width: 1, mx: "auto" }}
+            key={key}
+            size={{ xs: 12, md: 10, lg: 8, xl: 6 }}
+          >
+            {CartComponent && (
+              <CartComponent
+                onCheck={onCheck}
+                data={data}
+                refreshGrid={handleRefreshGrid}
+              />
+            )}
+            {isLastItem && (
+              <>
+                <Typography component="h1" ref={ref} sx={{ height: 0 }} />
+                <Box sx={{ width: "100%" }}>
+                  {isFetchingNextPage && <LinearProgress />}
+                </Box>
+              </>
+            )}
+          </Grid>
+        );
+      })
+    );
+  };
+
+  const renderDesktopFilter = () =>
+    filterComponent && (
+      <Grid
+        width="100%"
+        display={{ xs: "none", lg: "flex" }}
+        flexDirection="column"
+        justifyContent="flex-start"
+        alignItems="center"
         sx={{
-          width: "100%", minWidth: "200px", maxWidth: "300px",
+          backgroundColor: "white",
+          borderRadius: "16px",
+          gap: 1,
+          m: 1,
+          ml: 0,
+          p: 2,
+          maxWidth: "300px",
         }}
       >
-        {filterComponent}
-      </Grid2>
-    </Grid2>)}
-  </Grid2>);
+        <Grid sx={{ width: "100%", minWidth: "200px", maxWidth: "300px" }}>
+          {filterComponent}
+        </Grid>
+      </Grid>
+    );
+
+  return (
+    <Grid
+      width="100%"
+      display="flex"
+      sx={{
+        height: "100vh",
+        overflowY: "hidden",
+        userSelect: "none",
+      }}
+    >
+      <Grid
+        width="100%"
+        display="flex"
+        flexDirection="column"
+        justifyContent="flex-start"
+        alignItems="center"
+        container
+        sx={{
+          bgcolor: "white",
+          height: "100vh",
+          flexDirection: "column",
+          alignItems: "flex-end",
+          p: 2,
+          mx: 1,
+          borderRadius: "16px",
+          maxWidth: "100%",
+          overflowY: "hidden",
+        }}
+      >
+        <Grid container sx={{ width: "100%", justifyContent: "center", mx: "auto" }}>
+          {renderHeader()}
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "12px",
+              width: "100%",
+            }}
+          >
+            {renderTotalCount()}
+            {showCreateButton && (
+              <div className="min-w-[50px] w-[50px] h-full">
+                <CreateFormBtn />
+              </div>
+            )}
+          </Box>
+
+          {renderSearchAndFilter()}
+
+          <Grid
+            id="content"
+            container
+            size={{ xs: 12 }}
+            flexWrap="nowrap"
+            className="flex-1"
+            sx={{
+              width: "100%",
+              mx: "auto",
+              mt: 1,
+              mb: 5,
+              flexDirection: "column",
+              gap: 2,
+              overflowY: "auto",
+              height: "calc(100vh - 210px)",
+            }}
+          >
+            {renderContent()}
+          </Grid>
+        </Grid>
+
+        <BottomSheet open={isFilterOpen} onClose={() => setIsFilterOpen(false)}>
+          <Grid>{filterComponent}</Grid>
+        </BottomSheet>
+      </Grid>
+
+      {renderDesktopFilter()}
+    </Grid>
+  );
 };
 
 export default ListGrid;

@@ -9,10 +9,7 @@ export default function ListGridWrapper() {
   // const searchParams = useSearchParams();
   // const pathname = usePathname();
   // const { push } = useRouter();
-  const [formType, setFormType] = useState<any>({
-    type: "ALL",
-    status: "ALL",
-  });
+  const formType={type: "ALL", status: "ALL",}
   const filterBoxList: any = [];
   const searchBoxList: any = [
     {
@@ -22,7 +19,7 @@ export default function ListGridWrapper() {
       nextConditionOperator: "AND",
     },
   ];
-
+console.log("ffff",searchBoxList)
   // const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   //   setFormType((prev: any) => {
   //     return { ...prev, type: (event.target as HTMLInputElement).value };
@@ -37,12 +34,12 @@ export default function ListGridWrapper() {
 
   return (
     <ListGrid
-      title="گزارش ها"
+      title="گزارش‌ها"
       searchBoxList={searchBoxList}
       filterBoxList={filterBoxList}
       url="/form/main-list/"
       filterComponent={null}
-      CartComponent={(item: any) => <ListCard {...item} />}
+      CartComponent={(item: any) => <ListCard setRefreshGrid={setRefreshGrid} {...item} />}
       disableFilter
       refreshGrid={refreshGrid}
       searchQueryFilter={formType}

@@ -1,28 +1,17 @@
 "use client";
 
-import { Fragment, useState } from "react";
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { z } from "zod";
+import {Fragment, useState} from "react";
+import {useForm} from "react-hook-form";
+import {useRouter} from "next/navigation";
+import {z} from "zod";
 import Image from "next/image";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Box,
-  Dialog,
-  DialogContent,
-  IconButton,
-  Stack,
-  Typography,
-  Button,
-  Tabs,
-  Tab,
-} from "@mui/material";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Box, Button, Dialog, DialogContent, IconButton, Stack, Tab, Tabs, Typography,} from "@mui/material";
 import FormProvider from "../hook-form/FormProvider";
-import { LoadingButton } from "@mui/lab";
-import { IoClose } from "react-icons/io5";
-import { RHFTextField } from "../hook-form";
+import {IoClose} from "react-icons/io5";
+import {RHFTextField} from "../hook-form";
 import AxiosApi from "@/services/axios/AxiosApi";
-import { toast } from "sonner";
+import {toast} from "sonner";
 import PlusIcon from "@/../public/images/home-page/Add-fill.svg";
 
 const propertiesSchema = z.object({
@@ -292,7 +281,7 @@ export default function CreateFormBtn() {
                 marginBottom={2}
                 paddingX="40px"
               >
-                <LoadingButton
+                <Button
                   type="submit"
                   disableRipple
                   fullWidth
@@ -317,7 +306,7 @@ export default function CreateFormBtn() {
                   >
                     تایید
                   </Typography>
-                </LoadingButton>
+                </Button>
 
                 <Button
                   type="button"

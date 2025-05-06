@@ -1,10 +1,10 @@
 "use client";
-import { memo, useCallback, useState } from "react";
-import LoadingButton from "@mui/lab/LoadingButton";
-import { useParams } from "next/navigation";
-import { toast } from "sonner";
+import {memo, useCallback, useState} from "react";
+import {useParams} from "next/navigation";
+import {toast} from "sonner";
 import useActionDesigner from "@/hooks/useActionDesigner";
 import AxiosApi from "@/services/axios/AxiosApi";
+import {Button} from "@mui/material";
 // import useElements from "@/hooks/useElements";
 // import useDesigner from "@/hooks/useDesigner";
 
@@ -45,7 +45,7 @@ const CreateGroupBtn = memo(function CreateGroupBtn() {
       dir="rtl"
       className="flex justify-center items-center h-[54px] w-full cursor-pointer rounded-xl border-[1px] border-dashed border-[#DDE1E6] bg-[#fff]"
     >
-      <LoadingButton
+      <Button
         variant="text"
         onClick={handleCreateNewPage}
         loading={newPageIsLoading}
@@ -59,7 +59,7 @@ const CreateGroupBtn = memo(function CreateGroupBtn() {
         }}
       >
         <p className="font-bold">گروه سوال جدید</p>
-      </LoadingButton>
+      </Button>
     </div>
   );
 });

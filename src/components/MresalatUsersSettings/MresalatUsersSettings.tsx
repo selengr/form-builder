@@ -1,12 +1,11 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import FormProvider, { RHFSelect, RHFSwitch } from "../hook-form";
-import { Box, Button, MenuItem, Typography } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
-import { MyRangeSlider } from "../Slider/RangeSlider";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
+import FormProvider, {RHFSelect, RHFSwitch} from "../hook-form";
+import {Box, Button, MenuItem, Typography} from "@mui/material";
+import {MyRangeSlider} from "../Slider/RangeSlider";
+import {MdOutlineKeyboardArrowDown} from "react-icons/md";
 
 const propertiesSchema = z.object({
   city: z.string().optional(),
@@ -339,7 +338,7 @@ function MresalatUsersSettings({ handleOpen }: { handleOpen: () => void }) {
           marginTop: "24px",
         }}
       >
-        <LoadingButton
+        <Button
           type="submit"
           fullWidth
           variant="contained"
@@ -364,7 +363,7 @@ function MresalatUsersSettings({ handleOpen }: { handleOpen: () => void }) {
           }}
         >
           تایید و کسر از ظرفیت
-        </LoadingButton>
+        </Button>
         <Button
           disabled={isSubmitting}
           type="button"

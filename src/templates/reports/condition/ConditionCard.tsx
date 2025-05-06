@@ -1,36 +1,35 @@
 "use client";
-import { LoadingButton } from "@mui/lab";
-import { SlPencil } from "react-icons/sl";
-import { useCallback, useState } from "react";
-import { IGetCondition } from "@/types/conditionReportSolo";
-  import { Menu, Typography } from "@mui/material";
-  import { EditConditionDialog } from "./EditConditionDialog";
-  import { ConditionCardOperator } from './ConditionCardOperator'; 
-  import { WeuiDeleteOutlined } from "../../../../public/images/icons/DeleteIcon";
-  import { PhDotsThreeVerticalBold } from "../../../../public/images/icons/PhDotsThreeVerticalBold";
-import { useDeleteCondition } from "@/app/reports/create-solo/[id]/_hooks/useDeleteCondition";
-  
-  export function ConditionCard({ condition, index }: { condition: IGetCondition, index : number }) {
+import {SlPencil} from "react-icons/sl";
+import {useCallback, useState} from "react";
+import {IGetCondition} from "@/types/conditionReportSolo";
+import {Button, Menu, Typography} from "@mui/material";
+import {EditConditionDialog} from "./EditConditionDialog";
+import {ConditionCardOperator} from './ConditionCardOperator';
+import {WeuiDeleteOutlined} from "../../../../public/images/icons/DeleteIcon";
+import {PhDotsThreeVerticalBold} from "../../../../public/images/icons/PhDotsThreeVerticalBold";
+import {useDeleteCondition} from "@/app/reports/create-solo/[id]/_hooks/useDeleteCondition";
+
+export function ConditionCard({ condition, index }: { condition: IGetCondition, index : number }) {
     const [openDialog, setOpen] = useState<boolean>(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
     const { mutate: deleteCondition, isPending } = useDeleteCondition();
-  
+
     const handleClick = useCallback((event: any) => {
       setAnchorEl(event.currentTarget);
     }, []);
-  
+
     const handleClose = useCallback(() => {
       setAnchorEl(null);
     }, []);
-  
+
     const handleDelete = (id : number) => {
       deleteCondition(Number(id))
       handleClose()
     };
 
-  
+
     return (
       <div className="bg-[#F7F7FF] rounded-lg flex">
         <div className="flex flex-col justify-start items-center gap-[10px] pl-[10px]">
@@ -61,7 +60,7 @@ import { useDeleteCondition } from "@/app/reports/create-solo/[id]/_hooks/useDel
                   "aria-labelledby": "basic-button",
                 }}
               >
-                <LoadingButton
+                <Button
                   sx={{
                     paddingX: "10px",
                     height: "36px",
@@ -80,8 +79,8 @@ import { useDeleteCondition } from "@/app/reports/create-solo/[id]/_hooks/useDel
                 >
                   <Typography>ویرایش</Typography>
                   <SlPencil size="1.18rem" />
-                </LoadingButton>
-                <LoadingButton
+                </Button>
+                <Button
                   sx={{
                     paddingX: "10px",
                     display: "flex",
@@ -98,12 +97,12 @@ import { useDeleteCondition } from "@/app/reports/create-solo/[id]/_hooks/useDel
                 >
                   <Typography>حذف</Typography>
                   <WeuiDeleteOutlined fontSize="1.32rem" />
-                </LoadingButton>
+                </Button>
               </Menu>
             )}
           </div>
         </div>
-  
+
         <div className="rounded-lg p-[10px] flex justify-between w-full cursor-pointer border-[1px] border-[#1758BA] bg-[#fff]">
           <div className="flex justify-center items-center gap-[10px]">
             <ConditionCardOperator condition={condition} />
@@ -121,7 +120,7 @@ import { useDeleteCondition } from "@/app/reports/create-solo/[id]/_hooks/useDel
       </div>
     );
   }
-  
+
 
 
 

@@ -1,18 +1,13 @@
 "use client";
-import { Box, Button, Typography } from "@mui/material";
-import FormProvider, {
-  RHFCheckBox,
-  RHFSwitch,
-  RHFTextField,
-} from "../hook-form";
-import { LuCopy, LuRefreshCcw } from "react-icons/lu";
+import {Box, Button, Typography} from "@mui/material";
+import FormProvider, {RHFCheckBox, RHFSwitch, RHFTextField,} from "../hook-form";
+import {LuCopy, LuRefreshCcw} from "react-icons/lu";
 import Share from "../share-media/Share";
-import { IoShareSocialSharp } from "react-icons/io5";
+import {IoShareSocialSharp} from "react-icons/io5";
 import CopyToClipboardButton from "../clipboard-button/CopyToClipBoardButton";
-import { LoadingButton } from "@mui/lab";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import {z} from "zod";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
 import AxiosApi from "@/services/axios/AxiosApi";
 
 const propertiesSchema = z.object({
@@ -234,7 +229,7 @@ export default function GeneralSettings({
           marginTop: "24px",
         }}
       >
-        <LoadingButton
+        <Button
           type="submit"
           fullWidth
           variant="contained"
@@ -259,7 +254,7 @@ export default function GeneralSettings({
           }}
         >
           افزودن به سبد خرید
-        </LoadingButton>
+        </Button>
         <Button
           disabled={isSubmitting}
           type="button"

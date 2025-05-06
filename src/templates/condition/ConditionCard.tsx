@@ -1,9 +1,8 @@
 "use client";
-import {LoadingButton} from "@mui/lab";
 import {SlPencil} from "react-icons/sl";
 import {useCallback, useState} from "react";
 import {IGetCondition} from "@/types/condition";
-import {Menu, Typography} from "@mui/material";
+import {Button, Menu, Typography} from "@mui/material";
 import {EditConditionDialog} from "./EditConditionDialog";
 import {ConditionCardOperator} from './ConditionCardOperator';
 import {WeuiDeleteOutlined} from "../../../public/images/icons/DeleteIcon";
@@ -58,7 +57,7 @@ export function ConditionCard({condition, index, disable = true,}: { condition: 
             "aria-labelledby": "basic-button",
           }}
         >
-          <LoadingButton
+          <Button
             sx={{
               paddingX: "10px",
               height: "36px",
@@ -78,9 +77,9 @@ export function ConditionCard({condition, index, disable = true,}: { condition: 
           >
             <Typography>ویرایش</Typography>
             <SlPencil size="1.18rem"/>
-          </LoadingButton>
+          </Button>
 
-          <LoadingButton
+          <Button
             sx={{
               paddingX: "10px", display: "flex", justifyContent: "space-between", color: "#FA4D56",
             }}
@@ -94,7 +93,7 @@ export function ConditionCard({condition, index, disable = true,}: { condition: 
           >
             <Typography>حذف</Typography>
             <WeuiDeleteOutlined fontSize="1.32rem"/>
-          </LoadingButton>
+          </Button>
         </Menu>)}
       </div>
     </div>

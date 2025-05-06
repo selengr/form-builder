@@ -1,15 +1,9 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import FormProvider, {
-  RHFMultiSelect,
-  RHFSelect,
-  RHFSwitch,
-  RHFTextField,
-} from "../hook-form";
-import { Box, Button, MenuItem, Typography } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
+import FormProvider, {RHFMultiSelect, RHFSelect, RHFSwitch, RHFTextField,} from "../hook-form";
+import {Box, Button, MenuItem, Typography} from "@mui/material";
 
 const propertiesSchema = z.object({
   name: z
@@ -291,7 +285,7 @@ function IndividualSettings({ handleOpen }: { handleOpen: () => void }) {
           marginTop: "24px",
         }}
       >
-        <LoadingButton
+        <Button
           type="submit"
           fullWidth
           variant="contained"
@@ -316,7 +310,7 @@ function IndividualSettings({ handleOpen }: { handleOpen: () => void }) {
           }}
         >
           تایید و کسر از ظرفیت
-        </LoadingButton>
+        </Button>
         <Button
           disabled={isSubmitting}
           type="button"

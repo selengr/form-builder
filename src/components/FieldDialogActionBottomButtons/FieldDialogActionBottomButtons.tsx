@@ -1,7 +1,6 @@
 "use client";
-import { memo } from "react";
+import {memo} from "react";
 import Button from "@mui/material/Button";
-import LoadingButton from "@mui/lab/LoadingButton";
 import Backdrop from "@mui/material/Backdrop";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";
 import useActionSelectedElement from "@/hooks/useActionSelectedElement";
@@ -14,7 +13,7 @@ const FieldDialogActionBottomButtons = memo(
     return (
       <>
         <div className="flex gap-6 w-full mt-10 mb-4 px-[20px]">
-          <LoadingButton
+          <Button
             type="submit"
             fullWidth
             variant="contained"
@@ -36,7 +35,7 @@ const FieldDialogActionBottomButtons = memo(
             }}
           >
             ثبت
-          </LoadingButton>
+          </Button>
           <Button
             disabled={status}
             type="button"

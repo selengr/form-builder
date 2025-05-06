@@ -1,7 +1,6 @@
 "use client";
-import { useState } from "react";
-import LoadingButton from "@mui/lab/LoadingButton";
-import { SxProps, Theme } from "@mui/material";
+import {useState} from "react";
+import {Button, SxProps, Theme} from "@mui/material";
 import CreateConditionDialog from "./CreateConditionDialog";
 
 const buttonSx: SxProps<Theme> = {
@@ -26,15 +25,15 @@ const CreateCondition = () => {
 
   return (
     <>
-      <LoadingButton
+      <Button
         variant="text"
         onClick={() => setOpen(true)}
         // loading={}
         fullWidth
         sx={buttonSx}
       >
-        افزودن خرده‌گزارش 
-      </LoadingButton>
+        افزودن خرده‌گزارش
+      </Button>
 
       <CreateConditionDialog open={open} setOpen={setOpen} />
     </>

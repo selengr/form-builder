@@ -1,6 +1,6 @@
 "use client";
 import Box from "@mui/material/Box";
-import LoadingButton from "@mui/lab/LoadingButton";
+import {Button} from "@mui/material";
 
 export default function ActionButtons({
   prevAction = () => {},
@@ -25,7 +25,7 @@ export default function ActionButtons({
       alignItems="center"
       flexDirection="row"
     >
-      <LoadingButton
+      <Button
         sx={{
           width: "100px",
           height: "52px",
@@ -42,9 +42,9 @@ export default function ActionButtons({
         onClick={prevAction}
       >
         سوال قبلی
-      </LoadingButton>
+      </Button>
       <Box></Box>
-      <LoadingButton
+      <Button
         sx={{
           width: "100px",
           height: "52px",
@@ -61,7 +61,7 @@ export default function ActionButtons({
         onClick={nextAction}
       >
         سوال بعدی
-      </LoadingButton>
+      </Button>
     </Box>
   );
 }

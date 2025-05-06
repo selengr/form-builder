@@ -1,18 +1,9 @@
 "use client";
-import {
-  Box,
-  Button,
-  Checkbox,
-  IconButton,
-  InputBase,
-  Paper,
-  Typography,
-} from "@mui/material";
+import {Box, Button, Checkbox, IconButton, InputBase, Paper, Typography,} from "@mui/material";
 import Image from "next/image";
-import { LuUserRoundSearch } from "react-icons/lu";
-import { TfiDownload } from "react-icons/tfi";
-import { SwitchButton } from "../Switch/SwitchButton";
-import { LoadingButton } from "@mui/lab";
+import {LuUserRoundSearch} from "react-icons/lu";
+import {TfiDownload} from "react-icons/tfi";
+import {SwitchButton} from "../Switch/SwitchButton";
 
 const rows = [
   { title: "گروه پیش فرض", users: 35, date: "1403/02/23" },
@@ -126,7 +117,7 @@ function GroupSettings({ handleOpen }: { handleOpen: () => void }) {
           marginTop: "24px",
         }}
       >
-        <LoadingButton
+        <Button
           type="submit"
           fullWidth
           variant="contained"
@@ -149,7 +140,7 @@ function GroupSettings({ handleOpen }: { handleOpen: () => void }) {
           }}
         >
           افزودن به سبد خرید
-        </LoadingButton>
+        </Button>
         <Button
           type="button"
           fullWidth

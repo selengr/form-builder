@@ -1,20 +1,20 @@
 "use client";
 
-import { Fragment, memo, MouseEvent, useCallback, useState } from "react";
+import {Fragment, memo, MouseEvent, useCallback, useState} from "react";
 import Menu from "@mui/material/Menu";
-import { LoadingButton } from "@mui/lab";
 import Typography from "@mui/material/Typography";
-import { WeuiDeleteOutlined } from "@/../public/images/icons/DeleteIcon";
-import { IonCopyOutline } from "@/../public/images/icons/CopyIcon";
-import { PhDotsThreeVerticalBold } from "@/../public/images/icons/PhDotsThreeVerticalBold";
-import { SlPencil } from "react-icons/sl";
+import {WeuiDeleteOutlined} from "@/../public/images/icons/DeleteIcon";
+import {IonCopyOutline} from "@/../public/images/icons/CopyIcon";
+import {PhDotsThreeVerticalBold} from "@/../public/images/icons/PhDotsThreeVerticalBold";
+import {SlPencil} from "react-icons/sl";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";
 import useElements from "@/hooks/useElements";
 import useActionSelectedElement from "@/hooks/useActionSelectedElement";
 import useActionQuestionLoading from "@/hooks/useActionQuestionLoading";
 import useActionDesigner from "@/hooks/useActionDesigner";
 import AxiosApi from "@/services/axios/AxiosApi";
-import { toast } from "sonner";
+import {toast} from "sonner";
+import {Button} from "@mui/material";
 
 const QuestionMenu = memo(function QuestionMenu({
   questionID,
@@ -95,7 +95,7 @@ const QuestionMenu = memo(function QuestionMenu({
             "aria-labelledby": "basic-button",
           }}
         >
-          <LoadingButton
+          <Button
             sx={{
               display: "flex",
               justifyContent: "space-between",
@@ -130,8 +130,8 @@ const QuestionMenu = memo(function QuestionMenu({
           >
             <Typography>تکثیر</Typography>
             <IonCopyOutline width={18} height={18} />
-          </LoadingButton>
-          <LoadingButton
+          </Button>
+          <Button
             disabled={loadingDeleteData || loadingDuplicateData}
             sx={{
               paddingX: "10px",
@@ -144,8 +144,8 @@ const QuestionMenu = memo(function QuestionMenu({
           >
             <Typography>ویرایش</Typography>
             <SlPencil size="1.15rem" />
-          </LoadingButton>
-          <LoadingButton
+          </Button>
+          <Button
             sx={{
               paddingX: "10px",
               display: "flex",
@@ -175,7 +175,7 @@ const QuestionMenu = memo(function QuestionMenu({
           >
             <Typography>حذف</Typography>
             <WeuiDeleteOutlined width={20} height={20} />
-          </LoadingButton>
+          </Button>
         </Menu>
       )}
     </Fragment>

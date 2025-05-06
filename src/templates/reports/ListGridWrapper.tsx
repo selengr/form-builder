@@ -19,7 +19,6 @@ export default function ListGridWrapper() {
       nextConditionOperator: "AND",
     },
   ];
-console.log("ffff",searchBoxList)
   // const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   //   setFormType((prev: any) => {
   //     return { ...prev, type: (event.target as HTMLInputElement).value };

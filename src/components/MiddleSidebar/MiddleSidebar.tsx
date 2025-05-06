@@ -53,7 +53,7 @@ export default function MiddleSidebar() {
     >
       <Link href={href} className="w-full flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Image src={icon} alt="" width={32} height={32} />
+          <Image src={icon} alt="icon" width={32} height={32} priority/>
           <p className="text-[14px] text-black font-bold">{title}</p>
         </div>
         <IoIosArrowDown className="rotate-90" size="1.3rem" color="#292D32" />
@@ -64,9 +64,10 @@ export default function MiddleSidebar() {
   return (
     <div className="min-w-[400px] w-[400px] min-h-screen bg-white px-5 py-5 flex flex-col gap-8 overflow-y-auto" style={{ scrollbarWidth: "thin" }}>
       <div className="w-full flex flex-col gap-5 items-center">
-        <Image fetchPriority="high" src={Logo} width={111} height={38} alt="Psya-Logo" />
+        <Image src={Logo} width={111} height={38} alt="Psya-Logo" priority/>
         <div className="flex flex-col items-center w-full gap-5">
-          <SidebarRoleSelection />
+          {/*<SidebarRoleSelection />*/}
+          <div className="mt-7"/>
           <div className="w-full pr-3 flex flex-col gap-4">
             {!loading && menu?.aclList?.filter(i => i.type === "menu").map((item: IACLItem) =>
               renderLinkItem(item.text, item.a_attr?.href ?? "", `/images/home-page/menu/${item.icon}`, item.id)

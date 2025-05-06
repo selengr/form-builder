@@ -19,27 +19,23 @@ const TopAppBar = ({customActions, appBarSx, toolbarSx, imageSx}: any) => {
   };
 
   const handleLogout = async () => {
-    await signOut({redirect: false});
     toast.success("خروج با موفقیت انجام شد");
-    location.replace("/");
+    await signOut({callbackUrl: "/"});
   };
 
   const renderUserSection = () => {
     if (loading) {
-      return (
-        <div className="flex items-center">
+      return (<div className="flex items-center">
           <Skeleton variant="circular" width={50} height={50}/>
           <div className="ml-4">
             <Skeleton width={100}/>
             <Skeleton width={80}/>
           </div>
-        </div>
-      );
+        </div>);
     }
 
     if (userInfo) {
-      return (
-        <Link href="">
+      return (<Link href="">
           <div className="gap-[5px] flex items-center">
             <Avatar size="sm" name={userInfo?.user?.fullName || "کاربر"}/>
             <div>
@@ -51,12 +47,10 @@ const TopAppBar = ({customActions, appBarSx, toolbarSx, imageSx}: any) => {
               </Typography>
             </div>
           </div>
-        </Link>
-      );
+        </Link>);
     }
 
-    return (
-      <div onClick={handleLogin}>
+    return (<div onClick={handleLogin}>
         <IconButton
           size="medium"
           disableRipple
@@ -70,20 +64,14 @@ const TopAppBar = ({customActions, appBarSx, toolbarSx, imageSx}: any) => {
           />
           {customActions ?? <Typography color="#424242">ورود</Typography>}
         </IconButton>
-      </div>
-    );
+      </div>);
   };
 
-  return (
-    <AppBar
+  return (<AppBar
       elevation={0}
       position="static"
       sx={{
-        pt: 2,
-        height: "100px",
-        color: "black",
-        backgroundColor: "#fff",
-        ...appBarSx,
+        pt: 2, height: "100px", color: "black", backgroundColor: "#fff", ...appBarSx,
       }}
     >
       <Toolbar sx={toolbarSx}>
@@ -110,8 +98,7 @@ const TopAppBar = ({customActions, appBarSx, toolbarSx, imageSx}: any) => {
             />
           </IconButton>
 
-          {!loading && userInfo && (
-            <div onClick={handleLogout}>
+          {!loading && userInfo && (<div onClick={handleLogout}>
               <IconButton size="medium" disableRipple sx={{gap: "8px"}}>
                 <Image
                   className="rotate-180"
@@ -121,12 +108,10 @@ const TopAppBar = ({customActions, appBarSx, toolbarSx, imageSx}: any) => {
                   height={24}
                 />
               </IconButton>
-            </div>
-          )}
+            </div>)}
         </div>
       </Toolbar>
-    </AppBar>
-  );
+    </AppBar>);
 };
 
 export default TopAppBar;

@@ -34,8 +34,8 @@ export default function MenuSidebar() {
 
   const activeIcons = (link: string) => {
     const newPath = pathname.split("/");
-    if (newPath[2] === link) return true;
-    return false;
+    return newPath[2] === link;
+
   };
 
   return (
@@ -49,6 +49,7 @@ export default function MenuSidebar() {
             src={pathname === "/" ? ServicesActive : ServicesNotActive}
             width={28}
             height={28}
+            priority
             alt="logo-side-bar"
           />
         </div>
@@ -76,6 +77,7 @@ export default function MenuSidebar() {
                 src={activeIcons(link) ? active : notActive}
                 width={28}
                 height={28}
+                priority
                 alt="logo-side-bar"
               />
             </div>

@@ -2,11 +2,7 @@
 
 import React, {useEffect, useState} from "react";
 import {useParams, useRouter} from "next/navigation";
-import {IoStatsChartOutline} from "react-icons/io5";
-import {LuUserRoundPlus} from "react-icons/lu";
-import {MdKeyboardArrowLeft, MdKeyboardArrowRight, MdOutlineKeyboardArrowRight} from "react-icons/md";
-import {ImSpinner2} from "react-icons/im";
-import {IconButton, Tooltip} from "@mui/material";
+import {ReportHeader, ReportPagination, ReportTable} from "@/app/(builder)/stats/[id]/component";
 
 export default function StatsPage() {
   const [headData, setHeadData] = useState<any[]>([]);
@@ -96,7 +92,7 @@ export default function StatsPage() {
   //   fetchData();
   // }, []);
 
-  useEffect(() => {
+/*  useEffect(() => {
     async function fetchData() {
       try {
         setIsLoading(true);
@@ -116,7 +112,7 @@ export default function StatsPage() {
     }
 
     fetchData();
-  }, []);
+  }, []);*/
 
   useEffect(() => {
     setHeadData([
@@ -138,127 +134,13 @@ export default function StatsPage() {
 
   return (
     <div className="w-full p-4 bg-white">
-      {/* Header */}
-      <div className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative">
-        <IconButton
-          sx={{position: "absolute", left: "8px"}}
-          onClick={() => router.push("/")}
-        >
-          <MdOutlineKeyboardArrowRight color="#292D32"/>
-        </IconButton>
-        <p className="text-[16px] text-center font-bold text-[#161616]">
-          تست گزارش
-        </p>
-      </div>
-
-      {/* Table */}
-      <div className="w-full md:max-h-[calc(100vh-155px)] max-h-[calc(100vh-220px)] overflow-auto rounded-xl border">
-        {isLoading ? (
-          <div className="w-full h-[300px] flex justify-center items-center">
-            <ImSpinner2 className="animate-spin h-12 w-12"/>
-          </div>
-        ) : (
-          <table className="min-w-[700px] w-full border-separate border-spacing-0">
-            <thead>
-            <tr>
-              {headData.map((item) => (
-                <th
-                  key={item.questionId}
-                  className="bg-[#F7F7FF] font-bold text-black text-center px-4 py-3 text-sm w-[200px] truncate"
-                >
-                  <div
-                    className="truncate"
-                    title={item.questionTitle}
-                    dir="rtl"
-                  >
-                    {item.questionTitle}
-                  </div>
-                </th>
-              ))}
-            </tr>
-            </thead>
-            <tbody>
-            {allData.map((row, rowIndex) => (
-              <tr
-                key={row.row[0]?.questionId || rowIndex}
-                className={
-                  rowIndex % 2 !== 0 ? "bg-[#F7F7FF]" : "bg-white"
-                }
-              >
-
-                {row.row.map((data, i) => (
-                  <td
-                    key={i}
-                    className="text-center px-3 py-2 font-semibold text-sm w-[200px]"
-                  >
-                    <Tooltip
-                      title={data.answer.join(" - ")}
-                      followCursor
-                      arrow
-                      placement="top"
-                    >
-                      <div className=" overflow-hidden text-ellipsis line-clamp-3"
-                           style={{display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3}}>
-                        {data.answer
-                          .map((d) => d)
-                          .join(" - ")
-                          .slice(0, 400)}
-                        {data.answer.join(" - ").length > 400 ? "..." : ""}
-                      </div>
-                    </Tooltip>
-                  </td>
-
-                ))}
-
-                {/* Actions */}
-                <td className="px-4 py-2">
-                  <div className="flex items-center justify-end gap-2">
-                    <button
-                      className={`rounded-md p-2 ${
-                        row.id === 3 ? "bg-red-500" : "bg-teal-400"
-                      }`}
-                    >
-                      <LuUserRoundPlus className="text-white"/>
-                    </button>
-                    <button className="rounded-md p-2 bg-blue-700">
-                      <IoStatsChartOutline className="text-white"/>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-
-      {/* Pagination & Controls */}
-      <div className="bg-[#F7F7FF] w-full flex flex-wrap justify-between items-center px-4 py-2 mt-4 gap-2 rounded-lg">
-        <div className="flex items-center gap-2">
-          <span className="text-sm">سطر قابل نمایش در هر صفحه:</span>
-          <select className="bg-white rounded-md h-9 px-2 text-sm border border-gray-300 font-iran-sans">
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={25}>25</option>
-            <option value="all">همه</option>
-          </select>
-        </div>
-        <div className="flex items-center gap-2">
-          <button className="bg-white border border-blue-700 rounded-full p-1">
-            <MdKeyboardArrowRight className="text-blue-700 text-xl"/>
-          </button>
-          <span className="text-sm">صفحه 1 از 1</span>
-          <button className="bg-white border border-blue-700 rounded-full p-1">
-            <MdKeyboardArrowLeft className="text-blue-700 text-xl"/>
-          </button>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-sm">{allData.length} نفر در لیست</span>
-          <div className="bg-blue-700 p-2 rounded-lg">
-            <LuUserRoundPlus className="text-white text-xl"/>
-          </div>
-        </div>
-      </div>
+      <ReportHeader title="تست گزارش" onBack={() => router.push("/")} />
+      <ReportTable
+        headData={headData}
+        allData={allData}
+        isLoading={isLoading}
+      />
+      <ReportPagination totalItems={allData.length} />
     </div>
   );
 }

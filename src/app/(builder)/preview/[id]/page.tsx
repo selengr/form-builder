@@ -1,116 +1,74 @@
 "use client";
 
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import {useParams, useRouter} from "next/navigation";
-import Loading from "./loading";
 import usePreview from "@/hooks/usePreview";
-import {useResponsive} from "@/hooks/useResponsive";
-import PreviewProgress from "@/templates/preview/PreviewProgress";
+import {useEffect} from "react";
 import PreviewQuestion from "@/templates/preview/PreviewQuestion";
-import {IconButton} from "@mui/material";
+import PreviewProgress from "@/templates/preview/PreviewProgress";
+import Loading from "./loading";
+import {Button, IconButton} from "@mui/material";
 import {MdOutlineKeyboardArrowRight} from "react-icons/md";
-import React from "react";
 
-function PreviewPage() {
-  const isMobile = useResponsive("down", "md");
+export default function PreviewPage() {
+  const router = useRouter();
   const {id: paramId} = useParams();
   const {status, title} = usePreview();
-  const router = useRouter();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   if (status === "loading") {
-    return (
-      <div className="flex justify-center items-center h-screen">
+    return (<div className="w-full h-screen flex justify-center items-center bg-white">
         <Loading/>
-      </div>
-    );
+      </div>);
   }
 
   if (status === "notExist") {
-    return (
-      <div className="flex justify-center h-[calc(100%-48px)] md:my-[20px] md:mx-[10px] m-[20px]">
-        <div className="flex w-full h-full flex-col items-center justify-center gap-4">
-          <h2 className="text-destructive text-3xl text-center font-semibold">
+    return (<div className="w-full h-screen flex justify-center items-center px-4">
+        <div className="max-w-md w-full bg-white rounded-xl shadow p-6 text-center">
+          <h2 className="text-xl font-bold text-red-600 mb-4">
             هنوز سوالی ساخته نشده است
           </h2>
           <Button
             variant="contained"
-            sx={{
-              color: "#fff",
-              background: "#111",
-              "&.MuiButtonBase-root:hover": {
-                bgcolor: "#222",
-              },
-            }}
             onClick={() => router.push(`/builder/${paramId}`)}
-          >بازگشت به فرم ساز</Button>
+            sx={{
+              backgroundColor: "#111", "&:hover": {backgroundColor: "#222"},
+            }}
+          >
+            بازگشت به فرم ساز
+          </Button>
+        </div>
+      </div>);
+  }
+
+  return (<div className="p-2">
+      <div className="w-full h-[calc(100vh-1rem)] flex flex-col p-4 bg-white rounded-xl">
+        {/* Header */}
+        <div className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative">
+          <IconButton
+            sx={{position: "absolute", left: "8px"}}
+            onClick={() => router.push(`/builder/${paramId}`)}
+          >
+            <MdOutlineKeyboardArrowRight color="#292D32"/>
+          </IconButton>
+          <p className="text-[16px] text-center font-bold text-[#161616]">
+            {title}
+          </p>
+        </div>
+
+        {/* Main content (centered 60%) */}
+        <div className="flex-1 flex items-center justify-center">
+          <div className="w-full max-w-4xl h-[60%] flex items-center justify-center">
+            <PreviewQuestion/>
+          </div>
+        </div>
+
+        {/* Footer always at bottom */}
+        <div className="w-full flex justify-between items-center ">
+          <PreviewProgress/>
         </div>
       </div>
-    );
-  }
-
-  if (status === "ready") {
-    return (
-      <Box
-        sx={{userSelect: "none"}}
-        display="flex"
-        justifyContent="center"
-        margin={isMobile ? "20px 10px" : 2.5}
-      >
-        <Box
-          maxWidth="1200px"
-          width="100%"
-          sx={{direction: "ltr"}}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          flexDirection="column"
-          padding={2}
-          borderRadius="10px"
-          paddingBottom="2rem"
-          dir="rtl"
-          bgcolor="white"
-          border="1px solid #f7f7f7"
-          boxShadow="0px 0px 15px -5px #c1c1c1"
-        >
-          <Box
-            marginBottom={4}
-            width="100%"
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-            gap={2}
-            sx={{
-              backgroundColor: "#F7F7FF",
-              padding: "10px",
-            }}
-            borderRadius="10px"
-          >
-            <IconButton
-              onClick={() => router.back()}
-            >
-              <MdOutlineKeyboardArrowRight color="#292D32"/>
-            </IconButton>
-            <Box sx={{display: "flex", alignItems: "baseline"}}>
-              <Typography
-                variant="subtitle1"
-                component={"h3"}
-                fontWeight={600}
-                fontSize="20px"
-                color="#424242"
-              >
-                {title}
-              </Typography>
-            </Box>
-            <Box></Box>
-          </Box>
-          <PreviewQuestion/>
-          <PreviewProgress/>
-        </Box>
-      </Box>
-    );
-  }
+    </div>);
 }
-
-export default PreviewPage;

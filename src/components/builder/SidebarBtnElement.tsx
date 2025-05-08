@@ -66,12 +66,12 @@ function SidebarBtnElement({ formElement, disabled = false }: SidebarBtnElementP
       disabled={disabled}
       className={clsx(
         "w-full flex justify-start h-[52px] items-center rounded-lg pr-2",
-        "bg-[#f7f7f7] text-[#424242]",
+        "bg-[#f7f7ff] text-[#424242]",
         "hover:cursor-pointer",
         disabled && "opacity-50 cursor-not-allowed"
       )}
     >
-      <span className="bg-slate-50 rounded-xl h-[32px] w-[32px] flex justify-center items-center">
+      <span className="bg-white rounded-xl h-[36px] w-[36px] flex justify-center items-center">
         <Image src={icon} width={24} height={24} alt="" />
       </span>
       <p className="p-2 font-bold text-right text-[14px]">{label}</p>
@@ -85,10 +85,10 @@ export function SidebarBtnElementDragOverlay({ formElement }: { formElement: For
   return (
     <button
       dir="rtl"
-      style={{ outline: "1px solid #1758BA" }}
-      className="text-[#424242] outline-1 outline-[#1758BA] w-full flex justify-start box-border rounded-[16px] h-[52px] items-center pr-2 bg-[#f7f7f7]"
+      style={{ outline: "1px dashed #1758BA" }}
+      className="text-[#424242] w-full flex justify-start rounded-xl h-[52px] items-center pr-2 bg-[#fff]"
     >
-      <span className="bg-slate-50 rounded-xl h-[32px] w-[32px] flex justify-center items-center">
+      <span className="bg-[#f7f7ff] rounded-xl h-[36px] w-[36px] flex justify-center items-center">
         <Image src={icon} width={24} height={24} alt="" />
       </span>
       <p className="p-2 text-right text-[14px] font-bold">{label}</p>

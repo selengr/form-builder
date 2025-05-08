@@ -9,7 +9,7 @@ import {WeuiDeleteOutlined} from "../../../public/images/icons/DeleteIcon";
 import {PhDotsThreeVerticalBold} from "../../../public/images/icons/PhDotsThreeVerticalBold";
 import {useDeleteCondition} from '@/app/(builder)/builder/[id]/condition/_hooks/useDeleteCondition';
 
-export function ConditionCard({condition, index, disable = true,}: { condition: IGetCondition; index: number; disable?: boolean; }) {
+export function ConditionCard({condition, index, disabled = true,}: { condition: IGetCondition; index: number; disabled?: boolean; }) {
   const [openDialog, setOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const menuOpen = Boolean(anchorEl);
@@ -17,9 +17,9 @@ export function ConditionCard({condition, index, disable = true,}: { condition: 
   const {mutate: deleteCondition, isPending} = useDeleteCondition();
 
   const handleClick = useCallback((event: any) => {
-    if (disable) return;
+    if (disabled) return;
     setAnchorEl(event.currentTarget);
-  }, [disable]);
+  }, [disabled]);
 
   const handleClose = useCallback(() => {
     setAnchorEl(null);
@@ -31,15 +31,15 @@ export function ConditionCard({condition, index, disable = true,}: { condition: 
   };
 
   return (<div
-    className={`bg-[#F7F7FF] rounded-lg flex ${disable ? "opacity-50 pointer-events-none" : ""}`}
+    className={`bg-[#F7F7FF] rounded-lg flex ${disabled ? "opacity-50 pointer-events-none" : ""}`}
   >
     <div className="flex flex-col justify-start items-center gap-[10px] pl-[10px]">
       <div className="bg-white h-8 w-8 rounded-[10px] flex justify-center items-center">{index + 1}</div>
       <div className="bg-white h-8 w-8 rounded-[10px] flex justify-center items-center">
-        <button onClick={handleClick} disabled={disable}>
+        <button onClick={handleClick} disabled={disabled}>
           <PhDotsThreeVerticalBold color="#1758BA" fontSize="1.5rem"/>
         </button>
-        {menuOpen && !disable && (<Menu
+        {menuOpen && !disabled && (<Menu
           sx={{
             "& .MuiPaper-root.MuiPaper-elevation": {
               borderRadius: "15px",
@@ -73,7 +73,7 @@ export function ConditionCard({condition, index, disable = true,}: { condition: 
               setOpen(true);
               handleClose();
             }}
-            disabled={disable}
+            disabled={disabled}
           >
             <Typography>ویرایش</Typography>
             <SlPencil size="1.18rem"/>
@@ -89,7 +89,7 @@ export function ConditionCard({condition, index, disable = true,}: { condition: 
               handleDelete(condition.id!);
             }}
             fullWidth
-            disabled={isPending || disable}
+            disabled={isPending || disabled}
           >
             <Typography>حذف</Typography>
             <WeuiDeleteOutlined fontSize="1.32rem"/>

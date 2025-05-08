@@ -23,11 +23,9 @@ const buttonSx: SxProps<Theme> = {
 
 const CreateCondition = () => {
   const [open, setOpen] = useState<boolean>(false);
-  const {formSetting} = useDesigner();
 
   return (
     <>
-      {formSetting.formStatus === "CREATE" &&
         <Button
         variant="text"
         onClick={() => setOpen(true)}
@@ -37,7 +35,6 @@ const CreateCondition = () => {
       >
          ایجاد شرط
       </Button>
-      }
       <CreateConditionDialog open={open} setOpen={setOpen} />
     </>
   );

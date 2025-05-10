@@ -141,10 +141,8 @@ export default function PayWithMHesam() {
         toast.error(JSON.parse(response.message).message[0].title)
       } else {
         setOpenModal(undefined);
-        toast.success("عضویت شما با موفقیت به‌روزرسانی شد.")
-        router.push(
-          `${pathname.replace("gateway", "signature")}?uu-id=${issueReques?.issueRequestId}`
-        );
+        toast.success("پرداخت با موفقیت انجام شد.")
+        router.push("/purchase-order")
       }
     },
   });
@@ -153,7 +151,7 @@ export default function PayWithMHesam() {
     const body: ConfirmPaymentRequestBody = {
       issueRequestId: +issueReques!.issueRequestId!,
       otpCode: res.otpCode ?? "",
-      otpId: res.id ?? "",
+      otpId: res.eventId ?? "",
       userCreditModelList: selectedCredits,
     };
     mutate(body);

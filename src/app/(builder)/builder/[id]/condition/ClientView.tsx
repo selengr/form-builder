@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic'
 import DesignerTabs from '@/templates/builder/TabComponent'
 
-const ConditionList = dynamic(() => import('@/templates/condition/ConditionList'), { ssr: false })
+const ConditionList = dynamic(() => import('@/templates/condition/ConditionList'))
 
 export default function ClientView({ conditions }: { conditions: any[] }) {
   return (

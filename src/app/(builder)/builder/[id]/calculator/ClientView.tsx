@@ -4,9 +4,7 @@ import dynamic from 'next/dynamic'
 import DesignerTabs from '@/templates/builder/TabComponent'
 
 const CalculatorList = dynamic(
-  () => import('@/templates/calculator/CalculatorList'),
-  { ssr: false }
-)
+  () => import('@/templates/calculator/CalculatorList'))
 
 export default function ClientView({ calculators }: { calculators: any[] }) {
   return (

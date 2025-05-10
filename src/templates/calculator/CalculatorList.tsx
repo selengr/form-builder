@@ -16,7 +16,7 @@ const CalculatorList: React.FC<ICalculatorListProps> = ({calculators}) => {
         {!isLoading && formData?.formSettingModel?.formStatus === "CREATE" && (<CreateCalculator/>)}
         {calculators.length > 0 && (<div
             dir="rtl"
-            className="bg-[#F7F7FF] rounded-lg p-6 w-full flex flex-col gap-3  mb-10 overflow-scroll"
+            className="bg-[#F7F7FF] rounded-lg p-6 w-full flex flex-col gap-3  mb-10 overflow-y-auto"
         >
             {calculators?.map((calculator: ICalculator, index: number) => (
                 <CalculatorCard index={index} calculator={calculator} key={index}

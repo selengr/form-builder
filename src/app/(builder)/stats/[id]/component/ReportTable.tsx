@@ -19,12 +19,19 @@ export function ReportTable({headData, allData, isLoading}: StatsTableProps) {
         </div>
       ) : (
         <table className="min-w-[700px] w-full border-separate border-spacing-0">
-          <thead>
+          <thead className="sticky top-0 z-10">
           <tr>
             {headData.map((item) => (
+                <Tooltip
+                    key={item.questionId}
+                    title={item.questionTitle}
+                    followCursor
+                    arrow
+                    enterDelay={1000}
+                    placement="top"
+                >
               <th
-                key={item.questionId}
-                className="bg-[#F7F7FF] font-bold text-black text-center px-4 py-3 text-sm w-[200px] truncate"
+                className="bg-[#F7F7FF] font-bold text-black text-center px-4 py-3 text-sm w-[200px] truncate sticky top-0"
               >
                 <div
                   className="truncate"
@@ -34,6 +41,7 @@ export function ReportTable({headData, allData, isLoading}: StatsTableProps) {
                   {item.questionTitle}
                 </div>
               </th>
+                </Tooltip>
             ))}
           </tr>
           </thead>
@@ -54,6 +62,8 @@ export function ReportTable({headData, allData, isLoading}: StatsTableProps) {
                     title={data.answer.join(" - ")}
                     followCursor
                     arrow
+                    enterDelay={600}
+                    leaveDelay={100}
                     placement="top"
                   >
                     <div className="overflow-hidden text-ellipsis line-clamp-3"

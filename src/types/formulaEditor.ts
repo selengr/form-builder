@@ -3,6 +3,7 @@ export interface Element {
   content: string;
   id?: string;
   mainIndex?: number;
+  isInAvg?:any
 }
 
 export interface FnFxItem {

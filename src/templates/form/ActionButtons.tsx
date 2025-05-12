@@ -1,67 +1,42 @@
 "use client";
-import Box from "@mui/material/Box";
 import {Button} from "@mui/material";
 
 export default function ActionButtons({
-  prevAction = () => {},
-  nextAction = () => {},
-  disablePrev = false,
-  disableNext = false,
-  loadingPrev = false,
-  loadingNext = false,
-}: {
-  prevAction?: () => void;
-  nextAction?: () => void;
-  disablePrev?: boolean;
-  disableNext?: boolean;
-  loadingPrev?: boolean;
-  loadingNext?: boolean;
+                                        prevAction = () => {
+                                        }, nextAction = () => {
+  }, disablePrev = false, disableNext = false, loadingPrev = false, loadingNext = false,
+                                      }: {
+  prevAction?: () => void; nextAction?: () => void; disablePrev?: boolean; disableNext?: boolean; loadingPrev?: boolean; loadingNext?: boolean;
 }) {
-  return (
-    <Box
-      width="100%"
-      display="flex"
-      justifyContent="space-between"
-      alignItems="center"
-      flexDirection="row"
-    >
-      <Button
-        sx={{
-          width: "100px",
-          height: "52px",
-          borderRadius: "0 10px 10px 0",
-          boxShadow: "none",
-          "& .MuiButtonBase-root, &.MuiButtonBase-root:hover": {
-            backgroundColor: "#1758BA",
-            boxShadow: "none",
-          },
-        }}
-        disabled={disablePrev}
-        loading={loadingPrev}
-        variant="contained"
-        onClick={prevAction}
-      >
-        سوال قبلی
-      </Button>
-      <Box></Box>
-      <Button
-        sx={{
-          width: "100px",
-          height: "52px",
-          borderRadius: "10px 0 0 10px",
-          boxShadow: "none",
-          "& .MuiButtonBase-root, &.MuiButtonBase-root:hover": {
-            backgroundColor: "#1758BA",
-            boxShadow: "none",
-          },
-        }}
-        disabled={disableNext}
-        loading={loadingNext}
-        variant="contained"
-        onClick={nextAction}
-      >
-        سوال بعدی
-      </Button>
-    </Box>
-  );
+  return (<div className="w-full justify-center items-center m-4">
+      <div className="bg-[#F7F7FF] rounded-xl overflow-hidden flex items-center">
+        <Button
+          variant="contained"
+          loading={loadingPrev}
+          onClick={prevAction}
+          disabled={disablePrev}
+          sx={{
+            width: 120, height: 52, borderRadius: 0, bgcolor: "#1758BA", boxShadow: "none", "&:hover": {bgcolor: "#174AA0"},
+          }}
+        >
+          سوال قبلی
+        </Button>
+
+        <div className="flex-1 flex items-center justify-center px-4">
+          {/* می‌تونی اینجا چیزی مثل شماره سوال بذاری یا خالی بذاری */}
+        </div>
+
+        <Button
+          variant="contained"
+          onClick={nextAction}
+          loading={loadingNext}
+          disabled={disableNext}
+          sx={{
+            width: 120, height: 52, borderRadius: 0, bgcolor: "#1758BA", boxShadow: "none", "&:hover": {bgcolor: "#174AA0"},
+          }}
+        >
+          سوال بعدی
+        </Button>
+      </div>
+    </div>);
 }

@@ -176,8 +176,8 @@ export default function ParticipateFormPage() {
         const response = await AxiosApi.post(
           "/take-part/check-answer-to-form-before",
           {
-            formId: null,
-            link: null,
+            link: slug.startsWith("public-") ? slug : null,
+            formId: !slug.startsWith("public-") ? slug : null,
             username: null,
           }
         );
@@ -204,7 +204,7 @@ export default function ParticipateFormPage() {
 
   const handleNext = async () => {
     if (!isValid) {
-      toast.error("الزامی می باشد");
+      toast.error("پاسخ به این سوال الزامی می‌باشد");
       return;
     }
 
@@ -248,7 +248,9 @@ export default function ParticipateFormPage() {
       ? optionIdObj
       : [
           {
-            optionId: null,
+            optionId: ["SPECTRAL", "MULTIPLE_CHOICE", "MULTIPLE_CHOICE_IMAGE"].includes(question.questionType)
+                ? formData
+                : null,
             answer: formData,
           },
         ];

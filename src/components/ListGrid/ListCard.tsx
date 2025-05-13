@@ -13,7 +13,6 @@ import ConfirmDialog from "../confirm-dialog";
 import {useRouter} from "next/navigation";
 import PublishSettingsDialog from "../PublishSettingsDialog/PublishSettingsDialog";
 import {AiOutlinePieChart} from "react-icons/ai";
-import { AxiosError } from "axios";
 
 const formTypePersian: any = {
   TEST: "آزمون",
@@ -73,23 +72,6 @@ export default function ListCard(props: any) {
     }
   }
 
-  const handleDelete = async () => {
-    try {
-      setLoadingPublishStatus(true);
-      const res: any = await AxiosApi.delete(`/form/${props.data.id}`);
-      if (res.data) {
-        toast.success(`فرم (${props.data.name}) با موفقیت حذف شد`);
-        props.setRefreshGrid((prev: any) => !prev);
-      }
-    } catch (error) {
-      const axiosError = error as any      
-      const errorMessage = axiosError.response?.data?.message?.[0]?.title || "خطایی رخ داده است";
-      toast.error(errorMessage);
-    } finally {
-      setLoadingPublishStatus(false);
-    }
-  };
-  
   return (
     <>
       <div className="border-[1px] flex flex-col gap-3 rounded-[20px] border-[#DDE1E6] p-4">
@@ -205,7 +187,23 @@ export default function ListCard(props: any) {
                 bgcolor: (theme) => theme.palette.primary.main,
               },
             }}
-            onClick={handleDelete}
+            onClick={async () => {
+              try {
+                setLoadingPublishStatus(true);
+                const res: any = await AxiosApi.delete(
+                  `/form/${props.data.id}`
+                );
+                if (res.data) {
+                  toast.success(`فرم (${props.data.name}) با موفقیت حذف شد`);
+                  props.setRefreshGrid((prev: any) => !prev);
+                }
+              } catch (error) {
+                console.log(error);
+                toast.error("خطایی رخ داده است");
+              } finally {
+                setLoadingPublishStatus(false);
+              }
+            }}
           >
             تایید
           </Button>

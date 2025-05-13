@@ -1,21 +1,18 @@
 "use client";
-
-import {toast} from "sonner";
-import Keypad from "./Keypad";
-import styles from "./advancedFormulaEditor.module.css";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import {useParams, useRouter} from "next/navigation";
+import {toast} from "sonner";
+import {Box, Container, Stack, TextField, Typography} from "@mui/material";
 import AxiosApi from "@/services/axios/AxiosApi";
 import {htmlToFormula} from "@/lib/htmlToFormula";
+import FormulaKeypad from "@/components/formula-editor/FormulaKeypad";
+import FormulaInput from "@/components/formula-editor/FormulaInput";
+import FormulaControls from "@/components/formula-editor/FormulaControls";
 import {Element, FnFxItem} from "@/types/formulaEditor";
-import React, {useCallback, useEffect, useRef, useState} from "react";
-import {Box, Button, Container, Stack, TextField, Typography} from "@mui/material";
 import {IAdvancedFormulaEditorProps} from "@/types/calculator";
 
 const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
-                                                                          questionList,
-                                                                          handleClose,
-                                                                          editList,
-                                                                          isEdit,
+                                                                          questionList, handleClose, editList, isEdit,
                                                                       }) => {
     const {id} = useParams();
     const {refresh} = useRouter();
@@ -79,8 +76,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                 } else {
                     range.setStart(editableDiv, 0);
                 }
-            }
-            else {
+            } else {
                 const targetNode = editableDiv.childNodes[newCursorIndex];
                 range.setStartBefore(targetNode);
             }
@@ -103,29 +99,33 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         if (content === "(") {
             if (cursorIndex === 0) return true;
             const prevElement = elements[cursorIndex - 1];
-            return (
-              prevElement.type === "OPERATOR" ||
-              (prevElement.type === "PARENTHESIS" && prevElement.content === "(") ||
-              (prevElement.type === "AVG_PARENTHESIS" && prevElement.content === "(")
-            );
+            return (prevElement.type === "OPERATOR" || (prevElement.type === "PARENTHESIS" && prevElement.content === "(") || (prevElement.type === "AVG_PARENTHESIS" && prevElement.content === "("));
         } else {
             if (cursorIndex === 0) return false;
             const prevElement = elements[cursorIndex - 1];
-            return (
-              prevElement.type === "NEW_FIELD" ||
-              prevElement.type === "NUMBER" ||
-              prevElement.type === "NEW_FnFx" ||
-              (prevElement.type === "PARENTHESIS" && prevElement.content === ")") ||
-              (prevElement.type === "AVG_PARENTHESIS" && prevElement.content === ")")
-            );
+            return (prevElement.type === "NEW_FIELD" || prevElement.type === "NUMBER" || prevElement.type === "NEW_FnFx" || (prevElement.type === "PARENTHESIS" && prevElement.content === ")") || (prevElement.type === "AVG_PARENTHESIS" && prevElement.content === ")"));
         }
+    };
+
+    const isInsideAvg = (index: number): boolean => {
+        let openCount = 0;
+        for (let i = 0; i < index; i++) {
+            if (elements[i].type === "AVG_PARENTHESIS") {
+                if (elements[i].content === "(") {
+                    openCount++;
+                } else if (elements[i].content === ")") {
+                    openCount--;
+                }
+            }
+        }
+        return openCount > 0;
     };
 
     const handleUndo = useCallback(() => {
         if (elements.length === 0 || cursorIndex === 0) return;
-        if (elements[cursorIndex - 1].type === "AVG_PARENTHESIS") return;
 
         const newElements = [...elements];
+        let elementsToRemove = 1;
 
         if (elements[cursorIndex - 1].type === "NEW_FnFx") {
             let endIndex = cursorIndex - 1;
@@ -136,7 +136,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                     if (elements[i].content === "(") {
                         parenthesisCount++;
                     } else if (elements[i].content === ")") {
-                        if (parenthesisCount === 1) {
+                        if (parenthesisCount === 0) {
                             endIndex = i;
                             break;
                         }
@@ -144,12 +144,14 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                     }
                 }
             }
-            newElements.splice(cursorIndex - 1, endIndex - cursorIndex + 2);
-            mainIndex.current += -2
-        } else {
-            newElements.splice(cursorIndex - 1, 1);
+            elementsToRemove = endIndex - cursorIndex + 2;
+            mainIndex.current += -elementsToRemove;
+        } else if (elements[cursorIndex - 1].type === "AVG_PARENTHESIS") {
+            // Prevent removing avg parentheses individually
+            return;
         }
 
+        newElements.splice(cursorIndex - 1, elementsToRemove);
         updateElements(newElements, Math.max(0, cursorIndex - 1));
     }, [elements, cursorIndex]);
 
@@ -157,12 +159,14 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         const newElements = [...elements];
         let newCursorIndex = cursorIndex;
 
-        if (!isValidCursorPosition(cursorIndex, true)) {
+        const insideAvg = isInsideAvg(cursorIndex);
+
+        if (!insideAvg && !isValidCursorPosition(cursorIndex, true)) {
             toast.error("امکان اضافه کردن عملگر در این موقعیت وجود ندارد");
             return;
         }
 
-        if (cursorIndex === 0) {
+        if (cursorIndex === 0 && !insideAvg) {
             toast.error("فرمول نمی‌تواند با عملگر شروع شود");
             return;
         }
@@ -171,37 +175,27 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         const nextElement = cursorIndex < elements.length ? elements[cursorIndex] : null;
 
         if (prevElement) {
-            if (prevElement.type === "OPERATOR") {
+            if (prevElement.type === "OPERATOR" && !insideAvg) {
                 toast.error("عملگر نمی‌تواند بعد از عملگر دیگر قرار گیرد");
                 return;
             }
 
-            if ((prevElement.type === "PARENTHESIS" || prevElement.type === "AVG_PARENTHESIS") &&
-              prevElement.content === "(") {
+            if ((prevElement.type === "PARENTHESIS" || prevElement.type === "AVG_PARENTHESIS") && prevElement.content === "(" && !insideAvg) {
                 toast.error("عملگر نمی‌تواند بلافاصله بعد از پرانتز باز قرار گیرد");
                 return;
             }
         }
 
         if (nextElement) {
-            if ((nextElement.type === "PARENTHESIS" || nextElement.type === "AVG_PARENTHESIS") &&
-              nextElement.content === ")") {
-                toast.error("عملگر نمی‌تواند بلافاصله قبل از پرانتز بسته قرار گیرد");
-                return;
-            }
-
-            if (nextElement.type === "OPERATOR") {
+            if (nextElement.type === "OPERATOR" && !insideAvg) {
                 toast.error("دو عملگر نمی‌توانند پشت سر هم قرار گیرند");
                 return;
             }
         }
 
-        if (cursorIndex > 0 &&
-          newElements[cursorIndex - 1].type === "OPERATOR" &&
-          OPERATOR_TYPES.includes(newElements[cursorIndex - 1].content)) {
+        if (cursorIndex > 0 && newElements[cursorIndex - 1].type === "OPERATOR" && OPERATOR_TYPES.includes(newElements[cursorIndex - 1].content)) {
             newElements[cursorIndex - 1].content = content;
-        }
-        else {
+        } else {
             newElements.splice(cursorIndex, 0, {type: "OPERATOR", content});
             newCursorIndex++;
         }
@@ -210,6 +204,10 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
     };
 
     const canAddNumber = (content: string): boolean => {
+        const insideAvg = isInsideAvg(cursorIndex);
+
+        if (insideAvg) return true;
+
         if (cursorIndex > 0 && elements[cursorIndex - 1].type === "NUMBER") {
             return true;
         }
@@ -222,9 +220,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                 return false;
             }
 
-            if (!(prevElement.type === "OPERATOR" ||
-              (prevElement.type === "PARENTHESIS" && prevElement.content === "(") ||
-              (prevElement.type === "AVG_PARENTHESIS" && prevElement.content === "("))) {
+            if (!(prevElement.type === "OPERATOR" || (prevElement.type === "PARENTHESIS" && prevElement.content === "(") || (prevElement.type === "AVG_PARENTHESIS" && prevElement.content === "("))) {
                 return false;
             }
         }
@@ -256,18 +252,14 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                     return;
                 }
                 newElements[cursorIndex - 1].content += content;
-            }
-            else if (currentNumber === "0" && content !== ".") {
+            } else if (currentNumber === "0" && content !== ".") {
                 newElements[cursorIndex - 1].content = content;
-            }
-            else if (currentNumber === ".") {
+            } else if (currentNumber === ".") {
                 newElements[cursorIndex - 1].content = `0.${content}`;
-            }
-            else {
+            } else {
                 newElements[cursorIndex - 1].content += content;
             }
-        }
-        else {
+        } else {
             if (content === ".") {
                 newElements.splice(cursorIndex, 0, {type: "NUMBER", content: "0."});
             } else {
@@ -301,11 +293,10 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
 
     const toggleDropdown = (element: HTMLElement, isHidden: boolean) => {
         const optionsContainer = element.nextElementSibling as HTMLElement;
-        optionsContainer.style.display = isHidden ? "block" : "none";
         element.setAttribute("data-type", isHidden ? "up" : "down");
     };
 
-    const handleDropdownClick = (e: React.MouseEvent, id: string,index:any) => {
+    const handleDropdownClick = (e: React.MouseEvent, id: string, index: any) => {
         e.stopPropagation();
         const target = e.target as HTMLElement;
         const isHidden = target.getAttribute("data-type") === "down";
@@ -324,43 +315,47 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
             type: "NEW_FIELD",
             content: item.caption,
             id: finalId,
-            mainIndex: element.mainIndex
+            mainIndex: element.mainIndex,
+            isInAvg: element.isInAvg
         };
 
         setElements(newElements);
         selectFieldRef.current[finalId] = finalId;
-        closeDropdown(dropdownId);
 
         setCursorIndex(elementIndex + 1);
         updateCursorPosition(elementIndex + 1);
+        closeDropdown(dropdownId);
     };
 
     const closeDropdown = (id: string) => {
-        const optionsContainer = document.querySelector(`[data-id="${id}"] .${styles.optionsContainer}`) as HTMLElement;
-        const dropdownButton = document.querySelector(`[data-id="${id}"] .${styles.customDropdown}`) as HTMLElement;
+        const dropdownContainer = document.querySelector(`[data-id="${id}"]`);
+        if (!dropdownContainer) return;
+
+        const optionsContainer = dropdownContainer.querySelector('.optionsContainer') as HTMLElement;
+        const dropdownButton = dropdownContainer.querySelector('.customDropdown') as HTMLElement;
 
         if (optionsContainer) optionsContainer.style.display = "none";
         if (dropdownButton) dropdownButton.setAttribute("data-type", "down");
     };
 
     const canAddField = (): boolean => {
+        const insideAvg = isInsideAvg(cursorIndex);
+
+        if (insideAvg) return true;
+
         if (elements.length === 0) return true;
 
         const prevElement = cursorIndex > 0 ? elements[cursorIndex - 1] : null;
         const nextElement = cursorIndex < elements.length ? elements[cursorIndex] : null;
 
         if (prevElement) {
-            if (prevElement.type === "NEW_FIELD" ||
-              prevElement.type === "NUMBER" ||
-              prevElement.type === "NEW_FnFx") {
+            if (prevElement.type === "NEW_FIELD" || prevElement.type === "NUMBER" || prevElement.type === "NEW_FnFx") {
                 return false;
             }
         }
 
         if (nextElement) {
-            if (nextElement.type === "NEW_FIELD" ||
-              nextElement.type === "NUMBER" ||
-              nextElement.type === "NEW_FnFx") {
+            if (nextElement.type === "NEW_FIELD" || nextElement.type === "NUMBER" || nextElement.type === "NEW_FnFx") {
                 return false;
             }
         }
@@ -379,13 +374,11 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
             return;
         }
 
+        const insideAvg = isInsideAvg(cursorIndex);
         mainIndex.current += 2;
         const selectId = `select_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
         const newElement: Element = {
-            type: "NEW_FIELD",
-            content: "انتخاب سوال",
-            id: selectId,
-            mainIndex: mainIndex.current
+            type: "NEW_FIELD", content: "انتخاب سوال", id: selectId, mainIndex: mainIndex.current, isInAvg: insideAvg
         };
 
         const newElements = [...elements];
@@ -408,26 +401,26 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
     };
 
     const handleFnFX = () => {
-        const editableDiv = contentEditable.current;
-        if (!editableDiv) return;
-
         if (isLastElementOperand()) {
             toast.error("لطفاً ابتدا یک عملگر وارد کنید");
             return;
         }
 
         const selectId = `select_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+        const fieldId = `select_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
         const newElements = [...elements];
 
+        // ساختار اولیه میانگین: میانگین(فیلد)
         newElements.splice(cursorIndex, 0, {
-            type: "NEW_FnFx",
-            content: "میانگین()",
-            id: selectId
-        }, {type: "AVG_PARENTHESIS", content: "("}, {type: "AVG_PARENTHESIS", content: ")"});
+            type: "NEW_FnFx", content: "میانگین()", id: selectId
+        }, {type: "AVG_PARENTHESIS", content: "("}, {
+            type: "NEW_FIELD", content: "انتخاب سوال", id: fieldId, mainIndex: mainIndex.current + 2, isInAvg: true
+        }, {type: "AVG_PARENTHESIS", content: ")"});
 
+        mainIndex.current += 4;
         setElements(newElements);
         selectAvgRef.current[selectId] = "#avgNumber";
-        updateElements(newElements, cursorIndex + 2);
+        updateElements(newElements, cursorIndex + 3); // قرار دادن کرسر بعد از فیلد اول
     };
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -447,42 +440,20 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
 
     const handleClick = (e: React.MouseEvent) => {
         const editableDiv = contentEditable.current;
-        if (!editableDiv) return;
-
-        const clickX = e.clientX;
-        const clickY = e.clientY;
-        const elements = Array.from(editableDiv.children);
-
-        let closestElement = null;
-        let closestDistance = Infinity;
-        let closestIndex = -1;
-
-        elements.forEach((element, index) => {
-            const rect = element.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            const distance = Math.sqrt(
-              Math.pow(clickX - centerX, 2) + Math.pow(clickY - centerY, 2));
-            if (distance < closestDistance) {
-                closestDistance = distance;
-                closestElement = element;
-                closestIndex = index;
+        if (editableDiv) {
+            const range = document.caretRangeFromPoint(e.clientX, e.clientY);
+            if (range) {
+                const index = Array.from(editableDiv.childNodes).findIndex((node, index) => index === range.endOffset);
+                setCursorIndex(index === -1 ? elements.length : index);
             }
-        });
-
-        if (closestElement && closestIndex !== -1) {
-            // @ts-ignore
-            const rect = closestElement.getBoundingClientRect();
-            const isClickOnRightHalf = clickX > rect.left + rect.width / 2;
-            setCursorIndex(isClickOnRightHalf ? closestIndex + 1 : closestIndex);
-            updateCursorPosition(isClickOnRightHalf ? closestIndex + 1 : closestIndex);
-        } else {
-            setCursorIndex(elements.length);
-            updateCursorPosition(elements.length);
         }
     };
 
     const isValidCursorPosition = (index: number, forInsertion: boolean = false): boolean => {
+        const insideAvg = isInsideAvg(index);
+
+        if (insideAvg) return true;
+
         const prevElement = index > 0 ? elements[index - 1] : null;
         const nextElement = index < elements.length ? elements[index] : null;
 
@@ -494,8 +465,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
             return false;
         }
 
-        return !(prevElement?.type === "PARENTHESIS" && prevElement?.content === "(" &&
-          nextElement?.type === "OPERATOR");
+        return !(prevElement?.type === "PARENTHESIS" && prevElement?.content === "(" && nextElement?.type === "OPERATOR");
     };
 
     const callApi = async () => {
@@ -533,242 +503,111 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         }
     };
 
-    const generateStableKey = (elem: Element, index: number) => {
-        if (elem.mainIndex !== undefined) {
-            return `${elem.type}_${elem.mainIndex}`;
-        }
-        return `${elem.type}_${index}`;
-    };
-
-    const renderElement = (elem: Element, index: number) => {
-        const elementKey = generateStableKey(elem, index);
-
-        switch (elem.type) {
-            case "NEW_FIELD":
-                return (<div
-                  key={elementKey}
-                  data-id={elem.mainIndex}
-                  contentEditable={false}
-                  className={`${styles.dynamicbtn} ${styles.NEW_FIELD}`}
-                  data-type="NEW_FIELD"
-                >
-                    <div
-                      className={styles.customDropdown}
-                      data-type="down"
-                      onClick={(e) => handleDropdownClick(e, elem.id!,index)}
-                    >
-                        {elem.content}
-                    </div>
-                    <div className={styles.optionsContainer} style={{display: "none"}}>
-                        {questionList.dataList.map((item: any, index: number) => (<div
-                          key={index}
-                          className={styles.option}
-                          onClick={() => handleOptionClick(item, elem.id!,elem)}
-                        >
-                            {item.caption}
-                        </div>))}
-                    </div>
-                </div>);
-
-            case "NEW_FnFx":
-                return (<div
-                  key={elem.id}
-                  data-id={elem.id}
-                  contentEditable={false}
-                  className={`${styles.dynamicbtn} ${styles.NEW_FnFx}`}
-                  data-type="NEW_FnFx"
-                >
-                    <div
-                      className={styles.customDropdown}
-                      data-type="down"
-                      onClick={(e) => handleFnFXDropdownClick(e, elem.id!)}
-                    >
-                        {elem.content}
-                    </div>
-                    <div className={styles.optionsContainer} style={{display: "none"}}>
-                        {FN_FX_OPTIONS.map((item) => (<div
-                          key={item.fnValue}
-                          className={styles.option}
-                          onClick={() => handleFnFXOptionClick(item, elem.id!)}
-                        >
-                            {item.fnCaption}
-                        </div>))}
-                    </div>
-                </div>);
-
-            default:
-                return (<div
-                  key={index}
-                  contentEditable={false}
-                  className={`${styles.dynamicbtn} ${styles[elem.type]}`}
-                  data-type={elem.type}
-                >
-                    {elem.content}
-                </div>);
-        }
-    };
-
-    const renderElements = useCallback(() => elements.map(renderElement), [elements]);
-
     if (!isClient) return null;
 
-    return (
-      <Container
-        maxWidth="sm"
-        sx={{padding: "0px !important", marginTop: "-15px !important"}}
-      >
-          <Typography
-            variant="subtitle1"
-            sx={{
-                display: "flex", justifyContent: "center", color: "#404040", fontWeight: 700,
-            }}
-          >
-              محاسبه‌گر
-          </Typography>
-
-          <Box
-            sx={{
-                display: "flex", flexDirection: "column", height: "100%", direction: "ltr", width: "100%",
-            }}
-          >
-              <Stack spacing={1}>
-                  <Typography variant="subtitle2" color="#161616">
-                      نام:
-                  </Typography>
-                  <TextField
-                    sx={{
-                        "& .MuiOutlinedInput-root": {
-                            "& fieldset": {
-                                borderColor: "#DDE1E6", borderRadius: "8px",
-                            }, "&:hover fieldset": {
-                                borderColor: "#DDE1E6",
-                            }, "&.Mui-focused fieldset": {
-                                borderColor: "#DDE1E6",
-                            },
-                        }, "& input": {
-                            paddingX: 1, paddingY: 0, height: "50px",
-                        },
-                    }}
-                    value={formName}
-                    onChange={(e) => setFormName(e.target.value)}
-                  />
-              </Stack>
-
-              <Box
+    return (<Container
+            maxWidth="sm"
+            sx={{padding: "0px !important", marginTop: "-15px !important"}}
+        >
+            <Typography
+                variant="subtitle1"
                 sx={{
-                    width: "100%", display: "flex", flexDirection: {xs: "column", sm: "row"}, my: 3,
+                    display: "flex", justifyContent: "center", color: "#404040", fontWeight: 700,
                 }}
-              >
-                  <Keypad
-                    handleFnFX={handleFnFX}
-                    handleNewField={handleNewField}
-                    handleParenthesis={handleParenthesis}
-                    handleOperator={handleOperator}
-                    handleNumber={handleNumber}
-                    handleUndo={handleUndo}
-                    contentEditable={contentEditable}
-                  />
+            >
+                محاسبه‌گر
+            </Typography>
 
-                  <Box
-                    sx={{
-                        width: {xs: "100%", sm: "73%"},
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "start",
-                    }}
-                  >
-                      <Typography
-                        variant="subtitle1"
+            <Box
+                sx={{
+                    display: "flex", flexDirection: "column", height: "100%", direction: "ltr", width: "100%",
+                }}
+            >
+                <Stack spacing={1}>
+                    <Typography variant="subtitle2" color="#161616">
+                        نام:
+                    </Typography>
+                    <TextField
                         sx={{
-                            display: "flex", justifyContent: "center", color: "#404040", fontWeight: 500,
+                            "& .MuiOutlinedInput-root": {
+                                "& fieldset": {
+                                    borderColor: "#DDE1E6", borderRadius: "8px",
+                                }, "&:hover fieldset": {
+                                    borderColor: "#DDE1E6",
+                                }, "&.Mui-focused fieldset": {
+                                    borderColor: "#DDE1E6",
+                                },
+                            }, "& input": {
+                                paddingX: 1, paddingY: 0, height: "50px",
+                            },
                         }}
-                      >
-                          اسکریپت:
-                      </Typography>
-                      <Stack
+                        value={formName}
+                        onChange={(e) => setFormName(e.target.value)}
+                    />
+                </Stack>
+
+                <Box
+                    sx={{
+                        width: "100%", display: "flex", flexDirection: {xs: "column", sm: "row"}, my: 3,
+                    }}
+                >
+                    <FormulaKeypad
+                        handleFnFX={handleFnFX}
+                        handleNewField={handleNewField}
+                        handleParenthesis={handleParenthesis}
+                        handleOperator={handleOperator}
+                        handleNumber={handleNumber}
+                        handleUndo={handleUndo}
+                        contentEditableRef={contentEditable}
+                    />
+
+                    <Box
                         sx={{
-                            border: "1px solid #DDE1E6",
-                            borderRadius: 2,
-                            padding: 1,
-                            width: "100%",
-                            height: "100%",
-                            minHeight: 200,
+                            width: {xs: "100%", sm: "73%"},
                             display: "flex",
-                            flexWrap: "wrap",
-                            flexDirection: "row",
+                            flexDirection: "column",
+                            alignItems: "start",
                         }}
-                      >
-                          <div
-                            contentEditable
-                            onClick={handleClick}
-                            ref={contentEditable}
-                            onKeyDown={handleKeyDown}
-                            suppressContentEditableWarning
-                            className={styles.ContentEditable}
-                          >
-                              {renderElements()}
-                          </div>
-                      </Stack>
-                  </Box>
-              </Box>
+                    >
+                        <Typography
+                            variant="subtitle1"
+                            sx={{
+                                display: "flex", justifyContent: "center", color: "#404040", fontWeight: 500,
+                            }}
+                        >
+                            اسکریپت:
+                        </Typography>
+                        <Stack
+                            sx={{
+                                border: "1px solid #DDE1E6",
+                                borderRadius: 2,
+                                padding: 1,
+                                width: "100%",
+                                height: "100%",
+                                minHeight: 200,
+                                display: "flex",
+                                flexWrap: "wrap",
+                                flexDirection: "row",
+                            }}
+                        >
+                            <FormulaInput
+                                elements={elements}
+                                questionList={questionList}
+                                contentEditableRef={contentEditable}
+                                onFieldSelect={handleOptionClick}
+                                onFieldClick={handleDropdownClick}
+                                onFnSelect={handleFnFXOptionClick}
+                                onFnClick={handleFnFXDropdownClick}
+                                onClick={handleClick}
+                                onKeyDown={handleKeyDown}
+                            />
+                        </Stack>
+                    </Box>
+                </Box>
 
-              <Box
-                display="flex"
-                gap={3}
-                width="100%"
-                marginBottom={2}
-                sx={{justifyContent: "center"}}
-              >
-                  <Button
-                    onClick={callApi}
-                    variant="contained"
-                    sx={{
-                        backgroundColor: "#1758BA",
-                        fontWeight: "500",
-                        fontSize: "15px",
-                        borderRadius: "8px",
-                        height: "50px",
-                        "&.MuiButtonBase-root:hover": {
-                            backgroundColor: "#1758BA",
-                        },
-                        minWidth: "132px",
-                    }}
-                  >
-                      <Typography
-                        variant="body2"
-                        py={0.5}
-                        sx={{color: "#fff", fontWeight: 500}}
-                      >
-                          تایید
-                      </Typography>
-                  </Button>
-
-                  <Button
-                    variant="outlined"
-                    sx={{
-                        height: "50px",
-                        minWidth: "132px",
-                        fontWeight: "500",
-                        borderRadius: "8px",
-                        fontSize: "15px",
-                        borderColor: "#1758BA",
-                        background: "#F7F7FF",
-                    }}
-                    onClick={handleClose}
-                  >
-                      <Typography
-                        variant="body2"
-                        py={0.5}
-                        color="#1758BA"
-                        sx={{fontWeight: 500}}
-                      >
-                          انصراف
-                      </Typography>
-                  </Button>
-              </Box>
-          </Box>
-      </Container>
-    );
+                <FormulaControls onSubmit={callApi} onCancel={handleClose}/>
+            </Box>
+        </Container>);
 };
 
 export default AdvancedFormulaEditor;

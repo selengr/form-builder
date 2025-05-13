@@ -19,9 +19,6 @@ import { useGetQacWithOutFilter } from "@/app/(builder)/builder/[id]/condition/_
 import { useGetOnlyAllQuestions } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllQuestions"
 import { useGetOnlyAllCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation"
 
-
-
-
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
   handleClose,
   condition,
@@ -38,10 +35,13 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
     handleRemoveSubCondition,
   } = useConditionalForm(condition)
 
+  const handleRefresh = () => {
+    window.location.reload()
+  };
   const { qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter()
   const {
      onlyAllQuestions,
-     onlyAllDateOptions, 
+     onlyAllDateOptions,
      onlyAllQuestionsOptions,
       onlySomeQuestionsOptions,
        isFetchingOnlyAllQuestions
@@ -63,7 +63,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
             const operatorType = subCondition.operatorType?.split("@")[0];
             const value = typeof subCondition.value !== 'object' ? subCondition.value?.split("@")[0] : subCondition.value;
             const logicalOperator = subCondition.logicalOperator?.split("@")[0];
-    
+
             let formattedValue: string;
 
             if (operatorType === "OPTION") {
@@ -107,14 +107,14 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
               : baseCondition;
           })
           .join("");
-          
+
         return {
           formBuilderId: Number(id),
           conditionFormula: conditionFormula,
           elseQuestionId: Number(elseQuestionId.replace(/\D/g, '')) !== 0 ? Number(elseQuestionId.replace(/\D/g, '')) : null,
           returnQuestionId: Number(returnQuestionId.replace(/\D/g, '')),
           frontConditionData: JSON.stringify(input.conditions[index]),
-          ...(isEdit && { id: Number(condition.id) }) 
+          ...(isEdit && { id: Number(condition.id) })
         };
       });
     };
@@ -123,9 +123,11 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
     postCondition.mutate(
       { data: output },
       {
-        onSuccess: () => {
-          refresh()
+        onSuccess: async () => {
+          // refresh()
+          // await refetch()
           handleClose()
+          handleRefresh()
         },
         onError: (error: any) => {
           // ...

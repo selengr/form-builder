@@ -8,7 +8,7 @@ import DesignerTabs from "./TabComponent";
 
 const Designer = memo(function Designer() {
   return (
-    <div className="w-full min-h-full px-4 py-4 bg-[#f7f7f7]">
+    <div className="w-full min-h-full px-4 py-4 ">
       <CreateFieldDialog />
       <div className="bg-white w-full h-full lg:flex-row rounded-xl">
         <DesignerTabs />

@@ -2,9 +2,16 @@
 const nextConfig = {
     reactStrictMode: true,
     output: "standalone",
-    productionBrowserSourceMaps: true,
+    productionBrowserSourceMaps: false,
     compress: true,
     swcMinify: true,
+    poweredByHeader: false,
+    logging: {
+        fetches: {
+            fullUrl: true,
+            hmrRefreshes: true,
+        },
+    },
     images: {
         remotePatterns: [
             {

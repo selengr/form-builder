@@ -55,7 +55,7 @@ async function fetchData({pageParam = 0}: {
     const response = await clientFetch(endpoint, params);
 
     if (!response) {
-        throw new Error("خطا در ارتباط با سرور");
+        // throw new Error("خطا در ارتباط با سرور");
     }
 
     return {

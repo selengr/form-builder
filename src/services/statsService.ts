@@ -1,6 +1,7 @@
 import AxiosApi from '@/services/axios/AxiosApi';
 
-class StatsService {
+// eslint-disable-next-line import/no-anonymous-default-export
+export default new class StatsService {
   async getStatsData(id: string) {
     try {
       const response = await AxiosApi.get(
@@ -21,5 +22,3 @@ class StatsService {
     }
   }
 }
-
-export default new StatsService();

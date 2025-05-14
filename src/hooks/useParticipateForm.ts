@@ -71,7 +71,7 @@ export const useParticipateForm = () => {
       } else if (res?.data?.responseLimitation) {
         await checkAnswerBefore(userInfo.user.username);
       } else {
-        await takePart(userInfo);
+        await takePart(userInfo.user.username);
       }
     } catch (e) {
       console.error(e);

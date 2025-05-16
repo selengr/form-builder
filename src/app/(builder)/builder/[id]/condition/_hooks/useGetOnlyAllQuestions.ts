@@ -1,36 +1,34 @@
-
 import AxiosApi from '@/services/axios/AxiosApi';
-import { useQuery } from '@tanstack/react-query';
-import { IConditionQuestionType } from '@/types/condition';
-import { useParams } from 'next/navigation';
+import {useQuery} from '@tanstack/react-query';
+import {IConditionQuestionType} from '@/types/condition';
+import {useParams} from 'next/navigation';
 
 
-const fetchData = async (id:string | string[]) => {
-    const customComboFilterModel = {
-        type: "COMBO",
-        entity: "QUESTIONS",
-        mode: "QUESTIONS_IN_FORM_BUILDER__ALL",
-        input: "",
-        page: 0,
-        rows: 10000,
-        extMap: {
-          formId: id,
-          typeRequest: "ONLY_ALL_QUESTIONS" 
-        }
+const fetchData = async (id: string | string[]) => {
+  const customComboFilterModel = {
+    type: "COMBO",
+    entity: "QUESTIONS",
+    mode: "QUESTIONS_IN_FORM_BUILDER__ALL",
+    input: "",
+    page: 0,
+    rows: 10000,
+    extMap: {
+      formId: id,
+      typeRequest: "ONLY_ALL_QUESTIONS"
     }
+  }
 
-        const baseUrl = '/question/q-and-c-custom-combo';
-        const queryString = `?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`;
-        const url = baseUrl + queryString;
-        const response = await AxiosApi.get(url);
-        return response.data;
+  const baseUrl = '/question/q-and-c-custom-combo';
+  const queryString = `?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`;
+  const url = baseUrl + queryString;
+  const response = await AxiosApi.get(url);
+  return response.data;
 }
 
 
-
 export const useGetOnlyAllQuestions = () => {
-  const { id } = useParams();
-  const { data, isFetching } = useQuery({
+  const {id} = useParams();
+  const {data, isFetching} = useQuery({
     queryKey: ['ONLY_ALL_QUESTIONS'],
     queryFn: () => fetchData(id),
     staleTime: 0,
@@ -40,37 +38,36 @@ export const useGetOnlyAllQuestions = () => {
     retry: 3
   });
 
-  const onlyAllQuestionsOptions = data?.dataList?.map((item : IConditionQuestionType) => ({
+  const onlyAllQuestionsOptions = data?.dataList?.map((item: IConditionQuestionType) => ({
     value: `${item?.extMap.UNIC_NAME}@${item.caption}`,
     label: item.caption,
   }));
-
 
 
   const onlySomeQuestionsOptions = data?.dataList
-  ?.filter((item : IConditionQuestionType) => {
-    const { TEXT_FIELD_PATTERN, SPECTRAL_TYPE, MULTI_SELECT } = item.extMap;
-    const isMultiSelect = MULTI_SELECT === "false";
-    const isSpectralSingle = SPECTRAL_TYPE === "SPECTRAL";
-    const isTextFieldNumber = TEXT_FIELD_PATTERN === "NUMBER";
-    
-    return isTextFieldNumber || isMultiSelect || isSpectralSingle;
-  })
-  ?.map((item : IConditionQuestionType) => ({
-    value: `${item?.extMap.UNIC_NAME}@${item.caption}`,
-    label: item.caption,
-  }));
+    ?.filter((item: IConditionQuestionType) => {
+      const {TEXT_FIELD_PATTERN, SPECTRAL_TYPE, MULTI_SELECT} = item.extMap;
+      const isMultiSelect = MULTI_SELECT === "false";
+      const isSpectralSingle = SPECTRAL_TYPE === "SPECTRAL";
+      const isTextFieldNumber = TEXT_FIELD_PATTERN === "NUMBER";
+
+      return isTextFieldNumber || isMultiSelect || isSpectralSingle;
+    })
+    ?.map((item: IConditionQuestionType) => ({
+      value: `${item?.extMap.UNIC_NAME}@${item.caption}`,
+      label: item.caption,
+    }));
 
 
   const onlyAllDateOptions = data?.dataList
-  ?.filter((item : IConditionQuestionType) => {
-    const isTextFieldDate = item.extMap.TEXT_FIELD_PATTERN === "DATE";
-    return isTextFieldDate
-  })
-  ?.map((item : IConditionQuestionType) => ({
-    value: `${item?.extMap.UNIC_NAME}@${item.caption}`,
-    label: item.caption,
-  }));
+    ?.filter((item: IConditionQuestionType) => {
+      const isTextFieldDate = item.extMap.TEXT_FIELD_PATTERN === "DATE";
+      return isTextFieldDate
+    })
+    ?.map((item: IConditionQuestionType) => ({
+      value: `${item?.extMap.UNIC_NAME}@${item.caption}`,
+      label: item.caption,
+    }));
 
   return {
     isFetchingOnlyAllQuestions: isFetching,

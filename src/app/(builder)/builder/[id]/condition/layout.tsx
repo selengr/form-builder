@@ -1,6 +1,6 @@
 export default function CalculatorPageLayout({
-  children,
-}: {
+                                               children,
+                                             }: {
   children: React.ReactNode;
 }) {
   return (

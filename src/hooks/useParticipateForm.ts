@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { toast } from "sonner";
+import {useCallback, useEffect, useMemo, useState} from "react";
+import {useParams, useRouter} from "next/navigation";
+import {toast} from "sonner";
 import AxiosApi from "@/services/axios/AxiosApi";
-import { ElementsType, FormElements } from "@/types/FormElements";
+import {ElementsType, FormElements} from "@/types/FormElements";
 import withValidation from "@/components/Fields/FormHOC";
-import { fetchUserInfo } from "@/lib/auth";
+import {fetchUserInfo} from "@/lib/auth";
 
 export interface ILimitation {
   isLimited: boolean;
@@ -20,15 +20,13 @@ export const useParticipateForm = () => {
   const [takePartId, setTakePartId] = useState<any>(null);
   const [finishPage, setFinishPage] = useState(false);
   const [limitation, setLimitation] = useState<ILimitation>({
-    isLimited: false,
-    limitationType: ""
+    isLimited: false, limitationType: ""
   });
 
-  const { slug } = useParams<{ slug: string }>();
-  const { replace } = useRouter();
+  const {slug} = useParams<{ slug: string }>();
+  const {replace} = useRouter();
 
-  const extractProperty = useCallback((list: any[], key: string) =>
-      list?.find((item) => item.questionPropertyEnum === key)?.value, []);
+  const extractProperty = useCallback((list: any[], key: string) => list?.find((item) => item.questionPropertyEnum === key)?.value, []);
 
   const initializeQuestion = useCallback((q: any) => {
     if (!q || !q.questionType) {
@@ -57,11 +55,7 @@ export const useParticipateForm = () => {
         setFormData("");
     }
 
-    const valid =
-        !required ||
-        (q.questionType === "TEXT_FIELD" &&
-            (pattern === "SHORT_TEXT" || pattern === "LONG_TEXT") &&
-            minLength <= 0);
+    const valid = !required || (q.questionType === "TEXT_FIELD" && (pattern === "SHORT_TEXT" || pattern === "LONG_TEXT") && minLength <= 0);
 
     setIsValid(valid);
     setQuestion(q);
@@ -70,14 +64,13 @@ export const useParticipateForm = () => {
   const fetchInitialData = useCallback(async () => {
     try {
       const res = await AxiosApi.post("/take-part/check-response-limitation-form", {
-        link: slug.startsWith("public-") ? slug : null,
-        id: !slug.startsWith("public-") ? slug : null,
+        link: slug.startsWith("public-") ? slug : null, id: !slug.startsWith("public-") ? slug : null,
       });
 
-      const { userInfo } = await fetchUserInfo();
+      const {userInfo} = await fetchUserInfo();
 
       if (res?.data?.loggedInStatus === false && res?.data?.responseLimitation) {
-        setLimitation({ isLimited: true, limitationType: res.data.responseLimitation });
+        setLimitation({isLimited: true, limitationType: res.data.responseLimitation});
       } else if (res?.data?.responseLimitation) {
         await checkAnswerBefore(userInfo?.user?.username || null);
       } else {
@@ -94,9 +87,7 @@ export const useParticipateForm = () => {
   const takePart = async (userName: string | null) => {
     try {
       const res = await AxiosApi.post("/take-part", {
-        link: slug.startsWith("public-") ? slug : null,
-        formId: !slug.startsWith("public-") ? slug : null,
-        username: userName,
+        link: slug.startsWith("public-") ? slug : null, formId: !slug.startsWith("public-") ? slug : null, username: userName,
       });
 
       setTakePartId(res.data.takePart);
@@ -110,9 +101,7 @@ export const useParticipateForm = () => {
   const checkAnswerBefore = async (userName: string | null) => {
     try {
       const res = await AxiosApi.post("/take-part/check-answer-to-form-before", {
-        link: slug.startsWith("public-") ? slug : null,
-        formId: !slug.startsWith("public-") ? slug : null,
-        username: userName,
+        link: slug.startsWith("public-") ? slug : null, formId: !slug.startsWith("public-") ? slug : null, username: userName,
       });
 
       setTakePartId(res.data.takePart);
@@ -138,23 +127,14 @@ export const useParticipateForm = () => {
       const spectralType = extractProperty(props, "SPECTRAL_TYPE");
 
       const needsOption = isMultiSelect || spectralType === "DOMAIN";
-      const answerList = needsOption
-          ? formData.map((item: any) => ({
-            optionId: question.questionType === "SPECTRAL" ? null : item,
-            answer: item
-          }))
-          : [{
-            optionId: ["SPECTRAL", "MULTIPLE_CHOICE", "MULTIPLE_CHOICE_IMAGE"].includes(question.questionType)
-                ? formData
-                : null,
-            answer: formData
-          }];
+      const answerList = needsOption ? formData.map((item: any) => ({
+        optionId: question.questionType === "SPECTRAL" ? null : item, answer: item
+      })) : [{
+        optionId: ["SPECTRAL", "MULTIPLE_CHOICE", "MULTIPLE_CHOICE_IMAGE"].includes(question.questionType) ? formData : null, answer: formData
+      }];
 
       const res = await AxiosApi.post("/take-part/insert-answer", {
-        formId: question.formId,
-        takePartId,
-        questionId: question.questionId,
-        answerList,
+        formId: question.formId, takePartId, questionId: question.questionId, answerList,
       });
 
       if (!res.data.questionId) {
@@ -173,7 +153,7 @@ export const useParticipateForm = () => {
   const handlePrev = async () => {
     try {
       setQuestionLoading(true);
-      const res = await AxiosApi.post("/question/previous-question", { takePartId });
+      const res = await AxiosApi.post("/question/previous-question", {takePartId});
 
       const q = res.data.questionModel;
       const a = res.data.userAnswerModel?.answersModel ?? [];
@@ -200,15 +180,9 @@ export const useParticipateForm = () => {
     }
   };
 
-  const FormComponent = useMemo(() =>
-          question?.questionType
-              ? FormElements[question.questionType as ElementsType]?.formComponent
-              : null,
-      [question]);
+  const FormComponent = useMemo(() => question?.questionType ? FormElements[question.questionType as ElementsType]?.formComponent : null, [question]);
 
-  const ValidatedInput = useMemo(() =>
-          FormComponent ? withValidation(FormComponent) : () => null,
-      [FormComponent]);
+  const ValidatedInput = useMemo(() => FormComponent ? withValidation(FormComponent) : () => null, [FormComponent]);
 
   useEffect(() => {
     fetchInitialData();

@@ -1,90 +1,70 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import {useRouter} from 'next/navigation';
 import Button from '@mui/material/Button';
+import {InfoRow} from "@/components/common/infoRow";
 
 const formTypePersian: Record<string, string> = {
-  TEST: 'آزمون',
-  QUESTION: 'پرسشنامه',
-  SURVEY: 'نظرسنجی',
-  COMPETITION: 'مسابقه',
+    TEST: 'آزمون',
+    QUESTION: 'پرسشنامه',
+    SURVEY: 'نظرسنجی',
+    COMPETITION: 'مسابقه',
 };
 
-export default function ListCard(props: any) {
-  const router = useRouter();
+interface ListCardProps {
+    data: {
+        id: string;
+        name: string;
+        type: keyof typeof formTypePersian;
+        accessType?: string;
+        status?: string;
+    };
+}
 
-  const handleViewResults = () => {
-    router.push(`/stats/${props.data.id}`);
-  };
+export default function ListCard({data}: ListCardProps) {
+    const router = useRouter();
 
-  const handleCreateReport = () => {
-    router.push(`/reports/create-solo/${props.data.id}`);
-  };
+    return (
+        <div className="flex flex-col gap-3 rounded-[20px] border border-[#DDE1E6] p-4">
+            <InfoRow label="نام" value={data.name} bold/>
+            <InfoRow label="نوع" value={formTypePersian[data.type]} bold/>
+            <InfoRow label="دسترسی" value={data.accessType || 'عمومی'} bold/>
+            <InfoRow label="وضعیت" value="انجام نشده" bold/>
 
-  return (
-    <div className="flex flex-col gap-3 rounded-[20px] border border-[#DDE1E6] p-4">
-      <div className="flex gap-1 text-[#393939]">
-        <span className="text-sm">نام:</span>
-        <p className="text-sm font-bold break-words whitespace-pre-wrap">
-          {props.data.name}
-        </p>
-      </div>
+            <div className="flex w-full flex-row gap-2">
+                <Button
+                    variant="contained"
+                    size="large"
+                    disableElevation
+                    fullWidth
+                    onClick={() => router.push(`/stats/${data.id}`)}
+                    sx={{
+                        backgroundColor: '#1758BA',
+                        borderRadius: '8px',
+                        '&:hover': {backgroundColor: '#216ee1'},
+                    }}
+                >
+                    مشاهده نتایج
+                </Button>
 
-      <div className="flex gap-1 text-[#393939]">
-        <span className="text-sm">نوع:</span>
-        <p className="text-sm font-bold">
-          {formTypePersian[props.data.type]}
-        </p>
-      </div>
-
-      <div className="flex gap-1 text-[#393939]">
-        <span className="text-sm">دسترسی:</span>
-        <p className="text-sm font-bold">
-          {props.data.accessType || 'عمومی'}
-        </p>
-      </div>
-
-      <div className="flex gap-1 text-[#393939]">
-        <span className="text-sm">وضعیت:</span>
-        <p className="text-sm font-bold">انجام نشده</p>
-      </div>
-
-      <div className="flex w-full flex-row gap-2">
-        <Button
-          variant="contained"
-          size={"large"}
-          disableElevation
-          fullWidth
-          onClick={handleViewResults}
-          sx={{
-            backgroundColor: '#1758BA',
-            borderRadius: '8px',
-            '&:hover': {
-              backgroundColor: '#216ee1',
-            },
-          }}
-        >
-          مشاهده نتایج
-        </Button>
-
-        <Button
-          variant="contained"
-          size={"large"}
-          disableElevation
-          fullWidth
-          onClick={handleCreateReport}
-          sx={{
-            backgroundColor: '#2CDFC9',
-            borderRadius: '8px',
-            '&:hover': {
-              backgroundColor: '#2CDFC9',
-              opacity: 0.9,
-            },
-          }}
-        >
-          ساخت گزارش
-        </Button>
-      </div>
-    </div>
-  );
+                <Button
+                    variant="contained"
+                    size="large"
+                    disableElevation
+                    fullWidth
+                    onClick={() => router.push(`/reports/create-solo/${data.id}`)}
+                    sx={{
+                        backgroundColor: '#2CDFC9',
+                        borderRadius: '8px',
+                        '&:hover': {
+                            backgroundColor: '#2CDFC9',
+                            opacity: 0.9,
+                        },
+                    }}
+                >
+                    ساخت گزارش
+                </Button>
+            </div>
+        </div>
+    );
 }

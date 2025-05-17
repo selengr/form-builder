@@ -1,78 +1,77 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, useFieldArray } from "react-hook-form"
-import { ConditionFormSchema, TConditionData, TSubConditionData, type TConditionFormData } from "@/lib/ConditionFormSchema"
-import { idGenerator } from "@/lib/idGenerator"
-import { IGetCondition } from "@/types/condition"
-
+import {zodResolver} from "@hookform/resolvers/zod"
+import {useFieldArray, useForm} from "react-hook-form"
+import {ConditionFormSchema, TConditionData, type TConditionFormData, TSubConditionData} from "@/lib/ConditionFormSchema"
+import {idGenerator} from "@/lib/idGenerator"
+import {IGetCondition} from "@/types/condition"
 
 
 export const createNewSubCondition = () => ({
-    logicalOperator: "",
-    questionType: "",
-    operatorType: "",
-    conditionType: "",
-    value: "",
-    id: idGenerator(),
-  })
-  
-  export const createNewCondition = () => ({
-    subConditions: [createNewSubCondition()],
-    elseQuestionId: "",
-    returnQuestionId: "",
-  })
+  logicalOperator: "",
+  questionType: "",
+  operatorType: "",
+  conditionType: "",
+  value: "",
+  id: idGenerator(),
+})
+
+export const createNewCondition = () => ({
+  subConditions: [createNewSubCondition()],
+  elseQuestionId: "",
+  returnQuestionId: "",
+})
 
 
-  const transformOutputToInput = (conditionJson : IGetCondition ) : TConditionData => {
-   
-      const { frontConditionData } = conditionJson;
-      const  conditions = JSON.parse(frontConditionData);
-      const { subConditions, returnQuestionId, elseQuestionId   } = conditions
+const transformOutputToInput = (conditionJson: IGetCondition): TConditionData => {
 
-      const SubConditionsData : TSubConditionData[] = subConditions
-        ?.map((subCondition : TSubConditionData) => {
-          const id = subCondition.id
-          const conditionType = subCondition.conditionType;
-          const questionType = subCondition.questionType;
-          const operatorType = subCondition.operatorType;
-          const logicalOperator = subCondition.logicalOperator;
-          let value : string | string[] = ""
+  const {frontConditionData} = conditionJson;
+  const conditions = JSON.parse(frontConditionData);
+  const {subConditions, returnQuestionId, elseQuestionId} = conditions
 
-          // if(questionType === "MULTIPLE_CHOICE_MULTI_SELECT_OPTION"){}
-          
-          if (operatorType === "OPTION" && questionType?.split("*")[0] === "MULTIPLE_CHOICE_MULTI_SELECT") {
-              const op : string[] = []
-              if(Array.isArray(subCondition.value)){
-                    subCondition.value?.map((item:string)=>op.push(item?.toString()))
-                    value = op
-              }
-          } else value = subCondition.value.toString();
+  const SubConditionsData: TSubConditionData[] = subConditions
+    ?.map((subCondition: TSubConditionData) => {
+      const id = subCondition.id
+      const conditionType = subCondition.conditionType;
+      const questionType = subCondition.questionType;
+      const operatorType = subCondition.operatorType;
+      const logicalOperator = subCondition.logicalOperator;
+      let value: string | string[] = ""
 
-          return {
-            id : subCondition.id,
-            conditionType,
-            questionType,
-            operatorType,
-            value,
-            logicalOperator
-          }
-        });
+      // if(questionType === "MULTIPLE_CHOICE_MULTI_SELECT_OPTION"){}
+
+      if (operatorType === "OPTION" && questionType?.split("*")[0] === "MULTIPLE_CHOICE_MULTI_SELECT") {
+        const op: string[] = []
+        if (Array.isArray(subCondition.value)) {
+          subCondition.value?.map((item: string) => op.push(item?.toString()))
+          value = op
+        }
+      } else value = subCondition.value.toString();
 
       return {
-        id : conditionJson.id,
-        returnQuestionId: returnQuestionId,
-        elseQuestionId: elseQuestionId,
-        subConditions : SubConditionsData
-      };
-   
+        id: subCondition.id,
+        conditionType,
+        questionType,
+        operatorType,
+        value,
+        logicalOperator
+      }
+    });
+
+  return {
+    id: conditionJson.id,
+    returnQuestionId: returnQuestionId,
+    elseQuestionId: elseQuestionId,
+    subConditions: SubConditionsData
   };
 
+};
 
-export const useConditionalForm = (condition: IGetCondition  | undefined) => {
+
+export const useConditionalForm = (condition: IGetCondition | undefined) => {
 
   const methods = useForm<TConditionFormData>({
     resolver: zodResolver(ConditionFormSchema),
     defaultValues: {
-      conditions: [!!condition ? transformOutputToInput(condition):createNewCondition()],
+      conditions: [!!condition ? transformOutputToInput(condition) : createNewCondition()],
     },
   })
 
@@ -125,7 +124,7 @@ export const useConditionalForm = (condition: IGetCondition  | undefined) => {
   }
 
   const handleRemoveSubCondition = (conditionIndex: number, subConditionIndex: number) => {
-    const updatedCondition = { ...conditions[conditionIndex] }
+    const updatedCondition = {...conditions[conditionIndex]}
     updatedCondition.subConditions.splice(subConditionIndex, 1)
     updateCondition(conditionIndex, updatedCondition)
   }

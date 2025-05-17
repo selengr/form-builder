@@ -1,9 +1,9 @@
-import { toast } from 'sonner';
-import { useParams } from 'next/navigation';
+import {toast} from 'sonner';
+import {useParams} from 'next/navigation';
 import AxiosApi from '@/services/axios/AxiosApi';
-import { useMutation } from '@tanstack/react-query';
-import { IPostCondition } from '@/types/condition';
-import { queryClient } from '@/lib/react-query.config';
+import {useMutation} from '@tanstack/react-query';
+import {IPostCondition} from '@/types/condition';
+import {queryClient} from '@/lib/react-query.config';
 
 
 enum HttpMethod {
@@ -11,21 +11,21 @@ enum HttpMethod {
   PUT = 'put',
 }
 
-const postCalculation = async (data : IPostCondition[], method: HttpMethod, isEdit : boolean) => {
-    const url = isEdit ? `/condition/${data[0].id}` : `/condition`;
-    const response = await AxiosApi[method](url,data);
-    return response.data;
-  };
+const postCalculation = async (data: IPostCondition[], method: HttpMethod, isEdit: boolean) => {
+  const url = isEdit ? `/condition/${data[0].id}` : `/condition`;
+  const response = await AxiosApi[method](url, data);
+  return response.data;
+};
 
 
-export const usePostCondition = (isEdit:boolean) => {
-  const { id } = useParams();
+export const usePostCondition = (isEdit: boolean) => {
+  const {id} = useParams();
   const method = isEdit ? HttpMethod.PUT : HttpMethod.POST;
 
   const mutation = useMutation({
     mutationKey: ['post-condition'],
-    mutationFn: ({ data }: { data: IPostCondition[] }) =>
-        postCalculation(data, method, isEdit ),
+    mutationFn: ({data}: { data: IPostCondition[] }) =>
+      postCalculation(data, method, isEdit),
 
     onSuccess: (data) => {
       toast.success(`شرط با موفقیت ${isEdit ? "ویرایش" : "ایجاد"} شد`);
@@ -36,7 +36,7 @@ export const usePostCondition = (isEdit:boolean) => {
     onError: () => {
       toast.error("عملیات ناموفق بود مجددا تلاش کنید");
     },
-    
+
   });
 
   return mutation;

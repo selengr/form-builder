@@ -8,11 +8,10 @@ import {fetchUserInfo} from "@/lib/auth";
 
 export interface ILimitation {
   isLimited: boolean;
-  limitationType: "" | "phone" | "email";
+  limitationType: "" | "PHONE_NUMBER" | "email";
 }
 
 export const useParticipateForm = () => {
-
   const [question, setQuestion] = useState<any>(null);
   const [formData, setFormData] = useState<any>("");
   const [isValid, setIsValid] = useState(false);
@@ -20,15 +19,21 @@ export const useParticipateForm = () => {
   const [questionLoading, setQuestionLoading] = useState(false);
   const [takePartId, setTakePartId] = useState<any>(null);
   const [finishPage, setFinishPage] = useState(false);
-  const [limitation, setLimitation] = useState<ILimitation>({isLimited: false, limitationType: ""});
+  const [limitation, setLimitation] = useState<ILimitation>({
+    isLimited: false, limitationType: ""
+  });
 
   const {slug} = useParams<{ slug: string }>();
   const {replace} = useRouter();
 
-  const extractProperty = useCallback((list: any[], key: string) =>
-    list?.find((item) => item.questionPropertyEnum === key)?.value, []);
+  const extractProperty = useCallback((list: any[], key: string) => list?.find((item) => item.questionPropertyEnum === key)?.value, []);
 
   const initializeQuestion = useCallback((q: any) => {
+    if (!q || !q.questionType) {
+      setQuestion(null);
+      return;
+    }
+
     const required = extractProperty(q.questionPropertyList, "REQUIRED") === "true";
     const pattern = extractProperty(q.questionPropertyList, "TEXT_FIELD_PATTERN");
     const minLength = Number(extractProperty(q.questionPropertyList, "MINIMUM_LEN"));
@@ -50,59 +55,61 @@ export const useParticipateForm = () => {
         setFormData("");
     }
 
-    const valid =
-      !required ||
-      (q.questionType === "TEXT_FIELD" &&
-        (pattern === "SHORT_TEXT" || pattern === "LONG_TEXT") &&
-        minLength <= 0);
+    const valid = !required || (q.questionType === "TEXT_FIELD" && (pattern === "SHORT_TEXT" || pattern === "LONG_TEXT") && minLength <= 0);
 
     setIsValid(valid);
+    setQuestion(q);
   }, [extractProperty]);
 
   const fetchInitialData = useCallback(async () => {
     try {
       const res = await AxiosApi.post("/take-part/check-response-limitation-form", {
-        link: slug.startsWith("public-") ? slug : null,
-        id: !slug.startsWith("public-") ? slug : null,
+        link: slug.startsWith("public-") ? slug : null, id: !slug.startsWith("public-") ? slug : null,
       });
-      const { userInfo, isAuthenticated, error } = await fetchUserInfo();
+
+      const {userInfo} = await fetchUserInfo();
+
       if (res?.data?.loggedInStatus === false && res?.data?.responseLimitation) {
         setLimitation({isLimited: true, limitationType: res.data.responseLimitation});
       } else if (res?.data?.responseLimitation) {
-        await checkAnswerBefore(userInfo.user.username);
+        await checkAnswerBefore(userInfo?.user?.username || null);
       } else {
-        await takePart(userInfo.user.username);
+        await takePart(userInfo?.user?.username || null);
       }
     } catch (e) {
-      console.error(e);
+      console.error("Error in fetchInitialData:", e);
+      replace("/error");
     } finally {
       setFirstLoading(false);
     }
   }, [slug]);
 
-  const takePart = async (userName:string) => {
-    const res = await AxiosApi.post("/take-part", {
-      link: slug.startsWith("public-") ? slug : null,
-      formId: !slug.startsWith("public-") ? slug : null,
-      username: userName,
-    });
+  const takePart = async (userName: string | null) => {
+    try {
+      const res = await AxiosApi.post("/take-part", {
+        link: slug.startsWith("public-") ? slug : null, formId: !slug.startsWith("public-") ? slug : null, username: userName,
+      });
 
-    setTakePartId(res.data.takePart);
-    setQuestion(res.data.questionModel);
-    initializeQuestion(res.data.questionModel);
+      setTakePartId(res.data.takePart);
+      initializeQuestion(res.data.questionModel);
+    } catch (e) {
+      console.error("Error in takePart:", e);
+      throw e;
+    }
   };
 
-  const checkAnswerBefore = async (userName:string) => {
+  const checkAnswerBefore = async (userName: string | null) => {
+    try {
+      const res = await AxiosApi.post("/take-part/check-answer-to-form-before", {
+        link: slug.startsWith("public-") ? slug : null, formId: !slug.startsWith("public-") ? slug : null, username: userName,
+      });
 
-    const res = await AxiosApi.post("/take-part/check-answer-to-form-before", {
-      link: slug.startsWith("public-") ? slug : null,
-      formId: !slug.startsWith("public-") ? slug : null,
-      username: userName,
-    });
-
-    setTakePartId(res.data.takePart);
-    setQuestion(res.data.questionModel);
-    initializeQuestion(res.data.questionModel);
+      setTakePartId(res.data.takePart);
+      initializeQuestion(res.data.questionModel);
+    } catch (e) {
+      console.error("Error in checkAnswerBefore:", e);
+      throw e;
+    }
   };
 
   const handleValidationUpdate = (isValid: boolean, value: any) => {
@@ -120,25 +127,24 @@ export const useParticipateForm = () => {
       const spectralType = extractProperty(props, "SPECTRAL_TYPE");
 
       const needsOption = isMultiSelect || spectralType === "DOMAIN";
-      const answerList = needsOption
-        ? formData.map((item: any) => ({optionId: question.questionType === "SPECTRAL" ? null : item, answer: item}))
-        : [{optionId: ["SPECTRAL", "MULTIPLE_CHOICE", "MULTIPLE_CHOICE_IMAGE"].includes(question.questionType) ? formData : null, answer: formData}];
+      const answerList = needsOption ? formData.map((item: any) => ({
+        optionId: question.questionType === "SPECTRAL" ? null : item, answer: item
+      })) : [{
+        optionId: ["SPECTRAL", "MULTIPLE_CHOICE", "MULTIPLE_CHOICE_IMAGE"].includes(question.questionType) ? formData : null, answer: formData
+      }];
 
       const res = await AxiosApi.post("/take-part/insert-answer", {
-        formId: question.formId,
-        takePartId,
-        questionId: question.questionId,
-        answerList,
+        formId: question.formId, takePartId, questionId: question.questionId, answerList,
       });
 
       if (!res.data.questionId) {
         setFinishPage(true);
       } else {
-        setQuestion(res.data);
         initializeQuestion(res.data);
       }
     } catch (e) {
-      console.error(e);
+      console.error("Error in handleNext:", e);
+      toast.error("خطا در ارسال پاسخ");
     } finally {
       setQuestionLoading(false);
     }
@@ -152,7 +158,6 @@ export const useParticipateForm = () => {
       const q = res.data.questionModel;
       const a = res.data.userAnswerModel?.answersModel ?? [];
 
-      setQuestion(q);
       initializeQuestion(q);
 
       const isMultiSelect = extractProperty(q.questionPropertyList, "MULTI_SELECT") === "true";
@@ -168,20 +173,19 @@ export const useParticipateForm = () => {
 
       setIsValid(true);
     } catch (e) {
-      console.error(e);
+      console.error("Error in handlePrev:", e);
+      toast.error("خطا در بازگشت به سوال قبلی");
     } finally {
       setQuestionLoading(false);
     }
   };
 
-  const FormComponent = useMemo(() => FormElements[question?.questionType as ElementsType]?.formComponent, [question]);
-  const ValidatedInput = useMemo(() => withValidation(FormComponent), [FormComponent]);
+  const FormComponent = useMemo(() => question?.questionType ? FormElements[question.questionType as ElementsType]?.formComponent : null, [question]);
+
+  const ValidatedInput = useMemo(() => FormComponent ? withValidation(FormComponent) : () => null, [FormComponent]);
 
   useEffect(() => {
-    (async () => {
-      await fetchInitialData();
-    })();
-
+    fetchInitialData();
   }, [fetchInitialData]);
 
   return {

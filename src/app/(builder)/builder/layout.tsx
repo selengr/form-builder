@@ -1,8 +1,8 @@
-import { ReactNode } from "react";
+import {ReactNode} from "react";
 
 export default function BuilderPageLayout({
-  children,
-}: {
+                                            children,
+                                          }: {
   children: ReactNode;
 }) {
   return <>{children}</>;

@@ -8,7 +8,7 @@ import { Dispatch, SetStateAction } from "react";
 import { useFormLimitation } from "@/hooks/useFormLimitation";
 
 interface Props {
-    type: "" | "PHONE_NUMBER" | "email";
+    type: "" | "PHONE_NUMBER" | "EMAIL";
     setLimitation: Dispatch<SetStateAction<ILimitation>>;
     setQuestion: Dispatch<any>;
     addQuestion: (data: any) => void;

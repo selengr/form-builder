@@ -8,7 +8,7 @@ import {fetchUserInfo} from "@/lib/auth";
 
 export interface ILimitation {
   isLimited: boolean;
-  limitationType: "" | "PHONE_NUMBER" | "email";
+  limitationType: "" | "PHONE_NUMBER" | "EMAIL";
 }
 
 export const useParticipateForm = () => {

@@ -14,7 +14,8 @@ export default function ActionButtons({
           variant="contained"
           loading={loadingPrev}
           onClick={prevAction}
-          disabled={disablePrev}
+          // disabled={disablePrev} //todo دیزیبل موقتی تا زمانی که بیزینس اوکی بشه
+          disabled={true}
           sx={{
             width: 120, height: 52, borderRadius: 0, bgcolor: "#1758BA", boxShadow: "none", "&:hover": {bgcolor: "#174AA0"},
           }}
@@ -23,7 +24,6 @@ export default function ActionButtons({
         </Button>
 
         <div className="flex-1 flex items-center justify-center px-4">
-          {/* می‌تونی اینجا چیزی مثل شماره سوال بذاری یا خالی بذاری */}
         </div>
 
         <Button

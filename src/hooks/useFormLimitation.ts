@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import { ILimitation } from "@/hooks/useParticipateForm";
 
 export const useFormLimitation = (
-    type: "" | "PHONE_NUMBER" | "email",
+    type: "" | "PHONE_NUMBER" | "EMAIL",
     setLimitation: (limitation: ILimitation) => void,
     setQuestion: (data: any) => void,
     addQuestion: (data: any) => void

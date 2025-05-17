@@ -130,7 +130,7 @@ export const useParticipateForm = () => {
       const answerList = needsOption ? formData.map((item: any) => ({
         optionId: question.questionType === "SPECTRAL" ? null : item, answer: item
       })) : [{
-        optionId: ["SPECTRAL", "MULTIPLE_CHOICE", "MULTIPLE_CHOICE_IMAGE"].includes(question.questionType) ? formData : null, answer: formData
+        optionId: ["MULTIPLE_CHOICE", "MULTIPLE_CHOICE_IMAGE"].includes(question.questionType) ? formData : null, answer: formData
       }];
 
       const res = await AxiosApi.post("/take-part/insert-answer", {

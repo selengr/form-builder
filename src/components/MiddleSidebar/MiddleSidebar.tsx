@@ -18,10 +18,10 @@ import { toast } from "sonner";
 
 const staticLinks = [
   { id: 2, title: "فرم‌های عمومی", icon: MusicPlaylist, link: "/public-form" },
-  { id: 5, title: "آموزش", icon: ChartSquare, link: "" },
-  { id: 6, title: "ارتباط با ما", icon: GroupSquare, link: "" },
-  { id: 8, title: "سوالات پرتکرار", icon: ShoppingCart, link: "" },
-  { id: 9, title: "قوانین و مقررات", icon: Wallet, link: "" },
+  { id: 5, title: "آموزش", icon: ChartSquare, link: "/underconstruction" },
+  { id: 6, title: "ارتباط با ما", icon: GroupSquare, link: "/underconstruction" },
+  { id: 8, title: "سوالات پرتکرار", icon: ShoppingCart, link: "/underconstruction" },
+  { id: 9, title: "قوانین و مقررات", icon: Wallet, link: "/underconstruction" },
 ];
 
 export default function MiddleSidebar() {

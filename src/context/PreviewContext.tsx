@@ -92,7 +92,7 @@ export function PreviewProvider({ children }: { children: ReactNode }) {
     async function fetchData() {
       try {
         const { data }: { data: formResDataTypes } = await AxiosApi.get(
-          `/form/${id}`
+          `/user/form/${id}`
         );
 
         const allQuestions = data?.questionGroups

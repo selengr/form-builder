@@ -189,7 +189,6 @@ export default function GeneralSettings({
             <RHFTextField
               type="number"
               name="capacityPublicLink"
-              disabled={true}
               sx={{
                 "& .MuiInputBase-root": {
                   borderRadius: "10px",

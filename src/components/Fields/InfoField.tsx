@@ -21,8 +21,8 @@ import useSelectedElement from "@/hooks/useSelectedElement";
 import useActionDesigner from "@/hooks/useActionDesigner";
 
 import InformationIcon from "@/../public/images/home-page/information.svg";
-import { ElementsType, FormElement, FormElementInstance } from "../../types/FormElements";
-import { IFormElementConstructor, IQPLInfoField } from "../../types/bulider";
+import { ElementsType, FormElement, FormElementInstance } from "@/types/FormElements";
+import { IFormElementConstructor, IQPLInfoField } from "@/types/bulider";
 
 const questionType: ElementsType = "INFO_FIELD";
 
@@ -46,6 +46,7 @@ const propertiesSchema = z.object({
 type CustomInstance = FormElementInstance & { questionPropertyList: typeof questionPropertyList };
 type PropertiesFormValues = z.infer<typeof propertiesSchema>;
 
+// eslint-disable-next-line react/display-name
 const DesignerComponent = React.memo(({ elementInstance }: { elementInstance: FormElementInstance }) => {
   const element = elementInstance as CustomInstance;
 

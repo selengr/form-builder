@@ -50,7 +50,7 @@ interface GeneralSettingsProps {
   handleOpen: () => void;
   formId: string | number;
   formData: {
-    id: string;
+    publicLink: string;
   };
 }
 
@@ -78,7 +78,7 @@ export default function GeneralSettings({
   formId,
   formData,
 }: GeneralSettingsProps) {
-  const FINAL_LINK = `${DEFAULT_LINK}/${formData.id}`;
+  const FINAL_LINK = `${DEFAULT_LINK}/${formData.publicLink}`;
 
   const methods = useForm<PropertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),

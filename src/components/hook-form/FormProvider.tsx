@@ -9,14 +9,17 @@ type Props = {
 export default function FormProvider({ children, onSubmit, methods }: Props) {
   return (
     <Form {...methods}>
-      <form
-        onSubmit={onSubmit}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-          }
-        }}
-      >
+        <form
+            onSubmit={onSubmit}
+            onKeyDown={(e) => {
+                const target = e.target as HTMLElement;
+                const isMultiline = target.tagName === "TEXTAREA";
+
+                if (e.key === "Enter" && !isMultiline) {
+                    e.preventDefault();
+                }
+            }}
+        >
         {children}
       </form>
     </Form>

@@ -68,6 +68,11 @@ export default function ShoppingCartPage() {
     )
   }
 
+  const handlePayment = () => {
+    if (purchaseOrder?.purchaseOrderId) {
+      push(`/purchase-order/${JSON.stringify(purchaseOrder.purchaseOrderId)}/gateway`);
+    }
+  };
 
   return (
     <div
@@ -164,12 +169,7 @@ export default function ShoppingCartPage() {
                 backgroundColor: "#1758BA",
               },
             }}
-            onClick={()=>{
-              if(purchaseOrder?.purchaseOrderId){
-                const id : string = JSON.stringify(purchaseOrder.purchaseOrderId)
-                push(`/purchase-order/${id}/gateway`)
-              }
-            }}
+            onClick={handlePayment}
           >
             <span className="text-[14px] font-[500px]">پرداخت صورت حساب</span>
           </Button>

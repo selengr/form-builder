@@ -102,39 +102,49 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   const { handleSubmit, reset, formState: { isSubmitting } } = methods;
 
   const onSubmit = async (values: PropertiesFormValues) => {
-    const { title, MESSAGE, THE_END } = values;
     const selected = elements.find(el => el.questionId === element.questionId);
 
     const props = [
-      { questionPropertyEnum: "THE_END", value: THE_END.value ? "true" : "false", id: selected ? THE_END.id : null },
-      { questionPropertyEnum: "MESSAGE", value: MESSAGE.value, id: selected ? MESSAGE.id : null },
+      {
+        questionPropertyEnum: "THE_END",
+        value: values.THE_END?.value ? "true" : "false",
+        id: selected ? values.THE_END.id : null,
+      },
+      {
+        questionPropertyEnum: "MESSAGE",
+        value: values.MESSAGE?.value ?? "",
+        id: selected ? values.MESSAGE.id : null,
+      },
     ];
 
     const groupId = selectedElement?.fieldElement?.questionGroupId;
     const groupElements = elements.filter(el => el.questionGroupId === groupId);
 
     const prevGroupIdx = Math.max(
-        questionGroups.findIndex(q => q === groupId) - 1,
-        0
+      questionGroups.findIndex(q => q === groupId) - 1,
+      0
     );
 
     const insertIdx = elements.findLastIndex(el => el.questionGroupId === questionGroups[prevGroupIdx]) + 1;
     const lastIdxInGroup = elements.findLastIndex(el => el.questionGroupId === groupId);
 
     const newField = {
-      ...element,
-      title,
+      questionId: selected ? element.questionId : undefined,
+      questionType: element.questionType,
+      formId: element.formId,
+      questionGroupId: element.questionGroupId,
       position: selectedElement?.position?.apiPosition ?? groupElements.length,
+      title: values.title,
       questionPropertyList: props,
     };
 
     try {
       if (!selected) {
-        const { data } = await AxiosApi.post("/question", { ...newField, questionId: undefined });
+        const { data } = await AxiosApi.post("/question", newField);
         addElement(selectedElement?.position?.realPosition ?? insertIdx, data);
       } else {
-        const { data } = await AxiosApi.put(`/question/${newField.questionId}`, newField);
-        updateElement(newField.questionId, data);
+        const { data } = await AxiosApi.put(`/question/${element.questionId}`, newField);
+        updateElement(element.questionId, data);
       }
 
       setOpenDialog(false);

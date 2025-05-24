@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {toast} from "sonner";
 import MenuSidebar from "@/components/SideBar/MenuSidebar";
-import MiddleSidebar from "../MiddleSidebar/MiddleSidebar";
+import MiddleSidebar from "../MiddleSidebar";
 import Avatar from "@/components/Avatar/Avatar";
 import {useUserInfo} from "@/hooks/useUserInfo";
 import MresalatLogo from "@/../public/images/home-page/mresalat_logo.svg";

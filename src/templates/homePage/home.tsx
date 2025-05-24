@@ -25,11 +25,13 @@ export default function HomePage() {
           width={120}
           height={40}
           priority
+          unselectable={"on"}
+          draggable={false}
         />
       </div>
 
       <div className="flex flex-col lg:flex-row justify-center items-center md:pt-20">
-        <section className="px-4 text-center lg:text-right relative">
+        <section className="px-4 text-center lg:text-right relative z-50">
           <div
             className="absolute -top-12 -right-4 w-52 h-64 bg-[#0066FF] rounded-full opacity-[8%] blur-xl"
             aria-hidden="true"
@@ -47,9 +49,7 @@ export default function HomePage() {
               چه کاری انجام می‌دهیم!
             </h2>
           </div>
-          <p
-            className="text-[14px] text-[#4A4A4A] mx-auto lg:mx-0 text-justify leading-relaxed mb-4 px-[20px] lg:px-0  xs:max-w-5xl lg:max-w-72"
-          >
+          <p className="text-[14px] text-[#4A4A4A] mx-auto lg:mx-0 text-justify leading-relaxed mb-4 px-[20px] lg:px-0  xs:max-w-5xl lg:max-w-72">
             سایا سکویی برای ساخت، اجرا و تحلیل آزمون‌های روان‌شناختی است. این
             سکو با رابط کاربری ساده و یکپارچه، امکان ایجاد فرم‌های برخط و
             گزارش‌های شخصی‌سازی شده را فراهم می‌کند.
@@ -58,15 +58,18 @@ export default function HomePage() {
 
         <section
           className="relative w-full mt-10 lg:mt-0 px-4 lg:px-0 lg:w-[50%] h-full min-h-[250px] max-w-[500px] flex justify-center items-center">
-          <div className="absolute top-0 left-0 w-24 h-24 bg-blue-600 rounded-full opacity-20 blur-lg" aria-hidden="true"/>
-          <div className="absolute bottom-0 right-0 w-16 h-16 bg-purple-600 rounded-full opacity-20 blur-lg" aria-hidden="true"/>
-          <div className="absolute top-1/2 right-1/4 w-12 h-12 bg-pink-500 rounded-full opacity-20 blur-lg" aria-hidden="true"/>
+          <div className="absolute top-0 left-0 w-24 h-24 bg-blue-600 rounded-full opacity-20 blur-lg" aria-hidden="true" />
+          <div className="absolute bottom-0 right-0 w-16 h-16 bg-purple-600 rounded-full opacity-20 blur-lg" aria-hidden="true" />
+          <div className="absolute top-1/2 right-1/4 w-12 h-12 bg-pink-500 rounded-full opacity-20 blur-lg" aria-hidden="true" />
 
           <Image
             src={CircleBg}
             alt="سایا لوگو"
             width={100}
             height={100}
+            priority
+            unselectable={"on"}
+            draggable={false}
             className="w-full h-full absolute lg:-top-6 -left-[35px] xs:-left-[30%] lg:-left-36"
           />
           <Image
@@ -74,6 +77,9 @@ export default function HomePage() {
             alt="object"
             width={50}
             height={28}
+            priority
+            unselectable={"on"}
+            draggable={false}
             className="w-[60%] h-[60%] absolute -top-7 left-32"
           />
           <Image
@@ -81,6 +87,9 @@ export default function HomePage() {
             alt="object"
             width={50}
             height={28}
+            priority
+            unselectable={"on"}
+            draggable={false}
             className="w-[40%] h-[40%] lg:w-[50%] lg:h-[50%] absolute -top-[65px] -left-[35px] xs:-left-[15%] lg:-left-[155px]"
           />
           <Image
@@ -88,6 +97,9 @@ export default function HomePage() {
             alt="object"
             width={50}
             height={28}
+            priority
+            unselectable={"on"}
+            draggable={false}
             className="w-[60%] h-[60%] absolute -bottom-[65px] -left-[35px] xs:-left-[15%] lg:-left-[105px]"
           />
           <Image
@@ -95,11 +107,14 @@ export default function HomePage() {
             alt="object"
             width={50}
             height={28}
+            priority
+            unselectable={"on"}
+            draggable={false}
             className="w-[60%] h-[60%] absolute -bottom-[100px] -right-[95px] lg:-right-[135px]"
           />
           <div className="flex flex-row gap-4 xs:gap-6 md:gap-12 justify-center items-center w-full h-full p-2 xs:p-6 bg-[#FAFAFA] rounded-[60px]">
-            <FormBuilderCard/>
-            <PublicFormsCard/>
+            <FormBuilderCard />
+            <PublicFormsCard />
           </div>
         </section>
       </div>
@@ -111,6 +126,9 @@ export default function HomePage() {
             alt="سایا لوگو"
             width={120}
             height={40}
+            priority
+            unselectable={"on"}
+            draggable={false}
             className="hidden md:block"
           />
           <span className="lg:text-lg md:text-md sm:text-sm font-semibold font-d8 ss02">
@@ -123,6 +141,9 @@ export default function HomePage() {
           alt="picture"
           width={480}
           height={480}
+          priority
+          unselectable={"on"}
+          draggable={false}
           className="w-full h-full lg:h-[550px] max-h-[550px] items-center justify-center flex flex-col"
         />
       </div>
@@ -130,9 +151,8 @@ export default function HomePage() {
   );
 }
 
-  const FormBuilderCard = () => {
-
-    return (
+const FormBuilderCard = () => {
+  return (
     <div
       className="bg-[linear-gradient(233.47deg,_#2CDFC9_-51.3%,_#1758BA_86.56%)] text-white relative rounded-[45px] h-[190px] shadow-xl pt-8 pr-4 w-full xs:w-[170px]">
       <h3 className="text-md font-bold mb-4">فرم ساز</h3>
@@ -141,7 +161,7 @@ export default function HomePage() {
         <span className="text-white text-[10px]">ورود به فرم ساز</span>
         <Link href="/builder"
               className="bg-[#fff] z-50 rounded-[8px] md:rounded-[12px] w-[26px] md:w-[30px] h-[26px] md:h-[30px] flex items-center justify-center mr-2">
-          <ArrowLeft/>
+          <ArrowLeft />
         </Link>
       </Button>
     </div>

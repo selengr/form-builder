@@ -338,8 +338,10 @@ function FormComponent({
                     }}
                   >
                     <Image
-                      width={64}
-                      height={64}
+                      width={128}
+                      height={128}
+                      draggable={false}
+                      loading={"eager"}
                       alt=""
                       src={
                         process.env.NEXT_PUBLIC_BASE_URL +
@@ -393,8 +395,10 @@ function FormComponent({
                     }}
                   >
                     <Image
-                      width={64}
-                      height={64}
+                      width={128}
+                      height={128}
+                      draggable={false}
+                      loading={"eager"}
                       alt=""
                       src={
                         process.env.NEXT_PUBLIC_BASE_URL +
@@ -711,8 +715,10 @@ function PropertiesComponent({
               >
                 {field?.link?.includes("/download/") ? (
                   <Image
-                    width={64}
-                    height={64}
+                    width={128}
+                    height={128}
+                    draggable={false}
+                    loading={"eager"}
                     alt=""
                     style={{
                       width: "100px",

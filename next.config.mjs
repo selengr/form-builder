@@ -15,7 +15,7 @@ const nextConfig = {
     images: {
         remotePatterns: [
             {
-                protocol: "http",
+                protocol: "https",
                 hostname: "newpl1api.qhami.com",
                 port: "",
                 pathname: "/filemanager/**",

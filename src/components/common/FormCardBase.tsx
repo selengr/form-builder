@@ -1,4 +1,3 @@
-// components/common/FormCardBase.tsx
 "use client";
 import { useRouter } from "next/navigation";
 import { formStatusPersian, formTypePersian } from "@/constants/formDictionaries";

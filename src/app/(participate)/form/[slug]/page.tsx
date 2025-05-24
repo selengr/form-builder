@@ -73,7 +73,7 @@ export default function ParticipateFormPage() {
         );
     }
 
-    if (!finishPage) {
+    if (finishPage) {
         return (
             <div className="w-full flex flex-col p-4 overflow-y-hidden">
                 <div className="flex h-[calc(100vh-1rem)] flex-col bg-white rounded-xl overflow-y-hidden">

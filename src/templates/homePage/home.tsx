@@ -20,7 +20,7 @@ export default function HomePage() {
     >
       <div className="mx-auto px-4 pt-6 flex justify-center md:hidden">
         <Image
-          src="/images/logo/logo2.svg"
+          src={Logo}
           alt="سایا لوگو"
           width={120}
           height={40}
@@ -63,35 +63,35 @@ export default function HomePage() {
           <div className="absolute top-1/2 right-1/4 w-12 h-12 bg-pink-500 rounded-full opacity-20 blur-lg" aria-hidden="true"/>
 
           <Image
-            src="/images/home-page/circle-bg.svg"
+            src={CircleBg}
             alt="سایا لوگو"
             width={100}
             height={100}
             className="w-full h-full absolute lg:-top-6 -left-[35px] xs:-left-[30%] lg:-left-36"
           />
           <Image
-            src="/images/home-page/Oval2.svg"
+            src={Oval2}
             alt="object"
             width={50}
             height={28}
             className="w-[60%] h-[60%] absolute -top-7 left-32"
           />
           <Image
-            src="/images/home-page/Oval1.svg"
+            src={Oval1}
             alt="object"
             width={50}
             height={28}
             className="w-[40%] h-[40%] lg:w-[50%] lg:h-[50%] absolute -top-[65px] -left-[35px] xs:-left-[15%] lg:-left-[155px]"
           />
           <Image
-            src="/images/home-page/Oval3.svg"
+            src={Oval3}
             alt="object"
             width={50}
             height={28}
             className="w-[60%] h-[60%] absolute -bottom-[65px] -left-[35px] xs:-left-[15%] lg:-left-[105px]"
           />
           <Image
-            src="/images/home-page/Oval4.svg"
+            src={Oval4}
             alt="object"
             width={50}
             height={28}
@@ -107,7 +107,7 @@ export default function HomePage() {
       <div className="flex flex-col items-center justify-center pl-4 py-12 text-center relative -mt-28">
         <div className="absolute flex flex-col items-center justify-center mr-14">
           <Image
-            src="/images/logo/logo2.svg"
+            src={Logo}
             alt="سایا لوگو"
             width={120}
             height={40}
@@ -119,7 +119,7 @@ export default function HomePage() {
         </div>
 
         <Image
-          src="/images/home-page/banner-bg2.svg"
+          src={BannerBg2}
           alt="picture"
           width={480}
           height={480}

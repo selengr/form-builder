@@ -14,11 +14,12 @@ export interface ILimitation {
 export const useParticipateForm = () => {
   const [question, setQuestion] = useState<any>(null);
   const [formData, setFormData] = useState<any>("");
-  const [isValid, setIsValid] = useState(false);
-  const [firstLoading, setFirstLoading] = useState(true);
-  const [questionLoading, setQuestionLoading] = useState(false);
+  const [isValid, setIsValid] = useState<boolean>(false);
+  const [firstLoading, setFirstLoading] = useState<boolean>(true);
+  const [questionLoading, setQuestionLoading] = useState<boolean>(false);
   const [takePartId, setTakePartId] = useState<any>(null);
-  const [finishPage, setFinishPage] = useState(false);
+  const [finishPage, setFinishPage] = useState<boolean>(false);
+  const [formName, setFormName] = useState<string>("");
   const [limitation, setLimitation] = useState<ILimitation>({
     isLimited: false, limitationType: ""
   });
@@ -89,7 +90,7 @@ export const useParticipateForm = () => {
       const res = await AxiosApi.post("/take-part", {
         link: slug.startsWith("public-") ? slug : null, formId: !slug.startsWith("public-") ? slug : null, username: userName,
       });
-
+      setFormName(res.data.formName)
       setTakePartId(res.data.takePart);
       initializeQuestion(res.data.questionModel);
     } catch (e) {
@@ -195,6 +196,7 @@ export const useParticipateForm = () => {
     limitation,
     question,
     formData,
+    formName,
     ValidatedInput,
     handleValidationUpdate,
     handleNext,

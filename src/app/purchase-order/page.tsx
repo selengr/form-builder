@@ -1,7 +1,10 @@
 "use client";
+import { toast } from "sonner";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+// services
+import AxiosApi from "@/services/axios/AxiosApi";
 // components
 import { CircleLoading } from "@/components";
 // templates
@@ -11,6 +14,9 @@ import { useGetPurchaseOrder } from "./_hook/useGetPurchaseOrder";
 
 export default function ShoppingCartPage() {
   const { push } = useRouter();
+  const [open, setOpen ] = useState(false)
+  const [loading, setLoading ] = useState(false)
+
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const { data: purchaseOrder, isFetching, error } = useGetPurchaseOrder();
   const { purchaseOrderDetailModels } = purchaseOrder || {};
@@ -21,23 +27,32 @@ export default function ShoppingCartPage() {
     }
   }, [purchaseOrder]);
 
-  const handleRemoveDetail = (index: number) => {
-    if (!purchaseOrder) return;
-
-    const updatedPurchaseOrder = { ...purchaseOrder };
-    const updatedDetails = [...updatedPurchaseOrder.purchaseOrderDetailModels];
-    updatedDetails.splice(index, 1);
-
-    if (selectedIndex >= updatedDetails.length) {
-      setSelectedIndex(Math.max(0, updatedDetails.length - 1));
-    } else if (index === selectedIndex && updatedDetails.length > 0) {
-      setSelectedIndex(Math.min(selectedIndex, updatedDetails.length - 1));
+  const handleRemoveDetail = async (id: number) => {
+    try {
+      setLoading(true);
+      const res: any = await AxiosApi.delete(
+        `/purchase-order/purchase-order-detail/${id}`
+      );
+      if (res.data) {
+        toast.success("با موفقیت حذف شد");
+      } else {
+        toast.error("ناموفق بود مجددا امتحان فرمایید");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false); 
     }
+
   };
 
   const handleSelectItem = (index: number) => {
     setSelectedIndex(index);
   };
+
+  const toggleConfirm = () => {
+    setOpen((prev)=> !prev)
+  }
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("fa-IR").format(amount / 1000) + " هزار تومان";
@@ -47,11 +62,6 @@ export default function ShoppingCartPage() {
   const tax = purchaseOrder?.tax || 0;
   const total = purchaseOrder?.payAble ?? subtotal + tax;
 
-  // if (isFetching) {
-  //   return (
-  //     <BuilderLoading text="در حال بارگذاری..."/>
-  //   );
-  // }
 
   if (error) {
     return (
@@ -94,11 +104,14 @@ export default function ShoppingCartPage() {
               {purchaseOrderDetailModels?.map((detail, index) => (
                 <CartItem
                   key={index}
-                  detail={detail}
+                  open={open}
                   index={index}
+                  detail={detail}
+                  loading={loading}
+                  toggleConfirm={toggleConfirm}
                   isSelected={index === selectedIndex}
                   onSelect={() => handleSelectItem(index)}
-                  onRemove={() => handleRemoveDetail(index)}
+                  onRemove={handleRemoveDetail}
                 />
               ))}
             </div>

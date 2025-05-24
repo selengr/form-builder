@@ -1,11 +1,17 @@
 "use client";
 import Image from "next/image";
-import { IconButton } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
+// types
+import { ICartItemProps } from "@/types/shoppingCart";
+// components
+import ConfirmDialog from "@/components/confirm-dialog";
 // public
 import TrashIcon from "@/../public/images/home-page/trash.svg";
-import { ICartItemProps } from "@/types/shoppingCart";
 
-function CartItem({ detail, index, isSelected, onSelect, onRemove }: ICartItemProps) {
+
+function CartItem({ detail, index, isSelected, onSelect, onRemove, toggleConfirm, loading, open }: ICartItemProps) {
+
+
   return (
     <div className={`flex items-start justify-between p-4 border rounded-2xl ${
         isSelected ? "border border-[#1758BA]" : "border-[#DDE1E6]"
@@ -27,7 +33,7 @@ function CartItem({ detail, index, isSelected, onSelect, onRemove }: ICartItemPr
       <IconButton
         onClick={(e) => {
           e.stopPropagation()
-          onRemove()
+          toggleConfirm()
         }}
         sx={{
           width: "52px",
@@ -36,6 +42,42 @@ function CartItem({ detail, index, isSelected, onSelect, onRemove }: ICartItemPr
       >
         <Image src={TrashIcon} alt="delete" width={24} height={24} />
       </IconButton>
+
+
+        <ConfirmDialog
+          content="آیا از عملیات حذف اطمینان دارید؟"
+          open={open}
+          title="حذف"
+          loading={loading}
+          onClose={toggleConfirm}
+          cancelText="انصراف"
+          action={
+            <Button
+              type="submit"
+              fullWidth
+              disableRipple
+              variant="contained"
+              loading={loading}
+              disabled={loading}
+              sx={{
+                height: "50px",
+                fontWeight: "400",
+                fontSize: "15px",
+                borderRadius: "10px",
+                borderColor: "#1758BA",
+                boxShadow: "none",
+                "&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active": {
+                  bgcolor: "#1758BA",
+                  boxShadow: "none",
+                },
+              }}
+              onClick={()=>onRemove(detail.purchaseOrderDetailId)}
+            >
+              تایید
+            </Button>
+          }
+        />
+      
     </div>
   );
 }

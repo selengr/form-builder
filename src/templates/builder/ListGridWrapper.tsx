@@ -1,24 +1,19 @@
 "use client";
 
-import React, {useState} from "react";
+import React, { useState, useCallback } from "react";
 import ListGrid from "@/components/ListGrid/ListGrid";
 import ListCard from "@/components/ListGrid/ListCard";
-import {Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup,} from "@mui/material";
-import {usePathname, useRouter, useSearchParams} from "next/navigation";
-import Image from "next/image";
-import FilterIcon from "@/../public/images/home-page/filter-icon.svg";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import FormFilter from "./FormFilter";
 
 export default function ListGridWrapper() {
   const [refreshGrid, setRefreshGrid] = useState(false);
+  const [formType, setFormType] = useState({ type: "ALL", status: "ALL" });
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const {push} = useRouter();
-  const [formType, setFormType] = useState<any>({
-    type: "ALL",
-    status: "ALL",
-  });
-  const filterBoxList: any = [];
-  const searchBoxList: any = [
+  const { push } = useRouter();
+
+  const searchBoxList = [
     {
       fieldName: "formSetting.name",
       fieldOperation: "MATCH",
@@ -27,221 +22,53 @@ export default function ListGridWrapper() {
     },
   ];
 
-  const FilterSidebar = () => {
-    return (
-      <div className="flex h-[calc(100vh-50px)] w-full flex-col">
-        {/* هدر فیلتر */}
-        <div className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4">
-          <div className="flex items-center w-full justify-center gap-2">
-            <Image src={FilterIcon} width={30} height={30} alt="filter"/>
-            <p className="text-[16px] text-center font-bold text-[#161616]">
-              فیلتر
-            </p>
-          </div>
-        </div>
+  const handleTypeChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setFormType((prev) => ({ ...prev, type: event.target.value }));
+    },
+    []
+  );
 
-        {/* محتوای فیلترها */}
-        <div className="flex-1 overflow-y-auto pb-4">
-          <div className="flex flex-col gap-4 w-full">
-            <div className="flex flex-col gap-4">
-              {/* بخش نوع فیلتر */}
-              <div className="w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3">
-                <FormControl
-                  sx={{
-                    "& .MuiTypography-root": {
-                      fontSize: "14px",
-                      color: "#393939",
-                      fontWeight: 400,
-                    },
-                  }}
-                >
-                  <FormLabel
-                    sx={{
-                      fontSize: "15px",
-                      color: "#161616",
-                      fontWeight: 700,
-                      mb: "8px",
-                      "&.Mui-focused": {
-                        color: "#161616",
-                      },
-                    }}
-                    id="demo-controlled-radio-buttons-group"
-                  >
-                    بر اساس نوع
-                  </FormLabel>
-                  <RadioGroup
-                    aria-labelledby="demo-controlled-radio-buttons-group"
-                    name="controlled-radio-buttons-group"
-                    value={formType.type}
-                    onChange={handleTypeChange}
-                  >
-                    <FormControlLabel
-                      value="ALL"
-                      control={<Radio/>}
-                      label="همه"
-                    />
-                    <FormControlLabel
-                      value="COMPETITION"
-                      control={<Radio/>}
-                      label="مسابقه"
-                    />
-                    <FormControlLabel
-                      value="QUESTION"
-                      control={<Radio/>}
-                      label="پرسشنامه"
-                    />
-                    <FormControlLabel
-                      value="SURVEY"
-                      control={<Radio/>}
-                      label="نظرسنجی"
-                    />
-                    <FormControlLabel
-                      value="TEST"
-                      control={<Radio/>}
-                      label="آزمون"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </div>
+  const handleStatusChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setFormType((prev) => ({ ...prev, status: event.target.value }));
+    },
+    []
+  );
 
-              {/* بخش دسترسی فیلتر */}
-              <div className="w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3">
-                <FormControl
-                  sx={{
-                    "& .MuiTypography-root": {
-                      fontSize: "14px",
-                      color: "#393939",
-                      fontWeight: 400,
-                    },
-                  }}
-                >
-                  <FormLabel
-                    sx={{
-                      fontSize: "15px",
-                      color: "#161616",
-                      fontWeight: 700,
-                      mb: "8px",
-                      "&.Mui-focused": {
-                        color: "#161616",
-                      },
-                    }}
-                    id="demo-controlled-radio-buttons-group"
-                  >
-                    بر اساس دسترسی
-                  </FormLabel>
-                  <RadioGroup
-                    aria-labelledby="demo-controlled-radio-buttons-group"
-                    name="controlled-radio-buttons-group"
-                    value={formType.status}
-                    onChange={handleStatusChange}
-                  >
-                    <FormControlLabel
-                      value="ALL"
-                      control={<Radio/>}
-                      label="همه"
-                    />
-                    <FormControlLabel
-                      value="PUBLIC"
-                      control={<Radio/>}
-                      label="عمومی"
-                    />
-                    <FormControlLabel
-                      value="PRIVATE"
-                      control={<Radio/>}
-                      label="خصوصی"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* دکمه‌های ثابت در پایین */}
-        <div className="sticky bottom-0 bg-white pt-4 pb-2">
-          <div className="flex gap-4 items-center justify-between w-full">
-            <Button
-              sx={{
-                height: "52px",
-                bgcolor: "#1758BA",
-                boxShadow: "none",
-                borderRadius: "8px",
-                color: "white",
-                fontSize: "14px",
-                fontWeight: 700,
-                "&.MuiButtonBase-root:hover": {
-                  bgcolor: "#1758BA",
-                  boxShadow: "none",
-                },
-              }}
-              fullWidth
-              variant="contained"
-              onClick={() => {
-                const params = new URLSearchParams(searchParams);
-                if (params.size) {
-                  params.delete("query");
-                }
-                push(`${pathname}?${params.toString()}`);
-                setRefreshGrid((prev) => !prev);
-              }}
-            >
-              اعمال فیلتر
-            </Button>
-            <Button
-              sx={{
-                height: "52px",
-                bgcolor: "white",
-                border: "1px solid #1758BA",
-                boxShadow: "none",
-                borderRadius: "8px",
-                color: "#1758BA",
-                fontSize: "14px",
-                fontWeight: 700,
-                "&.MuiButtonBase-root:hover": {
-                  bgcolor: "transparent",
-                  boxShadow: "none",
-                },
-              }}
-              fullWidth
-              variant="outlined"
-              onClick={() => {
-                const params = new URLSearchParams(searchParams);
-                if (params.size) {
-                  params.delete("query");
-                }
-                push(`${pathname}?${params.toString()}`);
-                setFormType({type: "ALL", status: "ALL"});
-                setRefreshGrid((prev) => !prev);
-              }}
-            >
-              حذف فیلتر
-            </Button>
-          </div>
-        </div>
-      </div>
-    )
-  }
-  const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormType((prev: any) => {
-      return {...prev, type: (event.target as HTMLInputElement).value};
-    });
+  const applyFilter = () => {
+    const params = new URLSearchParams(searchParams);
+    if (params.size) params.delete("query");
+    push(`${pathname}?${params.toString()}`);
+    setRefreshGrid((prev) => !prev);
   };
 
-  const handleStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormType((prev: any) => {
-      return {...prev, status: (event.target as HTMLInputElement).value};
-    });
+  const clearFilter = () => {
+    const params = new URLSearchParams(searchParams);
+    if (params.size) params.delete("query");
+    push(`${pathname}?${params.toString()}`);
+    setFormType({ type: "ALL", status: "ALL" });
+    setRefreshGrid((prev) => !prev);
   };
-
 
   return (
     <ListGrid
       title="فرم‌های من"
       showCreateButton
+      // @ts-ignore
       searchBoxList={searchBoxList}
-      filterBoxList={filterBoxList}
+      filterBoxList={[]}
       url="/form/main-list/"
-      filterComponent={<FilterSidebar/>}
+      filterComponent={
+        <FormFilter
+          formType={formType}
+          // @ts-ignore
+          onTypeChange={handleTypeChange}
+          onStatusChange={handleStatusChange}
+          onApply={applyFilter}
+          onClear={clearFilter}
+        />
+      }
       CartComponent={(item: any) => (
         <ListCard setRefreshGrid={setRefreshGrid} {...item} />
       )}

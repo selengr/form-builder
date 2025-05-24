@@ -34,6 +34,7 @@ const STATIC_LINKS: StaticLink[] = [
 
 export default function DesktopSidebar() {
   const { userInfo } = useUserInfo();
+  const [loading, setLoading] = useState(true)
   const [menu, setMenu] = useState<IMenuResponseData | null>(null);
 
   const menuLinks = useMemo(() => {
@@ -43,6 +44,7 @@ export default function DesktopSidebar() {
   useEffect(() => {
     const loadMenu = async () => {
       if (userInfo) {
+        setLoading(true)
         try {
           const { data } = await AxiosApi.get(
             "/authorization-psya/front-panel/non-org-user-role/find-user-loggedin-info",
@@ -51,6 +53,8 @@ export default function DesktopSidebar() {
           setMenu(data);
         } catch (err) {
           console.error("Fetch error:", err);
+        } finally {
+          setLoading(false)
         }
       }
     };

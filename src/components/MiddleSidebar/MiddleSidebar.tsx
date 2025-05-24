@@ -51,8 +51,18 @@ const LinkItem = ({
   </div>
 );
 
+const SkeletonLoader = () => {
+  return (
+    <div className="animate-pulse flex flex-col gap-4">
+      <div className="h-10 bg-gray-300 rounded w-4/4" />
+      <div className="h-10 bg-gray-300 rounded w-4/4" />
+    </div>
+  );
+};
+
 export default function MiddleSidebar() {
   const { userInfo } = useUserInfo();
+  const [loading, setLoading] = useState(true)
   const [menu, setMenu] = useState<IMenuResponseData | null>(null);
 
   const menuLinks = useMemo(() => {
@@ -62,6 +72,7 @@ export default function MiddleSidebar() {
   useEffect(() => {
     const loadMenu = async () => {
       if (userInfo) {
+        setLoading(true)
         try {
           const { data } = await AxiosApi.get(
             "/authorization-psya/front-panel/non-org-user-role/find-user-loggedin-info",
@@ -70,6 +81,8 @@ export default function MiddleSidebar() {
           setMenu(data);
         } catch (err) {
           console.error("Fetch error:", err);
+        } finally {
+          setLoading(false)
         }
       }
     };
@@ -87,6 +100,7 @@ export default function MiddleSidebar() {
           {/*<SidebarRoleSelection />*/}
           <div className="mt-7" />
           <div className="w-full pr-3 flex flex-col gap-4">
+            {loading && <SkeletonLoader />}
             {menuLinks?.map((item: IACLItem) => (
               <LinkItem
                 key={item.id}

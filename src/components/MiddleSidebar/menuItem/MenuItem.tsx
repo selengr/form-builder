@@ -1,9 +1,43 @@
 
 import Link from "next/link";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { IoIosArrowDown } from "react-icons/io";
+// public
+import Wallet from "@/../public/images/home-page/menu/wallet-minus.svg";
+import ChartSquare from "@/../public/images/home-page/menu/chart-square.svg";
+import GroupSquare from "@/../public/images/home-page/menu/group-square.svg";
+import ShoppingCart from "@/../public/images/home-page/menu/shopping-cart.svg";
+import MusicPlaylist from "@/../public/images/home-page/menu/music-playlist.svg";
 
-const MenuList = ({ menuLinks, staticLinks }) => {
+
+interface StaticLink {
+    id: number;
+    title: string;
+    icon: StaticImageData;
+    link: string;
+  }
+  
+  interface MenuLinkItem {
+    id: number;
+    a_attr?: {
+      href?: string;
+    };
+    text: string;
+    icon: string;
+  }
+  interface IProps {
+    menuLinks: MenuLinkItem[];
+  }
+
+  const STATIC_LINKS: StaticLink[] = [
+    { id: 2, title: "فرم‌های عمومی", icon: MusicPlaylist, link: "/public-form" },
+    { id: 5, title: "آموزش", icon: ChartSquare, link: "/underconstruction" },
+    { id: 6, title: "ارتباط با ما", icon: GroupSquare, link: "/underconstruction" },
+    { id: 8, title: "سوالات پرتکرار", icon: ShoppingCart,link: "/underconstruction"},
+    { id: 9, title: "قوانین و مقررات", icon: Wallet, link: "/underconstruction" },
+  ];
+
+  const MenuList: React.FC<IProps> = ({ menuLinks }) => {
   return (
     <>
       {menuLinks?.map((item) => (
@@ -17,7 +51,7 @@ const MenuList = ({ menuLinks, staticLinks }) => {
           </Link>
         </div>
       ))}
-      {staticLinks.map((item) => (
+      {STATIC_LINKS.map((item) => (
         <div className="gap-4 w-full border-b border-[#DDE1E6] pb-4" key={item.id}>
           <Link href={item.link} className="w-full flex items-center justify-between">
             <div className="flex items-center gap-2">

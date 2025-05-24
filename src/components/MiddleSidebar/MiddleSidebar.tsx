@@ -1,93 +1,27 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, useMemo } from "react";
+import { useMemo } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 // hooks
-import { useUserInfo } from "@/hooks/useUserInfo";
+import { useUserInfo, useMenu } from "@/hooks";
 // public
 import Logo from "@/../public/images/home-page/psya-logo.svg";
-import Wallet from "@/../public/images/home-page/menu/wallet-minus.svg";
-import ChartSquare from "@/../public/images/home-page/menu/chart-square.svg";
-import GroupSquare from "@/../public/images/home-page/menu/group-square.svg";
-import ShoppingCart from "@/../public/images/home-page/menu/shopping-cart.svg";
-import MusicPlaylist from "@/../public/images/home-page/menu/music-playlist.svg";
-// services
-import AxiosApi from "@/services/axios/AxiosApi";
-// type
-import { IMenuResponseData, IACLItem } from "./type";
-interface StaticLink {
-  id: number;
-  title: string;
-  icon: any;
-  link: string;
-}
 
-const STATIC_LINKS: StaticLink[] = [
-  { id: 2, title: "فرم‌های عمومی", icon: MusicPlaylist, link: "/public-form" },
-  { id: 5, title: "آموزش", icon: ChartSquare, link: "/underconstruction" },
-  { id: 6, title: "ارتباط با ما", icon: GroupSquare, link: "/underconstruction" },
-  { id: 8, title: "سوالات پرتکرار", icon: ShoppingCart,link: "/underconstruction"},
-  { id: 9, title: "قوانین و مقررات", icon: Wallet, link: "/underconstruction" },
-];
 
-const LinkItem = ({
-  title,
-  href,
-  icon,
-}: {
-  title: string;
-  href: string;
-  icon: any;
-}) => (
-  <div className="gap-4 w-full border-b border-[#DDE1E6] pb-4">
-    <Link href={href} className="w-full flex items-center justify-between">
-      <div className="flex items-center gap-2">
-        <Image src={icon} alt="icon" width={32} height={32} priority />
-        <p className="text-[14px] text-black font-bold">{title}</p>
-      </div>
-      <IoIosArrowDown className="rotate-90" size="1.3rem" color="#292D32" />
-    </Link>
-  </div>
-);
+import MenuList from "./menuItem/MenuItem";
+import MenuItemSkeleton from "./menuItemSkeleton";
 
-const SkeletonLoader = () => {
-  return (
-    <div className="animate-pulse flex flex-col gap-4">
-      <div className="h-10 bg-gray-300 rounded w-4/4" />
-      <div className="h-10 bg-gray-300 rounded w-4/4" />
-    </div>
-  );
-};
 
 export default function MiddleSidebar() {
   const { userInfo } = useUserInfo();
-  const [loading, setLoading] = useState(true)
-  const [menu, setMenu] = useState<IMenuResponseData | null>(null);
+  const { menu, loading } = useMenu(userInfo)
 
   const menuLinks = useMemo(() => {
     return menu?.aclList?.filter((i) => i.type === "menu") || [];
   }, [menu]);
 
-  useEffect(() => {
-    const loadMenu = async () => {
-      if (userInfo) {
-        setLoading(true)
-        try {
-          const { data } = await AxiosApi.get(
-            "/authorization-psya/front-panel/non-org-user-role/find-user-loggedin-info",
-            { baseURL: process.env.NEXT_PUBLIC_BASE_URL_PSYA }
-          );
-          setMenu(data);
-        } catch (err) {
-          console.error("Fetch error:", err);
-        } finally {
-          setLoading(false)
-        }
-      }
-    };
-    loadMenu();
-  }, [userInfo]);
+ 
 
   return (
     <div
@@ -100,24 +34,9 @@ export default function MiddleSidebar() {
           {/*<SidebarRoleSelection />*/}
           <div className="mt-7" />
           <div className="w-full pr-3 flex flex-col gap-4">
-            {loading && <SkeletonLoader />}
-            {menuLinks?.map((item: IACLItem) => (
-              <LinkItem
-                key={item.id}
-                title={item.text}
-                href={item.a_attr?.href ?? "#"}
-                icon={`/images/home-page/menu/${item.icon}`}
-              />
-            ))}
-            {STATIC_LINKS.map((item) => (
-              <LinkItem
-                key={item.id}
-                title={item.title}
-                href={item.link}
-                icon={item.icon}
-              />
-            ))}
-          </div>
+            {loading && <MenuItemSkeleton />}
+            <MenuList menuLinks={menuLinks} />
+          </div>  
         </div>
       </div>
     </div>

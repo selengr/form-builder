@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import AxiosApi from "@/services/axios/AxiosApi";
+import { IMenuResponseData } from "@/components/MiddleSidebar/type";
 
-const useMenu = (userInfo) => {
-  const [menu, setMenu] = useState(null);
-  const [loading, setLoading] = useState(true);
+const useMenu = (userInfo:any)  : { menu: IMenuResponseData | null; loading: boolean } => {
+    const [menu, setMenu] = useState<IMenuResponseData | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const loadMenu = async () => {

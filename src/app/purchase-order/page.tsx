@@ -18,7 +18,7 @@ export default function ShoppingCartPage() {
   const [loading, setLoading ] = useState(false)
 
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
-  const { data: purchaseOrder, isFetching, error } = useGetPurchaseOrder();
+  const { data: purchaseOrder, isFetching, error, refetch } = useGetPurchaseOrder();
   const { purchaseOrderDetailModels } = purchaseOrder || {};
 
   useEffect(() => {
@@ -35,6 +35,7 @@ export default function ShoppingCartPage() {
       );
       if (res.data) {
         toast.success("با موفقیت حذف شد");
+        await refetch()
       } else {
         toast.error("ناموفق بود مجددا امتحان فرمایید");
       }

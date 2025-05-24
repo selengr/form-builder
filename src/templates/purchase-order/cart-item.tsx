@@ -11,6 +11,7 @@ import TrashIcon from "@/../public/images/home-page/trash.svg";
 
 function CartItem({ detail, index, isSelected, onSelect, onRemove, toggleConfirm, loading, open }: ICartItemProps) {
 
+  const { description, purchaseOrderDetailId } = detail;
 
   return (
     <div className={`flex items-start justify-between p-4 border rounded-2xl ${
@@ -26,7 +27,7 @@ function CartItem({ detail, index, isSelected, onSelect, onRemove, toggleConfirm
           </span>
         </span> */}
         {/* <span className="font-bold text-[#161616]">{detail.purchaseOrderProductModels[0]?.title || "محصول"}</span> */}
-        <span className="font-bold text-[#161616] line-clamp-2">{detail.description || "محصول"}</span>
+        <span className="font-bold text-[#161616] line-clamp-2">{description || "محصول"}</span>
         {/* {detail.description && <span className="text-sm text-[#404040]">{detail.description}</span>} */}
       </div>
 
@@ -71,7 +72,7 @@ function CartItem({ detail, index, isSelected, onSelect, onRemove, toggleConfirm
                   boxShadow: "none",
                 },
               }}
-              onClick={()=>onRemove(detail.purchaseOrderDetailId)}
+              onClick={()=>onRemove(purchaseOrderDetailId)}
             >
               تایید
             </Button>

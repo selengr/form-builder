@@ -2,12 +2,12 @@
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import BuilderLoading from "../(builder)/builder/[id]/loading";
+// components
+import { CircleLoading } from "@/components";
 // templates
 import { CartItem, InvoiceItem, EmptyCart } from "@/templates/purchase-order";
 // _hook
 import { useGetPurchaseOrder } from "./_hook/useGetPurchaseOrder";
-import CircleLoading from "@/components/CircleLoading";
 
 export default function ShoppingCartPage() {
   const { push } = useRouter();
@@ -61,7 +61,10 @@ export default function ShoppingCartPage() {
     );
   }
 
-  if (!purchaseOrderDetailModels || purchaseOrderDetailModels.length === 0 && !isFetching) {
+  if (
+    !purchaseOrderDetailModels ||
+    (purchaseOrderDetailModels.length === 0 && !isFetching)
+  ) {
     return <EmptyCart />;
   }
 
@@ -86,8 +89,8 @@ export default function ShoppingCartPage() {
         </div>
         <div className="w-full  justify-center items-center overflow-y-auto h-[calc(100%-80px)]">
           <div className="px-16 h-full">
+            {isFetching && <CircleLoading text="در حال بارگذاری..." />}
             <div className="space-y-3 px-2 md:px-8">
-              {isFetching &&  <CircleLoading text="در حال بارگذاری..."/>}
               {purchaseOrderDetailModels?.map((detail, index) => (
                 <CartItem
                   key={index}

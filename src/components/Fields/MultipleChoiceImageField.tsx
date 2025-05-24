@@ -401,7 +401,7 @@ function FormComponent({
                       loading={"eager"}
                       alt=""
                       src={
-                        "http://newpl1api.qhami.com" +
+                        process.env.NEXT_PUBLIC_BASE_URL +
                         "/filemanager" +
                         option?.link
                       }

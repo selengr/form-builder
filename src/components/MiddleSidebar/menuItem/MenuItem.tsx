@@ -17,16 +17,9 @@ interface StaticLink {
     link: string;
   }
   
-  interface MenuLinkItem {
-    id: number;
-    a_attr?: {
-      href?: string;
-    };
-    text: string;
-    icon: string;
-  }
+
   interface IProps {
-    menuLinks: MenuLinkItem[];
+    menuLinks: any[];
   }
 
   const STATIC_LINKS: StaticLink[] = [

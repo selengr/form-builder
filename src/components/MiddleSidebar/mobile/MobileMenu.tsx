@@ -10,8 +10,11 @@ import MenuIcon from "@/../public/images/home-page/menu/ic_menu.svg";
 // hooks
 import { useUserInfo, useMenu } from "@/hooks";
 
+import MenuList from "../menuItem/MenuItem"; 
+import MenuItemSkeleton from "../menuItemSkeleton"; 
 
-const MobileMenu = () => {
+
+const MobileMenu: React.FC = () => {
     const { userInfo } = useUserInfo();
     const [open, setOpen] = useState(false);
     const { menu, loading } = useMenu(userInfo); 
@@ -68,7 +71,8 @@ const MobileMenu = () => {
               </IconButton>
             </div>
             <div className="flex flex-col items-start w-full gap-5">
-              {list()}
+              {loading && <MenuItemSkeleton />}
+              <MenuList menuLinks={menuLinks} />
             </div>
           </div>
         </div>

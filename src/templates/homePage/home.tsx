@@ -1,7 +1,17 @@
 import {Button} from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
-import {ArrowLeft} from "../../../public/images/home-page/ArrowLeft";
+import Button from "@mui/material/Button";
+import { ArrowLeft } from "@/../public/images/home-page/ArrowLeft";
+
+// Image Imports
+import Logo from "@/../public/images/logo/logo2.svg";
+import CircleBg from "@/../public/images/home-page/circle-bg.svg";
+import Oval1 from "@/../public/images/home-page/Oval1.svg";
+import Oval2 from "@/../public/images/home-page/Oval2.svg";
+import Oval3 from "@/../public/images/home-page/Oval3.svg";
+import Oval4 from "@/../public/images/home-page/Oval4.svg";
+import BannerBg2 from "@/../public/images/home-page/banner-bg2.svg";
 
 export default function HomePage() {
   return (

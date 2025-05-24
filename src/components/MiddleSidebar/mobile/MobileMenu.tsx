@@ -20,7 +20,6 @@ const MobileMenu: React.FC = () => {
     const { menu, loading } = useMenu(userInfo); 
     const [isRotated, setIsRotated] = useState(false);
 
-
     const menuLinks = menu?.aclList?.filter((i) => i.type === "menu") || [];
 
   const toggleDrawer = () => {

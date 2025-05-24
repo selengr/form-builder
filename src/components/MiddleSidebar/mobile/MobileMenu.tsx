@@ -1,34 +1,34 @@
 "use client";
 import Image from "next/image";
 import { CgClose } from "react-icons/cg";
+import { useState, useMemo } from "react";
 import { IconButton, Drawer } from "@mui/material";
-import { useState } from "react";
 
 // public
 import Logo from "@/../public/images/home-page/psya-logo.svg";
 import MenuIcon from "@/../public/images/home-page/menu/ic_menu.svg";
 // hooks
 import { useUserInfo, useMenu } from "@/hooks";
-
-import MenuList from "../menuItem/MenuItem"; 
-import MenuItemSkeleton from "../menuItemSkeleton"; 
-
+// view
+import MenuList from "../menuItem/MenuItem";
+import MenuItemSkeleton from "../menuItemSkeleton";
 
 const MobileMenu: React.FC = () => {
-    const { userInfo } = useUserInfo();
-    const [open, setOpen] = useState(false);
-    const { menu, loading } = useMenu(userInfo); 
-    const [isRotated, setIsRotated] = useState(false);
+  const { userInfo } = useUserInfo();
+  const [open, setOpen] = useState(false);
+  const { menu, loading } = useMenu(userInfo);
+  const [isRotated, setIsRotated] = useState(false);
 
-    const menuLinks = menu?.aclList?.filter((i) => i.type === "menu") || [];
+  const menuLinks = useMemo(() => {
+    return menu?.aclList?.filter((i) => i.type === "menu") || [];
+  }, [menu]);
 
   const toggleDrawer = () => {
     setIsRotated((prev) => !prev);
-   setTimeout(() => {
-    setOpen((prev) => !prev);
-   }, 300);
+    setTimeout(() => {
+      setOpen((prev) => !prev);
+    }, 300);
   };
-
 
   return (
     <>
@@ -70,8 +70,11 @@ const MobileMenu: React.FC = () => {
               </IconButton>
             </div>
             <div className="flex flex-col items-start w-full gap-5">
-              {loading && <MenuItemSkeleton />}
-              <MenuList menuLinks={menuLinks} />
+              {loading ? (
+                <MenuItemSkeleton />
+              ) : (
+                <MenuList menuLinks={menuLinks} />
+              )}
             </div>
           </div>
         </div>

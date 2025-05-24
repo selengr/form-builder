@@ -73,6 +73,7 @@ export default function ShoppingCartPage() {
       push(`/purchase-order/${JSON.stringify(purchaseOrder.purchaseOrderId)}/gateway`);
     }
   };
+  console.log('purchaseOrder :>> ', purchaseOrder);
 
   return (
     <div
@@ -169,6 +170,7 @@ export default function ShoppingCartPage() {
                 backgroundColor: "#1758BA",
               },
             }}
+            disabled={!purchaseOrder?.purchaseOrderId}
             onClick={handlePayment}
           >
             <span className="text-[14px] font-[500px]">پرداخت صورت حساب</span>

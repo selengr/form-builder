@@ -9,8 +9,8 @@ import { ICartItemProps } from "@/types/shoppingCart";
 
 export function CartItem({ detail, index, isSelected, onSelect, onRemove }: ICartItemProps) {
   return (
-    <div className={`flex items-center justify-between p-4 border border-[#DDE1E6] rounded-2xl ${
-        isSelected ? "border-2 border-[#1758BA]" : ""
+    <div className={`flex items-start justify-between p-4 border rounded-2xl ${
+        isSelected ? "border border-[#1758BA]" : "border-[#DDE1E6]"
       }`}  onClick={onSelect}>
       <div className="flex flex-col">
         {/* <span className="text-xs text-[#393939]">بابت: </span>
@@ -21,8 +21,9 @@ export function CartItem({ detail, index, isSelected, onSelect, onRemove }: ICar
             {new Intl.NumberFormat("fa-IR").format(item.quantity)} عدد
           </span>
         </span> */}
-        <span className="font-bold text-[#161616]">{detail.purchaseOrderProductModels[0]?.title || "محصول"}</span>
-        {detail.description && <span className="text-sm text-[#404040]">{detail.description}</span>}
+        {/* <span className="font-bold text-[#161616]">{detail.purchaseOrderProductModels[0]?.title || "محصول"}</span> */}
+        <span className="font-bold text-[#161616] line-clamp-2">{detail.description || "محصول"}</span>
+        {/* {detail.description && <span className="text-sm text-[#404040]">{detail.description}</span>} */}
       </div>
 
       <IconButton

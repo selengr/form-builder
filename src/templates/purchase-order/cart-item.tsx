@@ -5,9 +5,7 @@ import { IconButton } from "@mui/material";
 import TrashIcon from "@/../public/images/home-page/trash.svg";
 import { ICartItemProps } from "@/types/shoppingCart";
 
-
-
-export function CartItem({ detail, index, isSelected, onSelect, onRemove }: ICartItemProps) {
+function CartItem({ detail, index, isSelected, onSelect, onRemove }: ICartItemProps) {
   return (
     <div className={`flex items-start justify-between p-4 border rounded-2xl ${
         isSelected ? "border border-[#1758BA]" : "border-[#DDE1E6]"
@@ -41,3 +39,5 @@ export function CartItem({ detail, index, isSelected, onSelect, onRemove }: ICar
     </div>
   );
 }
+
+export default CartItem;

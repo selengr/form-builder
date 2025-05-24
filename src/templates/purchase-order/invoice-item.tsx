@@ -1,6 +1,6 @@
 import { InvoiceItemProps } from "@/types/shoppingCart";
 
- export function InvoiceItem({ detail, index }: InvoiceItemProps) {
+ function InvoiceItem({ detail, index }: InvoiceItemProps) {
 
   return (
     <div className="bg-[#F7F7FF] rounded-2xl p-3">
@@ -22,3 +22,5 @@ import { InvoiceItemProps } from "@/types/shoppingCart";
     </div>
   );
 }
+
+export default InvoiceItem;

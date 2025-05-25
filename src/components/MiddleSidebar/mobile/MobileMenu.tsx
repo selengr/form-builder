@@ -72,7 +72,7 @@ const MobileMenu: React.FC = () => {
               </IconButton>
             </div>
             <div className="flex flex-col items-start w-full gap-5">
-              {loading && <MenuItemSkeleton />}
+              {!!userInfo &&loading && <MenuItemSkeleton />}
               <MenuList menuLinks={menuLinks} />
             </div>
           </div>

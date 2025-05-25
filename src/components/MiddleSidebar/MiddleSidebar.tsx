@@ -34,7 +34,7 @@ export default function MiddleSidebar() {
           {/*<SidebarRoleSelection />*/}
           <div className="mt-7" />
           <div className="w-full pr-3 flex flex-col gap-4">
-            {loading && <MenuItemSkeleton />}
+            {!!userInfo && loading && <MenuItemSkeleton />}
             <MenuList menuLinks={menuLinks} />
           </div>  
         </div>

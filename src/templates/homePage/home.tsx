@@ -11,6 +11,7 @@ import Oval2 from "@/../public/images/home-page/Oval2.svg";
 import Oval3 from "@/../public/images/home-page/Oval3.svg";
 import Oval4 from "@/../public/images/home-page/Oval4.svg";
 import BannerBg2 from "@/../public/images/home-page/banner-bg2.svg";
+import MobileMenu from "@/components/MiddleSidebar/mobile/MobileMenu";
 
 export default function HomePage() {
   return (
@@ -18,7 +19,10 @@ export default function HomePage() {
       className="h-screen w-full bg-white text-right lg:pr-4 lg:pl-0 overflow-x-hidden overflow-y-auto"
       dir="rtl"
     >
-      <div className="mx-auto px-4 pt-6 flex justify-center md:hidden">
+      <div className="mx-auto px-4 pb-6 flex justify-center md:hidden">
+        <div className="absolute right-8">
+          <MobileMenu />
+        </div>
         <Image
           src={Logo}
           alt="سایا لوگو"

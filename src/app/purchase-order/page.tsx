@@ -35,6 +35,7 @@ export default function ShoppingCartPage() {
       );
       if (res.data) {
         toast.success("با موفقیت حذف شد");
+        toggleConfirm()
         await refetch()
       } else {
         toast.error("ناموفق بود مجددا امتحان فرمایید");

@@ -75,6 +75,7 @@ export default function DesktopSidebar() {
             {menuLinks?.map((item: IACLItem) => (
               <MenuItem
                 key={item.id}
+                // @ts-ignore
                 title={item.text}
                 href={item.a_attr?.href ?? "#"}
                 icon={`/images/home-page/menu/${item.icon}`}
@@ -83,6 +84,7 @@ export default function DesktopSidebar() {
             {STATIC_LINKS.map((item) => (
               <MenuItem
                 key={item.id}
+                // @ts-ignore
                 title={item.title}
                 href={item.link}
                 icon={item.icon}

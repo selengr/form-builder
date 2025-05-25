@@ -12,6 +12,7 @@ export interface IPurchaseOrder {
   
  export interface IPurchaseOrderDetail {
    description: string | null
+   purchaseOrderDetailId : number 
    purchaseOrderProductModels: IPurchaseOrderProduct[]
  }
   
@@ -22,9 +23,12 @@ export interface IPurchaseOrder {
  export interface ICartItemProps {
     detail: IPurchaseOrderDetail
     index: number
+    open: boolean
+    loading: boolean
     isSelected: boolean
     onSelect: () => void
-    onRemove: () => void
+    onRemove: (id : number) => void
+    toggleConfirm: () => void
   }
 
 

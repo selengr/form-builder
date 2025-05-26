@@ -3,18 +3,20 @@
 import {useRouter} from "next/navigation";
 import {ReportHeader, ReportPagination, ReportTable} from "./component";
 import {useStatsViewModel} from "./viewModel";
-import {useState} from "react";
 
 export default function StatsPage() {
   const router = useRouter();
-  const {formData, headData, allData, isLoading} = useStatsViewModel();
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(25); // -1 means "all"
-
-  const startIndex = rowsPerPage === -1 ? 0 : (currentPage - 1) * rowsPerPage;
-  const endIndex = rowsPerPage === -1 ? allData.length : currentPage * rowsPerPage;
-  const paginatedData = allData.slice(startIndex, endIndex);
+  const {
+    formData,
+    headData,
+    allData,
+    isLoading,
+    page: currentPage,
+    setPage: setCurrentPage,
+    pageSize: rowsPerPage,
+    setPageSize: setRowsPerPage,
+    totalItems
+  } = useStatsViewModel();
 
   return (
     <div className="w-full p-4 bg-white">
@@ -25,12 +27,12 @@ export default function StatsPage() {
 
       <ReportTable
         headData={headData}
-        allData={paginatedData}
+        allData={allData}
         isLoading={isLoading}
       />
 
       <ReportPagination
-        totalItems={allData.length}
+        totalItems={totalItems}
         currentPage={currentPage}
         rowsPerPage={rowsPerPage}
         onPageChange={setCurrentPage}

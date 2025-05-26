@@ -18,7 +18,7 @@ export function CalculatorCard({ calculator, index, disabled = false }: ICalcula
   const [openDialog, setOpenDialog] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const {mutate: deleteCondition, isPending} = useDeleteCalculator();
+  const {mutate, isPending} = useDeleteCalculator();
 
   const isMenuOpen = Boolean(anchorEl);
 
@@ -39,7 +39,7 @@ export function CalculatorCard({ calculator, index, disabled = false }: ICalcula
   };
 
     const handleDelete = (id: number) => {
-      deleteCondition(Number(id));
+      mutate(Number(id));
       handleCloseMenu();
     };
 
@@ -111,9 +111,10 @@ export function CalculatorCard({ calculator, index, disabled = false }: ICalcula
                   justifyContent: "space-between",
                   color: "#FA4D56",
                 }}
-                onClick={(e) => e.stopPropagation()}
                 fullWidth
-                disabled
+                loading={isPending}
+                disabled={isPending || disabled}
+                onClick={handleDelete(calculator.id)}
               >
                 <Typography>حذف</Typography>
                 <WeuiDeleteOutlined fontSize="1.32rem" />

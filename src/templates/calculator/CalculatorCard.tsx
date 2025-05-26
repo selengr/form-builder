@@ -12,13 +12,14 @@ import {SlPencil} from "react-icons/sl";
 import {WeuiDeleteOutlined} from "../../../public/images/icons/DeleteIcon";
 import {PhDotsThreeVerticalBold} from "../../../public/images/icons/PhDotsThreeVerticalBold";
 // hooks
-import { useDeleteCalculator } from '../../app/(builder)/builder/[id]/calculator/_hooks/useDeleteCalculator';
+import { useDeleteCalculator, useCheckDependency } from '../../app/(builder)/builder/[id]/calculator/_hooks';
 
 export function CalculatorCard({ calculator, index, disabled = false }: ICalculatorCardProps) {
   const [openDialog, setOpenDialog] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const {mutate, isPending} = useDeleteCalculator();
+  const {mutate : checkDependency, isPending : checkDependencyLoading} = useCheckDependency();
 
   const isMenuOpen = Boolean(anchorEl);
 
@@ -39,8 +40,13 @@ export function CalculatorCard({ calculator, index, disabled = false }: ICalcula
   };
 
     const handleDelete = (id: number) => {
-      mutate(Number(id));
-      handleCloseMenu();
+      checkDependency(
+        {id},
+        {onSuccess : () =>{
+          mutate(Number(id));
+          handleCloseMenu();
+        }
+       })
     };
 
   return (
@@ -114,7 +120,7 @@ export function CalculatorCard({ calculator, index, disabled = false }: ICalcula
                 fullWidth
                 loading={isPending}
                 disabled={isPending || disabled}
-                onClick={handleDelete(calculator.id)}
+                onClick={()=>handleDelete(calculator.id as number)}
               >
                 <Typography>حذف</Typography>
                 <WeuiDeleteOutlined fontSize="1.32rem" />

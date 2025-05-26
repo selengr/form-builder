@@ -1,16 +1,24 @@
 "use client";
+// React & Libs
 import Image from "next/image";
-import {SlPencil} from "react-icons/sl";
 import {useState} from "react";
 import {Button, Menu, Typography} from "@mui/material";
+// types
 import {ICalculatorCardProps} from "@/types/calculator";
+// components
 import EditCalculatorDialog from "./EditCalculatorDialog";
-import {PhDotsThreeVerticalBold} from "../../../public/images/icons/PhDotsThreeVerticalBold";
+// icons
+import {SlPencil} from "react-icons/sl";
 import {WeuiDeleteOutlined} from "../../../public/images/icons/DeleteIcon";
+import {PhDotsThreeVerticalBold} from "../../../public/images/icons/PhDotsThreeVerticalBold";
+// hooks
+import { useDeleteCalculator } from '../../app/(builder)/builder/[id]/calculator/_hooks/useDeleteCalculator';
 
 export function CalculatorCard({ calculator, index, disabled = false }: ICalculatorCardProps) {
   const [openDialog, setOpenDialog] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const {mutate: deleteCondition, isPending} = useDeleteCalculator();
 
   const isMenuOpen = Boolean(anchorEl);
 
@@ -29,6 +37,11 @@ export function CalculatorCard({ calculator, index, disabled = false }: ICalcula
     setOpenDialog(true);
     handleCloseMenu();
   };
+
+    const handleDelete = (id: number) => {
+      deleteCondition(Number(id));
+      handleCloseMenu();
+    };
 
   return (
     <>

@@ -5,6 +5,7 @@ import CreateCalculatorDialog from "./CreateCalculatorDialog";
 
 const buttonSx: SxProps<Theme> = {
     height: 52,
+    minHeight: 52,
     width: "100%",
     display: "flex",
     color: "#6F6F6F",

@@ -1,18 +1,36 @@
-'use client'
+"use client";
 
-import dynamic from 'next/dynamic'
-import DesignerTabs from '@/templates/builder/TabComponent'
+import dynamic from "next/dynamic";
+// templates
+import { CalculatorSkeleton } from "@/templates/calculator";
+import DesignerTabs from "@/templates/builder/TabComponent";
 
 const CalculatorList = dynamic(
-  () => import('@/templates/calculator/CalculatorList'))
+  () => import("@/templates/calculator/CalculatorList")
+);
 
-export default function ClientView({calculators}: { calculators: any[] }) {
+interface IProps<T> {
+  calculators: T[];
+  isPending: boolean;
+  error: Error | null;
+}
+export default function ClientView<T>({ calculators, isPending, error }: IProps<T>) {
+
   return (
     <div className="w-full min-h-full px-4 py-4 ">
-      <div className="container mx-auto flex flex-col justify-start items-center h-full bg-white rounded-xl w-full">
-        <DesignerTabs/>
-        <CalculatorList calculators={calculators}/>
+      <div className="relative container mx-auto flex flex-col min-h-screen justify-start items-center h-full bg-white rounded-xl w-full">
+        <DesignerTabs />
+        {!error && isPending && <CalculatorSkeleton />}
+        {!error && !isPending && <CalculatorList calculators={calculators} />}
+        {error && (
+          <div className="flex flex-col absolute top-[250px] justify-center items-center">
+            <span className="text-red-500">
+              !!خطا در بارگذاری لیست محاسبه گر
+            </span>
+            <span>{error?.message}</span>
+          </div>
+        )}
       </div>
     </div>
-  )
+  );
 }

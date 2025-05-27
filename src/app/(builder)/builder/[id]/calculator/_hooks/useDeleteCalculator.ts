@@ -6,7 +6,7 @@ import {queryClient} from '@/lib/react-query.config';
 
 
 const deleteCalculator = async (id: number) => {
-  const url = `/calculation/${id}`;
+  const url = `/calculation/delete/${id}`;
   const response = await AxiosApi.delete(url);
   return response.data;
 };

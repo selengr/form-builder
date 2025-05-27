@@ -36,8 +36,16 @@ export function ConditionCard({
   };
 
   const handleDelete = (id: number) => {
-    deleteCondition(Number(id));
-    handleCloseMenu();
+    deleteCondition(id,{
+      onSuccess : () => {
+        setOpen(false);
+        handleCloseMenu();
+      }
+    });
+  };
+
+  const toggleConfirm = () => {
+    setOpen((prev) => !prev);
   };
 
   return (<div
@@ -94,12 +102,9 @@ export function ConditionCard({
               paddingX: "10px", display: "flex", justifyContent: "space-between", color: "#FA4D56",
             }}
             loading={isPending}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDelete(condition.id!);
-            }}
+                disabled={isPending || disabled}
+                onClick={toggleConfirm}
             fullWidth
-            disabled={isPending || disabled}
           >
             <Typography>حذف</Typography>
             <WeuiDeleteOutlined fontSize="1.32rem"/>
@@ -119,5 +124,40 @@ export function ConditionCard({
       setOpen={setOpenEditDialog}
       condition={condition}
     />)}
+
+<ConfirmDialog
+        content="آیا از عملیات حذف اطمینان دارید؟"
+        open={open}
+        title="حذف"
+        loading={isPending}
+        onClose={toggleConfirm}
+        cancelText="انصراف"
+        action={
+          <Button
+            type="submit"
+            fullWidth
+            disableRipple
+            variant="contained"
+            disabled={isPending}
+            sx={{...buttonStyles, ...buttonStylesAlert}}
+            onClick={handleCheckDependency}
+          >
+            {isPending ? (
+              <>
+                <CircularProgress
+                  size={20}
+                  color="inherit"
+                  thickness={5}
+                  style={{ marginLeft: 10 }}
+                />
+                در حال حذف…
+              </>
+            ) : (
+              "حذف"
+            )}
+          </Button>
+        }
+      />
+
   </div>);
 }

@@ -125,8 +125,10 @@ export function ConditionCard({
                 }}
                 disabled={disabled}
               >
-                <Typography>ویرایش</Typography>
-                <SlPencil size="1.18rem" />
+                <SlPencil size="1rem" />
+                <Typography sx={{ fontSize: "12px", color: "black" }}>
+                  ویرایش
+                </Typography>
               </Button>
 
               <Button
@@ -141,8 +143,10 @@ export function ConditionCard({
                 onClick={toggleConfirm}
                 fullWidth
               >
-                <Typography>حذف</Typography>
-                <WeuiDeleteOutlined fontSize="1.32rem" />
+                <Typography sx={{ fontSize: "12px", color: "black" }}>
+                  حذف
+                </Typography>
+                <WeuiDeleteOutlined fontSize="1.2rem" />
               </Button>
             </Menu>
           )}

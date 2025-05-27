@@ -19,8 +19,9 @@ const ConditionSkeleton = () => {
               </div>
             </div>
             <div className="rounded-lg p-[10px] flex justify-between w-full cursor-pointer border-[1px] border-[#1758BA] bg-[#fff]">
-              <div className="flex justify-center items-center gap-[10px]">
-                <div className="bg-gray-300 h-4 w-20 md:w-32 rounded"></div>
+              <div className="flex flex-col justify-center items-center gap-[10px]">
+                <div className="bg-gray-300 h-4 w-32 md:w-44 rounded"></div>
+                <div className="bg-gray-300 h-4 w-32 md:w-44 rounded"></div>
               </div>
             </div>
           </div>

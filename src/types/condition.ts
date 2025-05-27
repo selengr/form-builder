@@ -67,6 +67,11 @@ import { Dispatch, SetStateAction } from "react";
     frontConditionData: string; 
 }
 
+export interface IConditionCardProps {
+  index: number; 
+  disabled?: boolean; 
+  condition: IGetCondition; 
+}
 
 
 export interface ICreateConditionDialogProps {

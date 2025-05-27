@@ -1,7 +1,7 @@
 "use client";
 import {SlPencil} from "react-icons/sl";
 import {useCallback, useState} from "react";
-import {IGetCondition} from "@/types/condition";
+import {IConditionCardProps} from "@/types/condition";
 import {Button, Menu, Typography} from "@mui/material";
 import {EditConditionDialog} from "./EditConditionDialog";
 import {ConditionCardOperator} from './ConditionCardOperator';
@@ -9,25 +9,35 @@ import {WeuiDeleteOutlined} from "../../../public/images/icons/DeleteIcon";
 import {PhDotsThreeVerticalBold} from "../../../public/images/icons/PhDotsThreeVerticalBold";
 import {useDeleteCondition} from '@/app/(builder)/builder/[id]/condition/_hooks/useDeleteCondition';
 
-export function ConditionCard({condition, index, disabled = true,}: { condition: IGetCondition; index: number; disabled?: boolean; }) {
-  const [openDialog, setOpen] = useState<boolean>(false);
+
+
+export function ConditionCard({
+  index, 
+  condition,
+   disabled = true
+}: IConditionCardProps) {
+  const [open, setOpen] = useState<boolean>(false);
+  const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
   const menuOpen = Boolean(anchorEl);
+
 
   const {mutate: deleteCondition, isPending} = useDeleteCondition();
 
-  const handleClick = useCallback((event: any) => {
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     if (disabled) return;
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
-  }, [disabled]);
+  };
 
-  const handleClose = useCallback(() => {
+  const handleCloseMenu = () => {
     setAnchorEl(null);
-  }, []);
+  };
 
   const handleDelete = (id: number) => {
     deleteCondition(Number(id));
-    handleClose();
+    handleCloseMenu();
   };
 
   return (<div
@@ -36,7 +46,7 @@ export function ConditionCard({condition, index, disabled = true,}: { condition:
     <div className="flex flex-col justify-start items-center gap-[10px] pl-[10px]">
       <div className="bg-white h-8 w-8 rounded-[10px] flex justify-center items-center">{index + 1}</div>
       <div className="bg-white h-8 w-8 rounded-[10px] flex justify-center items-center">
-        <button onClick={handleClick} disabled={disabled}>
+        <button onClick={handleOpenMenu} disabled={disabled}>
           <PhDotsThreeVerticalBold color="#1758BA" fontSize="1.5rem"/>
         </button>
         {menuOpen && !disabled && (<Menu
@@ -52,7 +62,7 @@ export function ConditionCard({condition, index, disabled = true,}: { condition:
           id="basic-menu"
           anchorEl={anchorEl}
           open={menuOpen}
-          onClose={handleClose}
+          onClose={handleCloseMenu}
           MenuListProps={{
             "aria-labelledby": "basic-button",
           }}
@@ -70,8 +80,8 @@ export function ConditionCard({condition, index, disabled = true,}: { condition:
             }}
             onClick={(e) => {
               e.stopPropagation();
-              setOpen(true);
-              handleClose();
+              setOpenEditDialog(true);
+              handleCloseMenu();
             }}
             disabled={disabled}
           >
@@ -104,9 +114,9 @@ export function ConditionCard({condition, index, disabled = true,}: { condition:
       </div>
     </div>
 
-    {openDialog && (<EditConditionDialog
-      open={openDialog}
-      setOpen={setOpen}
+    {openEditDialog && (<EditConditionDialog
+      open={openEditDialog}
+      setOpen={setOpenEditDialog}
       condition={condition}
     />)}
   </div>);

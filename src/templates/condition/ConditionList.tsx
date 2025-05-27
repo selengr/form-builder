@@ -14,14 +14,14 @@ const ConditionList: React.FC<IConditionListProps> = ({conditions}) => {
     const {formData, isLoading} = useFormData();
 
     return (
-        <div className="w-full h-[calc(100vh-6rem)] max-w-md flex flex-col p-[13px] overflow-hidden">
+        <div className="w-full h-[calc(100vh-6rem)] max-w-[520px] flex flex-col p-[13px] overflow-hidden">
             {!isLoading && formData?.formSettingModel?.formStatus === "CREATE" && (
                 <CreateCondition/>
             )}
             {Array.isArray(conditions) && conditions.length > 0 && (
                 <div
                     dir="rtl"
-                    className="bg-[#F7F7FF] rounded-lg p-6 w-full flex flex-col gap-3  mb-10 overflow-y-auto"
+                    className="bg-[#F7F7FF] rounded-lg p-[10px] w-full flex flex-col gap-3  mb-10 overflow-y-auto"
                 >
                     {conditions?.map((condition: IGetCondition, index: number) => (
                         <div key={idGenerator()}>

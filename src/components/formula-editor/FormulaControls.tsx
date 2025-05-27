@@ -1,13 +1,14 @@
 "use client";
 import React from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 
 interface FormulaControlsProps {
+  isLoading : boolean;
   onSubmit: () => void;
   onCancel: () => void;
 }
 
-const FormulaControls: React.FC<FormulaControlsProps> = ({ onSubmit, onCancel }) => {
+const FormulaControls: React.FC<FormulaControlsProps> = ({ onSubmit, onCancel, isLoading }) => {
   return (
     <Box
       display="flex"
@@ -30,13 +31,26 @@ const FormulaControls: React.FC<FormulaControlsProps> = ({ onSubmit, onCancel })
           },
           minWidth: "132px",
         }}
+        disabled={isLoading}
       >
         <Typography
           variant="body2"
           py={0.5}
           sx={{ color: "#fff", fontWeight: 500 }}
         >
-          تایید
+          {isLoading ? (
+              <>
+                <CircularProgress
+                  size={20}
+                  color="inherit"
+                  thickness={5}
+                  style={{ marginLeft: 10 }}
+                />
+                در حال ارسال…
+              </>
+            ) : (
+              "تایید"
+            )}
         </Typography>
       </Button>
 

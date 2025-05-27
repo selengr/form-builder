@@ -1,6 +1,7 @@
 "use client";
+import { useParams } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import React, {useCallback, useEffect, useRef, useState} from "react";
-import {useParams, useRouter} from "next/navigation";
 import {toast} from "sonner";
 import {Box, Container, Stack, TextField, Typography} from "@mui/material";
 import AxiosApi from "@/services/axios/AxiosApi";
@@ -15,7 +16,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                                                                           questionList, handleClose, editList, isEdit,
                                                                       }) => {
     const {id} = useParams();
-    const {refresh} = useRouter();
+    const queryClient = useQueryClient();
     const mainIndex = useRef<number>(-2);
 
     const editData = editList?.frontCalcData ? JSON.parse(editList.frontCalcData as string) : [];
@@ -23,6 +24,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
     const [cursorIndex, setCursorIndex] = useState<number>(0);
     const [elements, setElements] = useState<Element[]>(editData);
     const [isClient, setIsClient] = useState<boolean>(false);
+    const [isLoading, setLoading] = useState<boolean>(false);
 
     const contentEditable = useRef<HTMLDivElement>(null);
     const selectAvgRef = useRef<Record<string, string>>({});
@@ -482,6 +484,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         });
 
         try {
+            setLoading(true)
             if (!isEdit) {
                 await AxiosApi.post("/calculation", {
                     name: formName, formBuilderId: id, theFormula: formula, frontCalcData: JSON.stringify(elements),
@@ -495,11 +498,13 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                     frontCalcData: JSON.stringify(elements),
                 });
             }
-            handleClose();
-            refresh();
+            handleClose(); 
+            queryClient.invalidateQueries(['Calculation_List'] as any);
             toast.success("محاسبه گر با موفقیت ثبت شد");
         } catch (error) {
             toast.error("عملیات ناموفق بود مجددا امتحان فرمایید");
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -605,7 +610,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                     </Box>
                 </Box>
 
-                <FormulaControls onSubmit={callApi} onCancel={handleClose}/>
+                <FormulaControls onSubmit={callApi} onCancel={handleClose} isLoading={isLoading}/>
             </Box>
         </Container>);
 };

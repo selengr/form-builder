@@ -1,17 +1,15 @@
 "use client";
-import {Box, Button, Typography} from "@mui/material"
-
+import { Box, Button, Typography, CircularProgress } from "@mui/material";
 
 interface ISubmitButtonsProps {
-  isLoading : boolean
-  handleClose : () => void
+  isLoading: boolean;
+  handleClose: () => void;
 }
 
 export const SubmitButtons: React.FC<ISubmitButtonsProps> = ({
   isLoading,
-  handleClose
+  handleClose,
 }) => {
-
   return (
     <Box
       display="flex"
@@ -25,7 +23,7 @@ export const SubmitButtons: React.FC<ISubmitButtonsProps> = ({
       }}
     >
       <Button
-        loading={isLoading}
+        disabled={isLoading}
         type="submit"
         variant="contained"
         sx={{
@@ -38,8 +36,25 @@ export const SubmitButtons: React.FC<ISubmitButtonsProps> = ({
           minWidth: 113,
         }}
       >
-        <Typography variant="body2" component={"p"} py={0.5} sx={{ color: "#fff", fontWeight: 500 }}>
-          تایید
+        <Typography
+          variant="body2"
+          component={"p"}
+          py={0.5}
+          sx={{ color: "#fff", fontWeight: 500 }}
+        >
+          {isLoading ? (
+            <>
+              <CircularProgress
+                size={20}
+                color="inherit"
+                thickness={5}
+                style={{ marginLeft: 10 }}
+              />
+              در حال ارسال…
+            </>
+          ) : (
+            "تایید"
+          )}
         </Typography>
       </Button>
       <Button
@@ -54,11 +69,16 @@ export const SubmitButtons: React.FC<ISubmitButtonsProps> = ({
           background: "#F7F7FF",
         }}
       >
-        <Typography variant="body2" component={"p"} py={0.5} color={"#1758BA"} sx={{ fontWeight: 500 }}>
+        <Typography
+          variant="body2"
+          component={"p"}
+          py={0.5}
+          color={"#1758BA"}
+          sx={{ fontWeight: 500 }}
+        >
           انصراف
         </Typography>
       </Button>
     </Box>
-  )
-}
-
+  );
+};

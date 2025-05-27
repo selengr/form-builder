@@ -53,7 +53,7 @@ export function CalculatorCard({
   disabled = false,
 }: ICalculatorCardProps) {
   const [open, setOpen] = useState<boolean>(false);
-  const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [hasDependencies, setHasDependencies] = useState<boolean>(false);
 
@@ -77,7 +77,7 @@ export function CalculatorCard({
 
   const handleOpenEditDialog = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
-    setOpenDialog(true);
+    setOpenEditDialog(true);
     handleCloseMenu();
   };
 
@@ -99,7 +99,7 @@ export function CalculatorCard({
           mutate(id);
           setOpen(false);
           handleCloseMenu();
-          setOpenDialog(false);
+          setHasDependencies(false);
   };
 
   const toggleConfirm = () => {
@@ -204,10 +204,10 @@ export function CalculatorCard({
         </div>
       </div>
 
-      {openDialog && (
+      {openEditDialog && (
         <EditCalculatorDialog
-          open={openDialog}
-          setOpen={setOpenDialog}
+          open={openEditDialog}
+          setOpen={setOpenEditDialog}
           calcId={id}
         />
       )}

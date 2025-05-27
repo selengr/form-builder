@@ -2,13 +2,11 @@ import {toast} from 'sonner';
 import AxiosApi from '@/services/axios/AxiosApi';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 
-
 const deleteCalculator = async (id: number) => {
   const url = `/calculation/delete/${id}`;
   const response = await AxiosApi.delete(url);
   return response.data;
 };
-
 
 export const useDeleteCalculator = () => {
   const queryClient = useQueryClient(); 

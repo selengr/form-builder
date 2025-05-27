@@ -1,25 +1,37 @@
 "use client";
 // React & Libs
 import Image from "next/image";
-import {useState} from "react";
-import {Button, Menu, Typography} from "@mui/material";
+import { useState } from "react";
+import { Button, Menu, Typography } from "@mui/material";
 // types
-import {ICalculatorCardProps} from "@/types/calculator";
+import { ICalculatorCardProps } from "@/types/calculator";
 // components
+import ConfirmDialog from "@/components/confirm-dialog";
 import EditCalculatorDialog from "./EditCalculatorDialog";
 // icons
-import {SlPencil} from "react-icons/sl";
-import {WeuiDeleteOutlined} from "../../../public/images/icons/DeleteIcon";
-import {PhDotsThreeVerticalBold} from "../../../public/images/icons/PhDotsThreeVerticalBold";
+import { SlPencil } from "react-icons/sl";
+import { WeuiDeleteOutlined } from "../../../public/images/icons/DeleteIcon";
+import { PhDotsThreeVerticalBold } from "../../../public/images/icons/PhDotsThreeVerticalBold";
 // hooks
-import { useDeleteCalculator, useCheckDependency } from '../../app/(builder)/builder/[id]/calculator/_hooks';
+import {
+  useDeleteCalculator,
+  useCheckDependency,
+} from "../../app/(builder)/builder/[id]/calculator/_hooks";
 
-export function CalculatorCard({ calculator, index, disabled = false, refetch }: ICalculatorCardProps) {
+export function CalculatorCard({
+  calculator,
+  index,
+  disabled = false,
+}: ICalculatorCardProps) {
   const [openDialog, setOpenDialog] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const {mutate, isPending} = useDeleteCalculator(refetch);
-  const {mutate : checkDependency, isPending : checkDependencyLoading} = useCheckDependency();
+  const { mutate, isPending } = useDeleteCalculator();
+  const { mutate: checkDependency, isPending: checkDependencyLoading } =
+    useCheckDependency();
 
   const isMenuOpen = Boolean(anchorEl);
 
@@ -39,15 +51,21 @@ export function CalculatorCard({ calculator, index, disabled = false, refetch }:
     handleCloseMenu();
   };
 
-    const handleDelete = (id: number) => {
-      checkDependency(
-        {id},
-        {onSuccess : () =>{
+  const handleDelete = (id: number) => {
+    checkDependency(
+      { id },
+      {
+        onSuccess: () => {
           mutate(Number(id));
           handleCloseMenu();
-        }
-       })
-    };
+        },
+      }
+    );
+  };
+
+  const toggleConfirm = () => {
+    setOpen((prev) => !prev);
+  };
 
   return (
     <>
@@ -61,7 +79,9 @@ export function CalculatorCard({ calculator, index, disabled = false, refetch }:
             {index + 1}
           </div>
           <div className="flex flex-col">
-            <h3 className="text-[#161616] text-sm">{calculator.name ?? "--"}</h3>
+            <h3 className="text-[#161616] text-sm">
+              {calculator.name ?? "--"}
+            </h3>
             <span className="text-[#393939] text-xs">#محاسبه‌گر</span>
           </div>
         </div>
@@ -71,7 +91,12 @@ export function CalculatorCard({ calculator, index, disabled = false, refetch }:
             className="bg-[#F7F7FF] h-8 w-8 rounded-[10px] flex justify-center items-center"
             disabled={disabled}
           >
-            <Image src="/images/calc/math.svg" width={25} height={25} alt="math" />
+            <Image
+              src="/images/calc/math.svg"
+              width={25}
+              height={25}
+              alt="math"
+            />
           </button>
 
           <div className="bg-[#F7F7FF] h-8 w-8 rounded-[10px] flex justify-center items-center">
@@ -107,8 +132,10 @@ export function CalculatorCard({ calculator, index, disabled = false, refetch }:
                 onClick={handleOpenEditDialog}
                 disabled={disabled}
               >
-                <Typography>ویرایش</Typography>
-                <SlPencil size="1.18rem" />
+                <SlPencil size="1rem" />
+                <Typography sx={{ fontSize: "12px", color: "black" }}>
+                  ویرایش
+                </Typography>
               </Button>
 
               <Button
@@ -120,10 +147,12 @@ export function CalculatorCard({ calculator, index, disabled = false, refetch }:
                 fullWidth
                 loading={isPending}
                 disabled={isPending || disabled}
-                onClick={()=>handleDelete(calculator.id as number)}
+                onClick={toggleConfirm}
               >
-                <Typography>حذف</Typography>
-                <WeuiDeleteOutlined fontSize="1.32rem" />
+                <Typography sx={{ fontSize: "12px", color: "black" }}>
+                  حذف
+                </Typography>
+                <WeuiDeleteOutlined fontSize="1.2rem" />
               </Button>
             </Menu>
           </div>
@@ -137,6 +166,40 @@ export function CalculatorCard({ calculator, index, disabled = false, refetch }:
           calcId={calculator.id}
         />
       )}
+
+      <ConfirmDialog
+        content="آیا از عملیات حذف اطمینان دارید؟"
+        open={open}
+        title="حذف"
+        loading={loading}
+        onClose={toggleConfirm}
+        cancelText="انصراف"
+        action={
+          <Button
+            type="submit"
+            fullWidth
+            disableRipple
+            variant="contained"
+            loading={loading}
+            disabled={loading}
+            sx={{
+              height: "50px",
+              fontWeight: "400",
+              fontSize: "15px",
+              borderRadius: "10px",
+              borderColor: "#1758BA",
+              boxShadow: "none",
+              "&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active": {
+                bgcolor: "#1758BA",
+                boxShadow: "none",
+              },
+            }}
+            onClick={() => handleDelete(calculator.id as number)}
+          >
+            تایید
+          </Button>
+        }
+      />
     </>
   );
 }

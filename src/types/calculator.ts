@@ -15,7 +15,6 @@ export interface ICalculatorCardProps {
   index:number;
   disabled?:boolean
   calculator: ICalculator;
-  refetch : TRefetchFunction
 }
 
 export interface ICalculatorListProps {

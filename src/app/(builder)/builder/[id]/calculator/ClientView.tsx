@@ -18,7 +18,7 @@ export default function ClientView<T>({ calculators, isPending, error }: ClientV
 
   return (
     <div className="w-full min-h-full px-4 py-4 ">
-      <div className="relative container mx-auto flex flex-col justify-start items-center h-full bg-white rounded-xl w-full">
+      <div className="relative container mx-auto flex flex-col min-h-screen justify-start items-center h-full bg-white rounded-xl w-full">
         <DesignerTabs />
         {!error && isPending && <CalculatorSkeleton />}
         {!error && !isPending && <CalculatorList calculators={calculators} />}

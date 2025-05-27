@@ -246,13 +246,12 @@ export function CalculatorCard({
         }
       />
       <ConfirmDialog
-        content="محاسبه گر در جاهای دیگر استفاده شده
-ایا از حذف این محاسبه گر اطمینان دارید؟!"
+        content="با توجه به اینکه شما از این محاسبه‌گر در شرط‌ها یا محاسبه‌گرهای دیگر استفاده کرده‌اید، حذف آن منجر به پاک شدن خودکار آن شرط‌ها/محاسبه‌گرها خواهد شد."
         open={hasDependencies}
         title="هشدار"
         loading={isPending}
         onClose={toggleDependencies}
-        cancelText="انصراف"
+        cancelText="لغو"
         action={
           <Button
             type="submit"

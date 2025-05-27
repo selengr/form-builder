@@ -8,7 +8,7 @@ const fetchData = async (id: string | string[]) => {
         searchFilterBoxList: [{restrictionList: []}], sortList: [{fieldName: "id", type: "DSC"}], page: 0, rows: 1000,
     };
 
-    const baseUrl = `/calculation/ain-list/${id}`;
+    const baseUrl = `/calculation/main-list/${id}`;
     const queryString = `?searchFilterModel=${encodeURIComponent(JSON.stringify(filterModel))}`;
     const url = baseUrl + queryString;
     const response = await AxiosApi.get(url);
@@ -18,7 +18,6 @@ const fetchData = async (id: string | string[]) => {
 
 export const useGetList = () => {
   const {id} = useParams();
-  console.log('iddddd :>> ', id);
   return useQuery({
     queryKey: ['Calculation_List'],
     queryFn: () => fetchData(id),

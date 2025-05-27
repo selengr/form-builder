@@ -1,4 +1,4 @@
-export default function CalculatorSkeleton() {
+ const CalculatorSkeleton = () => {
   return (
     <div className="animate-pulse h-[calc(100vh-6rem)] w-full max-w-md flex flex-col p-[13px] overflow-hidden">
     <div
@@ -33,3 +33,5 @@ export default function CalculatorSkeleton() {
     </div>
   );
 }
+
+export default CalculatorSkeleton

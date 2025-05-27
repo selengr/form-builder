@@ -35,9 +35,6 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
     handleRemoveSubCondition,
   } = useConditionalForm(condition)
 
-  const handleRefresh = () => {
-    window.location.reload()
-  };
   const { qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter()
   const {
      onlyAllQuestions,
@@ -124,10 +121,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
       { data: output },
       {
         onSuccess: async () => {
-          // refresh()
-          // await refetch()
           handleClose()
-          handleRefresh()
         },
         onError: (error: any) => {
           // ...

@@ -1,8 +1,9 @@
 "use client";
-import {useListFetcher} from "@/hooks/useListFetcher";
 import ClientView from "./ClientView";
+// _hooks
+import { useGetList } from "./_hooks";
 
-export default function CalculatorPage({params}: { params: { id: string } }) {
-  const {data: calculators, loading} = useListFetcher({path: "calculation", id: params.id});
-  return <ClientView calculators={calculators}/>;
+export default function CalculatorPage() {
+  const { data, isPending, error } = useGetList()
+  return <ClientView calculators={data} isPending={isPending} error={error}/>
 }

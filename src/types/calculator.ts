@@ -1,18 +1,21 @@
 import { Dispatch, SetStateAction } from "react";
+import { QueryObserverResult } from "@tanstack/react-query";
 
+export type TRefetchFunction = () => Promise<QueryObserverResult<any, unknown>>;
 
 export interface ICalculator {
   id: number;
   name: string;
-  formBuilderId: number;
   theFormula: string;
-  frontCalcData: string;
+  formBuilderId: number;
+  frontCalcData: string
 }
 
 export interface ICalculatorCardProps {
-  calculator: ICalculator;
   index:number;
   disabled?:boolean
+  calculator: ICalculator;
+  refetch : TRefetchFunction
 }
 
 export interface ICalculatorListProps {

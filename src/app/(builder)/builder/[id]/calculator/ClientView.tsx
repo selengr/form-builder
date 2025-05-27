@@ -1,6 +1,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
+// type
+import { TRefetchFunction } from "@/types/calculator";
 // templates
 import DesignerTabs from "@/templates/builder/TabComponent";
 import CalculatorSkeleton from "@/templates/calculator/CalculatorSkeleton";
@@ -9,19 +11,20 @@ const CalculatorList = dynamic(
   () => import("@/templates/calculator/CalculatorList")
 );
 
-interface ClientViewProps<T> {
+interface IProps<T> {
   calculators: T[];
   isPending: boolean;
   error: Error | null;
+  refetch: TRefetchFunction;
 }
-export default function ClientView<T>({ calculators, isPending, error }: ClientViewProps<T>) {
+export default function ClientView<T>({ calculators, isPending, error, refetch }: IProps<T>) {
 
   return (
     <div className="w-full min-h-full px-4 py-4 ">
       <div className="relative container mx-auto flex flex-col min-h-screen justify-start items-center h-full bg-white rounded-xl w-full">
         <DesignerTabs />
         {!error && isPending && <CalculatorSkeleton />}
-        {!error && !isPending && <CalculatorList calculators={calculators} />}
+        {!error && !isPending && <CalculatorList calculators={calculators} refetch={refetch}/>}
         {error && (
           <div className="flex flex-col absolute top-[250px] justify-center items-center">
             <span className="text-red-500">

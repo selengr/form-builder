@@ -14,11 +14,11 @@ import {PhDotsThreeVerticalBold} from "../../../public/images/icons/PhDotsThreeV
 // hooks
 import { useDeleteCalculator, useCheckDependency } from '../../app/(builder)/builder/[id]/calculator/_hooks';
 
-export function CalculatorCard({ calculator, index, disabled = false }: ICalculatorCardProps) {
+export function CalculatorCard({ calculator, index, disabled = false, refetch }: ICalculatorCardProps) {
   const [openDialog, setOpenDialog] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const {mutate, isPending} = useDeleteCalculator();
+  const {mutate, isPending} = useDeleteCalculator(refetch);
   const {mutate : checkDependency, isPending : checkDependencyLoading} = useCheckDependency();
 
   const isMenuOpen = Boolean(anchorEl);

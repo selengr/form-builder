@@ -1,8 +1,6 @@
 import {toast} from 'sonner';
-import {useParams, useRouter} from "next/navigation";
 import AxiosApi from '@/services/axios/AxiosApi';
-import {useMutation} from '@tanstack/react-query';
-import {queryClient} from '@/lib/react-query.config';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
 
 
 const deleteCalculator = async (id: number) => {
@@ -13,21 +11,13 @@ const deleteCalculator = async (id: number) => {
 
 
 export const useDeleteCalculator = () => {
-  const {id} = useParams();
-  const {refresh} = useRouter()
-
+  const queryClient = useQueryClient(); 
   const mutation = useMutation({
     mutationKey: ['delete-calculation'],
     mutationFn: (id: number) => deleteCalculator(id),
-
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [`/builder/${id}/calculation`],
-      });
+      queryClient.invalidateQueries(['Calculation_List'] as any);
       toast.success(` محاسبه گر با موفقیت حذف شد`);
-      setTimeout(() => {
-        refresh()
-      }, 500);
     },
     onError: () => {
       toast.error("عملیات ناموفق بود مجددا تلاش کنید");

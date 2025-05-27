@@ -1,8 +1,9 @@
 "use client";
-import {useListFetcher} from "@/hooks/useListFetcher";
 import ClientView from "./ClientView";
+// _hooks
+import { useGetList } from "./_hooks";
 
-export default function ConditionPage({params}: { params: { id: string } }) {
-  const {data: conditions, loading} = useListFetcher({path: "condition", id: params.id});
-  return <ClientView conditions={conditions}/>;
+export default function ConditionPage() {
+  const { data, isPending, error } = useGetList()
+  return <ClientView conditions={data} isPending={isPending} error={error}/>
 }

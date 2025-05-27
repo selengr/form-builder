@@ -2,8 +2,8 @@
 
 import dynamic from "next/dynamic";
 // templates
+import { CalculatorSkeleton } from "@/templates/calculator";
 import DesignerTabs from "@/templates/builder/TabComponent";
-import CalculatorSkeleton from "@/templates/calculator/CalculatorSkeleton";
 
 const CalculatorList = dynamic(
   () => import("@/templates/calculator/CalculatorList")

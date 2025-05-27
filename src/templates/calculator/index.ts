@@ -1,1 +1,1 @@
-import { default as CalculatorSkeleton } from "./CalculatorSkeleton"
+export { default as CalculatorSkeleton } from "./CalculatorSkeleton"

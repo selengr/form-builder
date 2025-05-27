@@ -1,17 +1,19 @@
 "use client";
+// lib
+import { idGenerator } from "@/lib";
+// hooks
+import { useFormData } from "@/hooks";
 // types
 import { ICalculator } from "@/types/calculator";
-/// hook
-import useFormData from "@/hooks/useFormData";
 // view
 import { CalculatorCard } from "./CalculatorCard";
 import CreateCalculator from "./CreateCalculator";
 
-interface ICalculatorListProps {
+interface IProps {
   calculators: ICalculator[] | any;
 }
 
-const CalculatorList: React.FC<ICalculatorListProps> = ({ calculators }) => {
+const CalculatorList: React.FC<IProps> = ({ calculators }) => {
   const { formData, isLoading } = useFormData();
 
   return (
@@ -28,7 +30,7 @@ const CalculatorList: React.FC<ICalculatorListProps> = ({ calculators }) => {
             <CalculatorCard
               index={index}
               calculator={calculator}
-              key={index}
+              key={idGenerator()}
               disabled={
                 isLoading || formData?.formSettingModel?.formStatus !== "CREATE"
               }

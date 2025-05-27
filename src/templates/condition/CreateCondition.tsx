@@ -1,6 +1,7 @@
 "use client";
 import {useState} from "react";
 import {Button, SxProps, Theme} from "@mui/material";
+// view
 import CreateConditionDialog from "./CreateConditionDialog";
 
 const buttonSx: SxProps<Theme> = {
@@ -29,7 +30,6 @@ const CreateCondition = () => {
         <Button
         variant="text"
         onClick={() => setOpen(true)}
-        // loading={}
         fullWidth
         sx={buttonSx}
       >

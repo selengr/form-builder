@@ -21,7 +21,7 @@ const ConditionList: React.FC<IConditionListProps> = ({conditions}) => {
             {Array.isArray(conditions) && conditions.length > 0 && (
                 <div
                     dir="rtl"
-                    className="bg-[#F7F7FF] rounded-lg p-6 w-full flex flex-col gap-3  mb-10 overflow-hidden"
+                    className="bg-[#F7F7FF] rounded-lg p-6 w-full flex flex-col gap-3  mb-10 overflow-y-auto"
                 >
                     {conditions?.map((condition: IGetCondition, index: number) => (
                         <div key={idGenerator()}>

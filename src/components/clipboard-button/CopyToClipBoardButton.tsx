@@ -1,30 +1,31 @@
 "use client";
-
+import { Box } from "@mui/material";
 import { ReactNode, useState } from "react";
-import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
 import Typography from "@mui/material/Typography";
 import { GrCircleInformation } from "react-icons/gr";
-import { Box } from "@mui/material";
+import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
 
-const CopyToClipboardButton = ({
-  text,
-  icon,
-  label,
-  labelColor,
-}: {
-  text: string;
+interface CopyToClipboardButtonProps {
+  link: string;
   icon: ReactNode;
   label?: string;
   labelColor?: string;
-}) => {
+}
+const CopyToClipboardButton = ({
+  link,
+  icon,
+  label,
+  labelColor,
+}: CopyToClipboardButtonProps) => {
   const [open, setOpen] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("کپی شد");
   const [isError, setIsError] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("کپی شد");
 
   const handleClick = () => {
+
     if (navigator.clipboard) {
-      navigator.clipboard
-        .writeText(text)
+        navigator.clipboard
+        .writeText(link)
         .then(() => {
           setMessage("کپی شد");
           setIsError(false);

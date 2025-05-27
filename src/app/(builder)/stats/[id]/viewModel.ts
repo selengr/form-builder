@@ -7,11 +7,11 @@ export const useStatsViewModel = () => {
     const [formData, setFormData] = useState<any>({});
     const [headData, setHeadData] = useState<any[]>([]);
     const [allData, setAllData] = useState<any[]>([]);
-    const [visibleData, setVisibleData] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [totalItems, setTotalItems] = useState(0);
 
     const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(-1);
+    const [pageSize, setPageSize] = useState(25);
 
     const fetchFormData = async () => {
         try {
@@ -26,13 +26,14 @@ export const useStatsViewModel = () => {
         }
     };
 
-    const fetchStatsData = async () => {
+    const fetchStatsData = async (page: number, pageSize: number) => {
         try {
             setIsLoading(true);
             // @ts-ignore
-            const data = await statsService.getStatsData(id.toString());
+            const data = await statsService.getStatsData(id.toString(), page, pageSize);
             setHeadData(data.headData);
             setAllData(data.allData);
+            setTotalItems(data.totalItems);
         } catch (error) {
             console.error('Error fetching stats data:', error);
         } finally {
@@ -41,27 +42,25 @@ export const useStatsViewModel = () => {
     };
 
     useEffect(() => {
-        (async () => {
-            await fetchFormData();
-            await fetchStatsData();
-        })();
+        fetchFormData();
+        fetchStatsData(page, pageSize);
     }, [id]);
 
     useEffect(() => {
-        const start = (page - 1) * pageSize;
-        const end = start + pageSize;
-        setVisibleData(allData.slice(start, end));
-    }, [page, pageSize, allData]);
+        if (pageSize !== -1) {
+            fetchStatsData(page, pageSize);
+        }
+    }, [page, pageSize]);
 
     return {
         formData,
         headData,
         allData,
-        visibleData,
         isLoading,
         page,
         setPage,
         pageSize,
         setPageSize,
+        totalItems
     };
 };

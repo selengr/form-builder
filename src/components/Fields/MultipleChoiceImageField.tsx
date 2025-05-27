@@ -855,7 +855,7 @@ function PropertiesComponent({
           marginTop={1.5}
         >
           <Typography variant="subtitle2" fontWeight="700">
-            توضیع تصادفی گزینه‌ها
+            توزیع تصادفی گزینه‌ها
           </Typography>
           <RHFSwitch
             label=""

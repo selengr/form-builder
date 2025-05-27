@@ -18,6 +18,19 @@ import {
   useCheckDependency,
 } from "../../app/(builder)/builder/[id]/calculator/_hooks";
 
+const buttonStyles = {
+  height: "50px",
+  fontWeight: "400",
+  fontSize: "15px",
+  borderRadius: "10px",
+  borderColor: "#1758BA",
+  boxShadow: "none",
+  "&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active": {
+    bgcolor: "#1758BA",
+    boxShadow: "none",
+  },
+};
+
 export function CalculatorCard({
   calculator,
   index,
@@ -25,9 +38,9 @@ export function CalculatorCard({
 }: ICalculatorCardProps) {
   const [open, setOpen] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [hasDependencies, setHasDependencies] = useState<boolean>(false);
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const { mutate, isPending } = useDeleteCalculator();
   const { mutate: checkDependency, isPending: checkDependencyLoading } =
@@ -51,21 +64,24 @@ export function CalculatorCard({
     handleCloseMenu();
   };
 
-  const handleDelete = (id: number) => {
+  const handleCheckDependency = (id: number) => {
     checkDependency(
       { id },
       {
         onSuccess: (data) => {
           if (data) {
-            toggleDependencies();
+            setHasDependencies(true);
           } else {
-            mutate(Number(id));
+            handleDelete(id);
           }
-          setOpen(false);
-          handleCloseMenu();
         },
       }
     );
+  };
+  const handleDelete = (id: number) => {
+          mutate(id);
+          setOpen(false);
+          handleCloseMenu();
   };
 
   const toggleConfirm = () => {
@@ -192,19 +208,8 @@ export function CalculatorCard({
             disableRipple
             variant="contained"
             disabled={isDeleteLoading}
-            sx={{
-              height: "50px",
-              fontWeight: "400",
-              fontSize: "15px",
-              borderRadius: "10px",
-              borderColor: "#1758BA",
-              boxShadow: "none",
-              "&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active": {
-                bgcolor: "#1758BA",
-                boxShadow: "none",
-              },
-            }}
-            onClick={() => handleDelete(calculator.id as number)}
+            sx={buttonStyles}
+            onClick={() => handleCheckDependency(calculator.id as number)}
           >
             {isDeleteLoading ? (
               <>
@@ -237,18 +242,7 @@ export function CalculatorCard({
             disableRipple
             variant="contained"
             disabled={isPending}
-            sx={{
-              height: "50px",
-              fontWeight: "400",
-              fontSize: "15px",
-              borderRadius: "10px",
-              borderColor: "#1758BA",
-              boxShadow: "none",
-              "&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active": {
-                bgcolor: "#1758BA",
-                boxShadow: "none",
-              },
-            }}
+            sx={buttonStyles}
             onClick={() => handleDelete(calculator.id as number)}
           >
             {isPending ? (

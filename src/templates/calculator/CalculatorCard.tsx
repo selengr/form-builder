@@ -2,7 +2,7 @@
 // React & Libs
 import Image from "next/image";
 import { useState } from "react";
-import { Button, Menu, Typography } from "@mui/material";
+import { Button, Menu, Typography, CircularProgress } from "@mui/material";
 // types
 import { ICalculatorCardProps } from "@/types/calculator";
 // components
@@ -23,9 +23,9 @@ export function CalculatorCard({
   index,
   disabled = false,
 }: ICalculatorCardProps) {
-  const [openDialog, setOpenDialog] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [hasDependencies, setHasDependencies] = useState<boolean>(false);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -55,8 +55,13 @@ export function CalculatorCard({
     checkDependency(
       { id },
       {
-        onSuccess: () => {
-          mutate(Number(id));
+        onSuccess: (data) => {
+          if (data) {
+            toggleDependencies();
+          } else {
+            mutate(Number(id));
+          }
+          setOpen(false);
           handleCloseMenu();
         },
       }
@@ -66,6 +71,12 @@ export function CalculatorCard({
   const toggleConfirm = () => {
     setOpen((prev) => !prev);
   };
+
+  const toggleDependencies = () => {
+    setHasDependencies((prev) => !prev);
+  };
+
+  const isDeleteLoading = checkDependencyLoading || isPending;
 
   return (
     <>
@@ -171,7 +182,7 @@ export function CalculatorCard({
         content="آیا از عملیات حذف اطمینان دارید؟"
         open={open}
         title="حذف"
-        loading={loading}
+        loading={isDeleteLoading}
         onClose={toggleConfirm}
         cancelText="انصراف"
         action={
@@ -180,8 +191,7 @@ export function CalculatorCard({
             fullWidth
             disableRipple
             variant="contained"
-            loading={loading}
-            disabled={loading}
+            disabled={isDeleteLoading}
             sx={{
               height: "50px",
               fontWeight: "400",
@@ -196,7 +206,64 @@ export function CalculatorCard({
             }}
             onClick={() => handleDelete(calculator.id as number)}
           >
-            تایید
+            {isDeleteLoading ? (
+              <>
+                <CircularProgress
+                  size={20}
+                  color="inherit"
+                  thickness={5}
+                  style={{ marginLeft: 10 }}
+                />
+                در حال حذف…
+              </>
+            ) : (
+              "تایید"
+            )}
+          </Button>
+        }
+      />
+      <ConfirmDialog
+        content="محاسبه گر در جاهای دیگر استفاده شده
+ایا از حذف این محاسبه گر اطمینان دارید؟!"
+        open={hasDependencies}
+        title="هشدار"
+        loading={isPending}
+        onClose={toggleDependencies}
+        cancelText="انصراف"
+        action={
+          <Button
+            type="submit"
+            fullWidth
+            disableRipple
+            variant="contained"
+            disabled={isPending}
+            sx={{
+              height: "50px",
+              fontWeight: "400",
+              fontSize: "15px",
+              borderRadius: "10px",
+              borderColor: "#1758BA",
+              boxShadow: "none",
+              "&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active": {
+                bgcolor: "#1758BA",
+                boxShadow: "none",
+              },
+            }}
+            onClick={() => handleDelete(calculator.id as number)}
+          >
+            {isPending ? (
+              <>
+                <CircularProgress
+                  size={20}
+                  color="inherit"
+                  thickness={5}
+                  style={{ marginLeft: 10 }}
+                />
+                در حال حذف…
+              </>
+            ) : (
+              "تایید"
+            )}
           </Button>
         }
       />

@@ -21,7 +21,7 @@ export default function ClientView({
       <div className="relative container mx-auto flex flex-col justify-start items-center h-full bg-white rounded-xl w-full">
         <DesignerTabs />
         {!error && isPending && <CalculatorSkeleton />}
-        {!isPending && <CalculatorList calculators={calculators} />}
+        {!error && !isPending && <CalculatorList calculators={calculators} />}
         {error && (
           <div className="flex flex-col absolute top-[250px] justify-center items-center">
             <span className="text-red-500">

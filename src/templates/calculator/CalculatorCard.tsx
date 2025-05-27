@@ -23,11 +23,27 @@ const buttonStyles = {
   fontWeight: "400",
   fontSize: "15px",
   borderRadius: "10px",
-  borderColor: "#1758BA",
   boxShadow: "none",
-  "&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active": {
-    bgcolor: "#1758BA",
-    boxShadow: "none",
+  transition: "background-color 0.3s, border-color 0.3s",
+};
+const buttonStylesAlert = {
+  bgcolor: "#1758BA",
+  borderColor: "#1758BA",
+  "&:hover": {
+    bgcolor: "#0F4C8A", 
+  },
+  "&:active": {
+    bgcolor: "#0A3A6A", 
+  },
+};
+const buttonStylesError = {
+  bgcolor: "#FA4D56",
+  borderColor: "#FA4D56",
+  "&:hover": {
+    bgcolor: "#C6394D", 
+  },
+  "&:active": {
+    bgcolor: "#A32A3A", 
   },
 };
 
@@ -41,6 +57,7 @@ export function CalculatorCard({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [hasDependencies, setHasDependencies] = useState<boolean>(false);
 
+  const { id } = calculator
 
   const { mutate, isPending } = useDeleteCalculator();
   const { mutate: checkDependency, isPending: checkDependencyLoading } =
@@ -64,7 +81,7 @@ export function CalculatorCard({
     handleCloseMenu();
   };
 
-  const handleCheckDependency = (id: number) => {
+  const handleCheckDependency = () => {
     checkDependency(
       { id },
       {
@@ -72,16 +89,17 @@ export function CalculatorCard({
           if (data) {
             setHasDependencies(true);
           } else {
-            handleDelete(id);
+            handleDelete();
           }
         },
       }
     );
   };
-  const handleDelete = (id: number) => {
+  const handleDelete = () => {
           mutate(id);
           setOpen(false);
           handleCloseMenu();
+          setOpenDialog(false);
   };
 
   const toggleConfirm = () => {
@@ -190,7 +208,7 @@ export function CalculatorCard({
         <EditCalculatorDialog
           open={openDialog}
           setOpen={setOpenDialog}
-          calcId={calculator.id}
+          calcId={id}
         />
       )}
 
@@ -208,8 +226,8 @@ export function CalculatorCard({
             disableRipple
             variant="contained"
             disabled={isDeleteLoading}
-            sx={buttonStyles}
-            onClick={() => handleCheckDependency(calculator.id as number)}
+            sx={{...buttonStyles, ...buttonStylesAlert}}
+            onClick={handleCheckDependency}
           >
             {isDeleteLoading ? (
               <>
@@ -222,7 +240,7 @@ export function CalculatorCard({
                 در حال حذف…
               </>
             ) : (
-              "تایید"
+              "حذف"
             )}
           </Button>
         }
@@ -242,8 +260,8 @@ export function CalculatorCard({
             disableRipple
             variant="contained"
             disabled={isPending}
-            sx={buttonStyles}
-            onClick={() => handleDelete(calculator.id as number)}
+            sx={{...buttonStyles, ...buttonStylesError }}
+            onClick={handleDelete}
           >
             {isPending ? (
               <>
@@ -256,7 +274,7 @@ export function CalculatorCard({
                 در حال حذف…
               </>
             ) : (
-              "تایید"
+              "حذف"
             )}
           </Button>
         }

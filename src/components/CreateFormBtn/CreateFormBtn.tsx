@@ -95,12 +95,12 @@ export default function CreateFormBtn() {
     subCategoryIds,
     categoryIds,
   }: propertiesFormSchemaType) {
-    const categoryId = categoryIds.concat(subCategoryIds)
+    const categoryId = categoryIds.concat(subCategoryIds);
     const body = {
       name,
       typeEnum,
       formCategorysModel: {
-        categoryId
+        categoryId,
       },
     };
     try {
@@ -360,6 +360,8 @@ export default function CreateFormBtn() {
                     fullWidth
                     name="categoryIds"
                     options={Category ?? []}
+                    isLoading={isFetchingCategory}
+                    disabled={isFetchingCategory}
                     onClose={handleFetchSubcategories}
                   />
                 </Box>
@@ -388,9 +390,12 @@ export default function CreateFormBtn() {
                     chip
                     checkbox
                     fullWidth
-                    disabled={watch("categoryIds").length === 0}
                     name="subCategoryIds"
                     options={subcategories ?? []}
+                    isLoading={mutation.isPending}
+                    disabled={
+                      watch("categoryIds").length === 0 || mutation.isPending
+                    }
                   />
                 </Box>
               </Box>

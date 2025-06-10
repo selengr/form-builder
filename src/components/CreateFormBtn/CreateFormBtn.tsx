@@ -9,10 +9,11 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {Box, Button, Dialog, DialogContent, IconButton, Stack, Tab, Tabs, Typography,MenuItem} from "@mui/material";
 import FormProvider from "../hook-form/FormProvider";
 import {IoClose} from "react-icons/io5";
-import {RHFTextField, RHFSelect} from "../hook-form";
+import {RHFTextField, RHFSelect, RHFMultiSelect} from "../hook-form";
 import AxiosApi from "@/services/axios/AxiosApi";
 import {toast} from "sonner";
 import PlusIcon from "@/../public/images/home-page/Add-fill.svg";
+import { useGetSubCategory } from "./hooks/useGetSubCategory";
 import { IGetCategory, useGetParentCategory } from "./hooks/useGetParentCategory";
 
 
@@ -39,6 +40,7 @@ export default function CreateFormBtn() {
   const [tabValue, setTabValue] = useState("QUESTION");
 
   const { Category, isFetchingCategory } = useGetParentCategory()
+  const { SubCategory, isFetchingSubCategory } = useGetSubCategory()
 
   
 console.log('Category : data?.datList :>> ', Category);
@@ -299,6 +301,36 @@ console.log('Category : data?.datList :>> ', Category);
                               },
                             }}
                           >
+                          
+
+                             <RHFMultiSelect
+                                          sx={{
+                                            "& .MuiInputBase-root": {
+                                              bgcolor: "#fff",
+                                              paddingY: "8px",
+                                            },
+                                          }}
+                                          fullWidth
+                                          name="group"
+                                          options={Category??[]}
+                                        />
+                          </Box>
+
+
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              height: "100%",
+                              direction: "ltr",
+                              width: "100%",
+                              paddingX: 0.5,
+                              marginTop : "8px",
+                              "& .MuiFormControl-root, & .MuiInputBase-root": {
+                                borderRadius: "10px",
+                              },
+                            }}
+                          >
                             <RHFSelect
                               fullWidth
                               name="gender"
@@ -308,7 +340,7 @@ console.log('Category : data?.datList :>> ', Category);
                                 },
                               }}
                             >
-                              {Category?.map((item: IGetCategory) => (
+                              {SubCategory?.map((item: IGetCategory) => (
                                 <MenuItem key={item.value} value={item.value}>
                                   {item.caption}
                                 </MenuItem>

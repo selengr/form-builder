@@ -30,10 +30,8 @@ export const useGetSubCategory = () => {
     retry: 3
   });
 
-    return {
-    isFetchingOnlyAllQuestions: isFetching,
-    onlyAllQuestions: data?.dataList,
-
+  return {
+      isFetchingSubCategory: isFetching,
+      SubCategory : data?.dataList,
   };
-
 };

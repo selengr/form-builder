@@ -134,8 +134,8 @@ const propertiesSchema = z
       .pipe(
         z
           .string()
-          .min(1, { message: "حداقل باید 1 و حداکثر 100 کاراکتر باشد" })
-          .max(100, { message: "حداقل باید 1 و حداکثر 100 کاراکتر باشد" })
+          .min(1, { message: "حداقل باید 1 و حداکثر 4000 کاراکتر باشد" })
+          .max(3999, { message: "حداقل باید 1 و حداکثر 4000 کاراکتر باشد" })
       ),
     SELECTION_TYPE: z.object({ value: z.string(), id: z.number() }),
     SPECTRAL_TYPE: z.object({ value: z.string(), id: z.number() }),
@@ -151,7 +151,7 @@ const propertiesSchema = z
         .trim()
         .transform((value) => value.replace(/\s+/g, " "))
         .pipe(
-          z.string().max(250, { message: "حداکثر میتواند 250 کاراکتر باشد" })
+          z.string().max(3999, { message: "حداکثر میتواند 4000 کاراکتر باشد" })
         )
         .optional(),
       id: z.number(),

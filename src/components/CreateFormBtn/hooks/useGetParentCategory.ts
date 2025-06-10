@@ -1,7 +1,13 @@
 import AxiosApi from '@/services/axios/AxiosApi';
 import {useQuery} from '@tanstack/react-query';
-import {IConditionQuestionType} from '@/types/condition';
-import {useParams} from 'next/navigation';
+
+
+
+
+export interface IGetCategory  {
+  value: string;
+  caption: string;
+}
 
 const fetchCategoryData = async () => {
   const customComboFilterModel = {
@@ -22,12 +28,24 @@ const fetchCategoryData = async () => {
 
 export const useGetParentCategory = () => {
 
-  return useQuery({
+    const {data, isFetching} = useQuery({
     queryKey: ['PARENT_CATEGORY'],
     queryFn: () => fetchCategoryData(),
     gcTime: 600000,
     staleTime: 0,
     retry: 3
   });
+
+   const Category = data?.dataList
+    ?.map((item: IGetCategory) => ({
+      value: item.value,
+      label: item.caption,
+    }));
+
+
+      return {
+    isFetchingCategory: isFetching,
+    Category,
+  };
 
 };

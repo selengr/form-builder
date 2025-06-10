@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import FormProvider from "../hook-form/FormProvider";
 import { IoClose } from "react-icons/io5";
-import { RHFTextField, RHFSelect, RHFMultiSelect } from "../hook-form";
+import { RHFTextField, RHFMultiSelectV0 } from "../hook-form";
 import AxiosApi from "@/services/axios/AxiosApi";
 import { toast } from "sonner";
 import PlusIcon from "@/../public/images/home-page/Add-fill.svg";
@@ -43,7 +43,7 @@ const propertiesSchema = z.object({
     ),
   typeEnum: z.string().min(1, { message: "لطفا یک مورد را انتخاب کنید" }),
   categoryIds: z
-    .array(z.string())
+    .array(z.number())
     .min(1, { message: "لطفا حداقل یک دسته بندی را انتخاب کنید" }), 
       // categoryIds: z.string().optional(),
   subCategoryIds: z
@@ -70,6 +70,8 @@ export default function CreateFormBtn() {
     defaultValues: {
       name: "",
       typeEnum: "QUESTION",
+      categoryIds : [],
+      subCategoryIds : []
     },
   });
 
@@ -328,7 +330,7 @@ export default function CreateFormBtn() {
                     },
                   }}
                 >
-                  <RHFMultiSelect
+                  <RHFMultiSelectV0
                     sx={{
                       "& .MuiInputBase-root": {
                         bgcolor: "#fff",
@@ -336,7 +338,7 @@ export default function CreateFormBtn() {
                       },
                     }}
                     chip
-                  checkbox
+                    checkbox
                     fullWidth
                     name="categoryIds"
                     options={Category ?? []}
@@ -357,13 +359,15 @@ export default function CreateFormBtn() {
                     },
                   }}
                 >
-                   <RHFMultiSelect
+                   <RHFMultiSelectV0
                     sx={{
                       "& .MuiInputBase-root": {
                         bgcolor: "#fff",
                         paddingY: "8px",
                       },
                     }}
+                     chip
+                    checkbox
                     fullWidth
                     name="subCategoryIds"
                     options={SubCategory ?? []}

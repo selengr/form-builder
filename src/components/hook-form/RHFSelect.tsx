@@ -13,6 +13,7 @@ import {
   OutlinedInput,
   TextFieldProps,
   FormHelperText,
+  LinearProgress,
 } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
 
@@ -93,6 +94,7 @@ type RHFMultiSelectProps = SelectProps & {
   }[];
   setValue?: any;
   clearErros?: any;
+  isLoading?: boolean;
 };
 
 const textFieldPatternList = ["PHONE", "DATE", "NATIONAL_CODE", "NUMBER"];
@@ -257,12 +259,23 @@ export function RHFMultiSelectV0({
   checkbox,
   placeholder,
   helperText,
+  isLoading = false,
   sx,
   ...other
 }: RHFMultiSelectProps) {
   const { control } = useFormContext();
 
   const renderValues = (selectedIds: string[]) => {
+    if (isLoading) {
+      return (
+        <LinearProgress
+          variant="buffer"
+          value={0}
+          valueBuffer={0}
+          sx={{ width: 28, pt: 1 }}
+        />
+      );
+    }
     const selectedItems = options.filter((item) =>
       selectedIds.includes(item.value)
     );

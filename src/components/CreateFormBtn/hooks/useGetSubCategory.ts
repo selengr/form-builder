@@ -1,5 +1,6 @@
 import AxiosApi from '@/services/axios/AxiosApi';
 import {useQuery} from '@tanstack/react-query';
+import { IGetCategory } from './useGetParentCategory';
 
 
 const fetchSubcategoryData = async () => {
@@ -30,8 +31,14 @@ export const useGetSubCategory = () => {
     retry: 3
   });
 
+   const SubCategory = data?.dataList
+      ?.map((item: IGetCategory) => ({
+        value: item.value,
+        label: item.caption,
+      }));
+
   return {
       isFetchingSubCategory: isFetching,
-      SubCategory : data?.dataList,
+      SubCategory
   };
 };

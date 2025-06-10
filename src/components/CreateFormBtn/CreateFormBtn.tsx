@@ -1,21 +1,34 @@
 "use client";
 
-import {Fragment, useState} from "react";
-import {useForm} from "react-hook-form";
-import {useRouter} from "next/navigation";
-import {z} from "zod";
+import { Fragment, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
 import Image from "next/image";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {Box, Button, Dialog, DialogContent, IconButton, Stack, Tab, Tabs, Typography,MenuItem} from "@mui/material";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  IconButton,
+  Stack,
+  Tab,
+  Tabs,
+  Typography,
+  MenuItem,
+} from "@mui/material";
 import FormProvider from "../hook-form/FormProvider";
-import {IoClose} from "react-icons/io5";
-import {RHFTextField, RHFSelect, RHFMultiSelect} from "../hook-form";
+import { IoClose } from "react-icons/io5";
+import { RHFTextField, RHFSelect, RHFMultiSelect } from "../hook-form";
 import AxiosApi from "@/services/axios/AxiosApi";
-import {toast} from "sonner";
+import { toast } from "sonner";
 import PlusIcon from "@/../public/images/home-page/Add-fill.svg";
 import { useGetSubCategory } from "./hooks/useGetSubCategory";
-import { IGetCategory, useGetParentCategory } from "./hooks/useGetParentCategory";
-
+import {
+  IGetCategory,
+  useGetParentCategory,
+} from "./hooks/useGetParentCategory";
 
 const propertiesSchema = z.object({
   name: z
@@ -29,6 +42,13 @@ const propertiesSchema = z.object({
         .max(50, { message: "حداقل باید 2 و حداکثر 50 کاراکتر باشد" })
     ),
   typeEnum: z.string().min(1, { message: "لطفا یک مورد را انتخاب کنید" }),
+  categoryIds: z
+    .array(z.string())
+    .min(1, { message: "لطفا حداقل یک دسته بندی را انتخاب کنید" }), 
+      // categoryIds: z.string().optional(),
+  subCategoryIds: z
+    .array(z.number())
+    .min(1, { message: "لطفا حداقل یک دسته بندی را انتخاب کنید" }), 
 });
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
@@ -39,11 +59,10 @@ export default function CreateFormBtn() {
   const [openDialog, setOpenDialog] = useState(false);
   const [tabValue, setTabValue] = useState("QUESTION");
 
-  const { Category, isFetchingCategory } = useGetParentCategory()
-  const { SubCategory, isFetchingSubCategory } = useGetSubCategory()
+  const { Category, isFetchingCategory } = useGetParentCategory();
+  const { SubCategory, isFetchingSubCategory } = useGetSubCategory();
 
-  
-console.log('Category : data?.datList :>> ', Category);
+  console.log("Category : data?.datList :>> ", Category);
 
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
@@ -55,11 +74,14 @@ console.log('Category : data?.datList :>> ', Category);
   });
 
   const {
+    watch,
     setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
+  console.log('watch :>> ', watch("categoryIds"));
+  console.log('watch sub:>> ', watch("subCategoryIds"));
   async function onSubmit(values: propertiesFormSchemaType) {
     try {
       const response: any = await AxiosApi.post("/form", values as any);
@@ -91,7 +113,7 @@ console.log('Category : data?.datList :>> ', Category);
           height: "100%",
           // bgcolor: "#ECFAFF",
           borderRadius: "16px",
-          border : "1px solid #1758BA",
+          border: "1px solid #1758BA",
         }}
       >
         <Image src={PlusIcon} alt="" width={22} height={22} />
@@ -283,71 +305,72 @@ console.log('Category : data?.datList :>> ', Category);
                 </Tabs>
               </Box>
 
+              <Box
+                display="flex"
+                flexDirection="column"
+                gap="6px"
+                width="100%"
+                mt="10px"
+              >
+                <Typography variant="subtitle2" fontWeight="700">
+                  دسته بند‌ی‌ها:
+                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    height: "100%",
+                    direction: "ltr",
+                    width: "100%",
+                    paddingX: 0.5,
+                    "& .MuiFormControl-root, & .MuiInputBase-root": {
+                      borderRadius: "10px",
+                    },
+                  }}
+                >
+                  <RHFMultiSelect
+                    sx={{
+                      "& .MuiInputBase-root": {
+                        bgcolor: "#fff",
+                        paddingY: "8px",
+                      },
+                    }}
+                    chip
+                  checkbox
+                    fullWidth
+                    name="categoryIds"
+                    options={Category ?? []}
+                  />
+                </Box>
 
-                        <Box display="flex" flexDirection="column" gap="6px" width="100%" mt="10px">
-                          <Typography variant="subtitle2" fontWeight="700">
-                              دسته بند‌ی‌ها:
-                          </Typography>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              height: "100%",
-                              direction: "ltr",
-                              width: "100%",
-                              paddingX: 0.5,
-                              "& .MuiFormControl-root, & .MuiInputBase-root": {
-                                borderRadius: "10px",
-                              },
-                            }}
-                          >
-                          
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    height: "100%",
+                    direction: "ltr",
+                    width: "100%",
+                    paddingX: 0.5,
+                    marginTop: "8px",
+                    "& .MuiFormControl-root, & .MuiInputBase-root": {
+                      borderRadius: "10px",
+                    },
+                  }}
+                >
+                   <RHFMultiSelect
+                    sx={{
+                      "& .MuiInputBase-root": {
+                        bgcolor: "#fff",
+                        paddingY: "8px",
+                      },
+                    }}
+                    fullWidth
+                    name="subCategoryIds"
+                    options={SubCategory ?? []}
+                  />
 
-                             <RHFMultiSelect
-                                          sx={{
-                                            "& .MuiInputBase-root": {
-                                              bgcolor: "#fff",
-                                              paddingY: "8px",
-                                            },
-                                          }}
-                                          fullWidth
-                                          name="group"
-                                          options={Category??[]}
-                                        />
-                          </Box>
-
-
-                          <Box
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              height: "100%",
-                              direction: "ltr",
-                              width: "100%",
-                              paddingX: 0.5,
-                              marginTop : "8px",
-                              "& .MuiFormControl-root, & .MuiInputBase-root": {
-                                borderRadius: "10px",
-                              },
-                            }}
-                          >
-                            <RHFSelect
-                              fullWidth
-                              name="gender"
-                              sx={{
-                                "& .MuiInputBase-root": {
-                                  bgcolor: "#fff",
-                                },
-                              }}
-                            >
-                              {SubCategory?.map((item: IGetCategory) => (
-                                <MenuItem key={item.value} value={item.value}>
-                                  {item.caption}
-                                </MenuItem>
-                              ))}
-                            </RHFSelect>
-                          </Box>
-                        </Box>
+                </Box>
+              </Box>
 
               <Box
                 display="flex"

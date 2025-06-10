@@ -60,8 +60,6 @@ export default function CreateFormBtn() {
   const { Category, isFetchingCategory } = useGetParentCategory();
   const { mutation, SubCategoryData } = useGetSubCategory();
 
-  console.log("Category : data?.datList :>> ", Category);
-
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     mode: "onSubmit",
@@ -237,8 +235,12 @@ export default function CreateFormBtn() {
                   display: "flex",
                   justifyContent: "center",
                   mt: 5,
+                  flexDirection: "column",
                 }}
               >
+                <Typography variant="subtitle2" fontWeight="700">
+                     نوع فرم:
+                </Typography>
                 <Tabs
                   value={tabValue}
                   onChange={handleTabChange}
@@ -263,16 +265,20 @@ export default function CreateFormBtn() {
                       borderRadius: "10px",
                       bgcolor: "#1758BA",
                     },
+                    "& .MuiTabs-flexContainer" : {
+                      width : "100%"
+                    }
                   }}
                 >
                   <Tab
                     sx={{
                       "&.MuiButtonBase-root.MuiTab-root": {
-                        minWidth: "30px",
+                        minWidth: "40%",
+                        width:"50%",
                         color: "#000",
                         fontWeight: 600,
                         paddingX: "15px",
-                        maxWidth: "80px",
+                        maxWidth: "45%",
                       },
                     }}
                     disableRipple={true}
@@ -282,11 +288,12 @@ export default function CreateFormBtn() {
                   <Tab
                     sx={{
                       "&.MuiButtonBase-root.MuiTab-root": {
-                        minWidth: "30px",
+                        minWidth: "40%",
                         color: "#000",
                         fontWeight: 600,
                         paddingX: "15px",
-                        maxWidth: "80px",
+                        maxWidth: "45%",
+                        width:"50%",
                       },
                     }}
                     disableRipple={true}

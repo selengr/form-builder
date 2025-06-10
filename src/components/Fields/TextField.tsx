@@ -80,8 +80,8 @@ const propertiesSchema = z
       .pipe(
         z
           .string()
-          .min(1, { message: "حداقل باید 1 و حداکثر 100 کاراکتر باشد" })
-          .max(100, { message: "حداقل باید 1 و حداکثر 100 کاراکتر باشد" })
+          .min(1, { message: "حداقل باید 1 و حداکثر 4000 کاراکتر باشد" })
+          .max(3999, { message: "حداقل باید 1 و حداکثر 4000 کاراکتر باشد" })
       ),
     MINIMUM_LEN: z.object({
       value: z.number({ invalid_type_error: "اجباری است" }).min(0),
@@ -99,7 +99,7 @@ const propertiesSchema = z
         .trim()
         .transform((value) => value.replace(/\s+/g, " "))
         .pipe(
-          z.string().max(250, { message: "حداکثر میتواند 250 کاراکتر باشد" })
+          z.string().max(3999, { message: "حداکثر میتواند 4000 کاراکتر باشد" })
         )
         .optional(),
       id: z.number(),
@@ -124,24 +124,24 @@ const propertiesSchema = z
   .refine(
     (val) => {
       if (val.TEXT_FIELD_PATTERN.value === "LONG_TEXT") {
-        return val.MAXIMUM_LEN.value <= 1000;
+        return val.MAXIMUM_LEN.value <= 3999;
       }
       return true;
     },
     {
-      message: "حداکثر طول برای متنی بلند باید 1000 کاراکتر باشد",
+      message: "حداکثر طول برای متنی بلند باید 4000 کاراکتر باشد",
       path: ["MAXIMUM_LEN.value"],
     }
   )
   .refine(
     (val) => {
       if (val.TEXT_FIELD_PATTERN.value === "SHORT_TEXT") {
-        return val.MAXIMUM_LEN.value <= 250;
+        return val.MAXIMUM_LEN.value <= 3999;
       }
       return true;
     },
     {
-      message: "حداکثر طول برای متنی ساده باید 250 کاراکتر باشد",
+      message: "حداکثر طول برای متنی ساده باید 4000 کاراکتر باشد",
       path: ["MAXIMUM_LEN.value"],
     }
   );

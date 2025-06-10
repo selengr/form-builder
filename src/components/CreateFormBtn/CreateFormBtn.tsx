@@ -1,10 +1,11 @@
 "use client";
 
-import { Fragment, useState } from "react";
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { z } from "zod";
+import { toast } from "sonner";
 import Image from "next/image";
+import { useForm } from "react-hook-form";
+import { Fragment, useState } from "react";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Box,
@@ -17,11 +18,10 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import FormProvider from "../hook-form/FormProvider";
 import { IoClose } from "react-icons/io5";
+import FormProvider from "../hook-form/FormProvider";
 import { RHFTextField, RHFMultiSelectV0 } from "../hook-form";
 import AxiosApi from "@/services/axios/AxiosApi";
-import { toast } from "sonner";
 import PlusIcon from "@/../public/images/home-page/Add-fill.svg";
 import { useGetSubCategory } from "./hooks/useGetSubCategory";
 import {
@@ -273,12 +273,10 @@ export default function CreateFormBtn() {
                   <Tab
                     sx={{
                       "&.MuiButtonBase-root.MuiTab-root": {
-                        minWidth: "40%",
                         width:"50%",
                         color: "#000",
                         fontWeight: 600,
                         paddingX: "15px",
-                        maxWidth: "45%",
                       },
                     }}
                     disableRipple={true}
@@ -288,11 +286,9 @@ export default function CreateFormBtn() {
                   <Tab
                     sx={{
                       "&.MuiButtonBase-root.MuiTab-root": {
-                        minWidth: "40%",
                         color: "#000",
                         fontWeight: 600,
                         paddingX: "15px",
-                        maxWidth: "45%",
                         width:"50%",
                       },
                     }}

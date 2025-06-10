@@ -6,13 +6,14 @@ import {useRouter} from "next/navigation";
 import {z} from "zod";
 import Image from "next/image";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {Box, Button, Dialog, DialogContent, IconButton, Stack, Tab, Tabs, Typography,} from "@mui/material";
+import {Box, Button, Dialog, DialogContent, IconButton, Stack, Tab, Tabs, Typography,MenuItem} from "@mui/material";
 import FormProvider from "../hook-form/FormProvider";
 import {IoClose} from "react-icons/io5";
-import {RHFTextField} from "../hook-form";
+import {RHFTextField, RHFSelect} from "../hook-form";
 import AxiosApi from "@/services/axios/AxiosApi";
 import {toast} from "sonner";
 import PlusIcon from "@/../public/images/home-page/Add-fill.svg";
+
 
 const propertiesSchema = z.object({
   name: z
@@ -89,7 +90,8 @@ export default function CreateFormBtn() {
       </IconButton>
 
       <Dialog
-        open={openDialog}
+        // open={openDialog}
+        open={true}
         dir="ltr"
         sx={{
           overflow: "hidden",
@@ -272,6 +274,45 @@ export default function CreateFormBtn() {
                   />
                 </Tabs>
               </Box>
+
+
+                        <Box display="flex" flexDirection="column" gap="6px" width="100%" mt="10px">
+                          <Typography variant="subtitle2" fontWeight="700">
+                              دسته بند‌ی‌ها:
+                          </Typography>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              height: "100%",
+                              direction: "ltr",
+                              width: "100%",
+                              paddingX: 0.5,
+                              "& .MuiFormControl-root, & .MuiInputBase-root": {
+                                borderRadius: "10px",
+                              },
+                            }}
+                          >
+                            <RHFSelect
+                              fullWidth
+                              name="gender"
+                              sx={{
+                                "& .MuiInputBase-root": {
+                                  bgcolor: "#fff",
+                                },
+                              }}
+                            >
+                              {[
+                                { value: "male", label: "مرد" },
+                                { value: "female", label: "زن" },
+                              ].map((item) => (
+                                <MenuItem key={item.value} value={item.value}>
+                                  {item.label}
+                                </MenuItem>
+                              ))}
+                            </RHFSelect>
+                          </Box>
+                        </Box>
 
               <Box
                 display="flex"

@@ -43,11 +43,10 @@ const propertiesSchema = z.object({
     ),
   typeEnum: z.string().min(1, { message: "لطفا یک مورد را انتخاب کنید" }),
   categoryIds: z
-    .array(z.number())
+    .array(z.string())
     .min(1, { message: "لطفا حداقل یک دسته بندی را انتخاب کنید" }), 
-      // categoryIds: z.string().optional(),
   subCategoryIds: z
-    .array(z.number())
+    .array(z.string())
     .min(1, { message: "لطفا حداقل یک دسته بندی را انتخاب کنید" }), 
 });
 
@@ -84,9 +83,16 @@ export default function CreateFormBtn() {
 
   console.log('watch :>> ', watch("categoryIds"));
   console.log('watch sub:>> ', watch("subCategoryIds"));
-  async function onSubmit(values: propertiesFormSchemaType) {
+  async function onSubmit({name, typeEnum, subCategoryIds, categoryIds }: propertiesFormSchemaType) {
+    const body = {
+     name,
+     typeEnum,
+     formCategorysModel : {
+        "categoryId" : categoryIds.push(...subCategoryIds)
+    }
+}
     try {
-      const response: any = await AxiosApi.post("/form", values as any);
+      const response: any = await AxiosApi.post("/form", body as any);
       setIsLoadingData(true);
       toast.success("عملیات با موفقیت انجام شد");
       router.push(`/builder/${response?.data?.id}`);

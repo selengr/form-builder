@@ -277,7 +277,7 @@ export default function CreateFormBtn() {
                     }}
                     disableRipple={true}
                     value="QUESTION"
-                    label="پرسشنامه"
+                    label="فرم ارزیابی"
                   />
                   <Tab
                     sx={{
@@ -293,7 +293,7 @@ export default function CreateFormBtn() {
                     value="TEST"
                     label="آزمون"
                   />
-                  <Tab
+                  {/* <Tab
                     sx={{
                       "&.MuiButtonBase-root.MuiTab-root": {
                         minWidth: "30px",
@@ -320,7 +320,7 @@ export default function CreateFormBtn() {
                     disableRipple={true}
                     value="SURVEY"
                     label="نظرسنجی"
-                  />
+                  /> */}
                 </Tabs>
               </Box>
 

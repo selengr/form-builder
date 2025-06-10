@@ -1,18 +1,33 @@
 "use client";
 
-import {Fragment, useState} from "react";
-import {useForm} from "react-hook-form";
-import {useRouter} from "next/navigation";
-import {z} from "zod";
+import { z } from "zod";
+import { toast } from "sonner";
 import Image from "next/image";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {Box, Button, Dialog, DialogContent, IconButton, Stack, Tab, Tabs, Typography,} from "@mui/material";
+import { useForm } from "react-hook-form";
+import { Fragment, useState } from "react";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  IconButton,
+  Stack,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
+import { IoClose } from "react-icons/io5";
 import FormProvider from "../hook-form/FormProvider";
-import {IoClose} from "react-icons/io5";
-import {RHFTextField} from "../hook-form";
+import { RHFTextField, RHFMultiSelectV0 } from "../hook-form";
 import AxiosApi from "@/services/axios/AxiosApi";
-import {toast} from "sonner";
 import PlusIcon from "@/../public/images/home-page/Add-fill.svg";
+import { useGetSubCategory } from "./hooks/useGetSubCategory";
+import {
+  IGetCategory,
+  useGetParentCategory,
+} from "./hooks/useGetParentCategory";
 
 const propertiesSchema = z.object({
   name: z
@@ -26,6 +41,12 @@ const propertiesSchema = z.object({
         .max(50, { message: "حداقل باید 2 و حداکثر 50 کاراکتر باشد" })
     ),
   typeEnum: z.string().min(1, { message: "لطفا یک مورد را انتخاب کنید" }),
+  categoryIds: z
+    .array(z.string())
+    .min(1, { message: "لطفا حداقل یک دسته بندی را انتخاب کنید" }),
+  subCategoryIds: z
+    .array(z.string())
+    .min(1, { message: "لطفا حداقل یک دسته بندی را انتخاب کنید" }),
 });
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
@@ -36,24 +57,52 @@ export default function CreateFormBtn() {
   const [openDialog, setOpenDialog] = useState(false);
   const [tabValue, setTabValue] = useState("QUESTION");
 
+  const { Category, isFetchingCategory } = useGetParentCategory();
+  const { mutation, SubCategoryData } = useGetSubCategory();
+
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     mode: "onSubmit",
     defaultValues: {
       name: "",
       typeEnum: "QUESTION",
+      categoryIds: [],
+      subCategoryIds: [],
     },
   });
 
   const {
+    watch,
     setValue,
+    getValues,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  async function onSubmit(values: propertiesFormSchemaType) {
+  const handleFetchSubcategories = () => {
+    if (getValues("categoryIds").length > 0) {
+      mutation.mutate(getValues("categoryIds"));
+    }
+  };
+
+  const subcategories = SubCategoryData(mutation.data);
+
+  async function onSubmit({
+    name,
+    typeEnum,
+    subCategoryIds,
+    categoryIds,
+  }: propertiesFormSchemaType) {
+    const categoryId = categoryIds.concat(subCategoryIds);
+    const body = {
+      name,
+      typeEnum,
+      formCategorysModel: {
+        categoryId,
+      },
+    };
     try {
-      const response: any = await AxiosApi.post("/form", values as any);
+      const response: any = await AxiosApi.post("/form", body as any);
       setIsLoadingData(true);
       toast.success("عملیات با موفقیت انجام شد");
       router.push(`/builder/${response?.data?.id}`);
@@ -82,7 +131,7 @@ export default function CreateFormBtn() {
           height: "100%",
           // bgcolor: "#ECFAFF",
           borderRadius: "16px",
-          border : "1px solid #1758BA",
+          border: "1px solid #1758BA",
         }}
       >
         <Image src={PlusIcon} alt="" width={22} height={22} />
@@ -186,8 +235,12 @@ export default function CreateFormBtn() {
                   display: "flex",
                   justifyContent: "center",
                   mt: 5,
+                  flexDirection: "column",
                 }}
               >
+                <Typography variant="subtitle2" fontWeight="700">
+                     نوع فرم:
+                </Typography>
                 <Tabs
                   value={tabValue}
                   onChange={handleTabChange}
@@ -212,37 +265,38 @@ export default function CreateFormBtn() {
                       borderRadius: "10px",
                       bgcolor: "#1758BA",
                     },
+                    "& .MuiTabs-flexContainer" : {
+                      width : "100%"
+                    }
                   }}
                 >
                   <Tab
                     sx={{
                       "&.MuiButtonBase-root.MuiTab-root": {
-                        minWidth: "30px",
+                        width:"50%",
                         color: "#000",
                         fontWeight: 600,
                         paddingX: "15px",
-                        maxWidth: "80px",
                       },
                     }}
                     disableRipple={true}
                     value="QUESTION"
-                    label="پرسشنامه"
+                    label="فرم ارزیابی"
                   />
                   <Tab
                     sx={{
                       "&.MuiButtonBase-root.MuiTab-root": {
-                        minWidth: "30px",
                         color: "#000",
                         fontWeight: 600,
                         paddingX: "15px",
-                        maxWidth: "80px",
+                        width:"50%",
                       },
                     }}
                     disableRipple={true}
                     value="TEST"
                     label="آزمون"
                   />
-                  <Tab
+                  {/* <Tab
                     sx={{
                       "&.MuiButtonBase-root.MuiTab-root": {
                         minWidth: "30px",
@@ -269,8 +323,83 @@ export default function CreateFormBtn() {
                     disableRipple={true}
                     value="SURVEY"
                     label="نظرسنجی"
-                  />
+                  /> */}
                 </Tabs>
+              </Box>
+
+              <Box
+                display="flex"
+                flexDirection="column"
+                gap="6px"
+                width="100%"
+                mt="10px"
+              >
+                <Typography variant="subtitle2" fontWeight="700">
+                  دسته بند‌ی‌ها:
+                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    height: "100%",
+                    direction: "ltr",
+                    width: "100%",
+                    paddingX: 0.5,
+                    "& .MuiFormControl-root, & .MuiInputBase-root": {
+                      borderRadius: "10px",
+                    },
+                  }}
+                >
+                  <RHFMultiSelectV0
+                    sx={{
+                      "& .MuiInputBase-root": {
+                        bgcolor: "#fff",
+                        paddingY: "8px",
+                      },
+                    }}
+                    chip
+                    checkbox
+                    fullWidth
+                    name="categoryIds"
+                    options={Category ?? []}
+                    isLoading={isFetchingCategory}
+                    disabled={isFetchingCategory}
+                    onClose={handleFetchSubcategories}
+                  />
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    height: "100%",
+                    direction: "ltr",
+                    width: "100%",
+                    paddingX: 0.5,
+                    marginTop: "8px",
+                    "& .MuiFormControl-root, & .MuiInputBase-root": {
+                      borderRadius: "10px",
+                    },
+                  }}
+                >
+                  <RHFMultiSelectV0
+                    sx={{
+                      "& .MuiInputBase-root": {
+                        bgcolor: "#fff",
+                        paddingY: "8px",
+                      },
+                    }}
+                    chip
+                    checkbox
+                    fullWidth
+                    name="subCategoryIds"
+                    options={subcategories ?? []}
+                    isLoading={mutation.isPending}
+                    disabled={
+                      watch("categoryIds").length === 0 || mutation.isPending
+                    }
+                  />
+                </Box>
               </Box>
 
               <Box

@@ -96,8 +96,8 @@ const optionsSchema = z.object({
         .min(1, {
           message: "هر گزینه حداقل باید 1 و حداکثر 50 کاراکتر داشته باشد",
         })
-        .max(50, {
-          message: "هر گزینه حداقل باید 1 و حداکثر 50 کاراکتر داشته باشد",
+        .max(500, {
+          message: "هر گزینه حداقل باید 1 و حداکثر 500 کاراکتر داشته باشد",
         })
     ),
   score: z.number(),
@@ -111,15 +111,15 @@ const propertiesSchema = z.object({
     .pipe(
       z
         .string()
-        .min(1, { message: "حداقل باید 1 و حداکثر 100 کاراکتر باشد" })
-        .max(100, { message: "حداقل باید 1 و حداکثر 100 کاراکتر باشد" })
+        .min(1, { message: "حداقل باید 1 و حداکثر 4000 کاراکتر باشد" })
+        .max(3999, { message: "حداقل باید 1 و حداکثر 4000 کاراکتر باشد" })
     ),
   DESCRIPTION: z.object({
     value: z
       .string()
       .trim()
       .transform((value) => value.replace(/\s+/g, " "))
-      .pipe(z.string().max(250, { message: "حداکثر میتواند 250 کاراکتر باشد" }))
+      .pipe(z.string().max(3999, { message: "حداکثر میتواند 4000 کاراکتر باشد" }))
       .optional(),
     id: z.number(),
   }),

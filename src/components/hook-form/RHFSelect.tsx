@@ -272,7 +272,7 @@ export function RHFMultiSelectV0({
           variant="buffer"
           value={0}
           valueBuffer={0}
-          sx={{ width: 28, pt: 1 }}
+          sx={{ width: 128, pt: 1, height : 15 }}
         />
       );
     }

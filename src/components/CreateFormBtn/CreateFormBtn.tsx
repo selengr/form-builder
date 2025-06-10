@@ -140,8 +140,7 @@ export default function CreateFormBtn() {
       </IconButton>
 
       <Dialog
-        // open={openDialog}
-        open={true}
+        open={openDialog}
         dir="ltr"
         sx={{
           overflow: "hidden",

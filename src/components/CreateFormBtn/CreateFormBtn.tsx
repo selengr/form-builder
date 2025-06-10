@@ -75,14 +75,12 @@ export default function CreateFormBtn() {
   });
 
   const {
-    watch,
     setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  console.log('watch :>> ', watch("categoryIds"));
-  console.log('watch sub:>> ', watch("subCategoryIds"));
+  
   async function onSubmit({name, typeEnum, subCategoryIds, categoryIds }: propertiesFormSchemaType) {
     const body = {
      name,

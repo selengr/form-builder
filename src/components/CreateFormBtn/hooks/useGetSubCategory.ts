@@ -1,9 +1,12 @@
 import AxiosApi from '@/services/axios/AxiosApi';
-import {useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery} from '@tanstack/react-query';
 import { IGetCategory } from './useGetParentCategory';
 
+interface SubcategoryModel {
+  parentId: string[];
+}
 
-const fetchSubcategoryData = async () => {
+const fetchSubcategoryData = async (parentId: string[]) => {
   const customComboFilterModel = {
     type: "COMBO",
     entity: "PROJECTS",
@@ -12,33 +15,32 @@ const fetchSubcategoryData = async () => {
     rows: 1000
   };
 
+  const subcategoryModel: SubcategoryModel = {
+    parentId: parentId
+  };
+
   const baseUrl = `/category/subcategory`;
-  const queryString = `?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`;
+const queryString = `?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}&subcategoryModel=${encodeURIComponent(JSON.stringify(subcategoryModel))}`;
+
   const url = baseUrl + queryString;
   const response = await AxiosApi.get(url);
   return response.data;
 }
 
 
-
 export const useGetSubCategory = () => {
-
-  const {data, isFetching} = useQuery({
-    queryKey: ['SUB_CATEGORY'],
-    queryFn: () => fetchSubcategoryData(),
-    gcTime: 600000,
-    staleTime: 0,
-    retry: 3
+  const mutation = useMutation({
+    mutationFn: (parentId: string[]) => fetchSubcategoryData(parentId),
   });
-
-   const SubCategory = data?.dataList
-      ?.map((item: IGetCategory) => ({
-        value: item.value,
-        label: item.caption,
-      }));
-
+  const SubCategoryData = (data:any) => {
+    return data?.dataList
+    ?.map((item: IGetCategory) => ({
+      value: item.value,
+      label: item.caption,
+    }));
+  }
   return {
-      isFetchingSubCategory: isFetching,
-      SubCategory
+    mutation,
+    SubCategoryData
   };
-};
+}

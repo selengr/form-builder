@@ -38,16 +38,16 @@
     "react-auth-code-input": "^3.2.1",
     "react-countdown": "^2.3.6",
     "react-dom": "^18",
-    "react-hook-form": "^7.56.4",
+    "react-hook-form": "^7.57.0",
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
     "react-intersection-observer": "^9.16.0",
     "react-multi-date-picker": "^4.5.2",
     "sharp": "^0.34.2",
-    "sonner": "^2.0.3",
+    "sonner": "^2.0.5",
     "stylis": "^4.3.6",
     "stylis-plugin-rtl": "^2.1.1",
-    "zod": "^3.24.4"
+    "zod": "^3.25.57"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.60.1",

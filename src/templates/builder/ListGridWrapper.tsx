@@ -33,7 +33,7 @@ export default function ListGridWrapper() {
         {/* هدر فیلتر */}
         <div className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4">
           <div className="flex items-center w-full justify-center gap-2">
-            <Image src={FilterIcon} width={30} height={30} alt="filter"/>
+            <Image src={FilterIcon} width={30} height={30} alt="filter" draggable={false} />
             <p className="text-[16px] text-center font-bold text-[#161616]">
               فیلتر
             </p>
@@ -240,7 +240,7 @@ export default function ListGridWrapper() {
       showCreateButton
       searchBoxList={searchBoxList}
       filterBoxList={filterBoxList}
-      url="/form/main-list/"
+      url="/form/main-list"
       filterComponent={<FilterSidebar/>}
       CartComponent={(item: any) => (
         <ListCard setRefreshGrid={setRefreshGrid} {...item} />

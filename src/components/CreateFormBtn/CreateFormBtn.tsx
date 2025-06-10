@@ -13,6 +13,7 @@ import {RHFTextField, RHFSelect} from "../hook-form";
 import AxiosApi from "@/services/axios/AxiosApi";
 import {toast} from "sonner";
 import PlusIcon from "@/../public/images/home-page/Add-fill.svg";
+import { useGetParentCategory } from "./hooks/useGetParentCategory";
 
 
 const propertiesSchema = z.object({
@@ -36,6 +37,8 @@ export default function CreateFormBtn() {
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [tabValue, setTabValue] = useState("QUESTION");
+
+  const { data : category, isPending : categoryLoading } = useGetParentCategory()
 
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),

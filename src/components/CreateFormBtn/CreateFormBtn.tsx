@@ -16,7 +16,6 @@ import {
   Tab,
   Tabs,
   Typography,
-  MenuItem,
 } from "@mui/material";
 import FormProvider from "../hook-form/FormProvider";
 import { IoClose } from "react-icons/io5";
@@ -44,10 +43,10 @@ const propertiesSchema = z.object({
   typeEnum: z.string().min(1, { message: "لطفا یک مورد را انتخاب کنید" }),
   categoryIds: z
     .array(z.string())
-    .min(1, { message: "لطفا حداقل یک دسته بندی را انتخاب کنید" }), 
+    .min(1, { message: "لطفا حداقل یک دسته بندی را انتخاب کنید" }),
   subCategoryIds: z
     .array(z.string())
-    .min(1, { message: "لطفا حداقل یک دسته بندی را انتخاب کنید" }), 
+    .min(1, { message: "لطفا حداقل یک دسته بندی را انتخاب کنید" }),
 });
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
@@ -59,7 +58,7 @@ export default function CreateFormBtn() {
   const [tabValue, setTabValue] = useState("QUESTION");
 
   const { Category, isFetchingCategory } = useGetParentCategory();
-  const { SubCategory, isFetchingSubCategory } = useGetSubCategory();
+  const { mutation, SubCategoryData } = useGetSubCategory();
 
   console.log("Category : data?.datList :>> ", Category);
 
@@ -69,26 +68,40 @@ export default function CreateFormBtn() {
     defaultValues: {
       name: "",
       typeEnum: "QUESTION",
-      categoryIds : [],
-      subCategoryIds : []
+      categoryIds: [],
+      subCategoryIds: [],
     },
   });
 
   const {
+    watch,
     setValue,
+    getValues,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  
-  async function onSubmit({name, typeEnum, subCategoryIds, categoryIds }: propertiesFormSchemaType) {
-    const body = {
-     name,
-     typeEnum,
-     formCategorysModel : {
-        "categoryId" : categoryIds.push(...subCategoryIds)
+  const handleFetchSubcategories = () => {
+    if (getValues("categoryIds").length > 0) {
+      mutation.mutate(getValues("categoryIds"));
     }
-}
+  };
+
+  const subcategories = SubCategoryData(mutation.data);
+
+  async function onSubmit({
+    name,
+    typeEnum,
+    subCategoryIds,
+    categoryIds,
+  }: propertiesFormSchemaType) {
+    const body = {
+      name,
+      typeEnum,
+      formCategorysModel: {
+        categoryId: categoryIds.push(...subCategoryIds),
+      },
+    };
     try {
       const response: any = await AxiosApi.post("/form", body as any);
       setIsLoadingData(true);
@@ -346,6 +359,7 @@ export default function CreateFormBtn() {
                     fullWidth
                     name="categoryIds"
                     options={Category ?? []}
+                    onClose={handleFetchSubcategories}
                   />
                 </Box>
 
@@ -363,20 +377,20 @@ export default function CreateFormBtn() {
                     },
                   }}
                 >
-                   <RHFMultiSelectV0
+                  <RHFMultiSelectV0
                     sx={{
                       "& .MuiInputBase-root": {
                         bgcolor: "#fff",
                         paddingY: "8px",
                       },
                     }}
-                     chip
+                    chip
                     checkbox
                     fullWidth
+                    disabled={watch("categoryIds").length > 0}
                     name="subCategoryIds"
-                    options={SubCategory ?? []}
+                    options={subcategories ?? []}
                   />
-
                 </Box>
               </Box>
 

@@ -95,11 +95,12 @@ export default function CreateFormBtn() {
     subCategoryIds,
     categoryIds,
   }: propertiesFormSchemaType) {
+    const categoryId = categoryIds.concat(subCategoryIds)
     const body = {
       name,
       typeEnum,
       formCategorysModel: {
-        categoryId: categoryIds.push(...subCategoryIds),
+        categoryId
       },
     };
     try {
@@ -387,7 +388,7 @@ export default function CreateFormBtn() {
                     chip
                     checkbox
                     fullWidth
-                    disabled={watch("categoryIds").length > 0}
+                    disabled={watch("categoryIds").length === 0}
                     name="subCategoryIds"
                     options={subcategories ?? []}
                   />

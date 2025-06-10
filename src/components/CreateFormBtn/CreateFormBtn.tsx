@@ -13,7 +13,7 @@ import {RHFTextField, RHFSelect} from "../hook-form";
 import AxiosApi from "@/services/axios/AxiosApi";
 import {toast} from "sonner";
 import PlusIcon from "@/../public/images/home-page/Add-fill.svg";
-import { useGetParentCategory } from "./hooks/useGetParentCategory";
+import { IGetCategory, useGetParentCategory } from "./hooks/useGetParentCategory";
 
 
 const propertiesSchema = z.object({
@@ -38,7 +38,10 @@ export default function CreateFormBtn() {
   const [openDialog, setOpenDialog] = useState(false);
   const [tabValue, setTabValue] = useState("QUESTION");
 
-  const { data : category, isPending : categoryLoading } = useGetParentCategory()
+  const { Category, isFetchingCategory } = useGetParentCategory()
+
+  
+console.log('Category : data?.datList :>> ', Category);
 
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
@@ -305,12 +308,9 @@ export default function CreateFormBtn() {
                                 },
                               }}
                             >
-                              {[
-                                { value: "male", label: "مرد" },
-                                { value: "female", label: "زن" },
-                              ].map((item) => (
+                              {Category?.map((item: IGetCategory) => (
                                 <MenuItem key={item.value} value={item.value}>
-                                  {item.label}
+                                  {item.caption}
                                 </MenuItem>
                               ))}
                             </RHFSelect>

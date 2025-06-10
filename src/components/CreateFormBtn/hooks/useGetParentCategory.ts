@@ -36,16 +36,9 @@ export const useGetParentCategory = () => {
     retry: 3
   });
 
-   const Category = data?.dataList
-    ?.map((item: IGetCategory) => ({
-      value: item.value,
-      label: item.caption,
-    }));
-
-
-      return {
-    isFetchingCategory: isFetching,
-    Category,
+console.log('Category : data?.datList :>> ', data?.dataList);
+    return {
+      isFetchingCategory: isFetching,
+      Category : data?.dataList,
   };
-
 };

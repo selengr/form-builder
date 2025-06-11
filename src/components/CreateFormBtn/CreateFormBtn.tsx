@@ -238,9 +238,9 @@ export default function CreateFormBtn() {
                   flexDirection: "column",
                 }}
               >
-                <Typography variant="subtitle2" fontWeight="700">
+                {/* <Typography variant="subtitle2" fontWeight="700">
                      نوع فرم:
-                </Typography>
+                </Typography> */}
                 <Tabs
                   value={tabValue}
                   onChange={handleTabChange}

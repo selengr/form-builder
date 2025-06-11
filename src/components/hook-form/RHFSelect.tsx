@@ -320,6 +320,7 @@ export function RHFMultiSelectV0({
             displayEmpty={!!placeholder}
             labelId={name}
             input={<OutlinedInput fullWidth label={label} error={!!error} />}
+              // @ts-ignore
             renderValue={renderValues}
             MenuProps={{
               PaperProps: {

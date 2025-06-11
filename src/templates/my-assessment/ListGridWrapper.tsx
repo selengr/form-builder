@@ -52,7 +52,7 @@ export default function ListGridWrapper() {
       title="ارزیابی‌های من"
       searchBoxList={searchBoxList}
       filterBoxList={filterBoxList}
-      url="/user/form/main-list/"
+      url="/user/form/main-list"
       filterComponent={
         <div className="flex h-full w-full flex-col items-center justify-between">
           <div className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4">

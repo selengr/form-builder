@@ -8,79 +8,79 @@ import ConfirmDialog from "@/components/confirm-dialog";
 // public
 import TrashIcon from "@/../public/images/home-page/trash.svg";
 
+function CartItem({
+                      detail,
+                      index,
+                      isSelected,
+                      onSelect,
+                      onRemove,
+                      toggleConfirm,
+                      loading,
+                      open,
+                  }: ICartItemProps) {
+    const { description, purchaseOrderProductModels, purchaseOrderDetailId } = detail;
+    const productTitle = purchaseOrderProductModels?.[0]?.title || "محصول";
 
-function CartItem({ detail, index, isSelected, onSelect, onRemove, toggleConfirm, loading, open }: ICartItemProps) {
+    return (
+        <div
+            className={`flex items-start justify-between p-4 border rounded-2xl cursor-pointer transition-colors duration-200 ${
+                isSelected ? "border-[#1758BA] bg-white" : "border-[#DDE1E6] bg-white"
+            }`}
+            onClick={onSelect}
+        >
+            {/* اطلاعات محصول */}
+            <div className="flex flex-col max-w-[80%]">
+                <span className="font-bold text-[#161616] text-sm line-clamp-2">{productTitle}</span>
+                {description && (
+                    <span className="text-xs text-[#404040] mt-1 line-clamp-2">{description}</span>
+                )}
+            </div>
 
-  const { description, purchaseOrderDetailId } = detail;
-
-  return (
-    <div className={`flex items-start justify-between p-4 border rounded-2xl ${
-        isSelected ? "border border-[#1758BA]" : "border-[#DDE1E6]"
-      }`}  onClick={onSelect}>
-      <div className="flex flex-col">
-        {/* <span className="text-xs text-[#393939]">بابت: </span>
-        <h6 className="text-[#393939] font-bold">{item.title}</h6>
-        <span className="text-xs text-[#393939]">
-          تعداد:{" "}
-          <span className="font-bold">
-            {new Intl.NumberFormat("fa-IR").format(item.quantity)} عدد
-          </span>
-        </span> */}
-        {/* <span className="font-bold text-[#161616]">{detail.purchaseOrderProductModels[0]?.title || "محصول"}</span> */}
-        <span className="font-bold text-[#161616] line-clamp-2">{description || "محصول"}</span>
-        {/* {detail.description && <span className="text-sm text-[#404040]">{detail.description}</span>} */}
-      </div>
-
-      <IconButton
-        onClick={(e) => {
-          e.stopPropagation()
-          toggleConfirm()
-        }}
-        sx={{
-          width: "52px",
-          height: "52px",
-        }}
-      >
-        <Image src={TrashIcon} alt="delete" width={24} height={24} />
-      </IconButton>
-
-
-        <ConfirmDialog
-          content="آیا از عملیات حذف اطمینان دارید؟"
-          open={open}
-          title="حذف"
-          loading={loading}
-          onClose={toggleConfirm}
-          cancelText="انصراف"
-          action={
-            <Button
-              type="submit"
-              fullWidth
-              disableRipple
-              variant="contained"
-              loading={loading}
-              disabled={loading}
-              sx={{
-                height: "50px",
-                fontWeight: "400",
-                fontSize: "15px",
-                borderRadius: "10px",
-                borderColor: "#1758BA",
-                boxShadow: "none",
-                "&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active": {
-                  bgcolor: "#1758BA",
-                  boxShadow: "none",
-                },
-              }}
-              onClick={()=>onRemove(purchaseOrderDetailId)}
+            {/* دکمه حذف */}
+            <IconButton
+                onClick={(e) => {
+                    e.stopPropagation();
+                    toggleConfirm();
+                }}
+                sx={{ width: 48, height: 48 }}
             >
-              تایید
-            </Button>
-          }
-        />
-      
-    </div>
-  );
+                <Image src={TrashIcon} alt="delete" width={24} height={24} />
+            </IconButton>
+
+            {/* دیالوگ تایید حذف */}
+            <ConfirmDialog
+                content="آیا از عملیات حذف اطمینان دارید؟"
+                open={open}
+                title="حذف"
+                loading={loading}
+                onClose={toggleConfirm}
+                cancelText="انصراف"
+                action={
+                    <Button
+                        type="submit"
+                        fullWidth
+                        disableRipple
+                        variant="contained"
+                        disabled={loading}
+                        sx={{
+                            height: "50px",
+                            fontWeight: 400,
+                            fontSize: "15px",
+                            borderRadius: "10px",
+                            backgroundColor: "#1758BA",
+                            boxShadow: "none",
+                            "&:hover, &:active": {
+                                backgroundColor: "#1758BA",
+                            },
+                        }}
+                        onClick={() => onRemove(purchaseOrderDetailId)}
+                    >
+                        تایید
+                    </Button>
+                }
+            />
+        </div>
+    );
 }
 
 export default CartItem;

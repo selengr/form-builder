@@ -1,9 +1,10 @@
 "use client";
-import { useParams } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
 import React, {useCallback, useEffect, useRef, useState} from "react";
-import {toast} from "sonner";
+import {useParams} from "next/navigation";
+import {useQueryClient} from "@tanstack/react-query";
 import {Box, Container, Stack, TextField, Typography} from "@mui/material";
+import {toast} from "sonner";
+
 import AxiosApi from "@/services/axios/AxiosApi";
 import {htmlToFormula} from "@/lib/htmlToFormula";
 import FormulaKeypad from "@/components/formula-editor/FormulaKeypad";
@@ -12,12 +13,22 @@ import FormulaControls from "@/components/formula-editor/FormulaControls";
 import {Element, FnFxItem} from "@/types/formulaEditor";
 import {IAdvancedFormulaEditorProps} from "@/types/calculator";
 
+const OPERATOR_TYPES = ["-", "+", "*", "/"];
+const FN_FX_OPTIONS = [{fnValue: "avg", fnCaption: "میانگین()"}];
+
 const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
-                                                                          questionList, handleClose, editList, isEdit,
+                                                                          questionList,
+                                                                          handleClose,
+                                                                          editList,
+                                                                          isEdit,
                                                                       }) => {
     const {id} = useParams();
     const queryClient = useQueryClient();
+
     const mainIndex = useRef<number>(-2);
+    const contentEditable = useRef<HTMLDivElement>(null);
+    const selectAvgRef = useRef<Record<string, string>>({});
+    const selectFieldRef = useRef<Record<string, string>>({});
 
     const editData = editList?.frontCalcData ? JSON.parse(editList.frontCalcData as string) : [];
     const [formName, setFormName] = useState<string>(editList?.name ?? "");
@@ -25,13 +36,6 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
     const [elements, setElements] = useState<Element[]>(editData);
     const [isClient, setIsClient] = useState<boolean>(false);
     const [isLoading, setLoading] = useState<boolean>(false);
-
-    const contentEditable = useRef<HTMLDivElement>(null);
-    const selectAvgRef = useRef<Record<string, string>>({});
-    const selectFieldRef = useRef<Record<string, string>>({});
-
-    const OPERATOR_TYPES = ["-", "+", "*", "/"];
-    const FN_FX_OPTIONS = [{fnValue: "avg", fnCaption: "میانگین()"}];
 
     useEffect(() => {
         setIsClient(true);
@@ -58,13 +62,13 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         });
     };
 
-    const isLastElementOperand = () => {
+    const isLastElementOperand = (): boolean => {
         if (elements.length === 0) return false;
         const lastElement = elements[elements.length - 1];
         return (lastElement.type === "NEW_FIELD" || lastElement.type === "NUMBER" || lastElement.type === "NEW_FnFx");
     };
 
-    const updateCursorPosition = (newCursorIndex: number) => {
+    const updateCursorPosition = useCallback((newCursorIndex: number) => {
         setTimeout(() => {
             const editableDiv = contentEditable.current;
             if (!editableDiv) return;
@@ -89,13 +93,13 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
             editableDiv.focus();
             editableDiv.style.caretColor = '#1758BA';
         }, 10);
-    };
+    }, []);
 
-    const updateElements = (newElements: Element[], newCursorIndex: number) => {
+    const updateElements = useCallback((newElements: Element[], newCursorIndex: number) => {
         setElements(newElements);
         setCursorIndex(newCursorIndex);
         updateCursorPosition(newCursorIndex);
-    };
+    }, [updateCursorPosition]);
 
     const isValidParenthesisPosition = (content: string): boolean => {
         if (content === "(") {
@@ -121,6 +125,25 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
             }
         }
         return openCount > 0;
+    };
+
+    const isValidCursorPosition = (index: number, forInsertion: boolean = false): boolean => {
+        const insideAvg = isInsideAvg(index);
+
+        if (insideAvg) return true;
+
+        const prevElement = index > 0 ? elements[index - 1] : null;
+        const nextElement = index < elements.length ? elements[index] : null;
+
+        if (!forInsertion) {
+            return !(prevElement?.type === "OPERATOR" && nextElement?.type === "OPERATOR");
+        }
+
+        if (prevElement?.type === "OPERATOR" && nextElement?.type === "OPERATOR") {
+            return false;
+        }
+
+        return !(prevElement?.type === "PARENTHESIS" && prevElement?.content === "(" && nextElement?.type === "OPERATOR");
     };
 
     const handleUndo = useCallback(() => {
@@ -155,7 +178,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
 
         newElements.splice(cursorIndex - 1, elementsToRemove);
         updateElements(newElements, Math.max(0, cursorIndex - 1));
-    }, [elements, cursorIndex]);
+    }, [elements, cursorIndex, updateElements]);
 
     const handleOperator = (content: string) => {
         const newElements = [...elements];
@@ -296,9 +319,23 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
     const toggleDropdown = (element: HTMLElement, isHidden: boolean) => {
         const optionsContainer = element.nextElementSibling as HTMLElement;
         element.setAttribute("data-type", isHidden ? "up" : "down");
+        if (optionsContainer) {
+            optionsContainer.style.display = isHidden ? "block" : "none";
+        }
     };
 
-    const handleDropdownClick = (e: React.MouseEvent, id: string, index: any) => {
+    const closeDropdown = (id: string) => {
+        const dropdownContainer = document.querySelector(`[data-id="${id}"]`);
+        if (!dropdownContainer) return;
+
+        const optionsContainer = dropdownContainer.querySelector('.optionsContainer') as HTMLElement;
+        const dropdownButton = dropdownContainer.querySelector('.customDropdown') as HTMLElement;
+
+        if (optionsContainer) optionsContainer.style.display = "none";
+        if (dropdownButton) dropdownButton.setAttribute("data-type", "down");
+    };
+
+    const handleDropdownClick = (e: React.MouseEvent, id: string) => {
         e.stopPropagation();
         const target = e.target as HTMLElement;
         const isHidden = target.getAttribute("data-type") === "down";
@@ -327,17 +364,6 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         setCursorIndex(elementIndex + 1);
         updateCursorPosition(elementIndex + 1);
         closeDropdown(dropdownId);
-    };
-
-    const closeDropdown = (id: string) => {
-        const dropdownContainer = document.querySelector(`[data-id="${id}"]`);
-        if (!dropdownContainer) return;
-
-        const optionsContainer = dropdownContainer.querySelector('.optionsContainer') as HTMLElement;
-        const dropdownButton = dropdownContainer.querySelector('.customDropdown') as HTMLElement;
-
-        if (optionsContainer) optionsContainer.style.display = "none";
-        if (dropdownButton) dropdownButton.setAttribute("data-type", "down");
     };
 
     const canAddField = (): boolean => {
@@ -422,7 +448,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         mainIndex.current += 4;
         setElements(newElements);
         selectAvgRef.current[selectId] = "#avgNumber";
-        updateElements(newElements, cursorIndex + 3); // قرار دادن کرسر بعد از فیلد اول
+        updateElements(newElements, cursorIndex + 3);
     };
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -451,31 +477,21 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         }
     };
 
-    const isValidCursorPosition = (index: number, forInsertion: boolean = false): boolean => {
-        const insideAvg = isInsideAvg(index);
-
-        if (insideAvg) return true;
-
-        const prevElement = index > 0 ? elements[index - 1] : null;
-        const nextElement = index < elements.length ? elements[index] : null;
-
-        if (!forInsertion) {
-            return !(prevElement?.type === "OPERATOR" && nextElement?.type === "OPERATOR");
-        }
-
-        if (prevElement?.type === "OPERATOR" && nextElement?.type === "OPERATOR") {
-            return false;
-        }
-
-        return !(prevElement?.type === "PARENTHESIS" && prevElement?.content === "(" && nextElement?.type === "OPERATOR");
-    };
-
     const callApi = async () => {
-        if (!formName) return toast.error("ابتدا نام محاسبه گر را وارد کنید");
+        if (!formName) {
+            toast.error("ابتدا نام محاسبه گر را وارد کنید");
+            return;
+        }
 
         const newFormula = htmlToFormula(elements, selectFieldRef, selectAvgRef);
-        if (!newFormula) return toast.error("هیج محاسبه ای افزوده نشده");
-        if (newFormula.includes("undefined")) return toast.error("سوال انتخاب نشده دارید");
+        if (!newFormula) {
+            toast.error("هیچ محاسبه‌ای افزوده نشده");
+            return;
+        }
+        if (newFormula.includes("undefined")) {
+            toast.error("سوال انتخاب نشده دارید");
+            return;
+        }
 
         let formula = "";
         const avgNum = newFormula.split("#avg");
@@ -484,10 +500,13 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         });
 
         try {
-            setLoading(true)
+            setLoading(true);
             if (!isEdit) {
                 await AxiosApi.post("/calculation", {
-                    name: formName, formBuilderId: id, theFormula: formula, frontCalcData: JSON.stringify(elements),
+                    name: formName,
+                    formBuilderId: id,
+                    theFormula: formula,
+                    frontCalcData: JSON.stringify(elements),
                 });
             } else {
                 await AxiosApi.put(`/calculation/${editList?.id}`, {
@@ -498,26 +517,30 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                     frontCalcData: JSON.stringify(elements),
                 });
             }
-            handleClose(); 
-            queryClient.invalidateQueries(['Calculation_List'] as any);
+            handleClose();
+            queryClient.invalidateQueries({queryKey: ['Calculation_List']});
             toast.success("محاسبه گر با موفقیت ثبت شد");
         } catch (error) {
             toast.error("عملیات ناموفق بود مجددا امتحان فرمایید");
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
     };
 
     if (!isClient) return null;
 
-    return (<Container
+    return (
+        <Container
             maxWidth="sm"
             sx={{padding: "0px !important", marginTop: "-15px !important"}}
         >
             <Typography
                 variant="subtitle1"
                 sx={{
-                    display: "flex", justifyContent: "center", color: "#404040", fontWeight: 700,
+                    display: "flex",
+                    justifyContent: "center",
+                    color: "#404040",
+                    fontWeight: 700,
                 }}
             >
                 محاسبه‌گر
@@ -525,7 +548,11 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
 
             <Box
                 sx={{
-                    display: "flex", flexDirection: "column", height: "100%", direction: "ltr", width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    height: "100%",
+                    direction: "ltr",
+                    width: "100%",
                 }}
             >
                 <Stack spacing={1}>
@@ -536,14 +563,20 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                         sx={{
                             "& .MuiOutlinedInput-root": {
                                 "& fieldset": {
-                                    borderColor: "#DDE1E6", borderRadius: "8px",
-                                }, "&:hover fieldset": {
                                     borderColor: "#DDE1E6",
-                                }, "&.Mui-focused fieldset": {
+                                    borderRadius: "8px",
+                                },
+                                "&:hover fieldset": {
                                     borderColor: "#DDE1E6",
                                 },
-                            }, "& input": {
-                                paddingX: 1, paddingY: 0, height: "50px",
+                                "&.Mui-focused fieldset": {
+                                    borderColor: "#DDE1E6",
+                                },
+                            },
+                            "& input": {
+                                paddingX: 1,
+                                paddingY: 0,
+                                height: "50px",
                             },
                         }}
                         value={formName}
@@ -553,7 +586,10 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
 
                 <Box
                     sx={{
-                        width: "100%", display: "flex", flexDirection: {xs: "column", sm: "row"}, my: 3,
+                        width: "100%",
+                        display: "flex",
+                        flexDirection: {xs: "row", sm: "row"},
+                        my: 3,
                     }}
                 >
                     <FormulaKeypad
@@ -572,12 +608,17 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "start",
+                            mt: {xs: 2, sm: 0},
+                            ml: {xs: 0, sm: 2},
                         }}
                     >
                         <Typography
                             variant="subtitle1"
                             sx={{
-                                display: "flex", justifyContent: "center", color: "#404040", fontWeight: 500,
+                                display: "flex",
+                                justifyContent: "center",
+                                color: "#404040",
+                                fontWeight: 500,
                             }}
                         >
                             اسکریپت:
@@ -612,7 +653,8 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
 
                 <FormulaControls onSubmit={callApi} onCancel={handleClose} isLoading={isLoading}/>
             </Box>
-        </Container>);
+        </Container>
+    );
 };
 
 export default AdvancedFormulaEditor;

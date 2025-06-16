@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { RootProvider } from "@/providers";
 import NextTopLoader from "nextjs-toploader";
+import MobileMenu from "@/components/MiddleSidebar/mobile/MobileMenu";
+import Image from "next/image";
+import Logo from "../../public/images/logo/logo2.svg";
 
 export const metadata: Metadata = {
   title: "ام‌رسالت - سکوی سایا",
@@ -27,7 +30,21 @@ export default function RootLayout({
     </head>
     <body dir="rtl">
     <NextTopLoader showSpinner={false} />
-    <RootProvider>{children}</RootProvider>
+    <RootProvider>
+      <div className="bg-white w-full mx-auto px-4 pb-6 flex justify-center md:hidden">
+        <div className="absolute right-8">
+          <MobileMenu />
+        </div>
+        <Image
+            src={Logo}
+            alt="سایا لوگو"
+            width={120}
+            height={40}
+            priority
+            unselectable={"on"}
+            draggable={false}
+        />
+      </div>{children}</RootProvider>
     </body>
     </html>
   );

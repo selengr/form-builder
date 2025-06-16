@@ -11,7 +11,7 @@ import Oval2 from "@/../public/images/home-page/Oval2.svg";
 import Oval3 from "@/../public/images/home-page/Oval3.svg";
 import Oval4 from "@/../public/images/home-page/Oval4.svg";
 import BannerBg2 from "@/../public/images/home-page/banner-bg2.svg";
-import MobileMenu from "@/components/MiddleSidebar/mobile/MobileMenu";
+// import MobileMenu from "@/components/MiddleSidebar/mobile/MobileMenu";
 
 export default function HomePage() {
   return (
@@ -20,9 +20,9 @@ export default function HomePage() {
       dir="rtl"
     >
       <div className="mx-auto px-4 pb-6 flex justify-center md:hidden">
-        <div className="absolute right-8">
-          <MobileMenu />
-        </div>
+        {/*<div className="absolute right-8">*/}
+        {/*  <MobileMenu />*/}
+        {/*</div>*/}
         <Image
           src={Logo}
           alt="سایا لوگو"

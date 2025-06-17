@@ -12,12 +12,90 @@ interface DropdownItem {
   unique_name : string;
   placeholder: string;
 }
-const AdvancedTextareaEditor = () => {
+
+interface InitialData {
+    content: string
+    contentWithIds: string
+    dropdowns: Array<{
+      id: string
+      value: string
+      unique_name: string
+      position: number
+    }>
+  }
+  interface AdvancedTextareaEditorProps {
+    initialData?: InitialData
+  }
+  
+  function AdvancedTextareaEditor({ initialData }: AdvancedTextareaEditorProps = {}) {
       const [dropdowns, setDropdowns] = useState<DropdownItem[]>([]);
   const [dropdownCounter, setDropdownCounter] = useState(0);
   const editorRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    if (initialData && editorRef.current) {
+      initializeEditorWithData(initialData)
+    }
+  }, [initialData])
 
+  const initializeEditorWithData = useCallback((data: InitialData) => {
+    if (!editorRef.current) return
+
+
+    editorRef.current.innerHTML = ""
+    setDropdowns([])
+    setDropdownCounter(0)
+
+    const sortedDropdowns = [...data.dropdowns].sort((a, b) => a.position - b.position)
+
+    let currentPosition = 0
+    const newDropdowns: DropdownItem[] = []
+    let counter = 0
+
+    sortedDropdowns.forEach((dropdownData, index) => {
+      const textBefore = data.content.substring(currentPosition, dropdownData.position)
+      if (textBefore) {
+        const textNode = document.createTextNode(textBefore)
+        editorRef.current!.appendChild(textNode)
+      }
+
+
+      const newDropdown: DropdownItem = {
+        id: `dropdown-${counter}`,
+        value: dropdownData.value,
+        unique_name: dropdownData.unique_name,
+        placeholder: "انتخاب كنيد",
+      }
+
+      newDropdowns.push(newDropdown)
+
+      const dropdownContainer = document.createElement("span")
+      dropdownContainer.className = "dropdown-container"
+      dropdownContainer.setAttribute("data-dropdown-id", newDropdown.id)
+      dropdownContainer.contentEditable = "false"
+      dropdownContainer.style.cssText = `
+      display: inline-block;
+      margin: 0 2px;
+      vertical-align: middle;
+    `
+
+      editorRef.current!.appendChild(dropdownContainer)
+
+
+      currentPosition = dropdownData.position + dropdownData.value.length
+      counter++
+    })
+
+    const remainingText = data.content.substring(currentPosition)
+    if (remainingText) {
+      const textNode = document.createTextNode(remainingText)
+      editorRef.current!.appendChild(textNode)
+    }
+
+
+    setDropdowns(newDropdowns)
+    setDropdownCounter(counter)
+  }, [])
 
     const removeDropdown = useCallback((dropdownId: string) => {
     setDropdowns((prev) => prev.filter((d) => d.id !== dropdownId));

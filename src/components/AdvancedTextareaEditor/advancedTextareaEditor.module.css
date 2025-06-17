@@ -1,0 +1,17 @@
+.NUMBER,
+.OPERATOR,
+.PARENTHESIS,
+.AVG_PARENTHESIS,
+.asNumber {
+  height: 30px;
+  display: flex;
+  min-width: 30px;
+  width: min-content;
+  border-radius: 10px;
+  align-items: center;
+  margin: 3px !important;
+  max-width: max-content;
+  justify-content: center;
+  margin-top: 0px !important;
+  font-weight: 500;
+}

@@ -1,4 +1,22 @@
+"use client";
+
+import type React from "react";
+
+import { useState, useRef, useCallback, useEffect } from "react";
+
+import styles from './advancedTextareaEditor.module.css'
+
+interface DropdownItem {
+  id: string;
+  value: string;
+  unique_name : string;
+  placeholder: string;
+}
 const AdvancedTextareaEditor = () => {
+      const [dropdowns, setDropdowns] = useState<DropdownItem[]>([]);
+  const [dropdownCounter, setDropdownCounter] = useState(0);
+  const editorRef = useRef<HTMLDivElement>(null);;
+
     return (
         <div className="w-full max-w-4xl mx-auto p-6">
 

@@ -19,8 +19,9 @@ export interface IInitialData {
   }
   
   export interface IAdvancedTextareaEditorProps {
-    initialData?: IInitialData
-    methods : any,
-    qacWithOutFilter : IConditionQuestionType
+    methods : any;
+    qacWithOutFilter : any
+    initialData?: IInitialData;
+    onDataChange?: (data: any) => void
   }
   

@@ -1,4 +1,5 @@
 "use client"
+import { useState } from "react"
 import { FormProvider } from "react-hook-form"
 import { useParams, useRouter } from "next/navigation"
 import { Box, Typography, Button } from "@mui/material"
@@ -28,6 +29,8 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
 }) => {
   const { id } = useParams();
   const {refresh} = useRouter()
+   const [currentData, setCurrentData] = useState<any>(null)
+
   const {
     methods,
     conditions,
@@ -48,6 +51,13 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
   const { onlyAllCalculationOptions, isFetchingOnlyAllCalculation } = useGetOnlyAllCalculation()
 
   const postCondition = usePostCondition(isEdit);
+
+  const handleDataChange = (data: any) => {
+    console.log("test");
+    console.log("test2",data);
+    setCurrentData(data)
+  }
+
 
   const onSubmit = (input: TConditionFormData) => {
 
@@ -177,10 +187,19 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
                 <TextFieldController  sx={{ minWidth: 240, ml: 0 }} name={`conditions.${index}.returnText`} type="string" /> */}
     
                  <AdvancedTextareaEditor 
+                 onDataChange={handleDataChange}
                  initialData={ undefined} 
-                 setValue={methods.setValue} 
+                 methods={methods.setValue} 
                  qacWithOutFilter={qacWithOutFilter}
                  />
+
+                 
+                    <div className="mt-6 p-4 bg-gray-100 rounded w-full">
+                      <h3 className="font-bold mb-2">Current Data:</h3>
+                      <pre className="text-xs overflow-auto">{JSON.stringify(currentData, null, 2)}</pre>
+                    </div>
+              
+
                 <Typography sx={{color: "#393939", fontSize: "14px", mr: 0 }}>در غیر اینصورت نمایش بده:</Typography>
                 
                 <TextFieldController sx={{ minWidth: 300, width: 380 }} name={`conditions.${index}.elseReturnText`} type="string" />

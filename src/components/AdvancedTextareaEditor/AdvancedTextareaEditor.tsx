@@ -8,8 +8,9 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import styles from './advancedTextareaEditor.module.css'
 // types
 import { IDropdownItem, IAdvancedTextareaEditorProps, IInitialData } from "./types";
+import { IConditionQuestionType } from "@/types/conditionReportSolo";
 
-  export default function AdvancedTextareaEditor({ initialData }: IAdvancedTextareaEditorProps = {}) {
+  export default function AdvancedTextareaEditor({ initialData, methods, qacWithOutFilter, onDataChange }: IAdvancedTextareaEditorProps) {
       const [dropdowns, setDropdowns] = useState<IDropdownItem[]>([]);
       const [dropdownCounter, setDropdownCounter] = useState<number>(0);
 
@@ -208,7 +209,12 @@ import { IDropdownItem, IAdvancedTextareaEditorProps, IInitialData } from "./typ
     [removeDropdown]
   );
 
-  const handleInput = () => {}
+  const handleInput = () => {
+     if (onDataChange) {
+            const formData = generateFormData()
+            onDataChange(formData)
+          }
+  }
   
   const handleDropdownClick = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
@@ -247,12 +253,12 @@ import { IDropdownItem, IAdvancedTextareaEditorProps, IInitialData } from "./typ
           {dropdown.value.length > 0 ?dropdown.value: dropdown.placeholder}
         </div>
         <div className={styles.optionsContainer} style={{ display: 'none' }}>
-          {JSONData.dataList.map((item: any) => (
+          {qacWithOutFilter?.map((item: IConditionQuestionType) => (
             <div
               key={item.extMap.UNIC_NAME}
               className={styles.option}
             //   onClick={() => handleOptionClick(item, dropdown.id!)}
-              onClick={(e) => updateDropdownValue(dropdown.id, item.caption, item.extMap.UNIC_NAME)}
+              onClick={(e) => updateDropdownValue(dropdown.id, item.caption, item.extMap.UNIC_NAME!)}
             >
               {item.caption}
             </div>
@@ -315,11 +321,11 @@ import { IDropdownItem, IAdvancedTextareaEditorProps, IInitialData } from "./typ
 
           finalText += " "+ selectedValue
 
-          if(dropdown?.unique_name){
-              finalTextWithIds += " "+ `${dropdown.unique_name}`
-          }else {
-            console.log("prevent submit will happen here");
-          }
+        //   if(dropdown?.unique_name){
+              finalTextWithIds += " "+ `${dropdown?.unique_name}`
+        //   }else {
+        //     console.log("prevent submit will happen here");
+        //   }
         }
       }
     }
@@ -331,8 +337,19 @@ import { IDropdownItem, IAdvancedTextareaEditorProps, IInitialData } from "./typ
       }
 
 
+
     return result
   }, [dropdowns])
+
+
+    useEffect(() => {
+    if (onDataChange && dropdowns.length > 0) {
+      const formData = generateFormData()
+      onDataChange(formData)
+    console.log("==================1");
+    }
+  }, [dropdowns, generateFormData])
+
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
@@ -345,8 +362,8 @@ import { IDropdownItem, IAdvancedTextareaEditorProps, IInitialData } from "./typ
   
   return (
     <div className="w-full max-w-[875px]">
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="flex flex-row">
+      {/* <form onSubmit={handleSubmit} className="space-y-6"> */}
+        <div className="flex flex-row space-y-6">
           <div className="flex flex-col justify-center items-center -mr-4">
             <span className="text-[#393939] text-sm">نمایش بده:</span>
             <button type="button" onClick={addDropdown} className="w-20 h-8 text-[#1758BA] bg-[#E8EEF8] rounded-md font-medium text-xs m-2">
@@ -374,14 +391,14 @@ import { IDropdownItem, IAdvancedTextareaEditorProps, IInitialData } from "./typ
                     {generateFormData().content}
                   </span>
                   <span>
-                    {generateFormData().contentWithIds}
+                    {generateFormData().dropdowns?.[0]?.unique_name}
                   </span>
                 </div>
 
-                <button type="submit" className="w-full">
+                {/* <button type="submit" className="w-full">
               Submit Form
-            </button>
-        </form>
+            </button> */}
+        {/* </form> */}
     </div>
   );
 }

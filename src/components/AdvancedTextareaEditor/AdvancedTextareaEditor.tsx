@@ -62,10 +62,44 @@ const AdvancedTextareaEditor = () => {
     editorRef.current.focus();
   }, [dropdownCounter]);
 
+
+    const generateFormData = () => {}
+
+   const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault()
+      const formData = generateFormData()
+      console.log("Form Data:", formData)
+    },
+    [generateFormData],
+  )
+
+   const updateDropdownValue = useCallback(
+    (dropdownId: string, value: string, unique_name : string) => {
+      setDropdowns((prev) =>
+        prev.map((dropdown) =>
+          dropdown.id === dropdownId ? { ...dropdown, value, unique_name } : dropdown
+        )
+      );
+      
+      const optionsContainer = document.querySelector(`[data-id="${dropdownId}"] .${styles.optionsContainer}`) as HTMLElement;
+    if (optionsContainer) {
+      optionsContainer.style.display = 'none';
+    }
+
+    const dropdownButton = document.querySelector(`[data-id="${dropdownId}"] .${styles.customDropdown}`) as HTMLElement;
+    if (dropdownButton) {
+      dropdownButton.setAttribute('data-type', 'down');
+    }
+    },
+    []
+  );
+
     return (
         <div className="w-full max-w-4xl mx-auto p-6">
 
-      <form className="space-y-6">
+     
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div className="flex flex-row-reverse pt-32">
           <div className="flex flex-col justify-center items-center">
             <span className="text-[#393939] text-sm">:نمایش بده</span>

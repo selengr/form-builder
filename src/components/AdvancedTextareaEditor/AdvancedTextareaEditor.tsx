@@ -1,39 +1,18 @@
 "use client";
-
+// React & Libs
 import type React from "react";
-
-import { useState, useRef, useCallback, useEffect } from "react";
-
-import { createPortal } from "react-dom";
 import JSONData from './fake-data.json'
+import { createPortal } from "react-dom";
+import { useState, useRef, useCallback, useEffect } from "react";
+// styles
 import styles from '@/sections/calculator/advancedFormulaEditor.module.css'
+// types
+import { IDropdownItem, IAdvancedTextareaEditorProps, IInitialData } from "./types";
 
-interface DropdownItem {
-  id: string;
-  value: string;
-  unique_name : string;
-  placeholder: string;
-}
+  export default function AdvancedTextareaEditor({ initialData }: IAdvancedTextareaEditorProps = {}) {
+      const [dropdowns, setDropdowns] = useState<IDropdownItem[]>([]);
+      const [dropdownCounter, setDropdownCounter] = useState<number>(0);
 
-
-interface InitialData {
-    content: string
-    contentWithIds: string
-    dropdowns: Array<{
-      id: string
-      value: string
-      unique_name: string
-      position: number
-    }>
-  }
-  
-  interface AdvancedTextareaEditorProps {
-    initialData?: InitialData
-  }
-  
-  export default function AdvancedTextareaEditor({ initialData }: AdvancedTextareaEditorProps = {}) {
-  const [dropdowns, setDropdowns] = useState<DropdownItem[]>([]);
-  const [dropdownCounter, setDropdownCounter] = useState(0);
   const editorRef = useRef<HTMLDivElement>(null);;
 
   useEffect(() => {
@@ -42,7 +21,7 @@ interface InitialData {
     }
   }, [initialData])
 
-  const initializeEditorWithData = useCallback((data: InitialData) => {
+  const initializeEditorWithData = useCallback((data: IInitialData) => {
     if (!editorRef.current) return
 
     editorRef.current.innerHTML = ""
@@ -53,7 +32,7 @@ interface InitialData {
     const sortedDropdowns = [...data.dropdowns].sort((a, b) => a.position - b.position)
 
     let currentPosition = 0
-    const newDropdowns: DropdownItem[] = []
+    const newDropdowns: IDropdownItem[] = []
     let counter = 0
 
     sortedDropdowns.forEach((dropdownData, index) => {
@@ -64,7 +43,7 @@ interface InitialData {
         editorRef.current!.appendChild(textNode)
       }
 
-      const newDropdown: DropdownItem = {
+      const newDropdown: IDropdownItem = {
         id: `dropdown-${counter}`,
         value: dropdownData.value,
         unique_name: dropdownData.unique_name,
@@ -103,7 +82,7 @@ interface InitialData {
     const selection = window.getSelection();
     if (!selection || !editorRef.current) return;
 
-    const newDropdown: DropdownItem = {
+    const newDropdown: IDropdownItem = {
       id: `dropdown-${dropdownCounter}`,
       value: "",
       unique_name: "",

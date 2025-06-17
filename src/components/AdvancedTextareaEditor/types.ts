@@ -1,0 +1,22 @@
+export interface IDropdownItem {
+  id: string;
+  value: string;
+  unique_name : string;
+  placeholder: string;
+}
+
+export interface IInitialData {
+    content: string
+    contentWithIds: string
+    dropdowns: Array<{
+      id: string
+      value: string
+      unique_name: string
+      position: number
+    }>
+  }
+  
+  export interface IAdvancedTextareaEditorProps {
+    initialData?: IInitialData
+  }
+  

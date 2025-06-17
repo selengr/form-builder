@@ -20,7 +20,65 @@ const AdvancedTextareaEditor = () => {
 
 
   
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Backspace" || e.key === "Delete") {
+        const selection = window.getSelection();
+        if (!selection || !editorRef.current) return;
 
+        const range = selection.getRangeAt(0);
+        const { startContainer, startOffset } = range;
+
+ 
+        if (e.key === "Backspace") {
+          const prevSibling =
+            startContainer.nodeType === Node.TEXT_NODE
+              ? startOffset === 0
+                ? startContainer.previousSibling
+                : null
+              : startContainer.previousSibling;
+
+          if (
+            prevSibling &&
+            (prevSibling as Element).classList?.contains("dropdown-container")
+          ) {
+            e.preventDefault();
+            const dropdownId = (prevSibling as Element).getAttribute(
+              "data-dropdown-id"
+            );
+            if (dropdownId) {
+              removeDropdown(dropdownId);
+            }
+            return;
+          }
+        }
+
+        if (e.key === "Delete") {
+          const nextSibling =
+            startContainer.nodeType === Node.TEXT_NODE
+              ? startOffset === startContainer.textContent?.length
+                ? startContainer.nextSibling
+                : null
+              : startContainer.nextSibling;
+
+          if (
+            nextSibling &&
+            (nextSibling as Element).classList?.contains("dropdown-container")
+          ) {
+            e.preventDefault();
+            const dropdownId = (nextSibling as Element).getAttribute(
+              "data-dropdown-id"
+            );
+            if (dropdownId) {
+              removeDropdown(dropdownId);
+            }
+            return;
+          }
+        }
+      }
+    },
+    [removeDropdown]
+  );
 
   const handleInput = () => {}
   
@@ -221,6 +279,7 @@ const AdvancedTextareaEditor = () => {
             contentEditable
             suppressContentEditableWarning
             onInput={handleInput}
+                   onKeyDown={handleKeyDown}
             className="min-h-[110px] focus:outline-none w-full leading-relaxed text-gray-900 relative rounded-lg px-4 py-2 border-[1px] border-[#DDE1E6]"
             style={{
               lineHeight: "2.5",

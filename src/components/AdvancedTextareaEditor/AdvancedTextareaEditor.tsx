@@ -3,7 +3,7 @@
 import type React from "react";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-
+import { createPortal } from "react-dom";
 import styles from './advancedTextareaEditor.module.css'
 
 interface DropdownItem {

@@ -63,6 +63,53 @@ const AdvancedTextareaEditor = () => {
   }, [dropdownCounter]);
 
 
+    const renderDropdowns = useCallback(() => {
+    if (!editorRef.current) return null;
+
+    return dropdowns.map((dropdown) => {
+      const container = editorRef.current?.querySelector(
+        `[data-dropdown-id="${dropdown.id}"]`
+      );
+      if (!container) return null;
+
+      return createPortal(
+        <div className="flex justify-center items-center gap-1 bg-white rounded-md p-1">
+        <div
+        key={dropdown.id}
+        data-id={dropdown.id}
+        contentEditable={false}
+        className={`${styles.dynamicbtn} ${styles.NEW_FIELD}`}
+        data-type="NEW_FIELD"
+      >
+        <div
+          className={styles.customDropdown}
+          data-type="down"
+          onClick={(e) => handleDropdownClick(e, dropdown.id!)}
+        >
+          {dropdown.value.length > 0 ?dropdown.value: dropdown.placeholder}
+        </div>
+        <div className={styles.optionsContainer} style={{ display: 'none' }}>
+          {JSONData.dataList.map((item: any) => (
+            <div
+              key={item.extMap.UNIC_NAME}
+              className={styles.option}
+            //   onClick={() => handleOptionClick(item, dropdown.id!)}
+              onClick={(e) => updateDropdownValue(dropdown.id, item.caption, item.extMap.UNIC_NAME)}
+            >
+              {item.caption}
+            </div>
+          ))}
+        </div>
+      </div>
+      </div>,
+        container
+      );
+
+      
+    });
+  }, [dropdowns, updateDropdownValue, removeDropdown]);
+
+
   const generateFormData = useCallback(() => {
     if (!editorRef.current) return { content: "", contentWithIds: "", dropdowns: [] }
 
@@ -180,7 +227,7 @@ const AdvancedTextareaEditor = () => {
               fontSize: "14px",
             }}
           />
-        
+          {renderDropdowns()}
         </div>
      
                 <button type="submit" className="w-full">

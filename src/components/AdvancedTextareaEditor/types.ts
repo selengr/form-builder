@@ -1,3 +1,5 @@
+import { IConditionQuestionType } from "@/types/conditionReportSolo";
+
 export interface IDropdownItem {
   id: string;
   value: string;
@@ -18,5 +20,7 @@ export interface IInitialData {
   
   export interface IAdvancedTextareaEditorProps {
     initialData?: IInitialData
+    methods : any,
+    qacWithOutFilter : IConditionQuestionType
   }
   

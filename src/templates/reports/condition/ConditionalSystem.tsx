@@ -37,7 +37,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
     handleRemoveSubCondition,
   } = useConditionalForm(condition)
 
-  const { qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter()
+  const { qacWithOutFilterOptions, isFetchingQacWithOutFilter, qacWithOutFilter } = useGetQacWithOutFilter()
   const {
      onlyAllQuestions,
      onlyAllDateOptions, 
@@ -168,14 +168,19 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
                 sx={{
                   ml: { xs: 0, md: 2 },
                   display: "flex",
-                  alignItems: "center",
+                  alignItems: "start",
                   gap: 1,
-                  flexWrap: "wrap",
-                  flexDirection: { xs: "column", md: "row" },
+                  flexDirection: { xs: "column"},
                 }}
               >
-                <Typography sx={{ color: "#393939", fontSize: "14px",ml:-1.3 }}>نمایش بده:</Typography>
-                <TextFieldController  sx={{ minWidth: 240, ml: 0 }} name={`conditions.${index}.returnText`} type="string" />
+                {/* <Typography sx={{ color: "#393939", fontSize: "14px",ml:-1.3 }}>نمایش بده:</Typography>
+                <TextFieldController  sx={{ minWidth: 240, ml: 0 }} name={`conditions.${index}.returnText`} type="string" /> */}
+    
+                 <AdvancedTextareaEditor 
+                 initialData={ undefined} 
+                 setValue={methods.setValue} 
+                 qacWithOutFilter={qacWithOutFilter}
+                 />
                 <Typography sx={{color: "#393939", fontSize: "14px", mr: 0 }}>در غیر اینصورت نمایش بده:</Typography>
                 
                 <TextFieldController sx={{ minWidth: 300, width: 380 }} name={`conditions.${index}.elseReturnText`} type="string" />
@@ -195,7 +200,6 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
                 </Button>
             )}
               </Box>
-                    <AdvancedTextareaEditor initialData={ undefined}  />
               <CircleDivider />
             </Box>
           ))}

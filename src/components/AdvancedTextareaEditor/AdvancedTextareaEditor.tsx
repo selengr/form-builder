@@ -344,12 +344,11 @@ import { IDropdownItem, IAdvancedTextareaEditorProps, IInitialData } from "./typ
   )
   
   return (
-    <div className="w-full max-w-4xl mx-auto p-6">
-
+    <div className="w-full max-w-[875px]">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="flex flex-row">
-          <div className="flex flex-col justify-center items-center">
-            <span className="text-[#393939] text-sm">:نمایش بده</span>
+          <div className="flex flex-col justify-center items-center -mr-4">
+            <span className="text-[#393939] text-sm">نمایش بده:</span>
             <button type="button" onClick={addDropdown} className="w-20 h-8 text-[#1758BA] bg-[#E8EEF8] rounded-md font-medium text-xs m-2">
               افزودن متغییر
             </button>

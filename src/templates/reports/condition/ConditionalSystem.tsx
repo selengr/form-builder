@@ -18,6 +18,7 @@ import { useGetQacWithOutFilter } from "@/app/reports/create-solo/[id]/_hooks/us
 import { useGetOnlyAllQuestions } from "@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllQuestions"
 import { useGetOnlyAllCalculation } from "@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllCalculation"
 import { usePostCondition } from "@/app/reports/create-solo/[id]/_hooks/usePostCondition"
+import AdvancedTextareaEditor from "@/components/AdvancedTextareaEditor/AdvancedTextareaEditor"
 
 
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
@@ -194,6 +195,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
                 </Button>
             )}
               </Box>
+                    <AdvancedTextareaEditor initialData={ undefined}  />
               <CircleDivider />
             </Box>
           ))}

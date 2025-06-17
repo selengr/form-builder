@@ -5,7 +5,7 @@ import JSONData from './fake-data.json'
 import { createPortal } from "react-dom";
 import { useState, useRef, useCallback, useEffect } from "react";
 // styles
-import styles from '@/sections/calculator/advancedFormulaEditor.module.css'
+import styles from './advancedTextareaEditor.module.css'
 // types
 import { IDropdownItem, IAdvancedTextareaEditorProps, IInitialData } from "./types";
 
@@ -313,9 +313,13 @@ import { IDropdownItem, IAdvancedTextareaEditorProps, IInitialData } from "./typ
           })
 
 
-          finalText += selectedValue
+          finalText += " "+ selectedValue
 
-          finalTextWithIds += `${dropdown.unique_name}`
+          if(dropdown?.unique_name){
+              finalTextWithIds += " "+ `${dropdown.unique_name}`
+          }else {
+            console.log("prevent submit will happen here");
+          }
         }
       }
     }
@@ -343,7 +347,7 @@ import { IDropdownItem, IAdvancedTextareaEditorProps, IInitialData } from "./typ
     <div className="w-full max-w-4xl mx-auto p-6">
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="flex flex-row-reverse pt-32">
+        <div className="flex flex-row">
           <div className="flex flex-col justify-center items-center">
             <span className="text-[#393939] text-sm">:نمایش بده</span>
             <button type="button" onClick={addDropdown} className="w-20 h-8 text-[#1758BA] bg-[#E8EEF8] rounded-md font-medium text-xs m-2">
@@ -366,8 +370,13 @@ import { IDropdownItem, IAdvancedTextareaEditorProps, IInitialData } from "./typ
           />
           {renderDropdowns()}
         </div>
-        <div className="text-sm leading-relaxed">
-                  {generateFormData().content}
+        <div className="text-sm leading-relaxed flex flex-col">
+                  <span>
+                    {generateFormData().content}
+                  </span>
+                  <span>
+                    {generateFormData().contentWithIds}
+                  </span>
                 </div>
 
                 <button type="submit" className="w-full">

@@ -63,7 +63,68 @@ const AdvancedTextareaEditor = () => {
   }, [dropdownCounter]);
 
 
-    const generateFormData = () => {}
+  const generateFormData = useCallback(() => {
+    if (!editorRef.current) return { content: "", contentWithIds: "", dropdowns: [] }
+
+    let finalText = ""
+    let finalTextWithIds = ""
+    const dropdownData: Array<{ id: string; value: string; unique_name: string; position: number }> = []
+
+    const walker = document.createTreeWalker(editorRef.current, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT, {
+      acceptNode: (node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          let parent = node.parentNode
+          while (parent && parent !== editorRef.current) {
+            if ((parent as Element).classList?.contains("dropdown-container")) {
+              return NodeFilter.FILTER_REJECT
+            }
+            parent = parent.parentNode
+          }
+          return NodeFilter.FILTER_ACCEPT
+        }
+        if (node.nodeType === Node.ELEMENT_NODE && (node as Element).classList.contains("dropdown-container")) {
+          return NodeFilter.FILTER_ACCEPT
+        }
+        return NodeFilter.FILTER_SKIP
+      },
+    })
+
+    let node
+    while ((node = walker.nextNode())) {
+      if (node.nodeType === Node.TEXT_NODE && node.textContent) {
+        finalText += node.textContent
+        finalTextWithIds += node.textContent
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        const element = node as Element
+        const dropdownId = element.getAttribute("data-dropdown-id")
+        if (dropdownId) {
+          const dropdown = dropdowns.find((d) => d.id === dropdownId)
+          const selectedValue = dropdown?.value || `[${dropdown?.placeholder || "Unselected"}]`
+
+          dropdownData.push({
+            id: dropdownId,
+            value: dropdown?.value || "",
+            unique_name: dropdown?.unique_name || "",
+            position: finalText.length,
+          })
+
+
+          finalText += selectedValue
+
+          finalTextWithIds += `${dropdown.unique_name}`
+        }
+      }
+    }
+
+    const result = {
+        content: finalText,
+        contentWithIds: finalTextWithIds,
+        dropdowns: dropdownData,
+      }
+
+
+    return result
+  }, [dropdowns])
 
    const handleSubmit = useCallback(
     (e: React.FormEvent) => {

@@ -230,6 +230,9 @@ const AdvancedTextareaEditor = () => {
           {renderDropdowns()}
         </div>
      
+       <div className="text-sm leading-relaxed">
+                  {generateFormData().content}
+                </div>
                 <button type="submit" className="w-full">
               {/* <Send className="h-4 w-4 mr-2" /> */}
               Submit Form

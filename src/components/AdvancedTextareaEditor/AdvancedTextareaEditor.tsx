@@ -26,7 +26,6 @@ interface InitialData {
   interface AdvancedTextareaEditorProps {
     initialData?: InitialData
   }
-  
   function AdvancedTextareaEditor({ initialData }: AdvancedTextareaEditorProps = {}) {
       const [dropdowns, setDropdowns] = useState<DropdownItem[]>([]);
   const [dropdownCounter, setDropdownCounter] = useState(0);
@@ -209,6 +208,16 @@ interface InitialData {
     setDropdownCounter((prev) => prev + 1);
     editorRef.current.focus();
   }, [dropdownCounter]);
+
+
+    const handleDropdownClick = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    const optionsContainer = (e.target as HTMLElement).nextElementSibling as HTMLElement;
+    const isHidden = optionsContainer.style.display === 'none';
+    optionsContainer.style.display = isHidden ? 'block' : 'none';
+    (e.target as HTMLElement).setAttribute('data-type', isHidden ? 'up' : 'down');
+  };
+
 
 
     const renderDropdowns = useCallback(() => {

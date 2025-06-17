@@ -19,7 +19,19 @@ const AdvancedTextareaEditor = () => {
 
 
 
-  
+    const removeDropdown = useCallback((dropdownId: string) => {
+    setDropdowns((prev) => prev.filter((d) => d.id !== dropdownId));
+
+    if (editorRef.current) {
+      const dropdownElement = editorRef.current.querySelector(
+        `[data-dropdown-id="${dropdownId}"]`
+      );
+      if (dropdownElement) {
+        dropdownElement.remove();
+      }
+    }
+  }, []);
+
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === "Backspace" || e.key === "Delete") {

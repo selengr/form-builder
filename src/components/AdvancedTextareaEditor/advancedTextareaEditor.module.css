@@ -1,17 +1,111 @@
-.NUMBER,
-.OPERATOR,
-.PARENTHESIS,
-.AVG_PARENTHESIS,
-.asNumber {
+.NEW_FIELD .customDropdown::before{
+  content: "";
+  right: 0px;
+  width: 20px;
   height: 30px;
+  position: absolute;
+  background-size: 15px;
+  background-color: #e8eef8;
+  background-position: center;
+  border-radius: 0 10px 10px 0;
+  background-repeat: no-repeat;
+}
+
+.NEW_FIELD .customDropdown::before {
+  background-image: url("/assets/icons/svg/ic_tick.svg");
+}
+
+.customDropdown[data-type="down"]::after,
+.customDropdown[data-type="up"]::after {
+  content: "";
+  left: 6px;
+  width: 10px;
+  height: 30px;
+  position: absolute;
+  background-size: 15px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.customDropdown[data-type="up"]::after {
+  background-image: url("/assets/icons/svg/ic_arrow_up.svg");
+}
+.customDropdown[data-type="down"]::after {
+  background-image: url("/assets/icons/svg/ic_arrow_down.svg");
+}
+
+.NEW_FIELD .option {
+  min-height: 30px;
+  width: 100%;
+  border-color: none;
+  color: #fff;
+  background-color: #1753af;
+  border-radius: 10px;
   display: flex;
-  min-width: 30px;
-  width: min-content;
+  margin: 4px 0;
+  padding: 1px 5px;
+  justify-content: start;
+  align-items: center;
+}
+
+.NEW_FIELD .option {
+  width: 100%;
+  color: #fff;
+  margin: 4px 0;
+  display: flex;
+  min-height: 30px;
+  padding: 1px 5px;
+  border-color: none;
   border-radius: 10px;
   align-items: center;
-  margin: 3px !important;
-  max-width: max-content;
+  justify-content: start;
+}
+
+.NEW_FIELD .option {
+  background-color: #1753af;
+}
+
+.NEW_FIELD .customDropdown {
+  height: 100%;
+  max-width: 90%;
+
+  max-width: 120px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  color: #fff;
+  display: flex;
+  padding: 0 4px;
+  border-color: none;
+  border-radius: 10px;
+  align-items: center;
+  padding-right: 24px;
+  white-space: nowrap;
+  justify-content: start;
+}
+
+.NEW_FIELD .optionsContainer {
+  width: 145px;
+  padding: 8px;
+  display: flex;
+  z-index: 1000;
+  min-height: 160px;
+  max-height: 240px;
+  position: absolute;
+  overflow-y: scroll;
+  align-items: center;
+  border-radius: 10px;
+  background-color: #fff;
   justify-content: center;
-  margin-top: 0px !important;
-  font-weight: 500;
+  box-shadow: 0px 0px 50px 0px #00000033;
+}
+
+.NEW_FIELD .optionsContainer {
+  margin-top: 2px;
+}
+
+.dynamicbtn {
+  padding: 5px;
+  text-align: center;
+  display: inline-block;
 }

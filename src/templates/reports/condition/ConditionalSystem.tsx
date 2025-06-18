@@ -29,7 +29,6 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
 }) => {
   const { id } = useParams();
   const {refresh} = useRouter()
-   const [currentData, setCurrentData] = useState<any>(null)
 
   const {
     methods,
@@ -52,11 +51,11 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
   const postCondition = usePostCondition(isEdit);
 
   const handleReturnTextChange = (data: any,index:number) => {
-    methods.setValue(`conditions.${index}.returnText`,data)
+    methods.setValue(`conditions.${index}.returnText`,JSON.stringify(data))
   }
 
   const handleElseReturnTextChange = (data: any,index:number) => {
-    methods.setValue(`conditions.${index}.elseReturnText`,data)
+    methods.setValue(`conditions.${index}.elseReturnText`,JSON.stringify(data))
   }
 
 

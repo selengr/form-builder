@@ -320,12 +320,7 @@ import { IConditionQuestionType } from "@/types/conditionReportSolo";
 
 
           finalText += " "+ selectedValue
-
-        //   if(dropdown?.unique_name){
-              finalTextWithIds += " "+ `${dropdown?.unique_name}`
-        //   }else {
-        //     console.log("prevent submit will happen here");
-        //   }
+          finalTextWithIds += " "+ `${dropdown?.unique_name}`
         }
       }
     }
@@ -376,13 +371,9 @@ import { IConditionQuestionType } from "@/types/conditionReportSolo";
           />
           {renderDropdowns()}
         </div>
-        <div className="text-sm leading-relaxed flex flex-col">
-                  <span>
+        <div className="text-sm leading-relaxed">
                     {generateFormData().content}
-                  </span>
-                  <span>
-                    {generateFormData().dropdowns?.[0]?.unique_name}
-                  </span>
+              
                 </div>
 
                 {/* <button type="submit" className="w-full">

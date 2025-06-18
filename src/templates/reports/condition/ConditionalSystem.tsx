@@ -53,9 +53,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
   const postCondition = usePostCondition(isEdit);
 
   const handleDataChange = (data: any,index:number) => {
-    console.log(methods.watch());
-    methods.setValue(`conditions.${index}.returnText`,data.contentWithIds)
-    setCurrentData(methods.getValues(`conditions.${index}.returnText`))
+    methods.setValue(`conditions.${index}.returnText`,data)
   }
 
 

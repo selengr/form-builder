@@ -44,7 +44,6 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
   const {
      onlyAllQuestions,
      onlyAllDateOptions, 
-     onlyAllQuestionsOptions,
       onlySomeQuestionsOptions,
        isFetchingOnlyAllQuestions
        } = useGetOnlyAllQuestions()
@@ -52,8 +51,12 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
 
   const postCondition = usePostCondition(isEdit);
 
-  const handleDataChange = (data: any,index:number) => {
+  const handleReturnTextChange = (data: any,index:number) => {
     methods.setValue(`conditions.${index}.returnText`,data)
+  }
+
+  const handleElseReturnTextChange = (data: any,index:number) => {
+    methods.setValue(`conditions.${index}.elseReturnText`,data)
   }
 
 
@@ -185,22 +188,28 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
                 <TextFieldController  sx={{ minWidth: 240, ml: 0 }} name={`conditions.${index}.returnText`} type="string" /> */}
     
                  <AdvancedTextareaEditor 
-                 onDataChange={(data)=>handleDataChange(data,index)}
+                 label="نمایش بده"
+                 onDataChange={(data)=>handleReturnTextChange(data,index)}
                  initialData={ undefined} 
                  methods={methods.setValue} 
                  qacWithOutFilter={qacWithOutFilter}
                  />
-
-                 
-                    <div dir="ltr" className="mt-6 p-4 bg-gray-100 rounded w-full">
-                      <h3 className="font-bold mb-2">Current Data:</h3>
-                      <pre className="text-xs overflow-auto">{JSON.stringify(currentData, null, 2)}</pre>
-                    </div>
+                 <AdvancedTextareaEditor 
+                    label="در غیر اینصورت نمایش بده:"
+                    onDataChange={(data)=>handleElseReturnTextChange(data,index)}
+                    initialData={ undefined} 
+                    methods={methods.setValue} 
+                    qacWithOutFilter={qacWithOutFilter}
+                 />
+  
               
-
+{/* 
                 <Typography sx={{color: "#393939", fontSize: "14px", mr: 0 }}>در غیر اینصورت نمایش بده:</Typography>
                 
-                <TextFieldController sx={{ minWidth: 300, width: 380 }} name={`conditions.${index}.elseReturnText`} type="string" />
+                <TextFieldController sx={{ minWidth: 300, width: 380 }} name={`conditions.${index}.elseReturnText`} type="string" /> */}
+               
+               
+               
                 {index !== 0 && (
                 <Button
                   onClick={() => handleRemoveCondition(index)}

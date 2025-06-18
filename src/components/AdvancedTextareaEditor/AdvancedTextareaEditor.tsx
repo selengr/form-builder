@@ -10,7 +10,7 @@ import styles from './advancedTextareaEditor.module.css'
 import { IDropdownItem, IAdvancedTextareaEditorProps, IInitialData } from "./types";
 import { IConditionQuestionType } from "@/types/conditionReportSolo";
 
-  export default function AdvancedTextareaEditor({ initialData, methods, qacWithOutFilter, onDataChange }: IAdvancedTextareaEditorProps) {
+  export default function AdvancedTextareaEditor({ initialData, methods, qacWithOutFilter, onDataChange, label }: IAdvancedTextareaEditorProps) {
       const [dropdowns, setDropdowns] = useState<IDropdownItem[]>([]);
       const [dropdownCounter, setDropdownCounter] = useState<number>(0);
 
@@ -363,9 +363,9 @@ import { IConditionQuestionType } from "@/types/conditionReportSolo";
   return (
     <div className="w-full max-w-[875px]">
       {/* <form onSubmit={handleSubmit} className="space-y-6"> */}
-        <div className="flex flex-row space-y-6">
+        <div className="flex flex-row">
           <div className="flex flex-col justify-center items-center -mr-4">
-            <span className="text-[#393939] text-sm">نمایش بده:</span>
+            <span className="text-[#393939] text-sm max-w-[68px]">{label}</span>
             <button type="button" onClick={addDropdown} className="w-20 h-8 text-[#1758BA] bg-[#E8EEF8] rounded-md font-medium text-xs m-2">
               افزودن متغییر
             </button>

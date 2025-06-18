@@ -19,6 +19,7 @@ export interface IInitialData {
   }
   
   export interface IAdvancedTextareaEditorProps {
+    label : string;
     methods : any;
     qacWithOutFilter : any
     initialData?: IInitialData;

@@ -52,10 +52,10 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
 
   const postCondition = usePostCondition(isEdit);
 
-  const handleDataChange = (data: any) => {
-    console.log("test");
-    console.log("test2",data);
-    setCurrentData(data)
+  const handleDataChange = (data: any,index:number) => {
+    console.log(methods.watch());
+    methods.setValue(`conditions.${index}.returnText`,data.contentWithIds)
+    setCurrentData(methods.getValues(`conditions.${index}.returnText`))
   }
 
 
@@ -187,14 +187,14 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
                 <TextFieldController  sx={{ minWidth: 240, ml: 0 }} name={`conditions.${index}.returnText`} type="string" /> */}
     
                  <AdvancedTextareaEditor 
-                 onDataChange={handleDataChange}
+                 onDataChange={(data)=>handleDataChange(data,index)}
                  initialData={ undefined} 
                  methods={methods.setValue} 
                  qacWithOutFilter={qacWithOutFilter}
                  />
 
                  
-                    <div className="mt-6 p-4 bg-gray-100 rounded w-full">
+                    <div dir="ltr" className="mt-6 p-4 bg-gray-100 rounded w-full">
                       <h3 className="font-bold mb-2">Current Data:</h3>
                       <pre className="text-xs overflow-auto">{JSON.stringify(currentData, null, 2)}</pre>
                     </div>

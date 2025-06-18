@@ -1,5 +1,12 @@
 import * as z from "zod"
 
+const dropdownSchema = z.object({
+  id: z.string(),
+  value: z.string(),
+  unique_name: z.string(),
+  position: z.number(),
+});
+
 const SubConditionSchema = z.object({
   logicalOperator: z.string().optional(),
   questionType: z.string().min(1, { message: "اين فيلد الزامي است" }),
@@ -16,6 +23,12 @@ const ConditionSchema = z.object({
   subConditions: z.array(SubConditionSchema),
   returnText: z.string().min(1, { message: "اين فيلد الزامي است" }),
   elseReturnText: z.string().optional().default(""),
+  returnTextModel: z.object({
+  content: z.string(),
+  contentWithIds: z.string(),
+  dropdowns: z.array(dropdownSchema),
+  }),
+  elseReturnTextModel: z.object({}),
   id: z.number().optional(),
 })
 

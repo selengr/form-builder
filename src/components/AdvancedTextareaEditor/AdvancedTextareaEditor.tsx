@@ -346,20 +346,10 @@ import { IConditionQuestionType } from "@/types/conditionReportSolo";
     if (onDataChange && dropdowns.length > 0) {
       const formData = generateFormData()
       onDataChange(formData)
-    console.log("==================1");
     }
   }, [dropdowns, generateFormData])
 
 
-  const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault()
-      const formData = generateFormData()
-      console.log("Form Data:", formData)
-    },
-    [generateFormData],
-  )
-  
   return (
     <div className="w-full max-w-[875px]">
       {/* <form onSubmit={handleSubmit} className="space-y-6"> */}

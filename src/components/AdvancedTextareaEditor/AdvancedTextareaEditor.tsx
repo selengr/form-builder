@@ -331,8 +331,6 @@ import { IConditionQuestionType } from "@/types/conditionReportSolo";
         dropdowns: dropdownData,
       }
 
-
-
     return result
   }, [dropdowns])
 

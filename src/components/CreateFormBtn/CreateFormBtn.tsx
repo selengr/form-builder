@@ -238,9 +238,9 @@ export default function CreateFormBtn() {
                   flexDirection: "column",
                 }}
               >
-                <Typography variant="subtitle2" fontWeight="700">
+                {/* <Typography variant="subtitle2" fontWeight="700">
                      نوع فرم:
-                </Typography>
+                </Typography> */}
                 <Tabs
                   value={tabValue}
                   onChange={handleTabChange}
@@ -265,15 +265,13 @@ export default function CreateFormBtn() {
                       borderRadius: "10px",
                       bgcolor: "#1758BA",
                     },
-                    "& .MuiTabs-flexContainer" : {
-                      width : "100%"
-                    }
                   }}
                 >
                   <Tab
                     sx={{
                       "&.MuiButtonBase-root.MuiTab-root": {
-                        width:"50%",
+                        minWidth: "30px",
+                        maxWidth: "80px",
                         color: "#000",
                         fontWeight: 600,
                         paddingX: "15px",
@@ -281,7 +279,8 @@ export default function CreateFormBtn() {
                     }}
                     disableRipple={true}
                     value="QUESTION"
-                    label="فرم ارزیابی"
+                    // label="فرم ارزیابی"
+                    label="پرسشنامه"
                   />
                   <Tab
                     sx={{
@@ -289,14 +288,15 @@ export default function CreateFormBtn() {
                         color: "#000",
                         fontWeight: 600,
                         paddingX: "15px",
-                        width:"50%",
+                        minWidth: "30px",
+                        maxWidth: "80px",
                       },
                     }}
                     disableRipple={true}
                     value="TEST"
                     label="آزمون"
                   />
-                  {/* <Tab
+                  <Tab
                     sx={{
                       "&.MuiButtonBase-root.MuiTab-root": {
                         minWidth: "30px",
@@ -323,7 +323,7 @@ export default function CreateFormBtn() {
                     disableRipple={true}
                     value="SURVEY"
                     label="نظرسنجی"
-                  /> */}
+                  />
                 </Tabs>
               </Box>
 

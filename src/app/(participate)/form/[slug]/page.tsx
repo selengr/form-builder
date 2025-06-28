@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect, useState} from "react";
+import { useState} from "react";
 import {Button, IconButton} from "@mui/material";
 import ResponsiveContainer from "@/templates/form/ContentWrapper";
 import AnimatedBox from "@/templates/form/AnimatedBox";
@@ -11,7 +11,6 @@ import Loading from "@/app/(builder)/preview/[id]/loading";
 import {MdOutlineKeyboardArrowRight} from "react-icons/md";
 import finalStep from "@/../public/images/home-page/finalStep.svg";
 import Image from "next/image";
-import {useParams} from "next/navigation";
 
 export default function ParticipateFormPage() {
   const [limitationStepPassed, setLimitationStepPassed] = useState<boolean>(false);

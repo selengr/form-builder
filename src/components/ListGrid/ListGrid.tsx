@@ -1,6 +1,6 @@
 "use client";
 
-import React, {ReactNode, useCallback, useEffect, useState} from "react";
+import React, {ReactNode, useCallback, useEffect, useMemo, useState} from "react";
 import Image from "next/image";
 import {useInfiniteQuery} from "@tanstack/react-query";
 import {useInView} from "react-intersection-observer";
@@ -107,7 +107,7 @@ const ListGrid: React.FC<Props> = ({
   const {ref, inView} = useInView();
   const searchParams = useSearchParams();
   const query = searchParams.get("query")?.toString() || "";
-
+  const memoizedFilterComponent = useMemo(() => filterComponent, []);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const router = useRouter();
 
@@ -130,9 +130,9 @@ const ListGrid: React.FC<Props> = ({
     refetch();
   }, [isFilterOpen, refetch]);
 
-  const handleFilterToggle = useCallback(() => {
+  const openFilter = useCallback(() => {
     if (!disableFilter) {
-      setIsFilterOpen((prev) => !prev);
+      setIsFilterOpen(true);
     }
   }, [disableFilter]);
 
@@ -195,7 +195,8 @@ const ListGrid: React.FC<Props> = ({
       </p>
     </Grid>);
 
-  const renderSearchAndFilter = () => (<Grid
+  const renderSearchAndFilter = () => (
+    <Grid
       display="flex"
       sx={{
         width: "100%", maxWidth: "550px", justifyContent: "center", mt: 1, gap: 2,
@@ -206,16 +207,28 @@ const ListGrid: React.FC<Props> = ({
         sx={{display: "flex", alignItems: "center", gap: "12px", mx: "auto"}}
       >
         <SearchInput/>
-        {!disableFilter && (<Grid sx={{display: {xs: "flex", lg: "none"}}} onClick={handleFilterToggle}>
+        {!disableFilter && (
+          <IconButton // Changed from Grid to IconButton
+            onClick={openFilter} // Using the new handler
+            sx={{
+              display: {xs: "flex", lg: "none"}, // Show only on mobile
+              flexShrink: 0, // Prevent shrinking
+              border: "1px solid #c9c9c9",
+              borderRadius: "15px",
+              padding: "8px", // Adjusted padding for IconButton to match Image's p-2
+              width: 51, // Ensure fixed size for consistency
+              height: 51,
+            }}
+          >
             <Image
               src={Filter}
-              width={51}
-              height={51}
+              width={35} // Adjust Image size to fit inside 51x51 IconButton if needed
+              height={35}
               alt="Filter"
               draggable={false}
-              className="cursor-pointer border-[1px] border-[#c9c9c9] rounded-[15px] p-2"
             />
-          </Grid>)}
+          </IconButton>
+        )}
       </Grid>
     </Grid>);
 
@@ -266,15 +279,18 @@ const ListGrid: React.FC<Props> = ({
       </Grid>
     </Grid>);
 
-  return (<Grid
+  return (
+    <Grid
       width="100%"
       display="flex"
       sx={{
-        height: "100vh", overflowY: "hidden", userSelect: "none",
+        overflowY: "hidden",
+        userSelect: "none",
+        height: { xs: "calc(100vh - 60px)", md: "100vh" },
+        flexDirection: { xs: "column", lg: "row" },
       }}
     >
       <Grid
-        width="100%"
         display="flex"
         flexDirection="column"
         justifyContent="flex-start"
@@ -282,48 +298,64 @@ const ListGrid: React.FC<Props> = ({
         container
         sx={{
           bgcolor: "white",
-          height: "100vh",
-          flexDirection: "column",
-          alignItems: "flex-end",
+          borderRadius: "16px",
           p: 2,
           mx: 1,
-          borderRadius: "16px",
-          maxWidth: "100%",
+          width: 1,
           overflowY: "hidden",
+          height: "100%",
         }}
       >
-        <Grid container sx={{width: "100%", justifyContent: "center", mx: "auto"}}>
+        <Grid container sx={{ width: "100%", justifyContent: "center", mx: "auto" }}>
           {renderHeader()}
           <Box
             sx={{
-              display: "flex", justifyContent: "center", alignItems: "center", gap: "12px", width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "12px",
+              width: "100%",
+              flexWrap: { xs: "wrap", sm: "nowrap" },
             }}
           >
             {renderTotalCount()}
-            {showCreateButton && (<div className="min-w-[50px] w-[50px] h-full">
-                <CreateFormBtn/>
-              </div>)}
+            {showCreateButton && (
+              <div className="min-w-[50px] w-[50px] h-full">
+                <CreateFormBtn />
+              </div>
+            )}
           </Box>
           {renderSearchAndFilter()}
           <Grid
             id="content"
             container
-            size={{xs: 12}}
             flexWrap="nowrap"
-            className="flex-1"
             sx={{
-              width: "100%", mx: "auto", mt: 1, mb: 5, flexDirection: "column", gap: 2, overflowY: "auto", height: "calc(100vh - 210px)",
+              width: 1,
+              mx: "auto",
+              mt: 1,
+              mb: 5,
+              flexDirection: "column",
+              gap: 2,
+              overflowY: "auto",
+              height: {
+                xs: "calc(100vh - 290px)",
+                md: "calc(100vh - 210px)",
+              },
             }}
           >
             {renderContent()}
           </Grid>
         </Grid>
-        <BottomSheet open={isFilterOpen} onClose={() => setIsFilterOpen(false)}>
-          <Grid>{filterComponent}</Grid>
-        </BottomSheet>
+        {isFilterOpen && (
+          <BottomSheet open onClose={() => setIsFilterOpen(false)}>
+            <Grid>{memoizedFilterComponent}</Grid>
+          </BottomSheet>
+        )}
       </Grid>
       {renderDesktopFilter()}
-    </Grid>);
+    </Grid>
+  );
 };
 
 export default ListGrid;

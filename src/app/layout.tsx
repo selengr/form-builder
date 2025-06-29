@@ -31,20 +31,21 @@ export default function RootLayout({
     <body dir="rtl">
     <NextTopLoader showSpinner={false} />
     <RootProvider>
-      <div className="bg-white w-full mx-auto px-4 pb-6 flex justify-center md:hidden">
-        <div className="absolute right-8">
-          <MobileMenu />
-        </div>
+      <div className="bg-white w-full mx-auto px-4 py-3 flex justify-between items-center md:hidden fixed top-0 left-0 right-0 z-50">
+        <MobileMenu />
         <Image
-            src={Logo}
-            alt="سایا لوگو"
-            width={120}
-            height={40}
-            priority
-            unselectable={"on"}
-            draggable={false}
+          src={Logo}
+          alt="سایا لوگو"
+          width={120}
+          height={40}
+          priority
+          draggable={false}
         />
-      </div>{children}</RootProvider>
+      </div>
+      <div className={"flex grow h-[calc(50vh-60px)] mt-[60px] md:mt-0 md:h-[calc(100vh-0px)]"}>
+        {children}
+      </div>
+    </RootProvider>
     </body>
     </html>
   );

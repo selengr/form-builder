@@ -8,7 +8,7 @@ export default function Index() {
   useEffect(() => {
     const timeout = setTimeout(() => {
       router.push('/');
-    }, 500000)
+    }, 3000)
     return () => {
       clearTimeout(timeout);
     }

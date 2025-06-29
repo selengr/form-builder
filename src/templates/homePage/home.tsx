@@ -16,22 +16,22 @@ import BannerBg2 from "@/../public/images/home-page/banner-bg2.svg";
 export default function HomePage() {
   return (
     <main
-      className="h-screen w-full bg-white text-right lg:pr-4 lg:pl-0 overflow-x-hidden overflow-y-auto"
+      className="h-screen w-full bg-white text-right lg:pr-4 lg:pl-0 overflow-x-hidden overflow-y-auto -mt-[60px] md:mt-0"
       dir="rtl"
     >
       <div className="mx-auto px-4 pb-6 flex justify-center md:hidden">
         {/*<div className="absolute right-8">*/}
         {/*  <MobileMenu />*/}
         {/*</div>*/}
-        <Image
-          src={Logo}
-          alt="سایا لوگو"
-          width={120}
-          height={40}
-          priority
-          unselectable={"on"}
-          draggable={false}
-        />
+        {/*<Image*/}
+        {/*  src={Logo}*/}
+        {/*  alt="سایا لوگو"*/}
+        {/*  width={120}*/}
+        {/*  height={40}*/}
+        {/*  priority*/}
+        {/*  unselectable={"on"}*/}
+        {/*  draggable={false}*/}
+        {/*/>*/}
       </div>
 
       <div className="flex flex-col lg:flex-row justify-center items-center md:pt-20">

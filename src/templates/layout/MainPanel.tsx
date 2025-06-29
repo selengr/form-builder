@@ -18,7 +18,7 @@ export default function MainPanel({
 
       <div className="flex flex-col w-full overflow-y-auto">
         {path === "/" && (
-          <div className="md:hidden block">
+          <div className="md:hidden block mt-[60px] ">
             <TopAppBar title="" />
           </div>
         )}

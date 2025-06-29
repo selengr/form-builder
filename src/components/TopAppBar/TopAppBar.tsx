@@ -25,17 +25,20 @@ const TopAppBar = ({customActions, appBarSx, toolbarSx, imageSx}: any) => {
 
   const renderUser = () => {
     if (loading) {
-      return (<div className="flex items-center gap-4">
+      return (
+        <div className="flex items-center gap-4">
           <Skeleton variant="circular" width={50} height={50}/>
           <div>
             <Skeleton width={100}/>
             <Skeleton width={80}/>
           </div>
-        </div>);
+        </div>
+      );
     }
 
     if (userInfo) {
-      return (<Link href={`${endPoint}/profile`}>
+      return (
+        <Link href={`${endPoint}/profile`}>
           <div className="flex items-center gap-2 cursor-pointer">
             <Avatar size="sm" name={userInfo?.user?.fullName || "کاربر"}/>
             <div>
@@ -43,24 +46,40 @@ const TopAppBar = ({customActions, appBarSx, toolbarSx, imageSx}: any) => {
               <Typography variant="caption">مشاهده پروفایل</Typography>
             </div>
           </div>
-        </Link>);
+        </Link>
+      );
     }
 
-    return (<IconButton onClick={handleAuth} sx={{gap: 1}}>
+    return (
+      <IconButton onClick={handleAuth} sx={{gap: 1}}>
         <Image src="/images/home-page/login.svg" alt="ورود" width={24} height={24}/>
         {customActions ?? <Typography color="#424242">ورود</Typography>}
-      </IconButton>);
+      </IconButton>
+    );
   };
 
-  return (<AppBar
+  return (
+    <AppBar
       elevation={0}
       position="static"
-      sx={{pt: 2, height: "100px", bgcolor: "#fff", color: "black", ...appBarSx}}
+      className={"bg-white"}
+      sx={{ pt: 2, height: "100px", bgcolor: "#fff", color: "black", ...appBarSx }}
     >
-      <Toolbar sx={toolbarSx}>
-        <Box sx={{...imageSx}}>{renderUser()}</Box>
-        <Box sx={{flexGrow: 1}}/>
+      <Toolbar
+        sx={{
+          display: 'flex', // Ensure Toolbar is a flex container
+          justifyContent: 'space-between', // Distribute items with space between
+          alignItems: 'center', // Vertically center items
+          width: '100%', // Ensure it takes full width
+          ...toolbarSx,
+        }}
+      >
+        {/* Left Section: User Info / Login */}
+        <Box sx={{ display: 'flex', alignItems: 'center', ...imageSx }}>
+          {renderUser()}
+        </Box>
 
+        {/* Right Section: Actions (Search, Notification, Logout) */}
         <Box className="flex items-center gap-2">
           <IconButton size="small" onClick={() => router.push("#")}>
             <Image src="/images/home-page/search.svg" alt="search" width={24} height={24}/>
@@ -70,7 +89,8 @@ const TopAppBar = ({customActions, appBarSx, toolbarSx, imageSx}: any) => {
             <Image src="/images/home-page/notification.svg" alt="notification" width={24} height={24}/>
           </IconButton>
 
-          {!loading && userInfo && (<IconButton onClick={handleAuth}>
+          {!loading && userInfo && (
+            <IconButton onClick={handleAuth}>
               <Image
                 className="rotate-180"
                 src="/images/home-page/login.svg"
@@ -78,10 +98,12 @@ const TopAppBar = ({customActions, appBarSx, toolbarSx, imageSx}: any) => {
                 width={24}
                 height={24}
               />
-            </IconButton>)}
+            </IconButton>
+          )}
         </Box>
       </Toolbar>
-    </AppBar>);
+    </AppBar>
+  );
 };
 
 export default TopAppBar;

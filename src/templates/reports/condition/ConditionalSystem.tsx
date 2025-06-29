@@ -1,4 +1,5 @@
 "use client"
+import { useState } from "react"
 import { FormProvider } from "react-hook-form"
 import { useParams, useRouter } from "next/navigation"
 import { Box, Typography, Button } from "@mui/material"
@@ -18,6 +19,7 @@ import { useGetQacWithOutFilter } from "@/app/reports/create-solo/[id]/_hooks/us
 import { useGetOnlyAllQuestions } from "@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllQuestions"
 import { useGetOnlyAllCalculation } from "@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllCalculation"
 import { usePostCondition } from "@/app/reports/create-solo/[id]/_hooks/usePostCondition"
+import AdvancedTextareaEditor from "@/components/AdvancedTextareaEditor/AdvancedTextareaEditor"
 
 
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
@@ -27,6 +29,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
 }) => {
   const { id } = useParams();
   const {refresh} = useRouter()
+
   const {
     methods,
     conditions,
@@ -36,17 +39,25 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
     handleRemoveSubCondition,
   } = useConditionalForm(condition)
 
-  const { qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter()
+  const { qacWithOutFilterOptions, isFetchingQacWithOutFilter, qacWithOutFilter } = useGetQacWithOutFilter()
   const {
      onlyAllQuestions,
      onlyAllDateOptions, 
-     onlyAllQuestionsOptions,
       onlySomeQuestionsOptions,
        isFetchingOnlyAllQuestions
        } = useGetOnlyAllQuestions()
   const { onlyAllCalculationOptions, isFetchingOnlyAllCalculation } = useGetOnlyAllCalculation()
 
   const postCondition = usePostCondition(isEdit);
+
+  const handleReturnTextChange = (data: any,index:number) => {
+    methods.setValue(`conditions.${index}.returnText`,JSON.stringify(data))
+  }
+
+  const handleElseReturnTextChange = (data: any,index:number) => {
+    methods.setValue(`conditions.${index}.elseReturnText`,JSON.stringify(data))
+  }
+
 
   const onSubmit = (input: TConditionFormData) => {
 
@@ -167,17 +178,37 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
                 sx={{
                   ml: { xs: 0, md: 2 },
                   display: "flex",
-                  alignItems: "center",
+                  alignItems: "start",
                   gap: 1,
-                  flexWrap: "wrap",
-                  flexDirection: { xs: "column", md: "row" },
+                  flexDirection: { xs: "column"},
                 }}
               >
-                <Typography sx={{ color: "#393939", fontSize: "14px",ml:-1.3 }}>نمایش بده:</Typography>
-                <TextFieldController  sx={{ minWidth: 240, ml: 0 }} name={`conditions.${index}.returnText`} type="string" />
+                {/* <Typography sx={{ color: "#393939", fontSize: "14px",ml:-1.3 }}>نمایش بده:</Typography>
+                <TextFieldController  sx={{ minWidth: 240, ml: 0 }} name={`conditions.${index}.returnText`} type="string" /> */}
+    
+                 <AdvancedTextareaEditor 
+                 label="نمایش بده"
+                 onDataChange={(data)=>handleReturnTextChange(data,index)}
+                 initialData={ undefined} 
+                 methods={methods.setValue} 
+                 qacWithOutFilter={qacWithOutFilter}
+                 />
+                 <AdvancedTextareaEditor 
+                    label="در غیر اینصورت نمایش بده:"
+                    onDataChange={(data)=>handleElseReturnTextChange(data,index)}
+                    initialData={ undefined} 
+                    methods={methods.setValue} 
+                    qacWithOutFilter={qacWithOutFilter}
+                 />
+  
+              
+{/* 
                 <Typography sx={{color: "#393939", fontSize: "14px", mr: 0 }}>در غیر اینصورت نمایش بده:</Typography>
                 
-                <TextFieldController sx={{ minWidth: 300, width: 380 }} name={`conditions.${index}.elseReturnText`} type="string" />
+                <TextFieldController sx={{ minWidth: 300, width: 380 }} name={`conditions.${index}.elseReturnText`} type="string" /> */}
+               
+               
+               
                 {index !== 0 && (
                 <Button
                   onClick={() => handleRemoveCondition(index)}

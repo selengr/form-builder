@@ -5,8 +5,8 @@ import Link from "next/link";
 
 export default function ComingSoon() {
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-[#f9fafb]">
-      <div className="flex flex-col items-center gap-6 p-10 rounded-2xl border border-gray-200 bg-white shadow-xl max-w-lg w-full">
+    <div className="grow flex items-center justify-center bg-[#f9fafb]">
+      <div className="flex flex-col items-center gap-6 p-10 rounded-2xl border border-gray-200 bg-white shadow-xl max-w-sm w-full">
 
         <h2 className="text-gray-800 text-3xl font-semibold text-center font-iran-sans font-d6">
           بزودی در دسترس خواهد بود

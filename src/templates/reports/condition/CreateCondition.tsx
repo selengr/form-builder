@@ -21,7 +21,7 @@ const buttonSx: SxProps<Theme> = {
 };
 
 const CreateCondition = () => {
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(true);
 
   return (
     <>

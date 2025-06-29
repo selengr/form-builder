@@ -33,6 +33,9 @@ const formatValue = (item: TSubConditionData) => {
     "&&": "و",
   };
 
+   const returnText = JSON.parse(parseCondition?.returnText)
+   const elseReturnText = JSON.parse(parseCondition?.elseReturnText)
+
   return (
     <div className="flex flex-col">
       {parseCondition?.subConditions?.map((item:TSubConditionData) => {
@@ -52,13 +55,13 @@ const formatValue = (item: TSubConditionData) => {
       })}
       <span className="text-[#161616] text-sm">
         <span>در اینصورت نمایش بده: </span>
-        <span className="text-[#1758BA]">{parseCondition?.returnText}</span>
+        <span className="text-[#1758BA]">{returnText.content}</span>
       </span>
       {parseCondition?.elseReturnText && (
         <span className="text-[#161616] text-sm">
           <span>در غیر اینصورت نمایش بده:</span>
           <span className="text-[#1758BA]">
-            {parseCondition?.elseReturnText}
+            {elseReturnText?.content}
           </span>
         </span>
       )}

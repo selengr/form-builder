@@ -1,20 +1,19 @@
 "use client";
 
-import { useState} from "react";
-import {Button, IconButton} from "@mui/material";
+import { useState } from "react";
+import { Button, IconButton } from "@mui/material";
 import ResponsiveContainer from "@/templates/form/ContentWrapper";
 import AnimatedBox from "@/templates/form/AnimatedBox";
 import FormLimitation from "@/templates/form/FormLimitation";
 import ActionButtons from "@/templates/form/ActionButtons";
-import {useParticipateForm} from "@/hooks/useParticipateForm";
+import { useParticipateForm } from "@/hooks/useParticipateForm";
 import Loading from "@/app/(builder)/preview/[id]/loading";
-import {MdOutlineKeyboardArrowRight} from "react-icons/md";
+import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import finalStep from "@/../public/images/home-page/finalStep.svg";
 import Image from "next/image";
 
 export default function ParticipateFormPage() {
-  const [limitationStepPassed, setLimitationStepPassed] = useState<boolean>(false);
-
+  const [limitationStepPassed, setLimitationStepPassed] = useState(false);
 
   const {
     firstLoading,
@@ -37,11 +36,10 @@ export default function ParticipateFormPage() {
   if (firstLoading) {
     return (
       <div className="w-full h-screen flex justify-center items-center bg-white">
-        <Loading/>
+        <Loading />
       </div>
     );
   }
-
 
   if (limitation.isLimited && !limitationStepPassed) {
     return (
@@ -61,40 +59,40 @@ export default function ParticipateFormPage() {
 
   if (finishPage) {
     return (
-      <div className="w-full flex flex-col p-4 overflow-y-hidden">
-        <div className="flex h-[calc(100vh-1rem)] flex-col bg-white rounded-xl overflow-y-hidden">
-          <div
-            className="flex h-[52px] items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative m-4">
+      <div className="w-full flex flex-col p-4 overflow-hidden">
+        <div className="flex flex-col bg-white rounded-xl h-full max-h-screen">
+          <div className="flex items-center justify-center gap-4 bg-[#F7F7FF] rounded-lg px-4 py-3 mb-4 relative">
             <IconButton
-              sx={{position: "absolute", left: "8px"}}
+              sx={{ position: "absolute", left: "8px" }}
               onClick={() => replace("/")}
             >
-              <MdOutlineKeyboardArrowRight color="#292D32"/>
+              <MdOutlineKeyboardArrowRight color="#292D32" />
             </IconButton>
-            <p className="text-[16px] text-center font-bold text-[#161616]">
-              پایان
-            </p>
+            <p className="text-base font-bold text-[#161616] text-center">پایان</p>
           </div>
 
-          <div className="flex-1 flex items-center justify-center overflow-y-auto">
-            <div className="w-full max-w-4xl flex items-center justify-center">
+          <div className="flex-1 flex items-center justify-center overflow-y-auto px-4">
+            <div className="w-full max-w-3xl">
               <AnimatedBox>
-                <div className="w-full flex flex-col items-center justify-center gap-2">
-                  <p className="text-center text-lg font-semibold leading-relaxed">
+                <div className="w-full flex flex-col items-center justify-center gap-4 text-center">
+                  <p className="text-lg font-semibold leading-relaxed">
                     پاسخ‌های شما به{" "}
                     <span className="text-xl font-bold">«{formName}»</span>{" "}
-                    با موفقیت در سامانه سنجش سایا ثبت شد.
+                    با موفقیت ثبت شد.
                   </p>
 
-                  <Image
-                    src={finalStep}
-                    alt="empty"
-                    width={300}
-                    height={300}
-                    priority
-                    draggable={false}
-                    className="w-full h-full max-h-[600px]"
-                  />
+                  <div className="w-full max-w-xs sm:max-w-md">
+                    <Image
+                      src={finalStep}
+                      alt="نتیجه"
+                      width={300}
+                      height={300}
+                      priority
+                      className="w-full h-auto max-h-[400px] object-contain"
+                      draggable={false}
+                    />
+                  </div>
+
                   <Button
                     sx={{
                       width: "150px",
@@ -116,30 +114,26 @@ export default function ParticipateFormPage() {
               </AnimatedBox>
             </div>
           </div>
-
         </div>
       </div>
     );
   }
 
   return (
-    <div className="w-full flex flex-col p-4 overflow-y-hidden">
-      <div className="flex h-[calc(100vh-1rem)] flex-col bg-white rounded-xl overflow-y-hidden">
-        <div
-          className="flex h-[52px] items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative m-4">
+    <div className="w-full flex flex-col p-4 overflow-hidden">
+      <div className="flex flex-col bg-white rounded-xl h-full max-h-screen">
+        <div className="flex items-center justify-center gap-4 bg-[#F7F7FF] rounded-lg px-4 py-3 mb-4 relative">
           <IconButton
-            sx={{position: "absolute", left: "8px"}}
-            onClick={() => {
-            }}
+            sx={{ position: "absolute", left: "8px" }}
+            onClick={() => {}}
           >
-            <MdOutlineKeyboardArrowRight color="#292D32"/>
+            <MdOutlineKeyboardArrowRight color="#292D32" />
           </IconButton>
-          <p className="text-[16px] text-center font-bold text-[#161616]">
-            {formName}
-          </p>
+          <p className="text-base font-bold text-[#161616] text-center">{formName}</p>
         </div>
-        <div className="flex-1 flex items-center justify-center overflow-y-auto">
-          <div className="w-full max-w-4xl h-[60%] flex items-center justify-center">
+
+        <div className="flex-1 flex items-center justify-center overflow-y-auto px-4">
+          <div className="w-full max-w-3xl">
             {question && (
               <AnimatedBox key={question.questionId}>
                 <ValidatedInput
@@ -152,7 +146,8 @@ export default function ParticipateFormPage() {
             )}
           </div>
         </div>
-        <div className="w-full flex justify-between items-center">
+
+        <div className="w-full flex justify-between items-center px-2 py-4">
           <ActionButtons
             loadingNext={questionLoading}
             disablePrev={questionLoading}

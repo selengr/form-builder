@@ -42,10 +42,10 @@ export const useParticipateForm = () => {
         }
 
         const isEnd = extractProperty(q.questionPropertyList, "THE_END") === "true";
-        if (isEnd) {
-          setFinishPage(true);
-          return;
-        }
+        // if (isEnd) {
+        //   // setFinishPage(true);
+        //   return;
+        // }
 
         const required =
             extractProperty(q.questionPropertyList, "REQUIRED") === "true";

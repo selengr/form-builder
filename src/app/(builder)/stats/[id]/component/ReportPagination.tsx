@@ -30,7 +30,7 @@ export function ReportPagination({
 
   const handleRowsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
-    onRowsPerPageChange(value === "all" ? -1 : Number(value));
+    onRowsPerPageChange(Number(value));
     onPageChange(1);
   };
 
@@ -40,13 +40,13 @@ export function ReportPagination({
       <span className="text-sm">سطر قابل نمایش در هر صفحه:</span>
       <select
         className="bg-white rounded-md h-9 px-2 text-sm border border-gray-300 font-iran-sans"
-        value={rowsPerPage === -1 ? "all" : rowsPerPage}
+        value={rowsPerPage}
         onChange={handleRowsChange}
       >
         <option value={25}>25</option>
         <option value={50}>50</option>
         <option value={100}>100</option>
-        <option value="all">همه</option>
+        <option value={10000}>همه</option>
       </select>
     </div>
     <div className="flex items-center gap-2">

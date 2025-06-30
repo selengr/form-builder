@@ -17,7 +17,7 @@ const ConditionList: React.FC<IProps> = ({ conditions }) => {
   const { formData, isLoading } = useFormData();
 
   return (
-    <div className="w-full h-[calc(100vh-6rem)] max-w-[520px] flex flex-col p-[13px] overflow-hidden">
+    <div className="w-full max-w-[520px] flex flex-col p-[13px] overflow-hidden">
       {formData?.formSettingModel?.formStatus === "CREATE" && (
         <CreateCondition />
       )}

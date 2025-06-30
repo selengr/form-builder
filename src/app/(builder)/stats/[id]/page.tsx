@@ -19,25 +19,29 @@ export default function StatsPage() {
   } = useStatsViewModel();
 
   return (
-    <div className="w-full p-4 bg-white">
-      <ReportHeader
-        title={formData.name || "گزارش"}
-        onBack={() => router.push("/")}
-      />
+    <div className="w-full grow flex flex-col md:p-4 p-2">
+      <div className="flex-grow bg-white rounded-xl p-4 overflow-hidden flex flex-col">
+        <ReportHeader
+          title={formData.name || "گزارش"}
+          onBack={() => router.push("/")}
+        />
 
-      <ReportTable
-        headData={headData}
-        allData={allData}
-        isLoading={isLoading}
-      />
+        <div className="flex-grow overflow-x-auto overflow-y-hidden">
+          <ReportTable
+            headData={headData}
+            allData={allData}
+            isLoading={isLoading}
+          />
+        </div>
 
-      <ReportPagination
-        totalItems={totalItems}
-        currentPage={currentPage}
-        rowsPerPage={rowsPerPage}
-        onPageChange={setCurrentPage}
-        onRowsPerPageChange={setRowsPerPage}
-      />
+        <ReportPagination
+          totalItems={totalItems}
+          currentPage={currentPage}
+          rowsPerPage={rowsPerPage}
+          onPageChange={setCurrentPage}
+          onRowsPerPageChange={setRowsPerPage}
+        />
+      </div>
     </div>
   );
 }

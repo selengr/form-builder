@@ -14,7 +14,7 @@ interface IProps<T> {
 export default function ClientView<T>({ conditions, isPending, error }: IProps<T>) {
   return (
     <div className="w-full min-h-screen px-4 py-4">
-      <div className="container mx-auto flex flex-col justify-start items-center bg-white rounded-xl w-full">
+      <div className=" mx-auto flex flex-col min-h-[calc(100vh-100px)] md:min-h-[calc(100vh-40px)] justify-start items-center bg-white rounded-xl w-full">
         <DesignerTabs/>
 
         {!error && isPending && <ConditionSkeleton />}
@@ -27,7 +27,7 @@ export default function ClientView<T>({ conditions, isPending, error }: IProps<T
             <span>{error?.message}</span>
           </div>
         )}
-        
+
       </div>
     </div>
   )

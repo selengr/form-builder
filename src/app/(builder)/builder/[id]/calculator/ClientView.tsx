@@ -18,7 +18,7 @@ export default function ClientView<T>({ calculators, isPending, error }: IProps<
 
   return (
     <div className="w-full min-h-full px-4 py-4 ">
-      <div className="relative container mx-auto flex flex-col min-h-screen justify-start items-center h-full bg-white rounded-xl w-full">
+      <div className=" mx-auto flex flex-col min-h-[calc(100vh-100px)] md:min-h-[calc(100vh-40px)] justify-start items-center bg-white rounded-xl w-full">
         <DesignerTabs />
         {!error && isPending && <CalculatorSkeleton />}
         {!error && !isPending && <CalculatorList calculators={calculators} />}

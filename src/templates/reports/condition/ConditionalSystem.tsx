@@ -20,6 +20,8 @@ import { useGetOnlyAllQuestions } from "@/app/reports/create-solo/[id]/_hooks/us
 import { useGetOnlyAllCalculation } from "@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllCalculation"
 import { usePostCondition } from "@/app/reports/create-solo/[id]/_hooks/usePostCondition"
 import AdvancedTextareaEditor from "@/components/AdvancedTextareaEditor/AdvancedTextareaEditor"
+import { IDropdownItem } from "@/components/AdvancedTextareaEditor/types"
+import { useEditorValidation } from "@/app/reports/create-solo/[id]/_hooks/useEditorValidation"
 
 
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
@@ -29,6 +31,13 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
 }) => {
   const { id } = useParams();
   const {refresh} = useRouter()
+
+  const [validationErrors, setValidationErrors] = useState<string[]>([])
+    const [unselectedDropdowns, setUnselectedDropdowns] = useState<IDropdownItem[]>([])
+
+  const { validateEditor} = useEditorValidation({
+    setValidationErrors,
+  })
 
   const {
     methods,
@@ -116,6 +125,19 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
               : baseCondition;
           })
           .join("");
+
+
+          
+   const returnTextValue = JSON.parse(input.conditions[index].returnText)
+    const unselectedDropdowns = returnTextValue.dropdownfilter(
+        (dropdown) => !dropdown.value || dropdown.value.trim() === "",
+      )
+      const isValid = validateEditor(unselectedDropdowns)
+console.log('isValid :>> ', JSON.parse(input.conditions[index].returnText)
+);
+//  if (!isValid) {
+//         return
+//       }
           
         return {
           formBuilderId: Number(id),
@@ -127,6 +149,8 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
         };
       });
     };
+
+
 
     const output : IPostCondition[] = transformInputToOutput(input);
     postCondition.mutate(

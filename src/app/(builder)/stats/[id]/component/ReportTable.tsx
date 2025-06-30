@@ -18,7 +18,7 @@ export function ReportTable({headData, allData, isLoading}: StatsTableProps) {
         </div>
       ) : (
         <table className="min-w-[700px] w-full border-collapse">
-          <thead className="sticky top-0 z-10">
+          <thead className="sticky top-0 z-10 mb-2">
           <tr>
 
             {/* ستون‌های داده */}
@@ -90,8 +90,8 @@ export function ReportTable({headData, allData, isLoading}: StatsTableProps) {
               ))}
 
               {/* ستون عملیات */}
-              <td className="px-4 py-2 border-l-0 border-slate-300">
-                <div className="flex items-center justify-end gap-2">
+              <td className="px-4 py-2 border-l-0 border-slate-300 align-middle">
+                <div className="flex items-center justify-center gap-2 align-middle">
                   <button className="rounded-md p-2 bg-teal-400">
                     <LuUserRoundPlus className="text-white"/>
                   </button>

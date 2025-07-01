@@ -18,7 +18,7 @@ export default function ActionButtons({prevAction = () => {}, nextAction = () =>
           width: 120, height: 52, borderRadius: 0, bgcolor: "#1758BA", boxShadow: "none", "&:hover": {bgcolor: "#174AA0"},
         }}
       >
-        سوال قبلی
+        قبلی
       </Button>
 
       <div className="flex-1 flex items-center justify-center px-4">
@@ -33,7 +33,7 @@ export default function ActionButtons({prevAction = () => {}, nextAction = () =>
           width: 120, height: 52, borderRadius: 0, bgcolor: "#1758BA", boxShadow: "none", "&:hover": {bgcolor: "#174AA0"},
         }}
       >
-        سوال بعدی
+       بعدی
       </Button>
     </div>
   </div>);

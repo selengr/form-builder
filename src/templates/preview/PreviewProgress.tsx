@@ -37,7 +37,7 @@ export default function PreviewProgress() {
             "&:hover": { bgcolor: "#174AA0" },
           }}
         >
-          سوال قبلی
+          قبلی
         </Button>
 
         <div className="w-full flex items-center justify-center px-4">
@@ -59,7 +59,7 @@ export default function PreviewProgress() {
             "&:hover": { bgcolor: "#174AA0" },
           }}
         >
-          سوال بعدی
+         بعدی
         </Button>
       </div>
     </div>

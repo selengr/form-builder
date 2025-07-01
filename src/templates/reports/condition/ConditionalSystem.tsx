@@ -1,5 +1,6 @@
 "use client"
-import { useState } from "react"
+import { toast } from 'sonner';
+import { useCallback, useState } from "react"
 import { FormProvider } from "react-hook-form"
 import { useParams, useRouter } from "next/navigation"
 import { Box, Typography, Button } from "@mui/material"
@@ -22,6 +23,7 @@ import { usePostCondition } from "@/app/reports/create-solo/[id]/_hooks/usePostC
 import AdvancedTextareaEditor from "@/components/AdvancedTextareaEditor/AdvancedTextareaEditor"
 import { IDropdownItem } from "@/components/AdvancedTextareaEditor/types"
 import { useEditorValidation } from "@/app/reports/create-solo/[id]/_hooks/useEditorValidation"
+import { useFormValidation } from "@/app/reports/create-solo/[id]/_hooks/useFormValidation"
 
 
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
@@ -33,11 +35,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
   const {refresh} = useRouter()
 
   const [validationErrors, setValidationErrors] = useState<string[]>([])
-    const [unselectedDropdowns, setUnselectedDropdowns] = useState<IDropdownItem[]>([])
-
-  const { validateEditor} = useEditorValidation({
-    setValidationErrors,
-  })
+ 
 
   const {
     methods,
@@ -59,9 +57,19 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
 
   const postCondition = usePostCondition(isEdit);
 
-  const handleReturnTextChange = (data: any,index:number) => {
-    methods.setValue(`conditions.${index}.returnText`,JSON.stringify(data))
-  }
+    const { validateAndHandleErrors, showSuccessMessage } = useFormValidation({
+    setValidationErrors,
+  })
+
+ const handleReturnTextChange = useCallback(
+    (data: any,index:number) => {
+      methods.setValue(`conditions.${index}.returnText`,JSON.stringify(data))
+      if (validationErrors.length > 0) {
+        setValidationErrors([])
+      }
+    },
+    [validationErrors.length],
+  )
 
   const handleElseReturnTextChange = (data: any,index:number) => {
     methods.setValue(`conditions.${index}.elseReturnText`,JSON.stringify(data))
@@ -69,6 +77,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
 
 
   const onSubmit = (input: TConditionFormData) => {
+        let flag : boolean = true
 
     const transformInputToOutput = (input : TConditionFormData) : any => {
       return input.conditions.map((condition : TConditionData,index) => {
@@ -126,19 +135,20 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
           })
           .join("");
 
+       const returnTextList = JSON.parse(returnText)
 
-          
-   const returnTextValue = JSON.parse(input.conditions[index].returnText)
-    const unselectedDropdowns = returnTextValue.dropdownfilter(
-        (dropdown) => !dropdown.value || dropdown.value.trim() === "",
-      )
-      const isValid = validateEditor(unselectedDropdowns)
-console.log('isValid :>> ', JSON.parse(input.conditions[index].returnText)
-);
-//  if (!isValid) {
-//         return
-//       }
-          
+          const unselectedDropdowns : IDropdownItem[] = returnTextList.dropdowns.filter(
+            (dropdown : IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",
+          )
+
+          const isValid = validateAndHandleErrors(unselectedDropdowns)
+        if(!isValid) {
+          flag = false
+          // return toast.error("لطفا تمامي فيلدهاي خالي را انتخاب كنيد");
+        } else {
+          flag = true
+        }
+
         return {
           formBuilderId: Number(id),
           conditionFormula: conditionFormula,
@@ -204,6 +214,7 @@ console.log('isValid :>> ', JSON.parse(input.conditions[index].returnText)
                   display: "flex",
                   alignItems: "start",
                   gap: 1,
+                  position : "relative",
                   flexDirection: { xs: "column"},
                 }}
               >
@@ -216,6 +227,7 @@ console.log('isValid :>> ', JSON.parse(input.conditions[index].returnText)
                  initialData={ undefined} 
                  methods={methods.setValue} 
                  qacWithOutFilter={qacWithOutFilter}
+                 validationErrors={validationErrors}
                  />
                  <AdvancedTextareaEditor 
                     label="در غیر اینصورت نمایش بده:"
@@ -241,6 +253,9 @@ console.log('isValid :>> ', JSON.parse(input.conditions[index].returnText)
                     height: "50px",
                     bgcolor: "#FA4D560D",
                     borderRadius: "8px",
+                       position : {lg:"absolute"},
+                    right : {lg: 10},
+                    bottom : 0,
                     border: "1px solid #FA4D56",
                     "&:hover": { bgcolor: "#FA4D560D" },
                   }}

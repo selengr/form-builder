@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable"
 
-import { restrictToVerticalAxis, restrictToWindowEdges } from "@dnd-kit/modifiers"
+// import { restrictToVerticalAxis, restrictToWindowEdges } from "@dnd-kit/modifiers"
 
 
 import { IGetCondition } from "@/types/conditionReportSolo";
@@ -73,7 +73,7 @@ const ConditionList: React.FC<IConditionListProps> = ({ conditions : initialCond
             sensors={sensors}
             collisionDetection={closestCenter}
             onDragEnd={handleDragEnd}
-            modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+            // modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
           >
            <SortableContext
             items={conditionsIds}

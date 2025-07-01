@@ -19,6 +19,7 @@ export const useParticipateForm = () => {
   const [questionLoading, setQuestionLoading] = useState<boolean>(false);
   const [takePartId, setTakePartId] = useState<any>(null);
   const [finishPage, setFinishPage] = useState<boolean>(false);
+  const [answerId, setAnswerId] = useState<number>();
   const [formName, setFormName] = useState<string>("");
   const [limitation, setLimitation] = useState<ILimitation>({
     isLimited: false,
@@ -177,6 +178,7 @@ export const useParticipateForm = () => {
               )
                   ? formData
                   : null,
+              id:answerId,
               answer: formData,
             },
           ];
@@ -187,7 +189,7 @@ export const useParticipateForm = () => {
         questionId: question.questionId,
         answerList,
       });
-
+      console.log(answerList,question)
       if (!res.data.questionId) {
         setFinishPage(true);
       } else {
@@ -208,7 +210,7 @@ export const useParticipateForm = () => {
 
       const q = res.data.questionModel;
       const a = res.data.userAnswerModel?.answersModel ?? [];
-
+      setAnswerId(a[0].id)
       initializeQuestion(q);
 
       const isMultiSelect = extractProperty(q.questionPropertyList, "MULTI_SELECT") === "true";

@@ -10,7 +10,7 @@ import styles from './advancedTextareaEditor.module.css'
 import { IDropdownItem, IAdvancedTextareaEditorProps, IInitialData } from "./types";
 import { IConditionQuestionType } from "@/types/conditionReportSolo";
 
-  export default function AdvancedTextareaEditor({ initialData, methods, qacWithOutFilter, onDataChange, label }: IAdvancedTextareaEditorProps) {
+  export default function AdvancedTextareaEditor({ initialData, methods, qacWithOutFilter, onDataChange, label, validationErrors = [] }: IAdvancedTextareaEditorProps) {
       const [dropdowns, setDropdowns] = useState<IDropdownItem[]>([]);
       const [dropdownCounter, setDropdownCounter] = useState<number>(0);
 
@@ -21,6 +21,21 @@ import { IConditionQuestionType } from "@/types/conditionReportSolo";
       initializeEditorWithData(initialData)
     }
   }, [initialData])
+
+  
+  const closeAllDropdowns = useCallback(() => {
+    const allOptionsContainers = document.querySelectorAll(`.${styles.optionsContainer}`)
+    const allDropdownButtons = document.querySelectorAll(`.${styles.customDropdown}`)
+
+    allOptionsContainers.forEach((container) => {
+      ;(container as HTMLElement).style.display = "none"
+    })
+
+    allDropdownButtons.forEach((button) => {
+      button.setAttribute("data-type", "down")
+    })
+  }, [])
+
 
   const initializeEditorWithData = useCallback((data: IInitialData) => {
     if (!editorRef.current) return
@@ -80,6 +95,21 @@ import { IConditionQuestionType } from "@/types/conditionReportSolo";
   }, [])
 
   const addDropdown = useCallback(() => {
+      if (!editorRef.current) return;
+    editorRef.current.focus();
+    const allDropdownButtons = document.querySelectorAll(`.${styles.customDropdown}`)
+
+    allDropdownButtons.forEach((button) => {
+      if(button.getAttribute("data-type") === "up"){
+        const selection = window.getSelection();
+        if (!selection || !editorRef.current) return;
+        const range = selection.getRangeAt(0);
+        editorRef.current.focus();
+        range.deleteContents();
+        closeAllDropdowns()
+      }
+    })
+
     const selection = window.getSelection();
     if (!selection || !editorRef.current) return;
 
@@ -152,7 +182,7 @@ import { IConditionQuestionType } from "@/types/conditionReportSolo";
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === "Backspace" || e.key === "Delete") {
+      if (e.key === "Backspace" || e.key === "Delete"|| e.key === "Escape") {
         const selection = window.getSelection();
         if (!selection || !editorRef.current) return;
 
@@ -204,6 +234,9 @@ import { IConditionQuestionType } from "@/types/conditionReportSolo";
             return;
           }
         }
+         if (e.key === "Escape") {
+          closeAllDropdowns()
+        }
       }
     },
     [removeDropdown]
@@ -234,6 +267,9 @@ import { IConditionQuestionType } from "@/types/conditionReportSolo";
       const container = editorRef.current?.querySelector(
         `[data-dropdown-id="${dropdown.id}"]`
       );
+
+       const hasError = validationErrors.includes(dropdown.id)
+        
       if (!container) return null;
 
       return createPortal(
@@ -242,7 +278,7 @@ import { IConditionQuestionType } from "@/types/conditionReportSolo";
         key={dropdown.id}
         data-id={dropdown.id}
         contentEditable={false}
-        className={`${styles.dynamicbtn} ${styles.NEW_FIELD}`}
+        className={`${styles.dynamicbtn} ${styles.NEW_FIELD}  ${hasError ? styles.NEW_FIELD_ERROR : ""}`}
         data-type="NEW_FIELD"
       >
         <div
@@ -347,7 +383,7 @@ import { IConditionQuestionType } from "@/types/conditionReportSolo";
     <div className="w-full max-w-[875px]">
       {/* <form onSubmit={handleSubmit} className="space-y-6"> */}
         <div className="flex flex-row">
-          <div className="flex flex-col justify-center items-center -mr-4">
+          <div className="flex flex-col justify-center items-center -mr-3">
             <span className="text-[#393939] text-sm max-w-[68px]">{label}</span>
             <button type="button" onClick={addDropdown} className="w-20 h-8 text-[#1758BA] bg-[#E8EEF8] rounded-md font-medium text-xs m-2">
               افزودن متغییر
@@ -369,15 +405,7 @@ import { IConditionQuestionType } from "@/types/conditionReportSolo";
           />
           {renderDropdowns()}
         </div>
-        <div className="text-sm leading-relaxed">
-                    {generateFormData().content}
-              
-                </div>
-
-                {/* <button type="submit" className="w-full">
-              Submit Form
-            </button> */}
-        {/* </form> */}
+   
     </div>
   );
 }

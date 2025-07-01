@@ -62,7 +62,6 @@ export default function FormCardBase({ data, buttonText, buttonLink }: FormCardB
   const handleReport = async (key: string) => {
     handleMenuClose();
     console.log("Selected report key:", key);
-    // می‌تونی اینجا POST بزنی به /api/destroy-report
   };
 
   return (

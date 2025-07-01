@@ -102,6 +102,9 @@
 .NEW_FIELD {
   background-color: #1753af;
 }
+.NEW_FIELD_ERROR {
+  background-color: #f87171;
+}
 .NEW_FnFx {
   background-color: #9d2cdf;
 }

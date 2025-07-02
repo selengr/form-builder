@@ -32,7 +32,7 @@ export default function ConfirmDialog({
         scrollbarWidth: "none",
         "& .MuiPaper-root": {
           margin: "10px",
-          borderRadius: "24px",
+          borderRadius: "20px",
         },
         "& .MuiDialog-container": {
           backdropFilter: "blur(4px)",

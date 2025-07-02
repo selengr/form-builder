@@ -45,10 +45,10 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
         setMenuAnchorEl(null);
     };
 
-    const handleReport = () => {
-        console.log("📢 گزارش کلیک شد");
-        handleMenuClose();
-    };
+    // const handleReport = () => {
+    //     console.log("📢 گزارش کلیک شد");
+    //     handleMenuClose();
+    // };
 
     const handlePublishStatus = useCallback(async () => {
         try {
@@ -116,20 +116,20 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
                       onChange={handlePublishStatus}
                     />
                   )}
-                  <div>
-                      <IconButton onClick={handleMenuOpen} size="medium">
-                          <GoInfo/>
-                      </IconButton>
-                      <Menu
-                        anchorEl={menuAnchorEl}
-                        open={Boolean(menuAnchorEl)}
-                        onClose={handleMenuClose}
-                        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-                        transformOrigin={{ vertical: "top", horizontal: "left" }}
-                      >
-                          <MenuItem onClick={handleReport}>گزارش</MenuItem>
-                      </Menu>
-                  </div>
+                  {/*<div>*/}
+                  {/*    <IconButton onClick={handleMenuOpen} size="medium">*/}
+                  {/*        <GoInfo/>*/}
+                  {/*    </IconButton>*/}
+                  {/*    <Menu*/}
+                  {/*      anchorEl={menuAnchorEl}*/}
+                  {/*      open={Boolean(menuAnchorEl)}*/}
+                  {/*      onClose={handleMenuClose}*/}
+                  {/*      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}*/}
+                  {/*      transformOrigin={{ vertical: "top", horizontal: "left" }}*/}
+                  {/*    >*/}
+                  {/*        <MenuItem onClick={handleReport}>گزارش</MenuItem>*/}
+                  {/*    </Menu>*/}
+                  {/*</div>*/}
                   </div>
               </div>
 

@@ -11,6 +11,8 @@ import Loading from "@/app/(builder)/preview/[id]/loading";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import finalStep from "@/../public/images/home-page/finalStep.svg";
 import Image from "next/image";
+import {GoAlert} from "react-icons/go";
+import {CgDanger} from "react-icons/cg";
 
 export default function ParticipateFormPage() {
   const [limitationStepPassed, setLimitationStepPassed] = useState(false);
@@ -122,14 +124,20 @@ export default function ParticipateFormPage() {
   return (
     <div className="w-full flex flex-col p-4 overflow-hidden">
       <div className="flex flex-col bg-white rounded-xl h-full max-h-screen">
-        <div className="flex items-center justify-center gap-4 bg-[#F7F7FF] rounded-lg px-4 py-3 mb-4 relative">
+        <div className="flex items-center justify-center gap-4 bg-[#F7F7FF] rounded-lg px-4 py-4 mb-4 relative m-2" >
           <IconButton
             sx={{ position: "absolute", left: "8px" }}
-            onClick={() => {}}
+            onClick={() => replace("/")}
           >
             <MdOutlineKeyboardArrowRight color="#292D32" />
           </IconButton>
-          <p className="text-base font-bold text-[#161616] text-center">{formName}</p>
+          <p className="text-base font-bold text-[#161616] text-center mx-7">{formName}</p>
+          <IconButton
+            sx={{ position: "absolute", right: "8px" }}
+            onClick={() => {}}
+          >
+            <CgDanger />
+          </IconButton>
         </div>
 
         <div className="flex-1 flex items-center justify-center overflow-y-auto px-4">

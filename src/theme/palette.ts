@@ -15,7 +15,7 @@ const palette: ThemeOptions["palette"] = {
   },
   primary: {
     main: "#1758BA",
-    dark: "#DE74A3",
+    dark: "#1c56aa",
     light: "#84A9FF",
   },
 };

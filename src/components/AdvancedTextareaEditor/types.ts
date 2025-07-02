@@ -24,5 +24,6 @@ export interface IInitialData {
     qacWithOutFilter : any
     initialData?: IInitialData;
     onDataChange?: (data: any) => void
+    validationErrors?: string[]
   }
   

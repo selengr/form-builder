@@ -14,7 +14,7 @@ export default function Reports() {
 
   return (
     <div className="w-full min-h-screen px-4 py-4 bg-[#f7f7f7]">
-      <div className="container mx-auto flex p-3 flex-col justify-start items-center min-w-screen h-[calc(100vh-32px)] bg-white rounded-xl w-full">
+      <div className="container mx-auto flex p-3 flex-col justify-start items-center min-w-screen h-full bg-white rounded-xl w-full">
         <Header />
 
         {!error && isPending && <ConditionSkeleton />}

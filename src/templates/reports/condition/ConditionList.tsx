@@ -62,12 +62,12 @@ const ConditionList: React.FC<IConditionListProps> = ({ conditions : initialCond
   }
 
   return (
-    <div className="w-full max-w-md flex flex-col pt-4">
+    <div className="w-full max-w-md flex flex-col pt-">
       <CreateCondition />
       {Array.isArray(conditions) && conditions.length > 0 && (
         <div
           dir="rtl"
-          className="bg-[#F7F7FF] rounded-lg p-[10px] w-full flex flex-col gap-3 pb-10 mb-10"
+          className="bg-[#F7F7FF] rounded-lg p-[10px] w-full flex flex-col gap-3 -pb-10 mb-0"
         >
           <DndContext
             sensors={sensors}

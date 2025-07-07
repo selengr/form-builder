@@ -35,7 +35,8 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
   const {refresh} = useRouter()
 
   const [validationErrors, setValidationErrors] = useState<string[]>([])
- 
+  const returnTextEdit = isEdit ? JSON.parse(condition?.returnText) : undefined
+  const elseReturnTextEdit = isEdit ? JSON.parse(condition?.elseReturnText) : undefined
 
   const {
     methods,
@@ -136,15 +137,21 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
           .join("");
 
        const returnTextList = JSON.parse(returnText)
-
+       const elseReturnTextList = JSON.parse(elseReturnText)
+c
           const unselectedDropdowns : IDropdownItem[] = returnTextList.dropdowns.filter(
             (dropdown : IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",
           )
 
+          const unselectedElseDropdowns : IDropdownItem[] = elseReturnTextList.dropdowns.filter(
+            (dropdown : IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",
+          )
+
           const isValid = validateAndHandleErrors(unselectedDropdowns)
-        if(!isValid) {
+          const isValidElse = validateAndHandleErrors(unselectedElseDropdowns)
+        if(!isValid && !isValidElse) {
           flag = false
-          // return toast.error("لطفا تمامي فيلدهاي خالي را انتخاب كنيد");
+              return toast.error("لطفا تمامي فيلدهاي خالي را انتخاب كنيد");
         } else {
           flag = true
         }
@@ -224,7 +231,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
                  <AdvancedTextareaEditor 
                  label="نمایش بده"
                  onDataChange={(data)=>handleReturnTextChange(data,index)}
-                 initialData={ undefined} 
+                 initialData={returnTextEdit} 
                  methods={methods.setValue} 
                  qacWithOutFilter={qacWithOutFilter}
                  validationErrors={validationErrors}
@@ -232,7 +239,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
                  <AdvancedTextareaEditor 
                     label="در غیر اینصورت نمایش بده:"
                     onDataChange={(data)=>handleElseReturnTextChange(data,index)}
-                    initialData={ undefined} 
+                    initialData={elseReturnTextEdit} 
                     methods={methods.setValue} 
                     qacWithOutFilter={qacWithOutFilter}
                  />

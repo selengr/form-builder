@@ -38,7 +38,6 @@ const ConditionList: React.FC<IConditionListProps> = ({
   conditions,
   setConditions 
 }) => {
-  console.log(conditions)
   const { id } = useParams();
   
   const { mutate: updatePosition, isPending: isUpdatingPosition } =

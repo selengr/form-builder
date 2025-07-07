@@ -15,7 +15,6 @@ export default function Reports() {
   const { data, isPending, error } = useGetReportList();
   const [conditions, setConditions] = useState<IGetCondition[]>([]);
 
-
   useEffect(() => {
     setConditions(Array.isArray(data) ? data : [])
   }, [data])

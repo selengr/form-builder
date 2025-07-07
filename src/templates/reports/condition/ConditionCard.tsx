@@ -1,27 +1,51 @@
 "use client";
+// dnd
 import { CSS } from "@dnd-kit/utilities";
 import { useSortable } from "@dnd-kit/sortable";
-
+// React & Libs
 import { SlPencil } from "react-icons/sl";
 import { useCallback, useState } from "react";
-import { IGetCondition } from "@/types/conditionReportSolo";
-import { Button, Menu, Typography } from "@mui/material";
+import { Button, Menu, Typography, CircularProgress } from "@mui/material";
+// types
+import { IConditionCardProps } from "@/types/conditionReportSolo";
+// components
+import ConfirmDialog from "@/components/confirm-dialog";  
 import { EditConditionDialog } from "./EditConditionDialog";
 import { ConditionCardOperator } from "./ConditionCardOperator";
+// icons
 import { WeuiDeleteOutlined } from "../../../../public/images/icons/DeleteIcon";
 import { PhDotsThreeVerticalBold } from "../../../../public/images/icons/PhDotsThreeVerticalBold";
 import { useDeleteCondition } from "@/app/reports/create-solo/[id]/_hooks/useDeleteCondition";
 
+const buttonStyles = {
+  height: "50px",
+  fontWeight: "400",
+  fontSize: "15px",
+  borderRadius: "10px",
+  boxShadow: "none",
+  transition: "background-color 0.3s, border-color 0.3s",
+};
+
+const buttonStylesError = {
+  bgcolor: "#FA4D56",
+  borderColor: "#FA4D56",
+  "&:hover": {
+    bgcolor: "#C6394D",
+  },
+  "&:active": {
+    bgcolor: "#A32A3A",
+  },
+};
+
 export function ConditionCard({
   condition,
   index,
-}: {
-  condition: IGetCondition;
-  index: number;
-}) {
-  const [openDialog, setOpen] = useState<boolean>(false);
+}: IConditionCardProps) {
+  const [open, setOpen] = useState<boolean>(false);
+    const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+
+  const menuOpen = Boolean(anchorEl);
 
   const {
     attributes,
@@ -40,6 +64,7 @@ export function ConditionCard({
   };
 
   const handleClick = useCallback((event: any) => {
+        event.stopPropagation();
     setAnchorEl(event.currentTarget);
   }, []);
 
@@ -50,6 +75,10 @@ export function ConditionCard({
   const handleDelete = (id: number) => {
     deleteCondition(Number(id));
     handleClose();
+  };
+
+    const toggleConfirm = () => {
+    setOpen((prev) => !prev);
   };
 
   return (
@@ -68,7 +97,7 @@ export function ConditionCard({
           <button onClick={handleClick}>
             <PhDotsThreeVerticalBold color="#1758BA" fontSize="1.5rem" />
           </button>
-          {open && (
+          {menuOpen && (
             <Menu
               sx={{
                 "& .MuiPaper-root.MuiPaper-elevation": {
@@ -84,7 +113,7 @@ export function ConditionCard({
               }}
               id="basic-menu"
               anchorEl={anchorEl}
-              open={open}
+              open={menuOpen}
               onClose={handleClose}
               MenuListProps={{
                 "aria-labelledby": "basic-button",
@@ -103,12 +132,14 @@ export function ConditionCard({
                 }}
                 onClick={(e) => {
                   e.stopPropagation();
-                  setOpen(true);
+                  setOpenEditDialog(true);
                   handleClose();
                 }}
               >
-                <Typography>ویرایش</Typography>
                 <SlPencil size="1.18rem" />
+                <Typography sx={{ fontSize: "12px", color: "black" }}>
+                  ویرایش
+                </Typography>
               </Button>
               <Button
                 sx={{
@@ -118,15 +149,14 @@ export function ConditionCard({
                   color: "#FA4D56",
                 }}
                 loading={isPending}
-                onClick={async (e) => {
-                  e.stopPropagation();
-                  handleDelete(condition.id!);
-                }}
+                         onClick={toggleConfirm}
                 fullWidth
                 disabled={isPending}
               >
-                <Typography>حذف</Typography>
-                <WeuiDeleteOutlined fontSize="1.32rem" />
+                          <Typography sx={{ fontSize: "12px", color: "black" }}>
+                  حذف
+                </Typography>
+                <WeuiDeleteOutlined fontSize="1.2rem" />
               </Button>
             </Menu>
           )}
@@ -144,15 +174,48 @@ export function ConditionCard({
           <ConditionCardOperator condition={condition} />
         </div>
       </div>
-      {openDialog && (
+      {openEditDialog && (
         <EditConditionDialog
-          // handleClose={handleClose}
-          open={openDialog}
-          setOpen={setOpen}
+          open={openEditDialog}
+          setOpen={setOpenEditDialog}
           // conditionId={condition.id}
           condition={condition}
         />
       )}
+
+        <ConfirmDialog
+              content="آیا از عملیات حذف اطمینان دارید؟"
+              open={open}
+              title="حذف"
+              loading={isPending}
+              onClose={toggleConfirm}
+              cancelText="انصراف"
+              action={
+                <Button
+                  type="submit"
+                  fullWidth
+                  disableRipple
+                  variant="contained"
+                  disabled={isPending}
+                  sx={{ ...buttonStyles, ...buttonStylesError }}
+                  onClick={handleDelete}
+                >
+                  {isPending ? (
+                    <>
+                      <CircularProgress
+                        size={20}
+                        color="inherit"
+                        thickness={5}
+                        style={{ marginLeft: 10 }}
+                      />
+                      در حال حذف…
+                    </>
+                  ) : (
+                    "حذف"
+                  )}
+                </Button>
+              }
+            />
     </div>
   );
 }

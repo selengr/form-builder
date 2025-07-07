@@ -109,7 +109,7 @@ const ConditionList: React.FC<IConditionListProps> = ({
             >
               {conditions?.map((condition: IGetCondition, index: number) => (
                 // eslint-disable-next-line react/jsx-key
-                <div className="bg-[#F7F7FF] gap-[6px] rounded-[8px] p-[10px]" key={idGenerator()}>
+                <div className="bg-[#F7F7FF] gap-[3px] rounded-[8px] p-[10px]" key={idGenerator()}>
                   <ConditionCard condition={condition} index={index} />
                 </div>
               ))}

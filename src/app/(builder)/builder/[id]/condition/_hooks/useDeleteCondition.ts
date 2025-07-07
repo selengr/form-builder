@@ -1,5 +1,5 @@
 import {toast} from 'sonner';
-import AxiosApi from '@/services/axios/AxiosApi';
+import {AxiosApi} from '@/services/axios/AxiosApi';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 
 

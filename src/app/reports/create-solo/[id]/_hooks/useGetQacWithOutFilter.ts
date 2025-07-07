@@ -1,4 +1,4 @@
-import AxiosApi from '@/services/axios/AxiosApi';
+import {AxiosApi} from '@/services/axios/AxiosApi';
 import { useQuery } from '@tanstack/react-query';
 import { IConditionQuestionType } from '@/types/condition';
 import { useParams } from 'next/navigation';

@@ -16,16 +16,16 @@ import {
   RHFSwitch,
   RHFTextField,
   RHFTextFieldOptionList,
-} from "../../components/hook-form";
+} from "@/components/hook-form";
 import FieldDialogActionBottomButtons from "../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons";
 import {
   IFormElementConstructor,
   IFormOptionList,
   IQPLSpectral,
   ISpectralQTapAndOptionsType,
-} from "../../types/bulider";
+} from "@/types/bulider";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import useElements from "@/hooks/useElements";
 import useDesigner from "@/hooks/useDesigner";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";

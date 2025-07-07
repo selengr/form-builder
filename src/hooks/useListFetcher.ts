@@ -1,7 +1,7 @@
 "use client";
 
 import {useEffect, useState} from "react";
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 
 interface FetchOptions {
     path: string;

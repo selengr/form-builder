@@ -93,6 +93,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
           sx={{
             width: { sm: "100%", md: "100%" },
             minWidth: 240,
+            maxWidth: 240,
             flexShrink: 0,
           }}
           onChange={() => {

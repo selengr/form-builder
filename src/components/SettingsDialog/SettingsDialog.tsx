@@ -13,7 +13,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import FieldSwitchPair from "./FieldSwitchPair";
 import {IoSettingsOutline} from "react-icons/io5";
 import {Typography} from "@mui/material";
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import {useParams} from "next/navigation";
 import {convertObject} from "@/lib/settingsUtils";
 

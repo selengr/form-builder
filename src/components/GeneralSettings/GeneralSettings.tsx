@@ -10,7 +10,7 @@ import {Box, Button, Typography} from "@mui/material";
 
 import Share from "../share-media/Share";
 // services
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 // clipboard
 import CopyToClipboardButton from "../clipboard-button/CopyToClipBoardButton";
 

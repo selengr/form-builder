@@ -1,14 +1,17 @@
 import {useParams} from 'next/navigation';
 import {useQuery} from '@tanstack/react-query';
-import {AxiosApi} from '@/services/axios/AxiosApi';
+import AxiosApi from '@/services/axios/AxiosApi';
 
 
 const fetchData = async (id: string | string[]) => {
     const filterModel = {
-        searchFilterBoxList: [{restrictionList: []}], sortList: [{fieldName: "id", type: "DSC"}], page: 0, rows: 1000,
+        searchFilterBoxList: [{ restrictionList: [] }],
+        sortList: [{ fieldName: "id", type: "DSC" }],
+        page: 0,
+        rows: 1000,
     };
 
-    const baseUrl = `/calculation/main-list/${id}`;
+    const baseUrl = `/report/solo/main-list/${id}`;
     const queryString = `?searchFilterModel=${encodeURIComponent(JSON.stringify(filterModel))}`;
     const url = baseUrl + queryString;
     const response = await AxiosApi.get(url);
@@ -19,7 +22,7 @@ const fetchData = async (id: string | string[]) => {
 export const useGetList = () => {
   const {id} = useParams();
   return useQuery({
-    queryKey: ['Calculation_List'],
+    queryKey: ['Report'],
     queryFn: () => fetchData(id),
     staleTime: 0,
     gcTime: 600000,

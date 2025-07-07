@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useState } from "react";
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -35,20 +35,20 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
-    const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+    // const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+    //
+    // const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    //     setMenuAnchorEl(event.currentTarget);
+    // };
+    //
+    // const handleMenuClose = () => {
+    //     setMenuAnchorEl(null);
+    // };
 
-    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setMenuAnchorEl(event.currentTarget);
-    };
-
-    const handleMenuClose = () => {
-        setMenuAnchorEl(null);
-    };
-
-    const handleReport = () => {
-        console.log("📢 گزارش کلیک شد");
-        handleMenuClose();
-    };
+    // const handleReport = () => {
+    //     console.log("📢 گزارش کلیک شد");
+    //     handleMenuClose();
+    // };
 
     const handlePublishStatus = useCallback(async () => {
         try {
@@ -103,9 +103,6 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
     return (
       <>
           <div className="border p-4 rounded-[20px] border-[#DDE1E6] flex flex-col gap-3 w-full max-w-ful relative">
-              {/* منوی همبرگری */}
-
-
               <div className="flex justify-between items-center gap-4 flex-wrap">
                   <InfoRow label="نام:" value={data.name} bold />
                   <div className={"flex flex-row align-middle justify-items-center items-center gap-2"}>
@@ -116,20 +113,20 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
                       onChange={handlePublishStatus}
                     />
                   )}
-                  <div>
-                      <IconButton onClick={handleMenuOpen} size="medium">
-                          <GoInfo/>
-                      </IconButton>
-                      <Menu
-                        anchorEl={menuAnchorEl}
-                        open={Boolean(menuAnchorEl)}
-                        onClose={handleMenuClose}
-                        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-                        transformOrigin={{ vertical: "top", horizontal: "left" }}
-                      >
-                          <MenuItem onClick={handleReport}>گزارش</MenuItem>
-                      </Menu>
-                  </div>
+                  {/*<div>*/}
+                  {/*    <IconButton onClick={handleMenuOpen} size="medium">*/}
+                  {/*        <GoInfo/>*/}
+                  {/*    </IconButton>*/}
+                  {/*    <Menu*/}
+                  {/*      anchorEl={menuAnchorEl}*/}
+                  {/*      open={Boolean(menuAnchorEl)}*/}
+                  {/*      onClose={handleMenuClose}*/}
+                  {/*      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}*/}
+                  {/*      transformOrigin={{ vertical: "top", horizontal: "left" }}*/}
+                  {/*    >*/}
+                  {/*        <MenuItem onClick={handleReport}>گزارش</MenuItem>*/}
+                  {/*    </Menu>*/}
+                  {/*</div>*/}
                   </div>
               </div>
 
@@ -179,7 +176,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
             open={openConfirmDialog}
             onClose={() => setOpenConfirmDialog(false)}
             title={`حذف فرم (${data.name})`}
-            content="آیا از عملیات حذف کامل فرم اطمینان دارید؟"
+            content="آیا مطمئن هستید که می‌خواهید این فرم را به‌طور کامل حذف کنید؟"
             cancelText="انصراف"
             loading={loading}
             action={

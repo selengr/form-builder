@@ -1,7 +1,6 @@
 import {useParams} from 'next/navigation';
 import {useQuery} from '@tanstack/react-query';
-import AxiosApi from '@/services/axios/AxiosApi';
-
+import {AxiosApi} from '@/services/axios/AxiosApi';
 
 const fetchData = async (id: string | string[]) => {
     const filterModel = {
@@ -14,7 +13,6 @@ const fetchData = async (id: string | string[]) => {
     const response = await AxiosApi.get(url);
     return response.data.content;
 }
-
 
 export const useGetList = () => {
   const {id} = useParams();

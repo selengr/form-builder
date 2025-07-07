@@ -5,7 +5,7 @@ import {useQueryClient} from "@tanstack/react-query";
 import {Box, Container, Stack, TextField, Typography} from "@mui/material";
 import {toast} from "sonner";
 
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import {htmlToFormula} from "@/lib/htmlToFormula";
 import FormulaKeypad from "@/components/formula-editor/FormulaKeypad";
 import FormulaInput from "@/components/formula-editor/FormulaInput";

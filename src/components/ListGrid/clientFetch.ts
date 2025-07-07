@@ -1,25 +1,27 @@
 "use client";
 
-import AxiosApi from "@/services/axios/AxiosApi";
+import { AxiosApi } from "@/services/axios/AxiosApi";
 
-export async function clientFetch(url: string, params: any = {}): Promise<any> {
+export async function clientFetch(url: string, params: Record<string, any> = {}): Promise<any | null> {
   try {
-    const queryString = encodeURI(JSON.stringify(params));
-    const fullURL = `${url}${queryString === "%7B%7D" ? "" : `${queryString}`}`;
+    const queryString = JSON.stringify(params);
+    const encodedParams = encodeURIComponent(queryString);
+    const fullURL = `${url}${encodedParams === encodeURIComponent("{}") ? "" : encodedParams}`;
+
     const response = await AxiosApi.get(fullURL);
 
-    if (!response.data) {
-      const { status } = response;
-      if (status === 401) {
-      } else if (status === 403) {
-        console.log("error");
-      } else {
-        console.log("error");
-      }
-      return null;
+    if (response?.data) {
+      return response;
     }
 
-    return response;
+    const status = response?.status;
+    if (status === 401 || status === 403) {
+      console.warn(`Access error: ${status}`);
+    } else {
+      console.warn("Unexpected response with no data");
+    }
+
+    return null;
   } catch (error) {
     console.error("Error fetching data:", error);
     return null;

@@ -1,7 +1,7 @@
 import { toast } from 'sonner';
 import { useRouter } from "next/navigation";
 import { useParams } from 'next/navigation';
-import AxiosApi from '@/services/axios/AxiosApi';
+import {AxiosApi} from '@/services/axios/AxiosApi';
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '@/lib/react-query.config';
 

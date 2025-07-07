@@ -3,7 +3,7 @@ import {memo, useCallback, useState} from "react";
 import {useParams} from "next/navigation";
 import {toast} from "sonner";
 import useActionDesigner from "@/hooks/useActionDesigner";
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import {Button} from "@mui/material";
 // import useElements from "@/hooks/useElements";
 // import useDesigner from "@/hooks/useDesigner";

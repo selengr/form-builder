@@ -1,6 +1,6 @@
 "use client";
 
-import {AppBar, Box, IconButton, Skeleton, Toolbar, Typography,} from "@mui/material";
+import {AppBar, Box, Button, IconButton, Skeleton, Toolbar, Typography} from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import {useRouter} from "next/navigation";
@@ -23,22 +23,19 @@ const TopAppBar = ({customActions, appBarSx, toolbarSx, imageSx}: any) => {
     }
   };
 
-  const renderUser = () => {
+  const renderUserSection = () => {
     if (loading) {
-      return (
-        <div className="flex items-center gap-4">
+      return (<div className="flex items-center gap-4">
           <Skeleton variant="circular" width={50} height={50}/>
           <div>
             <Skeleton width={100}/>
             <Skeleton width={80}/>
           </div>
-        </div>
-      );
+        </div>);
     }
 
     if (userInfo) {
-      return (
-        <Link href={`${endPoint}/profile`}>
+      return (<Link href={`${endPoint}/profile`}>
           <div className="flex items-center gap-2 cursor-pointer">
             <Avatar size="sm" name={userInfo?.user?.fullName || "کاربر"}/>
             <div>
@@ -46,64 +43,51 @@ const TopAppBar = ({customActions, appBarSx, toolbarSx, imageSx}: any) => {
               <Typography variant="caption">مشاهده پروفایل</Typography>
             </div>
           </div>
-        </Link>
-      );
+        </Link>);
     }
 
-    return (
-      <IconButton onClick={handleAuth} sx={{gap: 1}}>
+    return (<Button onClick={handleAuth} sx={{gap: 1}}>
         <Image src="/images/home-page/login.svg" alt="ورود" width={24} height={24}/>
         {customActions ?? <Typography color="#424242">ورود</Typography>}
-      </IconButton>
-    );
+      </Button>);
   };
 
-  return (
-    <AppBar
+  return (<AppBar
       elevation={0}
       position="static"
       className={"bg-white"}
-      sx={{ pt: 2, height: "100px", bgcolor: "#fff", color: "black", ...appBarSx }}
+      sx={{pt: 2, height: "100px", bgcolor: "#fff", color: "black", ...appBarSx}}
     >
       <Toolbar
         sx={{
-          display: 'flex', // Ensure Toolbar is a flex container
-          justifyContent: 'space-between', // Distribute items with space between
-          alignItems: 'center', // Vertically center items
-          width: '100%', // Ensure it takes full width
-          ...toolbarSx,
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', ...toolbarSx,
         }}
       >
-        {/* Left Section: User Info / Login */}
-        <Box sx={{ display: 'flex', alignItems: 'center', ...imageSx }}>
-          {renderUser()}
+        <Box sx={{display: 'flex', alignItems: 'center', ...imageSx}}>
+          {renderUserSection()}
         </Box>
 
-        {/* Right Section: Actions (Search, Notification, Logout) */}
         <Box className="flex items-center gap-2">
           <IconButton size="small" onClick={() => router.push("#")}>
-            <Image src="/images/home-page/search.svg" alt="search" width={24} height={24}/>
+            <Image src="/images/home-page/search.svg" alt="search" width={24} height={24} draggable={false}/>
           </IconButton>
 
           <IconButton size="small">
-            <Image src="/images/home-page/notification.svg" alt="notification" width={24} height={24}/>
+            <Image src="/images/home-page/notification.svg" alt="notification" width={24} height={24}
+                   draggable={false}/>
           </IconButton>
-
-          {!loading && userInfo && (
-            <IconButton onClick={handleAuth}>
-              <Image
-                className="rotate-180"
-                src="/images/home-page/login.svg"
-                alt="خروج"
+          {userInfo && <IconButton onClick={handleAuth}>
+            {loading ? (<Skeleton variant="circular" width={24} height={24}/>) : (<Image
+                className={userInfo ? "rotate-180" : ""}
+                src={"/images/home-page/logout.svg"}
+                alt={"خروج"}
                 width={24}
                 height={24}
-              />
-            </IconButton>
-          )}
+              />)}
+          </IconButton>}
         </Box>
       </Toolbar>
-    </AppBar>
-  );
+    </AppBar>);
 };
 
 export default TopAppBar;

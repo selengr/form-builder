@@ -10,7 +10,7 @@ import {PiWarningOctagonFill} from "react-icons/pi";
 import useActionDesigner from "@/hooks/useActionDesigner";
 import ConfirmDialog from "@/components/confirm-dialog";
 import {toast} from "sonner";
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import {Button} from "@mui/material";
 
 const GroupPopUpMenu = memo(function GroupPopUpMenu({

@@ -5,7 +5,7 @@ import {
   ElementsType,
   FormElement,
   FormElementInstance,
-} from "../../types/FormElements";
+} from "@/types/FormElements";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,15 +16,14 @@ import TextField from "@mui/material/TextField";
 import FormProvider from "../../components/hook-form/FormProvider";
 import { RHFSwitch, RHFTextField } from "../../components/hook-form";
 import FieldDialogActionBottomButtons from "../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons";
-import { IFormElementConstructor, IQPLTextField } from "../../types/bulider";
-import AxiosApi from "@/services/axios/AxiosApi";
+import { IFormElementConstructor, IQPLTextField } from "@/types/bulider";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import useDesigner from "@/hooks/useDesigner";
 import useElements from "@/hooks/useElements";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";
 import useActionSelectedElement from "@/hooks/useActionSelectedElement";
 import useSelectedElement from "@/hooks/useSelectedElement";
 import useActionDesigner from "@/hooks/useActionDesigner";
-import { useResponsive } from "@/hooks/useResponsive";
 import TextBlockIcon from "@/../public/images/home-page/text-block.svg";
 import DatePicker from "react-multi-date-picker";
 import "react-multi-date-picker/styles/layouts/mobile.css";

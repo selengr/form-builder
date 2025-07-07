@@ -1,4 +1,4 @@
-import AxiosApi from '@/services/axios/AxiosApi';
+import {AxiosApi} from '@/services/axios/AxiosApi';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default new class StatsService {

@@ -1,4 +1,4 @@
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import {
     FormPayload,
     QuestionGroupPayload,

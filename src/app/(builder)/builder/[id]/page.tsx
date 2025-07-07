@@ -4,7 +4,7 @@ import {useCallback, useEffect, useState} from "react";
 import useActionDesigner from "@/hooks/useActionDesigner";
 import useActionElements from "@/hooks/useActionElements";
 import {idGenerator} from "@/lib/idGenerator";
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import FormBuilder from "@/templates/builder/FormBuilder";
 import {FormElementInstance} from "@/types/FormElements";
 import {useParams} from "next/navigation";

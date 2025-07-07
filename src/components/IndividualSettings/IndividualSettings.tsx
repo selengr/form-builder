@@ -1,46 +1,59 @@
 "use client";
+
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
-import FormProvider, {RHFMultiSelect, RHFSelect, RHFSwitch, RHFTextField,} from "../hook-form";
+import FormProvider, {RHFMultiSelect, RHFSelect, RHFSwitch, RHFTextField} from "../hook-form";
 import {Box, Button, MenuItem, Typography} from "@mui/material";
+import {toast} from "sonner";
+
+const textFieldCommonSx = {
+  "& .MuiInputBase-root": {
+    bgcolor: "#fff",
+    borderRadius: "10px",
+    paddingY: "0",
+  },
+};
+
+const inputFieldContainerSx = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "8px",
+  width: "100%",
+  paddingX: 0.5,
+};
+
+const nameSchema = z
+  .string()
+  .trim()
+  .transform((value) => value.replace(/\s+/g, " "))
+  .pipe(
+    z
+      .string()
+      .min(2, {message: "حداقل باید 2 و حداکثر 50 کاراکتر باشد"})
+      .max(50, {message: "حداقل باید 2 و حداکثر 50 کاراکتر باشد"})
+  );
 
 const propertiesSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .transform((value) => value.replace(/\s+/g, " "))
-    .pipe(
-      z
-        .string()
-        .min(2, { message: "حداقل باید 2 و حداکثر 50 کاراکتر باشد" })
-        .max(50, { message: "حداقل باید 2 و حداکثر 50 کاراکتر باشد" })
-    ),
-  family: z
-    .string()
-    .trim()
-    .transform((value) => value.replace(/\s+/g, " "))
-    .pipe(
-      z
-        .string()
-        .min(2, { message: "حداقل باید 2 و حداکثر 50 کاراکتر باشد" })
-        .max(50, { message: "حداقل باید 2 و حداکثر 50 کاراکتر باشد" })
-    ),
+  name: nameSchema,
+  family: nameSchema,
   phone: z
     .string()
-    .regex(/^09\d{9}$/, {
-      message: "شماره تلفن باید با 09 شروع شود و دقیقاً 11 رقم داشته باشد",
-    })
     .trim()
-    .transform((value) => value.replace(/\s+/g, "")),
-  gender: z.string().min(1, { message: "الزامی است" }),
+    .transform((value) => value.replace(/\s+/g, ""))
+    .pipe(
+      z.string().regex(/^09\d{9}$/, {
+        message: "شماره تلفن باید با 09 شروع شود و دقیقاً 11 رقم داشته باشد",
+      })
+    ),
+  gender: z.enum(["MALE", "FEMALE"], {message: "جنسیت الزامی است و باید male یا female باشد"}),
   group: z.string().optional(),
   show: z.boolean().default(false).optional(),
 });
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
-function IndividualSettings({ handleOpen }: { handleOpen: () => void }) {
+function IndividualSettings({handleOpen, formId}: { handleOpen: () => void, formId: string }) {
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     mode: "onChange",
@@ -48,7 +61,7 @@ function IndividualSettings({ handleOpen }: { handleOpen: () => void }) {
       name: "",
       family: "",
       phone: "",
-      gender: "",
+      gender: undefined,
       group: "",
       show: false,
     },
@@ -57,11 +70,53 @@ function IndividualSettings({ handleOpen }: { handleOpen: () => void }) {
   const {
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    formState: {isSubmitting, isValid},
+    setError,
   } = methods;
 
   async function onSubmit(values: propertiesFormSchemaType) {
-    console.log(values);
+    try {
+      const response = await fetch('/api/individual', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          formId: formId.toString(),
+          name: values.name,
+          lname: values.family,
+          username: values.phone,
+          gender: values.gender,
+          groupId: values.group || null,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (data.error && data.details) {
+          data.details.forEach((err: any) => {
+            if (err.path && err.path[0]) {
+              setError(err.path[0], {type: 'manual', message: err.message});
+            }
+          });
+        } else if (data.error) {
+          // console.error("API Error:", data.error);
+          toast.error(data.error.toString);
+        }
+        return;
+      }
+      // console.log('Submission successful:', data);
+      toast.success("با موفقیت به سبد خرید افزوده شد.");
+
+      handleOpen();
+      reset();
+
+    } catch (error) {
+      // console.error("Client-side error:", error);
+      toast.error("خطای ناشناخته در ارسال اطلاعات.");
+
+    }
   }
 
   return (
@@ -70,184 +125,82 @@ function IndividualSettings({ handleOpen }: { handleOpen: () => void }) {
         sx={{
           display: "flex",
           flexDirection: "column",
-          height: "100%",
-          paddingX: 1.5,
-          direction: "ltr",
           width: "100%",
           bgcolor: "#F7F7FF",
           borderRadius: "8px",
           padding: 2,
           marginY: 2,
           gap: 1,
+          direction: "ltr",
         }}
       >
         <Box display="flex" gap={1} width="100%">
-          <Box display="flex" flexDirection="column" gap="8px" width="100%">
+          <Box sx={inputFieldContainerSx}>
             <Typography variant="subtitle2" fontWeight="700">
               نام:
             </Typography>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                height: "100%",
-                direction: "ltr",
-                width: "100%",
-                paddingX: 0.5,
-                "& .MuiFormControl-root, & .MuiInputBase-root": {
-                  borderRadius: "10px",
-                },
-              }}
-            >
-              <RHFTextField
-                sx={{
-                  "& .MuiInputBase-root": {
-                    bgcolor: "#fff",
-                    paddingY: "0",
-                  },
-                }}
-                name="name"
-                fullWidth
-              />
-            </Box>
+            <RHFTextField sx={textFieldCommonSx} name="name" fullWidth/>
           </Box>
-          <Box display="flex" flexDirection="column" gap="8px" width="100%">
+          <Box sx={inputFieldContainerSx}>
             <Typography variant="subtitle2" fontWeight="700">
               نام خانوادگی:
             </Typography>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                height: "100%",
-                direction: "ltr",
-                width: "100%",
-                paddingX: 0.5,
-                "& .MuiFormControl-root, & .MuiInputBase-root": {
-                  borderRadius: "10px",
-                },
-              }}
-            >
-              <RHFTextField
-                sx={{
-                  "& .MuiInputBase-root": {
-                    bgcolor: "#fff",
-                    paddingY: "0",
-                  },
-                }}
-                name="family"
-                fullWidth
-              />
-            </Box>
+            <RHFTextField sx={textFieldCommonSx} name="family" fullWidth/>
           </Box>
         </Box>
         <Box display="flex" gap={1} width="100%">
-          <Box display="flex" flexDirection="column" gap="8px" width="100%">
+          <Box sx={inputFieldContainerSx}>
             <Typography variant="subtitle2" fontWeight="700">
               تلفن همراه:
             </Typography>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                height: "100%",
-                direction: "ltr",
-                width: "100%",
-                paddingX: 0.5,
-                "& .MuiFormControl-root, & .MuiInputBase-root": {
-                  borderRadius: "10px",
-                },
-              }}
-            >
-              <RHFTextField
-                sx={{
-                  "& .MuiInputBase-root": {
-                    bgcolor: "#fff",
-                    paddingY: "0",
-                  },
-                }}
-                name="phone"
-                type="tel"
-                slotProps={{
-                  htmlInput: {
-                    maxLength: 11,
-                  },
-                }}
-                fullWidth
-              />
-            </Box>
-          </Box>
-          <Box display="flex" flexDirection="column" gap="8px" width="100%">
-            <Typography variant="subtitle2" fontWeight="700">
-              جنسیت:
-            </Typography>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                height: "100%",
-                direction: "ltr",
-                width: "100%",
-                paddingX: 0.5,
-                "& .MuiFormControl-root, & .MuiInputBase-root": {
-                  borderRadius: "10px",
-                },
-              }}
-            >
-              <RHFSelect
-                fullWidth
-                name="gender"
-                sx={{
-                  "& .MuiInputBase-root": {
-                    bgcolor: "#fff",
-                  },
-                }}
-              >
-                {[
-                  { value: "male", label: "مرد" },
-                  { value: "female", label: "زن" },
-                ].map((item) => (
-                  <MenuItem key={item.value} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </RHFSelect>
-            </Box>
-          </Box>
-        </Box>
-        <Box display="flex" flexDirection="column" gap="8px" width="100%">
-          <Typography variant="subtitle2" fontWeight="700">
-            گروه:
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              height: "100%",
-              direction: "ltr",
-              width: "100%",
-              paddingX: 0.5,
-              "& .MuiFormControl-root, & .MuiInputBase-root": {
-                borderRadius: "10px",
-              },
-            }}
-          >
-            <RHFMultiSelect
-              sx={{
-                "& .MuiInputBase-root": {
-                  bgcolor: "#fff",
-                  paddingY: "8px",
+            <RHFTextField
+              sx={textFieldCommonSx}
+              name="phone"
+              type="tel"
+              slotProps={{
+                htmlInput: {
+                  maxLength: 11,
                 },
               }}
               fullWidth
-              name="group"
-              disabled
-              options={[]}
             />
           </Box>
+          <Box sx={inputFieldContainerSx}>
+            <Typography variant="subtitle2" fontWeight="700">
+              جنسیت:
+            </Typography>
+            <RHFSelect fullWidth name="gender" sx={textFieldCommonSx}>
+              <MenuItem value="">انتخاب کنید</MenuItem>
+              {[
+                {value: "MALE", label: "مرد"},
+                {value: "FEMALE", label: "زن"},
+              ].map((item) => (
+                <MenuItem key={item.value} value={item.value}>
+                  {item.label}
+                </MenuItem>
+              ))}
+            </RHFSelect>
+          </Box>
+        </Box>
+        <Box sx={inputFieldContainerSx}>
+          <Typography variant="subtitle2" fontWeight="700">
+            گروه:
+          </Typography>
+          <RHFMultiSelect
+            sx={{
+              ...textFieldCommonSx,
+              "& .MuiInputBase-root": {
+                ...textFieldCommonSx["& .MuiInputBase-root"],
+                paddingY: "8px",
+              },
+            }}
+            fullWidth
+            name="group"
+            disabled
+            options={[]}
+          />
         </Box>
       </Box>
-      <Typography fontSize="10px">ظرفیت باقی‌مانده 30 نفر.</Typography>
       <Box
         display="flex"
         flexDirection="row"
@@ -289,9 +242,7 @@ function IndividualSettings({ handleOpen }: { handleOpen: () => void }) {
           type="submit"
           fullWidth
           variant="contained"
-          loading={isSubmitting}
-          disabled={isSubmitting}
-          disableRipple
+          disabled={isSubmitting || !isValid}
           sx={{
             bgcolor: "#1758BA",
             height: "54px",
@@ -309,13 +260,12 @@ function IndividualSettings({ handleOpen }: { handleOpen: () => void }) {
             },
           }}
         >
-          تایید و کسر از ظرفیت
+          افزودن به سبد خرید
         </Button>
         <Button
           disabled={isSubmitting}
           type="button"
           fullWidth
-          className="text-[16px] text-[#1758BA]"
           sx={{
             height: "54px",
             fontWeight: "700",
@@ -328,6 +278,10 @@ function IndividualSettings({ handleOpen }: { handleOpen: () => void }) {
               bgcolor: "transparent",
               boxShadow: "none",
               color: "#1758BA",
+            },
+            "&.Mui-disabled": {
+              borderColor: "#d9d9d9",
+              color: "#b0b0b0",
             },
           }}
           variant="outlined"

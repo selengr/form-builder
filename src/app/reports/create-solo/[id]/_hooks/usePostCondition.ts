@@ -23,7 +23,8 @@ export const usePostCondition = (isEdit: boolean) => {
         mutationFn: ({data}: { data: IPostCondition[] }) => postCalculation(data, method, isEdit),
 
         onSuccess: () => {
-            queryClient.invalidateQueries(['Condition_List'] as any);
+            queryClient.invalidateQueries(['Report_List'] as any);
+            queryClient.refetchQueries(['Report_List']as any);
             toast.success(`خرده‌گزارش با موفقیت ${isEdit ? "ویرایش" : "ایجاد"} شد`);  
         },
         onError: () => {

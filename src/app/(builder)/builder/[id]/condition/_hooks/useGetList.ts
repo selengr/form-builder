@@ -21,7 +21,7 @@ export const useGetList = () => {
     queryFn: () => fetchData(id),
     staleTime: 0,
     gcTime: 600000,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: true, 
     refetchOnReconnect: true,
     retry: 3
   });

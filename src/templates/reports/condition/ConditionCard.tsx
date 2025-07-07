@@ -14,8 +14,8 @@ import { EditConditionDialog } from "./EditConditionDialog";
 import { ConditionCardOperator } from "./ConditionCardOperator";
 // icons
 import { WeuiDeleteOutlined } from "../../../../public/images/icons/DeleteIcon";
+import { useDeleteReport } from "@/app/reports/create-solo/[id]/_hooks/useDeleteReport";
 import { PhDotsThreeVerticalBold } from "../../../../public/images/icons/PhDotsThreeVerticalBold";
-import { useDeleteCondition } from "@/app/reports/create-solo/[id]/_hooks/useDeleteCondition";
 
 const buttonStyles = {
   height: "50px",
@@ -57,7 +57,7 @@ export function ConditionCard({
     isDragging,
   } = useSortable({ id: condition.id });
 
-  const { mutate: deleteCondition, isPending } = useDeleteCondition();
+  const { mutate: deleteCondition, isPending } = useDeleteReport();
 
   const style = {
     transform: CSS.Transform.toString(transform),

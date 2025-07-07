@@ -31,15 +31,16 @@ import { useUpdateReportPosition } from "@/app/reports/create-solo/[id]/_hooks/u
 
 interface IConditionListProps {
   conditions: IGetCondition[];
+  setConditions : any
 }
 
 const ConditionList: React.FC<IConditionListProps> = ({
-  conditions: initialConditions,
+  conditions,
+  setConditions 
 }) => {
+  console.log(conditions)
   const { id } = useParams();
-  const [conditions, setConditions] = useState<IGetCondition[]>(
-    Array.isArray(initialConditions) ? initialConditions : []
-  );
+  
   const { mutate: updatePosition, isPending: isUpdatingPosition } =
     useUpdateReportPosition();
 

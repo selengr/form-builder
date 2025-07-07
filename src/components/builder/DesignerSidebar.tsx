@@ -8,7 +8,7 @@ import Link from "next/link";
 import {toast} from "sonner";
 
 import {FormElements} from "@/types/FormElements";
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import useDesigner from "@/hooks/useDesigner";
 import SidebarBtnElement from "./SidebarBtnElement";
 import {CodiconEye} from "@/../public/images/home-page/EyeIcon";

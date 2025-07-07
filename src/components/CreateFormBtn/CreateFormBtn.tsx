@@ -21,7 +21,7 @@ import {
 import { IoClose } from "react-icons/io5";
 import FormProvider from "../hook-form/FormProvider";
 import { RHFTextField, RHFMultiSelectV0 } from "../hook-form";
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import PlusIcon from "@/../public/images/home-page/Add-fill.svg";
 import { useGetSubCategory } from "./hooks/useGetSubCategory";
 import {

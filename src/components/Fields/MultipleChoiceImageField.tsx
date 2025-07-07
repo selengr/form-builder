@@ -22,18 +22,18 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import FormProvider from "../../components/hook-form/FormProvider";
-import { RHFSwitch, RHFTextField } from "../../components/hook-form";
+import FormProvider from "@/components/hook-form/FormProvider";
+import { RHFSwitch, RHFTextField } from "@/components/hook-form";
 import FieldDialogActionBottomButtons from "../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons";
 import {
   IFormElementConstructor,
   IFormOptionList,
   IQPLMultipleChoice,
-} from "../../types/bulider";
-import { UppyUploader } from "../../components/uploader/UppyUploader";
+} from "@/types/bulider";
+import { UppyUploader } from "@/components/uploader/UppyUploader";
 import shuffleArray from "@/lib/shuffle";
 import { FiPlusCircle } from "react-icons/fi";
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import useElements from "@/hooks/useElements";
 import useDesigner from "@/hooks/useDesigner";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";

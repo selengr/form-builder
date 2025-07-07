@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import { CircleLoading } from "@/components";
 import { CartItem, InvoiceItem, EmptyCart } from "@/templates/purchase-order";
 import { useGetPurchaseOrder } from "./_hook/useGetPurchaseOrder";

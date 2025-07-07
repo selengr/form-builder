@@ -4,7 +4,7 @@ import {
   ElementsType,
   FormElement,
   FormElementInstance,
-} from "../../types/FormElements";
+} from "@/types/FormElements";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,9 +13,9 @@ import Box from "@mui/material/Box";
 import FormProvider from "../../components/hook-form/FormProvider";
 import RHFTextField from "../../components/hook-form/RHFTextField";
 import FieldDialogActionBottomButtons from "../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons";
-import { IFormElementConstructor } from "../../types/bulider";
+import { IFormElementConstructor } from "@/types/bulider";
 import { useParams } from "next/navigation";
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";
 import useActionSelectedElement from "@/hooks/useActionSelectedElement";
 import useSelectedElement from "@/hooks/useSelectedElement";

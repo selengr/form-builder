@@ -1,12 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
-import { AxiosResponse } from "axios";
 import { CgClose } from "react-icons/cg";
 import Dialog from "@mui/material/Dialog";
 import { IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import DialogContent from "@mui/material/DialogContent";
 
 import { IEditCalculatorDialogProps } from "@/types/calculator";

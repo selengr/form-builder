@@ -1,5 +1,5 @@
 import axios from "axios";
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import { ConfirmPaymentRequestBody } from "../types";
 import { IPurchaseOrder } from "@/types/shoppingCart";
 

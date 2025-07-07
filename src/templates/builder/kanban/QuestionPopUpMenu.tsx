@@ -12,7 +12,7 @@ import useElements from "@/hooks/useElements";
 import useActionSelectedElement from "@/hooks/useActionSelectedElement";
 import useActionQuestionLoading from "@/hooks/useActionQuestionLoading";
 import useActionDesigner from "@/hooks/useActionDesigner";
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import {toast} from "sonner";
 import {Button} from "@mui/material";
 

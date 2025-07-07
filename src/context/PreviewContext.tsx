@@ -8,10 +8,10 @@ import {
   ReactNode,
   Dispatch,
 } from "react";
-import { FormElementInstance } from "../types/FormElements";
+import { FormElementInstance } from "@/types/FormElements";
 import { toast } from "react-hot-toast";
-import { IEndPageList } from "../types/bulider";
-import AxiosApi from "@/services/axios/AxiosApi";
+import { IEndPageList } from "@/types/bulider";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 
 type IInitialState = {
   questions: any[] | never[];

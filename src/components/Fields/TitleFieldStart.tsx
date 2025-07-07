@@ -6,16 +6,16 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import FormProvider from "../../components/hook-form/FormProvider";
 import RHFTextField from "../../components/hook-form/RHFTextField";
-import { IFormElementConstructor } from "../../types/bulider";
+import { IFormElementConstructor } from "@/types/bulider";
 import FieldDialogActionBottomButtons from "../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons";
 import {
   ElementsType,
   FormElement,
   FormElementInstance,
-} from "../../types/FormElements";
+} from "@/types/FormElements";
 import { useParams } from "next/navigation";
 import useDesigner from "@/hooks/useDesigner";
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";
 import useActionSelectedElement from "@/hooks/useActionSelectedElement";
 import useSelectedElement from "@/hooks/useSelectedElement";

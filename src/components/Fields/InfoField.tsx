@@ -12,7 +12,7 @@ import FormProvider from "@/components/hook-form/FormProvider";
 import { RHFSwitch, RHFTextField } from "@/components/hook-form";
 import FieldDialogActionBottomButtons from "../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons";
 
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import useDesigner from "@/hooks/useDesigner";
 import useElements from "@/hooks/useElements";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";

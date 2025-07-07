@@ -31,7 +31,7 @@ import useElements from "@/hooks/useElements";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";
 import useActionElements from "@/hooks/useActionElements";
 import useActionSelectedElement from "@/hooks/useActionSelectedElement";
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import { toast } from "sonner";
 import CreateGroupBtn from "./CreateGroupBtn";
 

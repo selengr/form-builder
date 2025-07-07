@@ -46,6 +46,7 @@ export function ConditionCard({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const menuOpen = Boolean(anchorEl);
+  const { id } = condition;
 
   const {
     attributes,
@@ -72,9 +73,13 @@ export function ConditionCard({
     setAnchorEl(null);
   }, []);
 
-  const handleDelete = (id: number) => {
-    deleteCondition(Number(id));
-    handleClose();
+    const handleDelete = () => {
+    deleteCondition(id, {
+      onSuccess: () => {
+        setOpen(false);
+        handleClose();
+      },
+    });
   };
 
     const toggleConfirm = () => {

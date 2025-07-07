@@ -56,7 +56,7 @@ export function ConditionCard({
     <div
       ref={setNodeRef}
       style={style}
-      className={`bg-[#F7F7FF] rounded-lg flex transition-all ${
+      className={`rounded-lg flex transition-all ${
         isDragging ? "opacity-50 scale-105" : ""
       }`}
     >

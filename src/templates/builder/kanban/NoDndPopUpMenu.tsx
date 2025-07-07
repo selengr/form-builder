@@ -9,11 +9,11 @@ import {PhDotsThreeVerticalBold} from "@/../public/images/icons/PhDotsThreeVerti
 import {toast} from "react-hot-toast";
 import {SlPencil} from "react-icons/sl";
 import {useParams} from "next/navigation";
-import {FormElementInstance} from "../../../types/FormElements";
+import {FormElementInstance} from "@/types/FormElements";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";
 import useActionSelectedElement from "@/hooks/useActionSelectedElement";
 import useActionDesigner from "@/hooks/useActionDesigner";
-import AxiosApi from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 import {Button} from "@mui/material";
 
 const NoDndPopUpMenu = memo(function NoDndPopUpMenu({

@@ -1,5 +1,5 @@
 import { toast } from 'sonner';
-import AxiosApi from '@/services/axios/AxiosApi';
+import {AxiosApi} from '@/services/axios/AxiosApi';
 import { useMutation } from '@tanstack/react-query';
 
 interface IUpdatePositionPayload {

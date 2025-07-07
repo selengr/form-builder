@@ -1,6 +1,6 @@
 import {useParams} from 'next/navigation';
 import {useQuery} from '@tanstack/react-query';
-import AxiosApi from '@/services/axios/AxiosApi';
+import {AxiosApi} from '@/services/axios/AxiosApi';
 
 
 const fetchData = async (id: string | string[]) => {

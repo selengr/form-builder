@@ -95,8 +95,7 @@ export default function GeneralSettings({
                 handleOpen();
                 reset();
             } catch (error) {
-                console.error("Submission error:", error);
-                // Consider adding error handling (e.g., toast notification)
+                // console.error("Submission error:", error);
             }
         },
         [formId, handleOpen, reset]
@@ -191,7 +190,6 @@ export default function GeneralSettings({
                         />
                     </Box>
 
-                    {/* سمت چپ: توضیح دقیقاً هم‌راستا با input */}
                     <Box flex={1} mt={3}>
                         <Typography
                             fontSize="11px"

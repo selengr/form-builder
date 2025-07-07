@@ -57,7 +57,8 @@ export default function FormCardBase({data, buttonText, buttonLink}: FormCardBas
                     formId: data.id,
                     description: reportText.trim(),
                     username,
-                    responseForDestroyerReport: "INAPPROPRIATE_CONTENT", //todo must be fixed from server response
+                    // responseForDestroyerReport: "INAPPROPRIATE_CONTENT", //todo must be fixed from server response
+                    responseForDestroyerReport: selectedReportKey,
                 }),
             });
 

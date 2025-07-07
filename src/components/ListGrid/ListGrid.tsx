@@ -1,6 +1,6 @@
 "use client";
 
-import React, {ReactNode, useCallback, useEffect, useMemo, useState} from "react";
+import React, {ReactNode, useCallback, useEffect, useState} from "react";
 import Image from "next/image";
 import {useInfiniteQuery} from "@tanstack/react-query";
 import {useInView} from "react-intersection-observer";
@@ -9,12 +9,12 @@ import SearchInput from "./SearchInput";
 import {Box, Grid2 as Grid, IconButton, LinearProgress, Typography} from "@mui/material";
 import TotalGrid from "@/../public/images/home-page/total-grid.svg";
 import Filter from "@/../public/images/home-page/FilterAA.svg";
-import {clientFetch} from "./clientFetch";
 import BottomSheet from "../BottomSheet/BottomSheet";
 import CreateFormBtn from "../CreateFormBtn/CreateFormBtn";
 import {MdOutlineKeyboardArrowRight} from "react-icons/md";
 import {toast} from "sonner";
 import formListEmpty from '@/../public/images/home-page/formListEmpty.png'
+import {fetchData} from "./dataService";
 
 interface SearchBoxItem {
   fieldName: string;
@@ -42,52 +42,7 @@ interface Props {
   title: string;
 }
 
-const PAGE_SIZE = 10;
 const DEFAULT_SEARCH_FILTER = {type: "ALL", status: "PUBLIC"};
-
-async function fetchData({pageParam = 0}: {
-  pageParam: number
-}, searchBoxList: SearchBoxItem[], filterBoxList: SearchBoxItem[], url: string, searchQueryFilter = DEFAULT_SEARCH_FILTER) {
-  const filterRestrictions: SearchBoxItem[] = [];
-  if (searchQueryFilter.type && searchQueryFilter.type !== "ALL") {
-    filterRestrictions.push({
-      fieldName: "typeEnum", fieldOperation: "EQUAL", fieldValue: searchQueryFilter.type, nextConditionOperator: "AND"
-    });
-  }
-  if (searchQueryFilter.status && searchQueryFilter.status !== "ALL") {
-    filterRestrictions.push({
-      fieldName: "status", fieldOperation: "EQUAL", fieldValue: searchQueryFilter.status, nextConditionOperator: "AND"
-    });
-  }
-
-  const validCombinedRestrictionList = [...searchBoxList, ...filterBoxList, ...filterRestrictions].filter(item => {
-    if (item === undefined || item === null) return false;
-    if (typeof item.fieldValue === 'string') {
-      return item.fieldValue !== '';
-    }
-    if (Array.isArray(item.fieldValue)) {
-      return item.fieldValue.length > 0;
-    }
-    return true;
-  });
-
-  const searchFilterBoxListPayload = [{restrictionList: validCombinedRestrictionList}];
-
-  const params = {
-    searchFilterBoxList: searchFilterBoxListPayload, sortList: [{fieldName: "id", type: "DSC"}], page: pageParam, rows: PAGE_SIZE,
-  };
-
-  const endpoint = `${url}?searchFilterModel=`;
-  const response = await clientFetch(endpoint, params);
-
-  if (!response) {
-
-  }
-
-  return {
-    data: response.data.content, total: response.data.totalElements,
-  };
-}
 
 const ListGrid: React.FC<Props> = ({
                                      filterComponent,
@@ -108,8 +63,6 @@ const ListGrid: React.FC<Props> = ({
   const searchParams = useSearchParams();
   const query = searchParams.get("query")?.toString() || "";
 
-  const memoizedFilterComponent = useMemo(() => filterComponent, [filterComponent]);
-
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const router = useRouter();
 
@@ -120,6 +73,8 @@ const ListGrid: React.FC<Props> = ({
     queryFn: ({pageParam}) => fetchData({pageParam}, searchBoxList, filterBoxList, url, searchQueryFilter),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
+      // Assuming PAGE_SIZE is defined in dataService or passed as a prop/constant
+      const PAGE_SIZE = 10;
       return lastPage.data && lastPage.data.length === PAGE_SIZE ? allPages.length : undefined;
     },
     refetchOnWindowFocus: false,
@@ -158,27 +113,21 @@ const ListGrid: React.FC<Props> = ({
     }
   }, [pages]);
 
-  if (isFetching && !isFetchingNextPage) {
-    return (<Box sx={{width: "100%"}}>
-      <LinearProgress/>
-    </Box>);
-  }
-
   if (error) {
     toast.error(error.message);
   }
 
-  const renderHeader = () => (
-    <div className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative shrink-0">
-      <IconButton sx={{position: "absolute", left: "8px"}} onClick={() => router.push("/")}>
-        <MdOutlineKeyboardArrowRight color="#292D32"/>
-      </IconButton>
-      <p className="text-[16px] text-center font-bold text-[#161616]">
-        {title}
-      </p>
-    </div>);
+  const renderHeader = useCallback(() => (<div
+    className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative shrink-0">
+    <IconButton sx={{position: "absolute", left: "8px"}} onClick={() => router.push("/")}>
+      <MdOutlineKeyboardArrowRight color="#292D32"/>
+    </IconButton>
+    <p className="text-[16px] text-center font-bold text-[#161616]">
+      {title}
+    </p>
+  </div>), [title, router]);
 
-  const renderTotalCount = () => (<Grid
+  const renderTotalCount = useCallback(() => (<Grid
     display="flex"
     sx={{
       width: "100%",
@@ -200,9 +149,9 @@ const ListGrid: React.FC<Props> = ({
     <p className="flex items-center text-[14px] text-[#393939] font-bold">
       {totalData} {textTotal[1]}
     </p>
-  </Grid>);
+  </Grid>), [totalData, textTotal]);
 
-  const renderSearchAndFilter = () => (<Grid
+  const renderSearchAndFilter = useCallback(() => (<Grid
     display="flex"
     sx={{
       width: "100%", maxWidth: "550px", justifyContent: "center", mt: 1, gap: 2,
@@ -214,31 +163,30 @@ const ListGrid: React.FC<Props> = ({
     >
       <SearchInput/>
       {!disableFilter && (<IconButton
-          onClick={openFilter}
-          sx={{
-            display: {xs: "flex", lg: "none"},
-            flexShrink: 0,
-            border: "1px solid #c9c9c9",
-            borderRadius: "15px",
-            padding: "8px",
-            width: 51,
-            height: 51,
-          }}
-        >
-          <Image
-            src={Filter}
-            width={35}
-            height={35}
-            alt="Filter"
-            draggable={false}
-          />
-        </IconButton>)}
+        onClick={openFilter}
+        sx={{
+          display: {xs: "flex", lg: "none"},
+          flexShrink: 0,
+          border: "1px solid #c9c9c9",
+          borderRadius: "15px",
+          padding: "8px",
+          width: 51,
+          height: 51,
+        }}
+      >
+        <Image
+          src={Filter}
+          width={35}
+          height={35}
+          alt="Filter"
+          draggable={false}
+        />
+      </IconButton>)}
     </Grid>
-  </Grid>);
+  </Grid>), [disableFilter, openFilter]);
 
-  const renderContent = () => {
+  const renderContent = useCallback(() => {
     const allItems = pages?.pages.flatMap(page => page.data) || [];
-
     if (isFetching && !isFetchingNextPage) {
       return (<Box sx={{width: "100%", mt: 2}}>
         <LinearProgress/>
@@ -248,7 +196,12 @@ const ListGrid: React.FC<Props> = ({
     if (allItems.length === 0) {
       return (<Box
         sx={{
-          display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center", height: "60vh", width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "column",
+          alignItems: "center",
+          height: "60vh",
+          width: "100%",
         }}
       >
         <Image src={formListEmpty} alt="No forms found" height={256} priority draggable={false}/>
@@ -259,7 +212,7 @@ const ListGrid: React.FC<Props> = ({
     }
 
     // @ts-ignore
-    return pages.pages.map((page, pageIndex) => page.data.map((data: any, index: number) => {
+    return pages.pages.map((page, pageIndex) => (page.data.map((data: any, index: number) => {
       const key = `${pageIndex}-${index}`;
       // @ts-ignore
       const isLastItem = (pageIndex === pages.pages.length - 1) && (index === page.data.length - 1);
@@ -273,10 +226,10 @@ const ListGrid: React.FC<Props> = ({
           </Box>
         </>)}
       </Grid>);
-    }));
-  };
+    })));
+  }, [pages, isFetching, isFetchingNextPage, CartComponent, onCheck, handleRefreshGrid, ref]);
 
-  const renderDesktopFilter = () => filterComponent && (<Grid
+  const renderDesktopFilter = useCallback(() => (filterComponent && (<Grid
     width="100%"
     display={{xs: "none", lg: "flex"}}
     flexDirection="column"
@@ -289,57 +242,72 @@ const ListGrid: React.FC<Props> = ({
     <Grid sx={{width: "100%", minWidth: "200px", maxWidth: "300px"}}>
       {filterComponent}
     </Grid>
-  </Grid>);
+  </Grid>)), [filterComponent]);
 
-  return (<Grid
-      width="100%"
-      display="flex"
-      sx={{
-        overflowY: "hidden", userSelect: "none", height: {xs: "calc(100vh - 60px)", md: "100vh"}, flexDirection: {xs: "column", lg: "row"},
-      }}
-    >
-      <Grid
-        display="flex"
-        flexDirection="column"
-        justifyContent="flex-start"
-        alignItems="center"
-        container
-        sx={{
-          bgcolor: "white", borderRadius: "16px", p: 2, mx: 1, width: 1, overflowY: "hidden", height: "100%",
-        }}
-      >
-        <Grid container sx={{width: "100%", justifyContent: "center", mx: "auto"}}>
-          {renderHeader()}
-          <Box
-            sx={{
-              display: "flex", justifyContent: "center", alignItems: "center", gap: "12px", width: "100%", flexWrap: {xs: "wrap", sm: "nowrap"},
-            }}
-          >
-            {renderTotalCount()}
-            {showCreateButton && (<div className="min-w-[50px] w-[50px] h-full">
-                <CreateFormBtn/>
-              </div>)}
-          </Box>
-          {renderSearchAndFilter()}
+
+  return (<>
+      {isFetching && !isFetchingNextPage ?
+
+        (<Box sx={{width: "100%"}}>
+          <LinearProgress/>
+        </Box>) : (<Grid
+          width="100%"
+          display="flex"
+          sx={{
+            overflowY: "hidden",
+            userSelect: "none",
+            height: {xs: "calc(100vh - 60px)", md: "100vh"},
+            flexDirection: {xs: "column", lg: "row"},
+          }}
+        >
           <Grid
-            id="content"
+            display="flex"
+            flexDirection="column"
+            justifyContent="flex-start"
+            alignItems="center"
             container
-            flexWrap="nowrap"
             sx={{
-              width: 1, mx: "auto", mt: 1, mb: 5, flexDirection: "column", gap: 2, overflowY: "auto", height: {
-                xs: "calc(100vh - 290px)", md: "calc(100vh - 210px)",
-              },
+              bgcolor: "white", borderRadius: "16px", p: 2, mx: 1, width: 1, overflowY: "hidden", height: "100%",
             }}
           >
-            {renderContent()}
+            <Grid container sx={{width: "100%", justifyContent: "center", mx: "auto"}}>
+              {renderHeader()}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "12px",
+                  width: "100%",
+                  flexWrap: {xs: "wrap", sm: "nowrap"},
+                }}
+              >
+                {renderTotalCount()}
+                {showCreateButton && (<div className="min-w-[50px] w-[50px] h-full">
+                  <CreateFormBtn/>
+                </div>)}
+              </Box>
+              {renderSearchAndFilter()}
+              <Grid
+                id="content"
+                container
+                flexWrap="nowrap"
+                sx={{
+                  width: 1, mx: "auto", mt: 1, mb: 5, flexDirection: "column", gap: 2, overflowY: "auto", height: {
+                    xs: "calc(100vh - 290px)", md: "calc(100vh - 210px)",
+                  },
+                }}
+              >
+                {renderContent()}
+              </Grid>
+            </Grid>
+            <BottomSheet open={isFilterOpen} onClose={() => setIsFilterOpen(false)}>
+              <Grid>{filterComponent}</Grid>
+            </BottomSheet>
           </Grid>
-        </Grid>
-        <BottomSheet open={isFilterOpen} onClose={() => setIsFilterOpen(false)}>
-          <Grid>{memoizedFilterComponent}</Grid>
-        </BottomSheet>
-      </Grid>
-      {renderDesktopFilter()}
-    </Grid>);
+          {renderDesktopFilter()}
+        </Grid>)}
+    </>);
 };
 
 export default ListGrid;

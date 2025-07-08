@@ -31,15 +31,15 @@ import { useUpdateReportPosition } from "@/app/reports/create-solo/[id]/_hooks/u
 
 interface IConditionListProps {
   conditions: IGetCondition[];
+  setConditions : any
 }
 
 const ConditionList: React.FC<IConditionListProps> = ({
-  conditions: initialConditions,
+  conditions,
+  setConditions 
 }) => {
   const { id } = useParams();
-  const [conditions, setConditions] = useState<IGetCondition[]>(
-    Array.isArray(initialConditions) ? initialConditions : []
-  );
+  
   const { mutate: updatePosition, isPending: isUpdatingPosition } =
     useUpdateReportPosition();
 
@@ -90,12 +90,12 @@ const ConditionList: React.FC<IConditionListProps> = ({
   };
 
   return (
-    <div className="w-full max-w-md flex flex-col pt-">
+    <div className="w-full max-w-[500px] flex flex-col pt-">
       <CreateCondition />
       {Array.isArray(conditions) && conditions.length > 0 && (
         <div
           dir="rtl"
-          className="bg-[#F7F7FF] rounded-lg p-[10px] w-full flex flex-col gap-3 -pb-10 mb-0"
+          className="rounded-lg p-[10px] w-full flex flex-col gap-3 -pb-10 mb-0"
         >
           <DndContext
             sensors={sensors}
@@ -109,7 +109,7 @@ const ConditionList: React.FC<IConditionListProps> = ({
             >
               {conditions?.map((condition: IGetCondition, index: number) => (
                 // eslint-disable-next-line react/jsx-key
-                <div key={idGenerator()}>
+                <div className="bg-[#F7F7FF] gap-[3px] rounded-[8px] p-[10px]" key={idGenerator()}>
                   <ConditionCard condition={condition} index={index} />
                 </div>
               ))}

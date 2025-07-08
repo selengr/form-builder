@@ -31,6 +31,10 @@ import { Dispatch, SetStateAction } from "react";
     label: string;
   }
 
+  export interface IConditionCardProps {
+    index: number;
+    condition: IGetCondition;
+  }
   
   export interface IConditionForm {
     questionType: string;

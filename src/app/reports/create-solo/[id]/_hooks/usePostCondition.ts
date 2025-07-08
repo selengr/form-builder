@@ -1,10 +1,7 @@
 import {toast} from 'sonner';
-import {useParams} from 'next/navigation';
 import {AxiosApi} from '@/services/axios/AxiosApi';
-import {useMutation} from '@tanstack/react-query';
 import {IPostCondition} from '@/types/conditionReportSolo';
-import {queryClient} from '@/lib/react-query.config';
-
+import {useMutation, useQueryClient} from '@tanstack/react-query';
 
 enum HttpMethod {
     POST = 'post',
@@ -17,25 +14,22 @@ const postCalculation = async (data: IPostCondition[], method: HttpMethod, isEdi
     return response.data;
 };
 
-
 export const usePostCondition = (isEdit: boolean) => {
-    const {id} = useParams();
+    const queryClient = useQueryClient();
     const method = isEdit ? HttpMethod.PUT : HttpMethod.POST;
 
     const mutation = useMutation({
         mutationKey: ['post-condition'],
         mutationFn: ({data}: { data: IPostCondition[] }) => postCalculation(data, method, isEdit),
 
-        onSuccess: (data) => {
-            toast.success(`خرده‌گزارش با موفقیت ${isEdit ? "ویرایش" : "ایجاد"} شد`);
-            queryClient.invalidateQueries({
-                queryKey: [`/reports/create-solo/${id}`],
-            });
+        onSuccess: () => {
+            queryClient.invalidateQueries(['Report_List'] as any);
+            queryClient.refetchQueries(['Report_List']as any);
+            toast.success(`خرده‌گزارش با موفقیت ${isEdit ? "ویرایش" : "ایجاد"} شد`);  
         },
         onError: () => {
             toast.error("عملیات ناموفق بود مجددا تلاش کنید");
         },
-
     });
 
     return mutation;

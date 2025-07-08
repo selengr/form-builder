@@ -19,10 +19,10 @@ const fetchData = async (id: string | string[]) => {
 }
 
 
-export const useGetList = () => {
+export const useGetReportList = () => {
   const {id} = useParams();
   return useQuery({
-    queryKey: ['Report'],
+    queryKey: ["Report_List"],
     queryFn: () => fetchData(id),
     staleTime: 0,
     gcTime: 600000,

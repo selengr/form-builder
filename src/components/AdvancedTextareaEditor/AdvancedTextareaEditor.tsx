@@ -10,7 +10,7 @@ import styles from './advancedTextareaEditor.module.css'
 import { IDropdownItem, IAdvancedTextareaEditorProps, IInitialData } from "./types";
 import { IConditionQuestionType } from "@/types/conditionReportSolo";
 
-  export default function AdvancedTextareaEditor({ initialData, methods, qacWithOutFilter, onDataChange, label, validationErrors = [] }: IAdvancedTextareaEditorProps) {
+  export default function AdvancedTextareaEditor({ initialData, hasError, qacWithOutFilter, onDataChange, label, validationErrors = [] }: IAdvancedTextareaEditorProps) {
       const [dropdowns, setDropdowns] = useState<IDropdownItem[]>([]);
       const [dropdownCounter, setDropdownCounter] = useState<number>(0);
 
@@ -80,7 +80,7 @@ import { IConditionQuestionType } from "@/types/conditionReportSolo";
 
       editorRef.current!.appendChild(dropdownContainer)
 
-      currentPosition = dropdownData.position + dropdownData.value.length
+      currentPosition = dropdownData.position + dropdownData.value.length + 1
       counter++
     })
 
@@ -268,7 +268,7 @@ import { IConditionQuestionType } from "@/types/conditionReportSolo";
         `[data-dropdown-id="${dropdown.id}"]`
       );
 
-       const hasError = validationErrors.includes(dropdown.id)
+       const hasErrors = validationErrors.includes(dropdown.id)
         
       if (!container) return null;
 
@@ -278,7 +278,7 @@ import { IConditionQuestionType } from "@/types/conditionReportSolo";
         key={dropdown.id}
         data-id={dropdown.id}
         contentEditable={false}
-        className={`${styles.dynamicbtn} ${styles.NEW_FIELD}  ${hasError ? styles.NEW_FIELD_ERROR : ""}`}
+        className={`${styles.dynamicbtn} ${styles.NEW_FIELD}  ${hasErrors ? styles.NEW_FIELD_ERROR : ""}`}
         data-type="NEW_FIELD"
       >
         <div
@@ -397,7 +397,7 @@ import { IConditionQuestionType } from "@/types/conditionReportSolo";
             suppressContentEditableWarning
             onInput={handleInput}
             onKeyDown={handleKeyDown}
-            className="min-h-[110px] focus:outline-none w-full leading-relaxed text-gray-900 relative rounded-lg px-4 py-2 border-[1px] border-[#DDE1E6]"
+            className={`min-h-[110px] focus:outline-none w-full leading-relaxed text-gray-900 relative rounded-lg px-4 py-2 border-[1px]  ${hasError ? "border-rose-400" : "border-[#DDE1E6]"}`}
             style={{
               lineHeight: "2.5",
               fontSize: "14px",

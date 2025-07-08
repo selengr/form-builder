@@ -22,6 +22,7 @@ import {usePostCondition} from "@/app/reports/create-solo/[id]/_hooks/usePostCon
 import AdvancedTextareaEditor from "@/components/AdvancedTextareaEditor/AdvancedTextareaEditor"
 import {IDropdownItem} from "@/components/AdvancedTextareaEditor/types"
 import {useFormValidation} from "@/app/reports/create-solo/[id]/_hooks/useFormValidation"
+import { idGenerator } from '@/lib';
 
 
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({handleClose, condition, isEdit = false}) => {
@@ -44,7 +45,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({handleClos
 
   const postCondition = usePostCondition(isEdit);
 
-  const {validateAndHandleErrors, showSuccessMessage} = useFormValidation({
+  const {validateAndHandleErrors} = useFormValidation({
     setValidationErrors,
   })
 
@@ -105,15 +106,17 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({handleClos
           })
           .join("");
 
+        let isValidElse = true
         const returnTextList = JSON.parse(returnText)
-        const elseReturnTextList = JSON.parse(elseReturnText)
+        if(!!elseReturnText){
+          const elseReturnTextList = JSON.parse(elseReturnText)
+          const unselectedElseDropdowns: IDropdownItem[] = elseReturnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",)
+          const isValidElse = validateAndHandleErrors(unselectedElseDropdowns)
+        }
         const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",)
 
-        const unselectedElseDropdowns: IDropdownItem[] = elseReturnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",)
-
         const isValid = validateAndHandleErrors(unselectedDropdowns)
-        const isValidElse = validateAndHandleErrors(unselectedElseDropdowns)
-        if (!isValid && !isValidElse) {
+        if (!isValid) {
           flag = false
           return toast.error("لطفا تمامي فيلدهاي خالي را انتخاب كنيد");
         } else {
@@ -152,7 +155,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({handleClos
     </Typography>
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
-        {conditions.map((condition, index) => (<Box key={condition.id} sx={{width: "100%"}}>
+        {conditions.map((condition, index) => (<Box key={idGenerator()} sx={{width: "100%"}}>
           {condition.subConditions.map((subCondition, subIndex) => (<SubCondition
             key={subCondition.id}
             index={index}
@@ -185,18 +188,17 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({handleClos
               label="نمایش بده"
               onDataChange={(data) => handleReturnTextChange(data, index)}
               initialData={returnTextEdit}
-              methods={methods.setValue}
               qacWithOutFilter={qacWithOutFilter}
               validationErrors={validationErrors}
+              hasError={!!methods.formState.errors.conditions?.[0]?.returnText}
             />
+
             <AdvancedTextareaEditor
               label="در غیر اینصورت نمایش بده:"
               onDataChange={(data) => handleElseReturnTextChange(data, index)}
               initialData={elseReturnTextEdit}
-              methods={methods.setValue}
               qacWithOutFilter={qacWithOutFilter}
             />
-
 
             {/*
                 <Typography sx={{color: "#393939", fontSize: "14px", mr: 0 }}>در غیر اینصورت نمایش بده:</Typography>

@@ -57,7 +57,6 @@ export default function FormCardBase({data, buttonText, buttonLink}: FormCardBas
                     formId: data.id,
                     description: reportText.trim(),
                     username,
-                    // responseForDestroyerReport: "INAPPROPRIATE_CONTENT", //todo must be fixed from server response
                     responseForDestroyerReport: selectedReportKey,
                 }),
             });
@@ -139,7 +138,7 @@ export default function FormCardBase({data, buttonText, buttonLink}: FormCardBas
                     <CircularProgress size={20}/>
                 </MenuItem>) : error ? (<MenuItem disabled
                                                   className="text-red-500">{error}</MenuItem>) : Array.isArray(reportData) && reportData.length > 0 ? (reportData.map((item: any, i: number) => (
-                    <MenuItem key={i} onClick={() => handleReport(item.key)}>
+                    <MenuItem key={i} onClick={() => handleReport(item.value)}>
                         {item.key.split(".").pop()}
                     </MenuItem>))) : (<MenuItem disabled>داده‌ای یافت نشد</MenuItem>)}
             </Menu>

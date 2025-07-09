@@ -76,7 +76,7 @@ function IndividualSettings({handleOpen, formId}: { handleOpen: () => void, form
 
   async function onSubmit(values: propertiesFormSchemaType) {
     try {
-      const response = await fetch('/api/individual', {
+      const response = await fetch('/api/publish/individual', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -206,6 +206,7 @@ function IndividualSettings({handleOpen, formId}: { handleOpen: () => void, form
         flexDirection="row"
         justifyContent="space-between"
         alignItems="center"
+        className={"px-3"}
       >
         <Typography
           variant="subtitle2"

@@ -17,7 +17,7 @@ export const createNewSubCondition = () => ({
   
   export const createNewCondition = () => ({
     subConditions: [createNewSubCondition()],
-    elseReturnText: "",
+    displayIf: false,
     returnText: "",
   })
 
@@ -26,7 +26,7 @@ export const createNewSubCondition = () => ({
    
       const { frontConditionData } = conditionJson;
       const  conditions = JSON.parse(frontConditionData);
-      const { subConditions, returnText, elseReturnText   } = conditions
+      const { subConditions, returnText, displayIf   } = conditions
 
       const SubConditionsData : TSubConditionData[] = subConditions
         ?.map((subCondition : TSubConditionData) => {
@@ -60,7 +60,7 @@ export const createNewSubCondition = () => ({
       return {
         id : conditionJson.id,
         returnText: returnText,
-        elseReturnText: elseReturnText,
+        displayIf: displayIf,
         subConditions : SubConditionsData
       };
    

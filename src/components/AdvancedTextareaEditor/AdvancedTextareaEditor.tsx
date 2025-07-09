@@ -380,12 +380,12 @@ import { IConditionQuestionType } from "@/types/conditionReportSolo";
 
 
   return (
-    <div className="w-full max-w-[875px]">
+    <div className="w-full max-w-[988px]">
       {/* <form onSubmit={handleSubmit} className="space-y-6"> */}
+            <span className="text-[#393939] text-sm max-w-[68px] mr-20 pr-2">{label}</span>
         <div className="flex flex-row">
-          <div className="flex flex-col justify-center items-center -mr-3">
-            <span className="text-[#393939] text-sm max-w-[68px]">{label}</span>
-            <button type="button" onClick={addDropdown} className="w-20 h-8 text-[#1758BA] bg-[#E8EEF8] rounded-md font-medium text-xs m-2">
+          <div className="flex flex-col justify-start items-center -mr-3">
+            <button type="button" onClick={addDropdown} className="w-20 h-8 text-[#1758BA] bg-[#E8EEF8] rounded-md font-medium text-xs m-2 mt-1">
               افزودن متغییر
             </button>
           </div>

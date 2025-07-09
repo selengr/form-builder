@@ -1,51 +1,51 @@
 "use client"
-import {toast} from 'sonner';
-import {useCallback, useState} from "react"
-import {FormProvider} from "react-hook-form"
-import {useParams, useRouter} from "next/navigation"
-import {Box, Button, Typography} from "@mui/material"
+import { toast } from 'sonner';
+import { useCallback, useState } from "react"
+import { FormProvider } from "react-hook-form"
+import { useParams, useRouter } from "next/navigation"
+import { Box, Button, Stack, Typography } from "@mui/material"
 
-import {SubCondition} from "./SubCondition"
+import { SubCondition } from "./SubCondition"
 // components
-import {CircleDivider} from "@/components/condition/CircleDivider"
-import {SubmitButtons} from "@/components/condition/form/SubmitButtons"
+import { CircleDivider } from "@/components/condition/CircleDivider"
+import { SubmitButtons } from "@/components/condition/form/SubmitButtons"
 // lib
-import {formatContainText} from "@/lib/formatContainText"
-import {TConditionData, type TConditionFormData, TSubConditionData} from "@/lib/CreateSoloReportSchema"
+import { formatContainText } from "@/lib/formatContainText"
+import { TConditionData, type TConditionFormData, TSubConditionData } from "@/lib/CreateSoloReportSchema"
 // hooks
-import {IConditionalSystemProps, IPostCondition} from "@/types/conditionReportSolo"
-import {useConditionalForm} from "@/app/reports/create-solo/[id]/_hooks/useConditionalForm"
-import {useGetQacWithOutFilter} from "@/app/reports/create-solo/[id]/_hooks/useGetQacWithOutFilter"
-import {useGetOnlyAllQuestions} from "@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllQuestions"
-import {useGetOnlyAllCalculation} from "@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllCalculation"
-import {usePostCondition} from "@/app/reports/create-solo/[id]/_hooks/usePostCondition"
+import { IConditionalSystemProps, IPostCondition } from "@/types/conditionReportSolo"
+import { useConditionalForm } from "@/app/reports/create-solo/[id]/_hooks/useConditionalForm"
+import { useGetQacWithOutFilter } from "@/app/reports/create-solo/[id]/_hooks/useGetQacWithOutFilter"
+import { useGetOnlyAllQuestions } from "@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllQuestions"
+import { useGetOnlyAllCalculation } from "@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllCalculation"
+import { usePostCondition } from "@/app/reports/create-solo/[id]/_hooks/usePostCondition"
 import AdvancedTextareaEditor from "@/components/AdvancedTextareaEditor/AdvancedTextareaEditor"
-import {IDropdownItem} from "@/components/AdvancedTextareaEditor/types"
-import {useFormValidation} from "@/app/reports/create-solo/[id]/_hooks/useFormValidation"
+import { IDropdownItem } from "@/components/AdvancedTextareaEditor/types"
+import { useFormValidation } from "@/app/reports/create-solo/[id]/_hooks/useFormValidation"
 import { idGenerator } from '@/lib';
+import { RHFSwitch } from '@/components/hook-form';
 
 
-export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({handleClose, condition, isEdit = false}) => {
-  const {id} = useParams();
-  const {refresh} = useRouter()
+export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClose, condition, isEdit = false }) => {
+  const { id } = useParams();
+  const { refresh } = useRouter()
 
   const [validationErrors, setValidationErrors] = useState<string[]>([])
   const returnTextEdit = isEdit ? JSON.parse(condition?.returnText) : undefined
-  const elseReturnTextEdit = isEdit ? JSON.parse(condition?.elseReturnText) : undefined
 
   const {
     methods, conditions, handleAddCondition, handleRemoveCondition, handleAddSubCondition, handleRemoveSubCondition,
   } = useConditionalForm(condition)
 
-  const {qacWithOutFilterOptions, isFetchingQacWithOutFilter, qacWithOutFilter} = useGetQacWithOutFilter()
+  const { qacWithOutFilterOptions, isFetchingQacWithOutFilter, qacWithOutFilter } = useGetQacWithOutFilter()
   const {
     onlyAllQuestions, onlyAllDateOptions, onlySomeQuestionsOptions, isFetchingOnlyAllQuestions
   } = useGetOnlyAllQuestions()
-  const {onlyAllCalculationOptions, isFetchingOnlyAllCalculation} = useGetOnlyAllCalculation()
+  const { onlyAllCalculationOptions, isFetchingOnlyAllCalculation } = useGetOnlyAllCalculation()
 
   const postCondition = usePostCondition(isEdit);
 
-  const {validateAndHandleErrors} = useFormValidation({
+  const { validateAndHandleErrors } = useFormValidation({
     setValidationErrors,
   })
 
@@ -66,7 +66,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({handleClos
 
     const transformInputToOutput = (input: TConditionFormData): any => {
       return input.conditions.map((condition: TConditionData, index) => {
-        const {subConditions, returnText, elseReturnText} = condition;
+        const { subConditions, returnText, elseReturnText } = condition;
 
         const conditionFormula = subConditions
           .map((subCondition: TSubConditionData) => {
@@ -108,7 +108,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({handleClos
 
         let isValidElse = true
         const returnTextList = JSON.parse(returnText)
-        if(!!elseReturnText){
+        if (!!elseReturnText) {
           const elseReturnTextList = JSON.parse(elseReturnText)
           const unselectedElseDropdowns: IDropdownItem[] = elseReturnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",)
           const isValidElse = validateAndHandleErrors(unselectedElseDropdowns)
@@ -128,14 +128,14 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({handleClos
           conditionFormula: conditionFormula,
           elseReturnText,
           returnText,
-          frontConditionData: JSON.stringify(input.conditions[index]), ...(isEdit && {id: Number(condition.id)})
+          frontConditionData: JSON.stringify(input.conditions[index]), ...(isEdit && { id: Number(condition.id) })
         };
       });
     };
 
 
     const output: IPostCondition[] = transformInputToOutput(input);
-    postCondition.mutate({data: output}, {
+    postCondition.mutate({ data: output }, {
       onSuccess: () => {
         refresh()
         handleClose()
@@ -145,17 +145,50 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({handleClos
   };
 
   return (<Box
-    sx={{width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", direction: "ltr"}}
+    sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", direction: "ltr" }}
   >
     <Typography
       variant="subtitle1"
-      sx={{display: "flex", justifyContent: "center", color: "#404040", fontWeight: 700, mb: 1}}
+      sx={{ display: "flex", justifyContent: "center", color: "#404040", fontWeight: 700 }}
     >
       افزودن خرده‌گزارش
     </Typography>
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
-        {conditions.map((condition, index) => (<Box key={idGenerator()} sx={{width: "100%"}}>
+
+        {conditions.map((condition, index) => (<Box key={idGenerator()} sx={{ width: "100%" }}>
+
+
+          <Box
+            sx={{
+              ml: { xs: 0, md: 2 },
+              display: "flex",
+              alignItems: "start",
+              gap: 1,
+              position: "relative",
+              flexDirection: { xs: "column" },
+            }}
+          >
+            <AdvancedTextareaEditor
+              label="نمایش بده"
+              onDataChange={(data) => handleReturnTextChange(data, index)}
+              initialData={returnTextEdit}
+              qacWithOutFilter={qacWithOutFilter}
+              validationErrors={validationErrors}
+              hasError={!!methods.formState.errors.conditions?.[0]?.returnText}
+            />
+
+            <Stack sx={{display:"flex",flexDirection : "row" , alignItems: "center"}}>
+              <RHFSwitch
+                label=""
+                name="REQUIRED.value"
+                labelPlacement="start"
+                sx={{ mb: 1, mx: 0, width: 1, justifyContent: "space-between" }}
+              />
+              <Typography sx={{ color: "#393939", fontSize: "14px", ml: 1 }}>نمایش بده به شرطی که</Typography>
+            </Stack>
+          </Box>
+
           {condition.subConditions.map((subCondition, subIndex) => (<SubCondition
             key={subCondition.id}
             index={index}
@@ -173,57 +206,54 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({handleClos
           />))}
           <Box
             sx={{
-              ml: {xs: 0, md: 2},
+              ml: { xs: 0, md: 2 },
               display: "flex",
               alignItems: "start",
               gap: 1,
               position: "relative",
-              flexDirection: {xs: "column"},
+              flexDirection: { xs: "column" },
             }}
           >
             {/* <Typography sx={{ color: "#393939", fontSize: "14px",ml:-1.3 }}>نمایش بده:</Typography>
                 <TextFieldController  sx={{ minWidth: 240, ml: 0 }} name={`conditions.${index}.returnText`} type="string" /> */}
 
-            <AdvancedTextareaEditor
-              label="نمایش بده"
-              onDataChange={(data) => handleReturnTextChange(data, index)}
-              initialData={returnTextEdit}
-              qacWithOutFilter={qacWithOutFilter}
-              validationErrors={validationErrors}
-              hasError={!!methods.formState.errors.conditions?.[0]?.returnText}
-            />
 
-            <AdvancedTextareaEditor
+            {/*   <AdvancedTextareaEditor
               label="در غیر اینصورت نمایش بده:"
               onDataChange={(data) => handleElseReturnTextChange(data, index)}
               initialData={elseReturnTextEdit}
               qacWithOutFilter={qacWithOutFilter}
             />
+         */}
 
-            {/*
-                <Typography sx={{color: "#393939", fontSize: "14px", mr: 0 }}>در غیر اینصورت نمایش بده:</Typography>
-                
-                <TextFieldController sx={{ minWidth: 300, width: 380 }} name={`conditions.${index}.elseReturnText`} type="string" /> */}
-
-
-            {index !== 0 && (<Button
-              onClick={() => handleRemoveCondition(index)}
-              sx={{
-                width: 113,
-                height: "50px",
-                bgcolor: "#FA4D560D",
-                borderRadius: "8px",
-                position: {lg: "absolute"},
-                right: {lg: 10},
-                bottom: 0,
-                border: "1px solid #FA4D56",
-                "&:hover": {bgcolor: "#FA4D560D"},
-              }}
-            >
-              <Typography sx={{color: "#FA4D56", fontSize: "14px"}}>حذف این خرده‌گزارش</Typography>
-            </Button>)}
+            {index !== 0 && (
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "50px",
+                  marginTop: 1
+                }}
+              >
+                <Button
+                  onClick={() => handleRemoveCondition(index)}
+                  sx={{
+                    width: 113,
+                    height: "50px",
+                    bgcolor: "#FA4D560D",
+                    borderRadius: "8px",
+                    position: { lg: "absolute" },
+                    right: { lg: 10 },
+                    bottom: 0,
+                    border: "1px solid #FA4D56",
+                    "&:hover": { bgcolor: "#FA4D560D" },
+                  }}
+                >
+                  <Typography sx={{ color: "#FA4D56", fontSize: "14px" }}>حذف این خرده‌گزارش</Typography>
+                </Button>
+              </Box>
+            )}
           </Box>
-          <CircleDivider/>
+          <CircleDivider />
         </Box>))}
         {!isEdit && (<Button
           variant="outlined"
@@ -234,7 +264,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({handleClos
         >
           افزودن شرط جدید
         </Button>)}
-        <SubmitButtons isLoading={postCondition.isPending} handleClose={handleClose}/>
+        <SubmitButtons isLoading={postCondition.isPending} handleClose={handleClose} />
       </form>
     </FormProvider>
   </Box>)

@@ -28,7 +28,7 @@ export default function RootLayout({
       <meta content="true" name="HandheldFriendly" />
       <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
     </head>
-    <body dir="rtl">
+    <body dir="rtl" className={"antialiased"}>
     <NextTopLoader showSpinner={false} />
     <RootProvider>
       <div className="bg-white w-full mx-auto px-4 py-3 flex justify-between items-center md:hidden fixed top-0 left-0 right-0 z-50">

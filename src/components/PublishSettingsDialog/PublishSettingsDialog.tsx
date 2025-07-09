@@ -1,17 +1,16 @@
 "use client";
-import { Dialog, DialogContent, IconButton } from "@mui/material";
+import { Dialog, DialogContent, IconButton, Box, Typography } from "@mui/material";
 import { useCallback, useState } from "react";
 import { CgClose } from "react-icons/cg";
 import { IoSettingsOutline } from "react-icons/io5";
 import PublishSettingsTabValue from "./PublishSettingsTabValue";
 
-export default function PublishSettingsDialog({
-  formId,
-  formData
-}: {
-  formId: string | number;
-  formData : any
-}) {
+interface PublishSettingsDialogProps {
+  formId: string;
+  formData: any;
+}
+
+export default function PublishSettingsDialog({ formId, formData }: PublishSettingsDialogProps) {
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleOpen = useCallback(() => {
@@ -29,11 +28,13 @@ export default function PublishSettingsDialog({
           justifyContent: "center",
           alignItems: "center",
         }}
+        aria-label="تنظیمات انتشار"
       >
         <IoSettingsOutline color="#2A2A2A" />
       </IconButton>
       <Dialog
         open={openDialog}
+        onClose={handleOpen}
         dir="ltr"
         sx={{
           overflow: "hidden",
@@ -41,6 +42,8 @@ export default function PublishSettingsDialog({
           "& .MuiPaper-root": {
             borderRadius: "24px",
             margin: "10px",
+            width: "100%",
+            maxWidth: "600px",
           },
           "& .MuiDialog-container": {
             backdropFilter: "blur(4px)",
@@ -48,39 +51,33 @@ export default function PublishSettingsDialog({
           },
         }}
       >
-        {openDialog && (
-          <>
-            <div className="flex items-center justify-start">
-              <button className="mx-4 mt-4 mb-0" onClick={handleOpen}>
-                <CgClose color="#404040" width={25} height={25} size="1.5rem" />
-              </button>
-            </div>
-            <DialogContent
-              dir="rtl"
-              sx={{
-                maxHeight: "75vh",
-                scrollbarWidth: "thin",
-                maxWidth: "100%",
-                width: "600px",
-                paddingX: 1,
-                paddingTop: 0,
-              }}
-            >
-              <div dir="rtl" className="flex flex-col pb-4 p-2">
-                <div className="flex justify-center items-baseline mb-6">
-                  <p className="font-bold text-center text-[20px]">
-                    تنظیمات انتشار
-                  </p>
-                </div>
-                <PublishSettingsTabValue
-                  handleOpen={handleOpen}
-                  formId={formId as any}
-                  formData={formData}
-                />
-              </div>
-            </DialogContent>
-          </>
-        )}
+        <Box className="flex items-center justify-start" sx={{ p: 2 }}>
+          <IconButton onClick={handleOpen} aria-label="بستن">
+            <CgClose color="#404040" size="1.5rem" />
+          </IconButton>
+        </Box>
+        <DialogContent
+          dir="rtl"
+          sx={{
+            maxHeight: "75vh",
+            scrollbarWidth: "thin",
+            paddingX: 1,
+            paddingTop: 0,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Box className="flex justify-center items-baseline" sx={{ mb: 3, pt: 1 }}>
+            <Typography variant="h6" component="p" fontWeight="bold" textAlign="center">
+              تنظیمات انتشار
+            </Typography>
+          </Box>
+          <PublishSettingsTabValue
+            handleOpen={handleOpen}
+            formId={formId}
+            formData={formData}
+          />
+        </DialogContent>
       </Dialog>
     </>
   );

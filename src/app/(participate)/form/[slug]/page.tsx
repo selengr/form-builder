@@ -239,7 +239,7 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
               <MenuItem disabled className="text-red-500">{reportError}</MenuItem>
             ) : Array.isArray(reportData) && reportData.length > 0 ? (
               reportData.map((item: any, i: number) => (
-                <MenuItem key={i} onClick={() => handleReport(item.key)}>
+                <MenuItem key={i} onClick={() => handleReport(item.value)}>
                   {item.key.split(".").pop()}
                 </MenuItem>
               ))

@@ -75,7 +75,7 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
 
       {returnText?.content && (
         <span className="text-[#161616] text-sm">
-          <span>در اینصورت نمایش بده: </span>
+          <span>نمایش بده: </span>
           <span className="text-[#1758BA]">{returnText.content}</span>
         </span>
       )}

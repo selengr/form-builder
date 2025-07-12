@@ -2,18 +2,21 @@ import * as z from "zod"
 
 const SubConditionSchema = z.object({
   logicalOperator: z.string().optional(),
-  questionType: z.string().min(1, { message: "اين فيلد الزامي است" }),
-  operatorType: z.string().min(1, { message: "اين فيلد الزامي است" }),
-  conditionType: z.string().min(1, { message: "اين فيلد الزامي است" }),
+  questionType: z.string(),
+  operatorType: z.string(),
+  conditionType: z.string(),
   value: z.union([
-    z.string().min(1, { message: "اين فيلد الزامي است" }),
-    z.array(z.string().min(1, { message: "اين فيلد الزامي است" })),
+    z.string(),
+    z.array(z.string()),
   ]),
   id: z.number(),
 })
 
 const ConditionSchema = z.object({
-  subConditions: z.array(SubConditionSchema),
+  subConditions: z.union([
+    z.array(SubConditionSchema), 
+    z.literal("false"),
+  ]),
   returnText: z.string().min(1, { message: "اين فيلد الزامي است" }),
   displayIf: z.boolean().default(false),
   id: z.number().optional(),

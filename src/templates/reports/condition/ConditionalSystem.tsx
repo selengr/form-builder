@@ -50,15 +50,12 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
   })
 
   const handleReturnTextChange = useCallback((data: any, index: number) => {
+
     methods.setValue(`conditions.${index}.returnText`, JSON.stringify(data))
     if (validationErrors.length > 0) {
       setValidationErrors([])
     }
   }, [validationErrors.length],)
-
-  const handleElseReturnTextChange = (data: any, index: number) => {
-    methods.setValue(`conditions.${index}.elseReturnText`, JSON.stringify(data))
-  }
 
 
   const onSubmit = (input: TConditionFormData) => {
@@ -66,10 +63,12 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
 
     const transformInputToOutput = (input: TConditionFormData): any => {
       return input.conditions.map((condition: TConditionData, index) => {
-        const { subConditions, returnText, elseReturnText } = condition;
+        const { subConditions, returnText,  displayIf  } = condition;
 
-        const conditionFormula = subConditions
-          .map((subCondition: TSubConditionData) => {
+        const conditionSubConditions = displayIf ? subConditions : "false";
+
+        const conditionFormula = displayIf ? Array.isArray(subConditions) &&
+         subConditions.map((subCondition: TSubConditionData) => {
             const conditionType = subCondition.conditionType?.split("@")[0];
             const questionType = subCondition.questionType?.split("@")[0];
             const operatorType = subCondition.operatorType?.split("@")[0];
@@ -104,31 +103,30 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
 
             return logicalOperator ? ` ${logicalOperator} ${baseCondition}` : baseCondition;
           })
-          .join("");
+          .join("") : "true";
 
-        let isValidElse = true
-        const returnTextList = JSON.parse(returnText)
-        if (!!elseReturnText) {
-          const elseReturnTextList = JSON.parse(elseReturnText)
-          const unselectedElseDropdowns: IDropdownItem[] = elseReturnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",)
-          const isValidElse = validateAndHandleErrors(unselectedElseDropdowns)
-        }
-        const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",)
-
-        const isValid = validateAndHandleErrors(unselectedDropdowns)
-        if (!isValid) {
-          flag = false
-          return toast.error("لطفا تمامي فيلدهاي خالي را انتخاب كنيد");
-        } else {
-          flag = true
-        }
+    
+        // const returnTextList = JSON.parse(returnText)
+        // const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",)
+        // const isValid = validateAndHandleErrors(unselectedDropdowns)
+       
+        // if (!isValid) {
+        //   flag = false
+        //   return toast.error("لطفا تمامي فيلدهاي خالي را انتخاب كنيد");
+        // } else {
+        //   flag = true
+        // }
 
         return {
           formBuilderId: Number(id),
           conditionFormula: conditionFormula,
-          elseReturnText,
           returnText,
-          frontConditionData: JSON.stringify(input.conditions[index]), ...(isEdit && { id: Number(condition.id) })
+            frontConditionData: JSON.stringify({
+            ...input.conditions[index],
+            subConditions: conditionSubConditions, 
+          }),
+          // frontConditionData: JSON.stringify(input.conditions[index]), 
+          ...(isEdit && { id: Number(condition.id) })
         };
       });
     };
@@ -143,6 +141,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
       },
     });
   };
+
 
   return (<Box
     sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", direction: "ltr" }}
@@ -181,7 +180,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
             <Stack sx={{display:"flex",flexDirection : "row" , alignItems: "center"}}>
               <RHFSwitch
                 label=""
-                name="REQUIRED.value"
+                name={`conditions.${index}.displayIf`}
                 labelPlacement="start"
                 sx={{ mb: 1, mx: 0, width: 1, justifyContent: "space-between" }}
               />
@@ -189,7 +188,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
             </Stack>
           </Box>
 
-          {condition.subConditions.map((subCondition, subIndex) => (<SubCondition
+          {methods.watch(`conditions.${index}.displayIf`) && Array.isArray(condition.subConditions) && condition.subConditions.map((subCondition, subIndex) => (<SubCondition
             key={subCondition.id}
             index={index}
             subIndex={subIndex}

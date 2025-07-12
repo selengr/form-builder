@@ -53,11 +53,11 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
   };
 
   const returnText = safeJsonParse<{ content: string }>(parseCondition?.returnText);
-  const elseReturnText = safeJsonParse<{ content: string }>(parseCondition?.elseReturnText);
+  // const elseReturnText = safeJsonParse<{ content: string }>(parseCondition?.elseReturnText);
 
   return (
     <div className="flex flex-col">
-      {parseCondition?.subConditions?.map((item: TSubConditionData) => {
+      {Array.isArray(parseCondition?.subConditions) && parseCondition?.subConditions?.map((item: TSubConditionData) => {
         const logicalOperator = item.logicalOperator ? logicalOperatorMap[item.logicalOperator] ?? "اگر" : "اگر";
         const conditionType = extractAfter(item.conditionType);
         const questionType = extractAfter(item.questionType);
@@ -79,13 +79,13 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
           <span className="text-[#1758BA]">{returnText.content}</span>
         </span>
       )}
-
+{/* 
       {elseReturnText?.content && (
         <span className="text-[#161616] text-sm">
           <span>در غیر اینصورت نمایش بده: </span>
           <span className="text-[#1758BA]">{elseReturnText.content}</span>
         </span>
-      )}
+      )} */}
     </div>
   );
 };

@@ -17,7 +17,7 @@ export const createNewSubCondition = () => ({
   
   export const createNewCondition = () => ({
     subConditions: [createNewSubCondition()],
-    displayIf: false,
+    displayIf: true,
     returnText: "",
   })
 
@@ -61,7 +61,7 @@ export const createNewSubCondition = () => ({
         id : conditionJson.id,
         returnText: returnText,
         displayIf: displayIf,
-        subConditions : SubConditionsData
+        subConditions : displayIf ? SubConditionsData : subConditions
       };
    
   };
@@ -120,13 +120,13 @@ export const useConditionalForm = (condition: IGetCondition  | undefined) => {
 
     updateCondition(index, {
       ...clonedCondition,
-      subConditions: newSubConditions,
+      subConditions: newSubConditions as any,
     })
   }
 
   const handleRemoveSubCondition = (conditionIndex: number, subConditionIndex: number) => {
     const updatedCondition = { ...conditions[conditionIndex] }
-    updatedCondition.subConditions.splice(subConditionIndex, 1)
+    Array.isArray(updatedCondition.subConditions) && updatedCondition.subConditions?.splice(subConditionIndex, 1)
     updateCondition(conditionIndex, updatedCondition)
   }
 

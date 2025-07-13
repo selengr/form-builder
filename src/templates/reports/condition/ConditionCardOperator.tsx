@@ -15,24 +15,24 @@ const safeJsonParse = <T,>(input?: string | null): T | null => {
   }
 };
 
-const extractAfter = (text?: string, delimiter = "@") =>
-  text?.split(delimiter)?.[1] ?? "";
+  const extractAfter = (text?: string, delimiter = "@") =>
+    text?.split(delimiter)?.[1] ?? "";
 
-const extractBefore = (text?: string, delimiter = "@") =>
-  text?.split(delimiter)?.[0] ?? "";
+  const extractBefore = (text?: string, delimiter = "@") =>
+    text?.split(delimiter)?.[0] ?? "";
 
-export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ condition }) => {
-  const parseCondition = safeJsonParse<TConditionData>(condition?.frontConditionData);
+  export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ condition }) => {
+    const parseCondition = safeJsonParse<TConditionData>(condition?.frontConditionData);
 
-  const formatValue = (item: TSubConditionData) => {
-    const operatorType = extractBefore(item.operatorType);
-    const questionType = extractBefore(item.questionType, "*");
+    const formatValue = (item: TSubConditionData) => {
+      const operatorType = extractBefore(item.operatorType);
+      const questionType = extractBefore(item.questionType, "*");
 
-    if (operatorType === "OPTION" && questionType === "MULTIPLE_CHOICE_MULTI_SELECT") {
-      return Array.isArray(item.value)
-        ? item.value.map((val: string) => extractAfter(val)).join(" , ")
-        : "";
-    }
+      if (operatorType === "OPTION" && questionType === "MULTIPLE_CHOICE_MULTI_SELECT") {
+        return Array.isArray(item.value)
+          ? item.value.map((val: string) => extractAfter(val)).join(" , ")
+          : "";
+      }
 
     const operatorMapping: Record<string, string[]> = {
       OPTION: ["MULTIPLE_CHOICE", "TEXT_FIELD_NUMBER"],
@@ -56,7 +56,7 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
   // const elseReturnText = safeJsonParse<{ content: string }>(parseCondition?.elseReturnText);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col items-start justify-start">
       {Array.isArray(parseCondition?.subConditions) && parseCondition?.subConditions?.map((item: TSubConditionData) => {
         const logicalOperator = item.logicalOperator ? logicalOperatorMap[item.logicalOperator] ?? "اگر" : "اگر";
         const conditionType = extractAfter(item.conditionType);

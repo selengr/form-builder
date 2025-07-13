@@ -28,7 +28,7 @@ export const createNewSubCondition = () => ({
       const  conditions = JSON.parse(frontConditionData);
       const { subConditions, returnText, displayIf   } = conditions
 
-      const SubConditionsData : TSubConditionData[] = subConditions
+      const SubConditionsData : TSubConditionData[] | boolean = Array.isArray(subConditions) && subConditions
         ?.map((subCondition : TSubConditionData) => {
           const id = subCondition.id
           const conditionType = subCondition.conditionType;

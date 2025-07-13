@@ -14,7 +14,7 @@ import { formatContainText } from "@/lib/formatContainText"
 import { TConditionData, type TConditionFormData, TSubConditionData } from "@/lib/CreateSoloReportSchema"
 // hooks
 import { IConditionalSystemProps, IPostCondition } from "@/types/conditionReportSolo"
-import { useConditionalForm } from "@/app/reports/create-solo/[id]/_hooks/useConditionalForm"
+import { createNewSubCondition, useConditionalForm } from "@/app/reports/create-solo/[id]/_hooks/useConditionalForm"
 import { useGetQacWithOutFilter } from "@/app/reports/create-solo/[id]/_hooks/useGetQacWithOutFilter"
 import { useGetOnlyAllQuestions } from "@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllQuestions"
 import { useGetOnlyAllCalculation } from "@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllCalculation"
@@ -143,6 +143,16 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
   };
 
 
+  const handleConditionDisplay = (index : number) =>{
+    if(methods.getValues(`conditions.${index}.displayIf`)){
+      // methods.setValue(`conditions.${index}.subConditions`, "false")
+      // console.log("0111111111",conditions[0].subConditions)
+    }else {
+      // console.log(handleAddCondition())
+      // methods.setValue(`conditions.${index}.subConditions`,  [handleAddSubCondition(0,0)])
+    }
+  }
+
   return (<Box
     sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", direction: "ltr" }}
   >
@@ -183,12 +193,14 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
                 name={`conditions.${index}.displayIf`}
                 labelPlacement="start"
                 sx={{ mb: 1, mx: 0, width: 1, justifyContent: "space-between" }}
+                onClick={()=>handleConditionDisplay(index)}
               />
               <Typography sx={{ color: "#393939", fontSize: "14px", ml: 1 }}>نمایش بده به شرطی که</Typography>
             </Stack>
           </Box>
 
-          {methods.watch(`conditions.${index}.displayIf`) && Array.isArray(condition.subConditions) && condition.subConditions.map((subCondition, subIndex) => (<SubCondition
+ {/* {methods.watch(`conditions.${index}.displayIf`) && Array.isArray(condition. */}
+          {methods.watch(`conditions.${index}.subConditions`) === "false" && Array.isArray(condition.subConditions) && condition.subConditions.map((subCondition, subIndex) => (<SubCondition
             key={subCondition.id}
             index={index}
             subIndex={subIndex}

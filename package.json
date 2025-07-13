@@ -1,6 +1,6 @@
 {
   "name": "psya",
-  "version": "4.4.18",
+  "version": "4.4.22",
   "private": true,
   "scripts": {
     "dev": "next dev -p 80 --turbo",
@@ -34,6 +34,7 @@
     "@uppy/tus": "^4.2.2",
     "axios": "^1.10.0",
     "framer-motion": "^11.18.2",
+    "mime": "^4.0.7",
     "moment-jalaali": "^0.10.4",
     "next": "^14.2.30",
     "next-auth": "^4.24.11",

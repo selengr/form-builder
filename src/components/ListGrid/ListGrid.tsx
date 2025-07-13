@@ -154,7 +154,7 @@ const ListGrid: React.FC<Props> = ({
   const renderSearchAndFilter = useCallback(() => (<Grid
     display="flex"
     sx={{
-      width: "100%", maxWidth: "550px", justifyContent: "center", mt: 1, gap: 2,
+      width: "100%", maxWidth: "560px", justifyContent: "center", mt: 1, gap: 2,
     }}
   >
     <Grid
@@ -245,7 +245,7 @@ const ListGrid: React.FC<Props> = ({
   </Grid>)), [filterComponent]);
 
 
-  return (<>
+  return (<div className={"p-2 h-screen w-full flex flex-col"}>
       {isFetching && !isFetchingNextPage ?
 
         (<Box sx={{width: "100%"}}>
@@ -307,7 +307,7 @@ const ListGrid: React.FC<Props> = ({
           </Grid>
           {renderDesktopFilter()}
         </Grid>)}
-    </>);
+    </div>);
 };
 
 export default ListGrid;

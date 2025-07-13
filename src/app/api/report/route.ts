@@ -7,9 +7,7 @@ import {AxiosError} from "axios";
 
 export async function GET() {
   try {
-    const {data} = await AxiosApi.get(
-      '/user/report-destroy-form/response-destroy'
-    );
+    const {data} = await AxiosApi.get('/user/report-destroy-form/response-destroy');
     return NextResponse.json(data);
   } catch (error: any) {
     return NextResponse.json({error: error.message}, {status: 500});

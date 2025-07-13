@@ -39,11 +39,23 @@ const errorMessages: Record<HttpStatus, string> = {
 };
 
 export const AxiosApi = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_BASE_URL_PSYA}/psya`, timeout: 10000, headers: {
+  baseURL: `${process.env.NEXT_PUBLIC_BASE_URL_PSYA}/psya`,
+  timeout: 10000,
+  headers: {
     "Content-Type": "application/json",
     "Access-Control-Allow-Methods": "GET, POST, DELETE, PUT",
     "content-encoding": "gzip, br, deflate, zstd",
-  }, withCredentials: true, decompress: true,
+    "X-Frame-Options": "DENY",
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "no-referrer",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+    "Cross-Origin-Embedder-Policy": "require-corp",
+    "Cross-Origin-Opener-Policy": "same-origin",
+    "Cross-Origin-Resource-Policy": "same-origin",
+    "Content-Security-Policy": "default-src 'self'; img-src 'self' data:; script-src 'self' 'unsafe-inline';"
+  },
+  withCredentials: true,
+  decompress: true,
 });
 
 let cachedSession: any = null;
@@ -60,17 +72,24 @@ async function getAccessToken(): Promise<string | null> {
   }
 }
 
-AxiosApi.interceptors.request.use(async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
-  const token = await getAccessToken();
+AxiosApi.interceptors.request.use(
+  async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
+    const token = await getAccessToken();
 
-  if (token) {
-    const headers: AxiosHeaders = new AxiosHeaders(config.headers);
-    headers.set("Authorization", `Bearer ${token}`);
+    const headers = new AxiosHeaders(config.headers);
+
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+
+    if (process.env.NEXT_PUBLIC_SECRET) {
+      headers.set("x-secret-token", process.env.NEXT_PUBLIC_SECRET);
+    }
+
     config.headers = headers;
+    return config;
   }
-
-  return config;
-});
+);
 
 AxiosApi.interceptors.response.use((response) => response, async (error: AxiosError): Promise<any> => {
   if (axios.isCancel(error)) return Promise.reject(error);

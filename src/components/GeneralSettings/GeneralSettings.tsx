@@ -71,6 +71,7 @@ export default function GeneralSettings({
       const response = await fetch('/api/publish/general', {
         method: 'POST', headers: {
           'Content-Type': 'application/json',
+          "x-secret-token": process.env.NEXT_PUBLIC_SECRET!,
         }, body: JSON.stringify({
           formId: formId,
           publicationMainPageMethod: values.publicationMainPageMethod,
@@ -88,7 +89,7 @@ export default function GeneralSettings({
             }
           });
         } else if (data.error) {
-          alert(data.error);
+          // alert(data.error);
         }
         return;
       }
@@ -96,7 +97,7 @@ export default function GeneralSettings({
       handleOpen();
       reset();
     } catch (error) {
-      alert("خطای ناشناخته در ارسال اطلاعات.");
+      // alert("خطای ناشناخته در ارسال اطلاعات.");
     }
   }, [formId, handleOpen, reset, setError]);
 

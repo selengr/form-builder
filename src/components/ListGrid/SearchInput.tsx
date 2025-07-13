@@ -1,36 +1,31 @@
-"use client";
+'use client';
 
 import { useState } from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
-import Paper from "@mui/material/Paper";
-import InputBase from "@mui/material/InputBase";
-import IconButton from "@mui/material/IconButton";
+import SearchIcon from "@/../public/images/home-page/search.svg";
 
 export default function SearchInput() {
   const searchParams = useSearchParams();
-  const search = searchParams.get("query");
-  const [value, setValue] = useState(search || "");
   const pathname = usePathname();
-  const { push } = useRouter();
+  const router = useRouter();
 
-  function handleSearch(term: any) {
-    setValue(term);
-  }
+  const searchQuery = searchParams.get("query") || "";
+  const [value, setValue] = useState(searchQuery);
 
-  function handleClick() {
-    const params = new URLSearchParams(searchParams);
+  const handleClick = () => {
+    const params = new URLSearchParams(searchParams.toString());
 
-    if (value) {
+    if (value.trim()) {
       params.set("query", value);
     } else {
       params.delete("query");
     }
 
-    push(`${pathname}?${params.toString()}`);
-  }
+    router.push(`${pathname}?${params.toString()}`);
+  };
 
-  const handleKeyDown = (event: any) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       event.preventDefault();
       handleClick();
@@ -38,46 +33,23 @@ export default function SearchInput() {
   };
 
   return (
-    <Paper
-      component="form"
-      sx={{
-        boxShadow: "unset",
-        border: "1px solid #C9C9C9 ",
-        p: "2px 4px",
-        display: "flex",
-        alignItems: "center",
-        width: "100%",
-        borderRadius: "13px",
-      }}
-    >
-      <InputBase
-        style={{}}
-        sx={{ ml: 1, flex: 1, textAlign: "end" }}
-        placeholder="جستجو"
-        inputProps={{ "aria-label": "جستجو" }}
-        defaultValue={searchParams.get("query")?.toString()}
+    <div className="flex items-center w-full border border-[#C9C9C9] rounded-xl px-3 py-1 gap-2 bg-white">
+      <input
+        type="text"
+        className="flex-1 bg-transparent focus:outline-none text-right placeholder:text-gray-400 text-sm"
+        placeholder="کاوش"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
         onKeyDown={handleKeyDown}
-        onChange={(e) => {
-          e.preventDefault();
-          handleSearch(e.target.value);
-        }}
       />
-      <IconButton
-        type="button"
-        sx={{ p: "8px" }}
-        aria-label="search"
+      <button
         onClick={handleClick}
+        type="button"
+        className="p-2.5 hover:bg-neutral-100 rounded-full transition"
+        aria-label="کاوش"
       >
-        <Image
-          src="./images/home-page/search.svg"
-          width={23}
-          height={23}
-          alt="Add"
-          style={{
-            cursor: "pointer",
-          }}
-        />
-      </IconButton>
-    </Paper>
+        <Image src={SearchIcon} alt="search"  draggable={false}  priority/>
+      </button>
+    </div>
   );
 }

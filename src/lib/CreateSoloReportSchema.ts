@@ -12,11 +12,32 @@ const SubConditionSchema = z.object({
   id: z.number(),
 })
 
+const ConditionalSubConditionSchema = z.union([
+  z.array(SubConditionSchema),
+  z.literal("false"),
+  z.array(z.any()),
+])
+
 const ConditionSchema = z.object({
-  subConditions: z.array(SubConditionSchema),
+  subConditions: ConditionalSubConditionSchema,
   returnText: z.string().min(1, { message: "اين فيلد الزامي است" }),
-  elseReturnText: z.string().optional().default(""),
+  displayIf: z.boolean().default(false),
   id: z.number().optional(),
+}).superRefine((data, ctx) => {
+  if (data.displayIf && Array.isArray(data.subConditions)) {
+    data.subConditions.forEach((subCondition, index) => {
+      const result = SubConditionSchema.safeParse(subCondition)
+      if (!result.success) {
+        result.error.issues.forEach((issue) => {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: issue.message,
+            path: ["subConditions", index, ...issue.path],
+          })
+        })
+      }
+    })
+  }
 })
 
 export const ConditionFormSchema = z.object({

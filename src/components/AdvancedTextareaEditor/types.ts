@@ -20,7 +20,7 @@ export interface IInitialData {
   
   export interface IAdvancedTextareaEditorProps {
     label : string;
-    methods : any;
+    hasError? : boolean;
     qacWithOutFilter : any
     initialData?: IInitialData;
     onDataChange?: (data: any) => void

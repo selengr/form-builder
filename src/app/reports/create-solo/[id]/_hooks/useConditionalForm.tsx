@@ -17,7 +17,7 @@ export const createNewSubCondition = () => ({
   
   export const createNewCondition = () => ({
     subConditions: [createNewSubCondition()],
-    elseReturnText: "",
+    displayIf: true,
     returnText: "",
   })
 
@@ -26,9 +26,9 @@ export const createNewSubCondition = () => ({
    
       const { frontConditionData } = conditionJson;
       const  conditions = JSON.parse(frontConditionData);
-      const { subConditions, returnText, elseReturnText   } = conditions
+      const { subConditions, returnText, displayIf   } = conditions
 
-      const SubConditionsData : TSubConditionData[] = subConditions
+      const SubConditionsData : TSubConditionData[] | boolean = Array.isArray(subConditions) && subConditions
         ?.map((subCondition : TSubConditionData) => {
           const id = subCondition.id
           const conditionType = subCondition.conditionType;
@@ -60,8 +60,8 @@ export const createNewSubCondition = () => ({
       return {
         id : conditionJson.id,
         returnText: returnText,
-        elseReturnText: elseReturnText,
-        subConditions : SubConditionsData
+        displayIf: displayIf,
+        subConditions : displayIf ? SubConditionsData : subConditions
       };
    
   };
@@ -120,13 +120,15 @@ export const useConditionalForm = (condition: IGetCondition  | undefined) => {
 
     updateCondition(index, {
       ...clonedCondition,
-      subConditions: newSubConditions,
+      subConditions: newSubConditions as any,
     })
   }
 
   const handleRemoveSubCondition = (conditionIndex: number, subConditionIndex: number) => {
     const updatedCondition = { ...conditions[conditionIndex] }
-    updatedCondition.subConditions.splice(subConditionIndex, 1)
+    // @typescript-eslint/no-unused-expressions
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    Array.isArray(updatedCondition.subConditions) && updatedCondition.subConditions?.splice(subConditionIndex, 1)
     updateCondition(conditionIndex, updatedCondition)
   }
 

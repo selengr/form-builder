@@ -34,12 +34,8 @@ export function useFormValidation({ setValidationErrors }: UseFormValidationProp
     [setValidationErrors],
   )
 
-  const showSuccessMessage = useCallback(() => {
-    alert("فرم با موفقیت ارسال شد!")
-  }, [])
 
   return {
-    validateAndHandleErrors,
-    showSuccessMessage,
+    validateAndHandleErrors
   }
 }

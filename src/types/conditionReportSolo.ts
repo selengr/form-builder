@@ -56,7 +56,7 @@ import { Dispatch, SetStateAction } from "react";
       conditionFormula: string; 
       formBuilderId: number;    
       returnText: string;  
-      elseReturnText: string; 
+      displayIf: boolean;  
       frontConditionData: string; 
       id? : number
    }
@@ -67,7 +67,7 @@ import { Dispatch, SetStateAction } from "react";
     conditionFormula: string; 
     formBuilderId: number;    
     returnText: string;  
-    elseReturnText: string; 
+    displayIf: boolean; 
     frontConditionData: string; 
 }
 

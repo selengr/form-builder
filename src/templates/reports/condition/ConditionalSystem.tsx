@@ -144,7 +144,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
 
 
   const handleConditionDisplay = (index : number) =>{
-   if(!methods.getValues(`conditions.${index}.displayIf`)){
+   if(!methods.watch(`conditions.${index}.displayIf`)){
 
         methods.setValue(`conditions.${index}.displayIf`, true)
         methods.setValue(`conditions.${index}.subConditions`, "false")
@@ -161,7 +161,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
       defaultValue: false,
     })
 
-    return displayIf === false ? <>{children}</> : null
+    return displayIf === true ? <>{children}</> : null
   }
 
   return (<Box

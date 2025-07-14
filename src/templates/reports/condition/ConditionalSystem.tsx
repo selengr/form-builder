@@ -1,7 +1,7 @@
 "use client"
 import { toast } from 'sonner';
 import { useCallback, useState } from "react"
-import { FormProvider } from "react-hook-form"
+import { FormProvider, useWatch } from "react-hook-form"
 import { useParams, useRouter } from "next/navigation"
 import { Box, Button, Stack, Typography } from "@mui/material"
 
@@ -146,11 +146,23 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
   const handleConditionDisplay = (index : number) =>{
     if(methods.getValues(`conditions.${index}.displayIf`)){
       // methods.setValue(`conditions.${index}.subConditions`, "false")
+      // methods.setValue(`conditions.${index}.displayIf`, true)
       // console.log("0111111111",conditions[0].subConditions)
     }else {
       // console.log(handleAddCondition())
       // methods.setValue(`conditions.${index}.subConditions`,  [handleAddSubCondition(0,0)])
+      //     methods.setValue(`conditions.${index}.displayIf`, false)
     }
+  }
+
+  const ConditionDisplayChecker = ({ index, children }: { index: number; children: React.ReactNode }) => {
+    const displayIf = useWatch({
+      control: methods.control,
+      name: `conditions.${index}.displayIf`,
+      defaultValue: false,
+    })
+
+    return displayIf === false ? <>{children}</> : null
   }
 
   return (<Box
@@ -199,8 +211,10 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
             </Stack>
           </Box>
 
- {/* {methods.watch(`conditions.${index}.displayIf`) && Array.isArray(condition. */}
-          {methods.watch(`conditions.${index}.subConditions`) === "false" && Array.isArray(condition.subConditions) && condition.subConditions.map((subCondition, subIndex) => (<SubCondition
+          <ConditionDisplayChecker index={index}>
+                {Array.isArray(condition.subConditions) &&
+                  condition.subConditions.map((subCondition, subIndex) => (
+            <SubCondition
             key={subCondition.id}
             index={index}
             subIndex={subIndex}
@@ -215,6 +229,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
             onlyAllQuestions={onlyAllQuestions}
             onlyAllDateOptions={onlyAllDateOptions}
           />))}
+           </ConditionDisplayChecker>
           <Box
             sx={{
               ml: { xs: 0, md: 2 },

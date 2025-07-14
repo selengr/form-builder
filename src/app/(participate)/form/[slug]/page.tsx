@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Button, IconButton, Menu, MenuItem, CircularProgress, Dialog, DialogTitle, DialogContent, TextField, DialogActions } from "@mui/material";
+import React, { useState } from "react";
+import { Button, IconButton } from "@mui/material";
 import ResponsiveContainer from "@/templates/form/ContentWrapper";
 import AnimatedBox from "@/templates/form/AnimatedBox";
 import FormLimitation from "@/templates/form/FormLimitation";
@@ -12,19 +12,12 @@ import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import finalStep from "@/../public/images/home-page/finalStep.svg";
 import errorStep from "@/../public/images/home-page/errorStep.svg";
 import Image from "next/image";
-import { CgDanger } from "react-icons/cg";
-import { toast } from "sonner";
-import { fetchUserInfo } from "@/lib/auth";
+import ReportDialog from "@/components/ReportDialog/ReportDialog";
+import BugIcon from "@/../public/images/home-page/menu/bugIcon.svg";
 
 export default function ParticipateFormPage({ params }: { params: { slug: string } }) {
   const [limitationStepPassed, setLimitationStepPassed] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [reportData, setReportData] = useState<any[]>([]);
-  const [loadingReportOptions, setLoadingReportOptions] = useState(false);
-  const [reportError, setReportError] = useState<string | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedReportKey, setSelectedReportKey] = useState<string | null>(null);
-  const [reportText, setReportText] = useState("");
+  const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
 
   const formId = params.slug;
 
@@ -47,79 +40,12 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
     hasError
   } = useParticipateForm();
 
-  const handleMenuOpen = async (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-    setLoadingReportOptions(true);
-    setReportError(null);
-
-    try {
-      const res = await fetch("/api/report");
-      if (!res.ok) throw new Error("Failed to fetch report options");
-
-      const json = await res.json();
-      const list = json.responseModelList;
-
-      if (Array.isArray(list)) {
-        setReportData(list);
-      } else {
-        throw new Error("Invalid response format");
-      }
-    } catch (err: any) {
-      setReportError(err.message || "خطا در دریافت داده");
-      setReportData([]);
-    } finally {
-      setLoadingReportOptions(false);
-    }
+  const handleOpenReportDialog = () => {
+    setIsReportDialogOpen(true);
   };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleReport = (key: string) => {
-    handleMenuClose();
-    setSelectedReportKey(key);
-    setReportText("");
-    setDialogOpen(true);
-  };
-
-  const handleDialogClose = () => {
-    setDialogOpen(false);
-    setSelectedReportKey(null);
-    setReportText("");
-  };
-
-  const handleDialogSubmit = async () => {
-    if (!selectedReportKey || !reportText.trim()) return;
-
-    try {
-      const { userInfo } = await fetchUserInfo();
-      const username = userInfo?.user?.username || "";
-
-      const res = await fetch("/api/report", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          formId: formId,
-          description: reportText.trim(),
-          username,
-          responseForDestroyerReport: selectedReportKey,
-        }),
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        toast.error(errorData.error || "خطا در ارسال گزارش");
-      } else {
-        toast.success("گزارش با موفقیت ارسال شد");
-      }
-    } catch (error) {
-      toast.error("خطا در ارسال گزارش");
-    }
-
-    handleDialogClose();
+  const handleCloseReportDialog = () => {
+    setIsReportDialogOpen(false);
   };
 
   if (firstLoading) {
@@ -268,35 +194,14 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
           </IconButton>
           <p className="text-base font-bold text-[#161616] text-center mx-7">{formName}</p>
 
-          <IconButton
-            sx={{ position: "absolute", right: "8px" }}
-            onClick={handleMenuOpen}
+          <Button onClick={handleOpenReportDialog} size="medium" className={"rounded-full"}
+                  endIcon={<Image alt={"report"} src={BugIcon} height={24} width={24}/>}
           >
-            <CgDanger />
-          </IconButton>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-            transformOrigin={{ vertical: "top", horizontal: "left" }}
-          >
-            {loadingReportOptions ? (
-              <MenuItem disabled>
-                <CircularProgress size={20} />
-              </MenuItem>
-            ) : reportError ? (
-              <MenuItem disabled className="text-red-500">{reportError}</MenuItem>
-            ) : Array.isArray(reportData) && reportData.length > 0 ? (
-              reportData.map((item: any, i: number) => (
-                <MenuItem key={i} onClick={() => handleReport(item.value)}>
-                  {item.key.split(".").pop()}
-                </MenuItem>
-              ))
-            ) : (
-              <MenuItem disabled>داده‌ای یافت نشد</MenuItem>
-            )}
-          </Menu>
+          <span className={"text-xs"}>
+                      گزارش
+
+          </span>
+          </Button>
         </div>
 
         <div className="flex-1 flex items-center justify-center overflow-y-auto px-4">
@@ -324,55 +229,11 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
         </div>
       </div>
 
-      <Dialog open={dialogOpen} onClose={handleDialogClose} fullWidth
-              dir="rtl"
-              maxWidth="xs"
-              sx={{
-                overflow: "hidden", scrollbarWidth: "none", "& .MuiPaper-root": {
-                  margin: "10px", borderRadius: "20px",
-                }, "& .MuiDialog-container": {
-                  backdropFilter: "blur(4px)", backgroundColor: "hsl(0deg 0% 100% / 50%)",
-                },
-              }}>
-        <DialogTitle sx={{ pb: 2, fontWeight: "700", textAlign: "center" }}> توضیح گزارش </DialogTitle>
-        <DialogContent>
-          <TextField
-            multiline
-            fullWidth
-            rows={4}
-            autoFocus
-            placeholder="دلیل گزارش خود را بنویسد..."
-            value={reportText}
-            onChange={(e) => setReportText(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions
-          sx={{
-            display: "flex", gap: 3, width: "100%", marginTop: 1, marginBottom: 2, paddingX: "30px",
-          }}>
-          <Button onClick={handleDialogSubmit} fullWidth variant="contained" disableElevation color="primary"
-                  sx={{
-                    marginX: "0 !important",
-                    height: "52px",
-                    fontWeight: "600",
-                    fontSize: "15px",
-                    borderRadius: "12px",
-                    borderColor: "#1758BA",
-                  }}
-          >تایید</Button>
-          <Button onClick={handleDialogClose} fullWidth color="inherit"
-                  variant="outlined"
-                  sx={{
-                    marginX: "0 !important",
-                    height: "52px",
-                    fontWeight: "600",
-                    fontSize: "15px",
-                    borderRadius: "12px",
-                    color: "#1758BA",
-                    borderColor: "#1758BA",
-                  }}>انصراف</Button>
-        </DialogActions>
-      </Dialog>
+      <ReportDialog
+        open={isReportDialogOpen}
+        onClose={handleCloseReportDialog}
+        formId={formId}
+      />
     </div>
   );
 }

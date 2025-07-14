@@ -63,12 +63,12 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
 
     const transformInputToOutput = (input: TConditionFormData): any => {
       return input.conditions.map((condition: TConditionData, index) => {
-        const { subConditions, returnText,  displayIf  } = condition;
+        const { subConditions, returnText, displayIf } = condition;
 
         const conditionSubConditions = displayIf ? subConditions : "false";
 
         const conditionFormula = displayIf ? Array.isArray(subConditions) &&
-         subConditions.map((subCondition: TSubConditionData) => {
+          subConditions.map((subCondition: TSubConditionData) => {
             const conditionType = subCondition.conditionType?.split("@")[0];
             const questionType = subCondition.questionType?.split("@")[0];
             const operatorType = subCondition.operatorType?.split("@")[0];
@@ -103,13 +103,13 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
 
             return logicalOperator ? ` ${logicalOperator} ${baseCondition}` : baseCondition;
           })
-          .join("") : "true";
+            .join("") : "true";
 
-    
+
         // const returnTextList = JSON.parse(returnText)
         // const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",)
         // const isValid = validateAndHandleErrors(unselectedDropdowns)
-       
+
         // if (!isValid) {
         //   flag = false
         //   return toast.error("لطفا تمامي فيلدهاي خالي را انتخاب كنيد");
@@ -121,9 +121,9 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
           formBuilderId: Number(id),
           conditionFormula: conditionFormula,
           returnText,
-            frontConditionData: JSON.stringify({
+          frontConditionData: JSON.stringify({
             ...input.conditions[index],
-            subConditions: conditionSubConditions, 
+            subConditions: conditionSubConditions,
           }),
           // frontConditionData: JSON.stringify(input.conditions[index]), 
           ...(isEdit && { id: Number(condition.id) })
@@ -143,18 +143,18 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
   };
 
 
-  const handleConditionDisplay = (index : number) =>{
-   if(methods.getValues(`conditions.${index}.displayIf`)){
+  const handleConditionDisplay = (index: number) => {
+    if (methods.getValues(`conditions.${index}.displayIf`)) {
 
-        methods.setValue(`conditions.${index}.displayIf`, false)
-        methods.setValue(`conditions.${index}.subConditions`, "false")
-      }else {
-        methods.setValue(`conditions.${index}.displayIf`, true)
-        methods.setValue(`conditions.${index}.subConditions`, [createNewSubCondition()])
+      methods.setValue(`conditions.${index}.displayIf`, false)
+      methods.setValue(`conditions.${index}.subConditions`, "false")
+    } else {
+      methods.setValue(`conditions.${index}.displayIf`, true)
+      methods.setValue(`conditions.${index}.subConditions`, [createNewSubCondition()])
+    }
   }
-}
 
-  const ConditionDisplayChecker = ({ index }: { index: number;}) => {
+  const ConditionDisplayChecker = ({ index }: { index: number; }) => {
     const displayIf = useWatch({
       control: methods.control,
       name: `conditions.${index}.displayIf`,
@@ -164,12 +164,12 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
       control: methods.control,
       name: `conditions.${index}.subConditions`
     })
-    
-    return displayIf === true ? <>
-    
-    {Array.isArray(subConditions) &&
-                  subConditions.map((subCondition, subIndex) => (
-            <SubCondition
+
+    return displayIf ? <>
+
+      {Array.isArray(subConditions) &&
+        subConditions.map((subCondition, subIndex) => (
+          <SubCondition
             key={subCondition.id}
             index={index}
             subIndex={subIndex}
@@ -184,13 +184,10 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
             onlyAllQuestions={onlyAllQuestions}
             onlyAllDateOptions={onlyAllDateOptions}
           />
-          ))}
-    
+        ))}
+
     </> : null
   }
-
-console.log('======displayIf', methods.watch(`conditions.${0}.displayIf`))  
-console.log('======subConditions', methods.watch(`conditions.${0}.subConditions`))  
 
   return (<Box
     sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", direction: "ltr" }}
@@ -226,13 +223,13 @@ console.log('======subConditions', methods.watch(`conditions.${0}.subConditions`
               hasError={!!methods.formState.errors.conditions?.[0]?.returnText}
             />
 
-            <Stack sx={{display:"flex",flexDirection : "row" , alignItems: "center"}}>
+            <Stack sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
               <RHFSwitch
                 label=""
                 name={`conditions.${index}.displayIf`}
                 labelPlacement="start"
                 sx={{ mb: 1, mx: 0, width: 1, justifyContent: "space-between" }}
-                onClick={()=>handleConditionDisplay(index)}
+                onClick={() => handleConditionDisplay(index)}
               />
               <Typography sx={{ color: "#393939", fontSize: "14px", ml: 1 }}>نمایش بده به شرطی که</Typography>
             </Stack>

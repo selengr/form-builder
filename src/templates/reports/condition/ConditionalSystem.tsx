@@ -144,25 +144,53 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
 
 
   const handleConditionDisplay = (index : number) =>{
-   if(!methods.watch(`conditions.${index}.displayIf`)){
+   if(methods.getValues(`conditions.${index}.displayIf`)){
 
-        methods.setValue(`conditions.${index}.displayIf`, true)
+        methods.setValue(`conditions.${index}.displayIf`, false)
         methods.setValue(`conditions.${index}.subConditions`, "false")
       }else {
-        methods.setValue(`conditions.${index}.displayIf`, false)
+        methods.setValue(`conditions.${index}.displayIf`, true)
         methods.setValue(`conditions.${index}.subConditions`, [createNewSubCondition()])
   }
 }
 
-  const ConditionDisplayChecker = ({ index, children }: { index: number; children: React.ReactNode }) => {
+  const ConditionDisplayChecker = ({ index }: { index: number;}) => {
     const displayIf = useWatch({
       control: methods.control,
       name: `conditions.${index}.displayIf`,
       defaultValue: false,
     })
-
-    return displayIf === true ? <>{children}</> : null
+    const subConditions = useWatch({
+      control: methods.control,
+      name: `conditions.${index}.subConditions`
+    })
+    
+    return displayIf === true ? <>
+    
+    {Array.isArray(subConditions) &&
+                  subConditions.map((subCondition, subIndex) => (
+            <SubCondition
+            key={subCondition.id}
+            index={index}
+            subIndex={subIndex}
+            onAddSubCondition={() => handleAddSubCondition(index, subIndex)}
+            onRemoveSubCondition={() => handleRemoveSubCondition(index, subIndex)}
+            qacWithOutFilterOptions={qacWithOutFilterOptions}
+            isFetchingQacWithOutFilter={isFetchingQacWithOutFilter}
+            onlySomeQuestionsOptions={onlySomeQuestionsOptions}
+            isFetchingOnlyAllQuestions={isFetchingOnlyAllQuestions}
+            onlyAllCalculationOptions={onlyAllCalculationOptions}
+            isFetchingOnlyAllCalculation={isFetchingOnlyAllCalculation}
+            onlyAllQuestions={onlyAllQuestions}
+            onlyAllDateOptions={onlyAllDateOptions}
+          />
+          ))}
+    
+    </> : null
   }
+
+console.log('======displayIf', methods.watch(`conditions.${0}.displayIf`))  
+console.log('======subConditions', methods.watch(`conditions.${0}.subConditions`))  
 
   return (<Box
     sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", direction: "ltr" }}
@@ -210,26 +238,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
             </Stack>
           </Box>
 
-          <ConditionDisplayChecker index={index}>
-                {Array.isArray(condition.subConditions) &&
-                  condition.subConditions.map((subCondition, subIndex) => (
-            <SubCondition
-            key={subCondition.id}
-            index={index}
-            subIndex={subIndex}
-            onAddSubCondition={() => handleAddSubCondition(index, subIndex)}
-            onRemoveSubCondition={() => handleRemoveSubCondition(index, subIndex)}
-            qacWithOutFilterOptions={qacWithOutFilterOptions}
-            isFetchingQacWithOutFilter={isFetchingQacWithOutFilter}
-            onlySomeQuestionsOptions={onlySomeQuestionsOptions}
-            isFetchingOnlyAllQuestions={isFetchingOnlyAllQuestions}
-            onlyAllCalculationOptions={onlyAllCalculationOptions}
-            isFetchingOnlyAllCalculation={isFetchingOnlyAllCalculation}
-            onlyAllQuestions={onlyAllQuestions}
-            onlyAllDateOptions={onlyAllDateOptions}
-          />
-          ))}
-           </ConditionDisplayChecker>
+          <ConditionDisplayChecker index={index} />
           <Box
             sx={{
               ml: { xs: 0, md: 2 },

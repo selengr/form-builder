@@ -58,8 +58,38 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
   }, [validationErrors.length],)
 
 
-  const onSubmit = (input: TConditionFormData) => {
+  const onSubmit = (input: TConditionFormData, e: any) => {
+    e?.preventDefault()
     let flag: boolean = true
+
+    let hasValidationErrors = false
+    const validationResults: boolean[] = []
+
+    for (let index = 0; index < input.conditions.length; index++) {
+      const condition = input.conditions[index]
+      try {
+        const returnTextList = JSON.parse(condition.returnText)
+        const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter(
+          (dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",
+        )
+
+        const isValid = validateAndHandleErrors(unselectedDropdowns)
+        validationResults[index] = isValid
+
+        if (!isValid) {
+          hasValidationErrors = true
+        }
+      } catch (error) {
+        console.error("Error parsing returnText:", error)
+        hasValidationErrors = true
+        validationResults[index] = false
+      }
+    }
+
+    if (hasValidationErrors) {
+      toast.error("لطفا تمامي فيلدهاي خالي را انتخاب كنيد")
+      return
+    }
 
     const transformInputToOutput = (input: TConditionFormData): any => {
       return input.conditions.map((condition: TConditionData, index) => {
@@ -106,16 +136,16 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
             .join("") : "true";
 
 
-        // const returnTextList = JSON.parse(returnText)
-        // const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",)
-        // const isValid = validateAndHandleErrors(unselectedDropdowns)
+        const returnTextList = JSON.parse(returnText)
+        const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",)
+        const isValid = validateAndHandleErrors(unselectedDropdowns)
 
-        // if (!isValid) {
-        //   flag = false
-        //   return toast.error("لطفا تمامي فيلدهاي خالي را انتخاب كنيد");
-        // } else {
-        //   flag = true
-        // }
+        if (!isValid) {
+          flag = false
+          return toast.error("لطفا تمامي فيلدهاي خالي را انتخاب كنيد");
+        } else {
+          flag = true
+        }
 
         return {
           formBuilderId: Number(id),
@@ -200,7 +230,6 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
     </Typography>
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
-
         {conditions.map((condition, index) => (<Box key={idGenerator()} sx={{ width: "100%" }}>
 
 
@@ -220,7 +249,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
               initialData={returnTextEdit}
               qacWithOutFilter={qacWithOutFilter}
               validationErrors={validationErrors}
-              hasError={!!methods.formState.errors.conditions?.[0]?.returnText}
+            // hasError={!!methods.formState.errors.conditions?.[0]?.returnText}
             />
 
             <Stack sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>

@@ -144,16 +144,15 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
 
 
   const handleConditionDisplay = (index : number) =>{
-    if(methods.getValues(`conditions.${index}.displayIf`)){
-      // methods.setValue(`conditions.${index}.subConditions`, "false")
-      // methods.setValue(`conditions.${index}.displayIf`, true)
-      // console.log("0111111111",conditions[0].subConditions)
-    }else {
-      // console.log(handleAddCondition())
-      // methods.setValue(`conditions.${index}.subConditions`,  [handleAddSubCondition(0,0)])
-      //     methods.setValue(`conditions.${index}.displayIf`, false)
-    }
+   if(!methods.getValues(`conditions.${index}.displayIf`)){
+
+        methods.setValue(`conditions.${index}.displayIf`, true)
+        methods.setValue(`conditions.${index}.subConditions`, "false")
+      }else {
+        methods.setValue(`conditions.${index}.displayIf`, false)
+        methods.setValue(`conditions.${index}.subConditions`, [createNewSubCondition()])
   }
+}
 
   const ConditionDisplayChecker = ({ index, children }: { index: number; children: React.ReactNode }) => {
     const displayIf = useWatch({
@@ -228,7 +227,8 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
             isFetchingOnlyAllCalculation={isFetchingOnlyAllCalculation}
             onlyAllQuestions={onlyAllQuestions}
             onlyAllDateOptions={onlyAllDateOptions}
-          />))}
+          />
+          ))}
            </ConditionDisplayChecker>
           <Box
             sx={{

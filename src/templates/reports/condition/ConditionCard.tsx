@@ -2,6 +2,9 @@
 // dnd
 import { CSS } from "@dnd-kit/utilities";
 import { useSortable } from "@dnd-kit/sortable";
+import { useQueryClient} from '@tanstack/react-query';
+//services
+import { AxiosApi } from "@/services/axios/AxiosApi";
 // React & Libs
 import { SlPencil } from "react-icons/sl";
 import { useCallback, useState } from "react";
@@ -13,9 +16,11 @@ import ConfirmDialog from "@/components/confirm-dialog";
 import { EditConditionDialog } from "./EditConditionDialog";
 import { ConditionCardOperator } from "./ConditionCardOperator";
 // icons
+import {IonCopyOutline} from "@/../public/images/icons/CopyIcon";
 import { WeuiDeleteOutlined } from "../../../../public/images/icons/DeleteIcon";
 import { useDeleteReport } from "@/app/reports/create-solo/[id]/_hooks/useDeleteReport";
 import { PhDotsThreeVerticalBold } from "../../../../public/images/icons/PhDotsThreeVerticalBold";
+import { toast } from "sonner";
 
 const buttonStyles = {
   height: "50px",
@@ -44,6 +49,10 @@ export function ConditionCard({
   const [open, setOpen] = useState<boolean>(false);
     const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+      const [loadingDuplicateData, setLoadingDuplicateData] = useState(false);
+      // const { removeElement, addElement } = useActionDesigner();
+    const queryClient = useQueryClient();
 
   const menuOpen = Boolean(anchorEl);
   const { id } = condition;
@@ -124,6 +133,36 @@ export function ConditionCard({
                 "aria-labelledby": "basic-button",
               }}
             >
+              <Button
+                                        sx={{
+                                          display: "flex",
+                                          justifyContent: "space-between",
+                                          color: "#222",
+                                          paddingX: "10px",
+                                        }}
+                                        onClick={async (e) => {
+                                          e.stopPropagation();
+                                          try {
+                                            setLoadingDuplicateData(true);
+                                            const res = await AxiosApi.post(
+                                              `/report/solo/main-list/${id}/duplicate`
+                                            );
+                              queryClient.invalidateQueries(['Report_List'] as any);
+                          queryClient.refetchQueries(['Report_List']as any);
+                                          } catch (error) {
+                                            toast.error("خطایی رخ داده است");
+                                          } finally {
+                                            setAnchorEl(null);
+                                            setLoadingDuplicateData(false);
+                                          }
+                                        }}
+                                        fullWidth
+                                        // disabled={loadingDeleteData}
+                                        loading={loadingDuplicateData}
+                                      >
+                                        <Typography>تکثیر</Typography>
+                                        <IonCopyOutline width={18} height={18} />
+                                      </Button>
               <Button
                 sx={{
                   paddingX: "10px",

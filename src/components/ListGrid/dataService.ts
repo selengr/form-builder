@@ -58,7 +58,7 @@ export async function fetchData({
 
   if (!response) {
     // Handle error or throw a specific error if needed
-    throw new Error("Failed to fetch data");
+    throw new Error("خطا در دریافت اطلاعات");
   }
 
   return {

@@ -33,7 +33,7 @@ export default function ShoppingCartPage() {
         toggleConfirm();
         await refetch();
       } else {
-        toast.error("ناموفق بود مجددا امتحان فرمایید");
+        toast.error("ناموفق بود مجددا امتحان نمایید");
       }
     } catch (error) {
       console.error(error);

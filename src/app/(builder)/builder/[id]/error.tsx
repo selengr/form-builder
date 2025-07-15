@@ -29,7 +29,7 @@ export default function BuilderErrorPage({error}: { error: Error }) {
         </div>
         <h2 className="text-gray-800 text-2xl font-semibold text-center">خطایی در بارگذاری سامانه رخ داده است</h2>
         <p className="text-gray-600 text-center text-base leading-relaxed">
-          با عرض پوزش، در فرآیند بارگذاری فرم‌ساز مشکلی به وجود آمده است. لطفاً مجدداً تلاش فرمایید یا در صورت تداوم مشکل، با تیم پشتیبانی تماس
+          با عرض پوزش، در فرآیند بارگذاری فرم‌ساز مشکلی به وجود آمده است. لطفاً مجدداً تلاش نمایید یا در صورت تداوم مشکل، با تیم پشتیبانی تماس
           بگیرید.
         </p>
         <Button

@@ -3,9 +3,17 @@ import {IoStatsChartOutline} from "react-icons/io5";
 import {LuUserRoundPlus} from "react-icons/lu";
 import {Tooltip} from "@mui/material";
 
+interface IContent {
+    formName: string;
+    userFullName: string;
+    numberOfReportingPoints: number;
+    publicationApprovalByAdmin: any; 
+    reporterInformation: any; 
+};
+
 interface StatsTableProps {
   headData: any[];
-  allData: any[];
+  allData: IContent[];
   isLoading: boolean;
 }
 
@@ -51,7 +59,7 @@ export function ReportTable({headData, allData, isLoading}: StatsTableProps) {
           <tbody>
           {allData.map((row, rowIndex) => (
             <tr
-              key={row?.questionId || rowIndex}
+              key={rowIndex}
               className={rowIndex % 2 !== 0 ? "bg-[#F7F7FF]" : "bg-white"}
             >
 
@@ -78,13 +86,8 @@ export function ReportTable({headData, allData, isLoading}: StatsTableProps) {
                     <div
                       className="overflow-hidden text-ellipsis line-clamp-3"
                       style={{display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3}}
-                    >lwvd
-                      {/* {Array.isArray(data.answer)
-                        ? data.answer.map((d) => d).join(" - ").slice(0, 400)
-                        : String(data.answer).slice(0, 400)}
-                      {(Array.isArray(data.answer)
-                        ? data.answer.join(" - ").length > 400
-                        : String(data.answer).length > 400) && "..."} */}
+                    >
+                      {item}
                     </div>
                   </Tooltip>
                 </td>

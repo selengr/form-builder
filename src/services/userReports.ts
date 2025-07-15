@@ -13,12 +13,21 @@ console.log('===response', response)
 
       const headData = [
         {
-          questionId: "index_column_id",
           questionTitle: "ردیف"
         },
-  
         {
-          questionId: "actions_column_id",
+          questionTitle: "عنوان فرم"
+        },
+        {
+          questionTitle: "منتشر کننده"
+        },
+        {
+          questionTitle: "تعداد گزارش"
+        },
+        {
+          questionTitle: "وضعیت"
+        },
+        {
           questionTitle: "مشاهده"
         }
       ];

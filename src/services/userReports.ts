@@ -2,7 +2,7 @@ import {AxiosApi} from '@/services/axios/AxiosApi';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default new class StatsService {
-  async getUserReportsData(id: string, page: number = 1, pageSize: number = 25) {
+  async getUserReportsData(page: number = 1, pageSize: number = 25) {
     try {
       const rows = pageSize === -1 ? 100000 : pageSize;
       const pageNumber = pageSize === -1 ? 0 : page - 1;

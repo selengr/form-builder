@@ -70,9 +70,10 @@ export function ReportPagination({
     </div>
     <div className="flex items-center gap-2">
       <span className="text-sm">{totalItems} نفر در لیست</span>
-      <div className="bg-blue-700 p-2 rounded-lg">
+      <button
+        className="rounded-xl p-2 bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 shadow-sm">
         <LuUserRoundPlus className="text-white text-xl"/>
-      </div>
+      </button>
     </div>
   </div>);
 }

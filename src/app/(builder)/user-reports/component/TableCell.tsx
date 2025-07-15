@@ -1,3 +1,5 @@
+import { Tooltip } from "@mui/material";
+
 interface TableCellProps {
     content: string | number;
     rowIndex: number;
@@ -12,12 +14,12 @@ export const TableCell: React.FC<TableCellProps> = ({ content, rowIndex }) => {
                 border-slate-300
             `}
         >
-            <div
-                className="overflow-hidden text-ellipsis line-clamp-3"
-                style={{ display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3 }}
-            >
-                {content}
-            </div>
+                <div
+                    className="overflow-hidden text-ellipsis line-clamp-3"
+                    style={{ display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3 }}
+                >
+                    {content}
+                </div>
         </td>
     );
 };

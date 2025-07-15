@@ -7,7 +7,6 @@ import {useStatsViewModel} from "./viewModel";
 export default function StatsPage() {
   const router = useRouter();
   const {
-    formData,
     headData,
     allData,
     isLoading,
@@ -22,7 +21,7 @@ export default function StatsPage() {
     <div className="w-full grow flex flex-col md:p-4 p-2">
       <div className="flex-grow bg-white rounded-xl p-4 overflow-hidden flex flex-col">
         <ReportHeader
-          title={formData.name || "گزارش"}
+          title="گزارشات کاربری"
           onBack={() => router.push("/")}
         />
 

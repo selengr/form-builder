@@ -64,11 +64,11 @@ export function ReportTable({headData, allData, isLoading}: StatsTableProps) {
               className={rowIndex % 2 !== 0 ? "bg-[#F7F7FF]" : "bg-white"}
             >
 
-                                <TableCell content={rowIndex} isFirst={rowIndex === 0} isLast={false} rowIndex={rowIndex} />
-                                <TableCell content={row.formName} isFirst={rowIndex === 0} isLast={false} rowIndex={rowIndex} />
-                                <TableCell content={row.reporterInformation} isFirst={rowIndex === 0} isLast={false} rowIndex={rowIndex} />
-                                <TableCell content={row.numberOfReportingPoints} isFirst={rowIndex === 0} isLast={false} rowIndex={rowIndex} />
-                                <TableCell content={row.publicationApprovalByAdmin} isFirst={rowIndex === 0} isLast={false} rowIndex={rowIndex} />
+                                <TableCell content={rowIndex} rowIndex={rowIndex} />
+                                <TableCell content={row.formName} rowIndex={rowIndex} />
+                                <TableCell content={row.reporterInformation} rowIndex={rowIndex} />
+                                <TableCell content={row.numberOfReportingPoints} rowIndex={rowIndex} />
+                                <TableCell content={row.publicationApprovalByAdmin} rowIndex={rowIndex} />
 
               {/* ستون عملیات */}
               <td className="px-4 py-2 border-l-0 border-slate-300 align-middle">

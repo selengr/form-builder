@@ -12,7 +12,7 @@ export default function MenuSidebar() {
       {MenuData.map(({ id, title, active, notActive, link }) => {
         const isActive = current === link;
 
-        return (
+        return (    
           <div
             key={id}
             className="flex flex-col items-center gap-[5px] cursor-pointer"

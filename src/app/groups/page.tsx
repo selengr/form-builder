@@ -11,15 +11,6 @@ import {GroupListItem, IGroup} from "./components/groupListItem";
 import {CreateGroupDialog} from "@/app/groups/components/createGroupDialog";
 import {GroupDialogTrigger} from "./components/GroupDialogTrigger";
 
-async function getAccessToken(): Promise<string | null> {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            const token = localStorage.getItem('myAppAuthToken') || null;
-            resolve(token);
-        }, 100);
-    });
-}
-
 interface GroupItemAPI {
     groupName: string;
     groupId: number;
@@ -43,12 +34,6 @@ export default function GroupsPage() {
         setLoading(true);
         setError(null);
         try {
-            const token = await getAccessToken();
-            if (!token) {
-                setError('Authentication token not found. Please log in.');
-                setLoading(false);
-                return;
-            }
 
             const defaultSearchFilterModel = {
                 searchFilterBoxList: [{restrictionList: []}],
@@ -58,11 +43,7 @@ export default function GroupsPage() {
             };
             const encodedSearchFilterModel = encodeURIComponent(JSON.stringify(defaultSearchFilterModel));
 
-            const response = await fetch(`/api/group/list?searchFilterModel=${encodedSearchFilterModel}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json',
-                },
-            });
+            const response = await fetch(`/api/group/list?searchFilterModel=${encodedSearchFilterModel}`);
 
             if (!response.ok) {
                 const errorData = await response.json();

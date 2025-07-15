@@ -2,6 +2,7 @@ import {ImSpinner2} from "react-icons/im";
 import {IoStatsChartOutline} from "react-icons/io5";
 import {LuUserRoundPlus} from "react-icons/lu";
 import {Tooltip} from "@mui/material";
+import { TableCell } from "./TableCell";
 
 interface IContent {
     formName: string;
@@ -63,139 +64,11 @@ export function ReportTable({headData, allData, isLoading}: StatsTableProps) {
               className={rowIndex % 2 !== 0 ? "bg-[#F7F7FF]" : "bg-white"}
             >
 
-              {/* پاسخ‌ها */}
-              {/* {row.row.map((data: { answer: any[]; }, i: number) => ( */}
-                <td
-                  key={rowIndex}
-                  className={`
-                    text-center px-3 py-2 font-semibold text-sm w-[200px]
-                    ${rowIndex === 0 ? 'border-l-0 border-r-0' : 'border-x-[0.5px]'}
-                    ${rowIndex === row.length - 1 ? 'border-r-0' : ''}
-                    border-slate-300
-                  `}
-                >
-                  <Tooltip
-                  title="rrr"
-                    // title={Array.isArray(data.answer) ? data.answer.join(" - ") : data.answer}
-                    followCursor
-                    arrow
-                    enterDelay={600}
-                    leaveDelay={100}
-                    placement="top"
-                  >
-                    <div
-                      className="overflow-hidden text-ellipsis line-clamp-3"
-                      style={{display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3}}
-                    >
-                      {rowIndex}
-                    </div>
-                  </Tooltip>
-                </td>
-                <td
-                  key={rowIndex}
-                  className={`
-                    text-center px-3 py-2 font-semibold text-sm w-[200px]
-                    ${rowIndex === 0 ? 'border-l-0 border-r-0' : 'border-x-[0.5px]'}
-                    ${rowIndex === row.length - 1 ? 'border-r-0' : ''}
-                    border-slate-300
-                  `}
-                >
-                  <Tooltip
-                  title="rrr"
-                    // title={Array.isArray(data.answer) ? data.answer.join(" - ") : data.answer}
-                    followCursor
-                    arrow
-                    enterDelay={600}
-                    leaveDelay={100}
-                    placement="top"
-                  >
-                    <div
-                      className="overflow-hidden text-ellipsis line-clamp-3"
-                      style={{display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3}}
-                    >
-                      {row.formName}
-                    </div>
-                  </Tooltip>
-                </td>
-                <td
-                  key={rowIndex}
-                  className={`
-                    text-center px-3 py-2 font-semibold text-sm w-[200px]
-                    ${rowIndex === 0 ? 'border-l-0 border-r-0' : 'border-x-[0.5px]'}
-                    ${rowIndex === row.length - 1 ? 'border-r-0' : ''}
-                    border-slate-300
-                  `}
-                >
-                  <Tooltip
-                  title="rrr"
-                    // title={Array.isArray(data.answer) ? data.answer.join(" - ") : data.answer}
-                    followCursor
-                    arrow
-                    enterDelay={600}
-                    leaveDelay={100}
-                    placement="top"
-                  >
-                    <div
-                      className="overflow-hidden text-ellipsis line-clamp-3"
-                      style={{display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3}}
-                    >
-                      {row.reporterInformation}
-                    </div>
-                  </Tooltip>
-                </td>
-                <td
-                  key={rowIndex}
-                  className={`
-                    text-center px-3 py-2 font-semibold text-sm w-[200px]
-                    ${rowIndex === 0 ? 'border-l-0 border-r-0' : 'border-x-[0.5px]'}
-                    ${rowIndex === row.length - 1 ? 'border-r-0' : ''}
-                    border-slate-300
-                  `}
-                >
-                  <Tooltip
-                  title="rrr"
-                    // title={Array.isArray(data.answer) ? data.answer.join(" - ") : data.answer}
-                    followCursor
-                    arrow
-                    enterDelay={600}
-                    leaveDelay={100}
-                    placement="top"
-                  >
-                    <div
-                      className="overflow-hidden text-ellipsis line-clamp-3"
-                      style={{display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3}}
-                    >
-                      {row.numberOfReportingPoints}
-                    </div>
-                  </Tooltip>
-                </td>
-                <td
-                  key={rowIndex}
-                  className={`
-                    text-center px-3 py-2 font-semibold text-sm w-[200px]
-                    ${rowIndex === 0 ? 'border-l-0 border-r-0' : 'border-x-[0.5px]'}
-                    ${rowIndex === row.length - 1 ? 'border-r-0' : ''}
-                    border-slate-300
-                  `}
-                >
-                  <Tooltip
-                  title="rrr"
-                    // title={Array.isArray(data.answer) ? data.answer.join(" - ") : data.answer}
-                    followCursor
-                    arrow
-                    enterDelay={600}
-                    leaveDelay={100}
-                    placement="top"
-                  >
-                    <div
-                      className="overflow-hidden text-ellipsis line-clamp-3"
-                      style={{display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3}}
-                    >
-                      {row.publicationApprovalByAdmin}
-                    </div>
-                  </Tooltip>
-                </td>
-              {/* ))} */}
+                                <TableCell content={rowIndex} isFirst={rowIndex === 0} isLast={false} rowIndex={rowIndex} />
+                                <TableCell content={row.formName} isFirst={rowIndex === 0} isLast={false} rowIndex={rowIndex} />
+                                <TableCell content={row.reporterInformation} isFirst={rowIndex === 0} isLast={false} rowIndex={rowIndex} />
+                                <TableCell content={row.numberOfReportingPoints} isFirst={rowIndex === 0} isLast={false} rowIndex={rowIndex} />
+                                <TableCell content={row.publicationApprovalByAdmin} isFirst={rowIndex === 0} isLast={false} rowIndex={rowIndex} />
 
               {/* ستون عملیات */}
               <td className="px-4 py-2 border-l-0 border-slate-300 align-middle">

@@ -87,7 +87,111 @@ export function ReportTable({headData, allData, isLoading}: StatsTableProps) {
                       className="overflow-hidden text-ellipsis line-clamp-3"
                       style={{display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3}}
                     >
-                      {item}
+                      {rowIndex}
+                    </div>
+                  </Tooltip>
+                </td>
+                <td
+                  key={rowIndex}
+                  className={`
+                    text-center px-3 py-2 font-semibold text-sm w-[200px]
+                    ${rowIndex === 0 ? 'border-l-0 border-r-0' : 'border-x-[0.5px]'}
+                    ${rowIndex === row.length - 1 ? 'border-r-0' : ''}
+                    border-slate-300
+                  `}
+                >
+                  <Tooltip
+                  title="rrr"
+                    // title={Array.isArray(data.answer) ? data.answer.join(" - ") : data.answer}
+                    followCursor
+                    arrow
+                    enterDelay={600}
+                    leaveDelay={100}
+                    placement="top"
+                  >
+                    <div
+                      className="overflow-hidden text-ellipsis line-clamp-3"
+                      style={{display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3}}
+                    >
+                      {row.formName}
+                    </div>
+                  </Tooltip>
+                </td>
+                <td
+                  key={rowIndex}
+                  className={`
+                    text-center px-3 py-2 font-semibold text-sm w-[200px]
+                    ${rowIndex === 0 ? 'border-l-0 border-r-0' : 'border-x-[0.5px]'}
+                    ${rowIndex === row.length - 1 ? 'border-r-0' : ''}
+                    border-slate-300
+                  `}
+                >
+                  <Tooltip
+                  title="rrr"
+                    // title={Array.isArray(data.answer) ? data.answer.join(" - ") : data.answer}
+                    followCursor
+                    arrow
+                    enterDelay={600}
+                    leaveDelay={100}
+                    placement="top"
+                  >
+                    <div
+                      className="overflow-hidden text-ellipsis line-clamp-3"
+                      style={{display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3}}
+                    >
+                      {row.reporterInformation}
+                    </div>
+                  </Tooltip>
+                </td>
+                <td
+                  key={rowIndex}
+                  className={`
+                    text-center px-3 py-2 font-semibold text-sm w-[200px]
+                    ${rowIndex === 0 ? 'border-l-0 border-r-0' : 'border-x-[0.5px]'}
+                    ${rowIndex === row.length - 1 ? 'border-r-0' : ''}
+                    border-slate-300
+                  `}
+                >
+                  <Tooltip
+                  title="rrr"
+                    // title={Array.isArray(data.answer) ? data.answer.join(" - ") : data.answer}
+                    followCursor
+                    arrow
+                    enterDelay={600}
+                    leaveDelay={100}
+                    placement="top"
+                  >
+                    <div
+                      className="overflow-hidden text-ellipsis line-clamp-3"
+                      style={{display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3}}
+                    >
+                      {row.numberOfReportingPoints}
+                    </div>
+                  </Tooltip>
+                </td>
+                <td
+                  key={rowIndex}
+                  className={`
+                    text-center px-3 py-2 font-semibold text-sm w-[200px]
+                    ${rowIndex === 0 ? 'border-l-0 border-r-0' : 'border-x-[0.5px]'}
+                    ${rowIndex === row.length - 1 ? 'border-r-0' : ''}
+                    border-slate-300
+                  `}
+                >
+                  <Tooltip
+                  title="rrr"
+                    // title={Array.isArray(data.answer) ? data.answer.join(" - ") : data.answer}
+                    followCursor
+                    arrow
+                    enterDelay={600}
+                    leaveDelay={100}
+                    placement="top"
+                  >
+                    <div
+                      className="overflow-hidden text-ellipsis line-clamp-3"
+                      style={{display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 3}}
+                    >
+                      {row.publicationApprovalByAdmin}
                     </div>
                   </Tooltip>
                 </td>

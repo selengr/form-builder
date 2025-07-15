@@ -42,7 +42,7 @@ const NoDndPopUpMenu = memo(function NoDndPopUpMenu({
           removeStartPage();
           toast.success("صفحه شروع با موفقیت حذف شد");
         } else {
-          toast.error("عملیات ناموفق بود مجددا تلاش فرمایید");
+          toast.error("عملیات ناموفق بود مجددا تلاش نمایید");
         }
         setLoading(false);
       } catch (error) {
@@ -58,7 +58,7 @@ const NoDndPopUpMenu = memo(function NoDndPopUpMenu({
           removeFinishPage();
           toast.success("صفحه پایان با موفقیت حذف شد");
         } else {
-          toast.error("عملیات ناموفق بود مجددا تلاش فرمایید");
+          toast.error("عملیات ناموفق بود مجددا تلاش نمایید");
         }
         setLoading(false);
       } catch (error) {

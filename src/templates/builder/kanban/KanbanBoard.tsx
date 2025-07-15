@@ -71,7 +71,7 @@ const KanbanBoard = memo(function KanbanBoard() {
         });
       } catch (error) {
         setElements(snapshot);
-        toast.error("عملیات ناموفق بود مجددا تلاش کنید");
+        toast.error("انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.");
         console.error(error);
       }
     },

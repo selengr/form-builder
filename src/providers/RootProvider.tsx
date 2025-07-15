@@ -1,35 +1,36 @@
 "use client";
 
-import type { ReactNode, FC } from "react";
-import {
-  MuiRtlProvider,
-  ReactQueryClientProvider,
-  NetworkProvider,
-  MuiThemeProvider,
-} from "@/providers";
-import { Toaster } from "sonner";
+import type {FC, ReactNode} from "react";
+import {MuiRtlProvider, MuiThemeProvider, NetworkProvider, ReactQueryClientProvider,} from "@/providers";
+import {Toaster} from "sonner";
 import MainPanel from "@/templates/layout/MainPanel";
-import { SessionProvider } from "next-auth/react";
+import {SessionProvider} from "next-auth/react";
 
 type TRootProvider = {
   readonly children: ReactNode;
 };
 
-const RootProvider: FC<TRootProvider> = ({ children }) => {
+const RootProvider: FC<TRootProvider> = ({children}) => {
   return (
     <SessionProvider>
-    <MuiThemeProvider>
-      <ReactQueryClientProvider>
-        <Toaster richColors closeButton dir="rtl" />
-        <NetworkProvider>
-          <MuiRtlProvider>
-            <MainPanel>{children}</MainPanel>
-          </MuiRtlProvider>
-        </NetworkProvider>
-      </ReactQueryClientProvider>
-    </MuiThemeProvider>
-     </SessionProvider>
+      <MuiThemeProvider>
+        <ReactQueryClientProvider>
+          <Toaster richColors
+                   closeButton dir="rtl"
+                   duration={20000}
+                   swipeDirections={["top", "bottom"]}
+                   expand
+                   visibleToasts={10} theme={"light"}
+          />
+          <NetworkProvider>
+            <MuiRtlProvider>
+              <MainPanel>{children}</MainPanel>
+            </MuiRtlProvider>
+          </NetworkProvider>
+        </ReactQueryClientProvider>
+      </MuiThemeProvider>
+    </SessionProvider>
   );
 };
 
-export { RootProvider };
+export {RootProvider};

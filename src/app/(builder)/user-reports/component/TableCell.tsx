@@ -10,7 +10,7 @@ export const TableCell: React.FC<TableCellProps> = ({ content, rowIndex }) => {
         <td
             className={`
                 text-center px-3 py-2 font-semibold text-sm w-[200px]
-                ${rowIndex === 0 ? 'border-l-0 border-r-0' : 'border-x-[0.5px]'}
+                ${rowIndex+1 === 0 ? 'border-l-0 border-r-0' : 'border-x-[0.5px]'}
                 border-slate-300
             `}
         >

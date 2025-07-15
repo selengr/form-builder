@@ -43,7 +43,7 @@ const MenuList: React.FC<IProps> = ({ menuLinks }) => {
             <IoIosArrowDown className="rotate-90" size="1.3rem" color="#292D32" />
           </Link>
         </div>
-      ))}
+      ))} 
       {STATIC_LINKS.map((item) => (
         <div className="gap-4 w-full border-b border-[#DDE1E6] pb-4" key={`static-${item.id}`}>
           <Link href={item.link} className="w-full flex items-center justify-between">

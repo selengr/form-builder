@@ -32,6 +32,7 @@ export const useStatsViewModel = () => {
             setIsLoading(true);
             // @ts-ignore
             const data = await userReports.getUserReportsData(page, pageSize);
+            
             setHeadData(data.headData);
             setAllData(data.allData);
             setTotalItems(data.totalItems);

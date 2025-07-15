@@ -1,21 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
-import { Button, IconButton } from "@mui/material";
+import React, {useState} from "react";
+import {Button, IconButton} from "@mui/material";
 import ResponsiveContainer from "@/templates/form/ContentWrapper";
 import AnimatedBox from "@/templates/form/AnimatedBox";
 import FormLimitation from "@/templates/form/FormLimitation";
 import ActionButtons from "@/templates/form/ActionButtons";
-import { useParticipateForm } from "@/hooks/useParticipateForm";
+import {useParticipateForm} from "@/hooks/useParticipateForm";
 import Loading from "@/app/(builder)/preview/[id]/loading";
-import { MdOutlineKeyboardArrowRight } from "react-icons/md";
+import {MdOutlineKeyboardArrowRight} from "react-icons/md";
 import finalStep from "@/../public/images/home-page/finalStep.svg";
 import errorStep from "@/../public/images/home-page/errorStep.svg";
 import Image from "next/image";
 import ReportDialog from "@/components/ReportDialog/ReportDialog";
 import BugIcon from "@/../public/images/home-page/menu/bugIcon.svg";
 
-export default function ParticipateFormPage({ params }: { params: { slug: string } }) {
+export default function ParticipateFormPage({params}: { params: { slug: string } }) {
   const [limitationStepPassed, setLimitationStepPassed] = useState(false);
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
 
@@ -51,7 +51,7 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
   if (firstLoading) {
     return (
       <div className="w-full h-screen flex justify-center items-center bg-white">
-        <Loading />
+        <Loading/>
       </div>
     );
   }
@@ -78,10 +78,10 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
         <div className="flex flex-col bg-white rounded-xl h-full max-h-screen">
           <div className="flex items-center justify-center gap-4 bg-[#F7F7FF] rounded-lg px-4 py-3 mb-4 relative">
             <IconButton
-              sx={{ position: "absolute", left: "8px" }}
+              sx={{position: "absolute", left: "8px"}}
               onClick={() => replace("/")}
             >
-              <MdOutlineKeyboardArrowRight color="#292D32" />
+              <MdOutlineKeyboardArrowRight color="#292D32"/>
             </IconButton>
             <p className="text-base font-bold text-[#161616] text-center">پایان</p>
           </div>
@@ -185,16 +185,19 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
   return (
     <div className="w-full flex flex-col p-4 overflow-hidden">
       <div className="flex flex-col bg-white rounded-xl h-full max-h-screen">
-        <div className="flex items-center justify-center gap-4 bg-[#F7F7FF] rounded-lg px-4 py-4 mb-4 relative m-2" >
+        <div className="flex items-center justify-center gap-4 bg-[#F7F7FF] rounded-lg px-4 py-4 mb-4 relative m-2">
           <IconButton
-            sx={{ position: "absolute", left: "8px" }}
+            sx={{position: "absolute", left: "8px"}}
             onClick={() => replace("/")}
           >
-            <MdOutlineKeyboardArrowRight color="#292D32" />
+            <MdOutlineKeyboardArrowRight color="#292D32"/>
           </IconButton>
           <p className="text-base font-bold text-[#161616] text-center mx-7">{formName}</p>
 
-          <Button onClick={handleOpenReportDialog} size="medium" className={"rounded-full"}
+          <Button onClick={handleOpenReportDialog}
+                  size="medium"
+                  className={"rounded-full"}
+                  sx={{position: "absolute", right: "8px"}}
                   endIcon={<Image alt={"report"} src={BugIcon} height={24} width={24}/>}
           >
           <span className={"text-xs"}>

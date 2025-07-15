@@ -28,7 +28,7 @@ export const usePostCondition = (isEdit: boolean) => {
             toast.success(`خرده‌گزارش با موفقیت ${isEdit ? "ویرایش" : "ایجاد"} شد`);  
         },
         onError: () => {
-            toast.error("عملیات ناموفق بود مجددا تلاش کنید");
+            toast.error("انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.");
         },
     });
 

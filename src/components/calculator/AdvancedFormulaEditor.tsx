@@ -521,7 +521,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
             queryClient.invalidateQueries({queryKey: ['Calculation_List']});
             toast.success("محاسبه گر با موفقیت ثبت شد");
         } catch (error) {
-            toast.error("عملیات ناموفق بود مجددا امتحان فرمایید");
+            toast.error("عملیات ناموفق بود مجددا امتحان نمایید");
         } finally {
             setLoading(false);
         }

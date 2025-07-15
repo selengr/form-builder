@@ -246,68 +246,68 @@ const ListGrid: React.FC<Props> = ({
 
 
   return (<div className={"p-2 h-screen w-full flex flex-col"}>
-      {isFetching && !isFetchingNextPage ?
+    {isFetching && !isFetchingNextPage ?
 
-        (<Box sx={{width: "100%"}}>
-          <LinearProgress/>
-        </Box>) : (<Grid
-          width="100%"
+      (<Box sx={{width: "100%"}}>
+        <LinearProgress/>
+      </Box>) : (<Grid
+        width="100%"
+        display="flex"
+        sx={{
+          overflowY: "hidden",
+          userSelect: "none",
+          height: {xs: "calc(100vh - 60px)", md: "100vh"},
+          flexDirection: {xs: "column", lg: "row"},
+        }}
+      >
+        <Grid
           display="flex"
+          flexDirection="column"
+          justifyContent="flex-start"
+          alignItems="center"
+          container
           sx={{
-            overflowY: "hidden",
-            userSelect: "none",
-            height: {xs: "calc(100vh - 60px)", md: "100vh"},
-            flexDirection: {xs: "column", lg: "row"},
+            bgcolor: "white", borderRadius: "16px", p: 2, mx: 1, width: 1, overflowY: "hidden", height: "100%",
           }}
         >
-          <Grid
-            display="flex"
-            flexDirection="column"
-            justifyContent="flex-start"
-            alignItems="center"
-            container
-            sx={{
-              bgcolor: "white", borderRadius: "16px", p: 2, mx: 1, width: 1, overflowY: "hidden", height: "100%",
-            }}
-          >
-            <Grid container sx={{width: "100%", justifyContent: "center", mx: "auto"}}>
-              {renderHeader()}
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: "12px",
-                  width: "100%",
-                  flexWrap: {xs: "wrap", sm: "nowrap"},
-                }}
-              >
-                {renderTotalCount()}
-                {showCreateButton && (<div className="min-w-[50px] w-[50px] h-full">
-                  <CreateFormBtn/>
-                </div>)}
-              </Box>
-              {renderSearchAndFilter()}
-              <Grid
-                id="content"
-                container
-                flexWrap="nowrap"
-                sx={{
-                  width: 1, mx: "auto", mt: 1, mb: 5, flexDirection: "column", gap: 2, overflowY: "auto", height: {
-                    xs: "calc(100vh - 290px)", md: "calc(100vh - 210px)",
-                  },
-                }}
-              >
-                {renderContent()}
-              </Grid>
+          <Grid container sx={{width: "100%", justifyContent: "center", mx: "auto"}}>
+            {renderHeader()}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "12px",
+                width: "100%",
+                flexWrap: {xs: "wrap", sm: "nowrap"},
+              }}
+            >
+              {renderTotalCount()}
+              {showCreateButton && (<div className="min-w-[50px] w-[50px] h-full">
+                <CreateFormBtn/>
+              </div>)}
+            </Box>
+            {renderSearchAndFilter()}
+            <Grid
+              id="content"
+              container
+              flexWrap="nowrap"
+              sx={{
+                width: 1, mx: "auto", mt: 1, mb: 5, pb: 4, flexDirection: "column", gap: 2, overflowY: "auto", height: {
+                  xs: "calc(100vh - 290px)", md: "calc(100vh - 210px)",
+                },
+              }}
+            >
+              {renderContent()}
             </Grid>
-            <BottomSheet open={isFilterOpen} onClose={() => setIsFilterOpen(false)}>
-              <Grid>{filterComponent}</Grid>
-            </BottomSheet>
           </Grid>
-          {renderDesktopFilter()}
-        </Grid>)}
-    </div>);
+          <BottomSheet open={isFilterOpen} onClose={() => setIsFilterOpen(false)}>
+            <Grid>{filterComponent}</Grid>
+          </BottomSheet>
+        </Grid>
+        {renderDesktopFilter()}
+      </Grid>)}
+  </div>);
 };
 
 export default ListGrid;

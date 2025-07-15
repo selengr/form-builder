@@ -160,7 +160,7 @@ const QuestionMenu = memo(function QuestionMenu({
                 if (res?.data?.response) {
                   removeElement(questionID);
                 } else {
-                  toast.error("عملیات ناموفق بود مجددا تلاش فرمایید");
+                  toast.error("عملیات ناموفق بود مجددا تلاش نمایید");
                 }
               } catch (error) {
                 toast.error("خطایی رخ داده است");

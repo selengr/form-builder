@@ -19,7 +19,7 @@ export const useCheckDependency = () => {
 
     onSuccess: () => {},
     onError: () => {
-      toast.error("عملیات ناموفق بود مجددا تلاش کنید");
+      toast.error("انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.");
     },
 
   });

@@ -138,7 +138,7 @@ const GroupPopUpMenu = memo(function GroupPopUpMenu({
                     toast.success("گروه سوال با موفقیت حذف شد");
                     deleteQuestionGroup(groupId);
                   } else {
-                    toast.error("ناموفق بود مجددا امتحان فرمایید");
+                    toast.error("ناموفق بود مجددا امتحان نمایید");
                   }
                 } catch (error) {
                   console.log(error);

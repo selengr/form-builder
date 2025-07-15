@@ -27,7 +27,7 @@ const DesignerSidebar = memo(() => {
     const {mutate, isPending} = useMutation({
         mutationFn: () => AxiosApi.put(`/form/ready-to-publish/${id}`),
         onSuccess: () => toast.success("عملیات با موفقیت انجام شد"),
-        onError: () => toast.error("عملیات ناموفق بود مجددا تلاش کنید"),
+        onError: () => toast.error("انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید."),
     });
 
     const handlePublish = useCallback(() => mutate(), [mutate]);

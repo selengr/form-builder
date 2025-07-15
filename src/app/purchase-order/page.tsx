@@ -49,7 +49,7 @@ export default function ShoppingCartPage() {
   const toggleConfirm = () => setOpen((prev) => !prev);
 
   const formatCurrency = (amount: number) =>
-    new Intl.NumberFormat("fa-IR").format(amount / 1000) + " هزار تومان";
+    new Intl.NumberFormat("fa-IR").format(amount) + " تومان";
 
   const subtotal = purchaseOrder?.totalAmount || 0;
   const tax = purchaseOrder?.tax || 0;

@@ -1,14 +1,19 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { AxiosApi } from "@/services/axios/AxiosApi";
-import { ElementsType, FormElements } from "@/types/FormElements";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {useParams, useRouter} from "next/navigation";
+import {toast} from "sonner";
+import {AxiosApi} from "@/services/axios/AxiosApi";
+import {ElementsType, FormElements} from "@/types/FormElements";
 import withValidation from "@/components/Fields/FormHOC";
-import { fetchUserInfo } from "@/lib/auth";
+import {fetchUserInfo} from "@/lib/auth";
 
 export interface ILimitation {
   isLimited: boolean;
   limitationType: "" | "PHONE_NUMBER" | "EMAIL";
+}
+
+interface HasError {
+  status: boolean;
+  message: string;
 }
 
 export const useParticipateForm = () => {
@@ -21,15 +26,15 @@ export const useParticipateForm = () => {
   const [finishPage, setFinishPage] = useState(false);
   const [answerId, setAnswerId] = useState<number>();
   const [formName, setFormName] = useState("");
-  const [hasError, setHasError] = useState(false);
+  const [hasError, setHasError] = useState<HasError>({status: false, message: ""});
   const [limitation, setLimitation] = useState<ILimitation>({
     isLimited: false,
     limitationType: "",
   });
 
   const hasFetchedRef = useRef(false);
-  const { slug } = useParams<{ slug: string }>();
-  const { replace } = useRouter();
+  const {slug} = useParams<{ slug: string }>();
+  const {replace} = useRouter();
 
   const extractProperty = useCallback(
     (list: any[], key: string) =>
@@ -78,7 +83,7 @@ export const useParticipateForm = () => {
         id: !slug.startsWith("public-") ? slug : null,
       });
 
-      const { userInfo } = await fetchUserInfo();
+      const {userInfo} = await fetchUserInfo();
       const username = userInfo?.user?.username || null;
 
       if (res?.data?.loggedInStatus === false && res?.data?.responseLimitation) {
@@ -92,12 +97,11 @@ export const useParticipateForm = () => {
         await takePart(username);
       }
     } catch (e: any) {
-      // if (e?.response?.status === 409) {
-      //   toast.error("شما دسترسی لازم برای ورود به این فرم را ندارید.");
-      // } else {
-      //   console.error("Error in fetchInitialData:", e);
-      // }
-      setHasError(true);
+      if (e?.response?.status === 409) {
+        setHasError({status: true, message: e?.response.data.message[0].title});
+      } else {
+        setHasError({status: true, message: "متأسفیم! فرم مورد نظر در حال حاضر در دسترس نیست."});
+      }
     } finally {
       setFirstLoading(false);
     }
@@ -187,7 +191,7 @@ export const useParticipateForm = () => {
   const handlePrev = async () => {
     try {
       setQuestionLoading(true);
-      const res = await AxiosApi.post("/question/previous-question", { takePartId });
+      const res = await AxiosApi.post("/question/previous-question", {takePartId});
       const q = res.data.questionModel;
       const a = res.data.userAnswerModel?.answersModel ?? [];
 

@@ -19,7 +19,7 @@ const RootProvider: FC<TRootProvider> = ({children}) => {
                    closeButton dir="rtl"
                    duration={20000}
                    swipeDirections={["top", "bottom"]}
-                   expand
+                   expand={false}
                    visibleToasts={10} theme={"light"}
           />
           <NetworkProvider>

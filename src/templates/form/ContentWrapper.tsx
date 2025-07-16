@@ -33,11 +33,11 @@ const ContentBox = styled(Box)(({ theme }) => ({
 
 const ResponsiveContainer: FC<{ children: ReactNode }> = ({ children }) => {
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full">
       <StyledBox>
         <ContentBox>
           <Box></Box>
-          {children}
+          {/*{children}*/}
         </ContentBox>
       </StyledBox>
     </div>

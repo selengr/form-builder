@@ -1,6 +1,7 @@
 "use client";
 
 import { AxiosApi } from "@/services/axios/AxiosApi";
+import { getAuthToken } from "@/utils/getAuthToken";
 
 interface IFetchUserInfoResult {
   userInfo: any;
@@ -27,13 +28,26 @@ export async function fetchUserInfo(): Promise<IFetchUserInfoResult> {
   cachedUserInfoPromise = (async (): Promise<IFetchUserInfoResult> => {
     try {
       if (!process.env.NEXT_PUBLIC_BASE_URL) {
-        throw new Error("NEXT_PUBLIC_BASE_URL is not defined in environment variables.");
+        throw new Error("NEXT_PUBLIC_BASE_URL is not defined");
+      }
+
+      const token = await getAuthToken();
+
+      if (!token) {
+        return {
+          userInfo: null,
+          isAuthenticated: false,
+          error: null,
+        };
       }
 
       const res = await AxiosApi.get<any>(
         "/authorization/front-panel/non-org-user-role/find-user-loggedin-info",
         {
           baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -47,8 +61,7 @@ export async function fetchUserInfo(): Promise<IFetchUserInfoResult> {
         error: null,
       };
     } catch (error: any) {
-      console.error("❌ Error fetching user info:", error);
-      const err = error instanceof Error ? error : new Error(error?.message || "An unknown error occurred.");
+      const err = error instanceof Error ? error : new Error(error?.message || "خطای نامشخص");
       return {
         userInfo: null,
         isAuthenticated: false,

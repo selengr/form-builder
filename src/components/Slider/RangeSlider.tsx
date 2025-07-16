@@ -38,6 +38,7 @@ export const MyRangeSlider = styled(Slider)({
     },
   },
   "& .MuiSlider-valueLabel": {
+    pointerEvents:"none",
     lineHeight: 1,
     fontSize: 12,
     padding: 0,

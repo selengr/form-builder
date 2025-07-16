@@ -1,25 +1,16 @@
 "use client";
 
 import React, {useState} from "react";
-import {Button, IconButton} from "@mui/material";
-import ResponsiveContainer from "@/templates/form/ContentWrapper";
-import AnimatedBox from "@/templates/form/AnimatedBox";
-import FormLimitation from "@/templates/form/FormLimitation";
-import ActionButtons from "@/templates/form/ActionButtons";
 import {useParticipateForm} from "@/hooks/useParticipateForm";
 import Loading from "@/app/(builder)/preview/[id]/loading";
-import {MdOutlineKeyboardArrowRight} from "react-icons/md";
-import finalStep from "@/../public/images/home-page/finalStep.svg";
-import errorStep from "@/../public/images/home-page/errorStep.svg";
-import Image from "next/image";
-import ReportDialog from "@/components/ReportDialog/ReportDialog";
-import BugIcon from "@/../public/images/home-page/menu/bugIcon.svg";
+import ResponsiveContainer from "@/templates/form/ContentWrapper";
+import FormLimitation from "@/templates/form/FormLimitation";
+import {ErrorStep, FinishStep, QuestionStep} from "./components";
 
 export default function ParticipateFormPage({params}: { params: { slug: string } }) {
+  const formId = params.slug;
   const [limitationStepPassed, setLimitationStepPassed] = useState(false);
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
-
-  const formId = params.slug;
 
   const {
     firstLoading,
@@ -37,24 +28,10 @@ export default function ParticipateFormPage({params}: { params: { slug: string }
     setLimitation,
     setQuestion,
     initializeQuestion,
-    hasError
+    hasError,
   } = useParticipateForm();
 
-  const handleOpenReportDialog = () => {
-    setIsReportDialogOpen(true);
-  };
-
-  const handleCloseReportDialog = () => {
-    setIsReportDialogOpen(false);
-  };
-
-  if (firstLoading) {
-    return (
-      <div className="w-full h-screen flex justify-center items-center bg-white">
-        <Loading/>
-      </div>
-    );
-  }
+  if (firstLoading) return <LoadingScreen/>;
 
   if (limitation.isLimited && !limitationStepPassed) {
     return (
@@ -73,170 +50,42 @@ export default function ParticipateFormPage({params}: { params: { slug: string }
   }
 
   if (finishPage) {
-    return (
-      <div className="w-full flex flex-col p-4 overflow-hidden">
-        <div className="flex flex-col bg-white rounded-xl h-full max-h-screen">
-          <div className="flex items-center justify-center gap-4 bg-[#F7F7FF] rounded-lg px-4 py-3 mb-4 relative">
-            <IconButton
-              sx={{position: "absolute", left: "8px"}}
-              onClick={() => replace("/")}
-            >
-              <MdOutlineKeyboardArrowRight color="#292D32"/>
-            </IconButton>
-            <p className="text-base font-bold text-[#161616] text-center">پایان</p>
-          </div>
-
-          <div className="flex-1 flex items-center justify-center overflow-y-auto px-4">
-            <div className="w-full max-w-3xl">
-              <AnimatedBox>
-                <div className="w-full flex flex-col items-center justify-center gap-4 text-center">
-                  <p className="text-lg font-semibold leading-relaxed">
-                    پاسخ‌های شما به{" "}
-                    <span className="text-xl font-bold">«{formName}»</span>{" "}
-                    با موفقیت ثبت شد.
-                  </p>
-
-                  <div className="w-full max-w-xs sm:max-w-md">
-                    <Image
-                      src={finalStep}
-                      alt="نتیجه"
-                      width={400}
-                      height={400}
-                      priority
-                      className="w-full h-auto max-h-[400px] object-contain"
-                      draggable={false}
-                    />
-                  </div>
-
-                  <Button
-                    sx={{
-                      width: "150px",
-                      height: "52px",
-                      borderRadius: "10px",
-                      backgroundColor: "#1758BA",
-                      boxShadow: "none",
-                      "&:hover": {
-                        backgroundColor: "#1758BA",
-                        boxShadow: "none",
-                      },
-                    }}
-                    variant="contained"
-                    onClick={() => replace("/")}
-                  >
-                    بازگشت
-                  </Button>
-                </div>
-              </AnimatedBox>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <FinishStep formName={formName}
+                       replace={replace}
+                       formId={formId}
+                       isReportDialogOpen={isReportDialogOpen}
+                       handleOpenReportDialog={() => setIsReportDialogOpen(true)}
+                       handleCloseReportDialog={() => setIsReportDialogOpen(false)}
+    />;
   }
-  if (hasError) {
-    return (
-      <div className="w-full flex flex-col p-4 overflow-hidden">
-        <div className="flex flex-col bg-white rounded-xl h-full max-h-screen">
-          <div className="flex-1 flex items-center justify-center overflow-y-auto px-4">
-            <div className="w-full max-w-3xl">
-              <AnimatedBox>
-                <div className="w-full flex flex-col items-center justify-center gap-4 text-center">
-                  <p className="text-xl font-bold text-red-400 mb-4">
-                    متأسفیم! فرم مورد نظر در حال حاضر قابل دسترسی نیست.
-                  </p>
-                  <div className="w-full max-w-xs sm:max-w-md">
-                    <Image
-                      src={errorStep}
-                      alt="نتیجه"
-                      width={400}
-                      height={400}
-                      priority
-                      className="w-full h-auto max-h-[400px] object-contain"
-                      draggable={false}
-                    />
-                  </div>
 
-                  <Button
-                    sx={{
-                      width: "150px",
-                      height: "52px",
-                      borderRadius: "10px",
-                      backgroundColor: "#1758BA",
-                      boxShadow: "none",
-                      "&:hover": {
-                        backgroundColor: "#1758BA",
-                        boxShadow: "none",
-                      },
-                    }}
-                    variant="contained"
-                    onClick={() => replace("/")}
-                  >
-                    بازگشت
-                  </Button>
-                </div>
-              </AnimatedBox>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+  if (hasError.status) {
+    return <ErrorStep message={hasError.message} replace={replace}/>;
   }
 
   return (
-    <div className="w-full flex flex-col p-4 overflow-hidden">
-      <div className="flex flex-col bg-white rounded-xl h-full max-h-screen">
-        <div className="flex items-center justify-center gap-4 bg-[#F7F7FF] rounded-lg px-4 py-4 mb-4 relative m-2">
-          <IconButton
-            sx={{position: "absolute", left: "8px"}}
-            onClick={() => replace("/")}
-          >
-            <MdOutlineKeyboardArrowRight color="#292D32"/>
-          </IconButton>
-          <p className="text-base font-bold text-[#161616] text-center mx-7">{formName}</p>
+    <QuestionStep
+      question={question}
+      formName={formName}
+      formData={formData}
+      ValidatedInput={ValidatedInput}
+      handleValidationUpdate={handleValidationUpdate}
+      handleNext={handleNext}
+      handlePrev={handlePrev}
+      questionLoading={questionLoading}
+      isReportDialogOpen={isReportDialogOpen}
+      handleOpenReportDialog={() => setIsReportDialogOpen(true)}
+      handleCloseReportDialog={() => setIsReportDialogOpen(false)}
+      formId={formId}
+      replace={replace}
+    />
+  );
+}
 
-          <Button onClick={handleOpenReportDialog}
-                  size="medium"
-                  className={"rounded-full"}
-                  sx={{position: "absolute", right: "8px"}}
-                  endIcon={<Image alt={"report"} src={BugIcon} height={24} width={24}/>}
-          >
-          <span className={"text-xs"}>
-                      گزارش
-
-          </span>
-          </Button>
-        </div>
-
-        <div className="flex-1 flex items-center justify-center overflow-y-auto px-4">
-          <div className="w-full max-w-3xl">
-            {question && (
-              <AnimatedBox key={question.questionId}>
-                <ValidatedInput
-                  key={question.id}
-                  formData={formData}
-                  elementInstance={question}
-                  onValidationUpdate={handleValidationUpdate}
-                />
-              </AnimatedBox>
-            )}
-          </div>
-        </div>
-
-        <div className="w-full flex justify-between items-center px-2 py-4">
-          <ActionButtons
-            loadingNext={questionLoading}
-            disablePrev={questionLoading}
-            nextAction={handleNext}
-            prevAction={handlePrev}
-          />
-        </div>
-      </div>
-
-      <ReportDialog
-        open={isReportDialogOpen}
-        onClose={handleCloseReportDialog}
-        formId={formId}
-      />
+function LoadingScreen() {
+  return (
+    <div className="w-full h-screen flex justify-center items-center bg-white">
+      <Loading/>
     </div>
   );
 }

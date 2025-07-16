@@ -26,6 +26,7 @@ export const useParticipateForm = () => {
   const [finishPage, setFinishPage] = useState(false);
   const [answerId, setAnswerId] = useState<number>();
   const [formName, setFormName] = useState("");
+  const [realFormID, setRealFormID] = useState();
   const [hasError, setHasError] = useState<HasError>({status: false, message: ""});
   const [limitation, setLimitation] = useState<ILimitation>({
     isLimited: false,
@@ -114,6 +115,7 @@ export const useParticipateForm = () => {
         formId: !slug.startsWith("public-") ? slug : null,
         username,
       });
+      setRealFormID(res.data.formId? res.data.formId : "");
       setFormName(res.data.formName);
       setTakePartId(res.data.takePart);
       initializeQuestion(res.data.questionModel);
@@ -247,5 +249,6 @@ export const useParticipateForm = () => {
     setQuestion,
     initializeQuestion,
     hasError,
+    realFormID
   };
 };

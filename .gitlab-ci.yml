@@ -32,12 +32,11 @@ compile-job:
   script:
   - set +e
   - export NVM_DIR="$HOME/.nvm"
-  - [ -s "$NVM_DIR/nvm.sh" ]
-  - \. "$NVM_DIR/nvm.sh"
+  - [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" 
   - nvm use 22
-  - npm ci --force && npm run build
+  - npm install --force && npm run build
 
-  - mvn clean package -DskipTests
+  #- mvn clean package -DskipTests
   artifacts:
     paths:
       - target/*.jar

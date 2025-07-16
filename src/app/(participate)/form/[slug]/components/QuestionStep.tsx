@@ -18,7 +18,7 @@ interface QuestionStepProps {
   isReportDialogOpen: boolean;
   handleOpenReportDialog: () => void;
   handleCloseReportDialog: () => void;
-  formId: string;
+  formId: any;
   replace: (path: string) => void;
 }
 

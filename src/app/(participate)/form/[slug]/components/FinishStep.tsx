@@ -14,7 +14,7 @@ interface FinishStepProps {
   isReportDialogOpen: boolean;
   handleOpenReportDialog: () => void;
   handleCloseReportDialog: () => void;
-  formId: string;
+  formId: any;
 }
 
 export function FinishStep({

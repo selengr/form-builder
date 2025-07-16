@@ -19,7 +19,7 @@ import {fetchUserInfo} from "@/lib/auth";
 interface ReportDialogProps {
   open: boolean;
   onClose: () => void;
-  formId: string;
+  formId: any;
 }
 
 export default function ReportDialog({open, onClose, formId}: ReportDialogProps) {

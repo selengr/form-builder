@@ -1,0 +1,80 @@
+stages:
+  - compile
+  - build
+  - deploy
+  - cleanup
+
+variables:
+  NAMESPACE: "newpl1"
+  IMAGE_REGISTRY: "registery.fardup.ir:5000"
+
+before_script:
+  - |
+    # Compute IMAGE_PROJECT dynamically
+    export IMAGE_PROJECT="$(basename $(dirname $CI_PROJECT_DIR))/$(basename $CI_PROJECT_DIR)"
+    export COMMIT_ID=$(git log -1 --pretty=format:%h)
+    export GIT_TAG=$(git describe --exact-match --tags 2>/dev/null || echo "no-tag")
+    echo "Branch: $CI_COMMIT_BRANCH"
+    echo "Commit ID: $COMMIT_ID"
+    echo "Git tag: $GIT_TAG"
+    export IMAGE_TAG="${IMAGE_REGISTRY}/${IMAGE_PROJECT}:${CI_COMMIT_BRANCH}_${CI_COMMIT_SHORT_SHA}_${GIT_TAG}"
+    echo "IMAGE_TAG → $IMAGE_TAG"
+    which docker && echo "Docker OK" || { echo "ERROR: docker not found"; exit 1; }
+    which kubectl && echo "kubectl OK" || { echo "ERROR: kubectl not found"; exit 1; }
+    whoami
+
+compile-job:
+  stage: compile
+  tags:
+    - sharemodel-ci
+  only:
+    - branches
+  script:
+  - set +e
+  - export NVM_DIR="$HOME/.nvm"
+  - [ -s "$NVM_DIR/nvm.sh" ]
+  - \. "$NVM_DIR/nvm.sh"
+  - nvm use 22
+  - npm ci --force && npm run build
+
+  - mvn clean package -DskipTests
+  artifacts:
+    paths:
+      - target/*.jar
+
+build-Docker-job:
+  stage: build
+  tags:
+    - sharemodel-ci
+  only:
+    - branches
+  dependencies:
+    - compile-job
+  script:
+    - docker build -t "$IMAGE_TAG" .
+    - docker push "$IMAGE_TAG"
+
+deploy-job:
+  stage: deploy
+  tags:
+    - sharemodel-ci
+  environment: production
+  only:
+    - branches
+  dependencies:
+    - build-Docker-job
+  script:
+    - sed -i "s~IMAGE_TAG~${IMAGE_TAG}~g" /home/gitlab-runner/ali-ci/newpl1/psya-client/psya-client.yaml
+    - kubectl apply -f /home/gitlab-runner/ali-ci/newpl1/psya-client/psya-client.yaml -n "$NAMESPACE"
+    - sed -i "s~${IMAGE_TAG}~IMAGE_TAG~g" /home/gitlab-runner/ali-ci/newpl1/psya-client/psya-client.yaml
+    #- kubectl apply -f manifest.yml -n "$NAMESPACE"
+
+cleanup:
+  stage: cleanup
+  tags:
+    - sharemodel-ci
+  only:
+    - branches
+  script:
+    - echo "Cleaning up project directory"
+    - rm -rf "$CI_PROJECT_DIR"

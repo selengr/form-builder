@@ -8,7 +8,6 @@ import FormLimitation from "@/templates/form/FormLimitation";
 import {ErrorStep, FinishStep, QuestionStep} from "./components";
 
 export default function ParticipateFormPage({params}: { params: { slug: string } }) {
-  const formId = params.slug;
   const [limitationStepPassed, setLimitationStepPassed] = useState(false);
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
 
@@ -28,6 +27,7 @@ export default function ParticipateFormPage({params}: { params: { slug: string }
     setLimitation,
     setQuestion,
     initializeQuestion,
+    realFormID,
     hasError,
   } = useParticipateForm();
 
@@ -52,7 +52,7 @@ export default function ParticipateFormPage({params}: { params: { slug: string }
   if (finishPage) {
     return <FinishStep formName={formName}
                        replace={replace}
-                       formId={formId}
+                       formId={realFormID}
                        isReportDialogOpen={isReportDialogOpen}
                        handleOpenReportDialog={() => setIsReportDialogOpen(true)}
                        handleCloseReportDialog={() => setIsReportDialogOpen(false)}
@@ -76,7 +76,7 @@ export default function ParticipateFormPage({params}: { params: { slug: string }
       isReportDialogOpen={isReportDialogOpen}
       handleOpenReportDialog={() => setIsReportDialogOpen(true)}
       handleCloseReportDialog={() => setIsReportDialogOpen(false)}
-      formId={formId}
+      formId={realFormID}
       replace={replace}
     />
   );

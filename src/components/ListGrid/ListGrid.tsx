@@ -127,29 +127,23 @@ const ListGrid: React.FC<Props> = ({
     </p>
   </div>), [title, router]);
 
-  const renderTotalCount = useCallback(() => (<Grid
-    display="flex"
-    sx={{
-      width: "100%",
-      maxWidth: "400px",
-      justifyContent: "space-between",
-      gap: 2,
-      bgcolor: "#ECFAFF",
-      borderRadius: "16px",
-      paddingX: "10px",
-      paddingY: "16px",
-    }}
-  >
-    <Box display="flex" alignItems="center" gap="10px">
-      <Image src={TotalGrid} width={20} height={20} alt="filter" draggable={false}/>
-      <Typography color="#393939" fontSize="14px">
-        تعداد کل فرم‌ها{textTotal[0]}:
-      </Typography>
-    </Box>
-    <p className="flex items-center text-[14px] text-[#393939] font-bold">
-      {totalData} {textTotal[1]}
-    </p>
-  </Grid>), [totalData, textTotal]);
+  const renderTotalCount = useCallback(() => (
+    <div className="flex justify-between gap-2 bg-[#ECFAFF] rounded-2xl px-[10px] py-4 w-full max-w-[400px]">
+      <div className="flex items-center gap-[10px]">
+        <Image
+          src={TotalGrid}
+          width={20}
+          height={20}
+          alt="filter"
+          draggable={false}
+        />
+        <p className="text-sm text-[#393939]">تعداد کل فرم‌ها{textTotal[0]}:</p>
+      </div>
+      <p className="flex items-center text-sm text-[#393939] font-bold">
+        {totalData} {textTotal[1]}
+      </p>
+    </div>
+  ), [totalData, textTotal]);
 
   const renderSearchAndFilter = useCallback(() => (<Grid
     display="flex"
@@ -217,7 +211,7 @@ const ListGrid: React.FC<Props> = ({
       // @ts-ignore
       const isLastItem = (pageIndex === pages.pages.length - 1) && (index === page.data.length - 1);
 
-      return (<Grid sx={{width: 1, mx: "auto"}} key={key} size={{xs: 12,md:10, xl:9}}>
+      return (<Grid sx={{width: 1, mx: "auto"}} key={key} size={{xs: 12, md: 10, xl: 9}}>
         {CartComponent && (<CartComponent onCheck={onCheck} data={data} refreshGrid={handleRefreshGrid}/>)}
         {isLastItem && (<>
           <Typography component="h1" ref={ref} sx={{height: 0}}/>
@@ -270,7 +264,7 @@ const ListGrid: React.FC<Props> = ({
             bgcolor: "white", borderRadius: "16px", p: 2, mx: 1, width: 1, overflowY: "hidden", height: "100%",
           }}
         >
-          <Grid container sx={{width: "100%", justifyContent: "center", mx: "auto"}} >
+          <Grid container sx={{width: "100%", justifyContent: "center", mx: "auto"}}>
             {renderHeader()}
             <Box
               sx={{
@@ -279,13 +273,15 @@ const ListGrid: React.FC<Props> = ({
                 alignItems: "center",
                 gap: "12px",
                 width: 1,
-                flexWrap: {xs: "wrap", sm: "nowrap"},
+                flexWrap: {xs: "nowrap", sm: "nowrap"},
               }}
             >
               {renderTotalCount()}
-              {showCreateButton && (<div className="min-w-[50px] w-[50px] h-full">
-                <CreateFormBtn/>
-              </div>)}
+              {showCreateButton && (
+                <div className="min-w-[50px] w-[50px] h-full">
+                  <CreateFormBtn/>
+                </div>
+              )}
             </Box>
             {renderSearchAndFilter()}
             <Grid
@@ -293,7 +289,7 @@ const ListGrid: React.FC<Props> = ({
               container
               flexWrap="nowrap"
               sx={{
-                width:1,
+                width: 1,
                 mx: "auto", mt: 1, mb: 5, pb: 4, flexDirection: "column", gap: 2, overflowY: "auto", height: {
                   xs: "calc(100vh - 290px)", md: "calc(100vh - 210px)",
                 },

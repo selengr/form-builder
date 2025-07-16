@@ -127,8 +127,8 @@ export default function CreateFormBtn() {
       <IconButton
         onClick={handleClose}
         sx={{
-          width: "100%",
-          height: "100%",
+          width: "50px",
+          height: "50px",
           // bgcolor: "#ECFAFF",
           borderRadius: "16px",
           border: "1px solid #1758BA",

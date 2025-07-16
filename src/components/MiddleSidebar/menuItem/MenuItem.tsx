@@ -8,6 +8,7 @@ import ChartSquare from "@/../public/images/home-page/menu/chart-square.svg";
 import GroupSquare from "@/../public/images/home-page/menu/group-square.svg";
 import ShoppingCart from "@/../public/images/home-page/menu/shopping-cart.svg";
 import MusicPlaylist from "@/../public/images/home-page/menu/music-playlist.svg";
+import React from "react";
 
 
 interface StaticLink {
@@ -16,10 +17,11 @@ interface StaticLink {
     icon: StaticImageData;
     link: string;
   }
-  
+
 
   interface IProps {
     menuLinks: any[];
+    onItemClick?: () => void
   }
 
   const STATIC_LINKS: StaticLink[] = [
@@ -30,23 +32,32 @@ interface StaticLink {
     { id: 9, title: "قوانین و مقررات", icon: Wallet, link: "/underconstruction" },
   ];
 
-const MenuList: React.FC<IProps> = ({ menuLinks }) => {
+const MenuList: React.FC<IProps> = ({ menuLinks, onItemClick }) => {
   return (
     <>
       {menuLinks?.map((item) => (
         <div className="gap-4 w-full border-b border-[#DDE1E6] pb-4" key={`menu-${item.id}`}>
-          <Link href={item.a_attr?.href ?? "#"} className="w-full flex items-center justify-between">
+          <Link
+            href={item.a_attr?.href ?? "#"}
+            onClick={onItemClick}
+            className="w-full flex items-center justify-between"
+          >
             <div className="flex items-center gap-2">
-              <Image src={`/images/home-page/menu/${item.icon}`} alt="icon" width={32} height={32} priority draggable={false}/>
+              <Image src={`/images/home-page/menu/${item.icon}`} alt="icon" width={32} height={32} priority draggable={false} />
               <p className="text-[14px] text-black font-bold">{item.text}</p>
             </div>
             <IoIosArrowDown className="rotate-90" size="1.3rem" color="#292D32" />
           </Link>
         </div>
-      ))} 
+      ))}
+
       {STATIC_LINKS.map((item) => (
         <div className="gap-4 w-full border-b border-[#DDE1E6] pb-4" key={`static-${item.id}`}>
-          <Link href={item.link} className="w-full flex items-center justify-between">
+          <Link
+            href={item.link}
+            onClick={onItemClick}
+            className="w-full flex items-center justify-between"
+          >
             <div className="flex items-center gap-2">
               <Image src={item.icon} alt="icon" width={32} height={32} priority draggable={false} />
               <p className="text-[14px] text-black font-bold">{item.title}</p>

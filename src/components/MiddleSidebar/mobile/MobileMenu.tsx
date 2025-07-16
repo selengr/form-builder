@@ -1,23 +1,23 @@
 "use client";
 import Image from "next/image";
-import { CgClose } from "react-icons/cg";
-import { useState, useMemo } from "react";
-import { IconButton, Drawer } from "@mui/material";
+import {CgClose} from "react-icons/cg";
+import React, {useMemo, useState} from "react";
+import {Drawer, IconButton} from "@mui/material";
 
 // public
 import Logo from "@/../public/images/home-page/psya-logo.svg";
 import MenuIcon from "@/../public/images/home-page/menu/ic_menu.svg";
 // hooks
-import { useUserInfo, useMenu } from "@/hooks";
+import {useMenu, useUserInfo} from "@/hooks";
 // view
 import MenuList from "../menuItem/MenuItem";
 import MenuItemSkeleton from "../menuItemSkeleton";
 
 
 const MobileMenu: React.FC = () => {
-  const { userInfo } = useUserInfo();
+  const {userInfo} = useUserInfo();
   const [open, setOpen] = useState(false);
-  const { menu, loading } = useMenu(userInfo);
+  const {menu, loading} = useMenu(userInfo);
   const [isRotated, setIsRotated] = useState(false);
 
   const menuLinks = useMemo(() => {
@@ -46,10 +46,10 @@ const MobileMenu: React.FC = () => {
       <Drawer anchor="left" open={open} onClose={toggleDrawer}>
         <div
           className="max-w-[400px] min-w-[370px] min-h-screen bg-white px-5 py-5 flex flex-col gap-8 overflow-y-auto"
-          style={{ scrollbarWidth: "thin" }}
+          style={{scrollbarWidth: "thin"}}
         >
           <div className="w-full flex flex-col gap-10 items-start">
-            <div className="flex flex-row justify-between w-full items-center"> {/* اینجا تغییر کرده است */}
+            <div className="flex flex-row justify-between w-full items-center">
               <Image
                 src={Logo}
                 width={111}
@@ -73,8 +73,8 @@ const MobileMenu: React.FC = () => {
               </IconButton>
             </div>
             <div className="flex flex-col items-start w-full gap-5">
-              {!!userInfo &&loading && <MenuItemSkeleton />}
-              <MenuList menuLinks={menuLinks} />
+              {!!userInfo && loading && <MenuItemSkeleton/>}
+              <MenuList menuLinks={menuLinks} onItemClick={() => setOpen(false)}/>
             </div>
           </div>
         </div>

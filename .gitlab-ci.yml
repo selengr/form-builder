@@ -40,7 +40,7 @@ compile-job:
   #- mvn clean package -DskipTests
   artifacts:
     paths:
-      - - .next/**
+      - .next/**
       #- target/*.jar
 
 build-Docker-job:

@@ -83,22 +83,12 @@ export default function ListGridWrapper() {
                     <FormControlLabel
                       value="COMPETITION"
                       control={<Radio/>}
-                      label="مسابقه"
+                      label="مالکیت معنوی"
                     />
                     <FormControlLabel
                       value="QUESTION"
                       control={<Radio/>}
-                      label="پرسشنامه"
-                    />
-                    <FormControlLabel
-                      value="SURVEY"
-                      control={<Radio/>}
-                      label="نظرسنجی"
-                    />
-                    <FormControlLabel
-                      value="TEST"
-                      control={<Radio/>}
-                      label="آزمون"
+                      label="سایر"
                     />
                   </RadioGroup>
                 </FormControl>
@@ -127,7 +117,7 @@ export default function ListGridWrapper() {
                     }}
                     id="demo-controlled-radio-buttons-group"
                   >
-                    بر اساس دسترسی
+                      مورد گزارش
                   </FormLabel>
                   <RadioGroup
                     aria-labelledby="demo-controlled-radio-buttons-group"
@@ -138,17 +128,57 @@ export default function ListGridWrapper() {
                     <FormControlLabel
                       value="ALL"
                       control={<Radio/>}
-                      label="همه"
+                      label="فرم"
                     />
                     <FormControlLabel
                       value="PUBLIC"
                       control={<Radio/>}
-                      label="عمومی"
+                      label="گزارش نتایج"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </div>
+
+              {/* بخش دسترسی فیلتر */}
+              <div className="w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3">
+                <FormControl
+                  sx={{
+                    "& .MuiTypography-root": {
+                      fontSize: "14px",
+                      color: "#393939",
+                      fontWeight: 400,
+                    },
+                  }}
+                >
+                  <FormLabel
+                    sx={{
+                      fontSize: "15px",
+                      color: "#161616",
+                      fontWeight: 700,
+                      mb: "8px",
+                      "&.Mui-focused": {
+                        color: "#161616",
+                      },
+                    }}
+                    id="demo-controlled-radio-buttons-group"
+                  >
+                      بر اساس زمان
+                  </FormLabel>
+                  <RadioGroup
+                    aria-labelledby="demo-controlled-radio-buttons-group"
+                    name="controlled-radio-buttons-group"
+                    value={formType.status}
+                    onChange={handleStatusChange}
+                  >
+                    <FormControlLabel
+                      value="ALL"
+                      control={<Radio/>}
+                      label="جدیدترین"
                     />
                     <FormControlLabel
-                      value="PRIVATE"
+                      value="PUBLIC"
                       control={<Radio/>}
-                      label="خصوصی"
+                      label="قدیمیترین"
                     />
                   </RadioGroup>
                 </FormControl>

@@ -22,7 +22,7 @@ export function ReportTable({ headData, allData, isLoading }: StatsTableProps) {
   const { push } = useRouter()
 
   const handleShow = () => {
-    push("/show")
+    push("/user-reports/show")
   }
 
   return (

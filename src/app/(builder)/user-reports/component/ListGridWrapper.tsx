@@ -1,8 +1,8 @@
 "use client";
 
 import React, {useState} from "react";
-import ListGrid from "@/components/ListGrid/ListGrid";
-import ListCard from "@/components/ListGrid/ListCard";
+import ListGrid from "./ListGrid";
+import ListCard from "./ListGrid";
 import {Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup,} from "@mui/material";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import Image from "next/image";
@@ -244,8 +244,7 @@ export default function ListGridWrapper() {
      url="/admin/destroy-form/1"
       filterComponent={<FilterSidebar/>}
       CartComponent={(item: any) => (
-        // <ListCard setRefreshGrid={setRefreshGrid} {...item} />
-        <>desgfghjsf</>
+        <ListCard />
       )}
       disableFilter={false}
       refreshGrid={refreshGrid}

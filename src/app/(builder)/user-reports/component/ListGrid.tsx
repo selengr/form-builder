@@ -108,6 +108,29 @@ const ListGrid: React.FC<Props> = ({
     </p>
   </div>), [title, router]);
 
+  const renderTotalCount = useCallback(() => (<Grid
+    display="flex"
+    sx={{
+      width: "100%",
+      maxWidth: "400px",
+      justifyContent: "space-between",
+      gap: 2,
+      bgcolor: "#ECFAFF",
+      borderRadius: "16px",
+      paddingX: "10px",
+      paddingY: "16px",
+    }}
+  >
+    <Box display="flex" alignItems="center" gap="10px">
+      <Image src={TotalGrid} width={20} height={20} alt="filter" draggable={false}/>
+      <Typography color="#393939" fontSize="14px">
+        تعداد کل فرم‌ها{textTotal[0]}:
+      </Typography>
+    </Box>
+    <p className="flex items-center text-[14px] text-[#393939] font-bold">
+      {totalData} {textTotal[1]}
+    </p>
+  </Grid>), [totalData, textTotal]);
 
 
 
@@ -136,23 +159,24 @@ const ListGrid: React.FC<Props> = ({
         </Typography>
       </Box>);
     }
-
+console.log('pages', pages)
+// debugger
     // @ts-ignore
-    return pages.pages.map((page, pageIndex) => (page.data.map((data: any, index: number) => {
-      const key = `${pageIndex}-${index}`;
-      // @ts-ignore
-      const isLastItem = (pageIndex === pages.pages.length - 1) && (index === page.data.length - 1);
+    // return pages.pages.map((page, pageIndex) => (page.data.map((data: any, index: number) => {
+    //   const key = `${pageIndex}-${index}`;
+    //   // @ts-ignore
+    //   const isLastItem = (pageIndex === pages.pages.length - 1) && (index === page.data.length - 1);
 
-      return (<Grid sx={{width: 1, mx: "auto"}} key={key} size={{xs: 12,md:10, xl:9}}>
-        {CartComponent && (<CartComponent onCheck={onCheck} data={data} />)}
-        {isLastItem && (<>
-          <Typography component="h1" ref={ref} sx={{height: 0}}/>
-          <Box sx={{width: "100%"}}>
-            {isFetchingNextPage && <LinearProgress/>}
-          </Box>
-        </>)}
-      </Grid>);
-    })));
+    //   return (<Grid sx={{width: 1, mx: "auto"}} key={key} size={{xs: 12,md:10, xl:9}}>
+    //     {CartComponent && (<CartComponent onCheck={onCheck} data={data} />)}
+    //     {isLastItem && (<>
+    //       <Typography component="h1" ref={ref} sx={{height: 0}}/>
+    //       <Box sx={{width: "100%"}}>
+    //         {isFetchingNextPage && <LinearProgress/>}
+    //       </Box>
+    //     </>)}
+    //   </Grid>);
+    // })));
   }, [pages, isFetching, isFetchingNextPage, CartComponent, onCheck, ref]);
 
   const renderDesktopFilter = useCallback(() => (filterComponent && (<Grid

@@ -236,8 +236,6 @@ export default function ListGridWrapper() {
 
   return (
     <ListGrid
-      title="فرم‌های من"
-      showCreateButton
       searchBoxList={searchBoxList}
       filterBoxList={filterBoxList}
     //   url="/form/main-list"

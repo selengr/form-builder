@@ -35,10 +35,7 @@ interface Props {
   refreshData?: () => void;
   refreshGrid?: boolean;
   disableFilter?: boolean;
-  textTotal?: [string, string];
   searchQueryFilter?: { type: string; status: string };
-  showCreateButton?: boolean;
-  title: string;
 }
 
 const DEFAULT_SEARCH_FILTER = {type: "ALL", status: "PUBLIC"};
@@ -52,10 +49,7 @@ const ListGrid: React.FC<Props> = ({
                                      onCheck,
                                      refreshGrid,
                                      disableFilter,
-                                     searchQueryFilter = DEFAULT_SEARCH_FILTER,
-                                     showCreateButton = false,
-                                     title,
-                                     textTotal = ["", "عدد"],
+                                     searchQueryFilter = DEFAULT_SEARCH_FILTER
                                    }) => {
   const {ref, inView} = useInView();
   const searchParams = useSearchParams();
@@ -93,13 +87,13 @@ const ListGrid: React.FC<Props> = ({
 
   const renderHeader = useCallback(() => (<div
     className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative shrink-0">
-    <IconButton sx={{position: "absolute", left: "8px"}} onClick={() => router.push("/")}>
+    <IconButton sx={{position: "absolute", left: "8px"}} onClick={() => router.push("/user-reports")}>
       <MdOutlineKeyboardArrowRight color="#292D32"/>
     </IconButton>
     <p className="text-[16px] text-center font-bold text-[#161616]">
-      {title}
+        {pages?.pages[0].data.formName}
     </p>
-  </div>), [title, router]);
+  </div>), [pages?.pages[0].data.formName, router]);
 
 
   const renderContent = useCallback(() => {
@@ -127,10 +121,9 @@ const ListGrid: React.FC<Props> = ({
         </Typography>
       </Box>);
     }
-console.log('pages', pages?.pages)
-// debugger
+
     // @ts-ignore
-    return pages.pages.map((page, pageIndex) => (page.data.map((data: TReporterInformationItem, index: number) => {
+    return pages.pages.map((page, pageIndex) => (page.data.reporterInformation?.map((data: TReporterInformationItem, index: number) => {
       const key = `${pageIndex}-${index}`;
       // @ts-ignore
       const isLastItem = (pageIndex === pages.pages.length - 1) && (index === page.data.length - 1);

@@ -62,7 +62,7 @@ export async function fetchData({
   }
 // debugger
   return {
-    data: response.data.reporterInformation,
+    data: response.data,
     // data: response.data.reporterInformation,
     // total: response.data.totalElements,
   };

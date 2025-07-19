@@ -2,6 +2,7 @@ import {ImSpinner2} from "react-icons/im";
 import {IoStatsChartOutline} from "react-icons/io5";
 import {LuUserRoundPlus} from "react-icons/lu";
 import {Tooltip} from "@mui/material";
+import { useRouter } from "next/navigation";
 
 interface StatsTableProps {
   headData: any[];
@@ -12,6 +13,11 @@ interface StatsTableProps {
 export function ReportTable({headData, allData, isLoading}: StatsTableProps) {
   const actionColumnWidth = "120px";
   const dataColumnMinWidth = "100px";
+  const { push } = useRouter()
+
+  const handleShowResult = () => {
+    push('/show-result')
+  }
 
   return (<div className="w-[100%] h-full rounded-xl border border-gray-200 shadow-sm bg-white overflow-hidden min-w-0">
       {isLoading ? (<div className="w-full h-[300px] flex flex-col justify-center items-center text-gray-500">
@@ -87,6 +93,7 @@ export function ReportTable({headData, allData, isLoading}: StatsTableProps) {
                       <LuUserRoundPlus className="w-5 h-5"/>
                     </button>
                     <button
+                      onClick={handleShowResult}
                       className="rounded-xl p-2 bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 shadow-sm">
                       <IoStatsChartOutline className="w-5 h-5"/>
                     </button>

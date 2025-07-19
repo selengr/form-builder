@@ -20,9 +20,10 @@ interface ReportDialogProps {
   open: boolean;
   onClose: () => void;
   formId: any;
+  typeOfReport: "REPORT" | "FORM"
 }
 
-export default function ReportDialog({open, onClose, formId}: ReportDialogProps) {
+export default function ReportDialog({open, onClose, formId, typeOfReport}: ReportDialogProps) {
   const [reportData, setReportData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -85,7 +86,11 @@ export default function ReportDialog({open, onClose, formId}: ReportDialogProps)
         method: "POST", headers: {
           "Content-Type": "application/json",
         }, body: JSON.stringify({
-          formId: formId, description: reportText.trim(), username, responseForDestroyerReport: selectedReportKey,
+          formId,
+          description: reportText.trim(),
+          username,
+          responseForDestroyerReport: selectedReportKey,
+          typeOfReport
         }),
       });
 
@@ -112,70 +117,70 @@ export default function ReportDialog({open, onClose, formId}: ReportDialogProps)
                       backdropFilter: "blur(4px)", backgroundColor: "hsl(0deg 0% 100% / 50%)",
                     },
                   }}>
-      <DialogTitle sx={{pb: 2, fontWeight: "700", textAlign: "center"}}> گزارش تخلف </DialogTitle>
-      <DialogContent dividers>
-        {loading ? (<div className="flex justify-center py-4">
-            <CircularProgress size={24}/>
-          </div>) : error ? (<div
-            className="text-red-500 text-center py-4">{error}</div>) : Array.isArray(reportData) && reportData.length > 0 ? (
-          <FormControl component="fieldset" fullWidth margin="normal">
-            <FormLabel component="legend" sx={{mb: 1, fontWeight: "600", color: "inherit"}}>نوع گزارش:</FormLabel>
-            <RadioGroup
-              aria-label="report-reason"
-              name="report-reason"
-              value={selectedReportKey}
-              onChange={handleRadioChange}
-            >
-              {reportData.map((item: any) => (<FormControlLabel
-                  key={item.value}
-                  value={item.value}
-                  control={<Radio size="small"/>}
-                  label={item.key.split(".").pop()}
-                />))}
-            </RadioGroup>
-          </FormControl>) : (<div className="text-center py-4">داده‌ای برای گزارش یافت نشد.</div>)}
+    <DialogTitle sx={{pb: 2, fontWeight: "700", textAlign: "center"}}> گزارش تخلف </DialogTitle>
+    <DialogContent dividers>
+      {loading ? (<div className="flex justify-center py-4">
+        <CircularProgress size={24}/>
+      </div>) : error ? (<div
+        className="text-red-500 text-center py-4">{error}</div>) : Array.isArray(reportData) && reportData.length > 0 ? (
+        <FormControl component="fieldset" fullWidth margin="normal">
+          <FormLabel component="legend" sx={{mb: 1, fontWeight: "600", color: "inherit"}}>نوع گزارش:</FormLabel>
+          <RadioGroup
+            aria-label="report-reason"
+            name="report-reason"
+            value={selectedReportKey}
+            onChange={handleRadioChange}
+          >
+            {reportData.map((item: any) => (<FormControlLabel
+              key={item.value}
+              value={item.value}
+              control={<Radio size="small"/>}
+              label={item.key.split(".").pop()}
+            />))}
+          </RadioGroup>
+        </FormControl>) : (<div className="text-center py-4">داده‌ای برای گزارش یافت نشد.</div>)}
 
-        <TextField
-          multiline
-          fullWidth
-          rows={4}
-          autoFocus
-          margin="normal"
-          label="توضیحات گزارش"
-          placeholder="دلیل گزارش خود را بنویسید..."
-          value={reportText}
-          onChange={(e) => setReportText(e.target.value)}
-          sx={{mt: 2}}
-        />
-      </DialogContent>
-      <DialogActions
-        sx={{
-          display: "flex", gap: 3, width: "100%", marginTop: 1, marginBottom: 2, paddingX: "30px",
-        }}>
+      <TextField
+        multiline
+        fullWidth
+        rows={4}
+        autoFocus
+        margin="normal"
+        label="توضیحات گزارش"
+        placeholder="دلیل گزارش خود را بنویسید..."
+        value={reportText}
+        onChange={(e) => setReportText(e.target.value)}
+        sx={{mt: 2}}
+      />
+    </DialogContent>
+    <DialogActions
+      sx={{
+        display: "flex", gap: 3, width: "100%", marginTop: 1, marginBottom: 2, paddingX: "30px",
+      }}>
 
-        <Button onClick={handleSubmit} fullWidth variant="contained" disableElevation color="primary"
-                sx={{
-                  marginX: "0 !important",
-                  height: "52px",
-                  fontWeight: "600",
-                  fontSize: "15px",
-                  borderRadius: "12px",
-                  borderColor: "#1758BA",
-                }}
-        >تایید</Button>
+      <Button onClick={handleSubmit} fullWidth variant="contained" disableElevation color="primary"
+              sx={{
+                marginX: "0 !important",
+                height: "52px",
+                fontWeight: "600",
+                fontSize: "15px",
+                borderRadius: "12px",
+                borderColor: "#1758BA",
+              }}
+      >تایید</Button>
 
-        <Button onClick={onClose} fullWidth color="inherit"
-                variant="outlined"
-                sx={{
-                  marginX: "0 !important",
-                  height: "52px",
-                  fontWeight: "600",
-                  fontSize: "15px",
-                  borderRadius: "12px",
-                  color: "#1758BA",
-                  borderColor: "#1758BA",
-                }}>انصراف</Button>
+      <Button onClick={onClose} fullWidth color="inherit"
+              variant="outlined"
+              sx={{
+                marginX: "0 !important",
+                height: "52px",
+                fontWeight: "600",
+                fontSize: "15px",
+                borderRadius: "12px",
+                color: "#1758BA",
+                borderColor: "#1758BA",
+              }}>انصراف</Button>
 
-      </DialogActions>
-    </Dialog>);
+    </DialogActions>
+  </Dialog>);
 }

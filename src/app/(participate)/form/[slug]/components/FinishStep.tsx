@@ -85,6 +85,7 @@ export function FinishStep({
         open={isReportDialogOpen}
         onClose={handleCloseReportDialog}
         formId={formId}
+        typeOfReport={"FORM"}
       />
     </div>
   );

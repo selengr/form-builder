@@ -1,6 +1,6 @@
 {
   "name": "psya",
-  "version": "4.4.25",
+  "version": "4.4.28",
   "private": true,
   "scripts": {
     "dev": "next dev -p 80 --turbo",

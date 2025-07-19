@@ -88,11 +88,13 @@ export default function ListCard({data, setRefreshGrid}: ListCardProps) {
         <div className="border p-4 rounded-[20px] border-[#DDE1E6] flex flex-col gap-4 w-full max-w-full relative">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
                 <InfoRow label="نام:" value={data.name} bold/>
-                {data.status !== "CREATE" && (<SwitchButton
+                {data.status === "PUBLISH" && (
+                  <SwitchButton
                     disabled={loading}
                     checked={data.status === "PUBLISH"}
                     onChange={handlePublishStatus}
-                />)}
+                />
+                )}
             </div>
 
             <div className="grid grid-cols-1 gap-2">
@@ -129,7 +131,7 @@ export default function ListCard({data, setRefreshGrid}: ListCardProps) {
                         </IconButton>
                     </Link>)}
 
-                    <Link href={`/src/app/stats/${data.id}`}>
+                    <Link href={`stats/${data.id}`}>
                         <IconButton disabled={loading}>
                             <AiOutlinePieChart color="#424242"/>
                         </IconButton>

@@ -240,10 +240,12 @@ export default function ListGridWrapper() {
       showCreateButton
       searchBoxList={searchBoxList}
       filterBoxList={filterBoxList}
-      url="/form/main-list"
+    //   url="/form/main-list"
+     url="/admin/destroy-form/1"
       filterComponent={<FilterSidebar/>}
       CartComponent={(item: any) => (
-        <ListCard setRefreshGrid={setRefreshGrid} {...item} />
+        // <ListCard setRefreshGrid={setRefreshGrid} {...item} />
+        <>desgfghjsf</>
       )}
       disableFilter={false}
       refreshGrid={refreshGrid}

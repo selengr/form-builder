@@ -244,7 +244,7 @@ export default function ListGridWrapper() {
      url="/admin/destroy-form/1"
       filterComponent={<FilterSidebar/>}
       CartComponent={(item: any) => (
-        <ListCard />
+        <ListCard data={item.data}/>
       )}
       disableFilter={false}
       refreshGrid={refreshGrid}

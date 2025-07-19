@@ -2,7 +2,7 @@
 
 import React, {useState} from "react";
 import ListGrid from "./ListGrid";
-import ListCard from "./ListGrid";
+import ListCard from "./ListCard";
 import {Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup,} from "@mui/material";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import Image from "next/image";

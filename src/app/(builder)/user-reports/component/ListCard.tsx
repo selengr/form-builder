@@ -1,5 +1,9 @@
+import { TReporterInformationItem } from "./type";
+interface ListCardProps {
+    data: TReporterInformationItem
+}
 
-const ListCard = () => {
+const ListCard = ({data}: ListCardProps) => {
   return (
     <div className="w-full min-h-screen px-4 py-4 bg-[#f7f7f7]">
       <div className="md:container mx-auto flex p-3 flex-col justify-start items-center min-w-screen h-full bg-white rounded-xl w-full">

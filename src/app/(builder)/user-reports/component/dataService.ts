@@ -60,9 +60,10 @@ export async function fetchData({
     // Handle error or throw a specific error if needed
     throw new Error("Failed to fetch data");
   }
-
+// debugger
   return {
-    data: response.data.content,
-    total: response.data.totalElements,
+    data: response.data.reporterInformation,
+    // data: response.data.reporterInformation,
+    // total: response.data.totalElements,
   };
 }

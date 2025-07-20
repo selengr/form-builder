@@ -1,6 +1,7 @@
 import { toast } from 'sonner';
+import {  useRouter } from "next/navigation";
+import { useMutation } from '@tanstack/react-query';
 import { AxiosApi } from '@/services/axios/AxiosApi';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 
 const postCalculation = async (data: { formId: number; takePartId: number }[]) => {
@@ -10,16 +11,15 @@ const postCalculation = async (data: { formId: number; takePartId: number }[]) =
 };
 
 export const usePostCondition = () => {
-    const queryClient = useQueryClient();
+    const { push } = useRouter()
 
     const mutation = useMutation({
         mutationKey: ['post-condition'],
         mutationFn: ({ data }: { data: { formId: number; takePartId: number }[] }) => postCalculation(data),
 
-        onSuccess: () => {
-            queryClient.invalidateQueries(['Report_List'] as any);
-            queryClient.refetchQueries(['Report_List'] as any);
-            toast.success("خرده‌گزارش با موفقیت ایجاد شد");
+        onSuccess: (formId,data) => {
+            console.log('formId, data', formId, data)
+             push(`/stats/${formId}/show-result`);
         },
         onError: () => {
             toast.error("عملیات ناموفق بود مجددا تلاش کنید");

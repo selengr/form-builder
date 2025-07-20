@@ -8,36 +8,7 @@ import { IconButton } from "@mui/material";
 import { usePostCondition } from "./hooks/usePostCondition";
 
 const ResultsPage = () => {
-    // const { mutate, isPending, isError, data } = usePostCondition();
 
-    // const [formId, setFormId] = useState(1);
-    // const [takePartId, setTakePartId] = useState(2);
-
-    //   mutate({
-    //     data: [
-    //       {
-    //         formId: formId,
-    //         takePartId: takePartId
-    //       }
-    //     ]
-    //   });
-
-    //       useEffect(() => {
-    //     const fetchData = async () => {
-    //         const response = await mutate({
-    //             data: [
-    //                 {
-    //                     formId: formId,
-    //                     takePartId: takePartId
-    //                 }
-    //             ]
-    //         });
-    //         console.log('response', response)
-    //     };
-    //     if (formId && takePartId) {
-    //         fetchData();
-    //     }
-    // }, []);
    
 
   return (

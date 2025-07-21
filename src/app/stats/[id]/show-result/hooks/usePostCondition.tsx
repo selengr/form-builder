@@ -17,9 +17,9 @@ export const usePostCondition = () => {
         mutationKey: ['post-condition'],
         mutationFn: ({ data }: { data: { formId: number; takePartId: number }[] }) => postCalculation(data),
 
-        onSuccess: (formId,data) => {
-            console.log('formId, data', formId, data)
-             push(`/stats/${formId}/show-result`);
+        onSuccess: (result) => {
+             localStorage.setItem('testResult', JSON.stringify(result));
+             push(`/stats/${result[0].formId}/show-result`);
         },
         onError: () => {
             toast.error("عملیات ناموفق بود مجددا تلاش کنید");

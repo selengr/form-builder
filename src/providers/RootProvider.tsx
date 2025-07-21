@@ -20,7 +20,7 @@ const RootProvider: FC<TRootProvider> = ({children}) => {
                    duration={20000}
                    swipeDirections={["top", "bottom"]}
                    expand={false}
-                   visibleToasts={10} theme={"light"}
+                   visibleToasts={1} theme={"light"}
           />
           <NetworkProvider>
             <MuiRtlProvider>

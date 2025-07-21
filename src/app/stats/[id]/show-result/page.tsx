@@ -1,21 +1,35 @@
 "use client"
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
-
 import Link from "next/link";
-import { IoIosArrowForward } from "react-icons/io";
+import Image from "next/image";
+import { useParams } from "next/navigation";
 import { IconButton } from "@mui/material";
-import { usePostCondition } from "./hooks/usePostCondition";
+import React, { useState, useEffect } from "react";
+import { IoIosArrowForward } from "react-icons/io";
+
+interface ResultRow {
+  row: string;
+}
+interface Result {
+  resultRows: ResultRow[];
+}
 
 const ResultsPage = () => {
+  const { id } = useParams()
+  const [results, setResults] = useState<Result[]>([]);
 
-   
+  useEffect(() => {
+    const storedResults = localStorage.getItem('testResult');
+    if (storedResults) {
+      setResults(JSON.parse(storedResults));
+    }
+  }, []);
+
 
   return (
     <div className="w-full min-h-screen px-4 py-4 bg-[#f7f7f7]">
       <div className="md:container mx-auto flex p-3 flex-col justify-start items-center min-w-screen h-full bg-white rounded-xl w-full">
         <div className="relative flex w-full justify-center items-center h-[52px] rounded-lg bg-[#F7F7FF]">
-          <Link href={`/reports`} className="absolute right-4">
+          <Link href={`/stats/${id}`} className="absolute right-4">
             <IconButton
               sx={{
                 borderRadius: "9999px",
@@ -37,19 +51,18 @@ const ResultsPage = () => {
           className="w-full sm:w-[50%] lg:w-[500px]"
         />
 
-        <div className="p-8">
-          {[1, 2, 3].map((item) => (
-            <div key={item} className="mb-8 last:mb-0">
-              <h2 className="text-right text-[15px] font-bold text-[#161616] mb-1">
-                سلام محمد جواد سلیمانی فرد عزیز
-              </h2>
-              <p className="text-right font-medium text-[#161616] mb-2">
-                با توجه به نتایج آزمون شما، وضعیت افسردگی شما در جایگاه متوسط
-                قرار دارد.
-              </p>
-              <p className="text-right font-medium text-[#161616]">
-                میزان افسردگی شما برابر ۸۰ می‌باشد.
-              </p>
+        <div className="p-8 max-w-[600px]">
+          {results?.map((result, index) => (
+            <div key={index} className="mb-4 last:mb-0">
+              {/* <h2 className="text-right text-[15px] font-bold text-[#161616] mb-1"></h2> */}
+              {result.resultRows.map((row, rowIndex) => (
+                <p
+                  key={rowIndex}
+                  className="text-justify font-medium text-[#161616] mb-2"
+                >
+                  {row.row}
+                </p>
+              ))}
             </div>
           ))}
         </div>

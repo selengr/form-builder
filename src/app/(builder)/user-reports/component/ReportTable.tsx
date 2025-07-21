@@ -2,6 +2,7 @@ import { Tooltip } from "@mui/material";
 import { TableCell } from "./TableCell";
 import { VscEye } from "react-icons/vsc";
 import { ImSpinner2 } from "react-icons/im";
+import { useRouter } from "next/navigation";
 
 interface IContent {
   formName: string;
@@ -18,6 +19,12 @@ interface StatsTableProps {
 }
 
 export function ReportTable({ headData, allData, isLoading }: StatsTableProps) {
+  const { push } = useRouter()
+
+  const handleShow = () => {
+    push("/user-reports/show")
+  }
+
   return (
     <div className="w-full md:max-h-[calc(100vh-155px)] max-h-[calc(100vh-220px)] overflow-auto rounded-xl border">
       {isLoading ? (
@@ -72,7 +79,7 @@ export function ReportTable({ headData, allData, isLoading }: StatsTableProps) {
                 {/* ستون عملیات */}
                 <td className="px-4 py-2 border-l-0 border-slate-300 align-middle">
                   <div className="flex items-center justify-center gap-2 align-middle">
-                    <button className="rounded-[8px] border-none p-2 bg-[#1758BA]">
+                    <button onClick={handleShow} className="rounded-[8px] border-none p-2 bg-[#1758BA]">
                       <VscEye className="text-white w-6 h-6" width={24} height={24}/>
                     </button>
                   </div>

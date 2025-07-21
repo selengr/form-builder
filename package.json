@@ -1,6 +1,6 @@
 {
   "name": "psya",
-  "version": "4.4.25",
+  "version": "4.4.30",
   "private": true,
   "scripts": {
     "dev": "next dev -p 80 --turbo",
@@ -48,7 +48,7 @@
     "react-icons": "^5.5.0",
     "react-intersection-observer": "^9.16.0",
     "react-multi-date-picker": "^4.5.2",
-    "sharp": "^0.34.2",
+    "sharp": "^0.34.3",
     "sonner": "^2.0.6",
     "stylis": "^4.3.6",
     "stylis-plugin-rtl": "^2.1.1",

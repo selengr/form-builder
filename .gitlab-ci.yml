@@ -35,6 +35,7 @@ compile-job:
   - [ -s "$NVM_DIR/nvm.sh" ] 
   -  \. "$NVM_DIR/nvm.sh" 
   - nvm use 22
+  - npm config set registry https://registry.npmjs.org/
   - npm install --force --verbose && npm run build
 
   #- mvn clean package -DskipTests

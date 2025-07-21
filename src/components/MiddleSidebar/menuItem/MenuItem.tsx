@@ -3,11 +3,11 @@ import Link from "next/link";
 import Image, { StaticImageData } from "next/image";
 import { IoIosArrowDown } from "react-icons/io";
 // public
-import Wallet from "@/../public/images/home-page/menu/wallet-minus.svg";
-import ChartSquare from "@/../public/images/home-page/menu/chart-square.svg";
-import GroupSquare from "@/../public/images/home-page/menu/group-square.svg";
-import ShoppingCart from "@/../public/images/home-page/menu/shopping-cart.svg";
-import MusicPlaylist from "@/../public/images/home-page/menu/music-playlist.svg";
+import LAWS from "@/../public/images/home-page/menu/laws.svg";
+import ContactUs from "@/../public/images/home-page/menu/contact-us.svg";
+import FAQ from "@/../public/images/home-page/menu/faq.svg";
+import Tour from "@/../public/images/home-page/menu/tour.svg";
+import Forms from "@/../public/images/home-page/menu/formsMoney.svg";
 import React from "react";
 
 
@@ -25,11 +25,11 @@ interface StaticLink {
   }
 
   const STATIC_LINKS: StaticLink[] = [
-    { id: 2, title: "فرم‌های عمومی", icon: MusicPlaylist, link: "/public-form" },
-    { id: 5, title: "آموزش", icon: ChartSquare, link: "/underconstruction" },
-    { id: 6, title: "ارتباط با ما", icon: GroupSquare, link: "/underconstruction" },
-    { id: 8, title: "سوالات پرتکرار", icon: ShoppingCart,link: "/underconstruction"},
-    { id: 9, title: "قوانین و مقررات", icon: Wallet, link: "/underconstruction" },
+    { id: 2, title: "فرم‌های عمومی", icon: Forms, link: "/public-form" },
+    { id: 5, title: "آموزش", icon: Tour, link: "/underconstruction" },
+    { id: 6, title: "ارتباط با ما", icon: ContactUs, link: "/underconstruction" },
+    { id: 8, title: "سوالات پرتکرار", icon: FAQ,link: "/underconstruction"},
+    { id: 9, title: "قوانین و مقررات", icon: LAWS, link: "/underconstruction" },
   ];
 
 const MenuList: React.FC<IProps> = ({ menuLinks, onItemClick }) => {

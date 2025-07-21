@@ -41,13 +41,13 @@ export default function TextFieldPair({
         <div className="flex gap-4 mt-4 justify-between">
           <div className="w-full">
             <Typography variant="subtitle2" fontWeight="700">
-              حداقل کرکتر:
+              حداقل کاراکتر:
             </Typography>
             <RHFTextField name="MINIMUM_LEN.value" type="number" />
           </div>
           <div className="w-full">
             <Typography variant="subtitle2" fontWeight="700">
-              حداکثر کرکتر:
+              حداکثر کاراکتر:
             </Typography>
             <RHFTextField name="MAXIMUM_LEN.value" type="number" />
           </div>

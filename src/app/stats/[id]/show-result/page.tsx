@@ -1,14 +1,19 @@
 "use client"
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
-
 import Link from "next/link";
-import { IoIosArrowForward } from "react-icons/io";
+import Image from "next/image";
 import { IconButton } from "@mui/material";
-import { usePostCondition } from "./hooks/usePostCondition";
+import React, { useState, useEffect } from "react";
+import { IoIosArrowForward } from "react-icons/io";
 
 const ResultsPage = () => {
+const [results, setResults] = useState([]);
 
+  useEffect(() => {
+    const storedResults = localStorage.getItem('testResult');
+    if (storedResults) {
+      setResults(JSON.parse(storedResults));
+    }
+  }, []);
    
 
   return (
@@ -38,17 +43,13 @@ const ResultsPage = () => {
         />
 
         <div className="p-8">
-          {[1, 2, 3].map((item) => (
-            <div key={item} className="mb-8 last:mb-0">
+          {results?.map((result, index) => (
+            <div key={index} className="mb-8 last:mb-0">
               <h2 className="text-right text-[15px] font-bold text-[#161616] mb-1">
                 سلام محمد جواد سلیمانی فرد عزیز
               </h2>
               <p className="text-right font-medium text-[#161616] mb-2">
-                با توجه به نتایج آزمون شما، وضعیت افسردگی شما در جایگاه متوسط
-                قرار دارد.
-              </p>
-              <p className="text-right font-medium text-[#161616]">
-                میزان افسردگی شما برابر ۸۰ می‌باشد.
+                 {result.resultRows[0].row}
               </p>
             </div>
           ))}

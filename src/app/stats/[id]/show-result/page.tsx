@@ -5,8 +5,15 @@ import { IconButton } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 
+interface ResultRow {
+  row: string;
+}
+interface Result {
+  resultRows: ResultRow[];
+}
+
 const ResultsPage = () => {
-const [results, setResults] = useState([]);
+  const [results, setResults] = useState<Result[]>([]);
 
   useEffect(() => {
     const storedResults = localStorage.getItem('testResult');
@@ -14,7 +21,7 @@ const [results, setResults] = useState([]);
       setResults(JSON.parse(storedResults));
     }
   }, []);
-   
+
 
   return (
     <div className="w-full min-h-screen px-4 py-4 bg-[#f7f7f7]">
@@ -48,9 +55,14 @@ const [results, setResults] = useState([]);
               <h2 className="text-right text-[15px] font-bold text-[#161616] mb-1">
                 سلام محمد جواد سلیمانی فرد عزیز
               </h2>
-              <p className="text-right font-medium text-[#161616] mb-2">
-                 {result.resultRows[0].row}
-              </p>
+              {result.resultRows.map((row, rowIndex) => (
+                <p
+                  key={rowIndex}
+                  className="text-right font-medium text-[#161616] mb-2"
+                >
+                  {row.row}
+                </p>
+              ))}
             </div>
           ))}
         </div>

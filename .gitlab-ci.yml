@@ -28,7 +28,7 @@ compile-job:
   tags:
     - sharemodel-ci
   only:
-    - branches
+    - newpl1
   script:
   - set +e
   - export NVM_DIR="$HOME/.nvm"
@@ -48,7 +48,7 @@ build-Docker-job:
   tags:
     - sharemodel-ci
   only:
-    - branches
+    - newpl1
   dependencies:
     - compile-job
   script:
@@ -61,7 +61,7 @@ deploy-job:
     - sharemodel-ci
   environment: production
   only:
-    - branches
+    - newpl1
   dependencies:
     - build-Docker-job
   script:
@@ -75,7 +75,7 @@ cleanup:
   tags:
     - sharemodel-ci
   only:
-    - branches
+    - newpl1
   script:
     - echo "Cleaning up project directory"
     - rm -rf "$CI_PROJECT_DIR"

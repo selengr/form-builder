@@ -23,7 +23,7 @@ export default function StatsPage() {
       <div className="flex-grow bg-white rounded-xl p-4 overflow-hidden flex flex-col min-w-0">
         <ReportHeader
           title={formData.name || "گزارش"}
-          onBack={() => router.push("/")}
+          onBack={() => router.push("/reports")}
         />
 
         <div className="flex-grow overflow-hidden min-w-0">

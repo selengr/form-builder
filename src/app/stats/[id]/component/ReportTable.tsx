@@ -15,8 +15,6 @@ interface StatsTableProps {
 
 export function ReportTable({ headData, allData, isLoading }: StatsTableProps) {
 
-  const [takePartId, setTakePartId] = useState(2);
-
   const { mutate, isPending, isError, data } = usePostCondition();
 
   const actionColumnWidth = "120px";

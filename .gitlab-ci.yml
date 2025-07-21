@@ -35,6 +35,8 @@ compile-job:
   - [ -s "$NVM_DIR/nvm.sh" ] 
   -  \. "$NVM_DIR/nvm.sh" 
   - nvm use 22
+  - npm install -g npm
+  - npm config set registry https://mirror-npm.runflare.com
   - npm install --force && npm run build
 
   #- mvn clean package -DskipTests

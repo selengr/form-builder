@@ -1,11 +1,22 @@
 "use client";
 
-import {zodResolver} from "@hookform/resolvers/zod";
-import {useForm} from "react-hook-form";
-import {z} from "zod";
-import FormProvider, {RHFMultiSelect, RHFSelect, RHFSwitch, RHFTextField} from "../hook-form";
-import {Box, Button, MenuItem, Typography} from "@mui/material";
-import {toast} from "sonner";
+import { useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import FormProvider, {
+  RHFMultiSelect,
+  RHFSelect,
+  RHFSwitch,
+  RHFTextField,
+} from "../hook-form";
+import { Box, Button, MenuItem, Typography } from "@mui/material";
+import { toast } from "sonner";
+
+interface GroupComboItem {
+  value: string;
+  caption: string;
+}
 
 const textFieldCommonSx = {
   "& .MuiInputBase-root": {
@@ -30,8 +41,8 @@ const nameSchema = z
   .pipe(
     z
       .string()
-      .min(2, {message: "حداقل باید 2 و حداکثر 50 کاراکتر باشد"})
-      .max(50, {message: "حداقل باید 2 و حداکثر 50 کاراکتر باشد"})
+      .min(2, { message: "حداقل باید 2 و حداکثر 50 کاراکتر باشد" })
+      .max(50, { message: "حداقل باید 2 و حداکثر 50 کاراکتر باشد" })
   );
 
 const propertiesSchema = z.object({
@@ -46,14 +57,24 @@ const propertiesSchema = z.object({
         message: "شماره تلفن باید با 09 شروع شود و دقیقاً 11 رقم داشته باشد",
       })
     ),
-  gender: z.enum(["MALE", "FEMALE"], {message: "جنسیت الزامی است و باید male یا female باشد"}),
+  gender: z.enum(["MALE", "FEMALE"], {
+    message: "جنسیت الزامی است و باید male یا female باشد",
+  }),
   group: z.string().optional(),
   show: z.boolean().default(false).optional(),
 });
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
-function IndividualSettings({handleOpen, formId}: { handleOpen: () => void, formId: string }) {
+function IndividualSettings({
+                              handleOpen,
+                              formId,
+                            }: {
+  handleOpen: () => void;
+  formId: string;
+}) {
+  const [groupOptions, setGroupOptions] = useState<GroupComboItem[]>([]);
+
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     mode: "onChange",
@@ -70,16 +91,56 @@ function IndividualSettings({handleOpen, formId}: { handleOpen: () => void, form
   const {
     handleSubmit,
     reset,
-    formState: {isSubmitting, isValid},
+    formState: { isSubmitting, isValid },
     setError,
   } = methods;
 
+  useEffect(() => {
+    async function fetchGroups() {
+      try {
+        const params = {
+          type: "COMBO",
+          entity: "QUESTIONS",
+          mode: "QUESTIONS_IN_FORM_BUILDER__ALL",
+          input: "",
+          page: 0,
+          rows: 10000,
+        };
+
+        const search = new URLSearchParams({
+          customComboFilterModel: JSON.stringify(params),
+        });
+
+        const response = await fetch(
+          `/api/group/combo?${search.toString()}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken") || ""}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setGroupOptions(data.dataList);
+        } else {
+          toast.error(data.error || "خطا در دریافت گروه‌ها");
+        }
+      } catch (err) {
+        toast.error("ارتباط با سرور برقرار نشد");
+      }
+    }
+
+    fetchGroups();
+  }, []);
+
   async function onSubmit(values: propertiesFormSchemaType) {
     try {
-      const response = await fetch('/api/publish/individual', {
-        method: 'POST',
+      const response = await fetch("/api/publish/individual", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           formId: formId.toString(),
@@ -97,25 +158,23 @@ function IndividualSettings({handleOpen, formId}: { handleOpen: () => void, form
         if (data.error && data.details) {
           data.details.forEach((err: any) => {
             if (err.path && err.path[0]) {
-              setError(err.path[0], {type: 'manual', message: err.message});
+              setError(err.path[0], {
+                type: "manual",
+                message: err.message,
+              });
             }
           });
         } else if (data.error) {
-          // console.error("API Error:", data.error);
-          toast.error(data.error.toString);
+          toast.error(data.error.toString());
         }
         return;
       }
-      // console.log('Submission successful:', data);
-      toast.success("با موفقیت به سبد خرید افزوده شد.");
 
+      toast.success("با موفقیت به سبد خرید افزوده شد.");
       handleOpen();
       reset();
-
     } catch (error) {
-      // console.error("Client-side error:", error);
       toast.error("خطای ناشناخته در ارسال اطلاعات.");
-
     }
   }
 
@@ -139,15 +198,16 @@ function IndividualSettings({handleOpen, formId}: { handleOpen: () => void, form
             <Typography variant="subtitle2" fontWeight="700">
               نام:
             </Typography>
-            <RHFTextField sx={textFieldCommonSx} name="name" fullWidth/>
+            <RHFTextField sx={textFieldCommonSx} name="name" fullWidth />
           </Box>
           <Box sx={inputFieldContainerSx}>
             <Typography variant="subtitle2" fontWeight="700">
               نام خانوادگی:
             </Typography>
-            <RHFTextField sx={textFieldCommonSx} name="family" fullWidth/>
+            <RHFTextField sx={textFieldCommonSx} name="family" fullWidth />
           </Box>
         </Box>
+
         <Box display="flex" gap={1} width="100%">
           <Box sx={inputFieldContainerSx}>
             <Typography variant="subtitle2" fontWeight="700">
@@ -172,8 +232,8 @@ function IndividualSettings({handleOpen, formId}: { handleOpen: () => void, form
             <RHFSelect fullWidth name="gender" sx={textFieldCommonSx}>
               <MenuItem value="">انتخاب کنید</MenuItem>
               {[
-                {value: "MALE", label: "مرد"},
-                {value: "FEMALE", label: "زن"},
+                { value: "MALE", label: "مرد" },
+                { value: "FEMALE", label: "زن" },
               ].map((item) => (
                 <MenuItem key={item.value} value={item.value}>
                   {item.label}
@@ -182,6 +242,7 @@ function IndividualSettings({handleOpen, formId}: { handleOpen: () => void, form
             </RHFSelect>
           </Box>
         </Box>
+
         <Box sx={inputFieldContainerSx}>
           <Typography variant="subtitle2" fontWeight="700">
             گروه:
@@ -196,11 +257,14 @@ function IndividualSettings({handleOpen, formId}: { handleOpen: () => void, form
             }}
             fullWidth
             name="group"
-            disabled
-            options={[]}
+            options={groupOptions.map((item) => ({
+              value: item.value,
+              label: item.caption,
+            }))}
           />
         </Box>
       </Box>
+
       <Box
         display="flex"
         flexDirection="row"
@@ -228,6 +292,7 @@ function IndividualSettings({handleOpen, formId}: { handleOpen: () => void, form
           }}
         />
       </Box>
+
       <Box
         sx={{
           display: "flex",

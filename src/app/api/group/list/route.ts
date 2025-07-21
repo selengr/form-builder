@@ -1,6 +1,7 @@
 import {NextResponse} from 'next/server';
 import {AxiosApi} from '@/services/axios/AxiosApi';
 import {AxiosError} from "axios";
+import {getAuthToken} from "@/utils/getAuthToken";
 
 interface GroupItem {
   groupName: string;
@@ -39,8 +40,7 @@ interface GroupListgridResponse {
 
 export async function GET(request: Request) {
   try {
-    const authorizationHeader = request.headers.get('Authorization');
-    const token = authorizationHeader?.split(' ')[1];
+    const token = await getAuthToken();
 
     if (!token) {
       return NextResponse.json({error: 'Authorization token is required.'}, {status: 401});

@@ -32,7 +32,7 @@ compile-job:
     - nvm use 22
     - npm i -g npm
     - npm config set registry https://registry.npmjs.org/
-    - npm ci --verbose
+    - npm i --force --verbose
     - npm run build
   artifacts:
     paths:

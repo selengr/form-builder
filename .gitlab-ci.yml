@@ -8,12 +8,6 @@ variables:
   NAMESPACE: "newpl1"
   IMAGE_REGISTRY: "registery.fardup.ir:5000"
 
-.default-job:
-  tags:
-    - sharemodel-ci
-  only:
-    - newpl1
-
 before_script:
   - |
     # Compute IMAGE_PROJECT dynamically
@@ -31,26 +25,32 @@ before_script:
 
 compile-job:
   stage: compile
-  extends: .default-job
+  tags:
+    - sharemodel-ci
+  only:
+    - newpl1
   script:
     - set +e
     - export NVM_DIR="$HOME/.nvm"
     - [ -s "$NVM_DIR/nvm.sh" ]
-    - \. "$NVM_DIR/nvm.sh"
+    -  \. "$NVM_DIR/nvm.sh"
     - nvm use 22
-    - npm i -g npm
     - npm config set registry https://registry.npmjs.org/
-    - npm i --force --verbose
-    - npm run build
+    - npm i -g npm
+    - npm install -f --verbose && npm run build
+
+  #- mvn clean package -DskipTests
   artifacts:
     paths:
-      - .next/standalone
-      - .next/static
-      - public
+      - .next/**
+      #- target/*.jar
 
 build-Docker-job:
   stage: build
-  extends: .default-job
+  tags:
+    - sharemodel-ci
+  only:
+    - newpl1
   dependencies:
     - compile-job
   script:
@@ -59,17 +59,25 @@ build-Docker-job:
 
 deploy-job:
   stage: deploy
-  extends: .default-job
+  tags:
+    - sharemodel-ci
   environment: production
+  only:
+    - newpl1
   dependencies:
     - build-Docker-job
   script:
-    - envsubst < /home/gitlab-runner/ali-ci/newpl1/psya-client/psya-client.yaml > deployment.yaml
-    - kubectl apply -f deployment.yaml -n "$NAMESPACE"
+    - sed -i "s~IMAGE_TAG~${IMAGE_TAG}~g" /home/gitlab-runner/ali-ci/newpl1/psya-client/psya-client.yaml
+    - kubectl apply -f /home/gitlab-runner/ali-ci/newpl1/psya-client/psya-client.yaml -n "$NAMESPACE"
+    - sed -i "s~${IMAGE_TAG}~IMAGE_TAG~g" /home/gitlab-runner/ali-ci/newpl1/psya-client/psya-client.yaml
+    #- kubectl apply -f manifest.yml -n "$NAMESPACE"
 
 cleanup:
   stage: cleanup
-  extends: .default-job
+  tags:
+    - sharemodel-ci
+  only:
+    - newpl1
   script:
     - echo "Cleaning up project directory"
     - rm -rf "$CI_PROJECT_DIR"

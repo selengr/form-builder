@@ -1,9 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { LuUserRoundPlus } from "react-icons/lu";
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
-import { useParams } from "next/navigation";
+import React, {useEffect, useState} from "react";
+import {LuUserRoundPlus} from "react-icons/lu";
+import {MdKeyboardArrowLeft, MdKeyboardArrowRight} from "react-icons/md";
+import {useParams} from "next/navigation";
+import {toast} from "sonner";
+import UsersDialog from "@/app/stats/[id]/component/excelDialog";
+
 // import { saveAs } from "file-saver";
 
 interface StatsPaginationProps {
@@ -14,7 +17,7 @@ interface StatsPaginationProps {
   rowsPerPage: number;
 }
 
-interface UserType {
+export interface UserType {
   takePartId: number;
   name: string;
 }
@@ -28,7 +31,7 @@ export function ReportPagination({
                                  }: StatsPaginationProps) {
   const totalPages =
     rowsPerPage === -1 ? 1 : Math.ceil(totalItems / rowsPerPage);
-  const { id } = useParams();
+  const {id} = useParams();
   const formId = JSON.parse(id as string);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -70,13 +73,31 @@ export function ReportPagination({
     localStorage.setItem("selectedUsersByForm", JSON.stringify(data));
     setSavedUsers(updated);
   };
+  const downloadExcel = async () => {
+    try {
+      const response = await fetch('/api/report/exportexcel', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          takePartIdList: savedUsers.map((user) => user.takePartId),
+        }),
+      });
 
-  const downloadExcel = () => {
-    const header = "ردیف,شناسه,نام\n";
-    const rows = savedUsers.map((u, i) => `${i + 1},${u.takePartId},${u.name}`);
-    const csv = header + rows.join("\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    // saveAs(blob, "users-list.csv");
+      const result = await response.json();
+
+      if (!response.ok || !result.response) {
+        throw new Error(result.error || 'خطا در تولید فایل اکسل');
+      }
+
+      toast.info("درخواست دانلود اکسل با موفقیت ارسال شد.",);
+
+    } catch (error: any) {
+      console.error('Download error:', error);
+      toast.error(error.message || "مشکلی در دانلود اکسل رخ داد.");
+
+    }
   };
 
   return (
@@ -101,7 +122,7 @@ export function ReportPagination({
             disabled={currentPage === 1}
             className="bg-white border border-blue-700 rounded-full p-1 disabled:opacity-50"
           >
-            <MdKeyboardArrowRight className="text-blue-700 text-xl" />
+            <MdKeyboardArrowRight className="text-blue-700 text-xl"/>
           </button>
           <span className="text-sm">
             صفحه {currentPage} از {totalPages}
@@ -111,7 +132,7 @@ export function ReportPagination({
             disabled={currentPage === totalPages}
             className="bg-white border border-blue-700 rounded-full p-1 disabled:opacity-50"
           >
-            <MdKeyboardArrowLeft className="text-blue-700 text-xl" />
+            <MdKeyboardArrowLeft className="text-blue-700 text-xl"/>
           </button>
         </div>
         <div className="flex items-center gap-2">
@@ -120,55 +141,22 @@ export function ReportPagination({
             onClick={() => setIsOpen(true)}
             className="rounded-xl p-2 bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 shadow-sm"
           >
-            <LuUserRoundPlus className="text-white text-xl" />
+            <LuUserRoundPlus className="text-white text-xl"/>
           </button>
         </div>
       </div>
 
-      {/* Modal */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex justify-center items-center">
-          <div className="bg-white w-[90%] max-w-md rounded-xl p-4 shadow-lg">
-            <h2 className="text-lg font-semibold mb-4 text-center">لیست کاربران انتخاب‌شده</h2>
-
-            {savedUsers.length === 0 ? (
-              <p className="text-center text-gray-500">کاربری انتخاب نشده است.</p>
-            ) : (
-              <ul className="space-y-2 max-h-60 overflow-y-auto pr-1">
-                {savedUsers.map((user, idx) => (
-                  <li
-                    key={user.takePartId}
-                    className="flex justify-between items-center bg-gray-100 px-3 py-2 rounded-md text-sm"
-                  >
-                    <span>{idx + 1}. {user.name}</span>
-                    <button
-                      onClick={() => handleDeleteUser(user.takePartId)}
-                      className="text-red-500 hover:underline"
-                    >
-                      حذف
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            <div className="flex justify-between items-center mt-6">
-              <button
-                onClick={downloadExcel}
-                disabled={savedUsers.length === 0}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm"
-              >
-                دانلود اکسل
-              </button>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded-md text-sm"
-              >
-                انصراف
-              </button>
-            </div>
-          </div>
-        </div>
+        <UsersDialog
+          open={isOpen}
+          onClose={() => setIsOpen(false)}
+          savedUsers={savedUsers}
+          onDeleteUser={handleDeleteUser}
+          onDownload={() => {
+            downloadExcel();
+            setIsOpen(false)
+          }}
+        />
       )}
     </>
   );

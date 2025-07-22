@@ -1,7 +1,7 @@
 "use client";
-import { Snackbar, SnackbarCloseReason } from "@mui/material";
-import { useState, type FC } from "react";
-import { GrCircleInformation } from "react-icons/gr";
+import {Snackbar, SnackbarCloseReason} from "@mui/material";
+import {type FC, useState} from "react";
+import {GrCircleInformation} from "react-icons/gr";
 
 const ShareController: FC<Props> = ({
   children,

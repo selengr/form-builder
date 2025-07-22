@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@mui/material";
+import {Button} from "@mui/material";
 import Image from "next/image";
 
 interface ICalculatorClear {

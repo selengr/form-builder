@@ -1,10 +1,6 @@
-import { useFormContext, Controller } from "react-hook-form";
-import {
-  FormControlLabel,
-  FormControlLabelProps,
-  FormHelperText,
-} from "@mui/material";
-import { SwitchButton } from "../Switch/SwitchButton";
+import {Controller, useFormContext} from "react-hook-form";
+import {FormControlLabel, FormControlLabelProps, FormHelperText,} from "@mui/material";
+import {SwitchButton} from "../Switch/SwitchButton";
 
 interface Props extends Omit<FormControlLabelProps, "control"> {
   name: string;

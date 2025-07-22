@@ -1,10 +1,10 @@
 "use client"
 import Link from "next/link";
 import Image from "next/image";
-import { useParams } from "next/navigation";
-import { IconButton } from "@mui/material";
-import React, { useState, useEffect } from "react";
-import { IoIosArrowForward } from "react-icons/io";
+import {useParams} from "next/navigation";
+import {IconButton} from "@mui/material";
+import React, {useEffect, useState} from "react";
+import {IoIosArrowForward} from "react-icons/io";
 
 interface ResultRow {
   row: string;

@@ -1,6 +1,6 @@
 {
   "name": "psya",
-  "version": "4.4.30",
+  "version": "4.4.31",
   "private": true,
   "scripts": {
     "dev": "next dev -p 80 --turbo",
@@ -47,6 +47,7 @@
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
     "react-intersection-observer": "^9.16.0",
+    "react-is": "^18.3.1",
     "react-multi-date-picker": "^4.5.2",
     "sharp": "^0.34.3",
     "sonner": "^2.0.6",
@@ -67,5 +68,8 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
+  },
+  "overrides": {
+    "react-is": "^18.3.1"
   }
 }

@@ -1,12 +1,11 @@
 "use client";
-import { Box } from "@mui/material";
-import { Controller} from "react-hook-form";
+import {Box} from "@mui/material";
+import {Controller} from "react-hook-form";
 
-import { DatePicker as DatePickerCustome  } from "@/components/DatePicker/DatePicker";
-import { TextFieldController } from "@/components/condition/form/TextFieldController";
-import { SelectController, MultiSelectController } from "@/components/condition/form/SelectController";
-import { IConditionQuestionType } from "@/types/conditionReportSolo";
-
+import {DatePicker as DatePickerCustome} from "@/components/DatePicker/DatePicker";
+import {TextFieldController} from "@/components/condition/form/TextFieldController";
+import {MultiSelectController, SelectController} from "@/components/condition/form/SelectController";
+import {IConditionQuestionType} from "@/types/conditionReportSolo";
 
 
 export const getQuestion = (type: string, values: any) => {

@@ -1,11 +1,7 @@
-import { memo } from "react";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import {
-  ElementsType,
-  FormElementInstance,
-  FormElements,
-} from "../../../types/FormElements";
+import {memo} from "react";
+import {useSortable} from "@dnd-kit/sortable";
+import {CSS} from "@dnd-kit/utilities";
+import {ElementsType, FormElementInstance, FormElements,} from "../../../types/FormElements";
 import QuestionCardExtra from "./QuestionCardExtra";
 
 const QuestionCard = memo(function QuestionCard({

@@ -1,8 +1,8 @@
 "use client";
 
-import { ReactNode } from "react";
-import { motion } from "framer-motion";
-import { useResponsive } from "@/hooks/useResponsive";
+import {ReactNode} from "react";
+import {motion} from "framer-motion";
+import {useResponsive} from "@/hooks/useResponsive";
 
 export default function AnimatedBox({ children }: { children: ReactNode }) {
   const isMobile = useResponsive("down", "md");

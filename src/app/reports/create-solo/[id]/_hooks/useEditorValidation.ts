@@ -1,5 +1,5 @@
-import { useCallback } from "react"
-import { IDropdownItem } from "@/components/AdvancedTextareaEditor/types"
+import {useCallback} from "react"
+import {IDropdownItem} from "@/components/AdvancedTextareaEditor/types"
 
 interface IUseEditorValidationProps {
   setValidationErrors: (errors: string[]) => void

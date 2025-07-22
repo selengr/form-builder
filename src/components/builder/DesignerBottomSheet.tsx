@@ -1,7 +1,7 @@
 import React from "react";
-import { Box, Modal, Slide, Grid2 } from "@mui/material";
-import { styled } from "@mui/system";
-import { TransitionProps } from "@mui/material/transitions";
+import {Box, Grid2, Modal, Slide} from "@mui/material";
+import {styled} from "@mui/system";
+import {TransitionProps} from "@mui/material/transitions";
 import Divider from "@mui/material/Divider";
 import useOpenBottomSheet from "@/hooks/useOpenBottomSheet";
 import useActionOpenBottomSheet from "@/hooks/useActionOpenBottomSheet";

@@ -1,18 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
-import { AxiosResponse } from "axios";
-import { CgClose } from "react-icons/cg";
+import {CgClose} from "react-icons/cg";
 import Dialog from "@mui/material/Dialog";
-import { IconButton } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import {IconButton} from "@mui/material";
+import {styled} from "@mui/material/styles";
 import {AxiosApi} from "@/services/axios/AxiosApi";
 import DialogContent from "@mui/material/DialogContent";
 
-import { ICreateCalculatorDialogProps } from "@/types/calculator";
+import {ICreateCalculatorDialogProps} from "@/types/calculator";
 import AdvancedFormulaEditor from "@/components/calculator/AdvancedFormulaEditor";
-import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import {useQuery} from "@tanstack/react-query";
+import {useParams} from "next/navigation";
 
 const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   direction: "ltr",

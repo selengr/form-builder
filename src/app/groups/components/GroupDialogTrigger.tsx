@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import {useEffect} from "react";
+import {usePathname, useSearchParams} from "next/navigation";
 
 export function GroupDialogTrigger({setShowCreateGroupDialog,}: {
   setShowCreateGroupDialog: (value: boolean) => void;

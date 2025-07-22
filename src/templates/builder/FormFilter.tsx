@@ -1,15 +1,8 @@
 "use client";
 import React from "react";
-import {
-  Button,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
-} from "@mui/material";
+import {Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup,} from "@mui/material";
 import Image from "next/image";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import FilterIcon from "@/../public/images/home-page/filter-icon.svg";
 
 interface Props {

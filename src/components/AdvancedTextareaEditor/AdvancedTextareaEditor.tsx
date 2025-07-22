@@ -1,16 +1,15 @@
 "use client";
 // React & Libs
 import type React from "react";
-import JSONData from './fake-data.json'
-import { createPortal } from "react-dom";
-import { useState, useRef, useCallback, useEffect } from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
+import {createPortal} from "react-dom";
 // styles
 import styles from './advancedTextareaEditor.module.css'
 // types
-import { IDropdownItem, IAdvancedTextareaEditorProps, IInitialData } from "./types";
-import { IConditionQuestionType } from "@/types/conditionReportSolo";
+import {IAdvancedTextareaEditorProps, IDropdownItem, IInitialData} from "./types";
+import {IConditionQuestionType} from "@/types/conditionReportSolo";
 
-  export default function AdvancedTextareaEditor({ initialData, hasError, qacWithOutFilter, onDataChange, label, validationErrors = [] }: IAdvancedTextareaEditorProps) {
+export default function AdvancedTextareaEditor({ initialData, hasError, qacWithOutFilter, onDataChange, label, validationErrors = [] }: IAdvancedTextareaEditorProps) {
       const [dropdowns, setDropdowns] = useState<IDropdownItem[]>([]);
       const [dropdownCounter, setDropdownCounter] = useState<number>(0);
 

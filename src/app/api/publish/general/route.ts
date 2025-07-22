@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
-import { AxiosApi } from '@/services/axios/AxiosApi';
-import { z, ZodError } from 'zod';
-import { AxiosError } from 'axios';
+import {NextResponse} from 'next/server';
+import {AxiosApi} from '@/services/axios/AxiosApi';
+import {z, ZodError} from 'zod';
+import {AxiosError} from 'axios';
 
 const publicMethodSchema = z.object({
   formId: z.union([z.string(), z.number()]),

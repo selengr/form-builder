@@ -1,11 +1,11 @@
 "use client";
 
-import { Box, TextField, Typography } from "@mui/material";
+import {Box, TextField, Typography} from "@mui/material";
 import AnimatedBox from "./AnimatedBox";
 import ActionButtons from "./ActionButtons";
-import { ILimitation } from "@/hooks/useParticipateForm";
-import { Dispatch, SetStateAction } from "react";
-import { useFormLimitation } from "@/hooks/useFormLimitation";
+import {ILimitation} from "@/hooks/useParticipateForm";
+import {Dispatch, SetStateAction} from "react";
+import {useFormLimitation} from "@/hooks/useFormLimitation";
 
 interface Props {
     type: "" | "PHONE_NUMBER" | "EMAIL";

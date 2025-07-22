@@ -1,14 +1,15 @@
 "use client";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import dynamic from "next/dynamic";
 // _hooks
-import { useGetReportList } from "./_hooks";
+import {useGetReportList} from "./_hooks";
 // templates
 import Header from "@/templates/reports/HeaderReports";
 import ErrorDisplay from "@/templates/condition/ErrorDisplay";
 import ConditionSkeleton from "@/templates/reports/condition/ConditionSkeleton";
 // types
-import { IGetCondition } from "@/types/conditionReportSolo";
+import {IGetCondition} from "@/types/conditionReportSolo";
+
 const ConditionList = dynamic(() => import("@/templates/reports/condition/ConditionList"));
 
 export default function Reports() {

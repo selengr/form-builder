@@ -1,7 +1,7 @@
 "use client";
 
-import { useContext } from "react";
-import { QuestionLoadingContext } from "@/context/AllContexts";
+import {useContext} from "react";
+import {QuestionLoadingContext} from "@/context/AllContexts";
 
 export default function useQuestionLoading() {
   const context = useContext(QuestionLoadingContext);

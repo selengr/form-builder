@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import {Suspense} from "react";
 import ListGridWrapper from "@/templates/public-form/ListGridWrapper";
 
 function PublicFormPage() {

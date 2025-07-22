@@ -1,7 +1,7 @@
 "use client";
 import usePreview from "@/hooks/usePreview";
-import { useRouter } from "next/navigation";
-import { Button, Typography } from "@mui/material";
+import {useRouter} from "next/navigation";
+import {Button, Typography} from "@mui/material";
 
 export default function PreviewProgress() {
   const router = useRouter();

@@ -1,16 +1,15 @@
 "use client";
 
-import { CgClose } from "react-icons/cg";
+import {CgClose} from "react-icons/cg";
 import Dialog from "@mui/material/Dialog";
-import { IconButton } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import {IconButton,styled} from "@mui/material";
 import {AxiosApi} from "@/services/axios/AxiosApi";
 import DialogContent from "@mui/material/DialogContent";
 
-import { IEditCalculatorDialogProps } from "@/types/calculator";
+import {IEditCalculatorDialogProps} from "@/types/calculator";
 import AdvancedFormulaEditor from "@/components/calculator/AdvancedFormulaEditor";
-import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import {useQuery} from "@tanstack/react-query";
+import {useParams} from "next/navigation";
 import PreviewLoading from "@/app/(builder)/preview/[id]/loading";
 
 const StyledDialogContent = styled(DialogContent)(({ theme }) => ({

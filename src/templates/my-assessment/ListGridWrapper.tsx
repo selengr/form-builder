@@ -1,17 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import {useState} from "react";
 import ListGrid from "@/components/ListGrid/ListGrid";
-import {
-  Button,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
-} from "@mui/material";
-import { usePathname, useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import {Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup,} from "@mui/material";
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import Image from "next/image";
 import FilterIcon from "@/../public/images/home-page/filter-icon.svg";
 import ListCard from "./ListCard";

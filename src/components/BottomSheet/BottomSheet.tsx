@@ -1,17 +1,10 @@
 "use client";
-import { forwardRef, ReactElement, Ref } from "react";
-import {
-  Box,
-  IconButton,
-  Modal,
-  Slide,
-  Typography,
-  Grid2,
-} from "@mui/material";
-import { styled } from "@mui/system";
-import { TransitionProps } from "@mui/material/transitions";
+import {forwardRef, ReactElement, Ref} from "react";
+import {Box, Grid2, IconButton, Modal, Slide, Typography,} from "@mui/material";
+import {styled} from "@mui/system";
+import {TransitionProps} from "@mui/material/transitions";
 import Divider from "@mui/material/Divider";
-import { IoClose } from "react-icons/io5";
+import {IoClose} from "react-icons/io5";
 
 interface BottomSheetProps {
   open: boolean;

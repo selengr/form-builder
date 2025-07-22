@@ -1,5 +1,5 @@
-import { jalaliToGregorian } from "./dateFormat";
-import { formatTime } from "./formatTime";
+import {jalaliToGregorian} from "./dateFormat";
+import {formatTime} from "./formatTime";
 
 interface Property {
   value: any;

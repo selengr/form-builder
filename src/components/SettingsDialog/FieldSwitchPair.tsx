@@ -1,14 +1,14 @@
 "use client";
 
-import { memo, useState } from "react";
-import { Controller, useFormContext } from "react-hook-form";
-import { Box, Typography } from "@mui/material";
-import { RHFMultiSelect } from "../hook-form";
-import { SwitchButton } from "../Switch/SwitchButton";
-import { DatePicker as DatePickerCustome } from "../DatePicker/DatePicker";
+import {memo, useState} from "react";
+import {Controller, useFormContext} from "react-hook-form";
+import {Box, Typography} from "@mui/material";
+import {RHFMultiSelect} from "../hook-form";
+import {SwitchButton} from "../Switch/SwitchButton";
+import {DatePicker as DatePickerCustome} from "../DatePicker/DatePicker";
 import DatePicker from "react-multi-date-picker";
 import TimePicker from "react-multi-date-picker/plugins/analog_time_picker";
-import { GoClock } from "react-icons/go";
+import {GoClock} from "react-icons/go";
 import TimePickerStyled from "./TimePicker.styled";
 
 const FieldSwitchPair = memo(function FieldSwitchPair({

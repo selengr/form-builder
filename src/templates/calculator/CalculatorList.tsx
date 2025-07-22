@@ -1,12 +1,12 @@
 "use client";
 // lib
-import { idGenerator } from "@/lib";
+import {idGenerator} from "@/lib";
 // hooks
-import { useFormData } from "@/hooks";
+import {useFormData} from "@/hooks";
 // types
-import { ICalculator } from "@/types/calculator";
+import {ICalculator} from "@/types/calculator";
 // view
-import { CalculatorCard } from "./CalculatorCard";
+import {CalculatorCard} from "./CalculatorCard";
 import CreateCalculator from "./CreateCalculator";
 
 interface IProps {

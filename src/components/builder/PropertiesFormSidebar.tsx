@@ -1,9 +1,5 @@
-import { memo } from "react";
-import {
-  ElementsType,
-  FormElementInstance,
-  FormElements,
-} from "@/types/FormElements";
+import {memo} from "react";
+import {ElementsType, FormElementInstance, FormElements,} from "@/types/FormElements";
 import useSelectedElement from "@/hooks/useSelectedElement";
 
 const PropertiesFormSidebar = memo(function PropertiesFormSidebar() {

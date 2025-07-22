@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext } from "react";
+import {useContext} from "react";
 import PreviewContext from "../context/PreviewContext";
 
 export default function usePreview() {

@@ -1,8 +1,7 @@
 "use client";
 import React from "react";
 import styles from "@/components/calculator/advancedFormulaEditor.module.css";
-import {FnFxItem} from "./types";
-import { Element } from "./types";
+import {Element, FnFxItem} from "./types";
 
 interface FormulaFnDropdownProps {
   element: Element;

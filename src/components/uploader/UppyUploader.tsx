@@ -1,12 +1,12 @@
 "use client";
 
-import { useRef } from "react";
+import {useRef} from "react";
 import Uppy from "@uppy/core";
 import Tus from "@uppy/tus";
 import CustomUppy from "./CustomeUppy";
-import { fileUploaderRestrictions } from "./fileUploader.config";
-import { toast } from "sonner";
-import { type IUploader } from "./types";
+import {fileUploaderRestrictions} from "./fileUploader.config";
+import {toast} from "sonner";
+import {type IUploader} from "./types";
 import "@uppy/core/dist/style.min.css";
 import "@uppy/dashboard/dist/style.min.css";
 import "@uppy/image-editor/dist/style.min.css";

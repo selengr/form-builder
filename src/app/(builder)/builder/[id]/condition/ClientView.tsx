@@ -2,9 +2,10 @@
 
 import dynamic from "next/dynamic";
 // templates
-import { ConditionSkeleton } from "@/templates/condition";
+import {ConditionSkeleton} from "@/templates/condition";
 import DesignerTabs from "@/templates/builder/TabComponent";
 import ErrorDisplay from "@/templates/condition/ErrorDisplay";
+
 const ConditionList = dynamic(() => import("@/templates/condition/ConditionList"));
 
 interface IProps<T> {

@@ -1,4 +1,4 @@
-import { type IFileRestriction } from "./types";
+import {type IFileRestriction} from "./types";
 
 export const fileUploaderRestrictions: IFileRestriction = {
   minFileSize: undefined,

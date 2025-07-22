@@ -1,18 +1,18 @@
 "use client";
 // React & Libs
-import { useState } from "react";
-import { Button, Menu, Typography, CircularProgress } from "@mui/material";
+import {useState} from "react";
+import {Button, CircularProgress, Menu, Typography} from "@mui/material";
 // types
-import { IConditionCardProps } from "@/types/condition";
+import {IConditionCardProps} from "@/types/condition";
 // components
 import ConfirmDialog from "@/components/confirm-dialog";
-import { EditConditionDialog } from "./EditConditionDialog";
-import { ConditionCardOperator } from "./ConditionCardOperator";
+import {EditConditionDialog} from "./EditConditionDialog";
+import {ConditionCardOperator} from "./ConditionCardOperator";
 // icons
-import { SlPencil } from "react-icons/sl";
-import { WeuiDeleteOutlined } from "../../../public/images/icons/DeleteIcon";
-import { PhDotsThreeVerticalBold } from "../../../public/images/icons/PhDotsThreeVerticalBold";
-import { useDeleteCondition } from "@/app/(builder)/builder/[id]/condition/_hooks/useDeleteCondition";
+import {SlPencil} from "react-icons/sl";
+import {WeuiDeleteOutlined} from "../../../public/images/icons/DeleteIcon";
+import {PhDotsThreeVerticalBold} from "../../../public/images/icons/PhDotsThreeVerticalBold";
+import {useDeleteCondition} from "@/app/(builder)/builder/[id]/condition/_hooks/useDeleteCondition";
 
 const buttonStyles = {
   height: "50px",

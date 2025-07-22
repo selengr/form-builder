@@ -1,8 +1,5 @@
-import { type ReactNode } from "react";
-import {
-  type AutocompleteRenderInputParams,
-  type AutocompleteProps,
-} from "@mui/material/Autocomplete";
+import {type ReactNode} from "react";
+import {type AutocompleteProps, type AutocompleteRenderInputParams,} from "@mui/material/Autocomplete";
 
 export interface IMuiAutocompleteProps<T>
   extends Omit<

@@ -1,5 +1,3 @@
-import { Tooltip } from "@mui/material";
-
 interface TableCellProps {
     content: string | number;
     rowIndex: number;

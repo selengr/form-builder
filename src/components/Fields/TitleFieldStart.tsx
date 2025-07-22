@@ -1,27 +1,23 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
+import {zodResolver} from "@hookform/resolvers/zod";
 import Box from "@mui/material/Box";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
 import FormProvider from "../../components/hook-form/FormProvider";
 import RHFTextField from "../../components/hook-form/RHFTextField";
-import { IFormElementConstructor } from "@/types/bulider";
+import {IFormElementConstructor} from "@/types/bulider";
 import FieldDialogActionBottomButtons from "../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons";
-import {
-  ElementsType,
-  FormElement,
-  FormElementInstance,
-} from "@/types/FormElements";
-import { useParams } from "next/navigation";
+import {ElementsType, FormElement, FormElementInstance,} from "@/types/FormElements";
+import {useParams} from "next/navigation";
 import useDesigner from "@/hooks/useDesigner";
 import {AxiosApi} from "@/services/axios/AxiosApi";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";
 import useActionSelectedElement from "@/hooks/useActionSelectedElement";
 import useSelectedElement from "@/hooks/useSelectedElement";
 import useActionDesigner from "@/hooks/useActionDesigner";
-import { toast } from "sonner";
-import { memo } from "react";
+import {toast} from "sonner";
+import {memo} from "react";
 
 const questionType: ElementsType = "TitleFieldStart";
 

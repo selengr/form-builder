@@ -1,16 +1,10 @@
 "use client";
 
-import { notFound, useParams, useSearchParams } from "next/navigation";
-import {
-  createContext,
-  useReducer,
-  useEffect,
-  ReactNode,
-  Dispatch,
-} from "react";
-import { FormElementInstance } from "@/types/FormElements";
-import { toast } from "react-hot-toast";
-import { IEndPageList } from "@/types/bulider";
+import {notFound, useParams, useSearchParams} from "next/navigation";
+import {createContext, Dispatch, ReactNode, useEffect, useReducer,} from "react";
+import {FormElementInstance} from "@/types/FormElements";
+import {toast} from "react-hot-toast";
+import {IEndPageList} from "@/types/bulider";
 import {AxiosApi} from "@/services/axios/AxiosApi";
 
 type IInitialState = {

@@ -1,12 +1,12 @@
 "use client";
 // lib
-import { idGenerator } from "@/lib";
+import {idGenerator} from "@/lib";
 // hooks
-import { useFormData } from "@/hooks";
+import {useFormData} from "@/hooks";
 // types
-import { IGetCondition } from "@/types/condition";
+import {IGetCondition} from "@/types/condition";
 // view
-import { ConditionCard } from "./ConditionCard";
+import {ConditionCard} from "./ConditionCard";
 import CreateCondition from "./CreateCondition";
 
 interface IProps {

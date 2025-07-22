@@ -6,7 +6,7 @@ import Image from "next/image";
 import {InfoRow} from "@/components/common/infoRow";
 import React, {useState} from "react";
 import BugIcon from "@/../public/images/home-page/menu/bugIcon.svg";
-import Button from "@mui/material/Button";
+import {Button} from "@mui/material";
 import ReportDialog from "@/components/ReportDialog/ReportDialog";
 
 interface FormCardBaseProps {
@@ -33,7 +33,7 @@ export default function FormCardBase({data, buttonText, buttonLink}: FormCardBas
     setIsReportDialogOpen(false);
   };
 
-  return (<div className="border p-4 rounded-[20px] border-[#DDE1E6] flex flex-col gap-3 w-full max-w-full relative">
+  return (<div className="border p-4 rounded-2xl border-[#DDE1E6] flex flex-col gap-3 w-full max-w-full relative">
     <div className="absolute top-2 left-2 z-10">
       <Button onClick={handleOpenReportDialog} size="medium" className={"rounded-full"}
               endIcon={<Image alt={"report"} src={BugIcon} height={24} width={24}/>}
@@ -42,10 +42,10 @@ export default function FormCardBase({data, buttonText, buttonLink}: FormCardBas
       </Button>
     </div>
 
-    <InfoRow label="نام:" value={data.name} bold/>
-    <InfoRow label="نوع:" value={formTypePersian[data.type]} bold/>
-    <InfoRow label="دسترسی:" value={data.accessType || "عمومی"} bold/>
-    <InfoRow label="وضعیت:" value={formStatusPersian[data.status]} bold/>
+    <InfoRow label="نام" value={data.name} bold/>
+    <InfoRow label="نوع" value={formTypePersian[data.type]} bold/>
+    <InfoRow label="دسترسی" value={data.accessType || "عمومی"} bold/>
+    <InfoRow label="وضعیت" value={formStatusPersian[data.status]} bold/>
 
     <div className="flex w-full gap-2">
       <button

@@ -1,12 +1,12 @@
 "use client";
-import { Fragment } from "react";
+import {Fragment} from "react";
 import DesignerElementNoDnD from "./DesignerElementNoDnd";
-import { FormElementInstance, FormElements } from "../../../types/FormElements";
+import {FormElementInstance, FormElements} from "../../../types/FormElements";
 import useDesigner from "@/hooks/useDesigner";
-import { FiPlus } from "react-icons/fi";
+import {FiPlus} from "react-icons/fi";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";
 import useActionSelectedElement from "@/hooks/useActionSelectedElement";
-import { idGenerator } from "@/lib/idGenerator";
+import {idGenerator} from "@/lib/idGenerator";
 
 export default function DesignerStartPageElement() {
   const setOpenDialog = useActionOpenDialog();

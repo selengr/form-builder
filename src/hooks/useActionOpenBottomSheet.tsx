@@ -1,7 +1,7 @@
 "use client";
 
-import { useContext } from "react";
-import { ActionOpenBottomSheetContext } from "@/context/AllContexts";
+import {useContext} from "react";
+import {ActionOpenBottomSheetContext} from "@/context/AllContexts";
 
 export default function useActionOpenBottomSheet() {
   const context = useContext(ActionOpenBottomSheetContext);

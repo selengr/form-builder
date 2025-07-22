@@ -1,8 +1,8 @@
 // import { TConditionData } from "@/lib/conditionFormSchema";
-import { Dispatch, SetStateAction } from "react";
+import {Dispatch, SetStateAction} from "react";
 
-  
-  export interface IConditionExtMap {
+
+export interface IConditionExtMap {
     QUESTION_TYPE?: string;
     DESCRIPTION?: string;
     MAXIMUM_LEN?: string;

@@ -1,9 +1,13 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, useFieldArray } from "react-hook-form"
-import { ConditionFormSchema, TConditionData, TSubConditionData, type TConditionFormData } from "@/lib/CreateSoloReportSchema"
-import { idGenerator } from "@/lib/idGenerator"
-import { IGetCondition } from "@/types/conditionReportSolo"
-
+import {zodResolver} from "@hookform/resolvers/zod"
+import {useFieldArray, useForm} from "react-hook-form"
+import {
+    ConditionFormSchema,
+    TConditionData,
+    type TConditionFormData,
+    TSubConditionData
+} from "@/lib/CreateSoloReportSchema"
+import {idGenerator} from "@/lib/idGenerator"
+import {IGetCondition} from "@/types/conditionReportSolo"
 
 
 export const createNewSubCondition = () => ({

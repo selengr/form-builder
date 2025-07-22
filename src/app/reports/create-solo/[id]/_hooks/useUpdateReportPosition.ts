@@ -1,6 +1,6 @@
-import { toast } from 'sonner';
+import {toast} from 'sonner';
 import {AxiosApi} from '@/services/axios/AxiosApi';
-import { useMutation } from '@tanstack/react-query';
+import {useMutation} from '@tanstack/react-query';
 
 interface IUpdatePositionPayload {
      formBuilderId: string | string[];

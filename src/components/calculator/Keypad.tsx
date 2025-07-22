@@ -2,7 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import CalculatorClear from "./calculator-clear";
-import { Box, Button, Select, MenuItem, Stack, Grid2 } from "@mui/material";
+import {Box, Button, Grid2, MenuItem, Select, Stack} from "@mui/material";
 import CalculatorParenthesis from "./calculator-parenthesis";
 
 

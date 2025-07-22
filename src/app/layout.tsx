@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
+import type {Metadata} from "next";
 import "./globals.css";
-import { RootProvider } from "@/providers";
+import {RootProvider} from "@/providers";
 import NextTopLoader from "nextjs-toploader";
 import MobileMenu from "@/components/MiddleSidebar/mobile/MobileMenu";
 import Image from "next/image";

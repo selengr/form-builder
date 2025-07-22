@@ -1,30 +1,16 @@
 "use client";
 
-import { memo, useMemo, useState } from "react";
-import {
-  ElementsType,
-  FormElement,
-  FormElementInstance,
-} from "../../types/FormElements";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, Stack, Typography } from "@mui/material";
+import {memo, useMemo, useState} from "react";
+import {ElementsType, FormElement, FormElementInstance,} from "../../types/FormElements";
+import {z} from "zod";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Box, Stack, Typography} from "@mui/material";
 import FormProvider from "../../components/hook-form/FormProvider";
-import {
-  RHFMultiSelect,
-  RHFSwitch,
-  RHFTextField,
-  RHFTextFieldOptionList,
-} from "@/components/hook-form";
+import {RHFMultiSelect, RHFSwitch, RHFTextField, RHFTextFieldOptionList,} from "@/components/hook-form";
 import FieldDialogActionBottomButtons from "../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons";
-import {
-  IFormElementConstructor,
-  IFormOptionList,
-  IQPLSpectral,
-  ISpectralQTapAndOptionsType,
-} from "@/types/bulider";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import {IFormElementConstructor, IFormOptionList, IQPLSpectral, ISpectralQTapAndOptionsType,} from "@/types/bulider";
+import {MdOutlineKeyboardArrowDown} from "react-icons/md";
 import {AxiosApi} from "@/services/axios/AxiosApi";
 import useElements from "@/hooks/useElements";
 import useDesigner from "@/hooks/useDesigner";
@@ -33,8 +19,8 @@ import useActionSelectedElement from "@/hooks/useActionSelectedElement";
 import useSelectedElement from "@/hooks/useSelectedElement";
 import useActionDesigner from "@/hooks/useActionDesigner";
 import CheckIcon from "@/../public/images/home-page/spectral.svg";
-import { SwitchButton } from "../Switch/SwitchButton";
-import { MyRangeSlider } from "../Slider/RangeSlider";
+import {SwitchButton} from "../Switch/SwitchButton";
+import {MyRangeSlider} from "../Slider/RangeSlider";
 
 const questionType: ElementsType = "SPECTRAL";
 

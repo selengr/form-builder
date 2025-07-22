@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import userReports from '@/services/userReports';
 
 export const useStatsViewModel = () => {

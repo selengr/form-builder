@@ -1,7 +1,7 @@
 "use client";
 
-import { useContext } from "react";
-import { ActionOpenDialogContext } from "@/context/AllContexts";
+import {useContext} from "react";
+import {ActionOpenDialogContext} from "@/context/AllContexts";
 
 export default function useActionOpenDialog() {
   const context = useContext(ActionOpenDialogContext);

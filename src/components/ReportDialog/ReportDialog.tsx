@@ -105,7 +105,7 @@ export default function ReportDialog({open, onClose, formId, typeOfReport}: Repo
                 onClose();
             }
         } catch (error) {
-            toast.error("خطا در ارسال گزارش");
+            // toast.error("خطا در ارسال گزارش");
         }
     };
 

@@ -61,13 +61,7 @@ const propertiesSchema = z.object({
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
-function IndividualSettings({
-                              handleOpen,
-                              formId,
-                            }: {
-  handleOpen: () => void;
-  formId: string;
-}) {
+function IndividualSettings({handleOpen, formId,}: { handleOpen: () => void; formId: string | number; }) {
   const [groupOptions, setGroupOptions] = useState<GroupComboItem[]>([]);
 
   const methods = useForm<propertiesFormSchemaType>({

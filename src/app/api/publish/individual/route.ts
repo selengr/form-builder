@@ -2,6 +2,7 @@ import {NextResponse} from 'next/server';
 import {AxiosApi} from '@/services/axios/AxiosApi';
 import {z, ZodError} from 'zod';
 import {AxiosError} from 'axios';
+import {getAuthToken} from "@/utils/getAuthToken";
 
 const soloMethodSchema = z.object({
   formId: z.string(),
@@ -18,6 +19,14 @@ export async function POST(req: Request) {
   try {
     const body: SoloMethodPayload = await req.json();
 
+    const token = await getAuthToken();
+    if (!token) {
+      return NextResponse.json(
+          { error: 'توکن احراز هویت یافت نشد.' },
+          { status: 401 }
+      );
+    }
+
     const parsed = soloMethodSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
@@ -26,7 +35,13 @@ export async function POST(req: Request) {
       );
     }
 
-    const {data} = await AxiosApi.post('/form-publish-setting/solo-method', body);
+    const {data} = await AxiosApi.post('/form-publish-setting/solo-method', body,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+    );
     return NextResponse.json(data);
   } catch (error: any) {
     if (error instanceof ZodError) {

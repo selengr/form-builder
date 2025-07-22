@@ -11,13 +11,13 @@ import {GroupListItem, IGroup} from "./components/groupListItem";
 import {CreateGroupDialog} from "@/app/groups/components/createGroupDialog";
 import {GroupDialogTrigger} from "./components/GroupDialogTrigger";
 
-interface GroupItemAPI {
+export interface GroupItemAPI {
     groupName: string;
     groupId: number;
     groupMemberCount: number;
 }
 
-interface GroupListResponse {
+export interface GroupListResponse {
     content: GroupItemAPI[];
     totalElements: number;
 }

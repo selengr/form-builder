@@ -184,7 +184,7 @@ export const useParticipateForm = () => {
       else initializeQuestion(res.data);
     } catch (e) {
       console.error("Error in handleNext:", e);
-      toast.error("خطا در ارسال پاسخ");
+      // toast.error("خطا در ارسال پاسخ");
     } finally {
       setQuestionLoading(false);
     }

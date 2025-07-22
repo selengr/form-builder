@@ -1,4 +1,4 @@
-import { ImSpinner2 } from "react-icons/im";
+import {ImSpinner2} from "react-icons/im";
 
 function PreviewLoading() {
   return (

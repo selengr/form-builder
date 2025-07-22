@@ -1,9 +1,9 @@
 "use client";
-import { Box } from "@mui/material";
-import { ReactNode, useState } from "react";
+import {Box} from "@mui/material";
+import {ReactNode, useState} from "react";
 import Typography from "@mui/material/Typography";
-import { GrCircleInformation } from "react-icons/gr";
-import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
+import {GrCircleInformation} from "react-icons/gr";
+import Snackbar, {SnackbarCloseReason} from "@mui/material/Snackbar";
 
 interface CopyToClipboardButtonProps {
   link: string;

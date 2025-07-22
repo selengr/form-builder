@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import {memo} from "react";
 import CreateFieldDialog from "@/components/builder/CreateFieldDialog";
 import DesignerSidebar from "@/components/builder/DesignerSidebar";
 import KanbanBoard from "./kanban/KanbanBoard";

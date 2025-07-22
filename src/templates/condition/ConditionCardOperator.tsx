@@ -1,5 +1,5 @@
-import { IGetCondition } from "@/types/condition";
-import { TConditionData, TSubConditionData } from "@/lib/ConditionFormSchema";
+import {IGetCondition} from "@/types/condition";
+import {TConditionData, TSubConditionData} from "@/lib/ConditionFormSchema";
 
 
 interface IConditionCardOperatorProps {

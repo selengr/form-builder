@@ -1,7 +1,6 @@
 "use client";
 import {memo} from "react";
-import Button from "@mui/material/Button";
-import Backdrop from "@mui/material/Backdrop";
+import {Backdrop, Button} from "@mui/material";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";
 import useActionSelectedElement from "@/hooks/useActionSelectedElement";
 

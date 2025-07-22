@@ -1,16 +1,9 @@
 "use client"
 
-import { useState } from "react";
-import {
-  Box,
-  Popper,
-  IconButton,
-  Typography,
-  Autocomplete,
-  AutocompleteRenderInputParams,
-} from "@mui/material";
-import { IoIosArrowDown } from "react-icons/io";
-import { type IDataAutocomplete } from "./types";
+import {useState} from "react";
+import {Autocomplete, AutocompleteRenderInputParams, Box, IconButton, Popper, Typography,} from "@mui/material";
+import {IoIosArrowDown} from "react-icons/io";
+import {type IDataAutocomplete} from "./types";
 import Input from "./Input";
 
 function DataAutocomplete<T>(props: IDataAutocomplete<T>) {

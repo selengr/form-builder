@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import {Box, Button, CircularProgress, Typography} from "@mui/material";
 
 interface FormulaControlsProps {
   isLoading : boolean;

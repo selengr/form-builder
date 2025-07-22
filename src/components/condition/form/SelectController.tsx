@@ -1,23 +1,23 @@
 "use client";
 import type React from "react";
 import {
-  Box,
-  Chip,
-  Select,
-  Checkbox,
-  MenuItem,
-  InputLabel,
-  OutlinedInput,
-  FormControl,
-  type Theme,
-  type SxProps,
-  type SelectProps,
-  FormHelperText,
-  LinearProgress,
+    Box,
+    Checkbox,
+    Chip,
+    FormControl,
+    FormHelperText,
+    InputLabel,
+    LinearProgress,
+    MenuItem,
+    OutlinedInput,
+    Select,
+    type SelectProps,
+    type SxProps,
+    type Theme,
 } from "@mui/material";
 
-import { IoIosArrowDown } from "react-icons/io";
-import { useFormContext, Controller } from "react-hook-form";
+import {IoIosArrowDown} from "react-icons/io";
+import {Controller, useFormContext} from "react-hook-form";
 
 interface CustomSelectProps extends Omit<SelectProps, "sx" | "name"> {
   options: { value: string; label: string }[];

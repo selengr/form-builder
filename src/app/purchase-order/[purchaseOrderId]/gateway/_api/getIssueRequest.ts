@@ -1,7 +1,6 @@
-import axios from "axios";
 import {AxiosApi} from "@/services/axios/AxiosApi";
-import { ConfirmPaymentRequestBody } from "../types";
-import { IPurchaseOrder } from "@/types/shoppingCart";
+import {ConfirmPaymentRequestBody} from "../types";
+import {IPurchaseOrder} from "@/types/shoppingCart";
 
 export async function serviceCost() {
   try {

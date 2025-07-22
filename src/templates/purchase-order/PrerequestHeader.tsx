@@ -1,6 +1,6 @@
 "use client";
-import { Box, Grid2, IconButton, Typography } from "@mui/material";
-import { ReactNode } from "react";
+import {Grid2, IconButton, Typography} from "@mui/material";
+import {ReactNode} from "react";
 
 interface IProps {
   title: string;

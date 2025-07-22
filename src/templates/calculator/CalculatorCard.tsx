@@ -1,22 +1,19 @@
 "use client";
 // React & Libs
 import Image from "next/image";
-import { useState } from "react";
-import { Button, Menu, Typography, CircularProgress } from "@mui/material";
+import {useState} from "react";
+import {Button, CircularProgress, Menu, Typography} from "@mui/material";
 // types
-import { ICalculatorCardProps } from "@/types/calculator";
+import {ICalculatorCardProps} from "@/types/calculator";
 // components
 import ConfirmDialog from "@/components/confirm-dialog";
 import EditCalculatorDialog from "./EditCalculatorDialog";
 // icons
-import { SlPencil } from "react-icons/sl";
-import { WeuiDeleteOutlined } from "../../../public/images/icons/DeleteIcon";
-import { PhDotsThreeVerticalBold } from "../../../public/images/icons/PhDotsThreeVerticalBold";
+import {SlPencil} from "react-icons/sl";
+import {WeuiDeleteOutlined} from "../../../public/images/icons/DeleteIcon";
+import {PhDotsThreeVerticalBold} from "../../../public/images/icons/PhDotsThreeVerticalBold";
 // hooks
-import {
-  useDeleteCalculator,
-  useCheckDependency,
-} from "../../app/(builder)/builder/[id]/calculator/_hooks";
+import {useCheckDependency, useDeleteCalculator,} from "../../app/(builder)/builder/[id]/calculator/_hooks";
 
 const buttonStyles = {
   height: "50px",

@@ -1,5 +1,5 @@
-import { type Breakpoint, useMediaQuery, useTheme } from "@mui/material";
-import { TValue, TQuery, TReturnType } from "./types";
+import {type Breakpoint, useMediaQuery, useTheme} from "@mui/material";
+import {TQuery, TReturnType, TValue} from "./types";
 
 function useResponsive(
   query: TQuery,

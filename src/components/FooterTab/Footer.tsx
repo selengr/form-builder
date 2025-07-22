@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
-import { MenuData } from "@/constants/Sidebar.constant";
-import { usePathname } from "next/navigation";
+import {MenuData} from "@/constants/Sidebar.constant";
+import {usePathname} from "next/navigation";
 
 export default function FooterTab() {
   const pathname = usePathname();

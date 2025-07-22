@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, FC, ReactNode } from "react";
-import { toast } from "sonner";
+import {FC, ReactNode, useEffect} from "react";
+import {toast} from "sonner";
 
 type TNetworkProvider = {
   readonly children: ReactNode;

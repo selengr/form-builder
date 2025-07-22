@@ -1,12 +1,12 @@
 "use client";
-import { Fragment, memo } from "react";
-import { useFormContext, useFieldArray, Controller } from "react-hook-form";
+import {Fragment, memo} from "react";
+import {Controller, useFieldArray, useFormContext} from "react-hook-form";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
-import { BsTrash3 } from "react-icons/bs";
-import { FiPlus } from "react-icons/fi";
+import {BsTrash3} from "react-icons/bs";
+import {FiPlus} from "react-icons/fi";
 
 type PropTypes = {
   name: string;

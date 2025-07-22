@@ -1,27 +1,23 @@
 "use client";
 
-import {
-  ElementsType,
-  FormElement,
-  FormElementInstance,
-} from "@/types/FormElements";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import {ElementsType, FormElement, FormElementInstance,} from "@/types/FormElements";
+import {z} from "zod";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
 import useDesigner from "@/hooks/useDesigner";
 import Box from "@mui/material/Box";
 import FormProvider from "../../components/hook-form/FormProvider";
 import RHFTextField from "../../components/hook-form/RHFTextField";
 import FieldDialogActionBottomButtons from "../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons";
-import { IFormElementConstructor } from "@/types/bulider";
-import { useParams } from "next/navigation";
+import {IFormElementConstructor} from "@/types/bulider";
+import {useParams} from "next/navigation";
 import {AxiosApi} from "@/services/axios/AxiosApi";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";
 import useActionSelectedElement from "@/hooks/useActionSelectedElement";
 import useSelectedElement from "@/hooks/useSelectedElement";
 import useActionDesigner from "@/hooks/useActionDesigner";
-import { toast } from "sonner";
-import { memo } from "react";
+import {toast} from "sonner";
+import {memo} from "react";
 import Image from "next/image";
 import finishIcon from "@/../public/images/home-page/finish.svg";
 

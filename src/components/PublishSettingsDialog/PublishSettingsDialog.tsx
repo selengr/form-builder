@@ -1,8 +1,8 @@
 "use client";
-import { Dialog, DialogContent, IconButton, Box, Typography } from "@mui/material";
-import { useCallback, useState } from "react";
-import { CgClose } from "react-icons/cg";
-import { IoSettingsOutline } from "react-icons/io5";
+import {Box, Dialog, DialogContent, IconButton, Typography} from "@mui/material";
+import {useCallback, useState} from "react";
+import {CgClose} from "react-icons/cg";
+import {IoSettingsOutline} from "react-icons/io5";
 import PublishSettingsTabValue from "./PublishSettingsTabValue";
 
 interface PublishSettingsDialogProps {

@@ -1,33 +1,25 @@
 "use client";
-import { useMemo, useState } from "react";
-import { useParams } from "next/navigation";
+import {useMemo} from "react";
+import {useParams} from "next/navigation";
 // dnd
 import {
-  useSensor,
-  DndContext,
-  useSensors,
-  closestCenter,
-  PointerSensor,
-  KeyboardSensor,
-  type DragEndEvent,
+    closestCenter,
+    DndContext,
+    type DragEndEvent,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
 } from "@dnd-kit/core";
-import {
-  restrictToVerticalAxis,
-  restrictToWindowEdges,
-} from "@dnd-kit/modifiers";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import {restrictToVerticalAxis, restrictToWindowEdges,} from "@dnd-kit/modifiers";
+import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy,} from "@dnd-kit/sortable";
 // templates
 import CreateCondition from "./CreateCondition";
-import { ConditionCard } from "./ConditionCard";
-import { idGenerator } from "@/lib/idGenerator";
+import {ConditionCard} from "./ConditionCard";
+import {idGenerator} from "@/lib/idGenerator";
 // types
-import { IGetCondition } from "@/types/conditionReportSolo";
-import { useUpdateReportPosition } from "@/app/reports/create-solo/[id]/_hooks/useUpdateReportPosition";
+import {IGetCondition} from "@/types/conditionReportSolo";
+import {useUpdateReportPosition} from "@/app/reports/create-solo/[id]/_hooks/useUpdateReportPosition";
 
 interface IConditionListProps {
   conditions: IGetCondition[];

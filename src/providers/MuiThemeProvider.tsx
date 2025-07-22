@@ -1,8 +1,8 @@
-import type { FC, PropsWithChildren } from "react";
-import { ThemeProvider } from "@mui/material";
-import { theme } from "@/theme/theme";
+import type {FC, PropsWithChildren} from "react";
+import {ThemeProvider} from "@mui/material";
+import {theme} from "@/theme/theme";
 import CssBaseline from "@mui/material/CssBaseline";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
+import {AppRouterCacheProvider} from "@mui/material-nextjs/v14-appRouter";
 
 type TMuiThemeProvider = PropsWithChildren;
 

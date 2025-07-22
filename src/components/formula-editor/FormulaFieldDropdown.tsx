@@ -1,7 +1,7 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import styles from "@/components/calculator/advancedFormulaEditor.module.css";
-import { Element } from "./types";
+import {Element} from "./types";
 
 interface FormulaFieldDropdownProps {
     element: Element;

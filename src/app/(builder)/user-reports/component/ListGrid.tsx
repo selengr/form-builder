@@ -1,18 +1,17 @@
 "use client";
 
-import React, {ReactNode, useCallback, useEffect, useState} from "react";
+import React, {ReactNode, useCallback, useEffect} from "react";
 import Image from "next/image";
 import {useInfiniteQuery} from "@tanstack/react-query";
 import {useInView} from "react-intersection-observer";
 import {useRouter, useSearchParams} from "next/navigation";
 import {Box, Grid2 as Grid, IconButton, LinearProgress, Typography} from "@mui/material";
-import { TReporterInformationItem } from "./type";
+import {TReporterInformationItem} from "./type";
 
 import {MdOutlineKeyboardArrowRight} from "react-icons/md";
 import {toast} from "sonner";
 import formListEmpty from '@/../public/images/home-page/formListEmpty.png'
 import {fetchData} from "./dataService";
-
 
 
 interface SearchBoxItem {

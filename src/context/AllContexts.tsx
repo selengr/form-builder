@@ -1,10 +1,6 @@
-import { createContext, Dispatch, SetStateAction } from "react";
-import {
-  ActionDesignerContextType,
-  DesignerContextType,
-  selectedElementObject,
-} from "./DesignerContext";
-import { FormElementInstance } from "../types/FormElements";
+import {createContext, Dispatch, SetStateAction} from "react";
+import {ActionDesignerContextType, DesignerContextType, selectedElementObject,} from "./DesignerContext";
+import {FormElementInstance} from "../types/FormElements";
 
 /* ---------------------------- Designer Context: Value & Action ---------------------------- */
 export const DesignerContext = createContext<DesignerContextType | null>(null);

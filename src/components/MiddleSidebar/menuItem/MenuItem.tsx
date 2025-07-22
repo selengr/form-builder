@@ -1,7 +1,6 @@
-
 import Link from "next/link";
-import Image, { StaticImageData } from "next/image";
-import { IoIosArrowDown } from "react-icons/io";
+import Image, {StaticImageData} from "next/image";
+import {IoIosArrowBack} from "react-icons/io";
 // public
 import LAWS from "@/../public/images/home-page/menu/laws.svg";
 import ContactUs from "@/../public/images/home-page/menu/contact-us.svg";
@@ -32,39 +31,69 @@ interface StaticLink {
     { id: 9, title: "قوانین و مقررات", icon: LAWS, link: "/underconstruction" },
   ];
 
+const MenuItem = ({
+                    id,
+                    href,
+                    icon,
+                    title,
+                    onClick,
+                    isStatic = false,
+                  }: {
+  id: string | number;
+  href: string;
+  icon: string;
+  title: string;
+  onClick?: () => void;
+  isStatic?: boolean;
+}) => (
+  <div className="gap-1 w-full border-b border-[#DDE1E6] py-2 rounded-sm duration-300 group" key={id}>
+    <Link
+      href={href}
+      onClick={onClick}
+      className="w-full flex items-center justify-between"
+    >
+      <div className="flex items-center gap-2">
+        <Image
+          src={isStatic ? icon : `/images/home-page/menu/${icon}`}
+          alt="icon"
+          width={32}
+          height={32}
+          priority
+          draggable={false}
+          className={"group-hover:rotate-6 transition-all"}
+        />
+        <p className="text-[14px] text-black font-bold">{title}</p>
+      </div>
+      <IoIosArrowBack size="1.3rem" color="#292D32" className={"group-hover:ml-0.5 transition-all"} />
+    </Link>
+  </div>
+);
+
 const MenuList: React.FC<IProps> = ({ menuLinks, onItemClick }) => {
   return (
     <>
       {menuLinks?.map((item) => (
-        <div className="gap-4 w-full border-b border-[#DDE1E6] pb-4" key={`menu-${item.id}`}>
-          <Link
-            href={item.a_attr?.href ?? "#"}
-            onClick={onItemClick}
-            className="w-full flex items-center justify-between"
-          >
-            <div className="flex items-center gap-2">
-              <Image src={`/images/home-page/menu/${item.icon}`} alt="icon" width={32} height={32} priority draggable={false} />
-              <p className="text-[14px] text-black font-bold">{item.text}</p>
-            </div>
-            <IoIosArrowDown className="rotate-90" size="1.3rem" color="#292D32" />
-          </Link>
-        </div>
+        <MenuItem
+          key={`menu-${item.id}`}
+          id={`menu-${item.id}`}
+          href={item.a_attr?.href ?? "#"}
+          icon={item.icon}
+          title={item.text}
+          onClick={onItemClick}
+        />
       ))}
 
       {STATIC_LINKS.map((item) => (
-        <div className="gap-4 w-full border-b border-[#DDE1E6] pb-4" key={`static-${item.id}`}>
-          <Link
-            href={item.link}
-            onClick={onItemClick}
-            className="w-full flex items-center justify-between"
-          >
-            <div className="flex items-center gap-2">
-              <Image src={item.icon} alt="icon" width={32} height={32} priority draggable={false} />
-              <p className="text-[14px] text-black font-bold">{item.title}</p>
-            </div>
-            <IoIosArrowDown className="rotate-90" size="1.3rem" color="#292D32" />
-          </Link>
-        </div>
+        <MenuItem
+          key={`static-${item.id}`}
+          id={`static-${item.id}`}
+          href={item.link}
+          // @ts-ignore
+          icon={item.icon}
+          title={item.title}
+          onClick={onItemClick}
+          isStatic
+        />
       ))}
     </>
   );

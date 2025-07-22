@@ -1,7 +1,7 @@
 "use client";
 
-import { useContext } from "react";
-import { DesignerContext } from "@/context/AllContexts";
+import {useContext} from "react";
+import {DesignerContext} from "@/context/AllContexts";
 
 export default function useDesigner() {
   const context = useContext(DesignerContext);

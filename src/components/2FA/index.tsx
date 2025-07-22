@@ -1,27 +1,24 @@
 "use client";
 
-import { z } from "zod";
-import { toast } from 'sonner';
+import {z} from "zod";
+import {toast} from 'sonner';
 import Image from "next/image";
 import Countdown from "react-countdown";
-import { BiAlarm } from "react-icons/bi";
-import { useEffect, useState } from "react";
+import {BiAlarm} from "react-icons/bi";
+import {useEffect, useState} from "react";
 import AuthCode from "react-auth-code-input";
-import { useMutation } from "@tanstack/react-query";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
-import { Box, Button, Typography, useTheme } from "@mui/material";
-import type {
-  TwoFABottomSheetProps,
-  ICheckNationalCodeResponse,
-} from "./types";
+import {useMutation} from "@tanstack/react-query";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {FormProvider, useForm} from "react-hook-form";
+import {Box, Button, Typography, useTheme} from "@mui/material";
+import type {ICheckNationalCodeResponse, TwoFABottomSheetProps,} from "./types";
 // image
 import TwoFAIcon from "@/../public/images/purchase-order/TwoFAIcon.svg";
 import NationalCardIcon from "@/../public/images/purchase-order/NationalCard.svg";
 // components
 import BottomSheet from "../BottomSheet/BottomSheet";
 import FormTextInput from "./text-input/form-text-input";
-import { twoFARequestHandler } from "@/app/purchase-order/[purchaseOrderId]/gateway/_api/getIssueRequest";
+import {twoFARequestHandler} from "@/app/purchase-order/[purchaseOrderId]/gateway/_api/getIssueRequest";
 
 
 const NationalCodeSchema = z.object({

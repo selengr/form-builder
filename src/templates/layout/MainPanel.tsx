@@ -1,7 +1,7 @@
 import FooterTab from "@/components/FooterTab/Footer";
 import MainSidebar from "@/components/MainSidebar/MainSidebar";
 import TopAppBar from "@/components/TopAppBar/TopAppBar";
-import { usePathname } from "next/navigation";
+import {usePathname} from "next/navigation";
 
 export default function MainPanel({
   children,

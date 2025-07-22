@@ -1,5 +1,5 @@
-import { getServerSession } from "next-auth";
-import { getSession } from "next-auth/react";
+import {getServerSession} from "next-auth";
+import {getSession} from "next-auth/react";
 import {authOptions} from "@/services/auth/authConfig";
 
 let cachedSession: any = null;

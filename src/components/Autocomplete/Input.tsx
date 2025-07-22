@@ -1,6 +1,6 @@
 "use client";
 
-import { styled, InputBase } from "@mui/material";
+import {InputBase, styled} from "@mui/material";
 
 const Input = styled(InputBase)(({ theme: { palette } }) => {
   return {

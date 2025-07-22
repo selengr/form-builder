@@ -1,10 +1,10 @@
 "use client";
 
-import { memo, useCallback } from "react";
+import {memo, useCallback} from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
-import { CgClose } from "react-icons/cg";
-import { ImSpinner2 } from "react-icons/im";
+import {CgClose} from "react-icons/cg";
+import {ImSpinner2} from "react-icons/im";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";
 import useOpenDialog from "@/hooks/useOpenDialog";
 import useActionSelectedElement from "@/hooks/useActionSelectedElement";

@@ -1,5 +1,5 @@
 // components/Avatar.tsx
-import { generateColorForName } from '@/lib/avatarColorGenerator';
+import {generateColorForName} from '@/lib/avatarColorGenerator';
 
 interface AvatarProps {
   name: string;

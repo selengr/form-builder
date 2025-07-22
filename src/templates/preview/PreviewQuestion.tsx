@@ -1,6 +1,6 @@
-import { motion } from "framer-motion";
-import { ElementsType, FormElements } from "@/types/FormElements";
-import { useResponsive } from "@/hooks/useResponsive";
+import {motion} from "framer-motion";
+import {ElementsType, FormElements} from "@/types/FormElements";
+import {useResponsive} from "@/hooks/useResponsive";
 import usePreview from "@/hooks/usePreview";
 
 export default function PreviewQuestion() {

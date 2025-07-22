@@ -1,5 +1,5 @@
-import { Dispatch, SetStateAction } from "react";
-import { QueryObserverResult } from "@tanstack/react-query";
+import {Dispatch, SetStateAction} from "react";
+import {QueryObserverResult} from "@tanstack/react-query";
 
 export type TRefetchFunction = () => Promise<QueryObserverResult<any, unknown>>;
 

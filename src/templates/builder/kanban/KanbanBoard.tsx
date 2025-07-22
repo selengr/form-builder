@@ -1,39 +1,19 @@
 "use client";
-import {
-  useMemo,
-  startTransition,
-  useState,
-  Fragment,
-  useCallback,
-  memo,
-} from "react";
+import {Fragment, memo, startTransition, useCallback, useMemo, useState,} from "react";
 import QuestionGroup from "./QuestionGroup";
-import {
-  DragEndEvent,
-  DragOverEvent,
-  DragStartEvent,
-  useDndMonitor,
-} from "@dnd-kit/core";
-import { arrayMove } from "@dnd-kit/sortable";
+import {DragEndEvent, DragOverEvent, DragStartEvent, useDndMonitor,} from "@dnd-kit/core";
+import {arrayMove} from "@dnd-kit/sortable";
 import useDesigner from "@/hooks/useDesigner";
-import {
-  ElementsType,
-  FormElementInstance,
-  FormElements,
-} from "@/types/FormElements";
-import { useParams } from "next/navigation";
-import {
-  IChangeOrMovePositionApi,
-  IFormElementConstructor,
-} from "@/types/bulider";
-import { idGenerator } from "@/lib/idGenerator";
+import {ElementsType, FormElementInstance, FormElements,} from "@/types/FormElements";
+import {useParams} from "next/navigation";
+import {IChangeOrMovePositionApi, IFormElementConstructor,} from "@/types/bulider";
+import {idGenerator} from "@/lib/idGenerator";
 import useElements from "@/hooks/useElements";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";
 import useActionElements from "@/hooks/useActionElements";
 import useActionSelectedElement from "@/hooks/useActionSelectedElement";
 import {AxiosApi} from "@/services/axios/AxiosApi";
-import { toast } from "sonner";
-import CreateGroupBtn from "./CreateGroupBtn";
+import {toast} from "sonner";
 
 const KanbanBoard = memo(function KanbanBoard() {
   const elements = useElements();

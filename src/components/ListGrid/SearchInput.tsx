@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from "react";
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import {useState} from "react";
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import Image from "next/image";
 import SearchIcon from "@/../public/images/home-page/search.svg";
 
@@ -33,7 +33,7 @@ export default function SearchInput() {
   };
 
   return (
-    <div className="flex items-center w-full border border-[#C9C9C9] rounded-xl px-3 py-1 gap-2 bg-white">
+    <div className="flex items-center w-full border border-[#DDE1E6] rounded-2xl px-3 py-1 gap-2 bg-white">
       <input
         type="text"
         className="flex-1 bg-transparent focus:outline-none text-right placeholder:text-gray-400 text-sm"

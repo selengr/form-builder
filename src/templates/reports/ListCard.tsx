@@ -1,8 +1,9 @@
 'use client';
 
 import {useRouter} from 'next/navigation';
-import Button from '@mui/material/Button';
-import {InfoRow} from "@/components/common/infoRow";
+import {FC} from 'react';
+import {Button} from '@mui/material';
+import {InfoRow} from '@/components/common/infoRow';
 
 const formTypePersian: Record<string, string> = {
     TEST: 'آزمون',
@@ -21,50 +22,57 @@ interface ListCardProps {
     };
 }
 
-export default function ListCard({data}: ListCardProps) {
+const ActionButton: FC<{
+    label: string;
+    onClick: () => void;
+    color: string;
+    hoverColor?: string;
+}> = ({ label, onClick, color, hoverColor }) => (
+    <Button
+        variant="contained"
+        size="large"
+        disableElevation
+        fullWidth
+        onClick={onClick}
+        title={label}
+        sx={{
+            backgroundColor: color,
+            borderRadius: '8px',
+            '&:hover': {
+                backgroundColor: hoverColor || color,
+                opacity: hoverColor ? 1 : 0.9,
+            },
+        }}
+    >
+        {label}
+    </Button>
+);
+
+const ListCard: FC<ListCardProps> = ({ data }) => {
     const router = useRouter();
+    const { id, name, type, accessType } = data;
 
     return (
-        <div className="flex flex-col gap-3 rounded-[20px] border border-[#DDE1E6] p-4">
-            <InfoRow label="نام" value={data.name} bold/>
-            <InfoRow label="نوع" value={formTypePersian[data.type]} bold/>
-            <InfoRow label="دسترسی" value={data.accessType || 'عمومی'} bold/>
-            <InfoRow label="وضعیت" value="انجام نشده" bold/>
+        <div className="flex flex-col gap-4 rounded-2xl border border-[#DDE1E6] p-5 shadow-sm">
+            <InfoRow label="نام" value={name} bold />
+            <InfoRow label="نوع" value={formTypePersian[type]} bold />
+            <InfoRow label="دسترسی" value={accessType || 'عمومی'} bold />
 
-            <div className="flex w-full flex-row gap-2">
-                <Button
-                    variant="contained"
-                    size="large"
-                    disableElevation
-                    fullWidth
-                    onClick={() => router.push(`/stats/${data.id}`)}
-                    sx={{
-                        backgroundColor: '#1758BA',
-                        borderRadius: '8px',
-                        '&:hover': {backgroundColor: '#216ee1'},
-                    }}
-                >
-                    مشاهده نتایج
-                </Button>
-
-                <Button
-                    variant="contained"
-                    size="large"
-                    disableElevation
-                    fullWidth
-                    onClick={() => router.push(`/reports/create-solo/${data.id}`)}
-                    sx={{
-                        backgroundColor: '#2CDFC9',
-                        borderRadius: '8px',
-                        '&:hover': {
-                            backgroundColor: '#2CDFC9',
-                            opacity: 0.9,
-                        },
-                    }}
-                >
-                    ساخت گزارش
-                </Button>
+            <div className="flex flex-col gap-2 sm:flex-row">
+                <ActionButton
+                    label="مشاهده نتایج"
+                    onClick={() => router.push(`/stats/${id}`)}
+                    color="#1758BA"
+                    hoverColor="#216ee1"
+                />
+                <ActionButton
+                    label="ساخت گزارش"
+                    onClick={() => router.push(`/reports/create-solo/${id}`)}
+                    color="#2CDFC9"
+                />
             </div>
         </div>
     );
-}
+};
+
+export default ListCard;

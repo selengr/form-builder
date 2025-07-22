@@ -1,11 +1,6 @@
 import {AxiosApi} from "@/services/axios/AxiosApi";
-import {
-    FormPayload,
-    QuestionGroupPayload,
-    SearchFilterModel,
-    SetFormStatusPayload,
-} from "./dataModel";
-import { AccessType, FormStatus, FormType } from "./constants";
+import {FormPayload, QuestionGroupPayload, SearchFilterModel, SetFormStatusPayload,} from "./dataModel";
+import {AccessType, FormStatus, FormType} from "./constants";
 
 // helper
 const extractData = <T>(response: { data: T }): T => response.data;

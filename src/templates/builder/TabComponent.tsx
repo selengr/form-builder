@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import {Box,Tabs,Tab} from "@mui/material";
-import { useRouter, usePathname } from "next/navigation";
+import {useEffect, useState} from "react";
+import {Box, Tab, Tabs} from "@mui/material";
+import {usePathname, useRouter} from "next/navigation";
 
 export default function DesignerTabs() {
   const [value, setValue] = useState<number>(2);

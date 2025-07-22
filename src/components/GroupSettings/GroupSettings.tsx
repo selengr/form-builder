@@ -1,174 +1,312 @@
 "use client";
-import {Box, Button, Checkbox, IconButton, InputBase, Paper, Typography,} from "@mui/material";
+
+import {useCallback, useEffect, useState} from "react";
+import {Box, Button, Checkbox, CircularProgress, IconButton, InputBase, Paper, Typography,} from "@mui/material";
 import Image from "next/image";
-import {LuUserRoundSearch} from "react-icons/lu";
-import {TfiDownload} from "react-icons/tfi";
-import {SwitchButton} from "../Switch/SwitchButton";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+import FormProvider from "../hook-form/FormProvider";
+import RHFSwitch from "../hook-form/RHFSwitch";
+import {IGroup} from "@/app/groups/components/groupListItem";
+import {GroupListResponse} from "@/app/groups/page";
 
-const rows = [
-  { title: "گروه پیش فرض", users: 35, date: "1403/02/23" },
-  { title: "گروه پیش فرض", users: 35, date: "1403/02/23" },
-  { title: "گروه پیش فرض", users: 35, date: "1403/02/23" },
-];
+const groupFormSchema = z.object({
+    groupsId: z.array(z.number()).min(1, "حداقل یک گروه را انتخاب کنید."),
+});
 
-function GroupSettings({ handleOpen }: { handleOpen: () => void }) {
-  return (
-    <Box>
-      <Box
-        bgcolor="#f7f7f7"
-        mt={2}
-        padding={2}
-        display="flex"
-        flexDirection="column"
-      >
-        <Paper
-          sx={{
-            boxShadow: "unset",
-            border: "1px solid #C9C9C9 ",
-            display: "flex",
-            alignItems: "center",
-            width: "100%",
-            paddingY: 1,
-            "&.MuiPaper-root": {
-              borderRadius: "18px",
-              margin: "0 0 20px 0",
-            },
-          }}
-        >
-          <InputBase
-            sx={{ ml: 1, flex: 1, textAlign: "end" }}
-            placeholder="کاوش بر اساس نام پایگاه داده"
-            inputProps={{ "aria-label": "کاوش بر اساس نام پایگاه داده" }}
-          />
-          <IconButton type="button" sx={{ p: "8px" }} aria-label="search">
-            <Image
-              src="./images/home-page/search.svg"
-              width={23}
-              height={23}
-              alt="Add"
-              style={{
-                cursor: "pointer",
-              }}
-            />
-          </IconButton>
-        </Paper>
-        <Box display="flex" alignItems="center" gap={1}>
-          <Checkbox />
-          <Typography>انتخاب همه</Typography>
-        </Box>
-        <Box display="flex" flexDirection="column" gap={2}>
-          {rows.map((row, index) => (
-            <Box
-              key={index}
-              display="flex"
-              gap={1}
-              bgcolor="white"
-              alignItems="center"
-              width="100%"
-              justifyContent="space-between"
-              padding={1}
-              borderRadius="12px"
-            >
-              <Checkbox />
-              <Typography>{row.title}</Typography>
-              <Box />
-              <Typography>عضو: {row.users} نفر</Typography>
-              <Typography>{row.date}</Typography>
-              <Box display="flex" gap={0.5}>
-                <IconButton>
-                  <LuUserRoundSearch size="1.5rem" color="black" />
-                </IconButton>
-                <IconButton>
-                  <TfiDownload size="1.5rem" color="#1758BA" />
-                </IconButton>
-              </Box>
-            </Box>
-          ))}
-        </Box>
-      </Box>
-      <Typography fontSize="10px" mt={0.75}>
-        ظرفیت باقی‌مانده 30 نفر.
-      </Typography>
-      <Box
-        display="flex"
-        flexDirection="row"
-        justifyContent="space-between"
-        alignItems="center"
-        mt={2}
-      >
-        <Typography
-          variant="subtitle2"
-          fontWeight="500"
-          color="#393939"
-          fontSize="14px"
-        >
-          نمایش نتیجه به پاسخ دهنده
-        </Typography>
-        <SwitchButton />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: "16px",
-          paddingX: "16px",
-          width: "100%",
-          marginTop: "24px",
-        }}
-      >
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          disableRipple
-          sx={{
-            bgcolor: "#1758BA",
-            height: "54px",
-            color: "white",
-            fontSize: {
-              xs: "13px",
-              sm: "16px",
-            },
-            fontWeight: "700",
-            borderRadius: "10px",
-            boxShadow: "none",
-            "&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active": {
-              bgcolor: "#1758BA",
-              boxShadow: "none",
-            },
-          }}
-        >
-          افزودن به سبد خرید
-        </Button>
-        <Button
-          type="button"
-          fullWidth
-          className="text-[16px] text-[#1758BA]"
-          sx={{
-            height: "54px",
-            fontWeight: "700",
-            borderRadius: "10px",
-            fontSize: "16px",
-            color: "#1758BA",
-            borderColor: "#1758BA",
-            bgcolor: "white",
-            "&.MuiButtonBase-root:hover": {
-              bgcolor: "transparent",
-              boxShadow: "none",
-              color: "#1758BA",
-            },
-          }}
-          variant="outlined"
-          onClick={() => {
-            handleOpen();
-          }}
-        >
-          انصراف
-        </Button>
-      </Box>
-    </Box>
-  );
+type GroupFormSchemaType = z.infer<typeof groupFormSchema>;
+
+interface GroupSettingsProps {
+    handleOpen: () => void;
+    formId: string | number;
 }
+
+const GroupSettings: React.FC<GroupSettingsProps> = ({handleOpen, formId}) => {
+    const [groups, setGroups] = useState<IGroup[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const methods = useForm<GroupFormSchemaType>({
+        resolver: zodResolver(groupFormSchema),
+        mode: "onChange",
+        defaultValues: {
+            groupsId: [],
+        },
+    });
+
+    const {
+        watch,
+        setValue,
+        handleSubmit,
+        reset,
+        formState: {isSubmitting, isValid, errors},
+    } = methods;
+
+    const selectedGroupIds = watch("groupsId");
+    const allSelected = groups.length > 0 && selectedGroupIds.length === groups.length;
+
+    const fetchGroups = useCallback(async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const searchFilterModel = {
+                searchFilterBoxList: [{restrictionList: []}],
+                sortList: [{fieldName: "id", type: "DSC"}],
+                page: 0,
+                rows: 10,
+            };
+
+            const encoded = encodeURIComponent(JSON.stringify(searchFilterModel));
+            const res = await fetch(`/api/group/list?searchFilterModel=${encoded}`);
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error || "دریافت لیست پایگاه‌ها ناموفق بود.");
+            }
+
+            const data: GroupListResponse = await res.json();
+            const transformed: IGroup[] = data.content.map((item) => ({
+                id: item.groupId,
+                name: item.groupName,
+                description: "",
+                userCount: item.groupMemberCount,
+            }));
+
+            setGroups(transformed);
+        } catch (err: any) {
+            setError(err?.message || "خطای نامشخصی رخ داده است.");
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchGroups();
+    }, [fetchGroups]);
+
+    const handleToggleGroup = (groupId: number) => {
+        setValue(
+            "groupsId",
+            selectedGroupIds.includes(groupId)
+                ? selectedGroupIds.filter((id) => id !== groupId)
+                : [...selectedGroupIds, groupId],
+            {shouldDirty: true, shouldValidate: true}
+        );
+    };
+
+    const handleToggleAll = () => {
+        const newSelectedIds = allSelected ? [] : groups.map((group) => group.id);
+        setValue("groupsId", newSelectedIds, {shouldDirty: true, shouldValidate: true});
+    };
+
+    const onSubmit = useCallback(async (values: GroupFormSchemaType) => {
+        console.log("✅ Group Form Data:", values);
+        try {
+            const response = await fetch("/api/publish/group", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    formId: Number(formId),
+                    groupsId: values.groupsId,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                if (data.error && data.details) {
+                    data.details.forEach((err: any) => {
+                        if (err.path && err.path[0]) {
+                            if (err.path[0] === 'groupsId') {
+                                methods.setError('groupsId', {
+                                    type: 'manual',
+                                    message: err.message,
+                                });
+                            }
+
+                        }
+                    });
+                } else if (data.error) {
+                }
+                return;
+            }
+
+            handleOpen();
+            reset();
+        } catch (err) {
+            console.error("Group publish error:", err);
+        }
+    }, [formId, handleOpen, reset, methods]);
+
+
+    return (
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            <Box bgcolor="#f7f7f7" mt={2} p={2} display="flex" flexDirection="column">
+                <Paper
+                    sx={{
+                        boxShadow: "unset",
+                        border: "1px solid #C9C9C9",
+                        display: "flex",
+                        alignItems: "center",
+                        width: "100%",
+                        py: 1,
+                        borderRadius: "12px",
+                        mb: 2,
+                    }}
+                >
+                    <InputBase
+                        sx={{ml: 1, flex: 1, textAlign: "end"}}
+                        placeholder="کاوش بر اساس نام پایگاه داده"
+                        inputProps={{"aria-label": "جستجو"}}
+                    />
+                    <IconButton sx={{p: "8px"}}>
+                        <Image
+                            src="/images/home-page/search.svg"
+                            width={23}
+                            height={23}
+                            alt="جستجو"
+                            style={{cursor: "pointer"}}
+                        />
+                    </IconButton>
+                </Paper>
+
+                <Box display="flex" alignItems="center" gap={1} mb={1}>
+                    <Checkbox
+                        checked={allSelected}
+                        indeterminate={
+                            selectedGroupIds.length > 0 && selectedGroupIds.length < groups.length
+                        }
+                        onChange={handleToggleAll}
+                    />
+                    <Typography>انتخاب همه</Typography>
+                </Box>
+
+                <Box display="flex" flexDirection="column" gap={2}>
+                    {loading ? (
+                        <Box display="flex" justifyContent="center" my={4}>
+                            <CircularProgress/>
+                        </Box>
+                    ) : error ? (
+                        <Typography color="error" textAlign="center">
+                            {error}
+                        </Typography>
+                    ) : (
+                        groups.map((group) => (
+                            <Box
+                                key={group.id}
+                                display="flex"
+                                gap={1}
+                                bgcolor="white"
+                                alignItems="center"
+                                justifyContent="space-between"
+                                px={2}
+                                py={1}
+                                borderRadius="12px"
+                            >
+                                <Checkbox
+                                    checked={selectedGroupIds.includes(group.id)}
+                                    onChange={() => handleToggleGroup(group.id)}
+                                    disabled={group.userCount < 1}
+                                />
+                                <Typography flex={1}>{group.name}</Typography>
+                                <Typography fontSize="14px">
+                                    عضو: {group.userCount} نفر
+                                </Typography>
+                            </Box>
+                        ))
+                    )}
+                </Box>
+            </Box>
+
+            {errors.groupsId && (
+                <Typography color="error" fontSize="12px" sx={{mt: 1, px: 2}}>
+                    {errors.groupsId.message}
+                </Typography>
+            )}
+
+            <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                mt={2}
+                px={2}
+            >
+                <Typography variant="subtitle2" fontWeight={500} fontSize="14px">
+                    نمایش نتیجه به پاسخ دهنده
+                </Typography>
+                <RHFSwitch
+                    name="showUser"
+                    label={undefined}
+                    sx={{
+                        mb: 1, mx: 0, width: 1, justifyContent: "space-between",
+                    }}
+                />
+            </Box>
+
+            <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                gap="16px"
+                px="16px"
+                mt="24px"
+            >
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    disabled={isSubmitting || !isValid}
+                    sx={{
+                        bgcolor: "#1758BA",
+                        height: "54px",
+                        color: "white",
+                        fontSize: {xs: "13px", sm: "16px"},
+                        fontWeight: "700",
+                        borderRadius: "10px",
+                        boxShadow: "none",
+                        "&:hover": {
+                            bgcolor: "#1758BA",
+                            boxShadow: "none",
+                        },
+                    }}
+                >
+                    افزودن به سبد خرید
+                </Button>
+
+                <Button
+                    fullWidth
+                    variant="outlined"
+                    onClick={() => {
+                        handleOpen();
+                        reset();
+                    }}
+                    disabled={isSubmitting}
+                    sx={{
+                        height: "54px",
+                        fontWeight: "700",
+                        borderRadius: "10px",
+                        fontSize: "16px",
+                        color: "#1758BA",
+                        borderColor: "#1758BA",
+                        bgcolor: "white",
+                        "&:hover": {
+                            bgcolor: "transparent",
+                            boxShadow: "none",
+                        },
+                        "&.Mui-disabled": {
+                            borderColor: "#d9d9d9",
+                            color: "#b0b0b0",
+                        },
+                    }}
+                >
+                    انصراف
+                </Button>
+            </Box>
+        </FormProvider>
+    );
+};
 
 export default GroupSettings;

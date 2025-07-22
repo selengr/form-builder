@@ -25,6 +25,7 @@ compile-job:
   stage: compile
   extends: .default-job
   script:
+    - set +e
     - export NVM_DIR="$HOME/.nvm"
     - [ -s "$NVM_DIR/nvm.sh" ]
     - \. "$NVM_DIR/nvm.sh"

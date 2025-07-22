@@ -15,11 +15,19 @@ variables:
     - newpl1
 
 before_script:
-  - export IMAGE_PROJECT="$(basename $(dirname $CI_PROJECT_DIR))/$(basename $CI_PROJECT_DIR)"
-  - export COMMIT_ID=$(git log -1 --pretty=format:%h)
-  - export GIT_TAG=$(git describe --exact-match --tags 2>/dev/null || echo "")
-  - export IMAGE_TAG="${IMAGE_REGISTRY}/${IMAGE_PROJECT}:${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHORT_SHA}${GIT_TAG:+_${GIT_TAG}}"
-  - echo "IMAGE_TAG → $IMAGE_TAG"
+  - |
+    # Compute IMAGE_PROJECT dynamically
+    export IMAGE_PROJECT="$(basename $(dirname $CI_PROJECT_DIR))/$(basename $CI_PROJECT_DIR)"
+    export COMMIT_ID=$(git log -1 --pretty=format:%h)
+    export GIT_TAG=$(git describe --exact-match --tags 2>/dev/null || echo "no-tag")
+    echo "Branch: $CI_COMMIT_BRANCH"
+    echo "Commit ID: $COMMIT_ID"
+    echo "Git tag: $GIT_TAG"
+    export IMAGE_TAG="${IMAGE_REGISTRY}/${IMAGE_PROJECT}:${CI_COMMIT_BRANCH}_${CI_COMMIT_SHORT_SHA}_${GIT_TAG}"
+    echo "IMAGE_TAG → $IMAGE_TAG"
+    which docker && echo "Docker OK" || { echo "ERROR: docker not found"; exit 1; }
+    which kubectl && echo "kubectl OK" || { echo "ERROR: kubectl not found"; exit 1; }
+    whoami
 
 compile-job:
   stage: compile

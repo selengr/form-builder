@@ -27,16 +27,7 @@ export function FinishStep({
                            }: FinishStepProps) {
   return (
     <div className="w-full flex flex-col p-4 overflow-hidden">
-      <div className="flex flex-col bg-white rounded-xl h-1/2">
-        <div className="flex items-center justify-center gap-4 bg-[#F7F7FF] rounded-lg px-4 py-3 mb-4 relative">
-          <Button
-            sx={{position: "absolute", left: "8px", minWidth: 0}}
-            onClick={() => replace("/")}
-          >
-            <span className="text-2xl">←</span>
-          </Button>
-          <p className="text-base font-bold text-[#161616] text-center"></p>
-        </div>
+      <div className="flex flex-col bg-white rounded-xl h-[calc(100vh-120px)] md:h-full max-h-screen">
         <Header handleOpenReportDialog={handleOpenReportDialog} replace={replace} formName={"پایان"}/>
 
         <div className="flex-1 flex items-center justify-center overflow-y-auto px-4">

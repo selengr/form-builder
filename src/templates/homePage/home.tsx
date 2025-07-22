@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import Button from "@mui/material/Button";
-import { ArrowLeft } from "@/../public/images/home-page/ArrowLeft";
+import {Button} from "@mui/material";
+import {ArrowLeft} from "@/../public/images/home-page/ArrowLeft";
 
 // Image Imports
 import Logo from "@/../public/images/logo/logo2.svg";

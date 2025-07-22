@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import type { SelectedCreditCardProps } from "./types";
-import { formatNumberWithCommas } from "@/lib/numberFormatter";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import type {SelectedCreditCardProps} from "./types";
+import {formatNumberWithCommas} from "@/lib/numberFormatter";
+import {Box, IconButton, Typography, useTheme} from "@mui/material";
 import TrashIcon from "@/../public/images/purchase-order/trashMts.svg";
 
 export function SelectedCreditCard({

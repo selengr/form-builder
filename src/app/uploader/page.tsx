@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { UppyUploader } from "@/components/uploader/UppyUploader";
+import {useState} from "react";
+import {UppyUploader} from "@/components/uploader/UppyUploader";
 
 export default function UploaderPage() {
   const [data, setData] = useState<any>(null);

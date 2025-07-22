@@ -1,33 +1,20 @@
 "use client";
 
-import { z } from "zod";
-import { toast } from "sonner";
+import {z} from "zod";
+import {toast} from "sonner";
 import Image from "next/image";
-import { useForm } from "react-hook-form";
-import { Fragment, useState } from "react";
-import { useRouter } from "next/navigation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogContent,
-  IconButton,
-  Stack,
-  Tab,
-  Tabs,
-  Typography,
-} from "@mui/material";
-import { IoClose } from "react-icons/io5";
+import {useForm} from "react-hook-form";
+import {Fragment, useState} from "react";
+import {useRouter} from "next/navigation";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Box, Button, Dialog, DialogContent, IconButton, Stack, Tab, Tabs, Typography,} from "@mui/material";
+import {IoClose} from "react-icons/io5";
 import FormProvider from "../hook-form/FormProvider";
-import { RHFTextField, RHFMultiSelectV0 } from "../hook-form";
+import {RHFMultiSelectV0, RHFTextField} from "../hook-form";
 import {AxiosApi} from "@/services/axios/AxiosApi";
 import PlusIcon from "@/../public/images/home-page/Add-fill.svg";
-import { useGetSubCategory } from "./hooks/useGetSubCategory";
-import {
-  IGetCategory,
-  useGetParentCategory,
-} from "./hooks/useGetParentCategory";
+import {useGetSubCategory} from "./hooks/useGetSubCategory";
+import {useGetParentCategory,} from "./hooks/useGetParentCategory";
 
 const propertiesSchema = z.object({
   name: z

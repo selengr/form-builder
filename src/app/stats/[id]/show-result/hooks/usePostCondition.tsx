@@ -1,7 +1,7 @@
-import { toast } from 'sonner';
-import {  useRouter } from "next/navigation";
-import { useMutation } from '@tanstack/react-query';
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import {toast} from 'sonner';
+import {useRouter} from "next/navigation";
+import {useMutation} from '@tanstack/react-query';
+import {AxiosApi} from '@/services/axios/AxiosApi';
 
 
 const postCalculation = async (data: { formId: number; takePartId: number }[]) => {

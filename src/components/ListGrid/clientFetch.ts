@@ -1,6 +1,6 @@
 "use client";
 
-import { AxiosApi } from "@/services/axios/AxiosApi";
+import {AxiosApi} from "@/services/axios/AxiosApi";
 
 export async function clientFetch(url: string, params: Record<string, any> = {}): Promise<any | null> {
   try {

@@ -2,17 +2,11 @@
 
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
-import React, { ChangeEvent, forwardRef, useState, useEffect } from "react";
-import {
-  Controller,
-  ControllerProps,
-  FieldPath,
-  FieldValues,
-} from "react-hook-form";
-import { InputBaseComponentProps } from "@mui/material/InputBase/InputBase";
-import { Grid } from "@mui/material";
-import { Typography } from "@mui/material";
-import { formatNumberWithCommas } from "@/lib/numberFormatter";
+import React, {ChangeEvent, forwardRef, useEffect, useState} from "react";
+import {Controller, ControllerProps, FieldPath, FieldValues,} from "react-hook-form";
+import {InputBaseComponentProps} from "@mui/material/InputBase/InputBase";
+import {Grid, Typography} from "@mui/material";
+import {formatNumberWithCommas} from "@/lib/numberFormatter";
 
 type TextInputProps = {
   label: string;

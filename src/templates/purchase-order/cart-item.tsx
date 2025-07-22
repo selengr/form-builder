@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
-import { Button, IconButton } from "@mui/material";
+import {Button, IconButton} from "@mui/material";
 // types
-import { ICartItemProps } from "@/types/shoppingCart";
+import {ICartItemProps} from "@/types/shoppingCart";
 // components
 import ConfirmDialog from "@/components/confirm-dialog";
 // public

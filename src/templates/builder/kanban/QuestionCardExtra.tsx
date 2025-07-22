@@ -1,10 +1,10 @@
 "use client";
-import { memo, useMemo } from "react";
+import {memo, useMemo} from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import {useParams} from "next/navigation";
 import QuestionMenu from "./QuestionPopUpMenu";
 import useElements from "@/hooks/useElements";
-import { VscEye } from "react-icons/vsc";
+import {VscEye} from "react-icons/vsc";
 
 const QuestionCardExtra = memo(function QuestionCardExtra({
   questionId,

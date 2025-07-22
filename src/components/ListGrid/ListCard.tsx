@@ -87,7 +87,7 @@ export default function ListCard({data, setRefreshGrid}: ListCardProps) {
     return (<>
         <div className="border p-4 rounded-[20px] border-[#DDE1E6] flex flex-col gap-4 w-full max-w-full relative">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-                <InfoRow label="نام:" value={data.name} bold/>
+                <InfoRow label="نام" value={data.name} bold/>
                 {data.status === "PUBLISH" && (
                   <SwitchButton
                     disabled={loading}
@@ -98,11 +98,11 @@ export default function ListCard({data, setRefreshGrid}: ListCardProps) {
             </div>
 
             <div className="grid grid-cols-1 gap-2">
-                <InfoRow label="نوع:" value={formTypePersian[data.type]} bold/>
-                <InfoRow label="دسترسی:" value={data.accessType || "عمومی"} bold/>
-                <InfoRow label="تعداد شرکت‌کننده:" value={data.participants} bold/>
-                <InfoRow label="تعداد گویه:" value={data.questionListSize} bold/>
-                <InfoRow label="وضعیت:" value={formStatusPersian[data.status]} bold/>
+                <InfoRow label="نوع" value={formTypePersian[data.type]} bold/>
+                <InfoRow label="دسترسی" value={data.accessType || "عمومی"} bold/>
+                <InfoRow label="تعداد شرکت‌کننده" value={data.participants} bold/>
+                <InfoRow label="تعداد گویه" value={data.questionListSize} bold/>
+                <InfoRow label="وضعیت" value={formStatusPersian[data.status]} bold/>
             </div>
 
             <div className="flex flex-wrap gap-2 w-full">

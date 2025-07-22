@@ -1,12 +1,25 @@
-import React from "react";
+import React, {FC, ReactNode} from "react";
+import clsx from "clsx";
 
-export function InfoRow({
-                     label, value, bold = false,
-                 }: {
-    label: string; value: React.ReactNode; bold?: boolean;
-}) {
-    return (<div className="flex gap-1 text-[#393939]">
-        <span className="text-sm">{label}</span>
-        <p className={`text-sm ${bold ? "font-bold" : ""}`}>{value}</p>
-    </div>);
+interface InfoRowProps {
+    label: string;
+    value: ReactNode;
+    bold?: boolean;
+    className?: string;
 }
+
+export const InfoRow: FC<InfoRowProps> = ({ label, value, bold = false, className }) => {
+    return (
+        <div
+            className={clsx(
+                "flex items-start gap-1 text-[#393939] text-sm rtl:flex-row",
+                className
+            )}
+        >
+            <span className="whitespace-nowrap">{label}:</span>
+            <span className={clsx(bold && "font-bold")}>{value}</span>
+        </div>
+    );
+};
+
+export default InfoRow;

@@ -1,38 +1,30 @@
 "use client";
 
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import {memo, useCallback, useEffect, useMemo, useState} from "react";
+import {ElementsType, FormElement, FormElementInstance,} from "../../types/FormElements";
+import {z} from "zod";
+import {useFieldArray, useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
 import {
-  ElementsType,
-  FormElement,
-  FormElementInstance,
-} from "../../types/FormElements";
-import { z } from "zod";
-import { useFieldArray, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Box,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormLabel,
-  IconButton,
-  Radio,
-  RadioGroup,
-  Stack,
-  Typography,
+    Box,
+    Checkbox,
+    FormControl,
+    FormControlLabel,
+    FormGroup,
+    FormLabel,
+    IconButton,
+    Radio,
+    RadioGroup,
+    Stack,
+    Typography,
 } from "@mui/material";
 import FormProvider from "@/components/hook-form/FormProvider";
-import { RHFSwitch, RHFTextField } from "@/components/hook-form";
+import {RHFSwitch, RHFTextField} from "@/components/hook-form";
 import FieldDialogActionBottomButtons from "../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons";
-import {
-  IFormElementConstructor,
-  IFormOptionList,
-  IQPLMultipleChoice,
-} from "@/types/bulider";
-import { UppyUploader } from "@/components/uploader/UppyUploader";
+import {IFormElementConstructor, IFormOptionList, IQPLMultipleChoice,} from "@/types/bulider";
+import {UppyUploader} from "@/components/uploader/UppyUploader";
 import shuffleArray from "@/lib/shuffle";
-import { FiPlusCircle } from "react-icons/fi";
+import {FiPlusCircle} from "react-icons/fi";
 import {AxiosApi} from "@/services/axios/AxiosApi";
 import useElements from "@/hooks/useElements";
 import useDesigner from "@/hooks/useDesigner";
@@ -40,9 +32,9 @@ import useActionOpenDialog from "@/hooks/useActionOpenDialog";
 import useActionSelectedElement from "@/hooks/useActionSelectedElement";
 import useSelectedElement from "@/hooks/useSelectedElement";
 import useActionDesigner from "@/hooks/useActionDesigner";
-import { HiOutlineTrash } from "react-icons/hi2";
+import {HiOutlineTrash} from "react-icons/hi2";
 import ImageGalleryIcon from "@/../public/images/home-page/gallery-tick.svg";
-import { SwitchButton } from "../Switch/SwitchButton";
+import {SwitchButton} from "../Switch/SwitchButton";
 import Image from "next/image";
 
 const questionType: ElementsType = "MULTIPLE_CHOICE_IMAGE";

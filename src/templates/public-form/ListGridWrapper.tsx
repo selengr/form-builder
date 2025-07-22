@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import {useState} from "react";
 import ListCard from "./ListCard";
 import ListGrid from "@/components/ListGrid/ListGrid";
 

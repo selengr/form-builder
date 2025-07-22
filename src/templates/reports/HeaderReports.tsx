@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { IoIosArrowForward } from "react-icons/io";
-import { IconButton } from "@mui/material";
+import {IoIosArrowForward} from "react-icons/io";
+import {IconButton} from "@mui/material";
 
 const Header = () => {
   return (

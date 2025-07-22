@@ -1,4 +1,4 @@
-import { Box, styled, Divider } from "@mui/material";
+import {Box, Divider, styled} from "@mui/material";
 
 
 const Circle = styled(Box)(({ theme }) => ({

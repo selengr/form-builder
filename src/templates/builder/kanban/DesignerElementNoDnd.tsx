@@ -1,10 +1,6 @@
 "use client";
-import { memo } from "react";
-import {
-  ElementsType,
-  FormElementInstance,
-  FormElements,
-} from "../../../types/FormElements";
+import {memo} from "react";
+import {ElementsType, FormElementInstance, FormElements,} from "../../../types/FormElements";
 import NoDndPopUpMenu from "./NoDndPopUpMenu";
 
 const DesignerElementNoDnD = memo(function DesignerElementNoDnD({

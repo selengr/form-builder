@@ -1,4 +1,4 @@
-import type { OTPResponseType } from ".";
+import type {OTPResponseType} from ".";
 
 type SendOTPUrlType = ((nationalCode: string) => string) | string;
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { useContext } from "react";
-import { ActionElementsContext } from "@/context/AllContexts";
+import {useContext} from "react";
+import {ActionElementsContext} from "@/context/AllContexts";
 
 export default function useActionElements() {
   const context = useContext(ActionElementsContext);

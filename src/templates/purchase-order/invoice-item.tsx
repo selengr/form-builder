@@ -1,4 +1,4 @@
-import { InvoiceItemProps } from "@/types/shoppingCart";
+import {InvoiceItemProps} from "@/types/shoppingCart";
 
 function InvoiceItem({ detail, index }: InvoiceItemProps) {
     const product = detail.purchaseOrderProductModels?.[0];

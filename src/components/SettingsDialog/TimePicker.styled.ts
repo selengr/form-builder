@@ -1,4 +1,4 @@
-import { Box, styled } from "@mui/material";
+import {Box, styled} from "@mui/material";
 
 const TimePickerStyled = styled(Box)(({ theme }) => ({
   "& .rmdp-analog-clock": {

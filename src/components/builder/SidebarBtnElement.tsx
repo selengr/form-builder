@@ -1,16 +1,16 @@
 "use client";
 
-import { useDraggable } from "@dnd-kit/core";
-import { FormElement, FormElements } from "@/types/FormElements";
+import {useDraggable} from "@dnd-kit/core";
+import {FormElement, FormElements} from "@/types/FormElements";
 import useDesigner from "@/hooks/useDesigner";
-import { IFormElementConstructor } from "@/types/bulider";
-import { useParams } from "next/navigation";
+import {IFormElementConstructor} from "@/types/bulider";
+import {useParams} from "next/navigation";
 import useActionOpenDialog from "@/hooks/useActionOpenDialog";
 import useActionSelectedElement from "@/hooks/useActionSelectedElement";
 import useActionOpenBottomSheet from "@/hooks/useActionOpenBottomSheet";
 import Image from "next/image";
-import { idGenerator } from "@/lib/idGenerator";
-import { useMediaQuery } from "@mui/material";
+import {idGenerator} from "@/lib/idGenerator";
+import {useMediaQuery} from "@mui/material";
 import clsx from "clsx";
 
 interface SidebarBtnElementProps {

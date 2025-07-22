@@ -152,9 +152,9 @@ export default function GroupDetailsPage() {
 
         <div className="mb-4">
           <div className="border border-gray-200 rounded-xl p-4 flex flex-col gap-[10px]">
-            <InfoRow label="نام گروه:" value={group.name} bold/>
-            <InfoRow label="تعداد اعضا:" value={`${users.length} نفر`} bold/>
-            <InfoRow label="توضیحات:" value={group.description}/>
+            <InfoRow label="نام گروه" value={group.name} bold/>
+            <InfoRow label="تعداد اعضا" value={`${users.length} نفر`} bold/>
+            <InfoRow label="توضیحات" value={group.description}/>
           </div>
         </div>
 

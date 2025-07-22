@@ -1,6 +1,5 @@
-
 import Link from "next/link";
-import Image, { StaticImageData } from "next/image";
+import Image, {StaticImageData} from "next/image";
 import {IoIosArrowBack} from "react-icons/io";
 // public
 import LAWS from "@/../public/images/home-page/menu/laws.svg";

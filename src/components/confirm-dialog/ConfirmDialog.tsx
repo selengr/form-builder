@@ -1,13 +1,6 @@
 "use client";
-import {
-  Dialog,
-  Button,
-  DialogTitle,
-  DialogActions,
-  DialogContent,
-  Typography,
-} from "@mui/material";
-import { ConfirmDialogProps } from "./types";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography,} from "@mui/material";
+import {ConfirmDialogProps} from "./types";
 
 export default function ConfirmDialog({
   title,

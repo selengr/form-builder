@@ -1,5 +1,5 @@
 "use client";
-import { Box, Button, Typography, CircularProgress } from "@mui/material";
+import {Box, Button, CircularProgress, Typography} from "@mui/material";
 
 interface ISubmitButtonsProps {
   isLoading: boolean;

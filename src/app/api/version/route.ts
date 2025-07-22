@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import {NextRequest, NextResponse} from 'next/server'
 import packageJson from '@/../package.json'
 
 export async function GET(req: NextRequest) {

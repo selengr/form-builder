@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import {NextResponse} from 'next/server';
 import statsService from '@/services/statsService';
 
 export async function GET(

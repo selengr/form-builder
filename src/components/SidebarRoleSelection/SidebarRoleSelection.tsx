@@ -1,14 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import {
-  FormControl,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from "@mui/material";
+import {useState} from "react";
+import {FormControl, MenuItem, Select, SelectChangeEvent,} from "@mui/material";
 import Image from "next/image";
-import { IoIosArrowDown } from "react-icons/io";
+import {IoIosArrowDown} from "react-icons/io";
 import UserIcon from "@/../public/images/home-page/user-octagon.svg";
 
 const roles = [{ id: 1, value: "manager", label: "مدیر" }];

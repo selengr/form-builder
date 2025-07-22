@@ -1,23 +1,23 @@
 "use client"
-import { FormProvider } from "react-hook-form"
-import { useParams, useRouter } from "next/navigation"
-import { Box, Typography, Button } from "@mui/material"
+import {FormProvider} from "react-hook-form"
+import {useParams, useRouter} from "next/navigation"
+import {Box, Button, Typography} from "@mui/material"
 
-import { SubCondition } from "./SubCondition"
+import {SubCondition} from "./SubCondition"
 // components
-import { CircleDivider } from "@/components/condition/CircleDivider"
-import { SubmitButtons } from "@/components/condition/form/SubmitButtons"
-import { SelectController } from "@/components/condition/form/SelectController"
+import {CircleDivider} from "@/components/condition/CircleDivider"
+import {SubmitButtons} from "@/components/condition/form/SubmitButtons"
+import {SelectController} from "@/components/condition/form/SelectController"
 // lib
-import { formatContainText } from "@/lib/formatContainText"
-import { type TConditionFormData , TConditionData, TSubConditionData } from "@/lib/ConditionFormSchema"
+import {formatContainText} from "@/lib/formatContainText"
+import {TConditionData, type TConditionFormData, TSubConditionData} from "@/lib/ConditionFormSchema"
 // hooks
-import { IConditionalSystemProps, IPostCondition } from "@/types/condition"
-import { useConditionalForm } from "@/app/(builder)/builder/[id]/condition/_hooks/useConditionalForm"
-import { usePostCondition } from "@/app/(builder)/builder/[id]/condition/_hooks/usePostCondition"
-import { useGetQacWithOutFilter } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter"
-import { useGetOnlyAllQuestions } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllQuestions"
-import { useGetOnlyAllCalculation } from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation"
+import {IConditionalSystemProps, IPostCondition} from "@/types/condition"
+import {useConditionalForm} from "@/app/(builder)/builder/[id]/condition/_hooks/useConditionalForm"
+import {usePostCondition} from "@/app/(builder)/builder/[id]/condition/_hooks/usePostCondition"
+import {useGetQacWithOutFilter} from "@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter"
+import {useGetOnlyAllQuestions} from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllQuestions"
+import {useGetOnlyAllCalculation} from "@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation"
 
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
   handleClose,

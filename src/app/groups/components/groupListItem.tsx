@@ -1,7 +1,5 @@
-import React, { Suspense } from "react";
-import { InfoRow } from "@/components/common/infoRow";
-import Image from "next/image";
-import TrashIcon from "@/../public/images/purchase-order/trashMts.svg";
+import React, {Suspense} from "react";
+import {InfoRow} from "@/components/common/infoRow";
 
 export interface IGroup {
   id: number;
@@ -20,8 +18,8 @@ export function GroupListItem({ group, onViewGroup, onDeleteGroup }: IGroupListI
   return (
     <div className="border border-gray-200 rounded-xl p-4 transition flex flex-col gap-[10px]">
       <Suspense fallback={<div>در حال بارگذاری...</div>}>
-        <InfoRow label="نام:" value={group.name} bold />
-        <InfoRow label="تعداد اعضا:" value={`${group.userCount} نفر`} bold />
+        <InfoRow label="نام" value={group.name} bold />
+        <InfoRow label="تعداد اعضا" value={`${group.userCount} نفر`} bold />
       </Suspense>
       {/*<div className="flex w-full gap-2">*/}
       {/*  <button*/}

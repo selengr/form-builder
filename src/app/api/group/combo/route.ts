@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { AxiosApi } from '@/services/axios/AxiosApi';
-import { AxiosError } from 'axios';
+import {NextRequest, NextResponse} from 'next/server';
+import {AxiosApi} from '@/services/axios/AxiosApi';
+import {AxiosError} from 'axios';
 import {getAuthToken} from "@/utils/getAuthToken";
 
 interface GroupComboItem {

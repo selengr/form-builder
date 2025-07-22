@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { MenuData } from "@/constants/Sidebar.constant";
+import {usePathname} from "next/navigation";
+import {MenuData} from "@/constants/Sidebar.constant";
 
 export default function MenuSidebar() {
   const current = usePathname().split("/")[2];

@@ -1,22 +1,18 @@
 "use client";
 
-import { Fragment, memo, useMemo, useState } from "react";
-import {
-  ElementsType,
-  FormElement,
-  FormElementInstance,
-} from "@/types/FormElements";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import {Fragment, memo, useMemo, useState} from "react";
+import {ElementsType, FormElement, FormElementInstance,} from "@/types/FormElements";
+import {z} from "zod";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import FormProvider from "../../components/hook-form/FormProvider";
-import { RHFSwitch, RHFTextField } from "../../components/hook-form";
+import {RHFSwitch, RHFTextField} from "../../components/hook-form";
 import FieldDialogActionBottomButtons from "../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons";
-import { IFormElementConstructor, IQPLTextField } from "@/types/bulider";
+import {IFormElementConstructor, IQPLTextField} from "@/types/bulider";
 import {AxiosApi} from "@/services/axios/AxiosApi";
 import useDesigner from "@/hooks/useDesigner";
 import useElements from "@/hooks/useElements";
@@ -27,13 +23,13 @@ import useActionDesigner from "@/hooks/useActionDesigner";
 import TextBlockIcon from "@/../public/images/home-page/text-block.svg";
 import DatePicker from "react-multi-date-picker";
 import "react-multi-date-picker/styles/layouts/mobile.css";
-import { SwitchButton } from "../Switch/SwitchButton";
+import {SwitchButton} from "../Switch/SwitchButton";
 import TextFieldPair from "../TextFieldPair/TextFieldPair";
 import TimePickerStyled from "../SettingsDialog/TimePicker.styled";
 import TimePicker from "react-multi-date-picker/plugins/analog_time_picker";
-import { GoClock } from "react-icons/go";
-import { BsCalendarDate } from "react-icons/bs";
-import { DatePicker as DatePickerCustome } from "../DatePicker/DatePicker";
+import {GoClock} from "react-icons/go";
+import {BsCalendarDate} from "react-icons/bs";
+import {DatePicker as DatePickerCustome} from "../DatePicker/DatePicker";
 
 const questionType: ElementsType = "TEXT_FIELD";
 

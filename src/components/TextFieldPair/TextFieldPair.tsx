@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import {useState} from "react";
 import Typography from "@mui/material/Typography";
-import { ITextFieldFormPatternOptions } from "@/types/bulider";
-import { RHFMultiSelect, RHFTextField } from "../hook-form";
+import {ITextFieldFormPatternOptions} from "@/types/bulider";
+import {RHFMultiSelect, RHFTextField} from "../hook-form";
 
 const fieldPatternOptions: ITextFieldFormPatternOptions = [
   { value: "SHORT_TEXT", label: "متن ساده" },

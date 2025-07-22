@@ -1,5 +1,5 @@
-import { styled } from '@mui/material';
-import { Dashboard } from '@uppy/react';
+import {styled} from '@mui/material';
+import {Dashboard} from '@uppy/react';
 
 const CustomUppy = styled(Dashboard)(() => ({
   '*': { boxSizing: 'border-box !important' },

@@ -1,5 +1,3 @@
-import { IConditionQuestionType } from "@/types/conditionReportSolo";
-
 export interface IDropdownItem {
   id: string;
   value: string;

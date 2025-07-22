@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useMemo } from "react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import React, {useMemo} from "react";
+import {z} from "zod";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
 import FormProvider from "@/components/hook-form/FormProvider";
-import { RHFSwitch, RHFTextField } from "@/components/hook-form";
+import {RHFSwitch, RHFTextField} from "@/components/hook-form";
 import FieldDialogActionBottomButtons from "../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons";
 
 import {AxiosApi} from "@/services/axios/AxiosApi";
@@ -21,8 +21,8 @@ import useSelectedElement from "@/hooks/useSelectedElement";
 import useActionDesigner from "@/hooks/useActionDesigner";
 
 import InformationIcon from "@/../public/images/home-page/information.svg";
-import { ElementsType, FormElement, FormElementInstance } from "@/types/FormElements";
-import { IFormElementConstructor, IQPLInfoField } from "@/types/bulider";
+import {ElementsType, FormElement, FormElementInstance} from "@/types/FormElements";
+import {IFormElementConstructor, IQPLInfoField} from "@/types/bulider";
 
 const questionType: ElementsType = "INFO_FIELD";
 

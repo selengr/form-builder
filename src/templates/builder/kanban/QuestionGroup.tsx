@@ -1,19 +1,15 @@
 "use client";
-import { useMemo, memo } from "react";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { useDroppable } from "@dnd-kit/core";
+import {memo, useMemo} from "react";
+import {SortableContext, verticalListSortingStrategy,} from "@dnd-kit/sortable";
+import {useDroppable} from "@dnd-kit/core";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 import QuestionCard from "./QuestionCard";
-import GroupPopUpMenu from "./GroupPopUpMenu";
 
 import useActionOpenBottomSheet from "@/hooks/useActionOpenBottomSheet";
 import useActionDesigner from "@/hooks/useActionDesigner";
 
-import { FormElementInstance } from "@/types/FormElements";
+import {FormElementInstance} from "@/types/FormElements";
 
 type Props = {
   group: number;

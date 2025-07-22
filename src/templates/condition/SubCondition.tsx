@@ -1,9 +1,9 @@
 "use client";
 import Image from "next/image"
-import { useFormContext, useWatch } from "react-hook-form"
-import { Box, IconButton, Typography } from "@mui/material"
-import { getInput , getQuestion, getCondition } from "./GetConditionInput"
-import { SelectController } from "@/components/condition/form/SelectController"
+import {useFormContext, useWatch} from "react-hook-form"
+import {Box, IconButton, Typography} from "@mui/material"
+import {getCondition, getInput, getQuestion} from "./GetConditionInput"
+import {SelectController} from "@/components/condition/form/SelectController"
 
 
 type SubConditionProps = {

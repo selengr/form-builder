@@ -1,5 +1,5 @@
 "use client";
-import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Button } from "@mui/material";
+import {Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup} from "@mui/material";
 import Image from "next/image";
 import FilterIcon from "@/../public/images/home-page/filter-icon.svg";
 import React from "react";

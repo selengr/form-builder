@@ -1,16 +1,16 @@
 "use client";
 
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  IconButton,
-  Typography,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    List,
+    ListItem,
+    ListItemText,
+    Typography,
 } from "@mui/material";
 import {UserType} from "@/app/stats/[id]/component/ReportPagination";
 import Image from "next/image";

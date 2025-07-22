@@ -1,7 +1,7 @@
 "use client";
 
-import { AxiosApi } from "@/services/axios/AxiosApi";
-import { getAuthToken } from "@/utils/getAuthToken";
+import {AxiosApi} from "@/services/axios/AxiosApi";
+import {getAuthToken} from "@/utils/getAuthToken";
 
 interface IFetchUserInfoResult {
   userInfo: any;

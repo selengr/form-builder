@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import {useEffect, useState} from 'react';
+import {useParams} from 'next/navigation';
 import statsService from '@/services/statsService';
 
 export const useStatsViewModel = () => {

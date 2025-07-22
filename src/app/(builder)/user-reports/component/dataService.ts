@@ -1,4 +1,4 @@
-import { clientFetch } from "@/components/ListGrid/clientFetch";
+import {clientFetch} from "@/components/ListGrid/clientFetch";
 
 interface SearchBoxItem {
   fieldName: string;

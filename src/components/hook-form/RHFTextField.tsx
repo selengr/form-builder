@@ -1,7 +1,7 @@
 "use client";
-import { ChangeEvent } from "react";
-import { TextField, TextFieldProps } from "@mui/material";
-import { useFormContext, Controller } from "react-hook-form";
+import {ChangeEvent} from "react";
+import {TextField, TextFieldProps} from "@mui/material";
+import {Controller, useFormContext} from "react-hook-form";
 
 type Props = TextFieldProps & {
   name: string;

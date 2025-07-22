@@ -1,6 +1,6 @@
 import React from "react";
-import { IGetCondition } from "@/types/conditionReportSolo";
-import { TConditionData, TSubConditionData } from "@/lib/CreateSoloReportSchema";
+import {IGetCondition} from "@/types/conditionReportSolo";
+import {TConditionData, TSubConditionData} from "@/lib/CreateSoloReportSchema";
 
 interface IConditionCardOperatorProps {
   condition: IGetCondition;

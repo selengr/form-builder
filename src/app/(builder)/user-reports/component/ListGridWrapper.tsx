@@ -14,8 +14,8 @@ export default function ListGridWrapper() {
   const pathname = usePathname();
   const {push} = useRouter();
   const [formType, setFormType] = useState<any>({
-    type: "ALL",
-    status: "ALL",
+    responseForDestroyerReport: "ALL",
+    typeOfReport: "ALL",
   });
   const filterBoxList: any = [];
   const searchBoxList: any = [
@@ -72,8 +72,8 @@ export default function ListGridWrapper() {
                   <RadioGroup
                     aria-labelledby="demo-controlled-radio-buttons-group"
                     name="controlled-radio-buttons-group"
-                    value={formType.type}
-                    onChange={handleTypeChange}
+                    value={formType.responseForDestroyerReport}
+                    onChange={handleResponseForeDestroyerChange}
                   >
                     <FormControlLabel
                       value="ALL"
@@ -81,12 +81,22 @@ export default function ListGridWrapper() {
                       label="همه"
                     />
                     <FormControlLabel
-                      value="COMPETITION"
+                      value="INAPPROPRIATE_CONTENT"
+                      control={<Radio/>}
+                      label="محتوا نامناسب"
+                    />
+                    <FormControlLabel
+                      value="PRIVACY_VIOLATION"
+                      control={<Radio/>}
+                      label="نقض حریم خصوصی"
+                    />
+                    <FormControlLabel
+                      value="INTELLECTUAL_PROPERTY_INFRINGMENT"
                       control={<Radio/>}
                       label="مالکیت معنوی"
                     />
                     <FormControlLabel
-                      value="QUESTION"
+                      value="OTHER"
                       control={<Radio/>}
                       label="سایر"
                     />
@@ -122,16 +132,16 @@ export default function ListGridWrapper() {
                   <RadioGroup
                     aria-labelledby="demo-controlled-radio-buttons-group"
                     name="controlled-radio-buttons-group"
-                    value={formType.status}
-                    onChange={handleStatusChange}
+                    value={formType.typeOfReport}
+                    onChange={handleTypeOfReportChange}
                   >
                     <FormControlLabel
-                      value="ALL"
+                      value="FORM"
                       control={<Radio/>}
                       label="فرم"
                     />
                     <FormControlLabel
-                      value="PUBLIC"
+                      value="REPORT"
                       control={<Radio/>}
                       label="گزارش نتایج"
                     />
@@ -167,8 +177,8 @@ export default function ListGridWrapper() {
                   <RadioGroup
                     aria-labelledby="demo-controlled-radio-buttons-group"
                     name="controlled-radio-buttons-group"
-                    value={formType.status}
-                    onChange={handleStatusChange}
+                    value={formType.typeOfReport}
+                    onChange={handleTypeOfReportChange}
                   >
                     <FormControlLabel
                       value="ALL"
@@ -240,7 +250,7 @@ export default function ListGridWrapper() {
                   params.delete("query");
                 }
                 push(`${pathname}?${params.toString()}`);
-                setFormType({type: "ALL", status: "ALL"});
+                setFormType({responseForDestroyerReport: "ALL", typeOfReport: "ALL"});
                 setRefreshGrid((prev) => !prev);
               }}
             >
@@ -251,15 +261,15 @@ export default function ListGridWrapper() {
       </div>
     )
   }
-  const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleResponseForeDestroyerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormType((prev: any) => {
-      return {...prev, type: (event.target as HTMLInputElement).value};
+      return {...prev, responseForDestroyerReport: (event.target as HTMLInputElement).value};
     });
   };
 
-  const handleStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTypeOfReportChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormType((prev: any) => {
-      return {...prev, status: (event.target as HTMLInputElement).value};
+      return {...prev, typeOfReport: (event.target as HTMLInputElement).value};
     });
   };
 

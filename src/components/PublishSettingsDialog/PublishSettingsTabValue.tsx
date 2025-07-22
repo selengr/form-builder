@@ -73,7 +73,7 @@ export default function PublishSettingsTabValue({handleOpen, formId, formData}: 
       >
         <Tab disableRipple label="عمومی" value="general"/>
         <Tab disableRipple label="انفرادی" value="individual"/>
-        <Tab disableRipple label="گروهی" value="group" disabled/>
+        <Tab disableRipple label="گروهی" value="group"/>
         <Tab disableRipple label="اعضای ام‌رسالت" value="mresalat" disabled/>
       </Tabs>
     </Box>
@@ -87,7 +87,7 @@ export default function PublishSettingsTabValue({handleOpen, formId, formData}: 
     </CustomTabPanel>
 
     <CustomTabPanel value={value} index="group">
-      <GroupSettings handleOpen={handleOpen}/>
+      <GroupSettings handleOpen={handleOpen} formId={formId}/>
     </CustomTabPanel>
 
     <CustomTabPanel value={value} index="mresalat">

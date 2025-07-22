@@ -8,48 +8,39 @@ variables:
   NAMESPACE: "newpl1"
   IMAGE_REGISTRY: "registery.fardup.ir:5000"
 
+.default-job:
+  tags:
+    - sharemodel-ci
+  only:
+    - newpl1
+
 before_script:
-  - |
-    # Compute IMAGE_PROJECT dynamically
-    export IMAGE_PROJECT="$(basename $(dirname $CI_PROJECT_DIR))/$(basename $CI_PROJECT_DIR)"
-    export COMMIT_ID=$(git log -1 --pretty=format:%h)
-    export GIT_TAG=$(git describe --exact-match --tags 2>/dev/null || echo "no-tag")
-    echo "Branch: $CI_COMMIT_BRANCH"
-    echo "Commit ID: $COMMIT_ID"
-    echo "Git tag: $GIT_TAG"
-    export IMAGE_TAG="${IMAGE_REGISTRY}/${IMAGE_PROJECT}:${CI_COMMIT_BRANCH}_${CI_COMMIT_SHORT_SHA}_${GIT_TAG}"
-    echo "IMAGE_TAG → $IMAGE_TAG"
-    which docker && echo "Docker OK" || { echo "ERROR: docker not found"; exit 1; }
-    which kubectl && echo "kubectl OK" || { echo "ERROR: kubectl not found"; exit 1; }
-    whoami
+  - export IMAGE_PROJECT="$(basename $(dirname $CI_PROJECT_DIR))/$(basename $CI_PROJECT_DIR)"
+  - export COMMIT_ID=$(git log -1 --pretty=format:%h)
+  - export GIT_TAG=$(git describe --exact-match --tags 2>/dev/null || echo "")
+  - export IMAGE_TAG="${IMAGE_REGISTRY}/${IMAGE_PROJECT}:${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHORT_SHA}${GIT_TAG:+_${GIT_TAG}}"
+  - echo "IMAGE_TAG → $IMAGE_TAG"
 
 compile-job:
   stage: compile
-  tags:
-    - sharemodel-ci
-  only:
-    - newpl1
+  extends: .default-job
   script:
-  - set +e
-  - export NVM_DIR="$HOME/.nvm"
-  - [ -s "$NVM_DIR/nvm.sh" ] 
-  -  \. "$NVM_DIR/nvm.sh" 
-  - nvm use 22
-  - npm config set registry https://registry.npmjs.org/
-  - npm install --force --verbose && npm run build
-
-  #- mvn clean package -DskipTests
+    - export NVM_DIR="$HOME/.nvm"
+    - [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    - nvm use 22
+    - npm i -g npm
+    - npm config set registry https://registry.npmjs.org/
+    - npm ci --verbose
+    - npm run build
   artifacts:
     paths:
-      - .next/**
-      #- target/*.jar
+      - .next/standalone
+      - .next/static
+      - public
 
 build-Docker-job:
   stage: build
-  tags:
-    - sharemodel-ci
-  only:
-    - newpl1
+  extends: .default-job
   dependencies:
     - compile-job
   script:
@@ -58,25 +49,17 @@ build-Docker-job:
 
 deploy-job:
   stage: deploy
-  tags:
-    - sharemodel-ci
+  extends: .default-job
   environment: production
-  only:
-    - newpl1
   dependencies:
     - build-Docker-job
   script:
-    - sed -i "s~IMAGE_TAG~${IMAGE_TAG}~g" /home/gitlab-runner/ali-ci/newpl1/psya-client/psya-client.yaml
-    - kubectl apply -f /home/gitlab-runner/ali-ci/newpl1/psya-client/psya-client.yaml -n "$NAMESPACE"
-    - sed -i "s~${IMAGE_TAG}~IMAGE_TAG~g" /home/gitlab-runner/ali-ci/newpl1/psya-client/psya-client.yaml
-    #- kubectl apply -f manifest.yml -n "$NAMESPACE"
+    - envsubst < /home/gitlab-runner/ali-ci/newpl1/psya-client/psya-client.yaml > deployment.yaml
+    - kubectl apply -f deployment.yaml -n "$NAMESPACE"
 
 cleanup:
   stage: cleanup
-  tags:
-    - sharemodel-ci
-  only:
-    - newpl1
+  extends: .default-job
   script:
     - echo "Cleaning up project directory"
     - rm -rf "$CI_PROJECT_DIR"

@@ -73,7 +73,7 @@ export default function GeneralSettings({
           'Content-Type': 'application/json',
           "x-secret-token": process.env.NEXT_PUBLIC_SECRET!,
         }, body: JSON.stringify({
-          formId: formId,
+          formId: Number(formId),
           publicationMainPageMethod: values.publicationMainPageMethod,
           capacityPublicLink: values.capacityPublicLink,
         }),

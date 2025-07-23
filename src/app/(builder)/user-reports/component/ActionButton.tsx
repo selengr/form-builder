@@ -34,7 +34,7 @@ export const RenderAction = () => {
     const handleSuspendClick = () => { };
 
     return (
-        <div className="w-full h-14 px-4 py-4 bg-[#F7F7FF] rounded-lg flex justify-between items-center">
+        <div className="w-[calc(100%-22px)]  h-14 absolute bottom-2 px-4 py-4 bg-[#F7F7FF] rounded-lg flex justify-between items-center">
             <div className="flex w-full gap-3">
                 <ActionButton
                     label="فرم"

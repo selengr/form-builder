@@ -7,6 +7,8 @@ import { Dispatch, SetStateAction } from "react";
 import { IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import DialogContent from "@mui/material/DialogContent";
+import { useGetTicketList } from "../_hooks/useGetTicketList";
+import DestroyTicketCard from "./DestroyTicketCard";
 
 export interface IProps {
     open: boolean;
@@ -43,6 +45,7 @@ export const DestroyTicketDialog: React.FC<IProps> = ({
   open,
   setOpen,
 }) => {
+  const { data, error, isLoading } = useGetTicketList();
  
   const handleClose = () => {
     setOpen((prev) => !prev);
@@ -63,7 +66,7 @@ export const DestroyTicketDialog: React.FC<IProps> = ({
           </IconButton>
         </div>
         {/* <ConditionalSystem handleClose={handleClose} /> */}
-        jhwdvlajfvfsv
+        <DestroyTicketCard />
       </StyledDialogContent>
     </StyledDialog>
   );

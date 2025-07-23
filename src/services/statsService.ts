@@ -15,12 +15,12 @@ export default new class StatsService {
       const headRow = rawData.content[0]?.row ?? [];
       const headData = [
         {
-          questionId: "index_column_id",
+          questionId: "index_column_id_row",
           questionTitle: "ردیف"
         },
         ...headRow,
         {
-          questionId: "actions_column_id",
+          questionId: "actions_column_id_action",
           questionTitle: "عملیات"
         }
       ];

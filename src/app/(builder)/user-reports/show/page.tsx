@@ -1,5 +1,5 @@
 import {Suspense} from "react";
-import ListGridWrapper from "../component/ListGridWrapper";
+import ListGridWrapper from "../_component/ListGridWrapper";
 
 export default function DisplayUserReportPage() {
   return (

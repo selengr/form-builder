@@ -26,7 +26,7 @@ export const RenderAction = ({id}:{id:string}) => {
     };
 
     const handleReportResultsClick = () => {
-        // router.push("/report-results"); 
+        push(`/reports/create-solo/${id}?rep=list`); 
     };
 
     const handleViewEventsClick = () => {

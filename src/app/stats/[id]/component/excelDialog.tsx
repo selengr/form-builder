@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import {UserType} from "@/app/stats/[id]/component/ReportPagination";
 import Image from "next/image";
-import TrashIcon from "../../../../../public/images/home-page/trash.svg";
+import TrashIcon from "@/../public/images/home-page/trash.svg";
 import React from "react";
 
 interface Props {
@@ -62,10 +62,10 @@ export default function SelectedUsersDialog({
             کاربری انتخاب نشده است.
           </Typography>
         ) : (
-          <List sx={{ maxHeight: 250, overflowY: "auto", }}>
+          <List sx={{ maxHeight: 300, overflowY: "auto" }} color={"primary"}>
             {savedUsers.map((user, idx) => (
               <ListItem
-                className={"border p-2 rounded-xl"}
+                className={"p-2 rounded-lg mt-2 hover:bg-[#FAFAFF] bg-[#F7F7FF] transition-all"}
                 key={user.takePartId}
                 secondaryAction={
                   <IconButton

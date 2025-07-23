@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation";
 import { SlashIcon, AdditemIcon, ChartSquareIcon, ReceiptTextIcon } from "../../../../../public/images/icons";
 
 interface IProps {
@@ -17,10 +18,11 @@ const ActionButton = ({ label, Icon, onClick }: IProps) => (
 );
 
 
-export const RenderAction = () => {
+export const RenderAction = ({id}:{id:string}) => {
+    const { push } = useRouter()
 
     const handleFormClick = () => {
-        // router.push("/forms"); 
+         push(`/preview/${id}`); 
     };
 
     const handleReportResultsClick = () => {

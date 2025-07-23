@@ -82,7 +82,7 @@ const ListGrid: React.FC<Props> = ({
   if (error) {
     toast.error(error.message);
   }
-
+console.log('pages', pages)
   const renderHeader = useCallback(() => (<div
     className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative shrink-0">
     <IconButton sx={{ position: "absolute", left: "8px" }} onClick={() => router.push("/user-reports")}>
@@ -197,7 +197,7 @@ const ListGrid: React.FC<Props> = ({
               {renderContent()}
             </Grid>
           </Grid>
-          <RenderAction />
+          <RenderAction id={pages?.pages[0].data.formId}/>
         </Grid>
         {renderDesktopFilter()}
       </Grid>)}

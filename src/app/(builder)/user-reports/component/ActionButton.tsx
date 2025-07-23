@@ -1,5 +1,7 @@
 import { useRouter } from "next/navigation";
 import { SlashIcon, AdditemIcon, ChartSquareIcon, ReceiptTextIcon } from "../../../../../public/images/icons";
+import { useState } from "react";
+import DestroyTicketDialog from "./DestroyTicketDialog";
 
 interface IProps {
     label: string;
@@ -20,6 +22,7 @@ const ActionButton = ({ label, Icon, onClick }: IProps) => (
 
 export const RenderAction = ({id}:{id:string}) => {
     const { push } = useRouter()
+      const [openDestroy, setOpenDestroy] = useState<boolean>(false);
 
     const handleFormClick = () => {
          push(`/preview/${id}`); 
@@ -30,7 +33,7 @@ export const RenderAction = ({id}:{id:string}) => {
     };
 
     const handleViewEventsClick = () => {
-        // router.push("/events"); 
+        setOpenDestroy(true);
     };
 
     const handleSuspendClick = () => { };
@@ -62,6 +65,9 @@ export const RenderAction = ({id}:{id:string}) => {
                 />
             </div>
 
+
+
+            <DestroyTicketDialog open={openDestroy} setOpen={setOpenDestroy} />
         </div>
     );
 }

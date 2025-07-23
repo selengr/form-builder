@@ -74,7 +74,7 @@ export function ReportPagination({
 
     const checkAndDownloadExcel = async () => {
         try {
-            const checkRes = await fetch(`/api/report/check-excel/${formId}`);
+            const checkRes = await fetch(`/api/report/check/${formId}`);
             const checkData = await checkRes.json();
 
             if (!checkRes.ok) {
@@ -100,7 +100,7 @@ export function ReportPagination({
                 const fullPath = checkData.filePath.startsWith("/")
                     ? checkData.filePath
                     : `/${checkData.filePath}`;
-                const downloadUrl = `${window.location.origin}${fullPath}`;
+                const downloadUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/filemanager${fullPath}`;
                 window.open(downloadUrl, "_blank");
                 toast.success("فایل آماده بود و دانلود شد.");
             } else {

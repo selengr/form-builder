@@ -11,17 +11,17 @@ import { useGetTicketList } from "../_hooks/useGetTicketList";
 import DestroyTicketCard from "./DestroyTicketCard";
 
 export interface IProps {
-    open: boolean;
-    setOpen: Dispatch<SetStateAction<boolean>>;
-  };
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+};
 
 const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   direction: "ltr",
   maxHeight: "75vh",
   scrollbarWidth: "thin",
   maxWidth: "100%",
-  padding : "16px",
-  overflowX : "hidden",
+  padding: "16px",
+  overflowX: "hidden",
   paddingTop: theme.spacing(2.8),
   paddingBottom: theme.spacing(1.8),
 }));
@@ -46,7 +46,7 @@ export const DestroyTicketDialog: React.FC<IProps> = ({
   setOpen,
 }) => {
   const { data, error, isLoading } = useGetTicketList();
- 
+
   const handleClose = () => {
     setOpen((prev) => !prev);
   };
@@ -65,8 +65,10 @@ export const DestroyTicketDialog: React.FC<IProps> = ({
             />
           </IconButton>
         </div>
-        {/* <ConditionalSystem handleClose={handleClose} /> */}
-        <DestroyTicketCard />
+        <label className="flex justify-center text-[404040] mb-1 font-medium">
+          وقایع
+        </label>
+        <DestroyTicketCard data={data} />
       </StyledDialogContent>
     </StyledDialog>
   );

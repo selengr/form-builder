@@ -46,7 +46,7 @@ const MenuItem = ({
   onClick?: () => void;
   isStatic?: boolean;
 }) => (
-  <div className="gap-1 w-full border-b border-[#DDE1E6] py-2 rounded-sm duration-300 group" key={id}>
+  <div className="gap-1 w-full border-b border-[#DDE1E6] py-2 rounded-sm duration-300 group" key={id} style={{userSelect:"none"}}>
     <Link
       href={href}
       onClick={onClick}

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import DestroyTicketDialog from "./DestroyTicketDialog";
 import { SlashIcon, AdditemIcon, ChartSquareIcon, ReceiptTextIcon } from "../../../../../public/images/icons";
+import ChangeStatusDialog from "./ChangeStatusDialog";
 
 interface IProps {
     label: string;
@@ -23,6 +24,7 @@ const ActionButton = ({ label, Icon, onClick }: IProps) => (
 export const RenderAction = ({id}:{id:string}) => {
     const { push } = useRouter()
       const [openDestroy, setOpenDestroy] = useState<boolean>(false);
+      const [openChangeStatus, setOpenChangeStatus] = useState<boolean>(false);
 
     const handleFormClick = () => {
          push(`/preview/${id}`); 
@@ -68,6 +70,7 @@ export const RenderAction = ({id}:{id:string}) => {
 
 
             <DestroyTicketDialog open={openDestroy} setOpen={setOpenDestroy} />
+            <ChangeStatusDialog open={openChangeStatus} setOpen={setOpenChangeStatus} />
         </div>
     );
 }

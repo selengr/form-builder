@@ -4,9 +4,8 @@ import React, {useEffect, useState} from "react";
 import {LuUsers} from "react-icons/lu";
 import {MdKeyboardArrowLeft, MdKeyboardArrowRight} from "react-icons/md";
 import {useParams} from "next/navigation";
+import {ExcelDialog, UserCount} from "@/app/stats/[id]/component";
 import {toast} from "sonner";
-import UsersDialog from "@/app/stats/[id]/component/excelDialog";
-import {UserCount} from "@/app/stats/[id]/component/userCount";
 
 interface StatsPaginationProps {
     totalItems: number;
@@ -180,7 +179,7 @@ export function ReportPagination({
             </div>
 
             {isOpen && (
-                <UsersDialog
+                <ExcelDialog
                     open={isOpen}
                     onClose={() => setIsOpen(false)}
                     savedUsers={savedUsers}

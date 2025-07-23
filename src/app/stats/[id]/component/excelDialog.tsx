@@ -25,7 +25,7 @@ interface Props {
   onDownload: () => void;
 }
 
-export default function SelectedUsersDialog({
+export function ExcelDialog({
                                               open,
                                               onClose,
                                               savedUsers,

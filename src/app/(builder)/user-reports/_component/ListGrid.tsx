@@ -197,7 +197,7 @@ console.log('pages', pages)
               {renderContent()}
             </Grid>
           </Grid>
-          <RenderAction id={pages?.pages[0].data.formId}/>
+          <RenderAction id={pages?.pages[0].data.formId} publicationApprovalByAdmin={pages?.pages[0].publicationApprovalByAdmin}/>
         </Grid>
         {renderDesktopFilter()}
       </Grid>)}

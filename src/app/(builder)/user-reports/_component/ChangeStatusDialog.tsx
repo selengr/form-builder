@@ -13,10 +13,13 @@ import { styled } from "@mui/material/styles";
 import { RHFTextField } from "@/components/hook-form";
 import DialogContent from "@mui/material/DialogContent";
 import { SubmitButtons } from "@/components/condition/form/SubmitButtons";
+import { usePostChangeStatus } from "../_hooks/usePostChangeStatus";
 
 export interface IProps {
+  id: string;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
+  publicationApprovalByAdmin: boolean
 };
 
 const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
@@ -47,12 +50,15 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 const TicketSchema = z.object({
   ticket: z.string().min(1, { message: "اين فيلد الزامي است" }),
 })
-export type TTicketFormData = z.infer<typeof TicketSchema>
+type TTicketFormData = z.infer<typeof TicketSchema>
 
 export const ChangeStatusDialog: React.FC<IProps> = ({
+  id,
   open,
   setOpen,
+  publicationApprovalByAdmin
 }) => {
+  const postChangeStatus = usePostChangeStatus();
 
   const methods = useForm<TTicketFormData>({
     resolver: zodResolver(TicketSchema),
@@ -65,8 +71,19 @@ export const ChangeStatusDialog: React.FC<IProps> = ({
     setOpen((prev) => !prev);
   };
 
-  const onSubmit = (data: any) => {
-    console.log('data', data)
+  const onSubmit = ({ ticket }: { ticket: string }) => {
+    postChangeStatus.mutate({
+      data: {
+        ticket,
+        formId: id,
+        publicationApprovalByAdmin
+      }
+    }, {
+      onSuccess: () => {
+        // refresh()
+        handleClose()
+      },
+    });
   };
 
   return (

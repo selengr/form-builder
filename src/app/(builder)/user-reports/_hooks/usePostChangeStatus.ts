@@ -1,12 +1,16 @@
 import { toast } from 'sonner';
 import { AxiosApi } from '@/services/axios/AxiosApi';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { TTicketFormData } from '../_component/ChangeStatusDialog';
 
+interface TTicketFormData {
+    formId : string
+    ticket : string
+    publicationApprovalByAdmin : boolean
+}
 
 const postChangeStatus = async (data: TTicketFormData) => {
     const url = `/admin/form/change-status`;
-    const response = await AxiosApi.post(url, data);
+    const response = await AxiosApi.put(url, data);
     return response.data;
 };
 
@@ -15,7 +19,7 @@ export const usePostChangeStatus = () => {
 
     const mutation = useMutation({
         mutationKey: ['change-status'],
-        mutationFn: ({ data }: { data: TTicketFormData }) => postChangeStatus(data),
+        mutationFn: ({ data}: { data: TTicketFormData}) => postChangeStatus(data),
 
         onSuccess: () => {
             // queryClient.invalidateQueries([''] as any);

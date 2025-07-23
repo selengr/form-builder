@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import DestroyTicketDialog from "./DestroyTicketDialog";
-import { SlashIcon, AdditemIcon, ChartSquareIcon, ReceiptTextIcon } from "../../../../../public/images/icons";
+import { SlashIcon, AdditemIcon, ChartSquareIcon, ReceiptTextIcon, TicketCircleIcon } from "../../../../../public/images/icons";
 import ChangeStatusDialog from "./ChangeStatusDialog";
 
 interface IProps {
@@ -21,17 +21,17 @@ const ActionButton = ({ label, Icon, onClick }: IProps) => (
 );
 
 
-export const RenderAction = ({id}:{id:string}) => {
+export const RenderAction = ({ id, publicationApprovalByAdmin }: { id: string, publicationApprovalByAdmin: boolean }) => {
     const { push } = useRouter()
-      const [openDestroy, setOpenDestroy] = useState<boolean>(false);
-      const [openChangeStatus, setOpenChangeStatus] = useState<boolean>(false);
+    const [openDestroy, setOpenDestroy] = useState<boolean>(false);
+    const [openChangeStatus, setOpenChangeStatus] = useState<boolean>(false);
 
     const handleFormClick = () => {
-         push(`/preview/${id}`); 
+        push(`/preview/${id}`);
     };
 
     const handleReportResultsClick = () => {
-        push(`/reports/create-solo/${id}?rep=list`); 
+        push(`/reports/create-solo/${id}?rep=list`);
     };
 
     const handleViewEventsClick = () => {
@@ -62,17 +62,24 @@ export const RenderAction = ({id}:{id:string}) => {
                     Icon={ReceiptTextIcon}
                     onClick={handleViewEventsClick}
                 />
-                <ActionButton
-                    label="معلق کردن"
-                    Icon={SlashIcon}
-                    onClick={handleSuspendClick}
-                />
+                {!publicationApprovalByAdmin &&
+                    <ActionButton
+                        label="معلق کردن"
+                        Icon={SlashIcon}
+                        onClick={handleSuspendClick}
+                    />
+                }
+                {publicationApprovalByAdmin &&
+                    <ActionButton
+                        label="عدم تعلیق"
+                        Icon={TicketCircleIcon}
+                        onClick={handleSuspendClick}
+                    />
+                }
             </div>
 
-
-
-            {openDestroy && <DestroyTicketDialog id={id} open={openDestroy} setOpen={setOpenDestroy} /> }
-            <ChangeStatusDialog open={openChangeStatus} setOpen={setOpenChangeStatus} />
+            {openDestroy && <DestroyTicketDialog id={id} open={openDestroy} setOpen={setOpenDestroy} />}
+            <ChangeStatusDialog id={id} open={openChangeStatus} setOpen={setOpenChangeStatus} publicationApprovalByAdmin={publicationApprovalByAdmin} />
         </div>
     );
 }

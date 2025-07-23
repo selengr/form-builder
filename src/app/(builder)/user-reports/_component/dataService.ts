@@ -63,7 +63,7 @@ export async function fetchData({
 // debugger
   return {
     data: response.data,
-    // data: response.data.reporterInformation,
+    publicationApprovalByAdmin: response.data.publicationApprovalByAdmin,
     // total: response.data.totalElements,
   };
 }

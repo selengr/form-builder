@@ -196,6 +196,7 @@ const ListGrid: React.FC<Props> = ({
               }}
             >
               {renderContent()}
+              <RenderActions />
             </Grid>
           </Grid>
       

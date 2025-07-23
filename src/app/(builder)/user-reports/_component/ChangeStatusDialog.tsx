@@ -1,14 +1,17 @@
 "use client";
 
+import * as z from "zod"
 import { CgClose } from "react-icons/cg";
+import { useForm } from "react-hook-form"
 import Dialog from "@mui/material/Dialog";
+import { FormProvider } from "react-hook-form"
 import { Dispatch, SetStateAction } from "react";
+import { zodResolver } from "@hookform/resolvers/zod"
 
 import { IconButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { RHFTextField } from "@/components/hook-form";
 import DialogContent from "@mui/material/DialogContent";
-import { useGetTicketList } from "../_hooks/useGetTicketList";
-import DestroyTicketCard from "./DestroyTicketCard";
 import { SubmitButtons } from "@/components/condition/form/SubmitButtons";
 
 export interface IProps {
@@ -41,15 +44,29 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
+const TicketSchema = z.object({
+  ticket: z.string().min(1, { message: "اين فيلد الزامي است" }),
+})
+export type TTicketFormData = z.infer<typeof TicketSchema>
 
 export const ChangeStatusDialog: React.FC<IProps> = ({
   open,
   setOpen,
 }) => {
-  // const { data, error, isLoading } = useGetTicketList();
+
+  const methods = useForm<TTicketFormData>({
+    resolver: zodResolver(TicketSchema),
+    defaultValues: {
+      ticket: ""
+    },
+  })
 
   const handleClose = () => {
     setOpen((prev) => !prev);
+  };
+
+  const onSubmit = (data: any) => {
+    console.log('data', data)
   };
 
   return (
@@ -66,11 +83,21 @@ export const ChangeStatusDialog: React.FC<IProps> = ({
             />
           </IconButton>
         </div>
-        <label className="flex justify-center text-[404040] mb-1 font-medium">
-            شرح عملیات
+        <label className="flex justify-center text-[15px] text-[#404040] mb-8 font-bold">
+          شرح عملیات
         </label>
-        <textarea />
-        <SubmitButtons isLoading={false} handleClose={handleClose}/>
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(onSubmit)}>
+            <RHFTextField multiline rows={6} name="ticket"
+              sx={{
+                "& .MuiInputBase-root": {
+                  borderRadius: "10px"
+                }
+              }} />
+            <SubmitButtons isLoading={false} handleClose={handleClose} />
+          </form>
+        </FormProvider>
+
       </StyledDialogContent>
     </StyledDialog>
   );

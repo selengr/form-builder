@@ -11,7 +11,7 @@ import { useGetTicketList } from "../_hooks/useGetTicketList";
 import DestroyTicketCard from "./DestroyTicketCard";
 
 export interface IProps {
-  id : string
+  id: string
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 };
@@ -67,7 +67,7 @@ export const DestroyTicketDialog: React.FC<IProps> = ({
             />
           </IconButton>
         </div>
-        <label className="flex justify-center text-[#404040] mb-10 font-medium">
+        <label className="flex justify-center text-[15px] text-[#404040] mb-8 font-bold">
           وقایع
         </label>
         <DestroyTicketCard data={data} />

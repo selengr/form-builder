@@ -46,7 +46,7 @@ export const ChangeStatusDialog: React.FC<IProps> = ({
   open,
   setOpen,
 }) => {
-  const { data, error, isLoading } = useGetTicketList();
+  // const { data, error, isLoading } = useGetTicketList();
 
   const handleClose = () => {
     setOpen((prev) => !prev);

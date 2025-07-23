@@ -38,7 +38,9 @@ export const RenderAction = ({id}:{id:string}) => {
         setOpenDestroy(true);
     };
 
-    const handleSuspendClick = () => { };
+    const handleSuspendClick = () => {
+        setOpenChangeStatus(true)
+    };
 
     return (
         <div className="w-[calc(100%-22px)]  h-14 absolute bottom-2 px-4 py-4 bg-[#F7F7FF] rounded-lg flex justify-between items-center">
@@ -69,7 +71,7 @@ export const RenderAction = ({id}:{id:string}) => {
 
 
 
-            <DestroyTicketDialog open={openDestroy} setOpen={setOpenDestroy} />
+            {openDestroy && <DestroyTicketDialog id={id} open={openDestroy} setOpen={setOpenDestroy} /> }
             <ChangeStatusDialog open={openChangeStatus} setOpen={setOpenChangeStatus} />
         </div>
     );

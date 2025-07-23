@@ -11,6 +11,7 @@ import { useGetTicketList } from "../_hooks/useGetTicketList";
 import DestroyTicketCard from "./DestroyTicketCard";
 
 export interface IProps {
+  id : string
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 };
@@ -42,10 +43,11 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 
 
 export const DestroyTicketDialog: React.FC<IProps> = ({
+  id,
   open,
   setOpen,
 }) => {
-  const { data, error, isLoading } = useGetTicketList();
+  const { data, error, isLoading } = useGetTicketList(id);
 
   const handleClose = () => {
     setOpen((prev) => !prev);
@@ -65,7 +67,7 @@ export const DestroyTicketDialog: React.FC<IProps> = ({
             />
           </IconButton>
         </div>
-        <label className="flex justify-center text-[404040] mb-1 font-medium">
+        <label className="flex justify-center text-[#404040] mb-10 font-medium">
           وقایع
         </label>
         <DestroyTicketCard data={data} />

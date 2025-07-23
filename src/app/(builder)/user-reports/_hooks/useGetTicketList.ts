@@ -17,8 +17,7 @@ const fetchData = async (id: string | string[]) => {
     return response.data.content;
 }
 
-export const useGetTicketList = () => {
-    const { id } = useParams();
+export const useGetTicketList = (id:string) => {
 
     return useQuery({
         queryKey: ["Ticket_List"],
@@ -27,6 +26,7 @@ export const useGetTicketList = () => {
         gcTime: 600000,
         refetchOnWindowFocus: true,
         refetchOnReconnect: true,
-        retry: 3
+        retry: 3,
+        enabled : !!id
     });
 };

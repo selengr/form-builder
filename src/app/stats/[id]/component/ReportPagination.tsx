@@ -1,7 +1,7 @@
 "use client";
 
 import React, {useEffect, useState} from "react";
-import {LuUserRoundPlus} from "react-icons/lu";
+import {LuUserRound, LuUserRoundPlus} from "react-icons/lu";
 import {MdKeyboardArrowLeft, MdKeyboardArrowRight} from "react-icons/md";
 import {useParams} from "next/navigation";
 import {toast} from "sonner";
@@ -73,30 +73,63 @@ export function ReportPagination({
     localStorage.setItem("selectedUsersByForm", JSON.stringify(data));
     setSavedUsers(updated);
   };
-  const downloadExcel = async () => {
+
+  const checkAndDownloadExcel = async () => {
     try {
-      const response = await fetch('/api/report/exportexcel', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          takePartIdList: savedUsers.map((user) => user.takePartId),
-        }),
-      });
+      const checkRes = await fetch(`/api/report/check-excel/${formId}`);
+      const checkData = await checkRes.json();
 
-      const result = await response.json();
-
-      if (!response.ok || !result.response) {
-        throw new Error(result.error || 'خطا در تولید فایل اکسل');
+      if (!checkRes.ok) {
+        throw new Error(checkData.error || "بررسی فایل با خطا مواجه شد");
       }
 
-      toast.info("درخواست دانلود اکسل با موفقیت ارسال شد.",);
+      const status = checkData.statusEnum;
+      const currentUserIds = savedUsers.map((u) => u.takePartId).sort((a, b) => a - b);
 
-    } catch (error: any) {
-      console.error('Download error:', error);
-      toast.error(error.message || "مشکلی در دانلود اکسل رخ داد.");
+      const lastExportedRaw = localStorage.getItem(`lastExportedUserIds_${formId}`);
+      const lastExportedUserIds: number[] = lastExportedRaw ? JSON.parse(lastExportedRaw) : [];
 
+      const isSameList =
+          lastExportedUserIds.length === currentUserIds.length &&
+          lastExportedUserIds.every((id, index) => id === currentUserIds[index]);
+
+      if (status === "PROCESSING") {
+        toast.info("📄 فایل اکسل شما در حال آماده‌سازی است. لطفاً چند لحظه دیگر دوباره تلاش کنید.");
+        return;
+      }
+
+      if (status === "SUCCESS" && checkData.filePath && isSameList) {
+        const fullPath = checkData.filePath.startsWith("/")
+            ? checkData.filePath
+            : `/${checkData.filePath}`;
+        const downloadUrl = `${window.location.origin}${fullPath}`;
+        window.open(downloadUrl, "_blank");
+        toast.success("فایل آماده بود و دانلود شد.");
+      } else {
+        const exportRes = await fetch('/api/report/exportexcel', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            takePartIdList: currentUserIds,
+          }),
+        });
+
+        const exportData = await exportRes.json();
+
+        if (!exportRes.ok || !exportData.response) {
+          throw new Error(exportData.error || 'ارسال درخواست فایل اکسل با خطا مواجه شد.');
+        }
+
+        localStorage.setItem(
+            `lastExportedUserIds_${formId}`,
+            JSON.stringify(currentUserIds)
+        );
+
+        toast.success("درخواست تولید فایل اکسل با موفقیت ثبت شد.");
+      }
+    } catch (err: any) {
+      console.error("Excel Check Error:", err);
+      toast.error(err.message || "خطایی در بررسی فایل اکسل رخ داد.");
     }
   };
 
@@ -141,7 +174,7 @@ export function ReportPagination({
             onClick={() => setIsOpen(true)}
             className="rounded-xl p-2 bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 shadow-sm"
           >
-            <LuUserRoundPlus className="text-white text-xl"/>
+            <LuUserRound className="text-white text-xl"/>
           </button>
         </div>
       </div>
@@ -153,7 +186,7 @@ export function ReportPagination({
           savedUsers={savedUsers}
           onDeleteUser={handleDeleteUser}
           onDownload={() => {
-            downloadExcel();
+            checkAndDownloadExcel();
             setIsOpen(false)
           }}
         />

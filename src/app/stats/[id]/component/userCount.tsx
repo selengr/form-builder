@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+"use client";
+import { useEffect, useState } from "react"
 
 export function UserCount({ formId }: { formId: number }) {
     const [userCount, setUserCount] = useState<number | null>(null);

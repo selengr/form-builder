@@ -1,7 +1,5 @@
-import { SlashIcon } from "../../../../public/images/icons/SlashIcon";
-import { AdditemIcon } from "../../../../public/images/icons/AdditemIcon";
-import { ChartSquareIcon } from "../../../../public/images/icons/ChartSquareIcon";
-import { ReceiptTextIcon } from "../../../../public/images/icons/ReceiptTextIcon";
+import { SlashIcon, AdditemIcon, ChartSquareIcon, ReceiptTextIcon } from "../../../../../public/images/icons";
+
 interface IProps {
     label: string;
     Icon: React.FC<React.SVGProps<SVGSVGElement>>;
@@ -19,34 +17,50 @@ const ActionButton = ({ label, Icon, onClick }: IProps) => (
 );
 
 
-const RenderAction = ({ label, Icon, onClick }: IProps) => (
-    <div className="w-full h-14 px-4 py-4 bg-[#F7F7FF] rounded-lg flex justify-between items-center">
-          <div className="flex w-full gap-3">
-            <ActionButton 
-              label="فرم" 
-              Icon={ChartSquareIcon} 
-              onClick={handleFormClick} 
-            />
-            <ActionButton 
-              label="گزارش نتایج" 
-              Icon={AdditemIcon} 
-              onClick={handleReportResultsClick} 
-            />
-          </div>
-          <div className="flex w-full gap-3 justify-end">
-            <ActionButton 
-              label="مشاهده وقایع" 
-              Icon={ReceiptTextIcon} 
-              onClick={handleViewEventsClick} 
-            />
-            <ActionButton 
-              label="معلق کردن" 
-              Icon={SlashIcon} 
-              onClick={handleSuspendClick} 
-            />
-          </div>
+export const RenderAction = () => {
+
+    const handleFormClick = () => {
+        // router.push("/forms"); 
+    };
+
+    const handleReportResultsClick = () => {
+        // router.push("/report-results"); 
+    };
+
+    const handleViewEventsClick = () => {
+        // router.push("/events"); 
+    };
+
+    const handleSuspendClick = () => { };
+
+    return (
+        <div className="w-full h-14 px-4 py-4 bg-[#F7F7FF] rounded-lg flex justify-between items-center">
+            <div className="flex w-full gap-3">
+                <ActionButton
+                    label="فرم"
+                    Icon={ChartSquareIcon}
+                    onClick={handleFormClick}
+                />
+                <ActionButton
+                    label="گزارش نتایج"
+                    Icon={AdditemIcon}
+                    onClick={handleReportResultsClick}
+                />
+            </div>
+            <div className="flex w-full gap-3 justify-end">
+                <ActionButton
+                    label="مشاهده وقایع"
+                    Icon={ReceiptTextIcon}
+                    onClick={handleViewEventsClick}
+                />
+                <ActionButton
+                    label="معلق کردن"
+                    Icon={SlashIcon}
+                    onClick={handleSuspendClick}
+                />
+            </div>
 
         </div>
-);
-
+    );
+}
 

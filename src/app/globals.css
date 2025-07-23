@@ -23,3 +23,7 @@ body {
   background-image: url("../../public/images/home-page/bg-pattern.svg");
   background-repeat: repeat;
 }
+
+.scroll-hide::-webkit-scrollbar {
+  display: none !important;
+}

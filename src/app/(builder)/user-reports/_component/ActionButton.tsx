@@ -1,7 +1,7 @@
-import { useRouter } from "next/navigation";
-import { SlashIcon, AdditemIcon, ChartSquareIcon, ReceiptTextIcon } from "../../../../../public/images/icons";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import DestroyTicketDialog from "./DestroyTicketDialog";
+import { SlashIcon, AdditemIcon, ChartSquareIcon, ReceiptTextIcon } from "../../../../../public/images/icons";
 
 interface IProps {
     label: string;

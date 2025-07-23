@@ -1,20 +1,20 @@
 "use client";
-
-import React, { ReactNode, useCallback, useEffect, useState } from "react";
+// React & Libs
 import Image from "next/image";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { useInView } from "react-intersection-observer";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from "@mui/material";
-import { TReporterInformationItem } from "./type";
-
-import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { toast } from "sonner";
-import formListEmpty from '@/../public/images/home-page/formListEmpty.png'
+import { useInView } from "react-intersection-observer";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useRouter, useSearchParams } from "next/navigation";
+import { MdOutlineKeyboardArrowRight } from "react-icons/md";
+import React, { ReactNode, useCallback, useEffect } from "react";
+import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from "@mui/material";
+//types
+import { TReporterInformationItem } from "./type";
+// apis
 import { fetchData } from "./dataService";
 import { RenderAction } from "./ActionButton";
-
-
+// image
+import formListEmpty from '@/../public/images/home-page/formListEmpty.png'
 
 interface SearchBoxItem {
   fieldName: "typeOfReport" | "responseForDestroyerReport";
@@ -73,14 +73,11 @@ const ListGrid: React.FC<Props> = ({
     refetchOnWindowFocus: false,
   });
 
-
-
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
-
 
   if (error) {
     toast.error(error.message);

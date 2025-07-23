@@ -17,9 +17,9 @@ import {EditConditionDialog} from "./EditConditionDialog";
 import {ConditionCardOperator} from "./ConditionCardOperator";
 // icons
 import {IonCopyOutline} from "@/../public/images/icons/CopyIcon";
-import {WeuiDeleteOutlined} from "../../../../public/images/icons/DeleteIcon";
+import {WeuiDeleteOutlined} from "@/../public/images/icons/DeleteIcon";
 import {useDeleteReport} from "@/app/reports/create-solo/[id]/_hooks/useDeleteReport";
-import {PhDotsThreeVerticalBold} from "../../../../public/images/icons/PhDotsThreeVerticalBold";
+import {PhDotsThreeVerticalBold} from "@/../public/images/icons/PhDotsThreeVerticalBold";
 import {toast} from "sonner";
 
 const buttonStyles = {

@@ -1,6 +1,6 @@
 {
   "name": "psya",
-  "version": "4.4.31",
+  "version": "4.5.1",
   "private": true,
   "scripts": {
     "dev": "next dev -p 80 --turbo",
@@ -32,7 +32,7 @@
     "@uppy/progress-bar": "^4.2.1",
     "@uppy/react": "^4.4.0",
     "@uppy/tus": "^4.2.2",
-    "axios": "^1.10.0",
+    "axios": "^1.11.0",
     "framer-motion": "^11.18.2",
     "mime": "^4.0.7",
     "moment-jalaali": "^0.10.4",

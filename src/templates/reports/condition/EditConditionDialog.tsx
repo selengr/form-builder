@@ -2,7 +2,7 @@
 
 import {CgClose} from "react-icons/cg";
 import Dialog from "@mui/material/Dialog";
-import {IconButton,styled} from "@mui/material";
+import {IconButton, styled} from "@mui/material";
 import DialogContent from "@mui/material/DialogContent";
 
 import {ConditionalSystem} from "./ConditionalSystem";

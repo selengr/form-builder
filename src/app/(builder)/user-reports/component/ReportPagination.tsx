@@ -1,6 +1,6 @@
 "use client";
 
-import {LuUserRoundPlus} from "react-icons/lu";
+import {LuUsers} from "react-icons/lu";
 import {MdKeyboardArrowLeft, MdKeyboardArrowRight} from "react-icons/md";
 
 interface StatsPaginationProps {
@@ -71,7 +71,7 @@ export function ReportPagination({
     <div className="flex items-center gap-2">
       <span className="text-sm">{totalItems} نفر در لیست</span>
       <div className="bg-blue-700 p-2 rounded-lg">
-        <LuUserRoundPlus className="text-white text-xl"/>
+        <LuUsers className="text-white text-xl"/>
       </div>
     </div>
   </div>);

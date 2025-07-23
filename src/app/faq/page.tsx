@@ -86,12 +86,20 @@ export default function HomePage() {
             </div>
 
             <div className="absolute inset-0 -z-10 -top-[2%] -left-[70%] opacity-10">
-                <Image alt={""} src={`/api/images?folder=faq&file=curvy.svg`} width={100} height={100}
-                       className={"w-full h-full "} draggable={false}/>
+                <Image alt={""}
+                       src={`/api/images?folder=faq&file=curvy.svg`}
+                       width={100}
+                       height={100}
+                       className={"w-full h-full "}
+                       draggable={false}/>
             </div>
             <div className="absolute inset-0 -z-10 ">
-                <Image alt={""} src={`/api/images?folder=faq&file=gr.svg`} width={100} height={100}
-                       className={"w-[100vw] h-screen "} draggable={false}/>
+                <Image alt={""}
+                       src={`/api/images?folder=faq&file=gr.svg`}
+                       width={100}
+                       height={100}
+                       className={"w-full h-screen "}
+                       draggable={false}/>
             </div>
 
 
@@ -99,8 +107,8 @@ export default function HomePage() {
                 <div className="relative flex items-center justify-center h-[300px]">
                     <div className="absolute inset-0 -z-10 flex items-center justify-center blur-sm opacity-55">
                         <Image
-                            alt=""
-                            src="/api/images?folder=faq&file=faq.svg"
+                            alt={""}
+                            src={"/api/images?folder=faq&file=faq.svg"}
                             width={500}
                             height={500}
                             draggable={false}
@@ -108,11 +116,13 @@ export default function HomePage() {
                     </div>
                     <div className="absolute inset-0 -z-10 flex items-center justify-center opacity-35 top-[380px]">
 
-                        <Image alt={""} src={`/api/images?folder=faq&file=circle-bg.svg`}                             width={500}
+                        <Image alt={""}
+                               src={`/api/images?folder=faq&file=circle-bg.svg`}
+                               width={500}
                                height={500}
                                draggable={false}/>
                     </div>
-                    <h1 className="text-6xl font-bold text-gray-800 font-d7">سوالات متداول</h1>
+                    <h1 className="text-6xl font-bold text-gray-800 font-d7">سوالات پرتکرار</h1>
                 </div>
                 <div className="p-4 h-3/4 overflow-y-scroll  scroll-hide">
                     <CustomAccordionGroup items={accordionItems} />

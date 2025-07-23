@@ -66,7 +66,7 @@ export default function SelectedUsersDialog({
             {savedUsers.map((user, idx) => (
               <ListItem
                 className={"p-2 rounded-lg mt-2 hover:bg-[#FAFAFF] bg-[#F7F7FF] transition-all"}
-                key={user.takePartId}
+                key={user.takePartId + idx}
                 secondaryAction={
                   <IconButton
                     edge="end"

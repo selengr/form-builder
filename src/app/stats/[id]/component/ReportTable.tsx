@@ -85,23 +85,30 @@ export function ReportTable({headData, allData, isLoading}: StatsTableProps) {
             <table className="table-auto min-w-full border-collapse border border-gray-200">
                 <thead className="sticky top-0 z-10 bg-gray-50 border-b border-gray-200">
                 <tr>
-                    {headData.map((item, index) => (<Tooltip
-                        key={item.questionId + Math.random()}
-                        title={item.questionTitle}
-                        followCursor
-                        arrow
-                        enterDelay={1000}
-                        placement="top"
-                    >
-                        <th
-                            className="px-4 py-3 text-sm font-semibold text-gray-700 text-center truncate border-r border-neutral-200 max-w-[300px]"
-                            style={{minWidth: dataColumnMinWidth}}
-                        >
-                            <div className="truncate" title={item.questionTitle} dir="rtl">
-                                {item.questionTitle}
-                            </div>
-                        </th>
-                    </Tooltip>))}
+                    {headData.map((item, index) => {
+                        const isActionsColumn = item.questionId === "actions_column_id_action";
+                        return (
+                            <Tooltip
+                                key={item.questionId + Math.random()}
+                                title={item.questionTitle}
+                                followCursor
+                                arrow
+                                enterDelay={1000}
+                                placement="top"
+                            >
+                                <th
+                                    className={`px-4 py-3 text-sm font-semibold text-gray-700 text-center truncate border-r border-neutral-200 max-w-[300px] ${
+                                        isActionsColumn ? "sticky left-0 bg-gray-50" : ""
+                                    }`}
+                                    style={{ minWidth: isActionsColumn ? actionColumnWidth : dataColumnMinWidth }}
+                                >
+                                    <div className="truncate" title={item.questionTitle} dir="rtl">
+                                        {item.questionTitle}
+                                    </div>
+                                </th>
+                            </Tooltip>
+                        );
+                    })}
                 </tr>
                 </thead>
                 <tbody>
@@ -112,7 +119,7 @@ export function ReportTable({headData, allData, isLoading}: StatsTableProps) {
 
                     return (<tr
                         key={row.row[0]?.questionId + Math.random() || rowIndex}
-                        className={`${rowIndex % 2 !== 0 ? "bg-neutral-50" : "bg-white"} hover:bg-blue-50 transition-colors duration-300 max-w-[150px]`}
+                        className={`${rowIndex % 2 !== 0 ? "bg-neutral-50" : "bg-white"} hover:bg-blue-50 transition-colors duration-300 max-w-[150px] group`}
                     >
                         {row.row.map((data: { answer: any[] }, i: number) => (<td
                             key={i}
@@ -142,22 +149,25 @@ export function ReportTable({headData, allData, isLoading}: StatsTableProps) {
                             </Tooltip>
                         </td>))}
                         <td
-                            className="px-4 py-2 text-center border-b border-r border-gray-200 align-middle"
-                            style={{minWidth: actionColumnWidth}}
+                            className={`sticky left-0 px-4 py-2 text-center border-b border-r border-gray-200 align-middle ${
+                                rowIndex % 2 !== 0 ? "bg-neutral-50 group-hover:bg-blue-50 duration-300" : "bg-white group-hover:bg-blue-50 duration-300"
+                            }`}
+                            style={{ minWidth: actionColumnWidth }}
                         >
                             <div className="flex items-center justify-center gap-2">
                                 <button
-                                    onClick={() => toggleSelectedUser({takePartId, name})}
-                                    className={`rounded-xl p-2 text-white transition-colors duration-200 shadow-sm ${isSelected ? "bg-red-500 hover:bg-red-600" : "bg-teal-500 hover:bg-teal-600"}`}
+                                    onClick={() => toggleSelectedUser({ takePartId, name })}
+                                    className={`rounded-xl p-2 text-white transition-colors duration-200 shadow-sm ${
+                                        isSelected ? "bg-red-500 hover:bg-red-600" : "bg-teal-500 hover:bg-teal-600"
+                                    }`}
                                 >
-                                    {isSelected ? <LuUserMinus className="w-5 h-5"/> :
-                                        <LuUserPlus className="w-5 h-5"/>}
+                                    {isSelected ? <LuUserMinus className="w-5 h-5" /> : <LuUserPlus className="w-5 h-5" />}
                                 </button>
                                 <button
                                     onClick={() => handleShowResult(takePartId)}
                                     className="rounded-xl p-2 bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 shadow-sm"
                                 >
-                                    <LuFileChartPie className="w-5 h-5"/>
+                                    <LuFileChartPie className="w-5 h-5" />
                                 </button>
                             </div>
                         </td>

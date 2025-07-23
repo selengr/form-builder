@@ -16,7 +16,7 @@ import {fetchData} from "./dataService";
 
 
 interface SearchBoxItem {
-  fieldName: string;
+  fieldName: "typeOfReport" | "responseForDestroyerReport";
   fieldOperation: "MATCH" | "EQUAL" | "DSC" | "ASC" | "IN";
   fieldValue: string | string[];
   nextConditionOperator: "OR" | "AND";
@@ -35,10 +35,10 @@ interface Props {
   refreshData?: () => void;
   refreshGrid?: boolean;
   disableFilter?: boolean;
-  searchQueryFilter?: { type: string; status: string };
+  searchQueryFilter?: { responseForDestroyerReport: string; typeOfReport: string };
 }
 
-const DEFAULT_SEARCH_FILTER = {type: "ALL", status: "PUBLIC"};
+const DEFAULT_SEARCH_FILTER = {responseForDestroyerReport: "ALL", typeOfReport: "ALL"};
 
 const ListGrid: React.FC<Props> = ({
                                      filterComponent,

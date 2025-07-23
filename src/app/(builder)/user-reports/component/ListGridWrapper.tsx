@@ -136,6 +136,11 @@ export default function ListGridWrapper() {
                     onChange={handleTypeOfReportChange}
                   >
                     <FormControlLabel
+                      value="ALL"
+                      control={<Radio/>}
+                      label="همه"
+                    />
+                    <FormControlLabel
                       value="FORM"
                       control={<Radio/>}
                       label="فرم"

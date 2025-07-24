@@ -105,10 +105,11 @@ export default function HomePage() {
 
             <div className="flex flex-col w-full items-center justify-center h-full z-20">
                 <div className="relative flex items-center justify-center h-[300px]">
-                    <div className="absolute inset-0 -z-10 flex items-center justify-center blur-sm opacity-55">
+                    <div className="absolute inset-0 -z-10 flex items-center justify-center blur-sm opacity-85">
                         <Image
                             alt={""}
                             src={"/api/images?folder=faq&file=faq.svg"}
+                            className={"animate-pulse"}
                             width={500}
                             height={500}
                             draggable={false}
@@ -122,9 +123,9 @@ export default function HomePage() {
                                height={500}
                                draggable={false}/>
                     </div>
-                    <h1 className="text-6xl font-bold text-gray-800 font-d7">سوالات پرتکرار</h1>
+                    <h1 className="xs:font-4xl md:text-6xl font-bold text-gray-800 font-d7">سوالات پرتکرار</h1>
                 </div>
-                <div className="p-4 h-3/4 overflow-y-scroll  scroll-hide">
+                <div className="p-4 h-4/5 overflow-y-scroll  scroll-hide">
                     <CustomAccordionGroup items={accordionItems} />
                 </div>
             </div>

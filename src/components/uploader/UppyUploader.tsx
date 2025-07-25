@@ -24,8 +24,17 @@ export function UppyUploader({
       locale: Persian,
     }).use(Tus, {
       endpoint: `${process.env.NEXT_PUBLIC_BASE_URL}/filemanager/upload`,
+      removeFingerprintOnSuccess: true,
     })
   );
+
+  uppy.current.on('file-added', (file) => {
+    uppy.current.setFileMeta(file.id, {
+      name: Date.now() + "_" + file.name,
+      date: Date.now()
+    });
+  });
+
   uppy.current.setOptions({ restrictions: fileRestriction });
   uppy.current.on("complete", ({ successful, failed }) => {
     if (failed!.length > 0) {

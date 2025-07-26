@@ -1,7 +1,7 @@
 "use client";
 import usePreview from "@/hooks/usePreview";
-import {useRouter, useSearchParams} from "next/navigation";
-import {Button, Typography} from "@mui/material";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Button, Typography } from "@mui/material";
 
 export default function PreviewProgress() {
   const router = useRouter();
@@ -10,19 +10,21 @@ export default function PreviewProgress() {
 
   const handlePrev = () => {
     if (index > 0) {
-      router.push(`?question=${index - 1}`);
+      const params = new URLSearchParams(searchParams);
+      params.set('question', (index - 1).toString());
+      router.push(`?${params.toString()}`);
       dispatch({ type: "pervQuestion" });
     }
   };
 
   const handleNext = () => {
-  if (index + 1 < numQuestions!) {
-    const params = new URLSearchParams(searchParams);
-    params.set('question', (index + 1).toString());
-    router.push(`?${params.toString()}`);
-    dispatch({ type: "nextQuestion" });
-  }
-};
+    if (index + 1 < numQuestions!) {
+      const params = new URLSearchParams(searchParams);
+      params.set('question', (index + 1).toString());
+      router.push(`?${params.toString()}`);
+      dispatch({ type: "nextQuestion" });
+    }
+  };
 
   return (
     <div className="w-full justify-center items-center mt-6">
@@ -62,7 +64,7 @@ export default function PreviewProgress() {
             "&:hover": { bgcolor: "#174AA0" },
           }}
         >
-         بعدی
+          بعدی
         </Button>
       </div>
     </div>

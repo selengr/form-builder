@@ -7,6 +7,7 @@ export type TTypeOfReportModel = {
     value: string;
 };
 export type TReporterInformationItem = {
+    createDate : string;
     questionId: number | null;
     description: string;
     username: string | null;

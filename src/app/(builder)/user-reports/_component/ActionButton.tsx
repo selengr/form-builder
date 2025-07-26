@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 // components
 import ChangeStatusDialog from "./ChangeStatusDialog";
 import DestroyTicketDialog from "./DestroyTicketDialog";
@@ -12,7 +12,7 @@ interface IProps {
     onClick: () => void;
 }
 
-const ActionButton = ({ label, Icon, onClick }: IProps) => (
+const   ActionButton = ({ label, Icon, onClick }: IProps) => (
     <button
         onClick={onClick}
         className="flex justify-center items-center h-8 rounded-lg bg-white text-[13px] font-medium px-2 cursor-pointer hover:bg-gray-100 transition-colors"
@@ -23,8 +23,9 @@ const ActionButton = ({ label, Icon, onClick }: IProps) => (
 );
 
 
-export const RenderAction = ({ id, publicationApprovalByAdmin }: { id: string, publicationApprovalByAdmin: boolean }) => {
+export const RenderAction = ({ publicationApprovalByAdmin }: {  publicationApprovalByAdmin: boolean }) => {
     const { push } = useRouter()
+    const { id } = useParams();
     const [openDestroy, setOpenDestroy] = useState<boolean>(false);
     const [openChangeStatus, setOpenChangeStatus] = useState<boolean>(false);
 
@@ -80,8 +81,8 @@ export const RenderAction = ({ id, publicationApprovalByAdmin }: { id: string, p
                 }
             </div>
 
-            {openDestroy && <DestroyTicketDialog id={id} open={openDestroy} setOpen={setOpenDestroy} />}
-            <ChangeStatusDialog id={id} open={openChangeStatus} setOpen={setOpenChangeStatus} publicationApprovalByAdmin={publicationApprovalByAdmin} />
+            {openDestroy && <DestroyTicketDialog open={openDestroy} setOpen={setOpenDestroy} />}
+            <ChangeStatusDialog open={openChangeStatus} setOpen={setOpenChangeStatus} publicationApprovalByAdmin={publicationApprovalByAdmin} />
         </div>
     );
 }

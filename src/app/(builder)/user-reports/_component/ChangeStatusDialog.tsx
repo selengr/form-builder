@@ -4,10 +4,10 @@ import * as z from "zod"
 import { CgClose } from "react-icons/cg";
 import { useForm } from "react-hook-form"
 import { IconButton } from "@mui/material";
-import { useRouter } from "next/navigation";
 import { FormProvider } from "react-hook-form"
 import { Dispatch, SetStateAction } from "react";
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useParams, useRouter } from "next/navigation";
 // hooks
 import { usePostChangeStatus } from "../_hooks/usePostChangeStatus";
 // components
@@ -17,7 +17,6 @@ import { SubmitButtons } from "@/components/condition/form/SubmitButtons";
 import { StyledDialog, StyledDialogContent } from "./userReports.style";
 
 export interface IProps {
-  id: string;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   publicationApprovalByAdmin: boolean
@@ -29,11 +28,11 @@ const TicketSchema = z.object({
 type TTicketFormData = z.infer<typeof TicketSchema>
 
 export const ChangeStatusDialog: React.FC<IProps> = ({
-  id,
   open,
   setOpen,
   publicationApprovalByAdmin
 }) => {
+  const { id } = useParams();
   const { refresh } = useRouter()
   const postChangeStatus = usePostChangeStatus();
 
@@ -52,7 +51,7 @@ export const ChangeStatusDialog: React.FC<IProps> = ({
     postChangeStatus.mutate({
       data: {
         ticket,
-        formId: JSON.stringify(26),
+        formId: id,
         publicationApprovalByAdmin: !publicationApprovalByAdmin
       }
     }, {

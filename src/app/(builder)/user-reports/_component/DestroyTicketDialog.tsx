@@ -2,6 +2,7 @@
 
 import { CgClose } from "react-icons/cg";
 import { IconButton } from "@mui/material";
+import { useParams } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
 // components
 import DestroyTicketCard from "./DestroyTicketCard";
@@ -11,16 +12,15 @@ import { useGetTicketList } from "../_hooks/useGetTicketList";
 import { StyledDialog, StyledDialogContent } from "./userReports.style";
 
 export interface IProps {
-  id: string
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 export const DestroyTicketDialog: React.FC<IProps> = ({
-  id,
   open,
   setOpen,
 }) => {
+  const { id } = useParams();
   const { data, error, isLoading } = useGetTicketList(id);
 
   const handleClose = () => {

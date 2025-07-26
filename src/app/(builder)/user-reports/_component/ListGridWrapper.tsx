@@ -2,7 +2,7 @@
 // React & Libs
 import Image from "next/image";
 import React, {useState} from "react";
-import {usePathname, useRouter, useSearchParams} from "next/navigation";
+import {useParams, usePathname, useRouter, useSearchParams} from "next/navigation";
 import {Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup,} from "@mui/material";
 // componenst
 import ListCard from "./ListCard";
@@ -15,6 +15,8 @@ export default function ListGridWrapper() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const {push} = useRouter();
+  const {id} = useParams();
+
   const [formType, setFormType] = useState<any>({
     responseForDestroyerReport: "ALL",
     typeOfReport: "ALL",
@@ -285,8 +287,7 @@ export default function ListGridWrapper() {
     <ListGrid
       searchBoxList={searchBoxList}
       filterBoxList={filterBoxList}
-    //   url="/form/main-list"
-     url="/admin/destroy-form/1"
+      url={`/admin/destroy-form/${id}`}
       filterComponent={<FilterSidebar/>}
       CartComponent={(item: any) => (
         <ListCard data={item.data}/>

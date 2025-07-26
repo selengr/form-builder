@@ -17,7 +17,7 @@ const fetchData = async (id: string | string[]) => {
     return response.data.content;
 }
 
-export const useGetTicketList = (id:string) => {
+export const useGetTicketList = (id:string | string[]) => {
 
     return useQuery({
         queryKey: ["Ticket_List"],

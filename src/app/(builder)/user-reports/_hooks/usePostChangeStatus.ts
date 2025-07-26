@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 interface TTicketFormData {
     formId : string
     ticket : string
-    publicationApprovalByAdmin : boolean
+    publicationApprovalByAdmin : string
 }
 
 const postChangeStatus = async (data: TTicketFormData) => {

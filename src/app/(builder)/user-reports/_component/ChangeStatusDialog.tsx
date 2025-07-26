@@ -19,7 +19,7 @@ export interface IProps {
   id: string;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  publicationApprovalByAdmin: boolean
+  publicationApprovalByAdmin: string
 };
 
 const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
@@ -27,7 +27,7 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   maxHeight: "75vh",
   scrollbarWidth: "thin",
   maxWidth: "100%",
-  padding: "16px",
+  padding: "32px",
   overflowX: "hidden",
   paddingTop: theme.spacing(2.8),
   paddingBottom: theme.spacing(1.8),
@@ -75,8 +75,8 @@ export const ChangeStatusDialog: React.FC<IProps> = ({
     postChangeStatus.mutate({
       data: {
         ticket,
-        formId: id,
-        publicationApprovalByAdmin
+        formId: JSON.stringify(26),
+        publicationApprovalByAdmin : publicationApprovalByAdmin ? "false" : "true"
       }
     }, {
       onSuccess: () => {
@@ -89,7 +89,7 @@ export const ChangeStatusDialog: React.FC<IProps> = ({
   return (
     <StyledDialog open={open} maxWidth="xl">
       <StyledDialogContent>
-        <div className="flex items-center justify-end h-6">
+        <div className="flex items-center justify-end h-6 -ml-2">
           <IconButton edge="end">
             <CgClose
               color="#404040"

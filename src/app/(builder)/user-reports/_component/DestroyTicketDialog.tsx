@@ -70,7 +70,7 @@ export const DestroyTicketDialog: React.FC<IProps> = ({
         <label className="flex justify-center text-[15px] text-[#404040] mb-8 font-bold">
           وقایع
         </label>
-        <DestroyTicketCard data={data} />
+        <DestroyTicketCard data={data} loading={isLoading} error={error}/>
       </StyledDialogContent>
     </StyledDialog>
   );

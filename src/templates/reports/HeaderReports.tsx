@@ -7,6 +7,7 @@ const Header = () => {
     const searchParams = useSearchParams()
   const search = searchParams.get('rep')
   const admin = search === "list"
+  const name = searchParams.get('name')
   
   return (
     <div className="relative flex w-full justify-center items-center h-[52px] rounded-lg bg-[#F7F7FF]">
@@ -19,7 +20,7 @@ const Header = () => {
           <IoIosArrowForward fontSize="1.1rem" color="#000" />
         </IconButton>
       </div>
-      ساخت گزارش
+        {admin ? `گزارش فرم ${name}` : " ساخت گزارش"}
     </div>
   );
 };

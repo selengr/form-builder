@@ -23,7 +23,7 @@ const   ActionButton = ({ label, Icon, onClick }: IProps) => (
 );
 
 
-export const RenderAction = ({ publicationApprovalByAdmin }: {  publicationApprovalByAdmin: boolean }) => {
+export const RenderAction = ({ publicationApprovalByAdmin, name }: {  publicationApprovalByAdmin: boolean, name : string }) => {
     const { push } = useRouter()
     const { id } = useParams();
     const [openDestroy, setOpenDestroy] = useState<boolean>(false);
@@ -34,7 +34,7 @@ export const RenderAction = ({ publicationApprovalByAdmin }: {  publicationAppro
     };
 
     const handleReportResultsClick = () => {
-        push(`/reports/create-solo/${id}?rep=list`);
+        push(`/reports/create-solo/${id}?rep=list&name=${name}`);
     };
 
     const handleViewEventsClick = () => {

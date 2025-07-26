@@ -56,7 +56,6 @@ const ListGrid: React.FC<Props> = ({
   const searchParams = useSearchParams();
   const query = searchParams.get("query")?.toString() || "";
 
-
   const router = useRouter();
 
   const {
@@ -197,7 +196,7 @@ const ListGrid: React.FC<Props> = ({
               {renderContent()}
             </Grid>
           </Grid>
-          <RenderAction publicationApprovalByAdmin={pages?.pages[0].publicationApprovalByAdmin}/>
+          <RenderAction name={pages?.pages[0].data.formName} publicationApprovalByAdmin={pages?.pages[0].publicationApprovalByAdmin}/>
         </Grid>
         {renderDesktopFilter()}
       </Grid>)}

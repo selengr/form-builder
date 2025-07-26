@@ -1,18 +1,22 @@
 "use client";
 
-import {useParams, useRouter} from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import usePreview from "@/hooks/usePreview";
-import {useEffect} from "react";
+import { useEffect } from "react";
 import PreviewQuestion from "@/templates/preview/PreviewQuestion";
 import PreviewProgress from "@/templates/preview/PreviewProgress";
 import Loading from "./loading";
-import {Button, IconButton} from "@mui/material";
-import {MdOutlineKeyboardArrowRight} from "react-icons/md";
+import { Button, IconButton } from "@mui/material";
+import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 
 export default function PreviewPage() {
   const router = useRouter();
-  const {id: paramId} = useParams();
-  const {status, title} = usePreview();
+  const { id: paramId } = useParams();
+  const { status, title } = usePreview();
+  const searchParams = useSearchParams()
+  const search = searchParams.get('rep')
+  const admin = search === "list"
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -20,7 +24,7 @@ export default function PreviewPage() {
 
   if (status === "loading") {
     return (<div className="w-full h-screen flex justify-center items-center bg-white">
-      <Loading/>
+      <Loading />
     </div>);
   }
 
@@ -34,7 +38,7 @@ export default function PreviewPage() {
           variant="contained"
           onClick={() => router.push(`/builder/${paramId}`)}
           sx={{
-            backgroundColor: "#111", "&:hover": {backgroundColor: "#222"},
+            backgroundColor: "#111", "&:hover": { backgroundColor: "#222" },
           }}
         >
           بازگشت به فرم ساز
@@ -48,10 +52,10 @@ export default function PreviewPage() {
       {/* Header */}
       <div className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative">
         <IconButton
-          sx={{position: "absolute", left: "8px"}}
-          onClick={() => router.push(`/builder/${paramId}`)}
+          sx={{ position: "absolute", left: "8px" }}
+          onClick={() => router.push(admin ? `/user-reports/${paramId}` : `/builder/${paramId}`)}
         >
-          <MdOutlineKeyboardArrowRight color="#292D32"/>
+          <MdOutlineKeyboardArrowRight color="#292D32" />
         </IconButton>
         <p className="text-[16px] text-center font-bold text-[#161616]">
           {title}
@@ -61,13 +65,13 @@ export default function PreviewPage() {
       {/* Main content (centered 60%) */}
       <div className="flex-1 flex items-center justify-center">
         <div className="w-full max-w-4xl h-[60%] flex items-center justify-center">
-          <PreviewQuestion/>
+          <PreviewQuestion />
         </div>
       </div>
 
       {/* Footer always at bottom */}
       <div className="w-full flex justify-between items-center ">
-        <PreviewProgress/>
+        <PreviewProgress />
       </div>
     </div>
   </div>);

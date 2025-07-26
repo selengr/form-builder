@@ -1,11 +1,11 @@
 "use client";
 
-import {notFound, useParams, useSearchParams} from "next/navigation";
-import {createContext, Dispatch, ReactNode, useEffect, useReducer,} from "react";
-import {FormElementInstance} from "@/types/FormElements";
-import {toast} from "react-hot-toast";
-import {IEndPageList} from "@/types/bulider";
-import {AxiosApi} from "@/services/axios/AxiosApi";
+import { notFound, useParams, useSearchParams } from "next/navigation";
+import { createContext, Dispatch, ReactNode, useEffect, useReducer, } from "react";
+import { FormElementInstance } from "@/types/FormElements";
+import { toast } from "react-hot-toast";
+import { IEndPageList } from "@/types/bulider";
+import { AxiosApi } from "@/services/axios/AxiosApi";
 
 type IInitialState = {
   questions: any[] | never[];
@@ -41,7 +41,7 @@ const initialState: IInitialState = {
   index: 0,
   answer: null,
   numQuestions: null,
-  dispatch: () => {},
+  dispatch: () => { },
 };
 
 function reducer(state: IInitialState, action: any) {
@@ -53,8 +53,8 @@ function reducer(state: IInitialState, action: any) {
         title: action.payload.title,
         index:
           action.payload.index !== null &&
-          action.payload.index <= action.payload.questions.length &&
-          action.payload.index >= 0
+            action.payload.index <= action.payload.questions.length &&
+            action.payload.index >= 0
             ? Number(action.payload.index)
             : 0,
         status: "ready",
@@ -81,12 +81,15 @@ export function PreviewProvider({ children }: { children: ReactNode }) {
   );
   const numQuestions: number = questions.length;
   const currentIndex = searchParams?.get("question");
+    const search = searchParams.get('rep')
+    const admin = search === "list"
+
 
   useEffect(() => {
     async function fetchData() {
       try {
         const { data }: { data: formResDataTypes } = await AxiosApi.get(
-          `/user/form/${id}`
+          admin ? `/admin/user/form/${id}` : `/user/form/${id}`
         );
 
         const allQuestions = data?.questionGroups

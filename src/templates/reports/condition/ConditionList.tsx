@@ -1,40 +1,40 @@
 "use client";
-import {useMemo} from "react";
-import {useParams, useSearchParams} from "next/navigation";
+import { useMemo } from "react";
+import { useParams, useSearchParams } from "next/navigation";
 // dnd
 import {
-    closestCenter,
-    DndContext,
-    type DragEndEvent,
-    KeyboardSensor,
-    PointerSensor,
-    useSensor,
-    useSensors,
+  closestCenter,
+  DndContext,
+  type DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
-import {restrictToVerticalAxis, restrictToWindowEdges,} from "@dnd-kit/modifiers";
-import {arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy,} from "@dnd-kit/sortable";
+import { restrictToVerticalAxis, restrictToWindowEdges, } from "@dnd-kit/modifiers";
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, } from "@dnd-kit/sortable";
 // templates
 import CreateCondition from "./CreateCondition";
-import {ConditionCard} from "./ConditionCard";
-import {idGenerator} from "@/lib/idGenerator";
+import { ConditionCard } from "./ConditionCard";
+import { idGenerator } from "@/lib/idGenerator";
 // types
-import {IGetCondition} from "@/types/conditionReportSolo";
-import {useUpdateReportPosition} from "@/app/reports/create-solo/[id]/_hooks/useUpdateReportPosition";
+import { IGetCondition } from "@/types/conditionReportSolo";
+import { useUpdateReportPosition } from "@/app/reports/create-solo/[id]/_hooks/useUpdateReportPosition";
 
 interface IConditionListProps {
   conditions: IGetCondition[];
-  setConditions : any
+  setConditions: any
 }
 
 const ConditionList: React.FC<IConditionListProps> = ({
   conditions,
-  setConditions 
+  setConditions
 }) => {
   const { id } = useParams();
   const searchParams = useSearchParams()
   const search = searchParams.get('rep')
   const admin = search === "list"
-  
+
   const { mutate: updatePosition, isPending: isUpdatingPosition } =
     useUpdateReportPosition();
 
@@ -86,7 +86,7 @@ const ConditionList: React.FC<IConditionListProps> = ({
 
   return (
     <div className="w-full max-w-[500px] flex flex-col pt-">
-     {!admin && <CreateCondition />}
+      {!admin && <CreateCondition />}
       {Array.isArray(conditions) && conditions.length > 0 && (
         <div
           dir="rtl"
@@ -105,7 +105,7 @@ const ConditionList: React.FC<IConditionListProps> = ({
               {conditions?.map((condition: IGetCondition, index: number) => (
                 // eslint-disable-next-line react/jsx-key
                 <div className="bg-[#F7F7FF] gap-[3px] rounded-[8px] p-[10px]" key={idGenerator()}>
-                  <ConditionCard condition={condition} index={index} admin={admin}/>
+                  <ConditionCard condition={condition} index={index} admin={admin} />
                 </div>
               ))}
             </SortableContext>

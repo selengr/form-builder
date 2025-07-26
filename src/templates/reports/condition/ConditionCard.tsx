@@ -45,6 +45,7 @@ const buttonStylesError = {
 export function ConditionCard({
   condition,
   index,
+  admin
 }: IConditionCardProps) {
   const [open, setOpen] = useState<boolean>(false);
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
@@ -124,7 +125,7 @@ export function ConditionCard({
           {index + 1}
         </div>
         <div className="bg-white h-8 w-8 rounded-[10px] flex justify-center items-center">
-          <button onClick={handleClick}>
+          <button disabled={admin} onClick={handleClick}>
             <PhDotsThreeVerticalBold color="#1758BA" fontSize="1.5rem" />
           </button>
           {menuOpen && (

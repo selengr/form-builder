@@ -1,51 +1,26 @@
 "use client";
-
+// React & Libs
 import * as z from "zod"
 import { CgClose } from "react-icons/cg";
 import { useForm } from "react-hook-form"
-import Dialog from "@mui/material/Dialog";
+import { IconButton } from "@mui/material";
 import { FormProvider } from "react-hook-form"
 import { Dispatch, SetStateAction } from "react";
 import { zodResolver } from "@hookform/resolvers/zod"
-
-import { IconButton } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { RHFTextField } from "@/components/hook-form";
-import DialogContent from "@mui/material/DialogContent";
-import { SubmitButtons } from "@/components/condition/form/SubmitButtons";
+import { useParams, useRouter } from "next/navigation";
+// hooks
 import { usePostChangeStatus } from "../_hooks/usePostChangeStatus";
+// components
+import { RHFTextField } from "@/components/hook-form";
+import { SubmitButtons } from "@/components/condition/form/SubmitButtons";
+// style
+import { StyledDialog, StyledDialogContent } from "./userReports.style";
 
 export interface IProps {
-  id: string;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   publicationApprovalByAdmin: boolean
 };
-
-const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
-  direction: "ltr",
-  maxHeight: "75vh",
-  scrollbarWidth: "thin",
-  maxWidth: "100%",
-  padding: "16px",
-  overflowX: "hidden",
-  paddingTop: theme.spacing(2.8),
-  paddingBottom: theme.spacing(1.8),
-}));
-
-const StyledDialog = styled(Dialog)(({ theme }) => ({
-  overflow: "hidden",
-  scrollbarWidth: "none",
-  "& .MuiPaper-root": {
-    borderRadius: "24px",
-    margin: "10px",
-    width: "1050px",
-  },
-  "& .MuiDialog-container": {
-    backdropFilter: "blur(4px)",
-    backgroundColor: "hsl(0deg 0% 100% / 50%)",
-  },
-}));
 
 const TicketSchema = z.object({
   ticket: z.string().min(1, { message: "اين فيلد الزامي است" }),
@@ -53,11 +28,12 @@ const TicketSchema = z.object({
 type TTicketFormData = z.infer<typeof TicketSchema>
 
 export const ChangeStatusDialog: React.FC<IProps> = ({
-  id,
   open,
   setOpen,
   publicationApprovalByAdmin
 }) => {
+  const { id } = useParams();
+  const { refresh } = useRouter()
   const postChangeStatus = usePostChangeStatus();
 
   const methods = useForm<TTicketFormData>({
@@ -76,11 +52,11 @@ export const ChangeStatusDialog: React.FC<IProps> = ({
       data: {
         ticket,
         formId: id,
-        publicationApprovalByAdmin
+        publicationApprovalByAdmin: !publicationApprovalByAdmin
       }
     }, {
       onSuccess: () => {
-        // refresh()
+        refresh()
         handleClose()
       },
     });
@@ -89,7 +65,7 @@ export const ChangeStatusDialog: React.FC<IProps> = ({
   return (
     <StyledDialog open={open} maxWidth="xl">
       <StyledDialogContent>
-        <div className="flex items-center justify-end h-6">
+        <div className="flex items-center justify-end h-6 -ml-2">
           <IconButton edge="end">
             <CgClose
               color="#404040"
@@ -111,7 +87,7 @@ export const ChangeStatusDialog: React.FC<IProps> = ({
                   borderRadius: "10px"
                 }
               }} />
-            <SubmitButtons isLoading={false} handleClose={handleClose} />
+            <SubmitButtons isLoading={postChangeStatus.isPending} handleClose={handleClose} />
           </form>
         </FormProvider>
 

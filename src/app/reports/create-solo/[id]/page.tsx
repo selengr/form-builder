@@ -21,7 +21,7 @@ export default function Reports() {
   }, [data])
 
   return (
-    <div className="w-full min-h-screen px-4 py-4 bg-[#f7f7f7]">
+    <div className="w-full h-[calc(100vh-1rem)] px-4 py-4 bg-[#f7f7f7]">
       <div className="md:container mx-auto flex p-3 flex-col justify-start items-center min-w-screen h-full bg-white rounded-xl w-full">
         <Header />
 

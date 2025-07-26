@@ -3,7 +3,7 @@ import { AxiosApi } from '@/services/axios/AxiosApi';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface TTicketFormData {
-    formId : string
+    formId : string | string[]
     ticket : string
     publicationApprovalByAdmin : boolean
 }

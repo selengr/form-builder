@@ -1,52 +1,26 @@
 "use client";
 
 import { CgClose } from "react-icons/cg";
-import Dialog from "@mui/material/Dialog";
-import { Dispatch, SetStateAction } from "react";
-
 import { IconButton } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import DialogContent from "@mui/material/DialogContent";
-import { useGetTicketList } from "../_hooks/useGetTicketList";
+import { useParams } from "next/navigation";
+import { Dispatch, SetStateAction } from "react";
+// components
 import DestroyTicketCard from "./DestroyTicketCard";
+// _hooks
+import { useGetTicketList } from "../_hooks/useGetTicketList";
+// style
+import { StyledDialog, StyledDialogContent } from "./userReports.style";
 
 export interface IProps {
-  id: string
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
-  direction: "ltr",
-  maxHeight: "75vh",
-  scrollbarWidth: "thin",
-  maxWidth: "100%",
-  padding: "16px",
-  overflowX: "hidden",
-  paddingTop: theme.spacing(2.8),
-  paddingBottom: theme.spacing(1.8),
-}));
-
-const StyledDialog = styled(Dialog)(({ theme }) => ({
-  overflow: "hidden",
-  scrollbarWidth: "none",
-  "& .MuiPaper-root": {
-    borderRadius: "24px",
-    margin: "10px",
-    width: "1050px",
-  },
-  "& .MuiDialog-container": {
-    backdropFilter: "blur(4px)",
-    backgroundColor: "hsl(0deg 0% 100% / 50%)",
-  },
-}));
-
-
 export const DestroyTicketDialog: React.FC<IProps> = ({
-  id,
   open,
   setOpen,
 }) => {
+  const { id } = useParams();
   const { data, error, isLoading } = useGetTicketList(id);
 
   const handleClose = () => {
@@ -70,7 +44,7 @@ export const DestroyTicketDialog: React.FC<IProps> = ({
         <label className="flex justify-center text-[15px] text-[#404040] mb-8 font-bold">
           وقایع
         </label>
-        <DestroyTicketCard data={data} />
+        <DestroyTicketCard data={data} loading={isLoading} error={error}/>
       </StyledDialogContent>
     </StyledDialog>
   );

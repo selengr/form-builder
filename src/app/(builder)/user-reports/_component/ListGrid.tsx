@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import React, { ReactNode, useCallback, useEffect } from "react";
 import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from "@mui/material";
-//types
+// types
 import { TReporterInformationItem } from "./type";
 // apis
 import { fetchData } from "./dataService";
@@ -56,7 +56,6 @@ const ListGrid: React.FC<Props> = ({
   const searchParams = useSearchParams();
   const query = searchParams.get("query")?.toString() || "";
 
-
   const router = useRouter();
 
   const {
@@ -82,7 +81,7 @@ const ListGrid: React.FC<Props> = ({
   if (error) {
     toast.error(error.message);
   }
-console.log('pages', pages)
+
   const renderHeader = useCallback(() => (<div
     className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative shrink-0">
     <IconButton sx={{ position: "absolute", left: "8px" }} onClick={() => router.push("/user-reports")}>
@@ -197,7 +196,7 @@ console.log('pages', pages)
               {renderContent()}
             </Grid>
           </Grid>
-          <RenderAction id={pages?.pages[0].data.formId} publicationApprovalByAdmin={pages?.pages[0].publicationApprovalByAdmin}/>
+          <RenderAction name={pages?.pages[0].data.formName} publicationApprovalByAdmin={pages?.pages[0].publicationApprovalByAdmin}/>
         </Grid>
         {renderDesktopFilter()}
       </Grid>)}

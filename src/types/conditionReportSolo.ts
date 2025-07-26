@@ -33,6 +33,7 @@ export interface IConditionExtMap {
 
   export interface IConditionCardProps {
     index: number;
+    admin: boolean;
     condition: IGetCondition;
   }
   

@@ -30,7 +30,7 @@ export const RenderAction = ({ publicationApprovalByAdmin, name }: {  publicatio
     const [openChangeStatus, setOpenChangeStatus] = useState<boolean>(false);
 
     const handleFormClick = () => {
-        push(`/preview/${id}`);
+        push(`/preview/${id}?rep=list`);
     };
 
     const handleReportResultsClick = () => {

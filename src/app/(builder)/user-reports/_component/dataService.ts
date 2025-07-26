@@ -1,14 +1,14 @@
 import {clientFetch} from "@/components/ListGrid/clientFetch";
 
 interface SearchBoxItem {
-  fieldName: string;
+  fieldName: "typeOfReport" | "responseForDestroyerReport";
   fieldOperation: "MATCH" | "EQUAL" | "DSC" | "ASC" | "IN";
   fieldValue: string | string[];
   nextConditionOperator: "OR" | "AND";
 }
 
 const PAGE_SIZE = 10;
-const DEFAULT_SEARCH_FILTER = {type: "ALL", status: "PUBLIC"};
+const DEFAULT_SEARCH_FILTER = {responseForDestroyerReport: "ALL", typeOfReport: "ALL"};
 
 export async function fetchData({
                                   pageParam = 0
@@ -16,19 +16,19 @@ export async function fetchData({
   pageParam: number
 }, searchBoxList: SearchBoxItem[], filterBoxList: SearchBoxItem[], url: string, searchQueryFilter = DEFAULT_SEARCH_FILTER) {
   const filterRestrictions: SearchBoxItem[] = [];
-  if (searchQueryFilter.type && searchQueryFilter.type !== "ALL") {
+  if (searchQueryFilter.responseForDestroyerReport && searchQueryFilter.responseForDestroyerReport !== "ALL") {
     filterRestrictions.push({
-      fieldName: "typeEnum",
+      fieldName: "responseForDestroyerReport",
       fieldOperation: "EQUAL",
-      fieldValue: searchQueryFilter.type,
+      fieldValue: searchQueryFilter.responseForDestroyerReport,
       nextConditionOperator: "AND"
     });
   }
-  if (searchQueryFilter.status && searchQueryFilter.status !== "ALL") {
+  if (searchQueryFilter.typeOfReport && searchQueryFilter.typeOfReport !== "ALL") {
     filterRestrictions.push({
-      fieldName: "status",
+      fieldName: "typeOfReport",
       fieldOperation: "EQUAL",
-      fieldValue: searchQueryFilter.status,
+      fieldValue: searchQueryFilter.typeOfReport,
       nextConditionOperator: "AND"
     });
   }
@@ -63,7 +63,7 @@ export async function fetchData({
 // debugger
   return {
     data: response.data,
-    // data: response.data.reporterInformation,
+    publicationApprovalByAdmin: response.data.publicationApprovalByAdmin,
     // total: response.data.totalElements,
   };
 }

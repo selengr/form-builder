@@ -1,21 +1,23 @@
 "use client";
-
-import React, {ReactNode, useCallback, useEffect} from "react";
+// React & Libs
 import Image from "next/image";
-import {useInfiniteQuery} from "@tanstack/react-query";
-import {useInView} from "react-intersection-observer";
-import {useRouter, useSearchParams} from "next/navigation";
-import {Box, Grid2 as Grid, IconButton, LinearProgress, Typography} from "@mui/material";
-import {TReporterInformationItem} from "./type";
-
-import {MdOutlineKeyboardArrowRight} from "react-icons/md";
-import {toast} from "sonner";
+import { toast } from "sonner";
+import { useInView } from "react-intersection-observer";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useRouter, useSearchParams } from "next/navigation";
+import { MdOutlineKeyboardArrowRight } from "react-icons/md";
+import React, { ReactNode, useCallback, useEffect } from "react";
+import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from "@mui/material";
+//types
+import { TReporterInformationItem } from "./type";
+// apis
+import { fetchData } from "./dataService";
+import { RenderAction } from "./ActionButton";
+// image
 import formListEmpty from '@/../public/images/home-page/formListEmpty.png'
-import {fetchData} from "./dataService";
-
 
 interface SearchBoxItem {
-  fieldName: string;
+  fieldName: "typeOfReport" | "responseForDestroyerReport";
   fieldOperation: "MATCH" | "EQUAL" | "DSC" | "ASC" | "IN";
   fieldValue: string | string[];
   nextConditionOperator: "OR" | "AND";
@@ -34,23 +36,23 @@ interface Props {
   refreshData?: () => void;
   refreshGrid?: boolean;
   disableFilter?: boolean;
-  searchQueryFilter?: { type: string; status: string };
+  searchQueryFilter?: { responseForDestroyerReport: string; typeOfReport: string };
 }
 
-const DEFAULT_SEARCH_FILTER = {type: "ALL", status: "PUBLIC"};
+const DEFAULT_SEARCH_FILTER = { responseForDestroyerReport: "ALL", typeOfReport: "ALL" };
 
 const ListGrid: React.FC<Props> = ({
-                                     filterComponent,
-                                     searchBoxList,
-                                     filterBoxList,
-                                     CartComponent,
-                                     url,
-                                     onCheck,
-                                     refreshGrid,
-                                     disableFilter,
-                                     searchQueryFilter = DEFAULT_SEARCH_FILTER
-                                   }) => {
-  const {ref, inView} = useInView();
+  filterComponent,
+  searchBoxList,
+  filterBoxList,
+  CartComponent,
+  url,
+  onCheck,
+  refreshGrid,
+  disableFilter,
+  searchQueryFilter = DEFAULT_SEARCH_FILTER
+}) => {
+  const { ref, inView } = useInView();
   const searchParams = useSearchParams();
   const query = searchParams.get("query")?.toString() || "";
 
@@ -61,7 +63,7 @@ const ListGrid: React.FC<Props> = ({
     data: pages, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, refetch,
   } = useInfiniteQuery({
     queryKey: ["datas", query, searchQueryFilter, filterBoxList],
-    queryFn: ({pageParam}) => fetchData({pageParam}, searchBoxList, filterBoxList, url, searchQueryFilter),
+    queryFn: ({ pageParam }) => fetchData({ pageParam }, searchBoxList, filterBoxList, url, searchQueryFilter),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       // Assuming PAGE_SIZE is defined in dataService or passed as a prop/constant
@@ -71,26 +73,23 @@ const ListGrid: React.FC<Props> = ({
     refetchOnWindowFocus: false,
   });
 
-
-
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
-
   if (error) {
     toast.error(error.message);
   }
-
+console.log('pages', pages)
   const renderHeader = useCallback(() => (<div
     className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative shrink-0">
-    <IconButton sx={{position: "absolute", left: "8px"}} onClick={() => router.push("/user-reports")}>
-      <MdOutlineKeyboardArrowRight color="#292D32"/>
+    <IconButton sx={{ position: "absolute", left: "8px" }} onClick={() => router.push("/user-reports")}>
+      <MdOutlineKeyboardArrowRight color="#292D32" />
     </IconButton>
     <p className="text-[16px] text-center font-bold text-[#161616]">
-        {pages?.pages[0].data.formName}
+      {pages?.pages[0].data.formName}
     </p>
   </div>), [pages?.pages[0].data.formName, router]);
 
@@ -98,8 +97,8 @@ const ListGrid: React.FC<Props> = ({
   const renderContent = useCallback(() => {
     const allItems = pages?.pages.flatMap(page => page.data) || [];
     if (isFetching && !isFetchingNextPage) {
-      return (<Box sx={{width: "100%", mt: 2}}>
-        <LinearProgress/>
+      return (<Box sx={{ width: "100%", mt: 2 }}>
+        <LinearProgress />
       </Box>);
     }
 
@@ -114,8 +113,8 @@ const ListGrid: React.FC<Props> = ({
           width: "100%",
         }}
       >
-        <Image src={formListEmpty} alt="No forms found" height={256} priority draggable={false}/>
-        <Typography sx={{fontSize: "18px", color: "#999"}}>
+        <Image src={formListEmpty} alt="No forms found" height={256} priority draggable={false} />
+        <Typography sx={{ fontSize: "18px", color: "#999" }}>
           موردی یافت نشد
         </Typography>
       </Box>);
@@ -127,12 +126,12 @@ const ListGrid: React.FC<Props> = ({
       // @ts-ignore
       const isLastItem = (pageIndex === pages.pages.length - 1) && (index === page.data.length - 1);
 
-      return (<Grid sx={{width: 1, mx: "auto"}} key={key} size={{xs: 12,md:10, xl:9}}>
+      return (<Grid sx={{ width: 1, mx: "auto" }} key={key} size={{ xs: 12, md: 10, xl: 9 }}>
         {CartComponent && (<CartComponent onCheck={onCheck} data={data} />)}
         {isLastItem && (<>
-          <Typography component="h1" ref={ref} sx={{height: 0}}/>
-          <Box sx={{width: "100%"}}>
-            {isFetchingNextPage && <LinearProgress/>}
+          <Typography component="h1" ref={ref} sx={{ height: 0 }} />
+          <Box sx={{ width: "100%" }}>
+            {isFetchingNextPage && <LinearProgress />}
           </Box>
         </>)}
       </Grid>);
@@ -141,7 +140,7 @@ const ListGrid: React.FC<Props> = ({
 
   const renderDesktopFilter = useCallback(() => (filterComponent && (<Grid
     width="100%"
-    display={{xs: "none", lg: "flex"}}
+    display={{ xs: "none", lg: "flex" }}
     flexDirection="column"
     justifyContent="flex-start"
     alignItems="center"
@@ -149,7 +148,7 @@ const ListGrid: React.FC<Props> = ({
       backgroundColor: "white", borderRadius: "16px", gap: 1, m: 1, ml: 0, p: 2, maxWidth: "300px",
     }}
   >
-    <Grid sx={{width: "100%", minWidth: "200px", maxWidth: "300px"}}>
+    <Grid sx={{ width: "100%", minWidth: "200px", maxWidth: "300px" }}>
       {filterComponent}
     </Grid>
   </Grid>)), [filterComponent]);
@@ -158,21 +157,22 @@ const ListGrid: React.FC<Props> = ({
   return (<div className={"p-2 h-screen w-full flex flex-col"}>
     {isFetching && !isFetchingNextPage ?
 
-      (<Box sx={{width: "100%"}}>
-        <LinearProgress/>
+      (<Box sx={{ width: "100%" }}>
+        <LinearProgress />
       </Box>) : (<Grid
         width="100%"
         display="flex"
         sx={{
           overflowY: "hidden",
           userSelect: "none",
-          height: {xs: "calc(100vh - 60px)", md: "100vh"},
-          flexDirection: {xs: "column", lg: "row"},
+          height: { xs: "calc(100vh - 60px)", md: "100vh" },
+          flexDirection: { xs: "column", lg: "row" },
         }}
       >
         <Grid
           display="flex"
           flexDirection="column"
+          position={"relative"}
           justifyContent="flex-start"
           alignItems="center"
           container
@@ -180,15 +180,15 @@ const ListGrid: React.FC<Props> = ({
             bgcolor: "white", borderRadius: "16px", p: 2, mx: 1, width: 1, overflowY: "hidden", height: "100%",
           }}
         >
-          <Grid container sx={{width: "100%", justifyContent: "center", mx: "auto"}} >
+          <Grid container sx={{ width: "100%", justifyContent: "center", mx: "auto" }} >
             {renderHeader()}
-          
+
             <Grid
               id="content"
               container
               flexWrap="nowrap"
               sx={{
-                width:1,
+                width: 1,
                 mx: "auto", mt: 1, mb: 5, pb: 4, flexDirection: "column", gap: 2, overflowY: "auto", height: {
                   xs: "calc(100vh - 290px)", md: "calc(100vh - 210px)",
                 },
@@ -197,7 +197,7 @@ const ListGrid: React.FC<Props> = ({
               {renderContent()}
             </Grid>
           </Grid>
-      
+          <RenderAction id={pages?.pages[0].data.formId} publicationApprovalByAdmin={pages?.pages[0].publicationApprovalByAdmin}/>
         </Grid>
         {renderDesktopFilter()}
       </Grid>)}

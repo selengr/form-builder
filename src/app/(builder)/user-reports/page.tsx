@@ -1,7 +1,7 @@
 "use client";
 
 import {useRouter} from "next/navigation";
-import {ReportHeader, ReportPagination, ReportTable} from "./component";
+import {ReportHeader, ReportPagination, ReportTable} from "./_component";
 import {useStatsViewModel} from "./viewModel";
 
 export default function StatsPage() {

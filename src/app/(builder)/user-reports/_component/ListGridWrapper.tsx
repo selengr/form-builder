@@ -1,11 +1,13 @@
 "use client";
-
-import React, {useState} from "react";
-import ListGrid from "./ListGrid";
-import ListCard from "./ListCard";
-import {Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup,} from "@mui/material";
-import {usePathname, useRouter, useSearchParams} from "next/navigation";
+// React & Libs
 import Image from "next/image";
+import React, {useState} from "react";
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
+import {Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup,} from "@mui/material";
+// componenst
+import ListCard from "./ListCard";
+import ListGrid from "./ListGrid";
+// icons
 import FilterIcon from "@/../public/images/home-page/filter-icon.svg";
 
 export default function ListGridWrapper() {

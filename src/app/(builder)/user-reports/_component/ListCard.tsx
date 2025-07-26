@@ -1,4 +1,4 @@
-import {TReporterInformationItem} from "./type";
+import { TReporterInformationItem } from "./type";
 
 interface IProps {
     data: TReporterInformationItem;

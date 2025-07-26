@@ -1,51 +1,27 @@
 "use client";
-
+// React & Libs
 import * as z from "zod"
 import { CgClose } from "react-icons/cg";
 import { useForm } from "react-hook-form"
-import Dialog from "@mui/material/Dialog";
+import { IconButton } from "@mui/material";
+import { useRouter } from "next/navigation";
 import { FormProvider } from "react-hook-form"
 import { Dispatch, SetStateAction } from "react";
 import { zodResolver } from "@hookform/resolvers/zod"
-
-import { IconButton } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { RHFTextField } from "@/components/hook-form";
-import DialogContent from "@mui/material/DialogContent";
-import { SubmitButtons } from "@/components/condition/form/SubmitButtons";
+// hooks
 import { usePostChangeStatus } from "../_hooks/usePostChangeStatus";
+// components
+import { RHFTextField } from "@/components/hook-form";
+import { SubmitButtons } from "@/components/condition/form/SubmitButtons";
+// style
+import { StyledDialog, StyledDialogContent } from "./userReports.style";
 
 export interface IProps {
   id: string;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  publicationApprovalByAdmin: string
+  publicationApprovalByAdmin: boolean
 };
-
-const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
-  direction: "ltr",
-  maxHeight: "75vh",
-  scrollbarWidth: "thin",
-  maxWidth: "100%",
-  padding: "32px",
-  overflowX: "hidden",
-  paddingTop: theme.spacing(2.8),
-  paddingBottom: theme.spacing(1.8),
-}));
-
-const StyledDialog = styled(Dialog)(({ theme }) => ({
-  overflow: "hidden",
-  scrollbarWidth: "none",
-  "& .MuiPaper-root": {
-    borderRadius: "24px",
-    margin: "10px",
-    width: "1050px",
-  },
-  "& .MuiDialog-container": {
-    backdropFilter: "blur(4px)",
-    backgroundColor: "hsl(0deg 0% 100% / 50%)",
-  },
-}));
 
 const TicketSchema = z.object({
   ticket: z.string().min(1, { message: "اين فيلد الزامي است" }),
@@ -58,6 +34,7 @@ export const ChangeStatusDialog: React.FC<IProps> = ({
   setOpen,
   publicationApprovalByAdmin
 }) => {
+  const { refresh } = useRouter()
   const postChangeStatus = usePostChangeStatus();
 
   const methods = useForm<TTicketFormData>({
@@ -76,11 +53,11 @@ export const ChangeStatusDialog: React.FC<IProps> = ({
       data: {
         ticket,
         formId: JSON.stringify(26),
-        publicationApprovalByAdmin : publicationApprovalByAdmin ? "false" : "true"
+        publicationApprovalByAdmin: !publicationApprovalByAdmin
       }
     }, {
       onSuccess: () => {
-        // refresh()
+        refresh()
         handleClose()
       },
     });
@@ -111,7 +88,7 @@ export const ChangeStatusDialog: React.FC<IProps> = ({
                   borderRadius: "10px"
                 }
               }} />
-            <SubmitButtons isLoading={false} handleClose={handleClose} />
+            <SubmitButtons isLoading={postChangeStatus.isPending} handleClose={handleClose} />
           </form>
         </FormProvider>
 

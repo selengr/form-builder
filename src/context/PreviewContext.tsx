@@ -81,15 +81,15 @@ export function PreviewProvider({ children }: { children: ReactNode }) {
   );
   const numQuestions: number = questions.length;
   const currentIndex = searchParams?.get("question");
-    const search = searchParams.get('rep')
-    const admin = search === "list"
+  const search = searchParams.get('rep')
+  const admin = search === "list"
 
 
   useEffect(() => {
     async function fetchData() {
       try {
         const { data }: { data: formResDataTypes } = await AxiosApi.get(
-          admin ? `/admin/user/form/${id}` : `/user/form/${id}`
+          admin ? `/admin/form/${id}` : `/user/form/${id}`
         );
 
         const allQuestions = data?.questionGroups

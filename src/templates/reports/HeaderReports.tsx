@@ -11,7 +11,7 @@ const Header = () => {
   
   return (
     <div className="relative flex w-full justify-center items-center h-[52px] rounded-lg bg-[#F7F7FF]">
-      <div onClick={()=> back()} className="absolute right-4">
+      <div onClick={back} className="absolute right-4">
         <IconButton
           sx={{
             borderRadius: "9999px",

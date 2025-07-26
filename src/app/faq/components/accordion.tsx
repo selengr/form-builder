@@ -35,7 +35,7 @@ const CustomAccordionGroup: React.FC<CustomAccordionGroupProps> = ({
                     onClick={() => toggle(item.id)}
                     className="w-full flex justify-between items-center px-4 py-6 transition text-right"
                 >
-                  <span className="font-semibold text-gray-800 text-md ">
+                  <span className="font-semibold text-gray-800 md:text-md  xs:text-sm">
                     {item.title}
                   </span>
                     <svg
@@ -56,7 +56,7 @@ const CustomAccordionGroup: React.FC<CustomAccordionGroupProps> = ({
                     }}
                     className="transition-all duration-700 ease-in-out overflow-hidden bg-white px-4"
                 >
-                    <div className="py-3 text-gray-800">{item.content}</div>
+                    <div className="py-3 text-gray-800 xs:text-sm md:text-md">{item.content}</div>
                 </div>
             </div>);
         })}

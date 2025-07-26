@@ -27,3 +27,42 @@ body {
 .scroll-hide::-webkit-scrollbar {
   display: none !important;
 }
+
+.heroTitle{
+  line-height: 4rem !important;
+}
+
+@keyframes float3d {
+  0% {
+    transform: translate3d(0px, 0px, 0px);
+  }
+  50% {
+    transform: translate3d(-4px, -7px, 8px);
+  }
+  100% {
+    transform: translate3d(0px, 0px, 0px);
+  }
+}
+
+.floating-3d {
+  animation: float3d 5s ease-in-out infinite;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+@keyframes rotateSlow {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-rotate {
+  animation: rotateSlow 120s linear infinite reverse;
+  will-change: transform;
+}

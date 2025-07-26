@@ -80,35 +80,27 @@ export default function HomePage() {
     ];
 
     return (
-        <div className="relative w-full h-screen overflow-hidden " style={{userSelect: "none"}}>
+        <div className="relative h-[calc(100vh-60px)] md:h-full max-h-screen overflow-hidden w-full"
+             style={{userSelect: "none"}}>
             <div className="absolute inset-0 -z-10 pointer-events-none bg-[#fcfcfe]">
 
             </div>
 
             <div className="absolute inset-0 -z-10 -top-[2%] -left-[70%] opacity-10">
-                <Image alt={""}
-                       src={`/api/images?folder=faq&file=curvy.svg`}
-                       width={100}
-                       height={100}
-                       className={"w-full h-full "}
-                       draggable={false}/>
+                <Image alt={""} src={`/api/images?folder=faq&file=curvy.svg`} width={100} height={100}
+                       className={"w-full h-full "} draggable={false}/>
             </div>
             <div className="absolute inset-0 -z-10 ">
-                <Image alt={""}
-                       src={`/api/images?folder=faq&file=gr.svg`}
-                       width={100}
-                       height={100}
-                       className={"w-full h-screen "}
-                       draggable={false}/>
+                <Image alt={""} src={`/api/images?folder=faq&file=gr.svg`} width={100} height={100}
+                       className={"w-[100vw] h-screen "} draggable={false}/>
             </div>
 
-
             <div className="flex flex-col w-full items-center justify-center h-full z-20">
-                <div className="relative flex items-center justify-center h-[300px]">
-                    <div className="absolute inset-0 -z-10 flex items-center justify-center blur-sm opacity-85">
+                <div className="relative flex items-center justify-center xs:h-1/5 lg:h-2/5">
+                    <div className="absolute inset-0 -z-10 flex items-center justify-center blur-[5px] opacity-85">
                         <Image
-                            alt={""}
-                            src={"/api/images?folder=faq&file=faq.svg"}
+                            alt=""
+                            src="/api/images?folder=faq&file=faq.svg"
                             className={"animate-pulse"}
                             width={500}
                             height={500}
@@ -117,16 +109,15 @@ export default function HomePage() {
                     </div>
                     <div className="absolute inset-0 -z-10 flex items-center justify-center opacity-35 top-[380px]">
 
-                        <Image alt={""}
-                               src={`/api/images?folder=faq&file=circle-bg.svg`}
+                        <Image alt={""} src={`/api/images?folder=faq&file=circle-bg.svg`}
                                width={500}
                                height={500}
                                draggable={false}/>
                     </div>
-                    <h1 className="xs:font-4xl md:text-6xl font-bold text-gray-800 font-d7">سوالات پرتکرار</h1>
+                    <h1 className="xs:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 font-d7">سوالات پرتکرار</h1>
                 </div>
-                <div className="p-4 h-4/5 overflow-y-scroll  scroll-hide">
-                    <CustomAccordionGroup items={accordionItems} />
+                <div className="p-4 overflow-y-scroll  scroll-hide">
+                    <CustomAccordionGroup items={accordionItems}/>
                 </div>
             </div>
         </div>

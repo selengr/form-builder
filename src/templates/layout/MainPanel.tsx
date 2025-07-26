@@ -28,7 +28,7 @@ export default function MainPanel({
         </div>
 
         {path === "/" && (
-          <div className="md:hidden block">
+          <div className="md:hidden block muirtl-cfmamy">
             <FooterTab />
           </div>
         )}

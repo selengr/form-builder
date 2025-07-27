@@ -43,7 +43,7 @@
     "react-auth-code-input": "^3.2.1",
     "react-countdown": "^2.3.6",
     "react-dom": "^18",
-    "react-hook-form": "^7.60.0",
+    "react-hook-form": "^7.61.1",
     "react-hot-toast": "^2.5.2",
     "react-icons": "^5.5.0",
     "react-intersection-observer": "^9.16.0",

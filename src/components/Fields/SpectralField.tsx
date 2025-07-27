@@ -86,7 +86,7 @@ const tapTypeOptions: ISpectralQTapAndOptionsType = [
 ];
 
 const spectralTypeOptions: ISpectralQTapAndOptionsType = [
-  { value: "SPECTRAL", label: "طیف" },
+  { value: "SPECTRAL", label: "نقطه" },
   { value: "DOMAIN", label: "دامنه" },
 ];
 
@@ -684,7 +684,7 @@ function PropertiesComponent({
 
         <Stack spacing={1} marginTop={2.5}>
           <Typography variant="subtitle2" fontWeight="700">
-            نوع نوار لغزان:
+            نوع پاسخ:
           </Typography>
           <RHFMultiSelect
             name="SPECTRAL_TYPE.value"
@@ -694,7 +694,7 @@ function PropertiesComponent({
 
         <Stack spacing={1} marginTop={2.5}>
           <Typography variant="subtitle2" fontWeight="700">
-            نوع انتخاب:
+           مقیاس پاسخ:
           </Typography>
           <RHFMultiSelect
             setValue={setValue}

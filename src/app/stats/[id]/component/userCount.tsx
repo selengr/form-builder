@@ -1,9 +1,14 @@
 "use client";
-import { useEffect, useState } from "react"
 
-export function UserCount({ formId }: { formId: number }) {
-    const [userCount, setUserCount] = useState<number | null>(null);
+import { useEffect } from "react";
 
+interface Props {
+    formId: number;
+    userCount: number;
+    setUserCount: (count: number) => void;
+}
+
+export function UserCount({ formId, userCount, setUserCount }: Props) {
     useEffect(() => {
         const raw = localStorage.getItem("selectedUsersByForm");
         if (raw) {
@@ -13,7 +18,7 @@ export function UserCount({ formId }: { formId: number }) {
         } else {
             setUserCount(0);
         }
-    }, [formId]);
+    }, [formId, setUserCount]);
 
     if (userCount === null) return null;
 
@@ -23,3 +28,5 @@ export function UserCount({ formId }: { formId: number }) {
     </span>
     );
 }
+
+export default UserCount;

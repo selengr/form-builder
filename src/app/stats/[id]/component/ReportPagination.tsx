@@ -1,9 +1,8 @@
 "use client";
 
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {LuUsers} from "react-icons/lu";
 import {MdKeyboardArrowLeft, MdKeyboardArrowRight} from "react-icons/md";
-import {useParams} from "next/navigation";
 import {ExcelDialog, UserCount} from "@/app/stats/[id]/component";
 import {toast} from "sonner";
 
@@ -13,6 +12,9 @@ interface StatsPaginationProps {
     onRowsPerPageChange: (rows: number) => void;
     currentPage: number;
     rowsPerPage: number;
+    selectedUsers: UserType[];
+    setSelectedUsers: React.Dispatch<React.SetStateAction<UserType[]>>;
+    formId: number;
 }
 
 export interface UserType {
@@ -26,22 +28,14 @@ export function ReportPagination({
                                      onRowsPerPageChange,
                                      currentPage,
                                      rowsPerPage,
+                                     selectedUsers,
+                                     setSelectedUsers,
+                                     formId,
                                  }: StatsPaginationProps) {
     const totalPages =
         rowsPerPage === -1 ? 1 : Math.ceil(totalItems / rowsPerPage);
-    const {id} = useParams();
-    const formId = JSON.parse(id as string);
 
     const [isOpen, setIsOpen] = useState(false);
-    const [savedUsers, setSavedUsers] = useState<UserType[]>([]);
-
-    useEffect(() => {
-        if (isOpen) {
-            const raw = localStorage.getItem("selectedUsersByForm");
-            const data = raw ? JSON.parse(raw) : {};
-            setSavedUsers(data[formId] || []);
-        }
-    }, [isOpen, formId]);
 
     const handleNext = () => {
         if (currentPage < totalPages) {
@@ -69,7 +63,7 @@ export function ReportPagination({
         );
         data[formId] = updated;
         localStorage.setItem("selectedUsersByForm", JSON.stringify(data));
-        setSavedUsers(updated);
+        setSelectedUsers(updated);
     };
 
     const checkAndDownloadExcel = async () => {
@@ -82,7 +76,7 @@ export function ReportPagination({
             }
 
             const status = checkData.statusEnum;
-            const currentUserIds = savedUsers.map((u) => u.takePartId).sort((a, b) => a - b);
+            const currentUserIds = selectedUsers.map((u) => u.takePartId).sort((a, b) => a - b);
 
             const lastExportedRaw = localStorage.getItem(`lastExportedUserIds_${formId}`);
             const lastExportedUserIds: number[] = lastExportedRaw ? JSON.parse(lastExportedRaw) : [];
@@ -168,7 +162,9 @@ export function ReportPagination({
                     </button>
                 </div>
                 <div className="flex items-center gap-2">
-                    <UserCount formId={formId}/>
+                    <UserCount userCount={selectedUsers.length} formId={formId}
+                               setUserCount={() => {
+                               }}/>
                     <button
                         onClick={() => setIsOpen(true)}
                         className="rounded-xl p-2 bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 shadow-sm"
@@ -182,11 +178,11 @@ export function ReportPagination({
                 <ExcelDialog
                     open={isOpen}
                     onClose={() => setIsOpen(false)}
-                    savedUsers={savedUsers}
+                    savedUsers={selectedUsers}
                     onDeleteUser={handleDeleteUser}
                     onDownload={() => {
                         checkAndDownloadExcel();
-                        setIsOpen(false)
+                        setIsOpen(false);
                     }}
                 />
             )}

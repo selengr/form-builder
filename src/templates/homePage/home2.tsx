@@ -36,14 +36,12 @@ export default function HomePagex() {
                 </button>
             </section>
 
-            {/* Left Section (Phone Mockup) */}
             <section
                 className="relative z-10 w-full max-w-md lg:w-1/2 lg:max-w-none flex justify-center items-center">
-                {/* Main phone image container */}
                 <div
                     className="relative w-full mx-auto aspect-[9/16] lg:aspect-auto lg:h-[600px] xl:h-[700px]">
                     <Image
-                        src="/api/images?folder=home&file=curvyBG.svg" // Replace with your phone mockup image
+                        src="/api/images?folder=home&file=curvyBG.svg"
                         alt=""
                         layout={"fill"}
                         objectFit="contain"
@@ -64,7 +62,7 @@ export default function HomePagex() {
                                 src="/api/images?folder=home&file=dragable.svg"
                                 alt="dragable content"
                                 layout="responsive"
-                                width={300} // فقط برای حفظ نسبت
+                                width={300}
                                 height={100}
                                 priority
                                 draggable={false}
@@ -75,8 +73,8 @@ export default function HomePagex() {
                     {/* Additional floating elements (simplified placeholders) */}
                     <div
                         className="absolute top-[10%] left-[5%] bg-white p-2 rounded-xl shadow-md flex items-center space-x-2 text-sm text-gray-700">
-                        <span className="text-yellow-500">⭐</span>
-                        <span>به این پزشک نمره بدهید</span>
+                        <span className="text-yellow-500"></span>
+                        <span>میانگین درآمدی شما چقدر است؟</span>
                     </div>
 
                     <div

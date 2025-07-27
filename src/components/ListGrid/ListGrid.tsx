@@ -1,20 +1,20 @@
 "use client";
 
-import React, {ReactNode, useCallback, useEffect, useState} from "react";
+import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import {useInfiniteQuery} from "@tanstack/react-query";
-import {useInView} from "react-intersection-observer";
-import {useRouter, useSearchParams} from "next/navigation";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInView } from "react-intersection-observer";
+import { useRouter, useSearchParams } from "next/navigation";
 import SearchInput from "./SearchInput";
-import {Box, Grid2 as Grid, IconButton, LinearProgress, Typography} from "@mui/material";
+import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from "@mui/material";
 import TotalGrid from "@/../public/images/home-page/total-grid.svg";
 import Filter from "@/../public/images/home-page/FilterAA.svg";
 import BottomSheet from "../BottomSheet/BottomSheet";
 import CreateFormBtn from "../CreateFormBtn/CreateFormBtn";
-import {MdOutlineKeyboardArrowRight} from "react-icons/md";
-import {toast} from "sonner";
+import { MdOutlineKeyboardArrowRight } from "react-icons/md";
+import { toast } from "sonner";
 import formListEmpty from '@/../public/images/home-page/formListEmpty.png'
-import {fetchData} from "./dataService";
+import { fetchData } from "./dataService";
 
 interface SearchBoxItem {
     fieldName: string;
@@ -42,24 +42,24 @@ interface Props {
     title: string;
 }
 
-const DEFAULT_SEARCH_FILTER = {type: "ALL", status: "PUBLIC"};
+const DEFAULT_SEARCH_FILTER = { type: "ALL", status: "PUBLIC" };
 
 const ListGrid: React.FC<Props> = ({
-                                       filterComponent,
-                                       searchBoxList,
-                                       filterBoxList,
-                                       CartComponent,
-                                       url,
-                                       onCheck,
-                                       refreshGrid,
-                                       disableFilter,
-                                       searchQueryFilter = DEFAULT_SEARCH_FILTER,
-                                       showCreateButton = false,
-                                       title,
-                                       textTotal = ["", "عدد"],
-                                   }) => {
+    filterComponent,
+    searchBoxList,
+    filterBoxList,
+    CartComponent,
+    url,
+    onCheck,
+    refreshGrid,
+    disableFilter,
+    searchQueryFilter = DEFAULT_SEARCH_FILTER,
+    showCreateButton = false,
+    title,
+    textTotal = ["", "عدد"],
+}) => {
     const [totalData, setTotalData] = useState<number | null>(null);
-    const {ref, inView} = useInView();
+    const { ref, inView } = useInView();
     const searchParams = useSearchParams();
     const query = searchParams.get("query")?.toString() || "";
 
@@ -70,7 +70,7 @@ const ListGrid: React.FC<Props> = ({
         data: pages, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, refetch,
     } = useInfiniteQuery({
         queryKey: ["datas", query, searchQueryFilter, filterBoxList],
-        queryFn: ({pageParam}) => fetchData({pageParam}, searchBoxList, filterBoxList, url, searchQueryFilter),
+        queryFn: ({ pageParam }) => fetchData({ pageParam }, searchBoxList, filterBoxList, url, searchQueryFilter),
         initialPageParam: 0,
         getNextPageParam: (lastPage, allPages) => {
             // Assuming PAGE_SIZE is defined in dataService or passed as a prop/constant
@@ -119,8 +119,8 @@ const ListGrid: React.FC<Props> = ({
 
     const renderHeader = useCallback(() => (<div
         className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative shrink-0">
-        <IconButton sx={{position: "absolute", left: "8px"}} onClick={() => router.push("/")}>
-            <MdOutlineKeyboardArrowRight color="#292D32"/>
+        <IconButton sx={{ position: "absolute", left: "8px" }} onClick={() => router.push("/")}>
+            <MdOutlineKeyboardArrowRight color="#292D32" />
         </IconButton>
         <p className="text-[16px] text-center font-bold text-[#161616]">
             {title}
@@ -151,14 +151,14 @@ const ListGrid: React.FC<Props> = ({
         }}
     >
         <Grid
-            size={{xs: 12, sm: 10}}
-            sx={{display: "flex", alignItems: "center", gap: "12px", mx: "auto"}}
+            size={{ xs: 12, sm: 10 }}
+            sx={{ display: "flex", alignItems: "center", gap: "12px", mx: "auto" }}
         >
-            <SearchInput/>
+            <SearchInput />
             {!disableFilter && (<IconButton
                 onClick={openFilter}
                 sx={{
-                    display: {xs: "flex", lg: "none"},
+                    display: { xs: "flex", lg: "none" },
                     flexShrink: 0,
                     border: "1px solid #c9c9c9",
                     borderRadius: "15px",
@@ -181,8 +181,8 @@ const ListGrid: React.FC<Props> = ({
     const renderContent = useCallback(() => {
         const allItems = pages?.pages.flatMap(page => page.data) || [];
         if (isFetching && !isFetchingNextPage) {
-            return (<Box sx={{width: "100%", mt: 2}}>
-                <LinearProgress/>
+            return (<Box sx={{ width: "100%", mt: 2 }}>
+                <LinearProgress />
             </Box>);
         }
 
@@ -197,8 +197,8 @@ const ListGrid: React.FC<Props> = ({
                     width: "100%",
                 }}
             >
-                <Image src={formListEmpty} alt="No forms found" height={256} priority draggable={false}/>
-                <Typography sx={{fontSize: "18px", color: "#999"}}>
+                <Image src={formListEmpty} alt="No forms found" height={256} priority draggable={false} />
+                <Typography sx={{ fontSize: "18px", color: "#999" }}>
                     موردی یافت نشد
                 </Typography>
             </Box>);
@@ -210,12 +210,12 @@ const ListGrid: React.FC<Props> = ({
             // @ts-ignore
             const isLastItem = (pageIndex === pages.pages.length - 1) && (index === page.data.length - 1);
 
-            return (<Grid sx={{width: 1, mx: "auto", maxWidth: '470px'}} key={key} size={{xs: 12, md: 10, xl: 9}}>
-                {CartComponent && (<CartComponent onCheck={onCheck} data={data} refreshGrid={handleRefreshGrid}/>)}
+            return (<Grid sx={{ width: 1, mx: "auto", maxWidth: '470px' }} key={key} size={{ xs: 12, md: 10, xl: 9 }}>
+                {CartComponent && (<CartComponent onCheck={onCheck} data={data} refreshGrid={handleRefreshGrid} />)}
                 {isLastItem && (<>
-                    <Typography component="h1" ref={ref} sx={{height: 0}}/>
-                    <Box sx={{width: "100%"}}>
-                        {isFetchingNextPage && <LinearProgress/>}
+                    <Typography component="h1" ref={ref} sx={{ height: 0 }} />
+                    <Box sx={{ width: "100%" }}>
+                        {isFetchingNextPage && <LinearProgress />}
                     </Box>
                 </>)}
             </Grid>);
@@ -224,7 +224,7 @@ const ListGrid: React.FC<Props> = ({
 
     const renderDesktopFilter = useCallback(() => (filterComponent && (<Grid
         width="100%"
-        display={{xs: "none", lg: "flex"}}
+        display={{ xs: "none", lg: "flex" }}
         flexDirection="column"
         justifyContent="flex-start"
         alignItems="center"
@@ -232,7 +232,7 @@ const ListGrid: React.FC<Props> = ({
             backgroundColor: "white", borderRadius: "16px", gap: 1, m: 1, ml: 0, p: 2, maxWidth: "300px",
         }}
     >
-        <Grid sx={{width: "100%", minWidth: "200px", maxWidth: "300px"}}>
+        <Grid sx={{ width: "100%", minWidth: "200px", maxWidth: "300px" }}>
             {filterComponent}
         </Grid>
     </Grid>)), [filterComponent]);
@@ -241,16 +241,16 @@ const ListGrid: React.FC<Props> = ({
     return (<div className={"p-2 h-screen w-full flex flex-col"}>
         {isFetching && !isFetchingNextPage ?
 
-            (<Box sx={{width: "100%"}}>
-                <LinearProgress/>
+            (<Box sx={{ width: "100%" }}>
+                <LinearProgress />
             </Box>) : (<Grid
                 width="100%"
                 display="flex"
                 sx={{
                     overflowY: "hidden",
                     userSelect: "none",
-                    height: {xs: "calc(100vh - 60px)", md: "100vh"},
-                    flexDirection: {xs: "column", lg: "row"},
+                    height: { xs: "calc(100vh - 60px)", md: "100vh" },
+                    flexDirection: { xs: "column", lg: "row" },
                 }}
             >
                 <Grid
@@ -269,7 +269,7 @@ const ListGrid: React.FC<Props> = ({
                         height: "100%",
                     }}
                 >
-                    <Grid container sx={{width: "100%", justifyContent: "center", mx: "auto"}}>
+                    <Grid container sx={{ width: "100%", justifyContent: "center", mx: "auto" }}>
                         {renderHeader()}
                         <Box
                             sx={{
@@ -278,12 +278,12 @@ const ListGrid: React.FC<Props> = ({
                                 alignItems: "center",
                                 gap: "12px",
                                 width: 1,
-                                flexWrap: {xs: "nowrap", sm: "nowrap"},
+                                flexWrap: { xs: "nowrap", sm: "nowrap" },
                             }}
                         >
                             {renderTotalCount()}
                             {showCreateButton && (<div className="min-w-[50px] w-[50px] h-full">
-                                <CreateFormBtn/>
+                                <CreateFormBtn />
                             </div>)}
                         </Box>
                         {renderSearchAndFilter()}

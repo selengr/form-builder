@@ -13,9 +13,11 @@ import { TReporterInformationItem } from "./type";
 // apis
 import { fetchData } from "./dataService";
 import { RenderAction } from "./ActionButton";
-// image
-import formListEmpty from '@/../public/images/home-page/formListEmpty.png'
+// components
 import BottomSheet from "@/components/BottomSheet/BottomSheet";
+// image
+import Filter from "@/../public/images/home-page/FilterAA.svg";
+import formListEmpty from '@/../public/images/home-page/formListEmpty.png'
 
 interface SearchBoxItem {
   fieldName: "typeOfReport" | "responseForDestroyerReport";
@@ -105,13 +107,35 @@ const ListGrid: React.FC<Props> = ({
   }
 
   const renderHeader = useCallback(() => (<div
-    className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative shrink-0">
+    className="w-full relative h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative shrink-0">
     <IconButton sx={{ position: "absolute", left: "8px" }} onClick={() => router.push("/user-reports")}>
       <MdOutlineKeyboardArrowRight color="#292D32" />
     </IconButton>
     <p className="text-[16px] text-center font-bold text-[#161616]">
       {pages?.pages[0].data.formName}
     </p>
+    {!disableFilter && (<IconButton
+      onClick={openFilter}
+      sx={{
+        display: { xs: "flex", lg: "none" },
+        flexShrink: 0,
+        border: "1px solid #c9c9c9",
+        borderRadius: "15px",
+        padding: "8px",
+        width: 42,
+        height: 42,
+        position: "absolute",
+        right: 10
+      }}
+    >
+      <Image
+        src={Filter}
+        width={35}
+        height={35}
+        alt="Filter"
+        draggable={false}
+      />
+    </IconButton>)}
   </div>), [pages?.pages[0].data.formName, router]);
 
 
@@ -148,7 +172,7 @@ const ListGrid: React.FC<Props> = ({
       const isLastItem = (pageIndex === pages.pages.length - 1) && (index === page.data.length - 1);
 
       return (<Grid sx={{ width: 1, mx: "auto" }} key={key} size={{ xs: 12, md: 10, xl: 9 }}>
-        {CartComponent && (<CartComponent onCheck={onCheck} data={data} />)}
+        {CartComponent && (<CartComponent onCheck={onCheck} data={data} refreshGrid={handleRefreshGrid} />)}
         {isLastItem && (<>
           <Typography component="h1" ref={ref} sx={{ height: 0 }} />
           <Box sx={{ width: "100%" }}>
@@ -157,7 +181,7 @@ const ListGrid: React.FC<Props> = ({
         </>)}
       </Grid>);
     })));
-  }, [pages, isFetching, isFetchingNextPage, CartComponent, onCheck, ref]);
+  }, [pages, isFetching, isFetchingNextPage, CartComponent, onCheck, ref, handleRefreshGrid]);
 
   const renderDesktopFilter = useCallback(() => (filterComponent && (<Grid
     width="100%"
@@ -166,7 +190,7 @@ const ListGrid: React.FC<Props> = ({
     justifyContent="flex-start"
     alignItems="center"
     sx={{
-      backgroundColor: "white", borderRadius: "16px", gap: 1, m: 1, ml: 0, p: 2, maxWidth: "300px",
+      backgroundColor: "white", borderRadius: "16px", gap: 1, ml: 0, p: 2, maxWidth: "300px",
     }}
   >
     <Grid sx={{ width: "100%", minWidth: "200px", maxWidth: "300px" }}>
@@ -185,6 +209,7 @@ const ListGrid: React.FC<Props> = ({
         display="flex"
         sx={{
           overflowY: "hidden",
+          overflowX: "hidden",
           userSelect: "none",
           height: { xs: "calc(100vh - 60px)", md: "100vh" },
           flexDirection: { xs: "column", lg: "row" },

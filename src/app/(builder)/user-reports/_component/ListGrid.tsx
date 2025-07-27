@@ -107,7 +107,7 @@ const ListGrid: React.FC<Props> = ({
   }
 
   const renderHeader = useCallback(() => (<div
-    className="w-full relative h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative shrink-0">
+    className="w-full relative h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 shrink-0">
     <IconButton sx={{ position: "absolute", left: "8px" }} onClick={() => router.push("/user-reports")}>
       <MdOutlineKeyboardArrowRight color="#292D32" />
     </IconButton>
@@ -172,7 +172,7 @@ const ListGrid: React.FC<Props> = ({
       const isLastItem = (pageIndex === pages.pages.length - 1) && (index === page.data.length - 1);
 
       return (<Grid sx={{ width: 1, mx: "auto" }} key={key} size={{ xs: 12, md: 10, xl: 9 }}>
-        {CartComponent && (<CartComponent onCheck={onCheck} data={data} refreshGrid={handleRefreshGrid} />)}
+        {CartComponent && (<CartComponent onCheck={onCheck} data={data} />)}
         {isLastItem && (<>
           <Typography component="h1" ref={ref} sx={{ height: 0 }} />
           <Box sx={{ width: "100%" }}>

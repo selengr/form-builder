@@ -6,7 +6,7 @@ import { useInView } from "react-intersection-observer";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
-import React, { ReactNode, useCallback, useEffect } from "react";
+import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from "@mui/material";
 // types
 import { TReporterInformationItem } from "./type";
@@ -15,6 +15,7 @@ import { fetchData } from "./dataService";
 import { RenderAction } from "./ActionButton";
 // image
 import formListEmpty from '@/../public/images/home-page/formListEmpty.png'
+import BottomSheet from "@/components/BottomSheet/BottomSheet";
 
 interface SearchBoxItem {
   fieldName: "typeOfReport" | "responseForDestroyerReport";
@@ -55,6 +56,7 @@ const ListGrid: React.FC<Props> = ({
   const { ref, inView } = useInView();
   const searchParams = useSearchParams();
   const query = searchParams.get("query")?.toString() || "";
+  const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
 
   const router = useRouter();
 
@@ -72,11 +74,31 @@ const ListGrid: React.FC<Props> = ({
     refetchOnWindowFocus: false,
   });
 
+  const handleRefreshGrid = useCallback(() => {
+    if (isFilterOpen) {
+      setIsFilterOpen(false);
+    }
+    refetch();
+  }, [isFilterOpen, refetch]);
+
+  const openFilter = useCallback(() => {
+    if (!disableFilter) {
+      setIsFilterOpen(true);
+    }
+  }, [disableFilter]);
+
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
+
+
+  useEffect(() => {
+    if (refreshGrid) {
+      handleRefreshGrid();
+    }
+  }, [refreshGrid, handleRefreshGrid]);
 
   if (error) {
     toast.error(error.message);
@@ -196,7 +218,10 @@ const ListGrid: React.FC<Props> = ({
               {renderContent()}
             </Grid>
           </Grid>
-          <RenderAction name={pages?.pages[0].data.formName} publicationApprovalByAdmin={pages?.pages[0].publicationApprovalByAdmin}/>
+          <RenderAction name={pages?.pages[0].data.formName} publicationApprovalByAdmin={pages?.pages[0].publicationApprovalByAdmin} />
+          <BottomSheet open={isFilterOpen} onClose={() => setIsFilterOpen(false)}>
+            <Grid>{filterComponent}</Grid>
+          </BottomSheet>
         </Grid>
         {renderDesktopFilter()}
       </Grid>)}

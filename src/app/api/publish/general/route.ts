@@ -25,9 +25,11 @@ export async function POST(req: Request) {
         if (!parsed.success) {
             return NextResponse.json({error: 'خطای اعتبارسنجی', details: parsed.error.errors}, {status: 400});
         }
-
+    console.log("data",parsed.data)
+    console.log("token",token)
         const {data} = await AxiosApi.post('/form-publish-setting/public-method', parsed.data, {
             headers: {
+                "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
         });

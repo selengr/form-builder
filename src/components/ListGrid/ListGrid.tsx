@@ -66,15 +66,22 @@ const ListGrid: React.FC<Props> = ({
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const router = useRouter();
 
+    const updatedSearchBoxList = searchBoxList.map(item => {
+        if (item.fieldName === "formSetting.name" && query) {
+            return { ...item, fieldValue: query };
+        }
+        return item;
+    });
+
     const {
         data: pages, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, refetch,
     } = useInfiniteQuery({
         queryKey: ["datas", query, searchQueryFilter, filterBoxList],
-        queryFn: ({pageParam}) => fetchData({pageParam}, searchBoxList, filterBoxList, url, searchQueryFilter),
+        queryFn: ({ pageParam }) =>
+            fetchData({ pageParam }, updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
         initialPageParam: 0,
         getNextPageParam: (lastPage, allPages) => {
-            // Assuming PAGE_SIZE is defined in dataService or passed as a prop/constant
-            const PAGE_SIZE = 10;
+            const PAGE_SIZE = 1000;
             return lastPage.data && lastPage.data.length === PAGE_SIZE ? allPages.length : undefined;
         },
         refetchOnWindowFocus: false,

@@ -53,7 +53,7 @@ export async function GET(req: Request) {
 
     const {data} = await AxiosApi.get<GroupListgridResponse>(`/user-group/introducer/group-listgrid${queryString}`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `${token}`,
       },
     });
 

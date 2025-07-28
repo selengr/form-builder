@@ -37,7 +37,7 @@ export async function POST(req: Request) {
         const {data} = await AxiosApi.post('/form-publish-setting/solo-method', body,
             {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `${token}`,
                 },
             }
         );

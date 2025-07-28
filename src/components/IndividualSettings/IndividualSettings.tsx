@@ -106,7 +106,7 @@ function IndividualSettings({handleOpen, formId,}: { handleOpen: () => void; for
                     `/api/group/combo?${search.toString()}`,
                     {
                         headers: {
-                            Authorization: `${token}`,
+                            Authorization: `Bearer ${token}`,
                         },
                     }
                 );
@@ -133,7 +133,7 @@ function IndividualSettings({handleOpen, formId,}: { handleOpen: () => void; for
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `${token}`
+                    Authorization: `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     formId: formId.toString(),

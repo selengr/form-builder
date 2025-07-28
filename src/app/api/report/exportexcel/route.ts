@@ -35,7 +35,7 @@ export async function POST(req: Request) {
             parsed.data,
             {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `${token}`,
                 },
             }
         );

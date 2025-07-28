@@ -30,7 +30,7 @@ export async function POST(req: Request) {
         const {data} = await AxiosApi.post('/form-publish-setting/public-method', parsed.data, {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
+                Authorization: `${token}`,
             },
         });
         return NextResponse.json(data);

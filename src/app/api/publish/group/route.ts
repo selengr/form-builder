@@ -34,7 +34,7 @@ export async function POST(req: Request) {
         const {data} = await AxiosApi.post('/form-publish-setting/group-method', body,
             {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `${token}`,
                 },
             });
         return NextResponse.json(data);

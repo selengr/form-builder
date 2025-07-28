@@ -41,7 +41,7 @@ const ResultsPage = () => {
           <span className="text-[#161616]">گزارش فرم فلان</span>
         </div>
 
-        <Image
+        {/* <Image
           src="/images/calc/ic_empty_report.svg"
           alt="سایا لوگو"
           width={416}
@@ -49,9 +49,9 @@ const ResultsPage = () => {
           priority
           draggable={false}
           className="w-full sm:w-[50%] lg:w-[500px]"
-        />
+        /> */}
 
-        <div className="p-8 max-w-[600px]">
+        <div className="p-8 mt-10 max-w-[600px]">
           {results?.map((result, index) => (
             <div key={index} className="mb-4 last:mb-0">
               {/* <h2 className="text-right text-[15px] font-bold text-[#161616] mb-1"></h2> */}

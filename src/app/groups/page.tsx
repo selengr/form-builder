@@ -48,7 +48,6 @@ export default function GroupsPage() {
             const response = await fetch(`/api/group/list?searchFilterModel=${encodedSearchFilterModel}`,
                 { headers: {
                         'Content-Type': 'application/json',
-                        "x-secret-token": process.env.NEXT_PUBLIC_SECRET!,
                         Authorization: `${token}`}
                 });
 

@@ -72,7 +72,7 @@ export function ReportPagination({
         try {
             const checkRes = await fetch(`/api/report/check/${formId.toString()}`,{
                 headers:{
-                    Authorization: `${token}`
+                    Authorization: `Bearer ${token}`
                 }
             });
             const checkData = await checkRes.json();
@@ -107,7 +107,9 @@ export function ReportPagination({
                 const token = await getAuthToken();
                 const exportRes = await fetch('/api/report/exportexcel', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json', Authorization: `${token}`},
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`},
                     body: JSON.stringify({
                         takePartIdList: currentUserIds,
                     }),

@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
         `/user-group/introducer/groups-custom-combo${queryString}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `${token}`,
           },
         }
     );

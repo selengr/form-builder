@@ -21,7 +21,7 @@ export async function GET(req: Request, context: { params: { id: string } }) {
         const {data} = await AxiosApi.get<ExcelCheckResponse>(`/report/solo/main-list/excel-export/check/${id}`,
             {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `${token}`,
                 },
             });
 

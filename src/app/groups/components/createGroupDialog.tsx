@@ -32,7 +32,7 @@ export function CreateGroupDialog({ onClose, onSubmit }: CreateGroupDialogProps)
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `${token}`
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
           uuid: receivedFileId,

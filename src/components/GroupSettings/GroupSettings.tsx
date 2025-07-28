@@ -64,7 +64,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({handleOpen, formId}) => {
             const res = await fetch(`/api/group/list?searchFilterModel=${encoded}`,
                 { headers: {
                 'Content-Type': 'application/json',
-                    Authorization: `${token}`}
+                    Authorization: `Bearer ${token}`}
             });
 
             if (!res.ok) {
@@ -114,7 +114,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({handleOpen, formId}) => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `${token}`
+                    Authorization: `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     formId: Number(formId),

@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
             body,
             {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `${token}`,
                 },
             }
         );

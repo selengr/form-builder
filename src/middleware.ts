@@ -51,5 +51,6 @@ export const config = {
     "/purchase-order/:path*",
     "/transactions/:path*",
     "/groups/:path*",
+    "/user-reports/:path*",
   ],
 };

@@ -1,26 +1,28 @@
 "use client";
 // dnd
-import {CSS} from "@dnd-kit/utilities";
-import {useSortable} from "@dnd-kit/sortable";
-import {useQueryClient} from '@tanstack/react-query';
+import { CSS } from "@dnd-kit/utilities";
+import { useSortable } from "@dnd-kit/sortable";
+import { useQueryClient } from '@tanstack/react-query';
 //services
-import {AxiosApi} from "@/services/axios/AxiosApi";
+import { AxiosApi } from "@/services/axios/AxiosApi";
 // React & Libs
-import {SlPencil} from "react-icons/sl";
-import {useCallback, useState} from "react";
-import {Button, CircularProgress, Menu, Typography} from "@mui/material";
+import { SlPencil } from "react-icons/sl";
+import { useCallback, useState } from "react";
+import { Button, CircularProgress, Menu, Typography } from "@mui/material";
 // types
-import {IConditionCardProps} from "@/types/conditionReportSolo";
+import { IConditionCardProps } from "@/types/conditionReportSolo";
 // components
 import ConfirmDialog from "@/components/confirm-dialog";
-import {EditConditionDialog} from "./EditConditionDialog";
-import {ConditionCardOperator} from "./ConditionCardOperator";
+import { EditConditionDialog } from "./EditConditionDialog";
+import { ConditionCardOperator } from "./ConditionCardOperator";
 // icons
-import {IonCopyOutline} from "@/../public/images/icons/CopyIcon";
-import {WeuiDeleteOutlined} from "@/../public/images/icons/DeleteIcon";
-import {useDeleteReport} from "@/app/reports/create-solo/[id]/_hooks/useDeleteReport";
-import {PhDotsThreeVerticalBold} from "@/../public/images/icons/PhDotsThreeVerticalBold";
-import {toast} from "sonner";
+import { IonCopyOutline } from "@/../public/images/icons/CopyIcon";
+import { WeuiDeleteOutlined } from "@/../public/images/icons/DeleteIcon";
+import { useDeleteReport } from "@/app/reports/create-solo/[id]/_hooks/useDeleteReport";
+import { PhDotsThreeVerticalBold } from "@/../public/images/icons/PhDotsThreeVerticalBold";
+import { toast } from "sonner";
+import { RHFSwitch } from "@/components/hook-form";
+import { SwitchButton } from "@/components/Switch/SwitchButton";
 
 const buttonStyles = {
   height: "50px",
@@ -51,13 +53,14 @@ export function ConditionCard({
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
+  const [loadingStatus, setLoadingStatus] = useState(false);
   const [loadingDuplicateData, setLoadingDuplicateData] = useState(false);
 
 
   const queryClient = useQueryClient();
 
   const menuOpen = Boolean(anchorEl);
-  const { id } = condition;
+  const { id, invalid } = condition;
 
   const {
     attributes,
@@ -112,6 +115,24 @@ export function ConditionCard({
     }
   };
 
+  const handleStatus = async () => {
+    try {
+      setLoadingStatus(true);
+      const body = {
+        id,
+        invalid: !invalid
+      }
+      await AxiosApi.put(`/report/solo/main-list/${id}/duplicate`, body);
+      queryClient.invalidateQueries(['Report_List'] as any);
+      queryClient.refetchQueries(['Report_List'] as any);
+    } catch (error) {
+      toast.error("خطایی رخ داده است");
+    } finally {
+      setAnchorEl(null);
+      setLoadingStatus(false);
+    }
+  };
+
 
   return (
     <div
@@ -155,11 +176,29 @@ export function ConditionCard({
                   display: "flex",
                   justifyContent: "space-between",
                   color: "#222",
+                  paddingRight: "10px",
+                }}
+                fullWidth
+                loading={loadingStatus}
+                disabled={loadingStatus}
+              >
+                <Typography>وضعیت</Typography>
+                <SwitchButton checked={invalid}
+                  disabled={loadingStatus}
+                  onClick={handleStatus}
+                />
+              </Button>
+              <Button
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  color: "#222",
                   paddingX: "10px",
                 }}
                 fullWidth
                 onClick={handleDuplicate}
                 loading={loadingDuplicateData}
+                disabled={loadingDuplicateData}
               >
                 <Typography>تکثیر</Typography>
                 <IonCopyOutline width={18} height={18} />
@@ -212,7 +251,7 @@ export function ConditionCard({
         {...attributes}
         {...listeners}
         className={`rounded-lg p-[10px] flex justify-between w-full border-[1px] border-[#1758BA] bg-[#fff] cursor-grab transition-colors active:cursor-grabbing touch-none ${isDragging ? "border-[#CCC]" : "border-[#1758BA]"
-          }`}
+          } ${invalid ? "opacity-80 border-[#CCC]" : ""}`}
       >
         <div className="flex justify-center items-center gap-[10px]">
           <ConditionCardOperator condition={condition} />

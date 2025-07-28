@@ -70,6 +70,7 @@ export interface IConditionExtMap {
     returnText: string;  
     displayIf: boolean; 
     frontConditionData: string; 
+    invalid : boolean
 }
 
 

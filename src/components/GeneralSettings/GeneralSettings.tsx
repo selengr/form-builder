@@ -10,6 +10,7 @@ import {Box, Button, Typography} from "@mui/material";
 
 import Share from "../share-media/Share";
 import CopyToClipboardButton from "../clipboard-button/CopyToClipBoardButton";
+import {getAuthToken, getAuthTokenServer} from "@/utils/getAuthToken";
 
 const DEFAULT_LINK = `${process.env.NEXT_PUBLIC_MBZ_DOMAIN}form`;
 
@@ -67,12 +68,16 @@ export default function GeneralSettings({
   } = methods;
 
   const onSubmit = useCallback(async (values: PropertiesFormSchemaType) => {
-    try {
+      const token = await getAuthToken();
+      try {
       const response = await fetch('/api/publish/general', {
-        method: 'POST', headers: {
+        method: 'POST',
+          headers: {
           'Content-Type': 'application/json',
           "x-secret-token": process.env.NEXT_PUBLIC_SECRET!,
-        }, body: JSON.stringify({
+              Authorization: `${token}`
+        },
+          body: JSON.stringify({
           formId: Number(formId),
           publicationMainPageMethod: values.publicationMainPageMethod,
           capacityPublicLink: values.capacityPublicLink,

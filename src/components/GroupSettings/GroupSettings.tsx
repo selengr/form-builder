@@ -10,6 +10,7 @@ import FormProvider from "../hook-form/FormProvider";
 import RHFSwitch from "../hook-form/RHFSwitch";
 import {IGroup} from "@/app/groups/components/groupListItem";
 import {GroupListResponse} from "@/app/groups/page";
+import {getAuthToken} from "@/utils/getAuthToken";
 
 const groupFormSchema = z.object({
     groupsId: z.array(z.number()).min(1, "حداقل یک گروه را انتخاب کنید."),
@@ -49,6 +50,8 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({handleOpen, formId}) => {
     const fetchGroups = useCallback(async () => {
         setLoading(true);
         setError(null);
+        const token = await getAuthToken();
+
         try {
             const searchFilterModel = {
                 searchFilterBoxList: [{restrictionList: []}],
@@ -58,7 +61,12 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({handleOpen, formId}) => {
             };
 
             const encoded = encodeURIComponent(JSON.stringify(searchFilterModel));
-            const res = await fetch(`/api/group/list?searchFilterModel=${encoded}`);
+            const res = await fetch(`/api/group/list?searchFilterModel=${encoded}`,
+                { headers: {
+                'Content-Type': 'application/json',
+                    "x-secret-token": process.env.NEXT_PUBLIC_SECRET!,
+                    Authorization: `${token}`}
+            });
 
             if (!res.ok) {
                 const errorData = await res.json();
@@ -101,12 +109,13 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({handleOpen, formId}) => {
     };
 
     const onSubmit = useCallback(async (values: GroupFormSchemaType) => {
-        console.log("✅ Group Form Data:", values);
+        const token = await getAuthToken();
         try {
             const response = await fetch("/api/publish/group", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    Authorization: `${token}`
                 },
                 body: JSON.stringify({
                     formId: Number(formId),

@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     try {
         const body: GroupMethodPayload = await req.json();
 
-        const token = await getAuthTokenServer();
+        const token =req.headers.get('Authorization')
         if (!token) {
             return NextResponse.json(
                 {error: 'توکن احراز هویت یافت نشد.'},

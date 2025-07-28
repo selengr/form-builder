@@ -17,9 +17,8 @@ type SoloMethodPayload = z.infer<typeof soloMethodSchema>;
 
 export async function POST(req: Request) {
     try {
+        const token =req.headers.get('Authorization')
         const body: SoloMethodPayload = await req.json();
-
-        const token = await getAuthTokenServer();
         if (!token) {
             return NextResponse.json(
                 {error: 'توکن احراز هویت یافت نشد.'},

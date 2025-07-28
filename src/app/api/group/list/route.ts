@@ -40,15 +40,15 @@ interface GroupListgridResponse {
   empty: boolean;
 }
 
-export async function GET(request: Request) {
+export async function GET(req: Request) {
   try {
-    const token = await getAuthTokenServer();
+    const token =req.headers.get('Authorization')
 
     if (!token) {
       return NextResponse.json({error: 'Authorization token is required.'}, {status: 401});
     }
 
-    const url = new URL(request.url);
+    const url = new URL(req.url);
     const queryString = url.search;
 
     const {data} = await AxiosApi.get<GroupListgridResponse>(`/user-group/introducer/group-listgrid${queryString}`, {

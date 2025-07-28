@@ -12,7 +12,7 @@ type ExportExcelPayload = z.infer<typeof exportExcelSchema>;
 
 export async function POST(req: Request) {
     try {
-        const token = await getAuthTokenServer();
+        const token =req.headers.get('Authorization')
         if (!token) {
             return NextResponse.json(
                 {error: 'توکن احراز هویت یافت نشد.'},

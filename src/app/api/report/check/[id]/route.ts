@@ -1,7 +1,7 @@
 import {NextResponse} from 'next/server';
 import {AxiosApi} from '@/services/axios/AxiosApi';
 import {AxiosError} from "axios";
-import {getAuthToken} from "@/utils/getAuthToken";
+import {getAuthTokenServer} from "@/utils/getAuthToken";
 
 interface ExcelCheckResponse {
     statusEnum: "SUCCESS" | "PROCESSING" | "FAILED";
@@ -10,7 +10,7 @@ interface ExcelCheckResponse {
 
 export async function GET(_: Request, context: { params: { id: string } }) {
     try {
-        const token = await getAuthToken();
+        const token = await getAuthTokenServer();
 
         if (!token) {
             return NextResponse.json({error: 'Authorization token is required.'}, {status: 401});

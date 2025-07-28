@@ -1,7 +1,9 @@
-import {NextRequest, NextResponse} from 'next/server';
-import {AxiosApi} from '@/services/axios/AxiosApi';
-import {AxiosError} from 'axios';
-import {getAuthToken} from "@/utils/getAuthToken";
+import { NextRequest, NextResponse } from 'next/server';
+import { AxiosApi } from '@/services/axios/AxiosApi';
+import { AxiosError } from 'axios';
+import { getAuthTokenServer} from "@/utils/getAuthToken";
+
+export const dynamic = 'force-dynamic';
 
 interface GroupComboItem {
   value: string;
@@ -19,22 +21,22 @@ interface GroupsCustomComboResponse {
 
 export async function GET(req: NextRequest) {
   try {
-    const token = await getAuthToken();
+    const token = await getAuthTokenServer();
 
     if (!token) {
-      return NextResponse.json({error: 'Authorization token is required.'}, {status: 401});
+      return NextResponse.json({ error: 'Authorization token is required.' }, { status: 401 });
     }
 
     const url = new URL(req.url);
     const queryString = url.search;
 
     const { data } = await AxiosApi.get<GroupsCustomComboResponse>(
-      `/user-group/introducer/groups-custom-combo${queryString}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+        `/user-group/introducer/groups-custom-combo${queryString}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
     );
 
     return NextResponse.json(data);

@@ -68,7 +68,7 @@ export function ReportPagination({
 
     const checkAndDownloadExcel = async () => {
         try {
-            const checkRes = await fetch(`/api/report/check/${formId}`);
+            const checkRes = await fetch(`/api/report/check/${formId.toString()}`);
             const checkData = await checkRes.json();
 
             if (!checkRes.ok) {

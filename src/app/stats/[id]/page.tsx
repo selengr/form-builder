@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { ReportHeader, ReportPagination, ReportTable } from "./component";
 import { useStatsViewModel } from "./viewModel";
 import { useEffect, useState } from "react";
@@ -12,6 +12,9 @@ export interface UserType {
 
 export default function StatsPage() {
     const router = useRouter();
+    const params = useParams();
+    const formId = params?.id?.toString(); // اطمینان از string بودن id
+
     const {
         formData,
         headData,
@@ -25,7 +28,6 @@ export default function StatsPage() {
     } = useStatsViewModel();
 
     const [selectedUsers, setSelectedUsers] = useState<UserType[]>([]);
-    const formId = formData?.id;
 
     useEffect(() => {
         if (formId) {
@@ -50,7 +52,7 @@ export default function StatsPage() {
                         isLoading={isLoading}
                         selectedUsers={selectedUsers}
                         setSelectedUsers={setSelectedUsers}
-                        formId={formId}
+                        formId={Number(formId)}
                     />
                 </div>
 
@@ -62,7 +64,7 @@ export default function StatsPage() {
                     onRowsPerPageChange={setRowsPerPage}
                     selectedUsers={selectedUsers}
                     setSelectedUsers={setSelectedUsers}
-                    formId={formId}
+                    formId={Number(formId)}
                 />
             </div>
         </div>

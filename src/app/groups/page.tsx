@@ -10,6 +10,7 @@ import SearchInput from "@/components/ListGrid/SearchInput";
 import {GroupListItem, IGroup} from "./components/groupListItem";
 import {CreateGroupDialog} from "@/app/groups/components/createGroupDialog";
 import {GroupDialogTrigger} from "./components/GroupDialogTrigger";
+import {getAuthToken} from "@/utils/getAuthToken";
 
 export interface GroupItemAPI {
     groupName: string;
@@ -33,6 +34,7 @@ export default function GroupsPage() {
     const fetchGroups = useCallback(async () => {
         setLoading(true);
         setError(null);
+        const token = await getAuthToken();
         try {
 
             const defaultSearchFilterModel = {
@@ -43,7 +45,12 @@ export default function GroupsPage() {
             };
             const encodedSearchFilterModel = encodeURIComponent(JSON.stringify(defaultSearchFilterModel));
 
-            const response = await fetch(`/api/group/list?searchFilterModel=${encodedSearchFilterModel}`);
+            const response = await fetch(`/api/group/list?searchFilterModel=${encodedSearchFilterModel}`,
+                { headers: {
+                        'Content-Type': 'application/json',
+                        "x-secret-token": process.env.NEXT_PUBLIC_SECRET!,
+                        Authorization: `${token}`}
+                });
 
             if (!response.ok) {
                 const errorData = await response.json();

@@ -21,7 +21,7 @@ interface GroupsCustomComboResponse {
 
 export async function GET(req: NextRequest) {
   try {
-    const token = await getAuthTokenServer();
+    const token =req.headers.get('Authorization')
 
     if (!token) {
       return NextResponse.json({ error: 'Authorization token is required.' }, { status: 401 });

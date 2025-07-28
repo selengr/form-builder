@@ -14,7 +14,7 @@ type PublicMethodPayload = z.infer<typeof publicMethodSchema>;
 
 export async function POST(req: Request) {
     try {
-        const token = await getAuthTokenServer();
+        const token =req.headers.get('Authorization')
         if (!token) {
             return NextResponse.json({error: 'توکن احراز هویت یافت نشد.'}, {status: 401});
         }
@@ -33,12 +33,10 @@ export async function POST(req: Request) {
         });
         return NextResponse.json(data);
     } catch (error: any) {
-        // ✅ هندل Zod errors
         if (error instanceof ZodError) {
             return NextResponse.json({error: 'خطای اعتبارسنجی', details: error.errors}, {status: 400});
         }
 
-        // ✅ هندل Axios errors
         if (error instanceof AxiosError) {
             const status = error.response?.status || 500;
             const data = error.response?.data;

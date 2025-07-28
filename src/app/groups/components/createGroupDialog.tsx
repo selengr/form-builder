@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import UploaderPage from "./uploader";
+import {getAuthToken} from "@/utils/getAuthToken";
 
 interface CreateGroupDialogProps {
   onClose: () => void;
@@ -25,11 +26,14 @@ export function CreateGroupDialog({ onClose, onSubmit }: CreateGroupDialogProps)
     }
 
     setLoading(true);
-
+    const token = await getAuthToken();
     try {
       const res = await fetch('/api/group/create', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${token}`
+        },
         body: JSON.stringify({
           uuid: receivedFileId,
           groupName,

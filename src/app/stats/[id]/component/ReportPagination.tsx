@@ -5,6 +5,7 @@ import {LuUsers} from "react-icons/lu";
 import {MdKeyboardArrowLeft, MdKeyboardArrowRight} from "react-icons/md";
 import {ExcelDialog, UserCount} from "@/app/stats/[id]/component";
 import {toast} from "sonner";
+import {getAuthToken} from "@/utils/getAuthToken";
 
 interface StatsPaginationProps {
     totalItems: number;
@@ -67,8 +68,13 @@ export function ReportPagination({
     };
 
     const checkAndDownloadExcel = async () => {
+        const token = await getAuthToken();
         try {
-            const checkRes = await fetch(`/api/report/check/${formId.toString()}`);
+            const checkRes = await fetch(`/api/report/check/${formId.toString()}`,{
+                headers:{
+                    Authorization: `${token}`
+                }
+            });
             const checkData = await checkRes.json();
 
             if (!checkRes.ok) {
@@ -98,9 +104,10 @@ export function ReportPagination({
                 window.open(downloadUrl, "_blank");
                 toast.success("فایل آماده بود و دانلود شد.");
             } else {
+                const token = await getAuthToken();
                 const exportRes = await fetch('/api/report/exportexcel', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: {'Content-Type': 'application/json', Authorization: `${token}`},
                     body: JSON.stringify({
                         takePartIdList: currentUserIds,
                     }),

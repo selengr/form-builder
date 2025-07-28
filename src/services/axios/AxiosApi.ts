@@ -136,9 +136,10 @@ AxiosApi.interceptors.request.use(// @ts-ignore
       (config.headers as AxiosHeaders).set("Authorization", `Bearer ${token}`);
     }
 
-    if (process.env.NEXT_PUBLIC_SECRET) {
-      (config.headers as AxiosHeaders).set("x-secret-token", process.env.NEXT_PUBLIC_SECRET);
-    }
+    //
+    // if (process.env.NEXT_PUBLIC_SECRET) {
+    //   (config.headers as AxiosHeaders).set("x-secret-token", process.env.NEXT_PUBLIC_SECRET);
+    // }
 
     const requestKey = `${config.method}-${config.url}`;
 

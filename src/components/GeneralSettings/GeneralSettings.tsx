@@ -74,7 +74,6 @@ export default function GeneralSettings({
         method: 'POST',
           headers: {
           'Content-Type': 'application/json',
-          "x-secret-token": process.env.NEXT_PUBLIC_SECRET!,
               Authorization: `${token}`
         },
           body: JSON.stringify({

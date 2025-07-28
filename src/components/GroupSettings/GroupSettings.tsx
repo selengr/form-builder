@@ -64,7 +64,6 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({handleOpen, formId}) => {
             const res = await fetch(`/api/group/list?searchFilterModel=${encoded}`,
                 { headers: {
                 'Content-Type': 'application/json',
-                    "x-secret-token": process.env.NEXT_PUBLIC_SECRET!,
                     Authorization: `${token}`}
             });
 

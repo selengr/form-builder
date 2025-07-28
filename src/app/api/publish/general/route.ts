@@ -2,7 +2,7 @@ import {NextResponse} from 'next/server';
 import {AxiosApi} from '@/services/axios/AxiosApi';
 import {z, ZodError} from 'zod';
 import {AxiosError} from 'axios';
-import {getAuthToken} from "@/utils/getAuthToken";
+import {getAuthTokenServer} from "@/utils/getAuthToken";
 
 const publicMethodSchema = z.object({
     formId: z.union([z.string(), z.number()]),
@@ -14,7 +14,7 @@ type PublicMethodPayload = z.infer<typeof publicMethodSchema>;
 
 export async function POST(req: Request) {
     try {
-        const token = await getAuthToken();
+        const token = await getAuthTokenServer();
         if (!token) {
             return NextResponse.json({error: 'توکن احراز هویت یافت نشد.'}, {status: 401});
         }

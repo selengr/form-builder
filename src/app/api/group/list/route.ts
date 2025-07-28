@@ -1,7 +1,9 @@
 import {NextResponse} from 'next/server';
 import {AxiosApi} from '@/services/axios/AxiosApi';
 import {AxiosError} from "axios";
-import {getAuthToken} from "@/utils/getAuthToken";
+import {getAuthTokenServer} from "@/utils/getAuthToken";
+
+export const dynamic = 'force-dynamic';
 
 interface GroupItem {
   groupName: string;
@@ -40,7 +42,7 @@ interface GroupListgridResponse {
 
 export async function GET(request: Request) {
   try {
-    const token = await getAuthToken();
+    const token = await getAuthTokenServer();
 
     if (!token) {
       return NextResponse.json({error: 'Authorization token is required.'}, {status: 401});

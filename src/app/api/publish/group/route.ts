@@ -2,7 +2,7 @@ import {NextResponse} from 'next/server';
 import {AxiosApi} from '@/services/axios/AxiosApi';
 import {z, ZodError} from 'zod';
 import {AxiosError} from 'axios';
-import {getAuthToken} from "@/utils/getAuthToken";
+import {getAuthTokenServer} from "@/utils/getAuthToken";
 
 const groupMethodSchema = z.object({
     formId: z.number(),
@@ -15,23 +15,23 @@ export async function POST(req: Request) {
     try {
         const body: GroupMethodPayload = await req.json();
 
-        const token = await getAuthToken();
+        const token = await getAuthTokenServer();
         if (!token) {
             return NextResponse.json(
-                { error: 'توکن احراز هویت یافت نشد.' },
-                { status: 401 }
+                {error: 'توکن احراز هویت یافت نشد.'},
+                {status: 401}
             );
         }
 
         const parsed = groupMethodSchema.safeParse(body);
         if (!parsed.success) {
             return NextResponse.json(
-                { error: 'خطای اعتبارسنجی', details: parsed.error.errors },
-                { status: 400 },
+                {error: 'خطای اعتبارسنجی', details: parsed.error.errors},
+                {status: 400},
             );
         }
 
-        const { data } = await AxiosApi.post('/form-publish-setting/group-method', body,
+        const {data} = await AxiosApi.post('/form-publish-setting/group-method', body,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -41,8 +41,8 @@ export async function POST(req: Request) {
     } catch (error: any) {
         if (error instanceof ZodError) {
             return NextResponse.json(
-                { error: 'خطای اعتبارسنجی', details: error.errors },
-                { status: 400 },
+                {error: 'خطای اعتبارسنجی', details: error.errors},
+                {status: 400},
             );
         }
 
@@ -62,12 +62,12 @@ export async function POST(req: Request) {
                 message = error.message;
             }
 
-            return NextResponse.json({ error: message }, { status });
+            return NextResponse.json({error: message}, {status});
         }
 
         return NextResponse.json(
-            { error: error?.message || 'خطای ناشناخته' },
-            { status: 500 },
+            {error: error?.message || 'خطای ناشناخته'},
+            {status: 500},
         );
     }
 }

@@ -1,6 +1,29 @@
+'use client'
 import Image from 'next/image';
+import {MyRangeSlider} from "@/components/Slider/RangeSlider";
+import React, {useEffect, useState} from "react";
+import {BarChart} from "@mui/x-charts";
 
 export default function HomePagex() {
+    const [value, setValue] = React.useState<number>(8.3);
+
+    const handleChange = (event: Event, newValue: any) => {
+        setValue(newValue);
+    };
+
+    const [data, setData] = useState<number[]>([10, 30, 20, 20, 40]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            // تولید عدد جدید بین 10 تا 40
+            const newData = Array.from({ length: data.length }, () =>
+                Math.floor(Math.random() * (40 - 10 + 1)) + 10
+            );
+            setData(newData);
+        }, 3000);
+
+        return () => clearInterval(interval);
+    }, [data.length]);
     return (<div className="h-screen bg-[#FAFAFF] text-saba-text-dark font-iranSans w-full">
         <main
             className="relative flex flex-col lg:flex-row items-center justify-center pt-16 pb-8 lg:pt-24 lg:pb-16 px-4 sm:px-6 lg:px-8">
@@ -39,11 +62,12 @@ export default function HomePagex() {
             <section
                 className="relative z-10 w-full max-w-md lg:w-1/2 lg:max-w-none flex justify-center items-center">
                 <div
-                    className="relative w-full mx-auto aspect-[9/16] lg:aspect-auto lg:h-[600px] xl:h-[700px]">
+                    className="relative w-full mx-auto aspect-[9/16] lg:aspect-auto lg:h-[600px] xl:h-[700px] ">
                     <Image
                         src="/api/images?folder=home&file=curvyBG.svg"
                         alt=""
                         layout={"fill"}
+                        className={'animate-rotate'}
                         objectFit="contain"
                         priority
                     />
@@ -72,15 +96,74 @@ export default function HomePagex() {
 
                     {/* Additional floating elements (simplified placeholders) */}
                     <div
-                        className="absolute top-[10%] left-[5%] bg-white p-2 rounded-xl shadow-md flex items-center space-x-2 text-sm text-gray-700">
-                        <span className="text-yellow-500"></span>
-                        <span>میانگین درآمدی شما چقدر است؟</span>
+                        className="absolute -top-[5%] left-[5%] bg-white p-3 rounded-3xl shadow-md flex flex-col flex-wrap items-center gap-2 text-sm text-gray-700 max-w-[90%] w-[90%] sm:w-auto"
+                    >
+                        <div>
+                            <span className="text-yellow-500">⭐</span>
+                            <span className="whitespace-nowrap">ارزیابی شما از کیفیت خدمات سایا چقدر است؟</span>
+                        </div>
+
+                        <div className="flex-1 min-w-[200px] max-w-full">
+                            <MyRangeSlider
+                                value={value}
+                                onChange={handleChange}
+                                size="small"
+                                valueLabelDisplay="auto"
+                                step={0.1}
+                                min={1}
+                                max={10}
+                                disableSwap
+                            />
+                        </div>
                     </div>
 
                     <div
-                        className="absolute top-[40%] right-[-10%] bg-white p-3 rounded-full shadow-md flex items-center justify-center text-gray-500">
+                        className="floating-3d-1 absolute top-[80%] left-[63%] bg-cyan-500 p-3 pl-0 rounded-3xl shadow-md flex items-center justify-center text-gray-500 -z-30 " dir={'rtl'}>
                         {/* Icon placeholder */}
-                        <span className="text-xl">📊</span>
+                        <span className="text-xl">
+                         <BarChart
+                             grid={{horizontal: false, vertical: false}}
+                             series={[{ data, type: 'bar' }]}
+                             borderRadius={300}
+                             sx={{
+                                 '& .MuiChartsAxis-left .MuiChartsAxis-tickLabel': {
+                                     fill: '#ffffff',
+                                 },
+                             }}
+                             xAxis={[
+                                 {
+                                     data: [
+                                         new Date(2020, 1, 1),
+                                         new Date(2021, 1, 1),
+                                         new Date(2022, 1, 1),
+                                         new Date(2023, 1, 1),
+                                         new Date(2024, 1, 1),
+                                     ],
+                                     valueFormatter: (value: Date) => value.getFullYear().toString(),
+                                     colorMap: {
+                                         type: 'continuous',
+                                         min: new Date(2019, 1, 1),
+                                         max: new Date(2024, 1, 1),
+                                         color: ['#fff', '#ffffff77']
+                                     },
+                                     categoryGapRatio: 0.5,
+                                     barGapRatio: 0.2,
+                                     disableTicks: true,
+                                     disableLine: true,
+                                     tickLabelMinGap:100,
+                                     tickLabelPlacement: "middle",
+                                     tickPlacement: "middle",
+                                     position: 'none'
+
+                                 }]}
+                             yAxis={[{
+                                 disableTicks: true,
+                                 disableLine: true,
+                             }]}
+                             width={250}
+                             height={120}
+                         />
+                        </span>
                     </div>
 
                     <div
@@ -90,7 +173,7 @@ export default function HomePagex() {
                     </div>
 
                     <div
-                        className="absolute top-[30%] left-[20%] bg-white p-2 rounded-xl shadow-md flex items-center text-sm text-gray-700">
+                        className="floating-3d-2 absolute top-[30%] left-[20%] bg-white p-2 rounded-xl shadow-md flex items-center text-sm text-gray-700">
                         <span>میانگین نمره</span>
                         <span className="text-yellow-500 ml-1">۷.۸۲~</span>
                     </div>

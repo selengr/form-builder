@@ -94,7 +94,7 @@ export default function HomePagex() {
 
                     {/* Additional floating elements (simplified placeholders) */}
                     <div
-                        className="absolute top-[-5%] left-[5%] bg-white p-3 rounded-3xl shadow-md flex flex-col items-center gap-2 text-sm text-gray-700 w-[90%] sm:w-auto max-w-[250px]"
+                        className="absolute top-[-5%] left-[5%] bg-white p-3 rounded-3xl shadow-md flex flex-col items-center gap-2 text-sm text-gray-700 w-[90%] sm:w-auto max-w-[400px]"
                     >
                         <div className="text-center">
                             <span className="text-yellow-500">⭐</span>

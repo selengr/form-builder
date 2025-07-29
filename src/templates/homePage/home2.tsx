@@ -29,7 +29,7 @@ export default function HomePagex() {
             <div className="absolute -top-[55%] left-[64%] w-1/2 aspect-square ">
                 <div className="relative w-full h-full animate-rotate">
                     <Image
-                        src="/api/images?folder=home&file=CIRCLES.svg"
+                        src="/api/images?folder=home&file=circles.svg"
                         alt="circles decoration"
                         layout="fill"
                         objectFit="contain"

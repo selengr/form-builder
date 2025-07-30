@@ -35,9 +35,10 @@ compile-job:
   - [ -s "$NVM_DIR/nvm.sh" ]
   -  \. "$NVM_DIR/nvm.sh"
   - rm -f .env.local
+  - rm -rf node_modules package-lock.json
   - nvm use 22
-  - npm config set registry https://registry.npmjs.org/
-  - npm i -f --verbose && npm run build
+  - npm i -f --verbose
+  - npm run build
 
   #- mvn clean package -DskipTests
   artifacts:

@@ -1,11 +1,11 @@
 "use client";
 import {IFormElementConstructor, IFormOptionList, tempObj} from "./bulider";
-import {SpectralFormElement} from "../components/Fields/SpectralField";
-import {TextFieldFormElement} from "../components/Fields/TextField";
-import {TitleFieldFinishFormElement} from "../components/Fields/TitleFieldFinish";
-import {TitleFieldStartFormElement} from "../components/Fields/TitleFieldStart";
-import {MultipleChoiceFormElement} from "../components/Fields/MultipleChoiceField";
-import {MultipleChoiceImageFormElement} from "../components/Fields/MultipleChoiceImageField";
+import {SpectralFormElement} from "@/components/Fields/SpectralField";
+import {TextFieldFormElement} from "@/components/Fields/TextField";
+import {TitleFieldFinishFormElement} from "@/components/Fields/TitleFieldFinish";
+import {TitleFieldStartFormElement} from "@/components/Fields/TitleFieldStart";
+import {MultipleChoiceFormElement} from "@/components/Fields/MultipleChoiceField";
+import {MultipleChoiceImageFormElement} from "@/components/Fields/MultipleChoiceImageField";
 import {InfoFieldFormElement} from "@/components/Fields/InfoField";
 
 export type ElementsType =

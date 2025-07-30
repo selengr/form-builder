@@ -10,7 +10,6 @@ export default function HomePageX() {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            // تولید عدد جدید بین 10 تا 40
             const newData = Array.from({length: data.length}, () => Math.floor(Math.random() * (40 - 10 + 1)) + 10);
             setData(newData);
         }, 3000);
@@ -18,8 +17,9 @@ export default function HomePageX() {
         return () => clearInterval(interval);
     }, [data.length]);
 
+
     return (
-        <div className="h-screen bg-[#FAFAFF]  w-full overflow-y-scroll">
+        <div className="h-screen w-full overflow-y-scroll" style={{background: 'linear-gradient(to bottom, #ffffff, #eff6ff, #eff6ff)'}}>
             <main
                 className="relative flex flex-col lg:flex-row items-center justify-between pt-20 pb-12 px-4 lg:px-8 w-full max-w-[1440px] mx-auto">
 
@@ -185,10 +185,6 @@ export default function HomePageX() {
                     </footer>
                 </section>
             </main>
-
-            {/* Footer */}
-
-
         </div>
     );
 }

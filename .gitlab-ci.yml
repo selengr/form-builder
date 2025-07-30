@@ -37,6 +37,7 @@ compile-job:
   - rm -f .env.local
   - rm -rf node_modules package-lock.json .next
   - nvm use 22
+  - npm i -g npm
   - npm i -f --verbose
   - npm run build
 

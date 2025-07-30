@@ -1,16 +1,11 @@
-'use client'
+'use client';
 import Image from 'next/image';
+import {useEffect, useState} from 'react';
 import {MyRangeSlider} from "@/components/Slider/RangeSlider";
-import React, {useEffect, useState} from "react";
 import {BarChart} from "@mui/x-charts";
 
-export default function HomePagex() {
-    const [value, setValue] = React.useState<number>(8.3);
-
-    const handleChange = (event: Event, newValue: any) => {
-        setValue(newValue);
-    };
-
+export default function HomePageX() {
+    const [sliderValue, setSliderValue] = useState(8.3);
     const [data, setData] = useState<number[]>([10, 30, 20, 20, 40]);
 
     useEffect(() => {
@@ -22,104 +17,107 @@ export default function HomePagex() {
 
         return () => clearInterval(interval);
     }, [data.length]);
-    return (<div className="h-screen bg-[#FAFAFF] text-saba-text-dark font-iranSans w-full">
-        <main
-            className="relative flex flex-col lg:flex-row items-center justify-center pt-16 pb-8 lg:pt-24 lg:pb-16 px-4 sm:px-6 lg:px-8">
 
-            <div className="absolute -top-[55%] left-[64%] w-1/2 aspect-square ">
-                <div className="relative w-full h-full animate-rotate">
+    return (
+        <div className="h-screen bg-[#FAFAFF]  w-full overflow-y-scroll">
+            <main
+                className="relative flex flex-col lg:flex-row items-center justify-between pt-20 pb-12 px-4 lg:px-8 w-full max-w-[1440px] mx-auto">
+
+                {/* دایره چرخشی بک‌گراند */}
+                <div
+                    className="absolute top-0 right-0 w-[40vw] h-[40vw] max-w-[600px] opacity-20 md:opacity-30 -z-0 translate-x-1/4 -translate-y-1/4 pointer-events-none">
                     <Image
                         src="/api/images?folder=home&file=circles.svg"
                         alt="circles decoration"
-                        layout="fill"
-                        objectFit="contain"
+                        fill
+                        className="object-contain animate-rotate-slow"
                         priority
                     />
                 </div>
-            </div>
 
-            <section className="relative z-10 text-center lg:text-right lg:w-1/2 px-4 lg:pr-16 mb-10 lg:mb-0">
+                {/* متن سمت راست */}
+                <section className="z-50 text-center lg:text-right lg:w-1/2 mb-16 lg:mb-0">
+                    <h1 className="text-4xl sm:text-5xl lg:text-[3rem] text-[#183B56] font-extrabold leading-tight mb-6 font-d7">
+                      <span className="relative inline-block">
+                        <span className="relative z-10">سایا</span>
+                        <span
+                            className="absolute bottom-0 left-0 w-full h-[50%] bg-[#2cdfc9] z-0 rounded-sm skew-x-4 -skew-y-6"></span>
+                      </span>
+                        <span>, دستیار</span>
+                        <span className="block">هوشمند شناخت</span>
+                    </h1>
+                    <p className="text-lg sm:text-lgl text-gray-700 mb-8 leading-relaxed font-d7 max-w-xl mx-auto lg:mx-0">
+                        سایا سکویی نوین برای طراحی، اجرا و تحلیل آزمون‌های روان‌شناختی است. این سامانه با رابط کاربری
+                        ساده، روان و یکپارچه، امکان ساخت فرم‌های آنلاین تعاملی و تولید گزارش‌های دقیق و شخصی‌سازی‌شده را
+                        فراهم می‌کند.
+                    </p>
+                    <div className="flex justify-center items-center h-full">
+                        <button
+                            className="bg-[conic-gradient(at_bottom_left,_var(--tw-gradient-stops))] from-blue-500 via-[#1758BA] to-[#1758BA] hover:scale-110 transition-all text-white font-bold py-4 px-10 rounded-3xl text-lg shadow-xl shadow-blue-700/30">
+                            ایجاد فرم
+                        </button>
+                    </div>
+                </section>
 
-                <h1 className="text-4xl sm:text-3xl lg:text-[40pt] font-[900] mb-6 text-[#183B56] font-d7 gap-1 heroTitle">
-                    <p className="">سایا، دستیار</p>
-                    <p className="">هوشمند شناخت</p>
-                </h1>
-
-                <p className="text-lg sm:text-lg font-d7 text-saba-text-light mb-8 max-w-xl mx-auto lg:mx-0">
-                    سایا سکویی نوین برای طراحی، اجرا و تحلیل آزمون‌های روان‌شناختی است. این سامانه با رابط کاربری
-                    ساده، روان و یکپارچه، امکان ساخت فرم‌های آنلاین تعاملی و تولید گزارش‌های دقیق و شخصی‌سازی‌شده را
-                    فراهم می‌کند.
-                </p>
-
-                <button
-                    className="bg-saba-blue hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition duration-300 ease-in-out shadow-lg">
-                    شروع کنید
-                </button>
-            </section>
-
-            <section
-                className="relative z-10 w-full max-w-md lg:w-1/2 lg:max-w-none flex justify-center items-center">
-                <div
-                    className="relative w-full mx-auto aspect-[9/16] lg:aspect-auto lg:h-[600px] xl:h-[700px] ">
-                    <Image
-                        src="/api/images?folder=home&file=curvyBG.svg"
-                        alt=""
-                        layout={"fill"}
-                        className={'animate-rotate'}
-                        objectFit="contain"
-                        priority
-                    />
-                    <div className="relative w-full max-w-md mx-auto aspect-[9/16]">
+                {/* تصویر سمت چپ */}
+                <section className="z-10 w-full lg:w-1/2 flex justify-center items-center">
+                    <div className="relative w-full max-w-[500px] aspect-[9/16] lg:aspect-auto lg:h-[590px]">
                         <Image
-                            src="/api/images?folder=home&file=phone.svg"
-                            alt="phone"
-                            layout="fill"
-                            objectFit="contain"
+                            src="/api/images?folder=home&file=curvyBG.svg"
+                            alt="Decorative background shape"
+                            fill
+                            className="object-contain animate-bounce-slow pointer-events-none -z-20"
                             priority
-                            draggable={false}
                         />
 
-                        <div className="absolute top-[35%] left-[22%] w-[80%] floating-3d px-4">
+                        {/* گوشی موبایل */}
+                        <div className="absolute inset-0 w-[70%] lg:w-[90%] mx-auto aspect-[9/16] -z-10">
                             <Image
-                                src="/api/images?folder=home&file=dragable.svg"
-                                alt="dragable content"
-                                layout="responsive"
-                                width={300}
-                                height={100}
+                                src="/api/images?folder=home&file=phone.svg"
+                                alt="phone mockup"
+                                fill
+                                className="object-contain"
                                 priority
                                 draggable={false}
                             />
-                        </div>
-                    </div>
 
-                    {/* Additional floating elements (simplified placeholders) */}
-                    <div
-                        className="absolute top-[-5%] left-[5%] bg-white p-3 rounded-3xl shadow-md flex flex-col items-center gap-2 text-sm text-gray-700 w-[90%] sm:w-auto max-w-[400px]"
-                    >
-                        <div className="text-center">
-                            <span className="text-yellow-500">⭐</span>
-                            <span className="ml-1 whitespace-nowrap">ارزیابی شما از کیفیت خدمات سایا چقدر است؟</span>
+                            {/* باکس کشویی */}
+                            <div className="absolute top-[35%] left-[15%] w-[70%] floating-3d px-2 py-1">
+                                <Image
+                                    src="/api/images?folder=home&file=dragable.svg"
+                                    alt="draggable content"
+                                    width={300}
+                                    height={100}
+                                    className="w-full h-auto"
+                                    priority
+                                />
+                            </div>
                         </div>
 
-                        <div className="w-fit min-w-[200px]">
-                            <MyRangeSlider
-                                value={value}
-                                onChange={handleChange}
-                                size="small"
-                                valueLabelDisplay="auto"
-                                step={0.1}
-                                min={1}
-                                max={10}
-                                disableSwap
-                            />
+                        {/* باکس سوال */}
+                        <div
+                            className="absolute top-[5%] -right-[20%] bg-white p-3 rounded-2xl shadow-xl flex flex-col items-center gap-2 text-sm text-gray-700 max-w-[260px] floating-3d-1 -rotate-3">
+                            <div className="text-center">
+                                <div className="text-yellow-500 text-2xl mb-1">⭐</div>
+                                <p className="font-medium text-gray-800">ارزیابی شما از کیفیت خدمات سایا چقدر است؟</p>
+                            </div>
+                            <div className="w-full pt-2">
+                                <MyRangeSlider
+                                    value={sliderValue}
+                                    onChange={(e, v) => typeof v === 'number' && setSliderValue(v)}
+                                    min={1}
+                                    max={10}
+                                    step={0.1}
+                                    valueLabelDisplay="auto"
+                                    size="small"
+                                />
+                            </div>
                         </div>
-                    </div>
 
-                    <div
-                        className="floating-3d-1 absolute top-[80%] left-[63%] bg-cyan-500 p-3 pl-0 rounded-3xl shadow-md flex items-center justify-center text-gray-500 -z-30 "
-                        dir={'rtl'}>
-                        {/* Icon placeholder */}
-                        <span className="text-xl">
+                        {/* چارت پایین چپ */}
+                        <div
+                            className="absolute bottom-[5%] left-0 bg-[#0BC0EB] p-2 pl-0 rounded-2xl shadow-xl floating-3d-2 max-w-[260px] text-white">
+                            <span className="text-xl">
                          <BarChart
                              grid={{horizontal: false, vertical: false}}
                              series={[{data, type: 'bar'}]}
@@ -155,41 +153,42 @@ export default function HomePagex() {
                              height={120}
                          />
                         </span>
+                        </div>
+
+
+                        {/* نمره */}
+                        <div
+                            className="absolute top-[20%] left-0 bg-white p-2 rounded-xl shadow-xl text-sm text-gray-800 floating-3d-4 rotate-3">
+                            <span className="font-medium">میانگین نمره:</span>
+                            <span className="text-yellow-500 font-bold mr-1">۷.۸۲~</span>
+                        </div>
+                    </div>
+                    <div className="absolute inset-0 -z-50 ">
+                        <Image alt={""} src={`/api/images?folder=faq&file=gr.svg`} width={100} height={100}
+                               className={"w-screen h-screen animate-bounce-slow"} draggable={false}/>
                     </div>
 
-                    <div
-                        className="absolute bottom-[10%] left-[10%] bg-white p-3 rounded-full shadow-md flex items-center justify-center text-gray-500">
-                        {/* Icon placeholder */}
-                        <span className="text-xl">✅</span>
-                    </div>
+                    <footer className=" absolute inset-0 p-10 pb-20 z-40 top-[95%]">
+                        <div
+                            className="max-w-[1440px] p-10 bg-white rounded-3xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6 text-center shadow-2xl shadow-blue-700/20">
+                            {[
+                                {label: "عضو", value: "۸۰۰۰۰۰+"},
+                                {label: "فرم", value: "۴۱۳۰۹۱"},
+                                {label: "ارزیابی", value: "۴۰۱۶۸۰"},
+                            ].map((item, i) => (
+                                <div key={i} className="flex flex-col items-center">
+                                    <span className="text-blue-500 text-4xl sm:text-5xl font-bold">{item.value}</span>
+                                    <span className="text-gray-600 text-lg mt-2">{item.label}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </footer>
+                </section>
+            </main>
 
-                    <div
-                        className="floating-3d-2 absolute top-[30%] left-[20%] bg-white p-2 rounded-xl shadow-md flex items-center text-sm text-gray-700">
-                        <span>میانگین نمره</span>
-                        <span className="text-yellow-500 ml-1">۷.۸۲~</span>
-                    </div>
+            {/* Footer */}
 
-                </div>
-            </section>
-        </main>
 
-        {/* Footer / Stats Section */}
-        <footer className="relative z-10 bg-white py-8 border-t border-gray-100 mt-10 lg:mt-20">
-            <div
-                className="container mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                <div className="flex flex-col items-center">
-                    <span className="text-saba-blue text-4xl sm:text-5xl font-bold">۸۰۰۰۰۰+</span>
-                    <span className="text-saba-text-light text-lg mt-2">عضو</span>
-                </div>
-                <div className="flex flex-col items-center">
-                    <span className="text-saba-blue text-4xl sm:text-5xl font-bold">۴۱۳۰۹۱</span>
-                    <span className="text-saba-text-light text-lg mt-2">فرم</span>
-                </div>
-                <div className="flex flex-col items-center">
-                    <span className="text-saba-blue text-4xl sm:text-5xl font-bold">۴۰۱۶۸۰</span>
-                    <span className="text-saba-text-light text-lg mt-2">ارزیابی</span>
-                </div>
-            </div>
-        </footer>
-    </div>);
+        </div>
+    );
 }

@@ -29,6 +29,7 @@ export default function ParticipateFormPage({params}: { params: { slug: string }
     initializeQuestion,
     realFormID,
     hasError,
+    isCurrentFirstQuestion
   } = useParticipateForm();
 
   if (firstLoading) return <LoadingScreen/>;
@@ -72,6 +73,7 @@ export default function ParticipateFormPage({params}: { params: { slug: string }
       handleValidationUpdate={handleValidationUpdate}
       handleNext={handleNext}
       handlePrev={handlePrev}
+      prevBlock={isCurrentFirstQuestion}
       questionLoading={questionLoading}
       isReportDialogOpen={isReportDialogOpen}
       handleOpenReportDialog={() => setIsReportDialogOpen(true)}

@@ -15,7 +15,7 @@ export default function MenuSidebar() {
         return (    
           <div
             key={id}
-            className="flex flex-col items-center gap-[5px] cursor-pointer"
+            className="flex flex-col items-center gap-[2px] cursor-pointer"
             onClick={() => (window.location.href = link)}
           >
             <Image
@@ -23,7 +23,8 @@ export default function MenuSidebar() {
               width={28}
               height={28}
               priority
-              alt="logo-side-bar"
+              draggable={false}
+              alt={title}
             />
             <p className={`text-[9px] ${isActive ? "text-[#2CDFC9]" : "text-[#F2F4F8]"}`}>
               {title}

@@ -23,17 +23,18 @@ export async function POST(req: Request) {
             );
         }
 
-        const parsed = groupMethodSchema.safeParse(body);
-        if (!parsed.success) {
-            return NextResponse.json(
-                {error: 'خطای اعتبارسنجی', details: parsed.error.errors},
-                {status: 400},
-            );
-        }
+        // const parsed = groupMethodSchema.safeParse(body);
+        // if (!parsed.success) {
+        //     return NextResponse.json(
+        //         {error: 'خطای اعتبارسنجی', details: parsed.error.errors},
+        //         {status: 400},
+        //     );
+        // }
 
         const {data} = await AxiosApi.post('/form-publish-setting/group-method', body,
             {
                 headers: {
+                    "Content-Type": "application/json",
                     Authorization: `${token}`,
                 },
             });

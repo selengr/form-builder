@@ -40,7 +40,8 @@ export default function HomePageX() {
                     <h1 className="text-4xl sm:text-5xl lg:text-[3rem] text-[#183B56] font-extrabold leading-tight mb-6 font-d7">
                       <span className="relative inline-block">
                         <span className="relative z-10">سایا</span>
-                        <span className="absolute bottom-0 left-0 w-full h-[50%] bg-[#2cdfc9] z-0 rounded-sm skew-x-4 -skew-y-6"></span>
+                        <span
+                            className="absolute bottom-0 left-0 w-full h-[50%] bg-[#2cdfc9] z-0 rounded-sm skew-x-4 -skew-y-6"></span>
                       </span>
                         <span>, دستیار</span>
                         <span className="block">هوشمند شناخت</span>
@@ -51,7 +52,8 @@ export default function HomePageX() {
                         فراهم می‌کند.
                     </p>
                     <div className="flex justify-center items-center h-full">
-                        <button className="bg-[conic-gradient(at_bottom_left,_var(--tw-gradient-stops))] from-blue-500 via-[#1758BA] to-[#1758BA] hover:scale-110 transition-all text-white font-bold py-4 px-10 rounded-3xl text-lg shadow-xl shadow-blue-700/30">
+                        <button
+                            className="bg-[conic-gradient(at_bottom_left,_var(--tw-gradient-stops))] from-blue-500 via-[#1758BA] to-[#1758BA] hover:scale-110 transition-all text-white font-bold py-4 px-10 rounded-3xl text-lg shadow-xl shadow-blue-700/30">
                             ایجاد فرم
                         </button>
                     </div>
@@ -59,12 +61,12 @@ export default function HomePageX() {
 
                 {/* تصویر سمت چپ */}
                 <section className="z-10 w-full lg:w-1/2 flex justify-center items-center">
-                    <div className="relative w-full max-w-[500px] aspect-[9/16] lg:aspect-auto lg:h-[600px]">
+                    <div className="relative w-full max-w-[500px] aspect-[9/16] lg:aspect-auto lg:h-[590px]">
                         <Image
                             src="/api/images?folder=home&file=curvyBG.svg"
                             alt="Decorative background shape"
                             fill
-                            className="object-contain animate-bounce-slow opacity-80 pointer-events-none -z-20"
+                            className="object-contain animate-bounce-slow pointer-events-none -z-20"
                             priority
                         />
 
@@ -114,7 +116,7 @@ export default function HomePageX() {
 
                         {/* چارت پایین چپ */}
                         <div
-                            className="absolute bottom-[5%] left-0 bg-cyan-600 p-2 pl-0 rounded-2xl shadow-xl floating-3d-2 max-w-[260px] text-white">
+                            className="absolute bottom-[5%] left-0 bg-[#0BC0EB] p-2 pl-0 rounded-2xl shadow-xl floating-3d-2 max-w-[260px] text-white">
                             <span className="text-xl">
                          <BarChart
                              grid={{horizontal: false, vertical: false}}
@@ -167,7 +169,8 @@ export default function HomePageX() {
                     </div>
 
                     <footer className=" absolute inset-0 p-10 pb-20 z-40 top-[95%]">
-                        <div className="max-w-[1440px] p-10 bg-white rounded-3xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6 text-center shadow-2xl shadow-blue-700/20">
+                        <div
+                            className="max-w-[1440px] p-10 bg-white rounded-3xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6 text-center shadow-2xl shadow-blue-700/20">
                             {[
                                 {label: "عضو", value: "۸۰۰۰۰۰+"},
                                 {label: "فرم", value: "۴۱۳۰۹۱"},

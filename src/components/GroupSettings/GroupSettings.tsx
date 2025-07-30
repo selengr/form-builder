@@ -11,6 +11,7 @@ import RHFSwitch from "../hook-form/RHFSwitch";
 import {IGroup} from "@/app/groups/components/groupListItem";
 import {GroupListResponse} from "@/app/groups/page";
 import {getAuthToken} from "@/utils/getAuthToken";
+import {toast} from "sonner";
 
 const groupFormSchema = z.object({
     groupsId: z.array(z.number()).min(1, "حداقل یک گروه را انتخاب کنید."),
@@ -69,7 +70,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({handleOpen, formId}) => {
 
             if (!res.ok) {
                 const errorData = await res.json();
-                throw new Error(errorData.error || "دریافت لیست پایگاه‌ها ناموفق بود.");
+                throw new Error(errorData.error || "دریافت لیست گروه‌ها ناموفق بود.");
             }
 
             const data: GroupListResponse = await res.json();
@@ -142,9 +143,11 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({handleOpen, formId}) => {
                 return;
             }
 
+            toast.success("با موفقیت به سبد خرید افزوده شد.");
             handleOpen();
             reset();
         } catch (err) {
+            toast.error("خطای ناشناخته در ارسال اطلاعات.");
             console.error("Group publish error:", err);
         }
     }, [formId, handleOpen, reset, methods]);

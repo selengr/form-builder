@@ -1,9 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { AxiosApi } from '@/services/axios/AxiosApi';
-import { AxiosError } from 'axios';
-import { getAuthTokenServer} from "@/utils/getAuthToken";
+import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const revalidate = 0;
 
 interface GroupComboItem {
   value: string;
@@ -19,9 +18,9 @@ interface GroupsCustomComboResponse {
   rows: number;
 }
 
-export async function GET(req: NextRequest) {
+export async function GET(req: Request) {
   try {
-    const token =req.headers.get('Authorization')
+    const token = req.headers.get('Authorization');
 
     if (!token) {
       return NextResponse.json({ error: 'Authorization token is required.' }, { status: 401 });
@@ -30,25 +29,33 @@ export async function GET(req: NextRequest) {
     const url = new URL(req.url);
     const queryString = url.search;
 
-    const { data } = await AxiosApi.get<GroupsCustomComboResponse>(
-        `/user-group/introducer/groups-custom-combo${queryString}`,
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
-        }
-    );
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_PSYA}/psya/user-group/introducer/groups-custom-combo${queryString}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
+      cache: 'no-store',
+    });
 
-    return NextResponse.json(data);
-  } catch (error) {
-    if (error instanceof AxiosError) {
-      const status = error.response?.status || 500;
-      const message = error.response?.data?.message || error.message;
-      return NextResponse.json({ error: message }, { status });
-    } else if (error instanceof Error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (!res.ok) {
+      const data = await res.json();
+      return NextResponse.json({ error: data?.message || 'Failed to fetch combo data.' }, { status: res.status });
     }
 
-    return NextResponse.json({ error: 'An unknown error occurred.' }, { status: 500 });
+    const data: GroupsCustomComboResponse = await res.json();
+
+    const response = NextResponse.json(data, { status: 200 });
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+
+    return response;
+
+  } catch (error: any) {
+    return NextResponse.json({ error: error?.message || 'Unexpected server error.' }, { status: 500 });
   }
 }

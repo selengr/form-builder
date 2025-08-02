@@ -1,8 +1,9 @@
-import {NextResponse} from 'next/server';
-import {AxiosApi} from '@/services/axios/AxiosApi';
-import {z, ZodError} from 'zod';
-import {AxiosError} from 'axios';
-import {getAuthTokenServer} from "@/utils/getAuthToken";
+import { NextResponse } from 'next/server';
+import { z, ZodError } from 'zod';
+
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const revalidate = 0;
 
 const soloMethodSchema = z.object({
     formId: z.string(),
@@ -17,62 +18,69 @@ type SoloMethodPayload = z.infer<typeof soloMethodSchema>;
 
 export async function POST(req: Request) {
     try {
-        const token =req.headers.get('Authorization')
-        const body: SoloMethodPayload = await req.json();
+        const token = req.headers.get('Authorization');
         if (!token) {
+            return NextResponse.json({ error: 'Authorization token is required.' }, { status: 401 });
+        }
+
+        const body = await req.json();
+        const parsed = soloMethodSchema.safeParse(body);
+
+        if (!parsed.success) {
             return NextResponse.json(
-                {error: 'توکن احراز هویت یافت نشد.'},
-                {status: 401}
+                { error: 'Validation error.', details: parsed.error.errors },
+                { status: 400 }
             );
         }
 
-        // const parsed = soloMethodSchema.safeParse(body);
-        // if (!parsed.success) {
-        //     return NextResponse.json(
-        //         {error: 'خطای اعتبارسنجی', details: parsed.error.errors},
-        //         {status: 400},
-        //     );
-        // }
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_PSYA}/psya/form-publish-setting/solo-method`, {
+            method: 'POST',
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json',
+                'Cache-Control': 'no-store',
+                'Pragma': 'no-cache',
+                'Expires': '0',
+            },
+            body: JSON.stringify(parsed.data),
+            cache: 'no-store',
+        });
 
-        const {data} = await AxiosApi.post('/form-publish-setting/solo-method', body,
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `${token}`,
-                },
-            }
-        );
-        return NextResponse.json(data);
-    } catch (error: any) {
-        if (error instanceof ZodError) {
-            return NextResponse.json(
-                {error: 'خطای اعتبارسنجی', details: error.errors},
-                {status: 400},
-            );
-        }
+        if (!res.ok) {
+            const data = await res.json();
 
-        if (error instanceof AxiosError) {
-            const status = error.response?.status || 500;
-            const data = error.response?.data;
-
-            let message = 'خطایی رخ داده است.';
-
+            let message = 'An error occurred.';
             if (Array.isArray(data?.message) && data.message[0]?.title) {
                 message = data.message[0].title;
             } else if (typeof data?.message === 'string') {
                 message = data.message;
             } else if (typeof data?.error === 'string') {
                 message = data.error;
-            } else if (error.message) {
-                message = error.message;
             }
 
-            return NextResponse.json({error: message}, {status});
+            return NextResponse.json({ error: message }, { status: res.status });
+        }
+
+        const data = await res.json();
+
+        const response = NextResponse.json(data, { status: 200 });
+        response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+        response.headers.set('Pragma', 'no-cache');
+        response.headers.set('Expires', '0');
+
+        return response;
+
+    } catch (error: any) {
+        if (error instanceof ZodError) {
+            return NextResponse.json(
+                { error: 'Validation error', details: error.errors },
+                { status: 400 }
+            );
         }
 
         return NextResponse.json(
-            {error: error?.message || 'خطای ناشناخته'},
-            {status: 500},
+            { error: error?.message || 'Unexpected server error.' },
+            { status: 500 }
         );
     }
 }

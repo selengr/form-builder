@@ -9,7 +9,6 @@ export default function BuilderErrorPage({error}: { error: Error }) {
         console.error(error);
     }, [error]);
 
-    return
     return (<div className="grow flex items-center justify-center bg-[#f9fafbaa]">
         <div
             className="flex flex-col items-center gap-6 p-10 rounded-3xl bg-white shadow-2xl shadow-gray-300 max-w-md w-full">

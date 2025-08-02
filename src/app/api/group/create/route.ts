@@ -43,9 +43,22 @@ export async function POST(req: Request) {
             cache: 'no-store',
         });
 
+
         if (!res.ok) {
-            const errData = await res.json();
-            return NextResponse.json({ error: errData?.message || 'Failed to add group by Excel.' }, { status: res.status });
+            let message = 'خطا در ثبت اطلاعات.';
+            try {
+                const contentType = res.headers.get('content-type');
+                if (contentType?.includes('application/json')) {
+                    const errData = await res.json();
+                    message = errData?.message || JSON.stringify(errData);
+                } else {
+                    const errText = await res.text();
+                    message = errText || message;
+                }
+            } catch (e) {
+            }
+
+            return NextResponse.json({ error: message }, { status: res.status });
         }
 
         const data: AddByExcelResponse = await res.json();
@@ -58,6 +71,9 @@ export async function POST(req: Request) {
         return response;
 
     } catch (error: any) {
-        return NextResponse.json({ error: error.message || 'Unexpected server error.' }, { status: 500 });
+        return NextResponse.json(
+            { error: error?.message || 'Unexpected server error.' },
+            { status: 500 }
+        );
     }
 }

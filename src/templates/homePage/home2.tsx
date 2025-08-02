@@ -3,11 +3,16 @@ import Image from 'next/image';
 import {useEffect, useState} from 'react';
 import {MyRangeSlider} from "@/components/Slider/RangeSlider";
 import {BarChart} from "@mui/x-charts";
+import CountUp from "react-countup";
 
 export default function HomePageX() {
     const [sliderValue, setSliderValue] = useState(8.3);
     const [data, setData] = useState<number[]>([10, 30, 20, 20, 40]);
-
+    const statistics = [
+        {label: "فرم", value: 413091},
+        {label: "ارزیابی", value: 401680},
+        {label: "عضو", value: 800000}
+    ]
     useEffect(() => {
         const interval = setInterval(() => {
             const newData = Array.from({length: data.length}, () => Math.floor(Math.random() * (40 - 10 + 1)) + 10);
@@ -19,7 +24,8 @@ export default function HomePageX() {
 
 
     return (
-        <div className="h-screen w-full overflow-y-scroll" style={{background: 'linear-gradient(to bottom, #ffffff, #eff6ff, #eff6ff)'}}>
+        <div className="h-screen w-full overflow-y-scroll"
+             style={{background: 'linear-gradient(to bottom, #ffffff, #eff6ff, #eff6ff)', userSelect: "none"}}>
             <main
                 className="relative flex flex-col lg:flex-row items-center justify-between pt-20 pb-12 px-4 lg:px-8 w-full max-w-[1440px] mx-auto">
 
@@ -53,7 +59,7 @@ export default function HomePageX() {
                     </p>
                     <div className="flex justify-center items-center h-full">
                         <button
-                            className="bg-[conic-gradient(at_bottom_left,_var(--tw-gradient-stops))] from-blue-500 via-[#1758BA] to-[#1758BA] hover:scale-110 transition-all text-white font-bold py-4 px-10 rounded-3xl text-lg shadow-xl shadow-blue-700/30">
+                            className="bg-[conic-gradient(at_bottom_left,_var(--tw-gradient-stops))] from-blue-500 via-[#1758BA] to-[#1758BA] hover:scale-x-95 hover:scale-y-90 hover:skew-x-1 transition-all duration-500 text-white font-bold py-4 px-10 rounded-3xl text-lg shadow-xl shadow-blue-700/30">
                             ایجاد فرم
                         </button>
                     </div>
@@ -116,7 +122,7 @@ export default function HomePageX() {
 
                         {/* چارت پایین چپ */}
                         <div
-                            className="absolute bottom-[5%] left-0 bg-[#0BC0EB] p-2 pl-0 rounded-2xl shadow-xl floating-3d-2 max-w-[260px] text-white">
+                            className="absolute bottom-[5%] left-0 bg-[conic-gradient(at_bottom_left,_var(--tw-gradient-stops))] from-blue-500 via-[#1758BA] to-[#1758BA] p-2 pl-0 rounded-2xl shadow-xl floating-3d-2 max-w-[260px] text-white">
                             <span className="text-xl">
                          <BarChart
                              grid={{horizontal: false, vertical: false}}
@@ -171,15 +177,18 @@ export default function HomePageX() {
                     <footer className=" absolute inset-0 p-10 pb-20 z-40 top-[95%]">
                         <div
                             className="max-w-[1440px] p-10 bg-white rounded-3xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6 text-center shadow-2xl shadow-blue-700/20">
-                            {[
-                                {label: "عضو", value: "۸۰۰۰۰۰+"},
-                                {label: "فرم", value: "۴۱۳۰۹۱"},
-                                {label: "ارزیابی", value: "۴۰۱۶۸۰"},
-                            ].map((item, i) => (
-                                <div key={i} className="flex flex-col items-center">
-                                    <span className="text-blue-500 text-4xl sm:text-5xl font-bold">{item.value}</span>
-                                    <span className="text-gray-600 text-lg mt-2">{item.label}</span>
-                                </div>
+                            {statistics.map((item, i) => (
+                            <div key={i} className="flex flex-col items-center">
+                                      <span className="text-[#183B56] text-4xl sm:text-5xl font-bold">
+                                        <CountUp end={item.value}
+                                                 duration={20}
+                                                 separator=","
+                                                 smartEasingAmount={i}
+                                        />
+                                          {i === 0 ? '+' : ''}
+                                      </span>
+                                <span className="text-gray-600 text-lg mt-2">{item.label}</span>
+                            </div>
                             ))}
                         </div>
                     </footer>

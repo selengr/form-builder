@@ -63,10 +63,12 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({handleOpen, formId}) => {
 
             const encoded = encodeURIComponent(JSON.stringify(searchFilterModel));
             const res = await fetch(`/api/group/list?searchFilterModel=${encoded}`,
-                { headers: {
-                'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`}
-            });
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    }
+                });
 
             if (!res.ok) {
                 const errorData = await res.json();
@@ -110,6 +112,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({handleOpen, formId}) => {
 
     const onSubmit = useCallback(async (values: GroupFormSchemaType) => {
         const token = await getAuthToken();
+
         try {
             const response = await fetch("/api/publish/group", {
                 method: "POST",
@@ -132,13 +135,15 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({handleOpen, formId}) => {
                             if (err.path[0] === 'groupsId') {
                                 methods.setError('groupsId', {
                                     type: 'manual',
-                                    message: err.message,
+                                    message: err.message || 'خطا در فیلد گروه',
                                 });
                             }
-
                         }
                     });
                 } else if (data.error) {
+                    toast.error(data.error);
+                } else {
+                    toast.error("خطای ناشناخته از سمت سرور");
                 }
                 return;
             }
@@ -147,11 +152,10 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({handleOpen, formId}) => {
             handleOpen();
             reset();
         } catch (err) {
-            toast.error("خطای ناشناخته در ارسال اطلاعات.");
+            toast.error("خطا در برقراری ارتباط با سرور.");
             console.error("Group publish error:", err);
         }
     }, [formId, handleOpen, reset, methods]);
-
 
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

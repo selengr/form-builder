@@ -11,6 +11,7 @@ import {Box, Button, Typography} from "@mui/material";
 import Share from "../share-media/Share";
 import CopyToClipboardButton from "../clipboard-button/CopyToClipBoardButton";
 import {getAuthToken, getAuthTokenServer} from "@/utils/getAuthToken";
+import { toast } from "sonner";
 
 const DEFAULT_LINK = `${process.env.NEXT_PUBLIC_MBZ_DOMAIN}form`;
 
@@ -67,43 +68,49 @@ export default function GeneralSettings({
     handleSubmit, reset, formState: {isSubmitting, isDirty}, setError,
   } = methods;
 
-  const onSubmit = useCallback(async (values: PropertiesFormSchemaType) => {
-      const token = await getAuthToken();
-      try {
-      const response = await fetch('/api/publish/general', {
-        method: 'POST',
-          headers: {
-          'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`
-        },
-          body: JSON.stringify({
-          formId: Number(formId),
-          publicationMainPageMethod: values.publicationMainPageMethod,
-          capacityPublicLink: values.capacityPublicLink,
-        }),
-      });
+    const onSubmit = useCallback(async (values: PropertiesFormSchemaType) => {
+        const token = await getAuthToken();
+        try {
+            const response = await fetch('/api/publish/general', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    formId: Number(formId),
+                    publicationMainPageMethod: values.publicationMainPageMethod,
+                    capacityPublicLink: values.capacityPublicLink,
+                }),
+            });
 
-      const data = await response.json();
+            const data = await response.json();
 
-      if (!response.ok) {
-        if (data.error && data.details) {
-          data.details.forEach((err: any) => {
-            if (err.path && err.path[0]) {
-              setError(err.path[0], {type: 'manual', message: err.message});
+            if (!response.ok) {
+                if (data.error && data.details) {
+                    data.details.forEach((err: any) => {
+                        if (err.path && err.path[0]) {
+                            setError(err.path[0], {
+                                type: 'manual',
+                                message: err.message || 'خطا در اعتبارسنجی فیلد',
+                            });
+                        }
+                    });
+                } else if (data.error) {
+                    toast.error(data.error);
+                } else {
+                    toast.error("خطای نامشخص در پاسخ سرور.");
+                }
+                return;
             }
-          });
-        } else if (data.error) {
-          // alert(data.error);
-        }
-        return;
-      }
 
-      handleOpen();
-      reset();
-    } catch (error) {
-      // alert("خطای ناشناخته در ارسال اطلاعات.");
-    }
-  }, [formId, handleOpen, reset, setError]);
+            toast.success("با موفقیت به سبد خرید افزوده شد.");
+            handleOpen();
+            reset();
+        } catch (error: any) {
+            toast.error("خطای ارتباط با سرور. لطفاً دوباره تلاش کنید.");
+        }
+    }, [formId, handleOpen, reset, setError]);
 
   const handleCancel = useCallback(() => {
     handleOpen();

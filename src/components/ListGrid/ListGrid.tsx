@@ -15,6 +15,8 @@ import {MdOutlineKeyboardArrowRight} from "react-icons/md";
 import {toast} from "sonner";
 import formListEmpty from '@/../public/images/home-page/formListEmpty.png'
 import {fetchData} from "./dataService";
+import PlusIcon from "@/../public/images/home-page/Add-fill.svg";
+
 
 interface SearchBoxItem {
     fieldName: string;
@@ -62,13 +64,33 @@ const ListGrid: React.FC<Props> = ({
     const {ref, inView} = useInView();
     const searchParams = useSearchParams();
     const query = searchParams.get("query")?.toString() || "";
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    useEffect(() => {
+        if (searchParams.get("new") !== null) {
+            setIsDialogOpen(true);
+        } else {
+            setIsDialogOpen(false);
+        }
+    }, [searchParams]);
+
+    const handleCloseDialog = () => {
+        setIsDialogOpen(false);
+        const newSearchParams = new URLSearchParams(searchParams.toString());
+        newSearchParams.delete("new");
+        router.replace(`?${newSearchParams.toString()}`);
+    };
+
+    const handleOpenDialog = () => {
+        router.push("?new");
+    };
 
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const router = useRouter();
 
     const updatedSearchBoxList = searchBoxList.map(item => {
         if (item.fieldName === "formSetting.name" && query) {
-            return { ...item, fieldValue: query };
+            return {...item, fieldValue: query};
         }
         return item;
     });
@@ -77,8 +99,8 @@ const ListGrid: React.FC<Props> = ({
         data: pages, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, refetch,
     } = useInfiniteQuery({
         queryKey: ["datas", query, searchQueryFilter, filterBoxList],
-        queryFn: ({ pageParam }) =>
-            fetchData({ pageParam }, updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
+        queryFn: ({pageParam}) =>
+            fetchData({pageParam}, updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
         initialPageParam: 0,
         getNextPageParam: (lastPage, allPages) => {
             const PAGE_SIZE = 1000;
@@ -289,9 +311,23 @@ const ListGrid: React.FC<Props> = ({
                             }}
                         >
                             {renderTotalCount()}
-                            {showCreateButton && (<div className="min-w-[50px] w-[50px] h-full">
-                                <CreateFormBtn/>
-                            </div>)}
+                            {showCreateButton && (
+                                <div className="min-w-[50px] w-[50px] h-full">
+                                    <IconButton
+                                        onClick={handleOpenDialog}
+                                        sx={{
+                                            width: "50px",
+                                            height: "50px",
+                                            borderRadius: "16px",
+                                            border: "1px solid #1758BA",
+                                        }}
+                                    >
+                                        <Image src={PlusIcon} alt="" width={22} height={22} />
+                                    </IconButton>
+
+                                    <CreateFormBtn open={isDialogOpen} onClose={handleCloseDialog} />
+                                </div>
+                            )}
                         </Box>
                         {renderSearchAndFilter()}
                         <Grid

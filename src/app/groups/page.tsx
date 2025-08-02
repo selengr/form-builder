@@ -30,6 +30,7 @@ export default function GroupsPage() {
     const [totalGroups, setTotalGroups] = useState(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const pathWithoutQuery = '/groups';
 
     const fetchGroups = useCallback(async () => {
         setLoading(true);
@@ -87,7 +88,7 @@ export default function GroupsPage() {
     };
 
     const handleCreateGroupSubmit = async () => {
-        router.back();
+        router.replace(pathWithoutQuery);
         await fetchGroups();
     };
 

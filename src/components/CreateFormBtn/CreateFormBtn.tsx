@@ -4,7 +4,7 @@ import {z} from "zod";
 import {toast} from "sonner";
 import Image from "next/image";
 import {useForm} from "react-hook-form";
-import {Fragment, useState} from "react";
+import {Fragment} from "react";
 import {useRouter} from "next/navigation";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Box, Button, Dialog, DialogContent, IconButton, Stack, Tab, Tabs, Typography,} from "@mui/material";
@@ -22,28 +22,29 @@ const propertiesSchema = z.object({
         .string()
         .trim()
         .transform((value) => value.replace(/\s+/g, " "))
-        .pipe(
-            z
-                .string()
-                .min(2, { message: "حداقل باید 2 و حداکثر 50 کاراکتر باشد" })
-                .max(50, { message: "حداقل باید 2 و حداکثر 50 کاراکتر باشد" })
-        ),
-    typeEnum: z.string().min(1, { message: "لطفا یک مورد را انتخاب کنید" }),
+        .pipe(z
+            .string()
+            .min(2, {message: "حداقل باید 2 و حداکثر 50 کاراکتر باشد"})
+            .max(50, {message: "حداقل باید 2 و حداکثر 50 کاراکتر باشد"})),
+    typeEnum: z.string().min(1, {message: "لطفا یک مورد را انتخاب کنید"}),
 
     categoryIds: z
         .array(z.string())
-        .min(1, { message: "لطفا حداقل یک دسته بندی را انتخاب کنید" }),
+        .min(1, {message: "لطفا حداقل یک دسته بندی را انتخاب کنید"}),
     subCategoryIds: z
         .array(z.string())
-        .min(1, { message: "لطفا حداقل یک دسته بندی را انتخاب کنید" }),
+        .min(1, {message: "لطفا حداقل یک دسته بندی را انتخاب کنید"}),
 });
 
 type PropertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
-export default function CreateFormBtn() {
-    const router = useRouter();
-    const [openDialog, setOpenDialog] = useState(false);
+interface CreateFormBtnProps {
+    open: boolean;
+    onClose: () => void;
+}
 
+export default function CreateFormBtn({open, onClose}: CreateFormBtnProps) {
+    const router = useRouter();
     const {Category, isFetchingCategory} = useGetParentCategory();
     const {mutation, SubCategoryData} = useGetSubCategory();
 
@@ -88,7 +89,7 @@ export default function CreateFormBtn() {
 
     const handleClose = () => {
         if (isSubmitting || mutation.isPending) return;
-        setOpenDialog(false);
+        onClose();
     };
 
     const handleTabChange = (_: unknown, newValue: string) => {
@@ -98,40 +99,38 @@ export default function CreateFormBtn() {
     const watchTypeEnum = watch("typeEnum");
     const watchCategoryIds = watch("categoryIds");
 
-    return (<Fragment>
-        <IconButton
-            onClick={() => setOpenDialog(true)}
-            sx={{
-                width: "50px", height: "50px", borderRadius: "16px", border: "1px solid #1758BA",
-            }}
-        >
-            <Image src={PlusIcon} alt="" width={22} height={22} draggable={false}/>
-        </IconButton>
-
+    return (
         <Dialog
-            open={openDialog}
+            open={open}
             dir="ltr"
             onClose={handleClose}
             sx={{
-                overflow: "hidden", scrollbarWidth: "none", "& .MuiPaper-root": {
-                    borderRadius: "24px", margin: "10px",
-                }, "& .MuiDialog-container": {
-                    backdropFilter: "blur(4px)", backgroundColor: "hsl(0deg 0% 100% / 50%)",
+                overflow: "hidden",
+                scrollbarWidth: "none",
+                "& .MuiPaper-root": {
+                    borderRadius: "24px",
+                    margin: "10px",
+                },
+                "& .MuiDialog-container": {
+                    backdropFilter: "blur(4px)",
+                    backgroundColor: "hsl(0deg 0% 100% / 50%)",
                 },
             }}
         >
             <Box
                 sx={{
-                    display: "flex", justifyContent: "flex-start", alignItems: "center",
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
                 }}
             >
                 <IconButton
                     disabled={isSubmitting || mutation.isPending}
                     aria-label="close"
                     onClick={handleClose}
-                    sx={{marginX: 1, marginTop: 1, marginBottom: 0}}
+                    sx={{ marginX: 1, marginTop: 1, marginBottom: 0 }}
                 >
-                    <IoClose color="#404040" width={25} height={25}/>
+                    <IoClose color="#404040" width={25} height={25} />
                 </IconButton>
             </Box>
             <DialogContent
@@ -185,8 +184,10 @@ export default function CreateFormBtn() {
                             <RHFTextField
                                 name="name"
                                 sx={{
-                                    height: "48px", "& .MuiInputBase-root": {
-                                        borderRadius: "10px", fontWeight: "600",
+                                    height: "48px",
+                                    "& .MuiInputBase-root": {
+                                        borderRadius: "10px",
+                                        fontWeight: "600",
                                     },
                                 }}
                             />
@@ -275,7 +276,8 @@ export default function CreateFormBtn() {
                                 <RHFMultiSelectV0
                                     sx={{
                                         "& .MuiInputBase-root": {
-                                            bgcolor: "#fff", paddingY: "8px",
+                                            bgcolor: "#fff",
+                                            paddingY: "8px",
                                         },
                                     }}
                                     chip
@@ -306,7 +308,8 @@ export default function CreateFormBtn() {
                                 <RHFMultiSelectV0
                                     sx={{
                                         "& .MuiInputBase-root": {
-                                            bgcolor: "#fff", paddingY: "8px",
+                                            bgcolor: "#fff",
+                                            paddingY: "8px",
                                         },
                                     }}
                                     chip
@@ -315,7 +318,9 @@ export default function CreateFormBtn() {
                                     name="subCategoryIds"
                                     options={subcategories ?? []}
                                     isLoading={mutation.isPending}
-                                    disabled={watchCategoryIds.length === 0 || mutation.isPending}
+                                    disabled={
+                                        watchCategoryIds.length === 0 || mutation.isPending
+                                    }
                                 />
                             </Box>
                         </Box>
@@ -368,7 +373,8 @@ export default function CreateFormBtn() {
                                     color: "#1758BA",
                                     borderColor: "#1758BA",
                                     "&.MuiButtonBase-root:hover": {
-                                        bgcolor: "white", color: "#1758BA",
+                                        bgcolor: "white",
+                                        color: "#1758BA",
                                     },
                                 }}
                                 onClick={handleClose}
@@ -389,5 +395,5 @@ export default function CreateFormBtn() {
                 </FormProvider>
             </DialogContent>
         </Dialog>
-    </Fragment>);
+    );
 }

@@ -128,6 +128,7 @@ function IndividualSettings({handleOpen, formId,}: { handleOpen: () => void; for
 
     async function onSubmit(values: propertiesFormSchemaType) {
         const token = await getAuthToken();
+
         try {
             const response = await fetch("/api/publish/individual", {
                 method: "POST",
@@ -153,12 +154,14 @@ function IndividualSettings({handleOpen, formId,}: { handleOpen: () => void; for
                         if (err.path && err.path[0]) {
                             setError(err.path[0], {
                                 type: "manual",
-                                message: err.message,
+                                message: err.message || "خطا در ورودی",
                             });
                         }
                     });
                 } else if (data.error) {
-                    toast.error(data.error.toString());
+                    toast.error(data.error);
+                } else {
+                    toast.error("خطای ناشناخته از سمت سرور");
                 }
                 return;
             }
@@ -167,7 +170,7 @@ function IndividualSettings({handleOpen, formId,}: { handleOpen: () => void; for
             handleOpen();
             reset();
         } catch (error) {
-            toast.error("خطای ناشناخته در ارسال اطلاعات.");
+            toast.error("خطا در برقراری ارتباط با سرور.");
         }
     }
 

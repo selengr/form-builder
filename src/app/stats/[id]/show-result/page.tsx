@@ -38,10 +38,10 @@ const ResultsPage = () => {
                 <IoIosArrowForward fontSize="1.1rem" color="#000" />
               </IconButton>
             </Link>
-            <span className="text-[#161616]">گزارش فرم فلان</span>
+            <span className="text-[#161616]">گزارش فرم </span>
           </div>
 
-          {/* <Image
+          <Image
           src="/images/calc/ic_empty_report.svg"
           alt="سایا لوگو"
           width={416}
@@ -49,7 +49,7 @@ const ResultsPage = () => {
           priority
           draggable={false}
           className="w-full sm:w-[50%] lg:w-[500px]"
-        /> */}
+        />
 
           <div className="p-8 mt-10 max-w-[600px]">
             {results?.map((result, index) => (

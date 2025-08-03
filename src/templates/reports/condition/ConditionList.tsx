@@ -85,7 +85,7 @@ const ConditionList: React.FC<IConditionListProps> = ({
   };
 
   return (
-    <div className="w-full max-w-[500px] flex flex-col pt-">
+    <div className="w-full max-w-[500px] flex flex-col">
       {!admin && <CreateCondition />}
       {Array.isArray(conditions) && conditions.length > 0 && (
         <div

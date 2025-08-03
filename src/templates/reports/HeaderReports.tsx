@@ -10,7 +10,7 @@ const Header = () => {
   const name = searchParams.get('name')
 
   return (
-    <div className={`relative flex w-full justify-center items-center h-[52px] rounded-lg bg-[#F7F7FF] ${admin ? "mb-8" : ""}`}>
+    <div className={`relative flex w-full justify-center items-center h-[52px] min-h-[52px] rounded-lg bg-[#F7F7FF] ${admin ? "mb-8" : ""}`}>
       <div onClick={back} className="absolute right-4">
         <IconButton
           sx={{

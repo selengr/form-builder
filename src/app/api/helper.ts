@@ -1,179 +1,112 @@
 import { NextResponse } from 'next/server';
-import { z, ZodError, ZodSchema } from 'zod';
+import { ZodError, ZodSchema } from 'zod';
 
 export const dynamic = 'force-dynamic';
 export const fetchCache = 'force-no-store';
 export const revalidate = 0;
 
 interface ApiProxyOptions<T> {
-    schema: ZodSchema<T>;
+    schema?: ZodSchema<T>;
     endpoint: string;
+    requiresAuth?: boolean;
+    method?: 'GET' | 'POST';
+}
+async function parseError(res: Response): Promise<{ error: string, status: number }> {
+    let message = 'An unexpected error occurred.';
+    try {
+        const contentType = res.headers.get('content-type');
+        if (contentType?.includes('application/json')) {
+            const errData = await res.json();
+            if (Array.isArray(errData?.error) && errData.error[0]?.title) {
+                message = errData.error[0].title;
+            } else if (typeof errData?.error === 'string') {
+                message = errData.error;
+            } else if (typeof errData?.message === 'string') {
+                message = errData.message;
+            } else if (typeof errData === 'string') {
+                message = errData;
+            } else {
+                message = JSON.stringify(errData);
+            }
+        } else {
+            const errText = await res.text();
+            message = errText || message;
+        }
+    } catch (e) {
+    }
+    return { error: message, status: res.status };
 }
 
-export async function handleApiProxy<T>(req: Request, options: ApiProxyOptions<T>): Promise<NextResponse> {
+async function apiProxy<T>(req: Request, options: ApiProxyOptions<T>): Promise<NextResponse> {
+    const { schema, endpoint, requiresAuth = true, method = 'GET' } = options;
+
     try {
-        const token = req.headers.get('Authorization');
-        if (!token) {
-            return NextResponse.json({ error: 'Authorization token is required.' }, { status: 401 });
+        const headers = new Headers({
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+        });
+
+        if (requiresAuth) {
+            const token = req.headers.get('Authorization');
+            if (!token) {
+                return NextResponse.json({ error: 'Authorization token is required.' }, { status: 401 });
+            }
+            headers.set('Authorization', token);
         }
 
-        const body: unknown = await req.json();
-        const parsed = options.schema.safeParse(body);
+        let requestBody = null;
+        let queryString = '';
 
-        if (!parsed.success) {
-            return NextResponse.json(
-                { error: 'Validation error.', details: parsed.error.errors },
-                { status: 400 }
-            );
+        if (method === 'POST' && schema) {
+            const body: unknown = await req.json();
+            const parsed = schema.safeParse(body);
+            if (!parsed.success) {
+                return NextResponse.json({ error: 'Validation error.', details: parsed.error.errors }, { status: 400 });
+            }
+            requestBody = JSON.stringify(parsed.data);
+        } else {
+            const url = new URL(req.url);
+            queryString = url.search;
         }
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_PSYA}${options.endpoint}`, {
-            method: 'POST',
-            headers: {
-                Authorization: token,
-                'Content-Type': 'application/json',
-                'Cache-Control': 'no-store',
-                Pragma: 'no-cache',
-                Expires: '0',
-            },
-            body: JSON.stringify(parsed.data),
+        const fullUrl = `${process.env.NEXT_PUBLIC_BASE_URL_PSYA}${endpoint}${queryString}`;
+
+        const res = await fetch(fullUrl, {
+            method,
+            headers,
+            body: requestBody,
             cache: 'no-store',
         });
 
         if (!res.ok) {
-            const data = await res.json();
-            let message = 'خطایی رخ داده است.';
-            if (typeof data?.message === 'string') {
-                message = data.message;
-            } else if (Array.isArray(data?.message) && data.message[0]?.title) {
-                message = data.message[0].title;
-            } else if (typeof data?.error === 'string') {
-                message = data.error;
-            }
-            return NextResponse.json({ error: message }, { status: res.status });
+            const { error, status } = await parseError(res);
+            return NextResponse.json({ error }, { status });
         }
 
         const data = await res.json();
         const response = NextResponse.json(data, { status: 200 });
+
         response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
         response.headers.set('Pragma', 'no-cache');
         response.headers.set('Expires', '0');
+
         return response;
 
     } catch (error: any) {
         if (error instanceof ZodError) {
-            return NextResponse.json(
-                { error: 'Validation error.', details: error.errors },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: 'Validation error.', details: error.errors }, { status: 400 });
         }
-        return NextResponse.json(
-            { error: error?.message || 'Unexpected server error.' },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: error?.message || 'Unexpected server error.' }, { status: 500 });
     }
 }
 
-export async function handleGetRequest(req: Request, endpoint: string): Promise<NextResponse> {
-    try {
-        const token = req.headers.get('Authorization');
 
-        if (!token) {
-            return NextResponse.json({ error: 'Authorization token is required.' }, { status: 401 });
-        }
-
-        const url = new URL(req.url);
-        const queryString = url.search;
-
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_PSYA}${endpoint}${queryString}`, {
-            method: 'GET',
-            headers: {
-                Authorization: token,
-                'Content-Type': 'application/json',
-                'Cache-Control': 'no-store',
-                Pragma: 'no-cache',
-                Expires: '0',
-            },
-            cache: 'no-store',
-        });
-
-        if (!res.ok) {
-            let message = 'خطا در دریافت اطلاعات از سرور.';
-            try {
-                const contentType = res.headers.get('content-type');
-                if (contentType?.includes('application/json')) {
-                    const errData = await res.json();
-                    if (Array.isArray(errData?.error) && errData.error[0]?.title) {
-                        message = errData.error[0].title;
-                    } else if (typeof errData?.error === 'string') {
-                        message = errData.error;
-                    } else if (typeof errData?.message === 'string') {
-                        message = errData.message;
-                    } else {
-                        message = JSON.stringify(errData);
-                    }
-                } else {
-                    const errText = await res.text();
-                    message = errText || message;
-                }
-            } catch (e) {}
-            return NextResponse.json({ error: message }, { status: res.status });
-        }
-
-        const data = await res.json();
-
-        const response = NextResponse.json(data);
-        response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-        response.headers.set('Pragma', 'no-cache');
-        response.headers.set('Expires', '0');
-
-        return response;
-
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message || 'Unexpected server error.' }, { status: 500 });
-    }
+export function handleGetRequest(req: Request, endpoint: string, requiresAuth: boolean = true): Promise<NextResponse> {
+    return apiProxy(req, { method: 'GET', endpoint, requiresAuth });
 }
 
-// تابع کمکی جدید برای درخواست‌های GET با پارامترهای مسیر
-export async function handleDynamicGetRequest(req: Request, endpoint: string): Promise<NextResponse> {
-    try {
-        const token = req.headers.get('Authorization');
-
-        if (!token) {
-            return NextResponse.json({ error: 'Authorization token is required.' }, { status: 401 });
-        }
-
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_PSYA}${endpoint}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': token,
-                'Content-Type': 'application/json',
-                'Cache-Control': 'no-store',
-                'Pragma': 'no-cache',
-                'Expires': '0',
-            },
-            cache: 'no-store',
-        });
-
-        if (!res.ok) {
-            const errData = await res.json();
-            const message = errData?.message || 'Failed to fetch status.';
-            return NextResponse.json({ error: message }, { status: res.status });
-        }
-
-        const data = await res.json();
-
-        const response = NextResponse.json(data, { status: 200 });
-        response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-        response.headers.set('Pragma', 'no-cache');
-        response.headers.set('Expires', '0');
-
-        return response;
-
-    } catch (error: any) {
-        return NextResponse.json(
-            { error: error?.message || 'Unexpected server error.' },
-            { status: 500 }
-        );
-    }
+export function handleApiProxy<T>(req: Request, options: Omit<ApiProxyOptions<T>, 'method'>): Promise<NextResponse> {
+    return apiProxy(req, { ...options, method: 'POST' });
 }

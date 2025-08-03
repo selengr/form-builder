@@ -1,3 +1,4 @@
+// route.ts
 import { NextResponse } from 'next/server';
 import { destroyReportSchema } from '@/validators/destroyReportSchema';
 import { handleGetRequest, handleApiProxy } from '../helper';
@@ -8,7 +9,7 @@ export const revalidate = 0;
 
 export async function GET(req: Request) {
   const endpoint = '/psya/user/report-destroy-form/response-destroy';
-  return handleGetRequest(req, endpoint);
+  return handleGetRequest(req, endpoint, false); 
 }
 
 export async function POST(req: Request) {
@@ -16,5 +17,6 @@ export async function POST(req: Request) {
   return handleApiProxy(req, {
     schema: destroyReportSchema,
     endpoint: endpoint,
+    requiresAuth: false,
   });
 }

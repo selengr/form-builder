@@ -63,10 +63,8 @@ export function ExcelDialog({
                     <List sx={{ maxHeight: 300, overflowY: "auto" }} color={"primary"}>
                         {savedUsers.map((user, idx) => (
                             <ListItem
-                                className={
-                                    "p-2 rounded-lg mt-2 hover:bg-[#FAFAFF] bg-[#F7F7FF] transition-all"
-                                }
-                                key={user.takePartId + idx}
+                                className="p-2 rounded-lg mt-2 bg-[#F7F7FF] hover:bg-[#FAFAFF] transition-all"
+                                key={user.takePartId}
                                 secondaryAction={
                                     <IconButton
                                         edge="end"

@@ -1,16 +1,17 @@
 "use client";
+
+import React from "react";
 import Image from "next/image";
-import {Button, IconButton} from "@mui/material";
-// types
-import {ICartItemProps} from "@/types/shoppingCart";
-// components
+import { Button } from "@mui/material";
+import { ICartItemProps } from "@/types/shoppingCart";
 import ConfirmDialog from "@/components/confirm-dialog";
-// public
 import TrashIcon from "@/../public/images/home-page/trash.svg";
+import { HiChevronLeft } from "react-icons/hi2";
+
+
 
 function CartItem({
                       detail,
-                      index,
                       isSelected,
                       onSelect,
                       onRemove,
@@ -19,39 +20,59 @@ function CartItem({
                       open,
                   }: ICartItemProps) {
     const { description, purchaseOrderProductModels, purchaseOrderDetailId } = detail;
-    const productTitle = purchaseOrderProductModels?.[0]?.title || "محصول";
+
+    const handleRemoveClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+        toggleConfirm();
+    };
+
+    const handleConfirmAction = () => {
+        onRemove(purchaseOrderDetailId);
+    };
 
     return (
-        <div
-            className={`flex items-start justify-between p-4 border rounded-2xl cursor-pointer transition-colors duration-200 ${
-                isSelected ? "border-[#1758BA] bg-white" : "border-[#DDE1E6] bg-white"
-            }`}
-            onClick={onSelect}
-        >
-            {/* اطلاعات محصول */}
-            <div className="flex flex-col max-w-[80%]">
-                <span className="font-bold text-[#161616] text-sm line-clamp-2">{productTitle}</span>
-                {description && (
-                    <span className="text-xs text-[#404040] mt-1 line-clamp-2">{description}</span>
-                )}
+        <>
+            <div
+                onClick={onSelect}
+                className={`
+                    flex items-center gap-4 p-4 rounded-2xl
+                    transition-all duration-300 ease-in-out border border-blue-500`}
+            >
+                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#F4F6FB]  flex items-center justify-center">
+                    <HiChevronLeft className={'text-blue-500'}/>
+                </div>
+
+                <div className="flex-grow flex flex-col">
+                    {description && (
+                        <p className="font-bold text-gray-800 text-base leading-tight line-clamp-2">
+                            {description}
+                        </p>
+                    )}
+                    <div className="mt-1 flex flex-col">
+                        {purchaseOrderProductModels?.map((product) => (
+                            <span
+                                key={product.purchaseOrderProductId}
+                                className="text-sm text-gray-500 line-clamp-1"
+                            >
+                                - {product.title}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+
+                <button
+                    onClick={handleRemoveClick}
+                    className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-gray-500 hover:bg-red-100 hover:text-red-600 transition-colors"
+                    aria-label="حذف آیتم"
+                >
+                    <Image src={TrashIcon} alt="delete" width={20} height={20} />
+                </button>
             </div>
 
-            {/* دکمه حذف */}
-            <IconButton
-                onClick={(e) => {
-                    e.stopPropagation();
-                    toggleConfirm();
-                }}
-                sx={{ width: 48, height: 48 }}
-            >
-                <Image src={TrashIcon} alt="delete" width={24} height={24} />
-            </IconButton>
-
-            {/* دیالوگ تایید حذف */}
             <ConfirmDialog
                 content="آیا از عملیات حذف اطمینان دارید؟"
                 open={open}
-                title="حذف"
+                title="حذف آیتم"
                 loading={loading}
                 onClose={toggleConfirm}
                 cancelText="انصراف"
@@ -64,22 +85,23 @@ function CartItem({
                         disabled={loading}
                         sx={{
                             height: "50px",
-                            fontWeight: 400,
-                            fontSize: "15px",
-                            borderRadius: "10px",
-                            backgroundColor: "#1758BA",
+                            fontWeight: 500,
+                            fontSize: "16px",
+                            borderRadius: "12px",
+                            backgroundColor: "#E53935",
                             boxShadow: "none",
-                            "&:hover, &:active": {
-                                backgroundColor: "#1758BA",
+                            textTransform: "none",
+                            "&:hover": {
+                                backgroundColor: "#D32F2F",
                             },
                         }}
-                        onClick={() => onRemove(purchaseOrderDetailId)}
+                        onClick={handleConfirmAction}
                     >
-                        تایید
+                        حذف کن
                     </Button>
                 }
             />
-        </div>
+        </>
     );
 }
 

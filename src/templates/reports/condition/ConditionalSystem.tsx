@@ -20,8 +20,6 @@ import {useGetOnlyAllQuestions} from "@/app/reports/create-solo/[id]/_hooks/useG
 import {useGetOnlyAllCalculation} from "@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllCalculation"
 import {usePostCondition} from "@/app/reports/create-solo/[id]/_hooks/usePostCondition"
 import AdvancedTextareaEditor from "@/components/AdvancedTextareaEditor/AdvancedTextareaEditor"
-import {IDropdownItem} from "@/components/AdvancedTextareaEditor/types"
-import {useFormValidation} from "@/app/reports/create-solo/[id]/_hooks/useFormValidation"
 import {idGenerator} from '@/lib';
 import {RHFSwitch} from '@/components/hook-form';
 
@@ -45,12 +43,11 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
 
   const postCondition = usePostCondition(isEdit);
 
-  const { validateAndHandleErrors } = useFormValidation({
-    setValidationErrors,
-  })
+  // const { validateAndHandleErrors } = useFormValidation({
+  //   setValidationErrors,
+  // })
 
   const handleReturnTextChange = useCallback((data: any, index: number) => {
-
     methods.setValue(`conditions.${index}.returnText`, JSON.stringify(data))
     if (validationErrors.length > 0) {
       setValidationErrors([])
@@ -58,38 +55,38 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
   }, [validationErrors.length],)
 
 
-  const onSubmit = (input: TConditionFormData, e: any) => {
+  const onSubmit = (input: TConditionFormData, e: any) => {debugger
     e?.preventDefault()
     let flag: boolean = true
 
-    let hasValidationErrors = false
-    const validationResults: boolean[] = []
+    // let hasValidationErrors = false
+    // const validationResults: boolean[] = []
 
-    for (let index = 0; index < input.conditions.length; index++) {
-      const condition = input.conditions[index]
-      try {
-        const returnTextList = JSON.parse(condition.returnText)
-        const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter(
-          (dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",
-        )
+    // for (let index = 0; index < input.conditions.length; index++) {
+    //   const condition = input.conditions[index]
+    //   try {
+    //     const returnTextList = JSON.parse(condition.returnText)
+    //     const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter(
+    //       (dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",
+    //     )
 
-        const isValid = validateAndHandleErrors(unselectedDropdowns)
-        validationResults[index] = isValid
+    //     const isValid = validateAndHandleErrors(unselectedDropdowns)
+    //     validationResults[index] = isValid
 
-        if (!isValid) {
-          hasValidationErrors = true
-        }
-      } catch (error) {
-        console.error("Error parsing returnText:", error)
-        hasValidationErrors = true
-        validationResults[index] = false
-      }
-    }
+    //     if (!isValid) {
+    //       hasValidationErrors = true
+    //     }
+    //   } catch (error) {
+    //     console.error("Error parsing returnText:", error)
+    //     hasValidationErrors = true
+    //     validationResults[index] = false
+    //   }
+    // }
 
-    if (hasValidationErrors) {
-      toast.error("لطفا تمامي فيلدهاي خالي را انتخاب كنيد")
-      return
-    }
+    // if (hasValidationErrors) {
+    //   toast.error("لطفا تمامي فيلدهاي خالي را انتخاب كنيد")
+    //   return
+    // }
 
     const transformInputToOutput = (input: TConditionFormData): any => {
       return input.conditions.map((condition: TConditionData, index) => {
@@ -136,16 +133,16 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
             .join("") : "true";
 
 
-        const returnTextList = JSON.parse(returnText)
-        const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",)
-        const isValid = validateAndHandleErrors(unselectedDropdowns)
+        // const returnTextList = JSON.parse(returnText)
+        // const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",)
+        // const isValid = validateAndHandleErrors(unselectedDropdowns)
 
-        if (!isValid) {
-          flag = false
-          return toast.error("لطفا تمامي فيلدهاي خالي را انتخاب كنيد");
-        } else {
-          flag = true
-        }
+        // if (!isValid) {
+        //   flag = false
+        //   return toast.error("لطفا تمامي فيلدهاي خالي را انتخاب كنيد");
+        // } else {
+        //   flag = true
+        // }
 
         return {
           formBuilderId: Number(id),
@@ -218,6 +215,11 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
 
     </> : null
   }
+
+  // console.log(a'watch(', methods.watch("conditions"))
+//  setTimeout(() => {
+//     console.log('conditions', methods.watch("conditions"))
+//  }, 2000);
 
   return (<Box
     sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", direction: "ltr" }}

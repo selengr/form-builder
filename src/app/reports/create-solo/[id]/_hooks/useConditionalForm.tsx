@@ -129,12 +129,15 @@ export const useConditionalForm = (condition: IGetCondition  | undefined) => {
   }
 
   const handleRemoveSubCondition = (conditionIndex: number, subConditionIndex: number) => {
-    const updatedCondition = { ...conditions[conditionIndex] }
-    // @typescript-eslint/no-unused-expressions
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    Array.isArray(updatedCondition.subConditions) && updatedCondition.subConditions?.splice(subConditionIndex, 1)
-    updateCondition(conditionIndex, updatedCondition)
+    const currentCondition = getValues().conditions[conditionIndex]
+    const clonedCondition = structuredClone(currentCondition)
+
+    if (Array.isArray(clonedCondition.subConditions) && clonedCondition.subConditions.length > subConditionIndex) {
+      clonedCondition.subConditions.splice(subConditionIndex, 1)
+      updateCondition(conditionIndex, clonedCondition)
+    }
   }
+  
 
   return {
     methods,
@@ -145,4 +148,3 @@ export const useConditionalForm = (condition: IGetCondition  | undefined) => {
     handleRemoveSubCondition,
   }
 }
-

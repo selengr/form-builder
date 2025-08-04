@@ -1,4 +1,5 @@
 "use client";
+
 import {IFormElementConstructor, IFormOptionList, tempObj} from "./bulider";
 import {SpectralFormElement} from "@/components/Fields/SpectralField";
 import {TextFieldFormElement} from "@/components/Fields/TextField";
@@ -9,13 +10,13 @@ import {MultipleChoiceImageFormElement} from "@/components/Fields/MultipleChoice
 import {InfoFieldFormElement} from "@/components/Fields/InfoField";
 
 export type ElementsType =
-  | "TEXT_FIELD"
-  | "MULTIPLE_CHOICE"
-  | "TitleFieldStart"
-  | "TitleFieldFinish"
-  | "MULTIPLE_CHOICE_IMAGE"
-  | "SPECTRAL"
-  | "INFO_FIELD";
+    | "TEXT_FIELD"
+    | "MULTIPLE_CHOICE"
+    | "TitleFieldStart"
+    | "TitleFieldFinish"
+    | "MULTIPLE_CHOICE_IMAGE"
+    | "SPECTRAL"
+    | "INFO_FIELD";
 
 export type SubmitFunction = (key: number, value: string) => void;
 
@@ -23,12 +24,12 @@ export type FormElement = {
   questionType: ElementsType;
 
   construct: ({
-    questionId,
-    questionGroupId,
-    formId,
-    title,
-    position,
-  }: IFormElementConstructor) => FormElementInstance;
+                questionId,
+                questionGroupId,
+                formId,
+                title,
+                position,
+              }: IFormElementConstructor) => FormElementInstance;
 
   designerBtnElement: {
     label: string;
@@ -40,8 +41,8 @@ export type FormElement = {
   }>;
   formComponent: React.FC<{
     elementInstance?: FormElementInstance;
-    value?: string;
-    onChange?: (value: string) => void;
+    value?: string | string[];
+    onChange?: (value: string | string[]) => void;
     error?: string;
     isPreview?: boolean;
   }>;

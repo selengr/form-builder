@@ -169,22 +169,67 @@ type CustomInstance = FormElementInstance & {
 };
 
 function FormComponent({
-                           elementInstance, onChange, error, value,
+                           elementInstance,
+                           onChange,
+                           error,
+                           value,
                        }: {
-    elementInstance?: FormElementInstance; onChange?: (value: string) => void; error?: string; value?: any;
+    elementInstance?: FormElementInstance;
+    onChange?: (value: string) => void;
+    error?: string;
+    value?: any;
 }) {
     const element = elementInstance as CustomInstance;
-    const isMultipleChoiceSelectionAllowed = element?.questionPropertyList?.find((el: any) => el?.questionPropertyEnum === "MULTI_SELECT")?.value === "true";
-    const [selectedValue, setSelectedValue] = useState<any>(value);
-    const description = element?.questionPropertyList?.find((el) => el?.questionPropertyEnum === "DESCRIPTION")?.value;
-    const randomOptions = element?.questionPropertyList?.find((el) => el?.questionPropertyEnum === "RANDOMIZE_OPTIONS")?.value === "true";
+    const isMultipleChoiceSelectionAllowed =
+        element?.questionPropertyList?.find(
+            (el: any) => el?.questionPropertyEnum === "MULTI_SELECT"
+        )?.value === "true";
+    const description = element?.questionPropertyList?.find(
+        (el) => el?.questionPropertyEnum === "DESCRIPTION"
+    )?.value;
+    const randomOptions =
+        element?.questionPropertyList?.find(
+            (el) => el?.questionPropertyEnum === "RANDOMIZE_OPTIONS"
+        )?.value === "true";
 
-    const [newOptionList] = useState(randomOptions ? shuffleArray(element?.optionList).slice() : element?.optionList.slice());
+    const [newOptionList] = useState(
+        randomOptions ? shuffleArray(element?.optionList).slice() : element?.optionList.slice()
+    );
+
+    const getInitialValue = () => {
+        if (!value) return isMultipleChoiceSelectionAllowed ? [] : "";
+
+        if (Array.isArray(value)) {
+            if (value[0] && typeof value[0] === "object" && "optionId" in value[0]) {
+                return value.map((v) => String(v.optionId));
+            }
+            return value.map((v) => String(v));
+        }
+
+        if (typeof value === "object" && value.optionId) {
+            return String(value.optionId);
+        }
+
+        return String(value);
+    };
+
+    const [selectedValue, setSelectedValue] = useState<any>(getInitialValue());
+
+// فقط وقتی value تغییر کرد و با selectedValue فرق داشت، مقدار رو آپدیت کن
+    useEffect(() => {
+        const newValue = getInitialValue();
+        if (
+            (Array.isArray(newValue) && JSON.stringify(newValue) !== JSON.stringify(selectedValue)) ||
+            (!Array.isArray(newValue) && newValue !== selectedValue)
+        ) {
+            setSelectedValue(newValue);
+        }
+    }, [value]);
 
     const handleChange = (event: any) => {
-        const {value} = event.target;
+        const { value } = event.target;
 
-        if (Array.isArray(selectedValue)) {
+        if (isMultipleChoiceSelectionAllowed) {
             setSelectedValue((prevSelected: any) => {
                 if (prevSelected.includes(value)) {
                     return prevSelected.filter((id: any) => id !== value);
@@ -201,7 +246,8 @@ function FormComponent({
         onChange?.(selectedValue);
     }, [selectedValue, onChange]);
 
-    return (<FormControl sx={{maxWidth: "750px"}}>
+    return (
+        <FormControl sx={{ maxWidth: "750px" }}>
             <FormLabel
                 sx={{
                     marginBottom: description ? "0.5rem" : "2rem",
@@ -215,38 +261,53 @@ function FormComponent({
             >
                 {element.title}
             </FormLabel>
-            {description && (<Typography
-                    sx={{fontSize: "12px", fontWeight: "500", marginBottom: "2rem"}}
+            {description && (
+                <Typography
+                    sx={{ fontSize: "12px", fontWeight: "500", marginBottom: "2rem" }}
                     variant="subtitle2"
                 >
                     {description}
-                </Typography>)}
-            {isMultipleChoiceSelectionAllowed ? (<>
+                </Typography>
+            )}
+            {isMultipleChoiceSelectionAllowed ? (
+                <>
                     <FormGroup>
-                        {newOptionList?.map((option: any) => (<FormControlLabel
+                        {newOptionList?.map((option: any) => (
+                            <FormControlLabel
                                 key={option?.id}
-                                value={option?.id}
+                                value={String(option?.id)}
                                 onChange={handleChange}
-                                control={<Checkbox
-                                    checked={selectedValue?.includes(String(option.id))}
-                                />}
+                                control={
+                                    <Checkbox
+                                        checked={selectedValue?.includes(String(option.id))}
+                                    />
+                                }
                                 label={option?.title}
-                            />))}
+                            />
+                        ))}
                     </FormGroup>
                     {!!error && <Typography color="#f44336">{error}</Typography>}
-                </>) : (<>
+                </>
+            ) : (
+                <>
                     <RadioGroup name={String(element?.questionId)}>
-                        {newOptionList?.map((option: any) => (<FormControlLabel
+                        {newOptionList?.map((option: any) => (
+                            <FormControlLabel
                                 key={option?.id}
-                                value={option?.id}
+                                value={String(option?.id)}
                                 onChange={handleChange}
-                                control={<Radio checked={selectedValue == option.id}/>}
+                                control={
+                                    <Radio checked={selectedValue == String(option.id)} />
+                                }
                                 label={option?.title}
-                            />))}
+                            />
+                        ))}
                     </RadioGroup>
                     {!!error && <Typography color="#f44336">{error}</Typography>}
-                </>)}
-        </FormControl>);
+                </>
+            )}
+        </FormControl>
+    );
 }
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;

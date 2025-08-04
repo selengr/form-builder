@@ -29,8 +29,8 @@ const ResultsPage = () => {
 
 
   return (
-      <div className="w-full min-h-screen h-full  px-4 py-4 bg-[#f7f7f7]">
-        <div className="md:container mx-auto flex p-3 flex-col justify-start items-center min-w-screen h-full bg-white rounded-xl w-full overflow-y-scroll">
+      <div className="w-full min-h-screen h-full px-4 py-4 bg-[#f7f7f7]">
+        <div className="md:container mx-auto flex p-3 flex-col justify-start items-center min-w-screen h-full bg-white rounded-xl w-full ">
           <div className="relative flex w-full justify-center items-center min-h-[52px] h-[52px] rounded-lg bg-[#F7F7FF]">
             <Link href={`/stats/${id}`} className="absolute right-4">
               <IconButton
@@ -44,7 +44,8 @@ const ResultsPage = () => {
             <span className="text-[#161616]">گزارش فرم {search}</span>
           </div>
 
-          <Image
+          <div className="overflow-y-scroll w-full flex justif flex-col items-center">
+            <Image
           src="/images/calc/ic_empty_report.svg"
           alt="سایا لوگو"
           width={416}
@@ -68,6 +69,7 @@ const ResultsPage = () => {
                   ))}
                 </div>
             ))}
+          </div>
           </div>
         </div>
       </div>

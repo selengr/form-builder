@@ -59,34 +59,34 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
     e?.preventDefault()
     let flag: boolean = true
 
-    // let hasValidationErrors = false
-    // const validationResults: boolean[] = []
+    let hasValidationErrors = false
+    const validationResults: boolean[] = []
 
-    // for (let index = 0; index < input.conditions.length; index++) {
-    //   const condition = input.conditions[index]
-    //   try {
-    //     const returnTextList = JSON.parse(condition.returnText)
-    //     const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter(
-    //       (dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",
-    //     )
+    for (let index = 0; index < input.conditions.length; index++) {
+      const condition = input.conditions[index]
+      try {
+        const returnTextList = JSON.parse(condition.returnText)
+        const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter(
+          (dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",
+        )
 
-    //     const isValid = validateAndHandleErrors(unselectedDropdowns)
-    //     validationResults[index] = isValid
+        const isValid = validateAndHandleErrors(unselectedDropdowns)
+        validationResults[index] = isValid
 
-    //     if (!isValid) {
-    //       hasValidationErrors = true
-    //     }
-    //   } catch (error) {
-    //     console.error("Error parsing returnText:", error)
-    //     hasValidationErrors = true
-    //     validationResults[index] = false
-    //   }
-    // }
+        if (!isValid) {
+          hasValidationErrors = true
+        }
+      } catch (error) {
+        console.error("Error parsing returnText:", error)
+        hasValidationErrors = true
+        validationResults[index] = false
+      }
+    }
 
-    // if (hasValidationErrors) {
-    //   toast.error("لطفا تمامي فيلدهاي خالي را انتخاب كنيد")
-    //   return
-    // }
+    if (hasValidationErrors) {
+      toast.error("لطفا تمامي فيلدهاي خالي را انتخاب كنيد")
+      return
+    }
 
     const transformInputToOutput = (input: TConditionFormData): any => {
       return input.conditions.map((condition: TConditionData, index) => {
@@ -133,16 +133,16 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
             .join("") : "true";
 
 
-        // const returnTextList = JSON.parse(returnText)
-        // const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",)
-        // const isValid = validateAndHandleErrors(unselectedDropdowns)
+        const returnTextList = JSON.parse(returnText)
+        const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",)
+        const isValid = validateAndHandleErrors(unselectedDropdowns)
 
-        // if (!isValid) {
-        //   flag = false
-        //   return toast.error("لطفا تمامي فيلدهاي خالي را انتخاب كنيد");
-        // } else {
-        //   flag = true
-        // }
+        if (!isValid) {
+          flag = false
+          return toast.error("لطفا تمامي فيلدهاي خالي را انتخاب كنيد");
+        } else {
+          flag = true
+        }
 
         return {
           formBuilderId: Number(id),
@@ -215,11 +215,6 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
 
     </> : null
   }
-
-  // console.log(a'watch(', methods.watch("conditions"))
-//  setTimeout(() => {
-//     console.log('conditions', methods.watch("conditions"))
-//  }, 2000);
 
   return (<Box
     sx={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "center", direction: "ltr" }}

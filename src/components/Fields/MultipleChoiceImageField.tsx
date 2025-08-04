@@ -219,268 +219,277 @@ function FormComponent({
   value,
 }: {
   elementInstance?: FormElementInstance;
-  onChange?: (value: string) => void;
+  onChange?: (value: string | string[]) => void;
   error?: string;
   value?: any;
 }) {
   const element = elementInstance as CustomInstance;
   const isMultipleChoiceSelectionAllowed: boolean =
-    element?.questionPropertyList?.find(
-      (el: any) => el?.questionPropertyEnum === "MULTI_SELECT"
-    )?.value === "true";
-  const [selectedValue, setSelectedValue] = useState<any>(value);
+      element?.questionPropertyList?.find(
+          (el: any) => el?.questionPropertyEnum === "MULTI_SELECT"
+      )?.value === "true";
   const description = element?.questionPropertyList?.find(
-    (el) => el.questionPropertyEnum === "DESCRIPTION"
+      (el) => el.questionPropertyEnum === "DESCRIPTION"
   )?.value;
   const randomOptions =
-    element?.questionPropertyList?.find(
-      (el) => el?.questionPropertyEnum === "RANDOMIZE_OPTIONS"
-    )?.value === "true";
+      element?.questionPropertyList?.find(
+          (el) => el?.questionPropertyEnum === "RANDOMIZE_OPTIONS"
+      )?.value === "true";
 
-  const [newOptionList] = useState(
-    randomOptions
-      ? shuffleArray(element?.optionList).slice()
-      : element?.optionList.slice()
+  const newOptionList = useMemo(
+      () => (randomOptions ? shuffleArray(element?.optionList).slice() : element?.optionList.slice()),
+      [element?.optionList, randomOptions]
   );
 
-  const handleChange = (event: any) => {
-    const { value } = event.target;
-
-    if (Array.isArray(selectedValue)) {
-      setSelectedValue((prevSelected: any) => {
-        if (prevSelected.includes(value)) {
-          return prevSelected.filter((id: any) => id !== value);
-        } else {
-          return [...prevSelected, value];
-        }
-      });
-    } else {
-      setSelectedValue(value);
+  const getInitialValue = useCallback(() => {
+    if (!value) return isMultipleChoiceSelectionAllowed ? [] : "";
+    if (Array.isArray(value)) {
+      return value.map((v) => (typeof v === "object" && "optionId" in v) ? String(v.optionId) : String(v));
     }
-  };
+    return (typeof value === "object" && "optionId" in value) ? String(value.optionId) : String(value);
+  }, [value, isMultipleChoiceSelectionAllowed]);
+
+  const [selectedValue, setSelectedValue] = useState<any>(getInitialValue());
 
   useEffect(() => {
-    onChange?.(selectedValue);
-  }, [selectedValue, onChange]);
+    const newValue = getInitialValue();
+    const areArraysEqual = Array.isArray(newValue) && Array.isArray(selectedValue) && JSON.stringify(newValue) === JSON.stringify(selectedValue);
+    const areValuesEqual = !Array.isArray(newValue) && newValue === selectedValue;
+
+    if (!areArraysEqual && !areValuesEqual) {
+      setSelectedValue(newValue);
+    }
+  }, [value, getInitialValue, selectedValue]);
+
+  const handleChange = useCallback((event: any) => {
+    const {value} = event.target;
+    if (isMultipleChoiceSelectionAllowed) {
+      setSelectedValue((prevSelected: any) => {
+        const prev = prevSelected || [];
+        let newSelection;
+        if (prev.includes(value)) {
+          newSelection = prev.filter((id: any) => id !== value);
+        } else {
+          newSelection = [...prev, value];
+        }
+        onChange?.(newSelection);
+        return newSelection;
+      });
+    } else {
+      onChange?.(value);
+      setSelectedValue(value);
+    }
+  }, [isMultipleChoiceSelectionAllowed, onChange]);
 
   return (
-    <FormControl
-      sx={{
-        width: "100%",
-        maxWidth: "1000px",
-      }}
-    >
-      <FormLabel
-        sx={{
-          marginBottom: description ? "0.5rem" : "3rem",
-          "&.MuiFormLabel-root.MuiFormLabel-colorPrimary.Mui-focused": {
-            color: "#353535",
-          },
-        }}
-        id={String(element?.questionId)}
+      <FormControl
+          sx={{
+            width: "100%",
+            maxWidth: "1000px",
+          }}
       >
-        {element.title}
-      </FormLabel>
-      {description && (
-        <Typography
-          sx={{ fontSize: "12px", fontWeight: "500", marginBottom: "3rem" }}
-          variant="subtitle2"
+        <FormLabel
+            sx={{
+              marginBottom: description ? "0.5rem" : "3rem",
+              "&.MuiFormLabel-root.MuiFormLabel-colorPrimary.Mui-focused": {
+                color: "#353535",
+              },
+            }}
+            id={String(element?.questionId)}
         >
-          {description}
-        </Typography>
-      )}
-      {isMultipleChoiceSelectionAllowed ? (
-        <>
-          <FormGroup
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-              gap: 4,
-              "& .MuiCheckbox-root": {
-                display: "none",
-              },
-            }}
-          >
-            {newOptionList?.map((option: any) => (
-              <FormControlLabel
-                sx={{
-                  "& img": {
-                    width: { xs: "105px", sm: "164px" },
-                    height: { xs: "105px", sm: "164px" },
-                    borderRadius: "12px",
-                  },
-                }}
-                key={option?.id}
-                value={option.id}
-                onChange={handleChange}
-                control={
-                  <Checkbox
-                    checked={selectedValue?.includes(String(option.id))}
-                  />
-                }
-                label={
-                  <div
-                    style={{
-                      borderRadius: "10px",
-                      outline: selectedValue?.includes(String(option.id))
-                        ? "3px solid #1758BA"
-                        : "3px solid transparent",
-                      transition: "outline 0.5s ease",
-                    }}
-                  >
-                    <Image
-                      width={128}
-                      height={128}
-                      draggable={false}
-                      loading={"eager"}
-                      alt=""
-                      src={
-                        process.env.NEXT_PUBLIC_BASE_URL +
-                        "/filemanager" +
-                        option?.link
-                      }
+          {element.title}
+        </FormLabel>
+        {description && (
+            <Typography
+                sx={{fontSize: "12px", fontWeight: "500", marginBottom: "3rem"}}
+                variant="subtitle2"
+            >
+              {description}
+            </Typography>
+        )}
+        {isMultipleChoiceSelectionAllowed ? (
+            <>
+              <FormGroup
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    gap: 4,
+                    "& .MuiCheckbox-root": {
+                      display: "none",
+                    },
+                  }}
+              >
+                {newOptionList?.map((option: any) => (
+                    <FormControlLabel
+                        sx={{
+                          "& img": {
+                            width: {xs: "105px", sm: "164px"},
+                            height: {xs: "105px", sm: "164px"},
+                            borderRadius: "12px",
+                          },
+                        }}
+                        key={option?.id}
+                        value={String(option.id)}
+                        onChange={handleChange}
+                        control={
+                          <Checkbox
+                              checked={selectedValue?.includes(String(option.id))}
+                          />
+                        }
+                        label={
+                          <div
+                              style={{
+                                borderRadius: "10px",
+                                outline: selectedValue?.includes(String(option.id))
+                                    ? "3px solid #1758BA"
+                                    : "3px solid transparent",
+                                transition: "outline 0.5s ease",
+                              }}
+                          >
+                            <Image
+                                width={128}
+                                height={128}
+                                draggable={false}
+                                loading={"eager"}
+                                alt=""
+                                src={
+                                    process.env.NEXT_PUBLIC_BASE_URL +
+                                    "/filemanager" +
+                                    option?.link
+                                }
+                            />
+                          </div>
+                        }
                     />
-                  </div>
-                }
-              />
-            ))}
-          </FormGroup>
-          {!!error && <Typography color="#f44336">{error}</Typography>}
-        </>
-      ) : (
-        <>
-          <RadioGroup
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-              gap: 4,
-              "& .MuiRadio-root": {
-                display: "none",
-              },
-            }}
-            onChange={handleChange}
-            name={String(element?.questionId)}
-          >
-            {newOptionList?.map((option: any) => (
-              <FormControlLabel
-                key={option?.id}
-                value={option?.id}
-                control={<Radio checked={selectedValue == option.id} />}
-                sx={{
-                  "& img": {
-                    width: { xs: "105px", sm: "164px" },
-                    height: { xs: "105px", sm: "164px" },
-                    borderRadius: "12px",
-                  },
-                }}
-                label={
-                  <div
-                    style={{
-                      borderRadius: "10px",
-                      outline:
-                        Number(selectedValue) === option.id
-                          ? "3px solid #1758BA"
-                          : "3px solid transparent",
-                      transition: "outline 0.5s ease",
-                    }}
-                  >
-                    <Image
-                      width={128}
-                      height={128}
-                      draggable={false}
-                      loading={"eager"}
-                      alt=""
-                      src={
-                        process.env.NEXT_PUBLIC_BASE_URL +
-                        "/filemanager" +
-                        option?.link
-                      }
+                ))}
+              </FormGroup>
+              {!!error && <Typography color="#f44336">{error}</Typography>}
+            </>
+        ) : (
+            <>
+              <RadioGroup
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    gap: 4,
+                    "& .MuiRadio-root": {
+                      display: "none",
+                    },
+                  }}
+                  onChange={handleChange}
+                  name={String(element?.questionId)}
+              >
+                {newOptionList?.map((option: any) => (
+                    <FormControlLabel
+                        key={option?.id}
+                        value={String(option?.id)}
+                        control={<Radio checked={selectedValue === String(option.id)}/>}
+                        sx={{
+                          "& img": {
+                            width: {xs: "105px", sm: "164px"},
+                            height: {xs: "105px", sm: "164px"},
+                            borderRadius: "12px",
+                          },
+                        }}
+                        label={
+                          <div
+                              style={{
+                                borderRadius: "10px",
+                                outline:
+                                    selectedValue === String(option.id)
+                                        ? "3px solid #1758BA"
+                                        : "3px solid transparent",
+                                transition: "outline 0.5s ease",
+                              }}
+                          >
+                            <Image
+                                width={128}
+                                height={128}
+                                draggable={false}
+                                loading={"eager"}
+                                alt=""
+                                src={
+                                    process.env.NEXT_PUBLIC_BASE_URL +
+                                    "/filemanager" +
+                                    option?.link
+                                }
+                            />
+                          </div>
+                        }
                     />
-                  </div>
-                }
-              />
-            ))}
-          </RadioGroup>
-          {!!error && <Typography color="#f44336">{error}</Typography>}
-        </>
-      )}
-    </FormControl>
+                ))}
+              </RadioGroup>
+              {!!error && <Typography color="#f44336">{error}</Typography>}
+            </>
+        )}
+      </FormControl>
   );
 }
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
+
 function PropertiesComponent({
-  elementInstance,
-}: {
+                               elementInstance,
+                             }: {
   elementInstance: FormElementInstance;
 }) {
   const elements = useElements();
   const setOpenDialog = useActionOpenDialog();
   const setSelectedElement = useActionSelectedElement();
   const selectedElement = useSelectedElement();
-  const { updateElement, addElement } = useActionDesigner();
-  const { questionGroups } = useDesigner();
+  const {updateElement, addElement} = useActionDesigner();
+  const {questionGroups} = useDesigner();
   const element = elementInstance as CustomInstance;
   const [openDescriptionSwitch, setOpenDescriptionSwitch] = useState<boolean>(
-    () =>
-      element.questionPropertyList.some((property) => {
-        return (
-          property.questionPropertyEnum === "DESCRIPTION" && property.value
-        );
-      })
+      () =>
+          element.questionPropertyList.some((property) => {
+            return (
+                property.questionPropertyEnum === "DESCRIPTION" && property.value
+            );
+          })
   );
-
-  // ^ Check to see why i have done this
-  // ^ THE REASON BEHIND THAT
-  // ^ WHY MATCHING ELEMENT MATTERS ??
   const defaultValues = useMemo(() => {
     const matchingElement = elements?.find(
-      (el: any) => el?.questionId === element?.questionId
+        (el: any) => el?.questionId === element?.questionId
     );
-
     const optionListCopy = matchingElement ? [...element.optionList] : [];
 
     const values = element.questionPropertyList.reduce(
-      (acc: any, attribute: any) => {
-        if (!acc[attribute.questionPropertyEnum]) {
-          acc[attribute.questionPropertyEnum] = {};
-        }
-
-        if (
-          attribute.questionPropertyEnum === "REQUIRED" ||
-          attribute.questionPropertyEnum === "RANDOMIZE_OPTIONS" ||
-          attribute.questionPropertyEnum === "MULTI_SELECT" ||
-          attribute.questionPropertyEnum === "EDIT_ANSWER_LOCKED"
-        ) {
-          acc[attribute.questionPropertyEnum].value =
-            attribute.value === "true";
-        } else if (attribute.questionPropertyEnum === "DESCRIPTION") {
-          acc[attribute.questionPropertyEnum].value =
-            attribute.value === null ? "" : attribute.value;
-        } else {
-          acc[attribute.questionPropertyEnum].value = attribute.value;
-        }
-
-        acc[attribute.questionPropertyEnum].id = attribute.id;
-
-        return acc;
-      },
-      {}
+        (acc: any, attribute: any) => {
+          if (!acc[attribute.questionPropertyEnum]) {
+            acc[attribute.questionPropertyEnum] = {};
+          }
+          if (
+              attribute.questionPropertyEnum === "REQUIRED" ||
+              attribute.questionPropertyEnum === "RANDOMIZE_OPTIONS" ||
+              attribute.questionPropertyEnum === "MULTI_SELECT" ||
+              attribute.questionPropertyEnum === "EDIT_ANSWER_LOCKED"
+          ) {
+            acc[attribute.questionPropertyEnum].value =
+                attribute.value === "true";
+          } else if (attribute.questionPropertyEnum === "DESCRIPTION") {
+            acc[attribute.questionPropertyEnum].value =
+                attribute.value === null ? "" : attribute.value;
+          } else {
+            acc[attribute.questionPropertyEnum].value = attribute.value;
+          }
+          acc[attribute.questionPropertyEnum].id = attribute.id;
+          return acc;
+        },
+        {}
     );
-
     values.title = element?.title;
     values.optionList = matchingElement
-      ? optionListCopy.map((optionItem) => {
+        ? optionListCopy.map((optionItem) => {
           delete optionItem?.position;
           delete optionItem?.isTarget;
           return optionItem;
         })
-      : [];
-
+        : [];
     return values;
-  }, []);
+  }, [element, elements]);
 
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
@@ -496,34 +505,34 @@ function PropertiesComponent({
     reset,
     handleSubmit,
     clearErrors,
-    formState: { isSubmitting, errors },
+    formState: {isSubmitting, errors},
   } = methods;
 
-  const { fields, append, remove } = useFieldArray({
+  const {fields, append, remove} = useFieldArray({
     control,
     name: "optionList",
   });
 
   const handleUppyUpload = useCallback(
-    (index: number, data: string[]) => {
-      setValue(`optionList.${index}.title`, data[0]);
-      clearErrors(`optionList.${index}.title`);
-    },
-    [setValue, clearErrors]
+      (index: number, data: string[]) => {
+        setValue(`optionList.${index}.title`, data[0]);
+        clearErrors(`optionList.${index}.title`);
+      },
+      [setValue, clearErrors]
   );
 
   const handleScoreChange = useCallback(
-    (index: number, data: number) => {
-      setValue(`optionList.${index}.score`, data);
-    },
-    [setValue]
+      (index: number, data: number) => {
+        setValue(`optionList.${index}.score`, data);
+      },
+      [setValue]
   );
 
   const handleAddOption = useCallback(() => {
     if (fields.length >= 10) return;
     const random = Math.ceil(Math.random() * 100000);
 
-    append({ id: random, title: "", score: 0 } as any);
+    append({id: random, title: "", score: 0} as any);
     if (fields.length === 1) {
       clearErrors("optionList");
     }
@@ -540,9 +549,8 @@ function PropertiesComponent({
       EDIT_ANSWER_LOCKED,
     } = values;
 
-    // ? finds whether a field is selected or not
     const selectedYet = elements?.find(
-      (el: any) => el?.questionId === element?.questionId
+        (el: any) => el?.questionId === element?.questionId
     );
 
     const propertiesData = [
@@ -569,7 +577,7 @@ function PropertiesComponent({
       {
         questionPropertyEnum: "DESCRIPTION",
         value:
-          openDescriptionSwitch && DESCRIPTION.value ? DESCRIPTION.value : null,
+            openDescriptionSwitch && DESCRIPTION.value ? DESCRIPTION.value : null,
         id: selectedYet ? DESCRIPTION.id : null,
       },
     ];
@@ -582,36 +590,29 @@ function PropertiesComponent({
     });
 
     const lastIndexOfGroup = elements.findLastIndex(
-      (el: any) =>
-        el.questionGroupId === selectedElement?.fieldElement?.questionGroupId
+        (el: any) =>
+            el.questionGroupId === selectedElement?.fieldElement?.questionGroupId
     );
 
     const group = elements.filter(
-      (el: any) =>
-        el.questionGroupId === selectedElement?.fieldElement?.questionGroupId
+        (el: any) =>
+            el.questionGroupId === selectedElement?.fieldElement?.questionGroupId
     );
 
     let findSelectedGroupPreviousGroup =
-      questionGroups.findIndex(
-        (el: any) => el === selectedElement?.fieldElement?.questionGroupId
-      ) - 1;
+        questionGroups.findIndex(
+            (el: any) => el === selectedElement?.fieldElement?.questionGroupId
+        ) - 1;
 
-    // if the selected group was the index 0
-    // because we are subtracting it by 1 we have
-    // to set it back to zero
     if (findSelectedGroupPreviousGroup === -1) {
       findSelectedGroupPreviousGroup = 0;
     }
 
-    // The application of this is when there is a empty group
-    // so there is no corresponding question related to it
-    // exist in elements array so we find the last index of its
-    // prevoius group and add one item after that
     const firstIndexAfterThePreviousSelectedGroup =
-      elements.findLastIndex(
-        (el: any) =>
-          el.questionGroupId === questionGroups[findSelectedGroupPreviousGroup]
-      ) + 1;
+        elements.findLastIndex(
+            (el: any) =>
+                el.questionGroupId === questionGroups[findSelectedGroupPreviousGroup]
+        ) + 1;
 
     delete element.temp;
 
@@ -624,27 +625,24 @@ function PropertiesComponent({
     };
 
     if (!selectedYet) {
-      const removeId: any = { ...finalFieldData };
+      const removeId: any = {...finalFieldData};
       delete removeId.questionId;
-
       try {
-        const { data }: any = await AxiosApi.post("/question", removeId as any);
+        const {data}: any = await AxiosApi.post("/question", removeId as any);
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;
         const newData = {
           ...data,
         };
-
         const positionToUse =
-          lastIndexOfGroup === -1
-            ? firstIndexAfterThePreviousSelectedGroup
-            : lastIndexOfGroup + 1;
+            lastIndexOfGroup === -1
+                ? firstIndexAfterThePreviousSelectedGroup
+                : lastIndexOfGroup + 1;
         addElement(
-          selectedElement?.position?.realPosition ?? positionToUse,
-          newData
+            selectedElement?.position?.realPosition ?? positionToUse,
+            newData
         );
-
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
@@ -653,9 +651,9 @@ function PropertiesComponent({
       }
     } else {
       try {
-        const { data }: any = await AxiosApi.put(
-          `/question/${finalFieldData.questionId}`,
-          finalFieldData
+        const {data}: any = await AxiosApi.put(
+            `/question/${finalFieldData.questionId}`,
+            finalFieldData
         );
         delete data.questionPropertyList;
         delete data.optionList;
@@ -674,235 +672,227 @@ function PropertiesComponent({
   }
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-          paddingX: 1.5,
-          direction: "ltr",
-          width: "100%",
-        }}
-      >
-        <Stack spacing={1}>
-          <Typography variant="subtitle2" fontWeight="700">
-            متن سوال:
-          </Typography>
-          <RHFTextField multiline rows={3} name="title" />
-        </Stack>
-
-        <Box>
-          <Box marginTop={3}>
-            {fields.map((field: any, index: number) => (
-              <Box
-                key={field.id}
-                display="flex"
-                alignItems="flex-start"
-                border="1px dashed #1758BA"
-                borderRadius="10px"
-                justifyContent="space-between"
-                my={1.5}
-                p={0.75}
-              >
-                {field?.link?.includes("/download/") ? (
-                  <Image
-                    width={128}
-                    height={128}
-                    draggable={false}
-                    loading={"eager"}
-                    alt=""
-                    style={{
-                      width: "100px",
-                      height: "100px",
-                      borderRadius: "12px",
-                    }}
-                    src={`${process.env.NEXT_PUBLIC_BASE_URL}/filemanager${field?.link}`}
-                  />
-                ) : (
-                  <div>
-                    <UppyUploader
-                      sx={{}}
-                      register={register(`optionList.${index}.title`)}
-                      getData={(data: string[]) =>
-                        handleUppyUpload(index, data)
-                      }
-                    />
-                    <p className="text-[#D21425] text-[12px]">
-                      {errors?.optionList &&
-                        errors?.optionList[index]?.title?.message}
-                    </p>
-                  </div>
-                )}
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  alignItems="center"
-                  gap={2}
-                >
-                  <RHFTextField
-                    name={`optionList.${index}.score`}
-                    callBack={(data: number) => handleScoreChange(index, data)}
-                    getRHF={getValues}
-                    uploader={true}
-                    type="number"
-                    sx={{
-                      width: "50px",
-                      "& .MuiInputBase-input": {
-                        textAlign: "center",
-                        padding: "5px !important",
-                      },
-                      "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
-                        {
-                          display: "none",
-                        },
-                      "& input[type=number]": {
-                        MozAppearance: "textfield",
-                      },
-                    }}
-                  />
-                  <IconButton
-                    aria-label="trash"
-                    onClick={() => remove(index)}
-                    sx={{
-                      marginBottom: 0,
-                      borderRadius: "10px",
-                      border: "1px solid transparent",
-                      borderColor: "#FA4D56",
-                      color: "#FA4D56",
-                    }}
-                  >
-                    <HiOutlineTrash size="1.5rem" color="#FA4D56" />
-                  </IconButton>
-                </Box>
-              </Box>
-            ))}
-          </Box>
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-            width="100%"
-          >
-            <p className="text-[#D21425] text-[12px] ml-2">
-              {errors?.optionList?.message}
-            </p>
-            <p className="text-[#D21425] text-[12px] ml-2">
-              {errors?.optionList?.root?.message}
-            </p>
-            <IconButton
-              disabled={fields.length >= 10}
-              onClick={handleAddOption}
-              sx={{
-                marginBottom: 0,
-                borderRadius: "10px",
-                border: "1px solid transparent",
-                borderColor: "#1758BA",
-                color: "#1758BA",
-              }}
-            >
-              <FiPlusCircle size="1.5rem" color="#1758BA" />
-            </IconButton>
-          </Box>
-        </Box>
-
-        <Stack
-          flexDirection="row"
-          justifyContent="space-between"
-          alignItems="flex-start"
-          marginTop={3}
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              height: "100%",
+              paddingX: 1.5,
+              direction: "ltr",
+              width: "100%",
+            }}
         >
-          <Typography variant="subtitle2" fontWeight="700">
-            چند انتخابی
-          </Typography>
-          <RHFSwitch
-            label=""
-            name="MULTI_SELECT.value"
-            labelPlacement="start"
-            sx={{ mb: 1, mx: 0, width: 1, justifyContent: "space-between" }}
-          />
-        </Stack>
-
-        <Stack
-          flexDirection="row"
-          justifyContent="space-between"
-          alignItems="flex-start"
-          marginTop={1.5}
-        >
-          <Typography variant="subtitle2" fontWeight="700">
-            پاسخ به سوال اجباری باشد
-          </Typography>
-          <RHFSwitch
-            label=""
-            name="REQUIRED.value"
-            labelPlacement="start"
-            sx={{ mb: 1, mx: 0, width: 1, justifyContent: "space-between" }}
-          />
-        </Stack>
-
-        <Stack
-          flexDirection="row"
-          justifyContent="space-between"
-          alignItems="flex-start"
-          marginTop={1.5}
-        >
-          <Typography variant="subtitle2" fontWeight="700">
-            توزیع تصادفی گزینه‌ها
-          </Typography>
-          <RHFSwitch
-            label=""
-            name="RANDOMIZE_OPTIONS.value"
-            labelPlacement="start"
-            sx={{ mb: 1, mx: 0, width: 1, justifyContent: "space-between" }}
-          />
-        </Stack>
-
-        <Stack
-          flexDirection="row"
-          justifyContent="space-between"
-          alignItems="flex-start"
-          marginTop={1.5}
-        >
-          <Typography variant="subtitle2" fontWeight="700">
-            پاسخ غیر قابل ویرایش
-          </Typography>
-          <RHFSwitch
-            label=""
-            name="EDIT_ANSWER_LOCKED.value"
-            labelPlacement="start"
-            sx={{ mb: 1, mx: 0, width: 1, justifyContent: "space-between" }}
-          />
-        </Stack>
-
-        <Stack
-          marginTop={1.5}
-          flexDirection="row"
-          justifyContent="space-between"
-          alignItems="flex-start"
-        >
-          <Typography variant="subtitle2" fontWeight="700">
-            توضیحات
-          </Typography>
-          <SwitchButton
-            onChange={() => setOpenDescriptionSwitch((prev) => !prev)}
-            checked={openDescriptionSwitch}
-          />
-        </Stack>
-
-        {openDescriptionSwitch && (
-          <Stack marginTop={2}>
-            <Typography fontWeight="700" variant="subtitle2" marginBottom={1.5}>
-              متن توضیح:
+          <Stack spacing={1}>
+            <Typography variant="subtitle2" fontWeight="700">
+              متن سوال:
             </Typography>
-            <RHFTextField
-              name="DESCRIPTION.value"
-              placeholder="پیامی برای توضیح بیشتر در مورد این سوال"
+            <RHFTextField multiline rows={3} name="title"/>
+          </Stack>
+          <Box>
+            <Box marginTop={3}>
+              {fields.map((field: any, index: number) => (
+                  <Box
+                      key={field.id}
+                      display="flex"
+                      alignItems="flex-start"
+                      border="1px dashed #1758BA"
+                      borderRadius="10px"
+                      justifyContent="space-between"
+                      my={1.5}
+                      p={0.75}
+                  >
+                    {field?.link?.includes("/download/") ? (
+                        <Image
+                            width={128}
+                            height={128}
+                            draggable={false}
+                            loading={"eager"}
+                            alt=""
+                            style={{
+                              width: "100px",
+                              height: "100px",
+                              borderRadius: "12px",
+                            }}
+                            src={`${process.env.NEXT_PUBLIC_BASE_URL}/filemanager${field?.link}`}
+                        />
+                    ) : (
+                        <div>
+                          <UppyUploader
+                              sx={{}}
+                              register={register(`optionList.${index}.title`)}
+                              getData={(data: string[]) =>
+                                  handleUppyUpload(index, data)
+                              }
+                          />
+                          <p className="text-[#D21425] text-[12px]">
+                            {errors?.optionList &&
+                                errors?.optionList[index]?.title?.message}
+                          </p>
+                        </div>
+                    )}
+                    <Box
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="center"
+                        gap={2}
+                    >
+                      <RHFTextField
+                          name={`optionList.${index}.score`}
+                          callBack={(data: number) => handleScoreChange(index, data)}
+                          getRHF={getValues}
+                          uploader={true}
+                          type="number"
+                          sx={{
+                            width: "50px",
+                            "& .MuiInputBase-input": {
+                              textAlign: "center",
+                              padding: "5px !important",
+                            },
+                            "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
+                                {
+                                  display: "none",
+                                },
+                            "& input[type=number]": {
+                              MozAppearance: "textfield",
+                            },
+                          }}
+                      />
+                      <IconButton
+                          aria-label="trash"
+                          onClick={() => remove(index)}
+                          sx={{
+                            marginBottom: 0,
+                            borderRadius: "10px",
+                            border: "1px solid transparent",
+                            borderColor: "#FA4D56",
+                            color: "#FA4D56",
+                          }}
+                      >
+                        <HiOutlineTrash size="1.5rem" color="#FA4D56"/>
+                      </IconButton>
+                    </Box>
+                  </Box>
+              ))}
+            </Box>
+            <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                width="100%"
+            >
+              <p className="text-[#D21425] text-[12px] ml-2">
+                {errors?.optionList?.message}
+              </p>
+              <p className="text-[#D21425] text-[12px] ml-2">
+                {errors?.optionList?.root?.message}
+              </p>
+              <IconButton
+                  disabled={fields.length >= 10}
+                  onClick={handleAddOption}
+                  sx={{
+                    marginBottom: 0,
+                    borderRadius: "10px",
+                    border: "1px solid transparent",
+                    borderColor: "#1758BA",
+                    color: "#1758BA",
+                  }}
+              >
+                <FiPlusCircle size="1.5rem" color="#1758BA"/>
+              </IconButton>
+            </Box>
+          </Box>
+          <Stack
+              flexDirection="row"
+              justifyContent="space-between"
+              alignItems="flex-start"
+              marginTop={3}
+          >
+            <Typography variant="subtitle2" fontWeight="700">
+              چند انتخابی
+            </Typography>
+            <RHFSwitch
+                label=""
+                name="MULTI_SELECT.value"
+                labelPlacement="start"
+                sx={{mb: 1, mx: 0, width: 1, justifyContent: "space-between"}}
             />
           </Stack>
-        )}
-
-        <FieldDialogActionBottomButtons status={isSubmitting} />
-      </Box>
-    </FormProvider>
+          <Stack
+              flexDirection="row"
+              justifyContent="space-between"
+              alignItems="flex-start"
+              marginTop={1.5}
+          >
+            <Typography variant="subtitle2" fontWeight="700">
+              پاسخ به سوال اجباری باشد
+            </Typography>
+            <RHFSwitch
+                label=""
+                name="REQUIRED.value"
+                labelPlacement="start"
+                sx={{mb: 1, mx: 0, width: 1, justifyContent: "space-between"}}
+            />
+          </Stack>
+          <Stack
+              flexDirection="row"
+              justifyContent="space-between"
+              alignItems="flex-start"
+              marginTop={1.5}
+          >
+            <Typography variant="subtitle2" fontWeight="700">
+              توزیع تصادفی گزینه‌ها
+            </Typography>
+            <RHFSwitch
+                label=""
+                name="RANDOMIZE_OPTIONS.value"
+                labelPlacement="start"
+                sx={{mb: 1, mx: 0, width: 1, justifyContent: "space-between"}}
+            />
+          </Stack>
+          <Stack
+              flexDirection="row"
+              justifyContent="space-between"
+              alignItems="flex-start"
+              marginTop={1.5}
+          >
+            <Typography variant="subtitle2" fontWeight="700">
+              پاسخ غیر قابل ویرایش
+            </Typography>
+            <RHFSwitch
+                label=""
+                name="EDIT_ANSWER_LOCKED.value"
+                labelPlacement="start"
+                sx={{mb: 1, mx: 0, width: 1, justifyContent: "space-between"}}
+            />
+          </Stack>
+          <Stack
+              marginTop={1.5}
+              flexDirection="row"
+              justifyContent="space-between"
+              alignItems="flex-start"
+          >
+            <Typography variant="subtitle2" fontWeight="700">
+              توضیحات
+            </Typography>
+            <SwitchButton
+                onChange={() => setOpenDescriptionSwitch((prev) => !prev)}
+                checked={openDescriptionSwitch}
+            />
+          </Stack>
+          {openDescriptionSwitch && (
+              <Stack marginTop={2}>
+                <Typography fontWeight="700" variant="subtitle2" marginBottom={1.5}>
+                  متن توضیح:
+                </Typography>
+                <RHFTextField
+                    name="DESCRIPTION.value"
+                    placeholder="پیامی برای توضیح بیشتر در مورد این سوال"
+                />
+              </Stack>
+          )}
+          <FieldDialogActionBottomButtons status={isSubmitting}/>
+        </Box>
+      </FormProvider>
   );
 }

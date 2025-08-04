@@ -1,3 +1,5 @@
+"use client";
+
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useParams, useRouter} from "next/navigation";
 import {toast} from "sonner";
@@ -43,34 +45,55 @@ export const useParticipateForm = () => {
 
     const extractProperty = useCallback((list: any[], key: string) => list?.find((item) => item.questionPropertyEnum === key)?.value, []);
 
-    const initializeQuestion = useCallback((q: any) => {
+    const initializeQuestion = useCallback((q: any, previousAnswers?: any[]) => {
         if (!q?.questionType) return setQuestion(null);
 
-        const required = extractProperty(q.questionPropertyList, "REQUIRED") === "true";
-        const pattern = extractProperty(q.questionPropertyList, "TEXT_FIELD_PATTERN");
-        const minLength = Number(extractProperty(q.questionPropertyList, "MINIMUM_LEN"));
-        const isMultiSelect = extractProperty(q.questionPropertyList, "MULTI_SELECT") === "true";
+        const props = q.questionPropertyList;
+        const required = extractProperty(props, "REQUIRED") === "true";
+        const pattern = extractProperty(props, "TEXT_FIELD_PATTERN");
+        const minLength = Number(extractProperty(props, "MINIMUM_LEN"));
+        const isMultiSelect = extractProperty(props, "MULTI_SELECT") === "true";
+        const spectralType = extractProperty(props, "SPECTRAL_TYPE");
 
-        switch (q.questionType) {
-            case "SPECTRAL": {
-                const start = Number(extractProperty(q.questionPropertyList, "SPECTRAL_START"));
-                const end = Number(extractProperty(q.questionPropertyList, "SPECTRAL_END"));
-                const type = extractProperty(q.questionPropertyList, "SPECTRAL_TYPE");
-                setFormData(type === "DOMAIN" ? [start, end] : start);
-                break;
+        let value: any = "";
+        let currentAnswerId: number | undefined;
+
+        if (previousAnswers && previousAnswers.length > 0) {
+            const first = previousAnswers[0];
+
+            if (q.questionType === "SPECTRAL") {
+                value = spectralType === "DOMAIN"
+                    ? previousAnswers.map((a) => Number(a.answer))
+                    : Number(first.answer);
+            } else if (["MULTIPLE_CHOICE", "MULTIPLE_CHOICE_IMAGE"].includes(q.questionType)) {
+                if (isMultiSelect) {
+                    value = previousAnswers.map((a) => a.optionId);
+                } else {
+                    value = first.optionId;
+                    currentAnswerId = first?.id;
+                }
+            } else {
+                value = first.answer;
+                currentAnswerId = first?.id;
             }
-            case "MULTIPLE_CHOICE":
-            case "MULTIPLE_CHOICE_IMAGE":
-                setFormData(isMultiSelect ? [] : "");
-                break;
-            default:
-                setFormData("");
+        } else {
+            if (q.questionType === "SPECTRAL") {
+                const start = Number(extractProperty(props, "SPECTRAL_START"));
+                const end = Number(extractProperty(props, "SPECTRAL_END"));
+                value = spectralType === "DOMAIN" ? [start, end] : start;
+            } else if (["MULTIPLE_CHOICE", "MULTIPLE_CHOICE_IMAGE"].includes(q.questionType)) {
+                value = isMultiSelect ? [] : "";
+            } else {
+                value = "";
+            }
         }
 
         const valid = !required || (q.questionType === "TEXT_FIELD" && ["SHORT_TEXT", "LONG_TEXT"].includes(pattern) && minLength <= 0);
 
         setIsValid(valid);
+        setFormData(value);
         setQuestion(q);
+        setAnswerId(currentAnswerId);
     }, [extractProperty]);
 
     const fetchInitialData = useCallback(async () => {
@@ -135,7 +158,7 @@ export const useParticipateForm = () => {
                 username,
             });
             setTakePartId(res.data.takePart);
-            initializeQuestion(res.data.questionModel);
+            initializeQuestion(res.data.questionModel, res.data.userAnswerModel?.answersModel ?? []);
         } catch (e) {
             console.error("Error in checkAnswerBefore:", e);
             throw e;
@@ -145,6 +168,9 @@ export const useParticipateForm = () => {
     const handleValidationUpdate = (valid: boolean, value: any) => {
         setIsValid(valid);
         setFormData(value);
+        if (answerId) {
+            setAnswerId(undefined);
+        }
     };
 
     const handleNext = async () => {
@@ -156,23 +182,43 @@ export const useParticipateForm = () => {
             const isMultiSelect = extractProperty(props, "MULTI_SELECT") === "true";
             const spectralType = extractProperty(props, "SPECTRAL_TYPE");
 
-            const needsOption = isMultiSelect || spectralType === "DOMAIN";
-            const answerList = needsOption ? formData.map((item: any) => ({
-                optionId: question.questionType === "SPECTRAL" ? null : item, answer: item,
-            })) : [{
-                optionId: ["MULTIPLE_CHOICE", "MULTIPLE_CHOICE_IMAGE"].includes(question.questionType) ? formData : null,
-                id: answerId,
-                answer: formData,
-            },];
+            const needsOption = isMultiSelect || ["MULTIPLE_CHOICE", "MULTIPLE_CHOICE_IMAGE"].includes(question.questionType);
+            let answerList;
+
+            if (needsOption) {
+                if (Array.isArray(formData)) {
+                    answerList = formData.map((item: any) => ({
+                        optionId: Number(item),
+                        answer: null,
+                    }));
+                } else {
+                    answerList = [{
+                        optionId: Number(formData),
+                        id: answerId,
+                        answer: null,
+                    }];
+                }
+            } else {
+                answerList = [{
+                    optionId: null,
+                    id: answerId,
+                    answer: String(formData),
+                }];
+            }
 
             const res = await AxiosApi.post("/take-part/insert-answer", {
                 formId: question.formId, takePartId, questionId: question.questionId, answerList,
             });
 
-            if (!res.data.questionId) setFinishPage(true); else initializeQuestion(res.data);
+            if (!res.data.questionId) {
+                setFinishPage(true);
+            } else {
+                initializeQuestion(res.data, res.data.userAnswerModel?.answersModel ?? []);
+            }
+
         } catch (e) {
             console.error("Error in handleNext:", e);
-            // toast.error("خطا در ارسال پاسخ");
+            toast.error("خطا در ارسال پاسخ");
         } finally {
             setQuestionLoading(false);
         }
@@ -185,14 +231,7 @@ export const useParticipateForm = () => {
             const q = res.data.questionModel;
             const a = res.data.userAnswerModel?.answersModel ?? [];
 
-            setAnswerId(a[0]?.id);
-            initializeQuestion(q);
-
-            const isMultiSelect = extractProperty(q.questionPropertyList, "MULTI_SELECT") === "true";
-            const spectralType = extractProperty(q.questionPropertyList, "SPECTRAL_TYPE");
-
-            if (isMultiSelect) setFormData(a.map((ans: any) => Number(ans.optionId))); else if (spectralType === "DOMAIN") setFormData(a.map((ans: any) => Number(ans.answer))); else setFormData(a[0]?.answer);
-
+            initializeQuestion(q, a);
             setIsValid(true);
         } catch (e) {
             console.error("Error in handlePrev:", e);

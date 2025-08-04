@@ -73,7 +73,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
           (dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",
         )
 
-        const isValid = validateAndHandleErrors(unselectedDropdowns)
+        const isValid:any = validateAndHandleErrors(unselectedDropdowns)
         validationResults[index] = isValid
 
         if (!isValid) {
@@ -138,7 +138,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
 
         const returnTextList = JSON.parse(returnText)
         const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === "",)
-        const isValid = validateAndHandleErrors(unselectedDropdowns)
+        const isValid:any = validateAndHandleErrors(unselectedDropdowns)
 
         if (!isValid) {
           flag = false

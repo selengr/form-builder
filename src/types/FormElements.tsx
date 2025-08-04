@@ -41,8 +41,8 @@ export type FormElement = {
   }>;
   formComponent: React.FC<{
     elementInstance?: FormElementInstance;
-    value?: string | string[];
-    onChange?: (value: string | string[]) => void;
+    value?: string | string[] | any;
+    onChange?: (value: any) => void;
     error?: string;
     isPreview?: boolean;
   }>;

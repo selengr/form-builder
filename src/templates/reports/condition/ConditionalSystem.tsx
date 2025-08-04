@@ -23,6 +23,7 @@ import AdvancedTextareaEditor from "@/components/AdvancedTextareaEditor/Advanced
 import { idGenerator } from '@/lib';
 import { RHFSwitch } from '@/components/hook-form';
 import { IDropdownItem } from '@/components/AdvancedTextareaEditor/types';
+import { useFormValidation } from '@/app/reports/create-solo/[id]/_hooks/useFormValidation';
 
 
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClose, condition, isEdit = false }) => {
@@ -44,9 +45,9 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
 
   const postCondition = usePostCondition(isEdit);
 
-  // const { validateAndHandleErrors } = useFormValidation({
-  //   setValidationErrors,
-  // })
+  const { validateAndHandleErrors } = useFormValidation({
+    setValidationErrors,
+  })
 
   const handleReturnTextChange = useCallback((data: any, index: number) => {
     methods.setValue(`conditions.${index}.returnText`, JSON.stringify(data))

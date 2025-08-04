@@ -99,7 +99,8 @@ export const useParticipateForm = () => {
     const fetchInitialData = useCallback(async () => {
         try {
             const res = await AxiosApi.post("/take-part/check-response-limitation-form", {
-                link: slug.startsWith("public-") ? slug : null, id: !slug.startsWith("public-") ? slug : null,
+                link: /^public-|^solo-/.test(slug) ? slug : null,
+                id: !/^public-|^solo-/.test(slug) ? slug : null,
             });
 
             const {userInfo} = await fetchUserInfo();
@@ -128,8 +129,8 @@ export const useParticipateForm = () => {
     const takePart = async (username: string | null) => {
         try {
             const res = await AxiosApi.post("/take-part", {
-                link: slug.startsWith("public-") ? slug : null,
-                formId: !slug.startsWith("public-") ? slug : null,
+                link: /^public-|^solo-/.test(slug) ? slug : null,
+                id: !/^public-|^solo-/.test(slug) ? slug : null,
                 username,
             });
 
@@ -153,8 +154,8 @@ export const useParticipateForm = () => {
         try {
             const url = "/take-part/check-answer-to-form-before";
             const res = await AxiosApi.post(url, {
-                link: slug.startsWith("public-") ? slug : null,
-                formId: !slug.startsWith("public-") ? slug : null,
+                link: /^public-|^solo-/.test(slug) ? slug : null,
+                id: !/^public-|^solo-/.test(slug) ? slug : null,
                 username,
             });
             setTakePartId(res.data.takePart);

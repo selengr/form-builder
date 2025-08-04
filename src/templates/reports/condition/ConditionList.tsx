@@ -85,33 +85,35 @@ const ConditionList: React.FC<IConditionListProps> = ({
   };
 
   return (
-    <div className="w-full max-w-[500px] flex flex-col">
-      {!admin && <CreateCondition />}
-      {Array.isArray(conditions) && conditions.length > 0 && (
-        <div
-          dir="rtl"
-          className="rounded-lg p-[10px] w-full flex flex-col gap-3 -pb-10 mb-0"
-        >
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-            modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+    <div className="w-full overflow-y-auto flex justify-center">
+      <div className="w-full max-w-[500px] flex flex-col">
+        {!admin && <CreateCondition />}
+        {Array.isArray(conditions) && conditions.length > 0 && (
+          <div
+            dir="rtl"
+            className="rounded-lg p-[10px] w-full flex flex-col gap-3 -pb-10 mb-0"
           >
-            <SortableContext
-              items={conditionsIds}
-              strategy={verticalListSortingStrategy}
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+              modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
             >
-              {conditions?.map((condition: IGetCondition, index: number) => (
-                // eslint-disable-next-line react/jsx-key
-                <div className="bg-[#F7F7FF] gap-[3px] rounded-[8px] p-[10px]" key={idGenerator()}>
-                  <ConditionCard condition={condition} index={index} admin={admin} />
-                </div>
-              ))}
-            </SortableContext>
-          </DndContext>
-        </div>
-      )}
+              <SortableContext
+                items={conditionsIds}
+                strategy={verticalListSortingStrategy}
+              >
+                {conditions?.map((condition: IGetCondition, index: number) => (
+                  // eslint-disable-next-line react/jsx-key
+                  <div className="bg-[#F7F7FF] gap-[3px] rounded-[8px] p-[10px]" key={idGenerator()}>
+                    <ConditionCard condition={condition} index={index} admin={admin} />
+                  </div>
+                ))}
+              </SortableContext>
+            </DndContext>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

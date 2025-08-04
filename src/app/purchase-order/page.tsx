@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import { Button } from "@mui/material";
 import { toast } from "sonner";
 import { AxiosApi } from "@/services/axios/AxiosApi";
-import { CircleLoading } from "@/components";
 import { CartItem, EmptyCart } from "@/templates/purchase-order";
 import { useGetPurchaseOrder } from "./_hook/useGetPurchaseOrder";
+import LoadingCart from "@/templates/purchase-order/loading-cart";
 
 const formatCurrency = (amount: number) =>
     new Intl.NumberFormat("fa-IR").format(amount) + " تومان";
@@ -74,17 +74,10 @@ const PageStateWrapper = ({
         );
     }
 
-    if (isFetching) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <CircleLoading text="در حال بارگذاری..." />
-            </div>
-        );
-    }
+    if (isFetching) return <LoadingCart />;
 
-    if (!purchaseOrderDetailModels || purchaseOrderDetailModels.length === 0) {
-        return <EmptyCart />;
-    }
+    const isEmpty = !purchaseOrderDetailModels?.length;
+    if (isEmpty) return <EmptyCart />;
 
     return null;
 };

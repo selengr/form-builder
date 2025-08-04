@@ -6,8 +6,7 @@ import { Button } from "@mui/material";
 import { ICartItemProps } from "@/types/shoppingCart";
 import ConfirmDialog from "@/components/confirm-dialog";
 import TrashIcon from "@/../public/images/home-page/trash.svg";
-
-
+import {PiDotOutlineFill} from "react-icons/pi";
 
 function CartItem({
                       detail,
@@ -41,19 +40,21 @@ function CartItem({
                     {index + 1}
                 </div>
 
-                <div className="flex-grow flex flex-col">
+                <div className="flex-grow flex flex-col gap-1">
                     {description && (
                         <p className="font-bold text-gray-800 text-base leading-tight line-clamp-2">
                             {description}
                         </p>
                     )}
-                    <div className="mt-1 flex flex-col">
+                    <div className="mt-1 flex flex-col gap-1">
                         {purchaseOrderProductModels?.map((product) => (
                             <span
                                 key={product.purchaseOrderProductId}
                                 className="text-sm text-gray-500 line-clamp-1"
                             >
-                                - {product.title}
+                                <div className="flex items-center gap-1">
+                                <PiDotOutlineFill/>{product.title}
+                                    </div>
                             </span>
                         ))}
                     </div>

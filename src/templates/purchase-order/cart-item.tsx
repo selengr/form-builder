@@ -6,18 +6,17 @@ import { Button } from "@mui/material";
 import { ICartItemProps } from "@/types/shoppingCart";
 import ConfirmDialog from "@/components/confirm-dialog";
 import TrashIcon from "@/../public/images/home-page/trash.svg";
-import { HiChevronLeft } from "react-icons/hi2";
 
 
 
 function CartItem({
                       detail,
-                      isSelected,
                       onSelect,
                       onRemove,
                       toggleConfirm,
                       loading,
                       open,
+                      index
                   }: ICartItemProps) {
     const { description, purchaseOrderProductModels, purchaseOrderDetailId } = detail;
 
@@ -38,8 +37,8 @@ function CartItem({
                     flex items-center gap-4 p-4 rounded-2xl
                     transition-all duration-300 ease-in-out border border-blue-500`}
             >
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#F4F6FB]  flex items-center justify-center">
-                    <HiChevronLeft className={'text-blue-500'}/>
+                <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-[#F4F6FB] text-blue-500 font-bold flex items-center justify-center">
+                    {index + 1}
                 </div>
 
                 <div className="flex-grow flex flex-col">
@@ -62,7 +61,7 @@ function CartItem({
 
                 <button
                     onClick={handleRemoveClick}
-                    className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-gray-500 hover:bg-red-100 hover:text-red-600 transition-colors"
+                    className="flex-shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center text-gray-500 hover:bg-red-100 hover:text-red-600 transition-colors"
                     aria-label="حذف آیتم"
                 >
                     <Image src={TrashIcon} alt="delete" width={20} height={20} />

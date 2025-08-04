@@ -1,206 +1,182 @@
 "use client";
-import {toast} from "sonner";
-import {Button} from "@mui/material";
-import {useEffect, useState} from "react";
-import {useRouter} from "next/navigation";
-import {AxiosApi} from "@/services/axios/AxiosApi";
-import {CircleLoading} from "@/components";
-import {CartItem, EmptyCart, InvoiceItem} from "@/templates/purchase-order";
-import {useGetPurchaseOrder} from "./_hook/useGetPurchaseOrder";
 
-export default function ShoppingCartPage() {
-  const { push } = useRouter();
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@mui/material";
+import { toast } from "sonner";
+import { AxiosApi } from "@/services/axios/AxiosApi";
+import { CartItem, EmptyCart } from "@/templates/purchase-order";
+import { useGetPurchaseOrder } from "./_hook/useGetPurchaseOrder";
+import LoadingCart from "@/templates/purchase-order/loading-cart";
 
-  const { data: purchaseOrder, isFetching, error, refetch } = useGetPurchaseOrder();
-  const { purchaseOrderDetailModels } = purchaseOrder || {};
-
-  useEffect(() => {
-    // @ts-ignore
-    if (purchaseOrder?.purchaseOrderDetailModels?.length > 0) {
-      setSelectedIndex(0);
-    }
-  }, [purchaseOrder]);
-
-  const handleRemoveDetail = async (id: number) => {
-    try {
-      setLoading(true);
-      const res: any = await AxiosApi.delete(`/purchase-order/purchase-order-detail/${id}`);
-      if (res.data) {
-        toast.success("با موفقیت حذف شد");
-        toggleConfirm();
-        await refetch();
-      } else {
-        toast.error("ناموفق بود مجددا امتحان نمایید");
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSelectItem = (index: number) => {
-    setSelectedIndex(index);
-  };
-
-  const toggleConfirm = () => setOpen((prev) => !prev);
-
-  const formatCurrency = (amount: number) =>
+const formatCurrency = (amount: number) =>
     new Intl.NumberFormat("fa-IR").format(amount) + " تومان";
 
-  const subtotal = purchaseOrder?.totalAmount || 0;
-  const tax = purchaseOrder?.tax || 0;
-  const total = purchaseOrder?.payAble ?? subtotal + tax;
+const InvoiceSection = ({ purchaseOrder, handlePayment }: any) => {
+    const { totalAmount, tax, payAble, purchaseOrderId } = purchaseOrder || {};
+    const subtotal = totalAmount || 0;
+    const total = payAble ?? subtotal + (tax || 0);
 
-  if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen text-red-500">
-        <p>خطا در بارگذاری اطلاعات: {error.message}</p>
-      </div>
+        <div className="bg-white rounded-2xl p-4 shadow-sm flex flex-col lg:max-h-screen w-full">
+            <div className="bg-[#F7F7FF] rounded-lg h-12 flex justify-center items-center mb-4">
+                <h3 className="text-[#161616] font-bold text-base">صورتحساب</h3>
+            </div>
+
+            <div className="bg-[#F4F6FB] rounded-2xl flex flex-col gap-3 p-4 mt-auto">
+                <div className="flex justify-between text-sm text-[#393939] font-medium">
+                    <span>مجموع:</span>
+                    <span className="font-bold">{formatCurrency(subtotal)}</span>
+                </div>
+                <hr className="border-gray-300 border-dashed border-b-1 mx-3" />
+                <div className="flex justify-between text-sm text-[#393939] font-medium">
+                    <span>مالیات:</span>
+                    <span className="font-bold">{formatCurrency(tax || 0)}</span>
+                </div>
+                <hr className="border-gray-300 border-dashed border-b-1 mx-3" />
+                <div className="flex justify-between text-sm text-[#1758BA] font-bold">
+                    <span>قابل پرداخت:</span>
+                    <span className="font-bold">{formatCurrency(total)}</span>
+                </div>
+            </div>
+
+            <Button
+                type="button"
+                variant="contained"
+                sx={{
+                    backgroundColor: "#1758BA",
+                    borderRadius: "10px",
+                    height: "50px",
+                    marginTop: "1rem",
+                    "&.MuiButtonBase-root:hover": {
+                        backgroundColor: "#1758BA",
+                    },
+                }}
+                disabled={!purchaseOrderId}
+                onClick={handlePayment}
+            >
+                <span className="text-sm font-medium">پرداخت صورت حساب</span>
+            </Button>
+        </div>
     );
-  }
+};
 
-  if (!purchaseOrderDetailModels || (purchaseOrderDetailModels.length === 0 && !isFetching)) {
-    return <EmptyCart />;
-  }
-
-  const handlePayment = () => {
-    if (purchaseOrder?.purchaseOrderId) {
-      push(`/purchase-order/${JSON.stringify(purchaseOrder.purchaseOrderId)}/gateway`);
+const PageStateWrapper = ({
+                              isFetching,
+                              error,
+                              purchaseOrderDetailModels,
+                          }: any) => {
+    if (error) {
+        return (
+            <div className="flex items-center justify-center min-h-screen text-red-500 p-4">
+                <p>خطا در بارگذاری اطلاعات: {error.message}</p>
+            </div>
+        );
     }
-  };
 
-  return (
-    <div dir="rtl" className="min-w-full mx-auto px-2 py-4 flex flex-col md:flex-row gap-4 min-[calc(h-screen - 60px)] md:min-h-screen bg-[#f9f9f9]">
+    if (isFetching) return <LoadingCart />;
 
-      {/* سبد خرید */}
-      <div className="w-full md:w-[70%] bg-white rounded-2xl p-4 shadow-sm flex flex-col grow md:max-h-screen overflow-hidden">
-        <div className="bg-[#F7F7FF] rounded-lg h-12 flex justify-center items-center mb-6">
-          <h3 className="text-[#161616] font-bold text-base">سبد خرید</h3>
+    const isEmpty = !purchaseOrderDetailModels?.length;
+    if (isEmpty) return <EmptyCart />;
+
+    return null;
+};
+
+export default function ShoppingCartPage() {
+    const { push } = useRouter();
+    const [loading, setLoading] = useState(false);
+    const [selectedIndex, setSelectedIndex] = useState<number>(0);
+    const [open, setOpen] = useState(false);
+
+    const { data: purchaseOrder, isFetching, error, refetch } = useGetPurchaseOrder();
+    const purchaseOrderDetailModels = purchaseOrder?.purchaseOrderDetailModels;
+
+    useEffect(() => {
+        if (purchaseOrderDetailModels && purchaseOrderDetailModels.length > 0) {
+            setSelectedIndex(0);
+        }
+    }, [purchaseOrderDetailModels]);
+
+    const handleRemoveDetail = async (id: number) => {
+        try {
+            setLoading(true);
+            const res = await AxiosApi.delete(`/purchase-order/purchase-order-detail/${id}`);
+            if (res.data) {
+                toast.success("با موفقیت حذف شد");
+                await refetch();
+            } else {
+                toast.error("ناموفق بود مجددا امتحان نمایید");
+            }
+        } catch (err: any) {
+            console.error(err);
+            toast.error("خطایی رخ داد");
+        } finally {
+            setLoading(false);
+            setOpen(false);
+        }
+    };
+
+    const handlePayment = () => {
+        if (purchaseOrder?.purchaseOrderId) {
+            push(`/purchase-order/${purchaseOrder.purchaseOrderId}/gateway`);
+        }
+    };
+
+    const handleSelectItem = (index: number) => {
+        setSelectedIndex(index);
+    };
+
+    const toggleConfirm = () => setOpen((prev) => !prev);
+
+    const pageState = (
+        <PageStateWrapper
+            isFetching={isFetching}
+            error={error}
+            purchaseOrderDetailModels={purchaseOrderDetailModels}
+        />
+    );
+
+    if (isFetching || error || !purchaseOrderDetailModels || purchaseOrderDetailModels.length === 0) {
+        return pageState;
+    }
+
+    return (
+        <div dir="rtl" className="min-h-screen w-full px-2 py-4 lg:p-4 flex flex-col lg:flex-row gap-4 ">
+
+            <div className="w-full flex-grow bg-white rounded-2xl p-4 shadow-sm lg:max-h-screen flex flex-col mobile:mb-[10px] lg:mb-0">
+                <div className="bg-[#F7F7FF] rounded-lg h-12 flex justify-center items-center mb-6 shrink-0">
+                    <h3 className="text-[#161616] font-bold text-base">سبد خرید</h3>
+                </div>
+                <div className="flex-1 overflow-y-auto space-y-4 px-2 lg:px-6">
+                    {purchaseOrderDetailModels?.map((detail, index) => (
+                        <CartItem
+                            key={detail.purchaseOrderDetailId}
+                            open={open}
+                            index={index}
+                            detail={detail}
+                            loading={loading}
+                            toggleConfirm={toggleConfirm}
+                            isSelected={index === selectedIndex}
+                            onSelect={() => handleSelectItem(index)}
+                            onRemove={handleRemoveDetail}
+                        />
+                    ))}
+                </div>
+            </div>
+
+            <div className="w-full lg:w-[450px] hidden lg:flex">
+                <InvoiceSection
+                    purchaseOrder={purchaseOrder}
+                    handlePayment={handlePayment}
+                />
+            </div>
+
+            <div className="fixed bottom-0 left-0 right-0 z-20 lg:hidden">
+                <InvoiceSection
+                    purchaseOrder={purchaseOrder}
+                    handlePayment={handlePayment}
+                />
+            </div>
         </div>
-
-        <div className="overflow-y-auto flex-1 px-2 md:px-6 pb-36 md:pb-0">
-          {isFetching && <CircleLoading text="در حال بارگذاری..." />}
-          <div className="space-y-4">
-            {purchaseOrderDetailModels.map((detail, index) => (
-              <CartItem
-                key={index}
-                open={open}
-                index={index}
-                detail={detail}
-                loading={loading}
-                toggleConfirm={toggleConfirm}
-                isSelected={index === selectedIndex}
-                onSelect={() => handleSelectItem(index)}
-                onRemove={handleRemoveDetail}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* صورتحساب دسکتاپ */}
-      <div className="w-full md:w-[30%] bg-white rounded-2xl p-4 shadow-sm flex-col max-h-screen hidden md:flex">
-        <div className="bg-[#F7F7FF] rounded-lg h-12 flex justify-center items-center mb-4">
-          <h3 className="text-[#161616] font-bold text-base">صورتحساب</h3>
-        </div>
-
-        <div className="overflow-y-auto grow mb-4">
-          {purchaseOrderDetailModels.length > 0 && selectedIndex < purchaseOrderDetailModels.length && (
-            <InvoiceItem
-              key={selectedIndex}
-              index={selectedIndex + 1}
-              detail={purchaseOrderDetailModels[selectedIndex]}
-            />
-          )}
-        </div>
-
-        <div className="bg-[#F7F7FF] rounded-2xl flex flex-col gap-2 p-4">
-          <div className="flex justify-between text-sm text-[#393939] font-medium">
-            <span>مجموع:</span>
-            <span className="font-bold">{formatCurrency(subtotal)}</span>
-          </div>
-          <div className="flex justify-between text-sm text-[#393939] font-medium">
-            <span>مالیات:</span>
-            <span className="font-bold">{formatCurrency(tax)}</span>
-          </div>
-          <div className="flex justify-between text-sm text-[#393939] font-medium">
-            <span>قابل پرداخت:</span>
-            <span className="font-bold">{formatCurrency(total)}</span>
-          </div>
-        </div>
-
-        <Button
-          type="button"
-          variant="contained"
-          sx={{
-            backgroundColor: "#1758BA",
-            borderRadius: "10px",
-            height: "52px",
-            marginTop: "1rem",
-            "&.MuiButtonBase-root:hover": {
-              backgroundColor: "#1758BA",
-            },
-          }}
-          disabled={!purchaseOrder?.purchaseOrderId}
-          onClick={handlePayment}
-        >
-          <span className="text-sm font-medium">پرداخت صورت حساب</span>
-        </Button>
-      </div>
-
-      {/* صورتحساب موبایل */}
-      <div className="fixed bottom-0 left-0 right-0 w-full bg-white rounded-t-2xl p-4 shadow-lg z-20 flex flex-col md:hidden">
-        <div className="bg-[#F7F7FF] rounded-lg h-12 flex justify-center items-center mb-4">
-          <h3 className="text-[#161616] font-bold text-base">صورتحساب</h3>
-        </div>
-
-        <div className="mb-4">
-          {purchaseOrderDetailModels.length > 0 && selectedIndex < purchaseOrderDetailModels.length && (
-            <InvoiceItem
-              key={selectedIndex}
-              index={selectedIndex + 1}
-              detail={purchaseOrderDetailModels[selectedIndex]}
-            />
-          )}
-        </div>
-
-        <div className="bg-[#F7F7FF] rounded-2xl flex flex-col gap-2 p-4">
-          <div className="flex justify-between text-sm text-[#393939] font-medium">
-            <span>مجموع:</span>
-            <span className="font-bold">{formatCurrency(subtotal)}</span>
-          </div>
-          <div className="flex justify-between text-sm text-[#393939] font-medium">
-            <span>مالیات:</span>
-            <span className="font-bold">{formatCurrency(tax)}</span>
-          </div>
-          <div className="flex justify-between text-sm text-[#393939] font-medium">
-            <span>قابل پرداخت:</span>
-            <span className="font-bold">{formatCurrency(total)}</span>
-          </div>
-        </div>
-
-        <Button
-          type="button"
-          variant="contained"
-          sx={{
-            backgroundColor: "#1758BA",
-            borderRadius: "10px",
-            height: "52px",
-            marginTop: "1rem",
-            "&.MuiButtonBase-root:hover": {
-              backgroundColor: "#1758BA",
-            },
-          }}
-          disabled={!purchaseOrder?.purchaseOrderId}
-          onClick={handlePayment}
-        >
-          <span className="text-sm font-medium">پرداخت صورت حساب</span>
-        </Button>
-      </div>
-    </div>
-  );
+    );
 }

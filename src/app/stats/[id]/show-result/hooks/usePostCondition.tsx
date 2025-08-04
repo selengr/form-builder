@@ -15,11 +15,11 @@ export const usePostCondition = () => {
 
     const mutation = useMutation({
         mutationKey: ['post-condition'],
-        mutationFn: ({ data }: { data: { formId: number; takePartId: number }[] }) => postCalculation(data),
+        mutationFn: ({ data }: { data: { formId: number; takePartId: number }[], name : string }) => postCalculation(data),
 
-        onSuccess: (result) => {
+        onSuccess: (result, {name}) => {
              localStorage.setItem('testResult', JSON.stringify(result));
-             push(`/stats/${result[0].formId}/show-result`);
+             push(`/stats/${result[0].formId}/show-result?name=${name}`);
         },
         onError: () => {
             toast.error("عملیات ناموفق بود مجددا تلاش کنید");

@@ -53,9 +53,10 @@ export function ReportTable({
         setSelectedUsers(updated);
     };
 
-    const handleShowResult = (takePartId: number) => {
+    const handleShowResult = (takePartId: number,name : string) => {
         mutate({
             data: [{ formId, takePartId }],
+            name 
         });
     };
 
@@ -167,7 +168,7 @@ export function ReportTable({
                                                 )}
                                             </button>
                                             <button
-                                                onClick={() => handleShowResult(takePartId)}
+                                                onClick={() => handleShowResult(takePartId,row?.row[1]?.answer[0])}
                                                 className="rounded-xl p-2 bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 shadow-sm"
                                             >
                                                 <LuFileChartPie className="w-5 h-5" />

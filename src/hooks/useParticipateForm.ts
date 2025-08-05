@@ -130,7 +130,7 @@ export const useParticipateForm = () => {
         try {
             const res = await AxiosApi.post("/take-part", {
                 link: /^public-|^solo-/.test(slug) ? slug : null,
-                id: !/^public-|^solo-/.test(slug) ? slug : null,
+                formId: !/^public-|^solo-/.test(slug) ? slug : null,
                 username,
             });
 
@@ -155,7 +155,7 @@ export const useParticipateForm = () => {
             const url = "/take-part/check-answer-to-form-before";
             const res = await AxiosApi.post(url, {
                 link: /^public-|^solo-/.test(slug) ? slug : null,
-                id: !/^public-|^solo-/.test(slug) ? slug : null,
+                formId: !/^public-|^solo-/.test(slug) ? slug : null,
                 username,
             });
             setTakePartId(res.data.takePart);

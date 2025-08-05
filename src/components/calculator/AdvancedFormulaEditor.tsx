@@ -518,6 +518,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                 });
             }
             handleClose();
+            queryClient.invalidateQueries({queryKey: ['calculators']});
             queryClient.invalidateQueries({queryKey: ['Calculation_List']});
             toast.success("محاسبه گر با موفقیت ثبت شد");
         } catch (error) {

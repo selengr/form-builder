@@ -63,6 +63,8 @@ export const CreateCalculatorDialog: React.FC<ICreateCalculatorDialogProps> = ({
     queryFn: () => fetchCalculators(id as string),
     staleTime: 0,
     gcTime: 600000,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 
   const handleClose = () => {

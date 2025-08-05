@@ -34,8 +34,8 @@ compile-job:
   - export NVM_DIR="$HOME/.nvm"
   - [ -s "$NVM_DIR/nvm.sh" ]
   -  \. "$NVM_DIR/nvm.sh"
-  - rm -f .env.local package-lock.json .next
-  - rm -rf node_modules
+  - rm -rf .env.local
+  - rm -rf node_modules package-lock.json
   - nvm use 22
   - npm i -g npm
   - npm i -f

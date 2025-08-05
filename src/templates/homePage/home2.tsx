@@ -4,8 +4,13 @@ import {useEffect, useState} from 'react';
 import {MyRangeSlider} from "@/components/Slider/RangeSlider";
 import {BarChart} from "@mui/x-charts";
 import CountUp from "react-countup";
+import {useRouter} from "next/navigation";
 
 export default function HomePageX() {
+    const router = useRouter();
+    const handleClick = () => {
+        router.push("/builder?new");
+    };
     const [sliderValue, setSliderValue] = useState(8.3);
     const [data, setData] = useState<number[]>([10, 30, 20, 20, 40]);
     const statistics = [
@@ -24,7 +29,7 @@ export default function HomePageX() {
 
 
     return (
-        <div className="h-screen w-full overflow-y-scroll"
+        <div className="h-screen w-full overflow-y-scroll -mt-[60px] lg:mt-0 pb-48"
              style={{background: 'linear-gradient(to bottom, #ffffff, #eff6ff, #eff6ff)', userSelect: "none"}}>
             <main
                 className="relative flex flex-col lg:flex-row items-center justify-between pt-20 pb-12 px-4 lg:px-8 w-full max-w-[1440px] mx-auto">
@@ -59,6 +64,7 @@ export default function HomePageX() {
                     </p>
                     <div className="flex justify-center items-center h-full">
                         <button
+                            onClick={handleClick}
                             className="bg-[conic-gradient(at_bottom_left,_var(--tw-gradient-stops))] from-blue-500 via-[#1758BA] to-[#1758BA] hover:scale-x-95 hover:scale-y-90 hover:skew-x-1 transition-all duration-500 text-white font-bold py-4 px-10 rounded-3xl text-lg shadow-xl shadow-blue-700/30">
                             ایجاد فرم
                         </button>
@@ -72,7 +78,7 @@ export default function HomePageX() {
                             src="/api/images?folder=home&file=curvyBG.svg"
                             alt="Decorative background shape"
                             fill
-                            className="object-contain animate-bounce-slow pointer-events-none -z-20"
+                            className="object-contain animate-rotate-slow pointer-events-none -z-20"
                             priority
                         />
 
@@ -102,7 +108,7 @@ export default function HomePageX() {
 
                         {/* باکس سوال */}
                         <div
-                            className="absolute top-[5%] -right-[20%] bg-white p-3 rounded-2xl shadow-xl flex flex-col items-center gap-2 text-sm text-gray-700 max-w-[260px] floating-3d-1 -rotate-3">
+                            className="absolute top-[5%] -right-[5%] lg:-right-[20%] bg-white p-3 rounded-2xl shadow-xl flex flex-col items-center gap-2 text-sm text-gray-700 max-w-[260px] floating-3d-1 -rotate-3">
                             <div className="text-center">
                                 <div className="text-yellow-500 text-2xl mb-1">⭐</div>
                                 <p className="font-medium text-gray-800">ارزیابی شما از کیفیت خدمات سایا چقدر است؟</p>
@@ -122,7 +128,7 @@ export default function HomePageX() {
 
                         {/* چارت پایین چپ */}
                         <div
-                            className="absolute bottom-[5%] left-0 bg-[conic-gradient(at_bottom_left,_var(--tw-gradient-stops))] from-blue-500 via-[#1758BA] to-[#1758BA] p-2 pl-0 rounded-2xl shadow-xl floating-3d-2 max-w-[260px] text-white">
+                            className="absolute bottom-[30%] lg:bottom-[5%] left-0 bg-[conic-gradient(at_bottom_left,_var(--tw-gradient-stops))] from-blue-500 via-[#1758BA] to-[#1758BA] p-2 pl-0 rounded-2xl shadow-xl floating-3d-2 max-w-[260px] text-white">
                             <span className="text-xl">
                          <BarChart
                              grid={{horizontal: false, vertical: false}}
@@ -166,7 +172,14 @@ export default function HomePageX() {
                         <div
                             className="absolute top-[20%] left-0 bg-white p-2 rounded-xl shadow-xl text-sm text-gray-800 floating-3d-4 rotate-3">
                             <span className="font-medium">میانگین نمره:</span>
-                            <span className="text-yellow-500 font-bold mr-1">۷.۸۲~</span>
+                            <span className="text-yellow-500 font-bold mr-1">
+                                <CountUp end={7.84}
+                                         decimals={2}
+
+                                         duration={5}
+                                    smartEasingAmount={0}
+                            />~
+                            </span>
                         </div>
                     </div>
                     <div className="absolute inset-0 -z-50 ">
@@ -174,21 +187,21 @@ export default function HomePageX() {
                                className={"w-screen h-screen animate-bounce-slow"} draggable={false}/>
                     </div>
 
-                    <footer className=" absolute inset-0 p-10 pb-20 z-40 top-[95%]">
+                    <footer className=" absolute inset-0 p-10 pb-20 z-40 top-[75%] lg:top-[95%]">
                         <div
                             className="max-w-[1440px] p-10 bg-white rounded-3xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6 text-center shadow-2xl shadow-blue-700/20">
                             {statistics.map((item, i) => (
-                            <div key={i} className="flex flex-col items-center">
+                                <div key={i} className="flex flex-col items-center">
                                       <span className="text-[#183B56] text-4xl sm:text-5xl font-bold">
                                         <CountUp end={item.value}
-                                                 duration={20}
+                                                 duration={7}
                                                  separator=","
                                                  smartEasingAmount={i}
                                         />
                                           {i === 0 ? '+' : ''}
                                       </span>
-                                <span className="text-gray-600 text-lg mt-2">{item.label}</span>
-                            </div>
+                                    <span className="text-gray-600 text-lg mt-2">{item.label}</span>
+                                </div>
                             ))}
                         </div>
                     </footer>

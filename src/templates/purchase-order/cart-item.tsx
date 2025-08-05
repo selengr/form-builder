@@ -32,10 +32,7 @@ function CartItem({
         <>
             <div
                 onClick={onSelect}
-                className={`
-                    flex items-center gap-4 p-4 rounded-2xl
-                    transition-all duration-300 ease-in-out border border-blue-500`}
-            >
+                className={`flex items-center gap-4 p-4 rounded-2xl border border-neutral-200`}>
                 <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-[#F4F6FB] text-blue-500 font-bold flex items-center justify-center">
                     {index + 1}
                 </div>
@@ -62,15 +59,15 @@ function CartItem({
 
                 <button
                     onClick={handleRemoveClick}
-                    className="flex-shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center text-gray-500 hover:bg-red-100 hover:text-red-600 transition-colors"
+                    className="flex-shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center text-gray-500 hover:bg-red-100 hover:text-red-700 transition-colors"
                     aria-label="حذف آیتم"
                 >
-                    <Image src={TrashIcon} alt="delete" width={20} height={20} />
+                    <Image src={TrashIcon} alt="delete" width={24} height={24} />
                 </button>
             </div>
 
             <ConfirmDialog
-                content="آیا از عملیات حذف اطمینان دارید؟"
+                content="آیا از انجام عملیات حذف این مورد اطمینان دارید؟"
                 open={open}
                 title="حذف آیتم"
                 loading={loading}
@@ -81,19 +78,16 @@ function CartItem({
                         type="submit"
                         fullWidth
                         disableRipple
+                        disableElevation
                         variant="contained"
                         disabled={loading}
                         sx={{
-                            height: "50px",
+                            height: "52px",
                             fontWeight: 500,
                             fontSize: "16px",
                             borderRadius: "12px",
-                            backgroundColor: "#E53935",
                             boxShadow: "none",
                             textTransform: "none",
-                            "&:hover": {
-                                backgroundColor: "#D32F2F",
-                            },
                         }}
                         onClick={handleConfirmAction}
                     >

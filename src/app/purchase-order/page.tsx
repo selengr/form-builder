@@ -141,9 +141,9 @@ export default function ShoppingCartPage() {
     }
 
     return (
-        <div dir="rtl" className="min-h-screen w-full px-2 py-4 lg:p-4 flex flex-col lg:flex-row gap-4 ">
+        <div dir="rtl" className="w-full px-2 py-4 lg:p-4 flex flex-col lg:flex-row gap-4 h-[calc(100vh-60px)] lg:h-screen">
 
-            <div className="w-full flex-grow bg-white rounded-2xl p-4 shadow-sm lg:max-h-screen flex flex-col mobile:mb-[10px] lg:mb-0">
+            <div className="w-full flex-grow bg-white rounded-2xl p-4 shadow-sm lg:max-h-screen flex flex-col mobile:mb-[10px] lg:mb-0 h-2/3 lg:h-full">
                 <div className="bg-[#F7F7FF] rounded-lg h-12 flex justify-center items-center mb-6 shrink-0">
                     <h3 className="text-[#161616] font-bold text-base">سبد خرید</h3>
                 </div>
@@ -171,7 +171,7 @@ export default function ShoppingCartPage() {
                 />
             </div>
 
-            <div className="fixed bottom-0 left-0 right-0 z-20 lg:hidden">
+            <div className="z-20 lg:hidden">
                 <InvoiceSection
                     purchaseOrder={purchaseOrder}
                     handlePayment={handlePayment}

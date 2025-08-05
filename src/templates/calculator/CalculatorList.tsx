@@ -24,7 +24,7 @@ const CalculatorList: React.FC<IProps> = ({ calculators }) => {
           <CreateCalculator />
         )}
       </div>
-      <div className="w-full overflow-y-auto h-full flex justify-center">
+      <div dir="rtl" className="w-full overflow-y-auto h-full flex justify-center">
         <div className="w-full max-w-[520px] flex flex-col p-[13px]">
 
           {calculators?.length > 0 && (

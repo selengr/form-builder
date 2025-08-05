@@ -94,7 +94,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
             width: { sm: "100%", md: "100%" },
             minWidth: 240,
             maxWidth: 240,
-            flexShrink: 0,
+            flexShrink: 0 
           }}
           onChange={() => {
             setValue(

@@ -17,14 +17,6 @@ const CalculatorList: React.FC<IProps> = ({ calculators }) => {
   const { formData, isLoading } = useFormData();
 
 
-
-
-
-
-  // <div className="w-full max-w-[500px] flex flex-col"></div>
-
-
-
   return (
     <>
       <div className="w-full max-w-[530px] -mr-3">

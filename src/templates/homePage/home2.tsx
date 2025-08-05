@@ -29,7 +29,7 @@ export default function HomePageX() {
 
 
     return (
-        <div className="h-screen w-full overflow-y-scroll -mt-[60px] lg:mt-0 pb-48"
+        <div className="h-screen w-full overflow-y-scroll -mt-[60px] lg:mt-0 pb-48 overflow-x-hidden z-0"
              style={{background: 'linear-gradient(to bottom, #ffffff, #eff6ff, #eff6ff)', userSelect: "none"}}>
             <main
                 className="relative flex flex-col lg:flex-row items-center justify-between pt-20 pb-12 px-4 lg:px-8 w-full max-w-[1440px] mx-auto">
@@ -108,15 +108,19 @@ export default function HomePageX() {
 
                         {/* باکس سوال */}
                         <div
-                            className="absolute top-[5%] -right-[5%] lg:-right-[20%] bg-white p-3 rounded-2xl shadow-xl flex flex-col items-center gap-2 text-sm text-gray-700 max-w-[260px] floating-3d-1 -rotate-3">
+                            className="absolute top-[3%] -right-[0%] lg:-right-[20%] bg-white p-2 lg:p-3 rounded-2xl shadow-xl flex flex-col items-center gap-1.5 lg:gap-2 text-xs lg:text-sm text-gray-700 max-w-[180px] lg:max-w-[260px] floating-3d-1 -rotate-3 scale-[0.7] lg:scale-100 origin-top-right"
+                        >
                             <div className="text-center">
-                                <div className="text-yellow-500 text-2xl mb-1">⭐</div>
-                                <p className="font-medium text-gray-800">ارزیابی شما از کیفیت خدمات سایا چقدر است؟</p>
+                                <div className="text-yellow-500 text-xl lg:text-2xl mb-0.5 lg:mb-1">⭐</div>
+                                <p className="font-medium text-gray-800 text-xs lg:text-sm leading-snug">
+                                    ارزیابی شما از کیفیت خدمات سایا چقدر است؟
+                                </p>
                             </div>
-                            <div className="w-full pt-2">
+
+                            <div className="w-full  px-3 pt-1.5 lg:pt-2">
                                 <MyRangeSlider
                                     value={sliderValue}
-                                    onChange={(e, v) => typeof v === 'number' && setSliderValue(v)}
+                                    onChange={(e, v) => typeof v === "number" && setSliderValue(v)}
                                     min={1}
                                     max={10}
                                     step={0.1}
@@ -141,7 +145,6 @@ export default function HomePageX() {
                              }}
                              xAxis={[{
                                  data: [new Date(2020, 1, 1), new Date(2021, 1, 1), new Date(2022, 1, 1), new Date(2023, 1, 1), new Date(2024, 1, 1),],
-                                 valueFormatter: (value: Date) => value.getFullYear().toString(),
                                  colorMap: {
                                      type: 'continuous',
                                      min: new Date(2019, 1, 1),

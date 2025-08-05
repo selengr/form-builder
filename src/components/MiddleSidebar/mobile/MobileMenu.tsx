@@ -33,7 +33,7 @@ const MobileMenu: React.FC = () => {
 
 
   return (
-    <>
+    <div className={"z-50"}>
       <IconButton
         edge="start"
         color="inherit"
@@ -79,7 +79,7 @@ const MobileMenu: React.FC = () => {
           </div>
         </div>
       </Drawer>
-    </>
+    </div>
   );
 };
 

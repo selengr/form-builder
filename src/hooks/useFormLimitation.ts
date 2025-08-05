@@ -62,7 +62,7 @@ export const useFormLimitation = (
       setLoading(true);
       const response = await AxiosApi.post("/take-part/check-answer-to-form-before", {
         link: /^public-|^solo-/.test(slug) ? slug : null,
-        id: !/^public-|^solo-/.test(slug) ? slug : null,
+        formId: !/^public-|^solo-/.test(slug) ? slug : null,
         username: formValue,
       });
 

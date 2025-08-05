@@ -187,18 +187,13 @@ export const useParticipateForm = () => {
             let answerList;
 
             if (needsOption) {
-                if (Array.isArray(formData)) {
-                    answerList = formData.map((item: any) => ({
-                        optionId: Number(item),
-                        answer: null,
-                    }));
-                } else {
-                    answerList = [{
-                        optionId: Number(formData),
-                        id: answerId,
-                        answer: null,
-                    }];
-                }
+                const ids = Array.isArray(formData) ? formData : [formData];
+
+                answerList = ids.map((item: any) => ({
+                    optionId: Number(item),
+                    answer: Array.isArray(formData) ? null : Number(item),
+                    ...(Array.isArray(formData) ? {} : {id: answerId}),
+                }));
             } else {
                 answerList = [{
                     optionId: null,
@@ -211,11 +206,9 @@ export const useParticipateForm = () => {
                 formId: question.formId, takePartId, questionId: question.questionId, answerList,
             });
 
-            if (!res.data.questionId) {
-                setFinishPage(true);
-            } else {
-                initializeQuestion(res.data, res.data.userAnswerModel?.answersModel ?? []);
-            }
+            res.data.questionId
+                ? initializeQuestion(res.data, res.data.userAnswerModel?.answersModel ?? [])
+                : setFinishPage(true);
 
         } catch (e) {
             console.error("Error in handleNext:", e);

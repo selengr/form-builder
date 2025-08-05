@@ -112,16 +112,16 @@ export function CalculatorCard({
   return (
     <>
       <div
-        className={`bg-white rounded-lg p-[10px] h-14 flex justify-between w-full border border-[#1758BA] ${
+        className={`bg-white rounded-lg p-[10px] min-h-14 flex justify-between w-full border border-[#1758BA] ${
           disabled ? "opacity-50 pointer-events-none" : "cursor-pointer"
         }`}
       >
         <div className="flex items-center gap-2.5">
-          <div className="bg-[#F7F7FF] h-8 w-8 rounded-[10px] flex justify-center items-center">
+          <div className="bg-[#F7F7FF] h-8 min-w-8 w-8 rounded-[10px] flex justify-center items-center">
             {index + 1}
           </div>
           <div className="flex flex-col">
-            <h3 className="text-[#161616] text-sm">
+            <h3 className="text-[#161616] text-sm break-words flex flex-nowrap">
               {calculator.name ?? "--"}
             </h3>
             <span className="text-[#393939] text-xs">#محاسبه‌گر</span>

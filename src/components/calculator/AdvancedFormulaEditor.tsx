@@ -1,17 +1,18 @@
 'use client';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
+import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { Box, Container, Stack, TextField, Typography } from '@mui/material';
-import { toast } from 'sonner';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Box, Container, IconButton, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
 import { htmlToFormula } from '@/lib/htmlToFormula';
-import FormulaKeypad from '@/components/formula-editor/FormulaKeypad';
-import FormulaInput from '@/components/formula-editor/FormulaInput';
-import FormulaControls from '@/components/formula-editor/FormulaControls';
+import { AxiosApi } from '@/services/axios/AxiosApi';
 import { Element, FnFxItem } from '@/types/formulaEditor';
 import { IAdvancedFormulaEditorProps } from '@/types/calculator';
+import FormulaInput from '@/components/formula-editor/FormulaInput';
+import FormulaKeypad from '@/components/formula-editor/FormulaKeypad';
+import FormulaControls from '@/components/formula-editor/FormulaControls';
 
 const OPERATOR_TYPES = ['-', '+', '*', '/'];
 const FN_FX_OPTIONS = [{ fnValue: 'avg', fnCaption: 'میانگین()' }];
@@ -19,6 +20,7 @@ const FN_FX_OPTIONS = [{ fnValue: 'avg', fnCaption: 'میانگین()' }];
 const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ questionList, handleClose, editList, isEdit }) => {
   const { id } = useParams();
   const queryClient = useQueryClient();
+  const isDesktop = useMediaQuery('(min-width:768px)');
 
   const mainIndex = useRef<number>(-2);
   const contentEditable = useRef<HTMLDivElement>(null);
@@ -610,21 +612,20 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
             flexDirection: { xs: 'row', sm: 'row' },
             my: 3,
           }}>
-          <Stack
-            sx={{
-              display: { xs: "none", md: "flex" }
-            }}
-          >
-            <FormulaKeypad
-              handleFnFX={handleFnFX}
-              handleNewField={handleNewField}
-              handleParenthesis={handleParenthesis}
-              handleOperator={handleOperator}
-              handleNumber={handleNumber}
-              handleUndo={handleUndo}
-              contentEditableRef={contentEditable}
-            />
-          </Stack>
+          {
+            isDesktop && (
+              <FormulaKeypad
+                handleFnFX={handleFnFX}
+                handleNewField={handleNewField}
+                handleParenthesis={handleParenthesis}
+                handleOperator={handleOperator}
+                handleNumber={handleNumber}
+                handleUndo={handleUndo}
+                contentEditableRef={contentEditable}
+              />
+            )
+          }
+
 
           <Box
             sx={{
@@ -672,8 +673,18 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
           </Box>
         </Box>
 
-        <FormulaControls onSubmit={callApi} onCancel={handleClose} isLoading={isLoading} />
+        <IconButton
+          sx={{
+            display: { sx: "flex", md: "none" }
+            // position: 'absolute',
+            // right: '0.2rem',
+            // bottom : 10
+            // transform: open ? 'rotate(180deg)' : undefined,
+          }}>
+          <Image src='/images/calc/ic_keypad.svg' width={52} height={52} alt='keypad' />
+        </IconButton>
       </Box>
+      <FormulaControls onSubmit={callApi} onCancel={handleClose} isLoading={isLoading} />
     </Container>
   );
 };

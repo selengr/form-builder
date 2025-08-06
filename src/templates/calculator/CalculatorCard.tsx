@@ -1,6 +1,6 @@
 'use client';
 // React & Libs
-import Image from 'next/image';
+  import Image from 'next/image';
 import { useState } from 'react';
 import { Button, CircularProgress, Menu, Typography } from '@mui/material';
 // types

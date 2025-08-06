@@ -26,7 +26,7 @@ const CreateCalculator = () => {
   const { push } = useRouter();
   const { id } = useParams();
   const [open, setOpen] = useState<boolean>(false);
-  const isDesktop = useMediaQuery('(min-width:1280px)');
+  const isDesktop = useMediaQuery('(min-width:768px)');
 
   const handleCreationsCalc = () => {
     if (isDesktop) {

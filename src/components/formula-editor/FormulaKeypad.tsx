@@ -13,7 +13,7 @@ interface FormulaKeypadProps {
 
 const FormulaKeypad: React.FC<FormulaKeypadProps> = ({ handleFnFX, handleNewField, handleParenthesis, handleOperator, handleNumber, handleUndo, contentEditableRef }) => {
   return (
-    <Keypad
+  <Keypad
       handleFnFX={handleFnFX}
       handleNewField={handleNewField}
       handleParenthesis={handleParenthesis}

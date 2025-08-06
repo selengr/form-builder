@@ -1,9 +1,5 @@
-import {ReactNode} from "react";
+import { ReactNode } from 'react';
 
-export default function BuilderPageLayout({children,}: {
-    children: ReactNode;
-}) {
-    return <>
-        {children}
-    </>;
+export default function BuilderPageLayout({ children }: { children: ReactNode }) {
+  return <>{children}</>;
 }

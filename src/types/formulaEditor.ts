@@ -1,9 +1,9 @@
 export interface Element {
-  type: "OPERATOR" | "NUMBER" | "NEW_FIELD" | "PARENTHESIS" | "AVG_PARENTHESIS" | "NEW_FnFx";
+  type: 'OPERATOR' | 'NUMBER' | 'NEW_FIELD' | 'PARENTHESIS' | 'AVG_PARENTHESIS' | 'NEW_FnFx';
   content: string;
   id?: string;
   mainIndex?: number;
-  isInAvg?:any
+  isInAvg?: any;
 }
 
 export interface FnFxItem {

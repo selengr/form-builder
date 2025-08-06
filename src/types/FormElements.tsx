@@ -1,35 +1,22 @@
-"use client";
+'use client';
 
-import {IFormElementConstructor, IFormOptionList, tempObj} from "./bulider";
-import {SpectralFormElement} from "@/components/Fields/SpectralField";
-import {TextFieldFormElement} from "@/components/Fields/TextField";
-import {TitleFieldFinishFormElement} from "@/components/Fields/TitleFieldFinish";
-import {TitleFieldStartFormElement} from "@/components/Fields/TitleFieldStart";
-import {MultipleChoiceFormElement} from "@/components/Fields/MultipleChoiceField";
-import {MultipleChoiceImageFormElement} from "@/components/Fields/MultipleChoiceImageField";
-import {InfoFieldFormElement} from "@/components/Fields/InfoField";
+import { IFormElementConstructor, IFormOptionList, tempObj } from './bulider';
+import { SpectralFormElement } from '@/components/Fields/SpectralField';
+import { TextFieldFormElement } from '@/components/Fields/TextField';
+import { TitleFieldFinishFormElement } from '@/components/Fields/TitleFieldFinish';
+import { TitleFieldStartFormElement } from '@/components/Fields/TitleFieldStart';
+import { MultipleChoiceFormElement } from '@/components/Fields/MultipleChoiceField';
+import { MultipleChoiceImageFormElement } from '@/components/Fields/MultipleChoiceImageField';
+import { InfoFieldFormElement } from '@/components/Fields/InfoField';
 
-export type ElementsType =
-    | "TEXT_FIELD"
-    | "MULTIPLE_CHOICE"
-    | "TitleFieldStart"
-    | "TitleFieldFinish"
-    | "MULTIPLE_CHOICE_IMAGE"
-    | "SPECTRAL"
-    | "INFO_FIELD";
+export type ElementsType = 'TEXT_FIELD' | 'MULTIPLE_CHOICE' | 'TitleFieldStart' | 'TitleFieldFinish' | 'MULTIPLE_CHOICE_IMAGE' | 'SPECTRAL' | 'INFO_FIELD';
 
 export type SubmitFunction = (key: number, value: string) => void;
 
 export type FormElement = {
   questionType: ElementsType;
 
-  construct: ({
-                questionId,
-                questionGroupId,
-                formId,
-                title,
-                position,
-              }: IFormElementConstructor) => FormElementInstance;
+  construct: ({ questionId, questionGroupId, formId, title, position }: IFormElementConstructor) => FormElementInstance;
 
   designerBtnElement: {
     label: string;

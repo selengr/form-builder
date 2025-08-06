@@ -1,5 +1,5 @@
-import {styled} from '@mui/material';
-import {Dashboard} from '@uppy/react';
+import { styled } from '@mui/material';
+import { Dashboard } from '@uppy/react';
 
 const CustomUppy = styled(Dashboard)(() => ({
   '*': { boxSizing: 'border-box !important' },
@@ -57,10 +57,9 @@ const CustomUppy = styled(Dashboard)(() => ({
                 '& .uppy-u-reset.uppy-StatusBar-actionCircleBtn': {
                   display: 'none',
                 },
-                '& .uppy-u-reset.uppy-c-btn.uppy-StatusBar-actionBtn.uppy-StatusBar-actionBtn--retry':
-                  {
-                    direction: 'rtl',
-                  },
+                '& .uppy-u-reset.uppy-c-btn.uppy-StatusBar-actionBtn.uppy-StatusBar-actionBtn--retry': {
+                  direction: 'rtl',
+                },
               },
               '& .uppy-StatusBar-content': {
                 padding: '0',
@@ -94,10 +93,9 @@ const CustomUppy = styled(Dashboard)(() => ({
         '& .uppy-StatusBar.is-complete': {
           display: 'flex',
           justifyContent: 'center',
-          '& button.uppy-u-reset.uppy-c-btn.uppy-StatusBar-actionBtn.uppy-StatusBar-actionBtn--done':
-            {
-              display: 'none',
-            },
+          '& button.uppy-u-reset.uppy-c-btn.uppy-StatusBar-actionBtn.uppy-StatusBar-actionBtn--done': {
+            display: 'none',
+          },
         },
         width: '100% !important',
         minHeight: '100% !important',

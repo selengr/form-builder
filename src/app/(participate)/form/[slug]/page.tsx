@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import React, {useState} from "react";
-import {useParticipateForm} from "@/hooks/useParticipateForm";
-import Loading from "@/app/(builder)/preview/[id]/loading";
-import ResponsiveContainer from "@/templates/form/ContentWrapper";
-import FormLimitation from "@/templates/form/FormLimitation";
-import {ErrorStep, FinishStep, QuestionStep} from "./components";
+import React, { useState } from 'react';
+import { useParticipateForm } from '@/hooks/useParticipateForm';
+import Loading from '@/app/(builder)/preview/[id]/loading';
+import ResponsiveContainer from '@/templates/form/ContentWrapper';
+import FormLimitation from '@/templates/form/FormLimitation';
+import { ErrorStep, FinishStep, QuestionStep } from './components';
 
-export default function ParticipateFormPage({params}: { params: { slug: string } }) {
+export default function ParticipateFormPage({ params }: { params: { slug: string } }) {
   const [limitationStepPassed, setLimitationStepPassed] = useState(false);
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
 
@@ -29,10 +29,10 @@ export default function ParticipateFormPage({params}: { params: { slug: string }
     initializeQuestion,
     realFormID,
     hasError,
-    isCurrentFirstQuestion
+    isCurrentFirstQuestion,
   } = useParticipateForm();
 
-  if (firstLoading) return <LoadingScreen/>;
+  if (firstLoading) return <LoadingScreen />;
 
   if (limitation.isLimited && !limitationStepPassed) {
     return (
@@ -51,17 +51,20 @@ export default function ParticipateFormPage({params}: { params: { slug: string }
   }
 
   if (finishPage) {
-    return <FinishStep formName={formName}
-                       replace={replace}
-                       formId={realFormID}
-                       isReportDialogOpen={isReportDialogOpen}
-                       handleOpenReportDialog={() => setIsReportDialogOpen(true)}
-                       handleCloseReportDialog={() => setIsReportDialogOpen(false)}
-    />;
+    return (
+      <FinishStep
+        formName={formName}
+        replace={replace}
+        formId={realFormID}
+        isReportDialogOpen={isReportDialogOpen}
+        handleOpenReportDialog={() => setIsReportDialogOpen(true)}
+        handleCloseReportDialog={() => setIsReportDialogOpen(false)}
+      />
+    );
   }
 
   if (hasError.status) {
-    return <ErrorStep message={hasError.message} replace={replace}/>;
+    return <ErrorStep message={hasError.message} replace={replace} />;
   }
 
   return (
@@ -86,8 +89,8 @@ export default function ParticipateFormPage({params}: { params: { slug: string }
 
 function LoadingScreen() {
   return (
-    <div className="w-full h-screen flex justify-center items-center bg-white">
-      <Loading/>
+    <div className='w-full h-screen flex justify-center items-center bg-white'>
+      <Loading />
     </div>
   );
 }

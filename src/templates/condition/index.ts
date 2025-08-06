@@ -1,1 +1,1 @@
-export { default as ConditionSkeleton } from "./ConditionSkeleton"
+export { default as ConditionSkeleton } from './ConditionSkeleton';

@@ -1,23 +1,10 @@
-import {type FC} from 'react';
+import { type FC } from 'react';
 
 import ShareController from './ShareController';
 
-const Share: FC<Props> = ({
-  children,
-  shareData,
-  onInteraction,
-  onSuccess,
-  onError,
-  disabled,
-}) => {
+const Share: FC<Props> = ({ children, shareData, onInteraction, onSuccess, onError, disabled }) => {
   return (
-    <ShareController
-      shareData={shareData}
-      onInteraction={onInteraction}
-      onSuccess={onSuccess}
-      onError={onError}
-      disabled={disabled}
-    >
+    <ShareController shareData={shareData} onInteraction={onInteraction} onSuccess={onSuccess} onError={onError} disabled={disabled}>
       {children}
     </ShareController>
   );

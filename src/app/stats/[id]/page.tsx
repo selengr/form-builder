@@ -1,72 +1,52 @@
-"use client";
+'use client';
 
-import { useParams, useRouter } from "next/navigation";
-import { ReportHeader, ReportPagination, ReportTable } from "./component";
-import { useStatsViewModel } from "./viewModel";
-import { useEffect, useState } from "react";
+import { useParams, useRouter } from 'next/navigation';
+import { ReportHeader, ReportPagination, ReportTable } from './component';
+import { useStatsViewModel } from './viewModel';
+import { useEffect, useState } from 'react';
 
 export interface UserType {
-    takePartId: number;
-    name: string;
+  takePartId: number;
+  name: string;
 }
 
 export default function StatsPage() {
-    const router = useRouter();
-    const params = useParams();
-    const formId = params?.id?.toString(); // اطمینان از string بودن id
+  const router = useRouter();
+  const params = useParams();
+  const formId = params?.id?.toString(); // اطمینان از string بودن id
 
-    const {
-        formData,
-        headData,
-        allData,
-        isLoading,
-        page: currentPage,
-        setPage: setCurrentPage,
-        pageSize: rowsPerPage,
-        setPageSize: setRowsPerPage,
-        totalItems,
-    } = useStatsViewModel();
+  const { formData, headData, allData, isLoading, page: currentPage, setPage: setCurrentPage, pageSize: rowsPerPage, setPageSize: setRowsPerPage, totalItems } = useStatsViewModel();
 
-    const [selectedUsers, setSelectedUsers] = useState<UserType[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<UserType[]>([]);
 
-    useEffect(() => {
-        if (formId) {
-            const raw = localStorage.getItem("selectedUsersByForm");
-            const data = raw ? JSON.parse(raw) : {};
-            setSelectedUsers(data[formId] || []);
-        }
-    }, [formId]);
+  useEffect(() => {
+    if (formId) {
+      const raw = localStorage.getItem('selectedUsersByForm');
+      const data = raw ? JSON.parse(raw) : {};
+      setSelectedUsers(data[formId] || []);
+    }
+  }, [formId]);
 
-    return (
-        <div className="w-0 grow flex flex-col md:p-4 p-2 overflow-x-hidden">
-            <div className="flex-grow bg-white rounded-xl p-4 overflow-hidden flex flex-col min-w-0">
-                <ReportHeader
-                    title={formData.name || "گزارش"}
-                    onBack={() => router.push("/reports")}
-                />
+  return (
+    <div className='w-0 grow flex flex-col md:p-4 p-2 overflow-x-hidden'>
+      <div className='flex-grow bg-white rounded-xl p-4 overflow-hidden flex flex-col min-w-0'>
+        <ReportHeader title={formData.name || 'گزارش'} onBack={() => router.push('/reports')} />
 
-                <div className="flex-grow overflow-hidden min-w-0">
-                    <ReportTable
-                        headData={headData}
-                        allData={allData}
-                        isLoading={isLoading}
-                        selectedUsers={selectedUsers}
-                        setSelectedUsers={setSelectedUsers}
-                        formId={Number(formId)}
-                    />
-                </div>
-
-                <ReportPagination
-                    totalItems={totalItems}
-                    currentPage={currentPage}
-                    rowsPerPage={rowsPerPage}
-                    onPageChange={setCurrentPage}
-                    onRowsPerPageChange={setRowsPerPage}
-                    selectedUsers={selectedUsers}
-                    setSelectedUsers={setSelectedUsers}
-                    formId={Number(formId)}
-                />
-            </div>
+        <div className='flex-grow overflow-hidden min-w-0'>
+          <ReportTable headData={headData} allData={allData} isLoading={isLoading} selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers} formId={Number(formId)} />
         </div>
-    );
+
+        <ReportPagination
+          totalItems={totalItems}
+          currentPage={currentPage}
+          rowsPerPage={rowsPerPage}
+          onPageChange={setCurrentPage}
+          onRowsPerPageChange={setRowsPerPage}
+          selectedUsers={selectedUsers}
+          setSelectedUsers={setSelectedUsers}
+          formId={Number(formId)}
+        />
+      </div>
+    </div>
+  );
 }

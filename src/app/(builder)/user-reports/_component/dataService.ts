@@ -1,39 +1,45 @@
-import {clientFetch} from "@/components/ListGrid/clientFetch";
+import { clientFetch } from '@/components/ListGrid/clientFetch';
 
 interface SearchBoxItem {
-  fieldName: "typeOfReport" | "responseForDestroyerReport";
-  fieldOperation: "MATCH" | "EQUAL" | "DSC" | "ASC" | "IN";
+  fieldName: 'typeOfReport' | 'responseForDestroyerReport';
+  fieldOperation: 'MATCH' | 'EQUAL' | 'DSC' | 'ASC' | 'IN';
   fieldValue: string | string[];
-  nextConditionOperator: "OR" | "AND";
+  nextConditionOperator: 'OR' | 'AND';
 }
 
 const PAGE_SIZE = 10;
-const DEFAULT_SEARCH_FILTER = {responseForDestroyerReport: "ALL", typeOfReport: "ALL"};
+const DEFAULT_SEARCH_FILTER = { responseForDestroyerReport: 'ALL', typeOfReport: 'ALL' };
 
-export async function fetchData({
-                                  pageParam = 0
-                                }: {
-  pageParam: number
-}, searchBoxList: SearchBoxItem[], filterBoxList: SearchBoxItem[], url: string, searchQueryFilter = DEFAULT_SEARCH_FILTER) {
+export async function fetchData(
+  {
+    pageParam = 0,
+  }: {
+    pageParam: number;
+  },
+  searchBoxList: SearchBoxItem[],
+  filterBoxList: SearchBoxItem[],
+  url: string,
+  searchQueryFilter = DEFAULT_SEARCH_FILTER,
+) {
   const filterRestrictions: SearchBoxItem[] = [];
-  if (searchQueryFilter.responseForDestroyerReport && searchQueryFilter.responseForDestroyerReport !== "ALL") {
+  if (searchQueryFilter.responseForDestroyerReport && searchQueryFilter.responseForDestroyerReport !== 'ALL') {
     filterRestrictions.push({
-      fieldName: "responseForDestroyerReport",
-      fieldOperation: "EQUAL",
+      fieldName: 'responseForDestroyerReport',
+      fieldOperation: 'EQUAL',
       fieldValue: searchQueryFilter.responseForDestroyerReport,
-      nextConditionOperator: "AND"
+      nextConditionOperator: 'AND',
     });
   }
-  if (searchQueryFilter.typeOfReport && searchQueryFilter.typeOfReport !== "ALL") {
+  if (searchQueryFilter.typeOfReport && searchQueryFilter.typeOfReport !== 'ALL') {
     filterRestrictions.push({
-      fieldName: "typeOfReport",
-      fieldOperation: "EQUAL",
+      fieldName: 'typeOfReport',
+      fieldOperation: 'EQUAL',
       fieldValue: searchQueryFilter.typeOfReport,
-      nextConditionOperator: "AND"
+      nextConditionOperator: 'AND',
     });
   }
 
-  const validCombinedRestrictionList = [...searchBoxList, ...filterBoxList, ...filterRestrictions].filter(item => {
+  const validCombinedRestrictionList = [...searchBoxList, ...filterBoxList, ...filterRestrictions].filter((item) => {
     if (item === undefined || item === null) return false;
     if (typeof item.fieldValue === 'string') {
       return item.fieldValue !== '';
@@ -44,11 +50,11 @@ export async function fetchData({
     return true;
   });
 
-  const searchFilterBoxListPayload = [{restrictionList: validCombinedRestrictionList}];
+  const searchFilterBoxListPayload = [{ restrictionList: validCombinedRestrictionList }];
 
   const params = {
     searchFilterBoxList: searchFilterBoxListPayload,
-    sortList: [{fieldName: "id", type: "DSC"}],
+    sortList: [{ fieldName: 'id', type: 'DSC' }],
     page: pageParam,
     rows: PAGE_SIZE,
   };
@@ -58,9 +64,9 @@ export async function fetchData({
 
   if (!response) {
     // Handle error or throw a specific error if needed
-    throw new Error("Failed to fetch data");
+    throw new Error('Failed to fetch data');
   }
-// debugger
+  // debugger
   return {
     data: response.data,
     publicationApprovalByAdmin: response.data.publicationApprovalByAdmin,

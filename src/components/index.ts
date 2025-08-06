@@ -1,1 +1,1 @@
-export { default as CircleLoading} from "./CircleLoading"
+export { default as CircleLoading } from './CircleLoading';

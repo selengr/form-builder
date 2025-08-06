@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import {UppyUploader} from "@/components/uploader/UppyUploader";
+import { UppyUploader } from '@/components/uploader/UppyUploader';
 
 interface UploaderPageProps {
   onFileUploadSuccess?: (fileId: string) => void;
 }
 
-export default function UploaderPage({onFileUploadSuccess}: UploaderPageProps) {
-
-  const handleUppyData = (data:any) => {
+export default function UploaderPage({ onFileUploadSuccess }: UploaderPageProps) {
+  const handleUppyData = (data: any) => {
     if (onFileUploadSuccess) {
       onFileUploadSuccess(data[0]);
     }
   };
 
-  return (<div className="p-6">
+  return (
+    <div className='p-6'>
       <UppyUploader
         sx={{}}
         getData={handleUppyData}
@@ -24,8 +24,9 @@ export default function UploaderPage({onFileUploadSuccess}: UploaderPageProps) {
           minNumberOfFiles: 1,
           maxNumberOfFiles: 1,
           maxTotalFileSize: undefined,
-          allowedFileTypes: [".xls", ".xlsx"],
+          allowedFileTypes: ['.xls', '.xlsx'],
         }}
       />
-    </div>);
+    </div>
+  );
 }

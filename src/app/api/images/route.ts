@@ -1,4 +1,4 @@
-import {NextRequest, NextResponse} from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import mime from 'mime';
@@ -23,8 +23,7 @@ export async function GET(req: NextRequest) {
   const fetchDest = req.headers.get('sec-fetch-dest');
   const acceptHeader = req.headers.get('accept') || '';
 
-  const isImageRequest =
-    fetchDest === 'image' || acceptHeader.includes('image/');
+  const isImageRequest = fetchDest === 'image' || acceptHeader.includes('image/');
 
   if (!isImageRequest) {
     return new NextResponse('Unauthorized', { status: 404 });

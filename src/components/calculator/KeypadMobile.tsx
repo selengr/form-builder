@@ -5,7 +5,7 @@ import CalculatorClear from './calculator-clear';
 import { Box, Button, Grid2, MenuItem, Select, Stack } from '@mui/material';
 import CalculatorParenthesis from './calculator-parenthesis';
 
-interface KeypadProps {
+interface KeypadMobileProps {
   handleFnFX: () => void;
   handleNewField: () => void;
   handleParenthesis: (content: string) => void;
@@ -15,14 +15,14 @@ interface KeypadProps {
   contentEditable: React.RefObject<HTMLDivElement>;
 }
 
-const Keypad: React.FC<KeypadProps> = ({ handleFnFX, handleNewField, handleParenthesis, handleOperator, handleNumber, handleUndo, contentEditable }) => {
+const KeypadMobile: React.FC<KeypadMobileProps> = ({ handleFnFX, handleNewField, handleParenthesis, handleOperator, handleNumber, handleUndo, contentEditable }) => {
   const operators = ['+', '-', '*', '/'];
   const numbers = ['0', '.', '7', '8', '9', '4', '5', '6', '1', '2', '3'];
 
   return (
     <Box
       sx={{
-        width: '26%',
+        width: {xs:"100%", md: "26%"},
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'start',
@@ -35,7 +35,7 @@ const Keypad: React.FC<KeypadProps> = ({ handleFnFX, handleNewField, handleParen
           '& .MuiSelect-select': {
             padding: 1,
           },
-          width: 135,
+            width: {xs:"100%", md: 135},
           height: 30,
           fontWeight: 500,
           marginBottom: '2px',
@@ -106,7 +106,7 @@ const Keypad: React.FC<KeypadProps> = ({ handleFnFX, handleNewField, handleParen
       <Button
         sx={{
           border: '1px solid white',
-          width: 135,
+          width: {xs:"100%", md:135},
           height: 30,
           borderRadius: '8px',
           fontWeight: 600,
@@ -179,4 +179,4 @@ const Keypad: React.FC<KeypadProps> = ({ handleFnFX, handleNewField, handleParen
   );
 };
 
-export default Keypad;
+export default KeypadMobile;

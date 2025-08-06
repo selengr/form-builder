@@ -1,40 +1,40 @@
-"use client";
+'use client';
 
-import React, {useMemo} from "react";
-import {z} from "zod";
-import {useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
+import React, { useMemo } from 'react';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 
-import FormProvider from "@/components/hook-form/FormProvider";
-import {RHFSwitch, RHFTextField} from "@/components/hook-form";
-import FieldDialogActionBottomButtons from "../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons";
+import FormProvider from '@/components/hook-form/FormProvider';
+import { RHFSwitch, RHFTextField } from '@/components/hook-form';
+import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
 
-import {AxiosApi} from "@/services/axios/AxiosApi";
-import useDesigner from "@/hooks/useDesigner";
-import useElements from "@/hooks/useElements";
-import useActionOpenDialog from "@/hooks/useActionOpenDialog";
-import useActionSelectedElement from "@/hooks/useActionSelectedElement";
-import useSelectedElement from "@/hooks/useSelectedElement";
-import useActionDesigner from "@/hooks/useActionDesigner";
+import { AxiosApi } from '@/services/axios/AxiosApi';
+import useDesigner from '@/hooks/useDesigner';
+import useElements from '@/hooks/useElements';
+import useActionOpenDialog from '@/hooks/useActionOpenDialog';
+import useActionSelectedElement from '@/hooks/useActionSelectedElement';
+import useSelectedElement from '@/hooks/useSelectedElement';
+import useActionDesigner from '@/hooks/useActionDesigner';
 
-import InformationIcon from "@/../public/images/home-page/information.svg";
-import {ElementsType, FormElement, FormElementInstance} from "@/types/FormElements";
-import {IFormElementConstructor, IQPLInfoField} from "@/types/bulider";
+import InformationIcon from '@/../public/images/home-page/information.svg';
+import { ElementsType, FormElement, FormElementInstance } from '@/types/FormElements';
+import { IFormElementConstructor, IQPLInfoField } from '@/types/bulider';
 
-const questionType: ElementsType = "INFO_FIELD";
+const questionType: ElementsType = 'INFO_FIELD';
 
 const questionPropertyList: IQPLInfoField = [
-  { id: 1, questionPropertyEnum: "MESSAGE", value: "" },
-  { id: 2, questionPropertyEnum: "THE_END", value: "false" },
+  { id: 1, questionPropertyEnum: 'MESSAGE', value: '' },
+  { id: 2, questionPropertyEnum: 'THE_END', value: 'false' },
 ];
 
 const propertiesSchema = z.object({
-  title: z.string().trim().min(1, "حداقل باید 1 و حداکثر 4000 کاراکتر باشد").max(3999),
+  title: z.string().trim().min(1, 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد').max(3999),
   MESSAGE: z.object({
-    value: z.string().max(3999, "حداکثر میتواند 4000 کاراکتر باشد").optional(),
+    value: z.string().max(3999, 'حداکثر میتواند 4000 کاراکتر باشد').optional(),
     id: z.number(),
   }),
   THE_END: z.object({
@@ -51,24 +51,23 @@ const DesignerComponent = React.memo(({ elementInstance }: { elementInstance: Fo
   const element = elementInstance as CustomInstance;
 
   return (
-    <div className="flex items-start flex-col overflow-hidden absolute" dir="rtl" style={{ width: "calc(100% - 96px)" }}>
-      <p dir="rtl" className="text-base overflow-hidden text-ellipsis w-full" style={{ textWrap: "nowrap", fontWeight: 700 }}>
+    <div className='flex items-start flex-col overflow-hidden absolute' dir='rtl' style={{ width: 'calc(100% - 96px)' }}>
+      <p dir='rtl' className='text-base overflow-hidden text-ellipsis w-full' style={{ textWrap: 'nowrap', fontWeight: 700 }}>
         {element.title}
       </p>
-      <p className="text-xs text-[#424242]">#بخش راهنما</p>
+      <p className='text-xs text-[#424242]'>#بخش راهنما</p>
     </div>
   );
 });
 
-
 function formatTextWithLinksAndLineBreaks(text: string) {
   const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g;
   const escaped = text
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/\n/g, "<br/>")
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\n/g, '<br/>')
     .replace(urlRegex, (match) => {
-      const href = match.startsWith("http") ? match : `https://${match}`;
+      const href = match.startsWith('http') ? match : `https://${match}`;
       return `<a href="${href}" target="_blank" rel="noopener noreferrer" style="color:#1e88e5;">${match}</a>`;
     });
 
@@ -77,10 +76,10 @@ function formatTextWithLinksAndLineBreaks(text: string) {
 
 function FormComponent({ elementInstance }: { elementInstance?: FormElementInstance }) {
   const element = elementInstance as CustomInstance;
-  const message = element.questionPropertyList.find((el) => el.questionPropertyEnum === "MESSAGE")?.value;
+  const message = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'MESSAGE')?.value;
 
   return (
-    <Box display="flex" gap={1} flexDirection="column" width="100%" maxWidth="600px">
+    <Box display='flex' gap={1} flexDirection='column' width='100%' maxWidth='600px'>
       <Typography sx={{ marginRight: 3, fontWeight: 600, fontSize: 18 }}>{element.title}</Typography>
       {message && (
         <Typography
@@ -90,7 +89,7 @@ function FormComponent({ elementInstance }: { elementInstance?: FormElementInsta
             fontSize: 16,
             whiteSpace: 'pre-line',
           }}
-          component="div"
+          component='div'
           dangerouslySetInnerHTML={{ __html: formatTextWithLinksAndLineBreaks(message) }}
         />
       )}
@@ -110,7 +109,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   const defaultValues = useMemo(() => {
     const values = element.questionPropertyList.reduce((acc: any, attr) => {
       acc[attr.questionPropertyEnum] = {
-        value: attr.questionPropertyEnum === "THE_END" ? attr.value === "true" : attr.value ?? "",
+        value: attr.questionPropertyEnum === 'THE_END' ? attr.value === 'true' : (attr.value ?? ''),
         id: attr.id,
       };
       return acc;
@@ -121,37 +120,38 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
   const methods = useForm<PropertiesFormValues>({
     resolver: zodResolver(propertiesSchema),
-    mode: "onChange",
+    mode: 'onChange',
     defaultValues,
   });
 
-  const { handleSubmit, reset, formState: { isSubmitting } } = methods;
+  const {
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = methods;
 
   const onSubmit = async (values: PropertiesFormValues) => {
-    const selected = elements.find(el => el.questionId === element.questionId);
+    const selected = elements.find((el) => el.questionId === element.questionId);
 
     const props = [
       {
-        questionPropertyEnum: "THE_END",
-        value: values.THE_END?.value ? "true" : "false",
+        questionPropertyEnum: 'THE_END',
+        value: values.THE_END?.value ? 'true' : 'false',
         id: selected ? values.THE_END.id : null,
       },
       {
-        questionPropertyEnum: "MESSAGE",
-        value: values.MESSAGE?.value ?? "",
+        questionPropertyEnum: 'MESSAGE',
+        value: values.MESSAGE?.value ?? '',
         id: selected ? values.MESSAGE.id : null,
       },
     ];
 
     const groupId = selectedElement?.fieldElement?.questionGroupId;
-    const groupElements = elements.filter(el => el.questionGroupId === groupId);
+    const groupElements = elements.filter((el) => el.questionGroupId === groupId);
 
-    const prevGroupIdx = Math.max(
-      questionGroups.findIndex(q => q === groupId) - 1,
-      0
-    );
+    const prevGroupIdx = Math.max(questionGroups.findIndex((q) => q === groupId) - 1, 0);
 
-    const insertIdx = elements.findLastIndex(el => el.questionGroupId === questionGroups[prevGroupIdx]) + 1;
+    const insertIdx = elements.findLastIndex((el) => el.questionGroupId === questionGroups[prevGroupIdx]) + 1;
 
     const newField = {
       questionId: selected ? element.questionId : undefined,
@@ -165,7 +165,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
     try {
       if (!selected) {
-        const { data } = await AxiosApi.post("/question", newField);
+        const { data } = await AxiosApi.post('/question', newField);
         addElement(selectedElement?.position?.realPosition ?? insertIdx, data);
       } else {
         const { data } = await AxiosApi.put(`/question/${element.questionId}`, newField);
@@ -182,30 +182,38 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Box sx={{ display: "flex", flexDirection: "column", height: "100%", paddingX: 1.5, direction: "ltr", width: "100%" }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          paddingX: 1.5,
+          direction: 'ltr',
+          width: '100%',
+        }}>
         <Stack spacing={1}>
-          <Typography variant="subtitle2" fontWeight={700}>عنوان راهنما:</Typography>
-          <Box sx={{ px: 0.5, "& .MuiFormControl-root, & .MuiInputBase-root": { borderRadius: "10px" } }}>
-            <RHFTextField name="title" />
+          <Typography variant='subtitle2' fontWeight={700}>
+            عنوان راهنما:
+          </Typography>
+          <Box sx={{ px: 0.5, '& .MuiFormControl-root, & .MuiInputBase-root': { borderRadius: '10px' } }}>
+            <RHFTextField name='title' />
           </Box>
         </Stack>
 
         <Stack mt={2}>
-          <Typography variant="subtitle2" fontWeight={700} mb={1.5}>متن راهنما:</Typography>
-          <Box sx={{ px: 0.5, "& .MuiFormControl-root, & .MuiInputBase-root": { borderRadius: "10px" } }}>
-            <RHFTextField
-              multiline
-              minRows={3}
-              maxRows={6}
-              name="MESSAGE.value"
-              placeholder="متن راهنمای خود را بنویسید."
-            />
+          <Typography variant='subtitle2' fontWeight={700} mb={1.5}>
+            متن راهنما:
+          </Typography>
+          <Box sx={{ px: 0.5, '& .MuiFormControl-root, & .MuiInputBase-root': { borderRadius: '10px' } }}>
+            <RHFTextField multiline minRows={3} maxRows={6} name='MESSAGE.value' placeholder='متن راهنمای خود را بنویسید.' />
           </Box>
         </Stack>
 
-        <Stack direction="row" justifyContent="space-between" alignItems="flex-start" mt={3}>
-          <Typography variant="subtitle2" fontWeight={700}>به جای صفحه پایان باشد</Typography>
-          <RHFSwitch label="" name="THE_END.value" labelPlacement="start" sx={{ mb: 1, mx: 0, width: 1, justifyContent: "space-between" }} />
+        <Stack direction='row' justifyContent='space-between' alignItems='flex-start' mt={3}>
+          <Typography variant='subtitle2' fontWeight={700}>
+            به جای صفحه پایان باشد
+          </Typography>
+          <RHFSwitch label='' name='THE_END.value' labelPlacement='start' sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }} />
         </Stack>
 
         <FieldDialogActionBottomButtons status={isSubmitting} />
@@ -225,7 +233,7 @@ export const InfoFieldFormElement: FormElement = {
     position,
     questionPropertyList,
   }),
-  designerBtnElement: { label: "بخش راهنما", icon: InformationIcon },
+  designerBtnElement: { label: 'بخش راهنما', icon: InformationIcon },
   designerComponent: DesignerComponent,
   formComponent: FormComponent,
   propertiesComponent: PropertiesComponent,

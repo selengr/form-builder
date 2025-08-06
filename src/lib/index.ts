@@ -1,1 +1,1 @@
-export *  from "./idGenerator"
+export * from './idGenerator';

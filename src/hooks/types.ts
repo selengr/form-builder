@@ -1,8 +1,8 @@
-import type {Breakpoint} from "@mui/material";
+import type { Breakpoint } from '@mui/material';
 
 type TReturnType = boolean;
 
-type TQuery = "up" | "down" | "between" | "only";
+type TQuery = 'up' | 'down' | 'between' | 'only';
 
 type TValue = Breakpoint | number;
 

@@ -1,6 +1,6 @@
-import {toast} from 'sonner';
-import {AxiosApi} from '@/services/axios/AxiosApi';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { AxiosApi } from '@/services/axios/AxiosApi';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const deleteCalculator = async (id: number) => {
   const url = `/calculation/delete/${id}`;
@@ -9,7 +9,7 @@ const deleteCalculator = async (id: number) => {
 };
 
 export const useDeleteCalculator = () => {
-  const queryClient = useQueryClient(); 
+  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationKey: ['delete-calculation'],
     mutationFn: (id: number) => deleteCalculator(id),
@@ -18,9 +18,8 @@ export const useDeleteCalculator = () => {
       toast.success(` محاسبه گر با موفقیت حذف شد`);
     },
     onError: () => {
-      toast.error("انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.");
+      toast.error('انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.');
     },
-
   });
 
   return mutation;

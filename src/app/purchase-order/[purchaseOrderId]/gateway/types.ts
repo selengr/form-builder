@@ -13,8 +13,7 @@ export interface UserCreditListResponse {
   processUUID: string;
 }
 
-export interface SelectedCreditCardProps
-  extends Pick<UserCreditListResponse, "availableAmount" | "creditTypeValue"> {
+export interface SelectedCreditCardProps extends Pick<UserCreditListResponse, 'availableAmount' | 'creditTypeValue'> {
   onDelete: () => void;
   remainedCredit: number;
 }

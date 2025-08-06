@@ -1,10 +1,10 @@
-"use client"
+'use client';
 
-import {useState} from "react";
-import {Autocomplete, AutocompleteRenderInputParams, Box, IconButton, Popper, Typography,} from "@mui/material";
-import {IoIosArrowDown} from "react-icons/io";
-import {type IDataAutocomplete} from "./types";
-import Input from "./Input";
+import { useState } from 'react';
+import { Autocomplete, AutocompleteRenderInputParams, Box, IconButton, Popper, Typography } from '@mui/material';
+import { IoIosArrowDown } from 'react-icons/io';
+import { type IDataAutocomplete } from './types';
+import Input from './Input';
 
 function DataAutocomplete<T>(props: IDataAutocomplete<T>) {
   const { getOptionLabel, ...rest } = props;
@@ -14,29 +14,26 @@ function DataAutocomplete<T>(props: IDataAutocomplete<T>) {
       open={open}
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
-      PopperComponent={(params) => (
-        <Popper sx={{ direction: "rtl" }} {...params} />
-      )}
-      ListboxProps={{ sx: { "*": { direction: "ltr" } } }}
+      PopperComponent={(params) => <Popper sx={{ direction: 'rtl' }} {...params} />}
+      ListboxProps={{ sx: { '*': { direction: 'ltr' } } }}
       renderInput={(params: AutocompleteRenderInputParams) => {
         const { InputLabelProps, InputProps, ...rest } = params;
         return (
-          <Box position="relative" display="flex" alignItems="center">
+          <Box position='relative' display='flex' alignItems='center'>
             <IconButton
               sx={{
-                position: "absolute",
-                right: "0.2rem",
-                transform: open ? "rotate(180deg)" : undefined,
-              }}
-            >
-              <IoIosArrowDown size="1rem" />
+                position: 'absolute',
+                right: '0.2rem',
+                transform: open ? 'rotate(180deg)' : undefined,
+              }}>
+              <IoIosArrowDown size='1rem' />
             </IconButton>
-            <Input ref={InputProps.ref} {...rest}/>
+            <Input ref={InputProps.ref} {...rest} />
           </Box>
         );
       }}
       noOptionsText={
-        <Typography fontSize="0.8rem" textAlign="center">
+        <Typography fontSize='0.8rem' textAlign='center'>
           نتیجه‌ای یافت نشد.
         </Typography>
       }

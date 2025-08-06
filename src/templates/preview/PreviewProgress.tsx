@@ -1,7 +1,7 @@
-"use client";
-import usePreview from "@/hooks/usePreview";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Button, Typography } from "@mui/material";
+'use client';
+import usePreview from '@/hooks/usePreview';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Button, Typography } from '@mui/material';
 
 export default function PreviewProgress() {
   const router = useRouter();
@@ -13,7 +13,7 @@ export default function PreviewProgress() {
       const params = new URLSearchParams(searchParams);
       params.set('question', (index - 1).toString());
       router.push(`?${params.toString()}`);
-      dispatch({ type: "pervQuestion" });
+      dispatch({ type: 'pervQuestion' });
     }
   };
 
@@ -22,48 +22,46 @@ export default function PreviewProgress() {
       const params = new URLSearchParams(searchParams);
       params.set('question', (index + 1).toString());
       router.push(`?${params.toString()}`);
-      dispatch({ type: "nextQuestion" });
+      dispatch({ type: 'nextQuestion' });
     }
   };
 
   return (
-    <div className="w-full justify-center items-center mt-6">
-      <div className="bg-[#F7F7FF] rounded-xl overflow-hidden flex items-center">
+    <div className='w-full justify-center items-center mt-6'>
+      <div className='bg-[#F7F7FF] rounded-xl overflow-hidden flex items-center'>
         <Button
-          variant="contained"
+          variant='contained'
           onClick={handlePrev}
           disabled={index === 0}
           sx={{
             width: 120,
             height: 52,
             borderRadius: 0,
-            bgcolor: "#1758BA",
-            boxShadow: "none",
-            "&:hover": { bgcolor: "#174AA0" },
-          }}
-        >
+            bgcolor: '#1758BA',
+            boxShadow: 'none',
+            '&:hover': { bgcolor: '#174AA0' },
+          }}>
           قبلی
         </Button>
 
-        <div className="w-full flex items-center justify-center px-4">
+        <div className='w-full flex items-center justify-center px-4'>
           <Typography fontSize={16} fontWeight={600}>
             سوال {numQuestions === 0 ? 0 : index + 1} از {numQuestions}
           </Typography>
         </div>
 
         <Button
-          variant="contained"
+          variant='contained'
           onClick={handleNext}
           disabled={index + 1 === numQuestions || numQuestions === 0}
           sx={{
             width: 120,
             height: 52,
             borderRadius: 0,
-            bgcolor: "#1758BA",
-            boxShadow: "none",
-            "&:hover": { bgcolor: "#174AA0" },
-          }}
-        >
+            bgcolor: '#1758BA',
+            boxShadow: 'none',
+            '&:hover': { bgcolor: '#174AA0' },
+          }}>
           بعدی
         </Button>
       </div>

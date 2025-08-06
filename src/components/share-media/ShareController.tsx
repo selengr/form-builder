@@ -1,16 +1,9 @@
-"use client";
-import {Snackbar, SnackbarCloseReason} from "@mui/material";
-import {type FC, useState} from "react";
-import {GrCircleInformation} from "react-icons/gr";
+'use client';
+import { Snackbar, SnackbarCloseReason } from '@mui/material';
+import { type FC, useState } from 'react';
+import { GrCircleInformation } from 'react-icons/gr';
 
-const ShareController: FC<Props> = ({
-  children,
-  shareData,
-  onInteraction,
-  onSuccess,
-  onError,
-  disabled,
-}) => {
+const ShareController: FC<Props> = ({ children, shareData, onInteraction, onSuccess, onError, disabled }) => {
   const [openError, setOpenError] = useState(false);
 
   const handleOnClick = async () => {
@@ -27,11 +20,8 @@ const ShareController: FC<Props> = ({
     }
   };
 
-  const handleClose = (
-    event: React.SyntheticEvent | Event,
-    reason?: SnackbarCloseReason
-  ) => {
-    if (reason === "clickaway") {
+  const handleClose = (event: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
+    if (reason === 'clickaway') {
       return;
     }
 
@@ -40,23 +30,23 @@ const ShareController: FC<Props> = ({
 
   return (
     <>
-      <button onClick={handleOnClick} type="button" disabled={disabled}>
+      <button onClick={handleOnClick} type='button' disabled={disabled}>
         {children}
       </button>
       <Snackbar
         message={
-          <div className="flex gap-2 items-center">
-            <GrCircleInformation strokeWidth={0.5} size="1.4rem" />
+          <div className='flex gap-2 items-center'>
+            <GrCircleInformation strokeWidth={0.5} size='1.4rem' />
             <p>مرورگر شما از این ویژگی پشتیبانی نمی کند</p>
           </div>
         }
         ContentProps={{
           style: {
-            backgroundColor: "#dc2626",
-            color: "#FFF",
+            backgroundColor: '#dc2626',
+            color: '#FFF',
           },
         }}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         autoHideDuration={2500}
         onClose={handleClose}
         open={openError}

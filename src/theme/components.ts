@@ -1,6 +1,6 @@
-import type {ThemeOptions} from "@mui/material";
+import type { ThemeOptions } from '@mui/material';
 
-const components: ThemeOptions["components"] = {
+const components: ThemeOptions['components'] = {
   MuiButton: {
     variants: [],
   },

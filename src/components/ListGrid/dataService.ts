@@ -1,39 +1,45 @@
-import {clientFetch} from "./clientFetch"; // Assuming clientFetch is in the same directory or adjust path
+import { clientFetch } from './clientFetch'; // Assuming clientFetch is in the same directory or adjust path
 
 interface SearchBoxItem {
   fieldName: string;
-  fieldOperation: "MATCH" | "EQUAL" | "DSC" | "ASC" | "IN";
+  fieldOperation: 'MATCH' | 'EQUAL' | 'DSC' | 'ASC' | 'IN';
   fieldValue: string | string[];
-  nextConditionOperator: "OR" | "AND";
+  nextConditionOperator: 'OR' | 'AND';
 }
 
 const PAGE_SIZE = 10;
-const DEFAULT_SEARCH_FILTER = {type: "ALL", status: "PUBLIC"};
+const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'PUBLIC' };
 
-export async function fetchData({
-                                  pageParam = 0
-                                }: {
-  pageParam: number
-}, searchBoxList: SearchBoxItem[], filterBoxList: SearchBoxItem[], url: string, searchQueryFilter = DEFAULT_SEARCH_FILTER) {
+export async function fetchData(
+  {
+    pageParam = 0,
+  }: {
+    pageParam: number;
+  },
+  searchBoxList: SearchBoxItem[],
+  filterBoxList: SearchBoxItem[],
+  url: string,
+  searchQueryFilter = DEFAULT_SEARCH_FILTER,
+) {
   const filterRestrictions: SearchBoxItem[] = [];
-  if (searchQueryFilter.type && searchQueryFilter.type !== "ALL") {
+  if (searchQueryFilter.type && searchQueryFilter.type !== 'ALL') {
     filterRestrictions.push({
-      fieldName: "typeEnum",
-      fieldOperation: "EQUAL",
+      fieldName: 'typeEnum',
+      fieldOperation: 'EQUAL',
       fieldValue: searchQueryFilter.type,
-      nextConditionOperator: "AND"
+      nextConditionOperator: 'AND',
     });
   }
-  if (searchQueryFilter.status && searchQueryFilter.status !== "ALL") {
+  if (searchQueryFilter.status && searchQueryFilter.status !== 'ALL') {
     filterRestrictions.push({
-      fieldName: "status",
-      fieldOperation: "EQUAL",
+      fieldName: 'status',
+      fieldOperation: 'EQUAL',
       fieldValue: searchQueryFilter.status,
-      nextConditionOperator: "AND"
+      nextConditionOperator: 'AND',
     });
   }
 
-  const validCombinedRestrictionList = [...searchBoxList, ...filterBoxList, ...filterRestrictions].filter(item => {
+  const validCombinedRestrictionList = [...searchBoxList, ...filterBoxList, ...filterRestrictions].filter((item) => {
     if (item === undefined || item === null) return false;
     if (typeof item.fieldValue === 'string') {
       return item.fieldValue !== '';
@@ -44,11 +50,11 @@ export async function fetchData({
     return true;
   });
 
-  const searchFilterBoxListPayload = [{restrictionList: validCombinedRestrictionList}];
+  const searchFilterBoxListPayload = [{ restrictionList: validCombinedRestrictionList }];
 
   const params = {
     searchFilterBoxList: searchFilterBoxListPayload,
-    sortList: [{fieldName: "id", type: "DSC"}],
+    sortList: [{ fieldName: 'id', type: 'DSC' }],
     page: pageParam,
     rows: PAGE_SIZE,
   };
@@ -58,7 +64,7 @@ export async function fetchData({
 
   if (!response) {
     // Handle error or throw a specific error if needed
-    throw new Error("خطا در دریافت اطلاعات");
+    throw new Error('خطا در دریافت اطلاعات');
   }
 
   return {

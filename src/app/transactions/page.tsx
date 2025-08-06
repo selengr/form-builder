@@ -1,8 +1,7 @@
-"use client";
+'use client';
 
-import {UnderConstruction} from "@/components/underConstruction";
+import { UnderConstruction } from '@/components/underConstruction';
 
 export default function ComingSoon() {
-
-  return (<UnderConstruction/>);
+  return <UnderConstruction />;
 }

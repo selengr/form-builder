@@ -1,3 +1,3 @@
-export * from "./useGetList"
-export * from "./useCheckDependency"
-export * from "./useDeleteCalculator"
+export * from './useGetList';
+export * from './useCheckDependency';
+export * from './useDeleteCalculator';

@@ -1,19 +1,18 @@
-import {AxiosApi} from '@/services/axios/AxiosApi';
-import {useQuery} from '@tanstack/react-query';
-import {IConditionQuestionType} from '@/types/condition';
-import {useParams} from 'next/navigation';
-
+import { AxiosApi } from '@/services/axios/AxiosApi';
+import { useQuery } from '@tanstack/react-query';
+import { IConditionQuestionType } from '@/types/condition';
+import { useParams } from 'next/navigation';
 
 const fetchData = async (id: string | string[]) => {
   const customComboFilterModel = {
-    "type": "COMBO",
-    "entity": "QUESTIONS",
-    "mode": "QUESTIONS_IN_FORM_BUILDER__ALL",
-    "input": "",
-    "page": 0,
-    "rows": 10000,
-    "extMap": {"formId": id, "typeRequest": "QAC_WIHT_OUT_FILTER"}
-  }
+    type: 'COMBO',
+    entity: 'QUESTIONS',
+    mode: 'QUESTIONS_IN_FORM_BUILDER__ALL',
+    input: '',
+    page: 0,
+    rows: 10000,
+    extMap: { formId: id, typeRequest: 'QAC_WIHT_OUT_FILTER' },
+  };
   const baseUrl = '/question/q-and-c-custom-combo';
   const queryString = `?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`;
   const url = baseUrl + queryString;
@@ -21,10 +20,9 @@ const fetchData = async (id: string | string[]) => {
   return response.data;
 };
 
-
 export const useGetQacWithOutFilter = () => {
-  const {id} = useParams();
-  const {data, isFetching} = useQuery({
+  const { id } = useParams();
+  const { data, isFetching } = useQuery({
     queryKey: ['QAC_WIHT_OUT_FILTER'],
     queryFn: () => fetchData(id),
     staleTime: 0,
@@ -35,10 +33,10 @@ export const useGetQacWithOutFilter = () => {
   });
 
   const qacWithOutFilterOptions = data?.dataList?.map((item: IConditionQuestionType) => {
-    const isCalculation = item.elementStr === "CALCULATION";
-    const isTextFieldDate = item.extMap.TEXT_FIELD_PATTERN === "DATE";
-    const isSpectralDouble = item.extMap.SPECTRAL_TYPE === "DOMAIN";
-    const isTextFieldNumber = item.extMap.TEXT_FIELD_PATTERN === "NUMBER";
+    const isCalculation = item.elementStr === 'CALCULATION';
+    const isTextFieldDate = item.extMap.TEXT_FIELD_PATTERN === 'DATE';
+    const isSpectralDouble = item.extMap.SPECTRAL_TYPE === 'DOMAIN';
+    const isTextFieldNumber = item.extMap.TEXT_FIELD_PATTERN === 'NUMBER';
     const isMultiSelect = item.extMap.MULTI_SELECT ? JSON.parse(item.extMap.MULTI_SELECT) : false;
 
     const questionType = isCalculation
@@ -51,7 +49,7 @@ export const useGetQacWithOutFilter = () => {
             ? `${item.extMap.QUESTION_TYPE}_${item.extMap.SPECTRAL_TYPE}*${item.extMap.UNIC_NAME}`
             : isTextFieldNumber
               ? `${item.extMap.QUESTION_TYPE}_${item.extMap.TEXT_FIELD_PATTERN}*${item.extMap.UNIC_NAME}`
-              : `${item.extMap.QUESTION_TYPE}*${item.extMap.UNIC_NAME || ""}`;
+              : `${item.extMap.QUESTION_TYPE}*${item.extMap.UNIC_NAME || ''}`;
 
     return {
       value: `${questionType}@${item.caption}`,

@@ -1,4 +1,4 @@
-import {FormElementInstance} from "./FormElements";
+import { FormElementInstance } from './FormElements';
 
 export type IFormElementConstructor = {
   questionId: number;
@@ -41,120 +41,120 @@ export type ITextFieldFormPatternOptions = {
 export type IQPLInfoField = [
   {
     id: number;
-    questionPropertyEnum: "MESSAGE";
+    questionPropertyEnum: 'MESSAGE';
     value: string;
   },
   {
     id: number;
-    questionPropertyEnum: "THE_END";
+    questionPropertyEnum: 'THE_END';
     value: string;
-  }
+  },
 ];
 
 export type IQPLTextField = [
   {
     id: number;
-    questionPropertyEnum: "TEXT_FIELD_PATTERN";
+    questionPropertyEnum: 'TEXT_FIELD_PATTERN';
     value: string;
   },
   {
     id: number;
-    questionPropertyEnum: "REQUIRED";
+    questionPropertyEnum: 'REQUIRED';
     value: string;
   },
   {
     id: number;
-    questionPropertyEnum: "DESCRIPTION";
+    questionPropertyEnum: 'DESCRIPTION';
     value: string | null;
   },
   {
     id: number;
-    questionPropertyEnum: "MINIMUM_LEN";
+    questionPropertyEnum: 'MINIMUM_LEN';
     value: string | number | null;
   },
   {
     id: number;
-    questionPropertyEnum: "MAXIMUM_LEN";
+    questionPropertyEnum: 'MAXIMUM_LEN';
     value: string | number | null;
   },
   {
     id: number;
-    questionPropertyEnum: "EDIT_ANSWER_LOCKED";
+    questionPropertyEnum: 'EDIT_ANSWER_LOCKED';
     value: string;
-  }
+  },
 ];
 
 export type ISpectralQTapAndOptionsType = { value: string; label: string }[];
 
 export type IQPLSpectral = [
   {
-    questionPropertyEnum: "SPECTRAL_TYPE";
+    questionPropertyEnum: 'SPECTRAL_TYPE';
     value: string;
     id: number;
   },
   {
-    questionPropertyEnum: "REQUIRED";
+    questionPropertyEnum: 'REQUIRED';
     value: string;
     id: number;
   },
   {
-    questionPropertyEnum: "DESCRIPTION";
+    questionPropertyEnum: 'DESCRIPTION';
     value: string | null;
     id: number;
   },
   {
-    questionPropertyEnum: "SELECTION_TYPE";
+    questionPropertyEnum: 'SELECTION_TYPE';
     value: string;
     id: number;
   },
   {
-    questionPropertyEnum: "STEP";
+    questionPropertyEnum: 'STEP';
     value: number | string;
     id: number;
   },
   {
-    questionPropertyEnum: "SPECTRAL_START";
+    questionPropertyEnum: 'SPECTRAL_START';
     value: number | string;
     id: number;
   },
   {
-    questionPropertyEnum: "SPECTRAL_END";
+    questionPropertyEnum: 'SPECTRAL_END';
     value: number | string;
     id: number;
   },
   {
     id: number;
-    questionPropertyEnum: "EDIT_ANSWER_LOCKED";
+    questionPropertyEnum: 'EDIT_ANSWER_LOCKED';
     value: string;
-  }
+  },
 ];
 
 export type IQPLMultipleChoice = [
   {
     id: number;
-    questionPropertyEnum: "MULTI_SELECT";
+    questionPropertyEnum: 'MULTI_SELECT';
     value: string;
   },
   {
     id: number;
-    questionPropertyEnum: "REQUIRED";
+    questionPropertyEnum: 'REQUIRED';
     value: string;
   },
   {
     id: number;
-    questionPropertyEnum: "RANDOMIZE_OPTIONS";
+    questionPropertyEnum: 'RANDOMIZE_OPTIONS';
     value: string;
   },
   {
     id: number;
-    questionPropertyEnum: "DESCRIPTION";
+    questionPropertyEnum: 'DESCRIPTION';
     value: string | null;
   },
   {
     id: number;
-    questionPropertyEnum: "EDIT_ANSWER_LOCKED";
+    questionPropertyEnum: 'EDIT_ANSWER_LOCKED';
     value: string;
-  }
+  },
 ];
 
 export type ITest = {

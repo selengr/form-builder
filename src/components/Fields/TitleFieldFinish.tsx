@@ -1,65 +1,53 @@
-"use client";
+'use client';
 
-import {ElementsType, FormElement, FormElementInstance,} from "@/types/FormElements";
-import {z} from "zod";
-import {useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod";
-import useDesigner from "@/hooks/useDesigner";
-import Box from "@mui/material/Box";
-import FormProvider from "../../components/hook-form/FormProvider";
-import RHFTextField from "../../components/hook-form/RHFTextField";
-import FieldDialogActionBottomButtons from "../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons";
-import {IFormElementConstructor} from "@/types/bulider";
-import {useParams} from "next/navigation";
-import {AxiosApi} from "@/services/axios/AxiosApi";
-import useActionOpenDialog from "@/hooks/useActionOpenDialog";
-import useActionSelectedElement from "@/hooks/useActionSelectedElement";
-import useSelectedElement from "@/hooks/useSelectedElement";
-import useActionDesigner from "@/hooks/useActionDesigner";
-import {toast} from "sonner";
-import {memo} from "react";
-import Image from "next/image";
-import finishIcon from "@/../public/images/home-page/finish.svg";
+import { ElementsType, FormElement, FormElementInstance } from '@/types/FormElements';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import useDesigner from '@/hooks/useDesigner';
+import Box from '@mui/material/Box';
+import FormProvider from '../../components/hook-form/FormProvider';
+import RHFTextField from '../../components/hook-form/RHFTextField';
+import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
+import { IFormElementConstructor } from '@/types/bulider';
+import { useParams } from 'next/navigation';
+import { AxiosApi } from '@/services/axios/AxiosApi';
+import useActionOpenDialog from '@/hooks/useActionOpenDialog';
+import useActionSelectedElement from '@/hooks/useActionSelectedElement';
+import useSelectedElement from '@/hooks/useSelectedElement';
+import useActionDesigner from '@/hooks/useActionDesigner';
+import { toast } from 'sonner';
+import { memo } from 'react';
+import Image from 'next/image';
+import finishIcon from '@/../public/images/home-page/finish.svg';
 
-const questionType: ElementsType = "TitleFieldFinish";
+const questionType: ElementsType = 'TitleFieldFinish';
 
 const propertiesSchema = z.object({
   description: z
-    .string({ message: "حداقل باید 1 و حداکثر 250 کاراکتر باشد" })
+    .string({ message: 'حداقل باید 1 و حداکثر 250 کاراکتر باشد' })
     .trim()
-    .transform((value) => value.replace(/\s+/g, " "))
+    .transform((value) => value.replace(/\s+/g, ' '))
     .pipe(
-      z
-        .string({ message: "حداقل باید 1 و حداکثر 250 کاراکتر باشد" })
-        .min(1, { message: "حداقل باید 1 و حداکثر 250 کاراکتر باشد" })
-        .max(250, { message: "حداقل باید 1 و حداکثر 250 کاراکتر باشد" })
+      z.string({ message: 'حداقل باید 1 و حداکثر 250 کاراکتر باشد' }).min(1, { message: 'حداقل باید 1 و حداکثر 250 کاراکتر باشد' }).max(250, { message: 'حداقل باید 1 و حداکثر 250 کاراکتر باشد' }),
     ),
 });
 
-const DesignerComponent = memo(function DesignerComponent({
-  elementInstance,
-}: {
-  elementInstance: FormElementInstance;
-}) {
+const DesignerComponent = memo(function DesignerComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
   const { label } = TitleFieldFinishFormElement.designerBtnElement;
   const description = elementInstance?.description;
 
   return (
     <div
-      className="flex items-start flex-col overflow-hidden absolute"
-      dir="rtl"
+      className='flex items-start flex-col overflow-hidden absolute'
+      dir='rtl'
       style={{
-        width: "calc(100% - 56px)",
-      }}
-    >
-      <p
-        dir="rtl"
-        className="text-base overflow-hidden text-ellipsis w-full"
-        style={{ textWrap: "nowrap", fontWeight: "700" }}
-      >
+        width: 'calc(100% - 56px)',
+      }}>
+      <p dir='rtl' className='text-base overflow-hidden text-ellipsis w-full' style={{ textWrap: 'nowrap', fontWeight: '700' }}>
         {description}
       </p>
-      <p className="text-xs">#{label}</p>
+      <p className='text-xs'>#{label}</p>
     </div>
   );
 });
@@ -72,7 +60,7 @@ export const TitleFieldFinishFormElement: FormElement = {
     questionType,
   }),
   designerBtnElement: {
-    label: "صفحه پایان",
+    label: 'صفحه پایان',
   },
   designerComponent: DesignerComponent,
   formComponent: FormComponent,
@@ -81,29 +69,12 @@ export const TitleFieldFinishFormElement: FormElement = {
   validate: () => true,
 };
 
-function FormComponent({
-  elementInstance,
-}: {
-  elementInstance?: FormElementInstance;
-}) {
+function FormComponent({ elementInstance }: { elementInstance?: FormElementInstance }) {
   return (
-    <div className="flex flex-col gap-4 items-center justify-center w-full">
-      <Image
-        src={finishIcon}
-        alt=""
-        width={200}
-        height={300}
-        className="h-[300px] w-full"
-      />
-      {elementInstance && (
-        <p className="text-[15px] font-bold text-[#161616] text-justify mb-6">
-          {elementInstance as any}
-        </p>
-      )}
-      <button
-        disabled
-        className="h-[52px] rounded-lg border-[1px] border-[#1758BA] text-[#1758BA] w-full max-w-[240px]"
-      >
+    <div className='flex flex-col gap-4 items-center justify-center w-full'>
+      <Image src={finishIcon} alt='' width={200} height={300} className='h-[300px] w-full' />
+      {elementInstance && <p className='text-[15px] font-bold text-[#161616] text-justify mb-6'>{elementInstance as any}</p>}
+      <button disabled className='h-[52px] rounded-lg border-[1px] border-[#1758BA] text-[#1758BA] w-full max-w-[240px]'>
         ثبت و ارسال
       </button>
     </div>
@@ -112,11 +83,7 @@ function FormComponent({
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
-function PropertiesComponent({
-  elementInstance,
-}: {
-  elementInstance: FormElementInstance;
-}) {
+function PropertiesComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
   const { id } = useParams();
   const element = elementInstance;
   const setOpenDialog = useActionOpenDialog();
@@ -127,7 +94,7 @@ function PropertiesComponent({
 
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
-    mode: "onSubmit",
+    mode: 'onSubmit',
     defaultValues: {
       description: element.description,
     },
@@ -150,13 +117,13 @@ function PropertiesComponent({
 
     if (!finishPage) {
       try {
-        const res: any = await AxiosApi.post("/form/end-page", data as any);
+        const res: any = await AxiosApi.post('/form/end-page', data as any);
         addFinishPage({
           ...selectedElement?.fieldElement,
           questionId: res?.data?.endPageId,
           description: res?.data?.description,
         } as FormElementInstance);
-        toast.success("صفحه پایان با موفقیت افزوده شد");
+        toast.success('صفحه پایان با موفقیت افزوده شد');
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
@@ -165,7 +132,7 @@ function PropertiesComponent({
       }
     } else {
       try {
-        const res = await AxiosApi.put("/form/end-page", data as any);
+        const res = await AxiosApi.put('/form/end-page', data as any);
         updateFinishPage({
           ...element,
           description: res?.data?.description,
@@ -183,28 +150,26 @@ function PropertiesComponent({
     <FormProvider methods={methods} onSubmit={handleSubmit(applyChanges)}>
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-          direction: "ltr",
-          width: "100%",
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          direction: 'ltr',
+          width: '100%',
           paddingX: 1.5,
-        }}
-      >
+        }}>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            height: "100%",
-            direction: "ltr",
-            width: "100%",
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            direction: 'ltr',
+            width: '100%',
             paddingX: 1.5,
-            "& .MuiFormControl-root, & .MuiInputBase-root": {
-              borderRadius: "10px",
+            '& .MuiFormControl-root, & .MuiInputBase-root': {
+              borderRadius: '10px',
             },
-          }}
-        >
-          <RHFTextField multiline rows={5} name="description" />
+          }}>
+          <RHFTextField multiline rows={5} name='description' />
         </Box>
         <FieldDialogActionBottomButtons status={isSubmitting} />
       </Box>

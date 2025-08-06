@@ -1,20 +1,15 @@
-"use client";
-import React, {useEffect, useRef} from "react";
-import {Controller, useFormContext} from "react-hook-form";
-import {TextField, type TextFieldProps} from "@mui/material";
+'use client';
+import React, { useEffect, useRef } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
+import { TextField, type TextFieldProps } from '@mui/material';
 
-interface TextFieldControllerProps extends Omit<TextFieldProps, "name"> {
+interface TextFieldControllerProps extends Omit<TextFieldProps, 'name'> {
   name: string;
   type?: string;
-  sx? : any
+  sx?: any;
 }
 
-export const TextFieldController: React.FC<TextFieldControllerProps> = ({
-  name,
-  type,
-  sx,
-  ...props
-}) => {
+export const TextFieldController: React.FC<TextFieldControllerProps> = ({ name, type, sx, ...props }) => {
   const { control } = useFormContext();
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -32,34 +27,34 @@ export const TextFieldController: React.FC<TextFieldControllerProps> = ({
         <TextField
           inputRef={inputRef}
           type={type}
-          value={value || ""}
+          value={value || ''}
           onChange={onChange}
           error={!!error}
           helperText={error?.message}
           sx={{
-            "& .MuiOutlinedInput-root": {
-              borderColor: "none",
-              "& fieldset": {
+            '& .MuiOutlinedInput-root': {
+              borderColor: 'none',
+              '& fieldset': {
                 paddingLeft: 2,
-                borderRadius: "8px",
-                border: "1px solid #DDE1E6",
+                borderRadius: '8px',
+                border: '1px solid #DDE1E6',
               },
-              "&:hover fieldset": {
-                border: "1px solid #DDE1E6",
+              '&:hover fieldset': {
+                border: '1px solid #DDE1E6',
               },
-              "&.Mui-focused fieldset": {
-                border: "2px solid #DDE1E6",
+              '&.Mui-focused fieldset': {
+                border: '2px solid #DDE1E6',
               },
-              "&.Mui-error fieldset": {
-                borderColor: "#FA4D56",
+              '&.Mui-error fieldset': {
+                borderColor: '#FA4D56',
               },
               height: {
-                xs: 50  ,    
-                // sm: 50,    
-                // md: 52 
+                xs: 50,
+                // sm: 50,
+                // md: 52
               },
             },
-            ...sx
+            ...sx,
           }}
           {...props}
         />
@@ -67,5 +62,3 @@ export const TextFieldController: React.FC<TextFieldControllerProps> = ({
     />
   );
 };
-
-

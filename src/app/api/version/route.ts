@@ -1,15 +1,15 @@
-import {NextRequest, NextResponse} from 'next/server'
-import packageJson from '@/../package.json'
+import { NextRequest, NextResponse } from 'next/server';
+import packageJson from '@/../package.json';
 
 export async function GET(req: NextRequest) {
-  const url = new URL(req.url)
-  const app = url.searchParams.get('app') || packageJson.name
+  const url = new URL(req.url);
+  const app = url.searchParams.get('app') || packageJson.name;
 
-  const versions:any = {
+  const versions: any = {
     default: packageJson.version,
-  }
+  };
 
-  const version = versions[app] || versions.default
+  const version = versions[app] || versions.default;
 
-  return NextResponse.json({ app, version })
+  return NextResponse.json({ app, version });
 }

@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import InputAdornment from "@mui/material/InputAdornment";
-import TextField from "@mui/material/TextField";
-import React, {ChangeEvent, forwardRef, useEffect, useState} from "react";
-import {Controller, ControllerProps, FieldPath, FieldValues,} from "react-hook-form";
-import {InputBaseComponentProps} from "@mui/material/InputBase/InputBase";
-import {Grid, Typography} from "@mui/material";
-import {formatNumberWithCommas} from "@/lib/numberFormatter";
+import InputAdornment from '@mui/material/InputAdornment';
+import TextField from '@mui/material/TextField';
+import React, { ChangeEvent, forwardRef, useEffect, useState } from 'react';
+import { Controller, ControllerProps, FieldPath, FieldValues } from 'react-hook-form';
+import { InputBaseComponentProps } from '@mui/material/InputBase/InputBase';
+import { Grid, Typography } from '@mui/material';
+import { formatNumberWithCommas } from '@/lib/numberFormatter';
 
 type TextInputProps = {
   label: string;
@@ -31,10 +31,7 @@ const TextInput = forwardRef<
   TextInputProps & {
     name: string;
     value: string;
-    onChange: (
-      value: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-      amount: string
-    ) => void;
+    onChange: (value: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, amount: string) => void;
     onBlur: () => void;
   }
 >(function TextInput(props, ref) {
@@ -44,15 +41,11 @@ const TextInput = forwardRef<
 
   const handleClickShowPassword = () => setIsShowPassword((show) => !show);
 
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
 
-  const _HandleOnChange = (
-    event: ChangeEvent<HTMLInputElement>
-  ): void | null => {
+  const _HandleOnChange = (event: ChangeEvent<HTMLInputElement>): void | null => {
     let inputValue2;
     if (props.inputAdornment && props.hasSeperator === undefined) {
       const checkSpacingRegex = /\s/g;
@@ -62,11 +55,11 @@ const TextInput = forwardRef<
 
       let inputValue = event.target.value;
 
-      inputValue = inputValue.replace(/[^0-9]/g, "");
+      inputValue = inputValue.replace(/[^0-9]/g, '');
       const formattedValue = formatNumberWithCommas(inputValue);
       setInputValueST(formattedValue);
 
-      inputValue2 = formattedValue.replaceAll(",", "");
+      inputValue2 = formattedValue.replaceAll(',', '');
     } else {
       inputValue2 = event.target.value;
       setInputValueST(event.target.value);
@@ -85,17 +78,13 @@ const TextInput = forwardRef<
       ref={ref}
       name={props.name}
       // value={props.value}
-      value={
-        props.inputAdornment && props.hasSeperator
-          ? formatNumberWithCommas(inputValueST)
-          : inputValueST
-      }
+      value={props.inputAdornment && props.hasSeperator ? formatNumberWithCommas(inputValueST) : inputValueST}
       onChange={_HandleOnChange}
       onBlur={props.onBlur}
-      label={""}
+      label={''}
       autoFocus={props.autoFocus}
       type={props.type}
-      variant="outlined"
+      variant='outlined'
       placeholder={props.placeholder}
       fullWidth
       error={!!props.error}
@@ -104,34 +93,33 @@ const TextInput = forwardRef<
       disabled={props.disabled}
       autoComplete={props.autoComplete}
       FormHelperTextProps={{
-        ["data-testid" as string]: `${props.testId}-error`,
+        ['data-testid' as string]: `${props.testId}-error`,
       }}
       multiline={props.multiline}
       minRows={props.minRows}
       maxRows={props.maxRows}
-      sx={{ bgcolor: props.disabled ? "#eeeeee" : "transparent" }}
+      sx={{ bgcolor: props.disabled ? '#eeeeee' : 'transparent' }}
       InputProps={{
         readOnly: props.readOnly,
         sx: {
-          "& input": {
-            height: "1rem",
-            color: "#797979",
-            borderColor: "#f1f1f1",
+          '& input': {
+            height: '1rem',
+            color: '#797979',
+            borderColor: '#f1f1f1',
           },
-          borderRadius: "0.5rem",
+          borderRadius: '0.5rem',
         },
         inputComponent: props.inputComponent,
         endAdornment: props.inputAdornment ? (
           <InputAdornment
-            position="end"
+            position='end'
             sx={{
-              backgroundColor: "transparent",
-              height: "100%",
-              borderLeft: " 1px dashed #d9d9d9",
-              paddingLeft: "0.5rem",
-              paddingTop: "0.5rem",
-            }}
-          >
+              backgroundColor: 'transparent',
+              height: '100%',
+              borderLeft: ' 1px dashed #d9d9d9',
+              paddingLeft: '0.5rem',
+              paddingTop: '0.5rem',
+            }}>
             {props.inputAdornment}
           </InputAdornment>
         ) : undefined,
@@ -154,12 +142,8 @@ const TextInput = forwardRef<
   );
 });
 
-function FormTextInput<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->(
-  props: Pick<ControllerProps<TFieldValues, TName>, "name" | "defaultValue"> &
-    TextInputProps
+function FormTextInput<TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>>(
+  props: Pick<ControllerProps<TFieldValues, TName>, 'name' | 'defaultValue'> & TextInputProps,
 ) {
   return (
     <Controller
@@ -167,9 +151,9 @@ function FormTextInput<
       render={({ field, fieldState }) => {
         return (
           <Grid>
-            <Typography sx={{ color: "gray" }}>{props.label}</Typography>
+            <Typography sx={{ color: 'gray' }}>{props.label}</Typography>
             <TextInput
-              label={""}
+              label={''}
               autoFocus={props.autoFocus}
               type={props.type}
               placeholder={props.placeholder}

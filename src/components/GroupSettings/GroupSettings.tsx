@@ -1,327 +1,281 @@
-"use client";
+'use client';
 
-import {useCallback, useEffect, useState} from "react";
-import {Box, Button, Checkbox, CircularProgress, IconButton, InputBase, Paper, Typography,} from "@mui/material";
-import Image from "next/image";
-import {useForm} from "react-hook-form";
-import {z} from "zod";
-import {zodResolver} from "@hookform/resolvers/zod";
-import FormProvider from "../hook-form/FormProvider";
-import RHFSwitch from "../hook-form/RHFSwitch";
-import {IGroup} from "@/app/groups/components/groupListItem";
-import {GroupListResponse} from "@/app/groups/page";
-import {getAuthToken} from "@/utils/getAuthToken";
-import {toast} from "sonner";
+import { useCallback, useEffect, useState } from 'react';
+import { Box, Button, Checkbox, CircularProgress, IconButton, InputBase, Paper, Typography } from '@mui/material';
+import Image from 'next/image';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import FormProvider from '../hook-form/FormProvider';
+import RHFSwitch from '../hook-form/RHFSwitch';
+import { IGroup } from '@/app/groups/components/groupListItem';
+import { GroupListResponse } from '@/app/groups/page';
+import { getAuthToken } from '@/utils/getAuthToken';
+import { toast } from 'sonner';
 
 const groupFormSchema = z.object({
-    groupsId: z.array(z.number()).min(1, "حداقل یک گروه را انتخاب کنید."),
+  groupsId: z.array(z.number()).min(1, 'حداقل یک گروه را انتخاب کنید.'),
 });
 
 type GroupFormSchemaType = z.infer<typeof groupFormSchema>;
 
 interface GroupSettingsProps {
-    handleOpen: () => void;
-    formId: string | number;
+  handleOpen: () => void;
+  formId: string | number;
 }
 
-const GroupSettings: React.FC<GroupSettingsProps> = ({handleOpen, formId}) => {
-    const [groups, setGroups] = useState<IGroup[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
+const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId }) => {
+  const [groups, setGroups] = useState<IGroup[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-    const methods = useForm<GroupFormSchemaType>({
-        resolver: zodResolver(groupFormSchema),
-        mode: "onChange",
-        defaultValues: {
-            groupsId: [],
+  const methods = useForm<GroupFormSchemaType>({
+    resolver: zodResolver(groupFormSchema),
+    mode: 'onChange',
+    defaultValues: {
+      groupsId: [],
+    },
+  });
+
+  const {
+    watch,
+    setValue,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting, isValid, errors },
+  } = methods;
+
+  const selectedGroupIds = watch('groupsId');
+  const allSelected = groups.length > 0 && selectedGroupIds.length === groups.length;
+
+  const fetchGroups = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    const token = await getAuthToken();
+
+    try {
+      const searchFilterModel = {
+        searchFilterBoxList: [{ restrictionList: [] }],
+        sortList: [{ fieldName: 'id', type: 'DSC' }],
+        page: 0,
+        rows: 10,
+      };
+
+      const encoded = encodeURIComponent(JSON.stringify(searchFilterModel));
+      const res = await fetch(`/api/group/list?searchFilterModel=${encoded}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'دریافت لیست گروه‌ها ناموفق بود.');
+      }
+
+      const data: GroupListResponse = await res.json();
+      const transformed: IGroup[] = data.content.map((item) => ({
+        id: item.groupId,
+        name: item.groupName,
+        description: '',
+        userCount: item.groupMemberCount,
+      }));
+
+      setGroups(transformed);
+    } catch (err: any) {
+      setError(err?.message || 'خطای نامشخصی رخ داده است.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchGroups();
+  }, [fetchGroups]);
+
+  const handleToggleGroup = (groupId: number) => {
+    setValue('groupsId', selectedGroupIds.includes(groupId) ? selectedGroupIds.filter((id) => id !== groupId) : [...selectedGroupIds, groupId], {
+      shouldDirty: true,
+      shouldValidate: true,
     });
+  };
 
-    const {
-        watch,
-        setValue,
-        handleSubmit,
-        reset,
-        formState: {isSubmitting, isValid, errors},
-    } = methods;
+  const handleToggleAll = () => {
+    const newSelectedIds = allSelected ? [] : groups.map((group) => group.id);
+    setValue('groupsId', newSelectedIds, { shouldDirty: true, shouldValidate: true });
+  };
 
-    const selectedGroupIds = watch("groupsId");
-    const allSelected = groups.length > 0 && selectedGroupIds.length === groups.length;
+  const onSubmit = useCallback(
+    async (values: GroupFormSchemaType) => {
+      const token = await getAuthToken();
 
-    const fetchGroups = useCallback(async () => {
-        setLoading(true);
-        setError(null);
-        const token = await getAuthToken();
+      try {
+        const response = await fetch('/api/publish/group', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            formId: Number(formId),
+            groupsId: values.groupsId,
+          }),
+        });
 
-        try {
-            const searchFilterModel = {
-                searchFilterBoxList: [{restrictionList: []}],
-                sortList: [{fieldName: "id", type: "DSC"}],
-                page: 0,
-                rows: 10,
-            };
+        const data = await response.json();
 
-            const encoded = encodeURIComponent(JSON.stringify(searchFilterModel));
-            const res = await fetch(`/api/group/list?searchFilterModel=${encoded}`,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData.error || "دریافت لیست گروه‌ها ناموفق بود.");
-            }
-
-            const data: GroupListResponse = await res.json();
-            const transformed: IGroup[] = data.content.map((item) => ({
-                id: item.groupId,
-                name: item.groupName,
-                description: "",
-                userCount: item.groupMemberCount,
-            }));
-
-            setGroups(transformed);
-        } catch (err: any) {
-            setError(err?.message || "خطای نامشخصی رخ داده است.");
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
-    useEffect(() => {
-        fetchGroups();
-    }, [fetchGroups]);
-
-    const handleToggleGroup = (groupId: number) => {
-        setValue(
-            "groupsId",
-            selectedGroupIds.includes(groupId)
-                ? selectedGroupIds.filter((id) => id !== groupId)
-                : [...selectedGroupIds, groupId],
-            {shouldDirty: true, shouldValidate: true}
-        );
-    };
-
-    const handleToggleAll = () => {
-        const newSelectedIds = allSelected ? [] : groups.map((group) => group.id);
-        setValue("groupsId", newSelectedIds, {shouldDirty: true, shouldValidate: true});
-    };
-
-    const onSubmit = useCallback(async (values: GroupFormSchemaType) => {
-        const token = await getAuthToken();
-
-        try {
-            const response = await fetch("/api/publish/group", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    formId: Number(formId),
-                    groupsId: values.groupsId,
-                }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                if (data.error && data.details) {
-                    data.details.forEach((err: any) => {
-                        if (err.path && err.path[0]) {
-                            if (err.path[0] === 'groupsId') {
-                                methods.setError('groupsId', {
-                                    type: 'manual',
-                                    message: err.message || 'خطا در فیلد گروه',
-                                });
-                            }
-                        }
-                    });
-                } else if (data.error) {
-                    toast.error(data.error);
-                } else {
-                    toast.error("خطای ناشناخته از سمت سرور");
+        if (!response.ok) {
+          if (data.error && data.details) {
+            data.details.forEach((err: any) => {
+              if (err.path && err.path[0]) {
+                if (err.path[0] === 'groupsId') {
+                  methods.setError('groupsId', {
+                    type: 'manual',
+                    message: err.message || 'خطا در فیلد گروه',
+                  });
                 }
-                return;
-            }
+              }
+            });
+          } else if (data.error) {
+            toast.error(data.error);
+          } else {
+            toast.error('خطای ناشناخته از سمت سرور');
+          }
+          return;
+        }
 
-            toast.success("با موفقیت به سبد خرید افزوده شد.");
+        toast.success('با موفقیت به سبد خرید افزوده شد.');
+        handleOpen();
+        reset();
+      } catch (err) {
+        toast.error('خطا در برقراری ارتباط با سرور.');
+        console.error('Group publish error:', err);
+      }
+    },
+    [formId, handleOpen, reset, methods],
+  );
+
+  return (
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <Box bgcolor='#f7f7f7' mt={2} p={2} display='flex' flexDirection='column'>
+        <Paper
+          sx={{
+            boxShadow: 'unset',
+            border: '1px solid #C9C9C9',
+            display: 'flex',
+            alignItems: 'center',
+            width: '100%',
+            py: 1,
+            borderRadius: '12px',
+            mb: 2,
+          }}>
+          <InputBase sx={{ ml: 1, flex: 1, textAlign: 'end' }} placeholder='کاوش بر اساس نام پایگاه داده' inputProps={{ 'aria-label': 'جستجو' }} />
+          <IconButton sx={{ p: '8px' }}>
+            <Image src='/images/home-page/search.svg' width={23} height={23} alt='جستجو' style={{ cursor: 'pointer' }} />
+          </IconButton>
+        </Paper>
+
+        <Box display='flex' alignItems='center' gap={1} mb={1}>
+          <Checkbox checked={allSelected} indeterminate={selectedGroupIds.length > 0 && selectedGroupIds.length < groups.length} onChange={handleToggleAll} />
+          <Typography>انتخاب همه</Typography>
+        </Box>
+
+        <Box display='flex' flexDirection='column' gap={2}>
+          {loading ? (
+            <Box display='flex' justifyContent='center' my={4}>
+              <CircularProgress />
+            </Box>
+          ) : error ? (
+            <Typography color='error' textAlign='center'>
+              {error}
+            </Typography>
+          ) : (
+            groups.map((group) => (
+              <Box key={group.id} display='flex' gap={1} bgcolor='white' alignItems='center' justifyContent='space-between' px={2} py={1} borderRadius='12px'>
+                <Checkbox checked={selectedGroupIds.includes(group.id)} onChange={() => handleToggleGroup(group.id)} disabled={group.userCount < 1} />
+                <Typography flex={1}>{group.name}</Typography>
+                <Typography fontSize='14px'>عضو: {group.userCount} نفر</Typography>
+              </Box>
+            ))
+          )}
+        </Box>
+      </Box>
+
+      {errors.groupsId && (
+        <Typography color='error' fontSize='12px' sx={{ mt: 1, px: 2 }}>
+          {errors.groupsId.message}
+        </Typography>
+      )}
+
+      <Box display='flex' justifyContent='space-between' alignItems='center' mt={2} px={2}>
+        <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>
+          نمایش نتیجه به پاسخ دهنده
+        </Typography>
+        <RHFSwitch
+          name='showUser'
+          label={undefined}
+          sx={{
+            mb: 1,
+            mx: 0,
+            width: 1,
+            justifyContent: 'space-between',
+          }}
+        />
+      </Box>
+
+      <Box display='flex' justifyContent='space-between' alignItems='center' gap='16px' px='16px' mt='24px'>
+        <Button
+          type='submit'
+          fullWidth
+          variant='contained'
+          disabled={isSubmitting || !isValid}
+          sx={{
+            bgcolor: '#1758BA',
+            height: '54px',
+            color: 'white',
+            fontSize: { xs: '13px', sm: '16px' },
+            fontWeight: '700',
+            borderRadius: '10px',
+            boxShadow: 'none',
+            '&:hover': {
+              bgcolor: '#1758BA',
+              boxShadow: 'none',
+            },
+          }}>
+          افزودن به سبد خرید
+        </Button>
+
+        <Button
+          fullWidth
+          variant='outlined'
+          onClick={() => {
             handleOpen();
             reset();
-        } catch (err) {
-            toast.error("خطا در برقراری ارتباط با سرور.");
-            console.error("Group publish error:", err);
-        }
-    }, [formId, handleOpen, reset, methods]);
-
-    return (
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <Box bgcolor="#f7f7f7" mt={2} p={2} display="flex" flexDirection="column">
-                <Paper
-                    sx={{
-                        boxShadow: "unset",
-                        border: "1px solid #C9C9C9",
-                        display: "flex",
-                        alignItems: "center",
-                        width: "100%",
-                        py: 1,
-                        borderRadius: "12px",
-                        mb: 2,
-                    }}
-                >
-                    <InputBase
-                        sx={{ml: 1, flex: 1, textAlign: "end"}}
-                        placeholder="کاوش بر اساس نام پایگاه داده"
-                        inputProps={{"aria-label": "جستجو"}}
-                    />
-                    <IconButton sx={{p: "8px"}}>
-                        <Image
-                            src="/images/home-page/search.svg"
-                            width={23}
-                            height={23}
-                            alt="جستجو"
-                            style={{cursor: "pointer"}}
-                        />
-                    </IconButton>
-                </Paper>
-
-                <Box display="flex" alignItems="center" gap={1} mb={1}>
-                    <Checkbox
-                        checked={allSelected}
-                        indeterminate={
-                            selectedGroupIds.length > 0 && selectedGroupIds.length < groups.length
-                        }
-                        onChange={handleToggleAll}
-                    />
-                    <Typography>انتخاب همه</Typography>
-                </Box>
-
-                <Box display="flex" flexDirection="column" gap={2}>
-                    {loading ? (
-                        <Box display="flex" justifyContent="center" my={4}>
-                            <CircularProgress/>
-                        </Box>
-                    ) : error ? (
-                        <Typography color="error" textAlign="center">
-                            {error}
-                        </Typography>
-                    ) : (
-                        groups.map((group) => (
-                            <Box
-                                key={group.id}
-                                display="flex"
-                                gap={1}
-                                bgcolor="white"
-                                alignItems="center"
-                                justifyContent="space-between"
-                                px={2}
-                                py={1}
-                                borderRadius="12px"
-                            >
-                                <Checkbox
-                                    checked={selectedGroupIds.includes(group.id)}
-                                    onChange={() => handleToggleGroup(group.id)}
-                                    disabled={group.userCount < 1}
-                                />
-                                <Typography flex={1}>{group.name}</Typography>
-                                <Typography fontSize="14px">
-                                    عضو: {group.userCount} نفر
-                                </Typography>
-                            </Box>
-                        ))
-                    )}
-                </Box>
-            </Box>
-
-            {errors.groupsId && (
-                <Typography color="error" fontSize="12px" sx={{mt: 1, px: 2}}>
-                    {errors.groupsId.message}
-                </Typography>
-            )}
-
-            <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                mt={2}
-                px={2}
-            >
-                <Typography variant="subtitle2" fontWeight={500} fontSize="14px">
-                    نمایش نتیجه به پاسخ دهنده
-                </Typography>
-                <RHFSwitch
-                    name="showUser"
-                    label={undefined}
-                    sx={{
-                        mb: 1, mx: 0, width: 1, justifyContent: "space-between",
-                    }}
-                />
-            </Box>
-
-            <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                gap="16px"
-                px="16px"
-                mt="24px"
-            >
-                <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    disabled={isSubmitting || !isValid}
-                    sx={{
-                        bgcolor: "#1758BA",
-                        height: "54px",
-                        color: "white",
-                        fontSize: {xs: "13px", sm: "16px"},
-                        fontWeight: "700",
-                        borderRadius: "10px",
-                        boxShadow: "none",
-                        "&:hover": {
-                            bgcolor: "#1758BA",
-                            boxShadow: "none",
-                        },
-                    }}
-                >
-                    افزودن به سبد خرید
-                </Button>
-
-                <Button
-                    fullWidth
-                    variant="outlined"
-                    onClick={() => {
-                        handleOpen();
-                        reset();
-                    }}
-                    disabled={isSubmitting}
-                    sx={{
-                        height: "54px",
-                        fontWeight: "700",
-                        borderRadius: "10px",
-                        fontSize: "16px",
-                        color: "#1758BA",
-                        borderColor: "#1758BA",
-                        bgcolor: "white",
-                        "&:hover": {
-                            bgcolor: "transparent",
-                            boxShadow: "none",
-                        },
-                        "&.Mui-disabled": {
-                            borderColor: "#d9d9d9",
-                            color: "#b0b0b0",
-                        },
-                    }}
-                >
-                    انصراف
-                </Button>
-            </Box>
-        </FormProvider>
-    );
+          }}
+          disabled={isSubmitting}
+          sx={{
+            height: '54px',
+            fontWeight: '700',
+            borderRadius: '10px',
+            fontSize: '16px',
+            color: '#1758BA',
+            borderColor: '#1758BA',
+            bgcolor: 'white',
+            '&:hover': {
+              bgcolor: 'transparent',
+              boxShadow: 'none',
+            },
+            '&.Mui-disabled': {
+              borderColor: '#d9d9d9',
+              color: '#b0b0b0',
+            },
+          }}>
+          انصراف
+        </Button>
+      </Box>
+    </FormProvider>
+  );
 };
 
 export default GroupSettings;

@@ -1,8 +1,8 @@
-"use client";
-import React, {useCallback} from "react";
-import styles from "@/components/calculator/advancedFormulaEditor.module.css";
-import {Element} from "./types";
-import FormulaElement from "./FormulaElement";
+'use client';
+import React, { useCallback } from 'react';
+import styles from '@/components/calculator/advancedFormulaEditor.module.css';
+import { Element } from './types';
+import FormulaElement from './FormulaElement';
 
 interface FormulaInputProps {
   elements: Element[];
@@ -16,17 +16,7 @@ interface FormulaInputProps {
   onKeyDown: (e: React.KeyboardEvent) => void;
 }
 
-const FormulaInput: React.FC<FormulaInputProps> = ({
-                                                     elements,
-                                                     questionList,
-                                                     contentEditableRef,
-                                                     onFieldSelect,
-                                                     onFieldClick,
-                                                     onFnSelect,
-                                                     onFnClick,
-                                                     onClick,
-                                                     onKeyDown,
-                                                   }) => {
+const FormulaInput: React.FC<FormulaInputProps> = ({ elements, questionList, contentEditableRef, onFieldSelect, onFieldClick, onFnSelect, onFnClick, onClick, onKeyDown }) => {
   const renderElements = useCallback(
     () =>
       elements.map((elem, index) => (
@@ -41,18 +31,11 @@ const FormulaInput: React.FC<FormulaInputProps> = ({
           onFnClick={onFnClick}
         />
       )),
-    [elements, questionList, onFieldSelect, onFieldClick, onFnSelect, onFnClick]
+    [elements, questionList, onFieldSelect, onFieldClick, onFnSelect, onFnClick],
   );
 
   return (
-    <div
-      contentEditable
-      onClick={onClick}
-      ref={contentEditableRef}
-      onKeyDown={onKeyDown}
-      suppressContentEditableWarning
-      className={styles.ContentEditable}
-    >
+    <div contentEditable onClick={onClick} ref={contentEditableRef} onKeyDown={onKeyDown} suppressContentEditableWarning className={styles.ContentEditable}>
       {renderElements()}
     </div>
   );

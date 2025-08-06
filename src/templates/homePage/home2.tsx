@@ -180,8 +180,8 @@ export default function HomePageX() {
                                          decimals={2}
 
                                          duration={5}
-                                    smartEasingAmount={0}
-                            />~
+                                         smartEasingAmount={0}
+                                />~
                             </span>
                         </div>
                     </div>
@@ -190,20 +190,22 @@ export default function HomePageX() {
                                className={"w-screen h-screen animate-bounce-slow"} draggable={false}/>
                     </div>
 
-                    <footer className=" absolute inset-0 p-10 pb-20 z-40 top-[75%] lg:top-[95%]">
+                    <footer className="absolute inset-0 z-40 top-[75%] lg:top-[95%] px-4 sm:px-6 md:px-10 pb-24">
                         <div
-                            className="max-w-[1440px] p-10 bg-white rounded-3xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6 text-center shadow-2xl shadow-blue-700/20">
+                            className="max-w-[1440px] mx-auto bg-white rounded-3xl shadow-2xl shadow-blue-700/20 p-6 sm:p-8 md:p-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-center"
+                        >
                             {statistics.map((item, i) => (
                                 <div key={i} className="flex flex-col items-center">
-                                      <span className="text-[#183B56] text-4xl sm:text-5xl font-bold">
-                                        <CountUp end={item.value}
-                                                 duration={7}
-                                                 separator=","
-                                                 smartEasingAmount={i}
-                                        />
-                                          {i === 0 ? '+' : ''}
-                                      </span>
-                                    <span className="text-gray-600 text-lg mt-2">{item.label}</span>
+                                    <span className="text-[#183B56] text-3xl sm:text-4xl md:text-5xl font-bold">
+                                      <CountUp
+                                          end={item.value}
+                                          duration={7}
+                                          separator=","
+                                          smartEasingAmount={i}
+                                      />
+                                        {i === 0 ? '+' : ''}
+                                    </span>
+                                    <span className="text-gray-600 text-sm sm:text-base mt-2">{item.label}</span>
                                 </div>
                             ))}
                         </div>

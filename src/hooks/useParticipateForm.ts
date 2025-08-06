@@ -191,8 +191,8 @@ export const useParticipateForm = () => {
 
                 answerList = ids.map((item: any) => ({
                     optionId: Number(item),
-                    answer: Array.isArray(formData) ? null : Number(item),
-                    ...(Array.isArray(formData) ? {} : {id: answerId}),
+                    answer: Number(item),
+
                 }));
             } else {
                 answerList = [{

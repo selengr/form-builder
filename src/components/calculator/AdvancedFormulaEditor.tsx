@@ -10,6 +10,8 @@ import { htmlToFormula } from '@/lib/htmlToFormula';
 import { AxiosApi } from '@/services/axios/AxiosApi';
 import { Element, FnFxItem } from '@/types/formulaEditor';
 import { IAdvancedFormulaEditorProps } from '@/types/calculator';
+// components
+import BottomSheet from '@/components/BottomSheet/BottomSheet';
 import FormulaInput from '@/components/formula-editor/FormulaInput';
 import FormulaKeypad from '@/components/formula-editor/FormulaKeypad';
 import FormulaControls from '@/components/formula-editor/FormulaControls';
@@ -33,6 +35,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
   const [elements, setElements] = useState<Element[]>(editData);
   const [isClient, setIsClient] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
+    const [isMobileKeypadOpen, setIsMobileKeypadOpen] = useState<boolean>(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -680,11 +683,26 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
             // right: '0.2rem',
             // bottom : 10
             // transform: open ? 'rotate(180deg)' : undefined,
-          }}>
+          }}
+            onClick={() => setIsMobileKeypadOpen(true)}
+          >
           <Image src='/images/calc/ic_keypad.svg' width={52} height={52} alt='keypad' />
         </IconButton>
       </Box>
       <FormulaControls onSubmit={callApi} onCancel={handleClose} isLoading={isLoading} />
+    
+       <BottomSheet open={isMobileKeypadOpen} onClose={() => setIsMobileKeypadOpen(false)}>
+              
+               <FormulaKeypad
+                handleFnFX={handleFnFX}
+                handleNewField={handleNewField}
+                handleParenthesis={handleParenthesis}
+                handleOperator={handleOperator}
+                handleNumber={handleNumber}
+                handleUndo={handleUndo}
+                contentEditableRef={contentEditable}
+              />
+                 </BottomSheet>
     </Container>
   );
 };

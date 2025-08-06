@@ -7,7 +7,7 @@ interface SearchBoxItem {
   nextConditionOperator: 'OR' | 'AND';
 }
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 100;
 const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'PUBLIC' };
 
 export async function fetchData(

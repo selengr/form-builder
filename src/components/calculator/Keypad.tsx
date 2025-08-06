@@ -22,7 +22,7 @@ const Keypad: React.FC<KeypadProps> = ({ handleFnFX, handleNewField, handleParen
   return (
     <Box
       sx={{
-        width: '26%',
+        width: {xs:"100%", md: "26%"},
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'start',
@@ -35,7 +35,7 @@ const Keypad: React.FC<KeypadProps> = ({ handleFnFX, handleNewField, handleParen
           '& .MuiSelect-select': {
             padding: 1,
           },
-          width: 135,
+          width: {xs:"100%", md: 135},
           height: 30,
           fontWeight: 500,
           marginBottom: '2px',
@@ -106,7 +106,7 @@ const Keypad: React.FC<KeypadProps> = ({ handleFnFX, handleNewField, handleParen
       <Button
         sx={{
           border: '1px solid white',
-          width: 135,
+          width: {xs:"100%", md:135},
           height: 30,
           borderRadius: '8px',
           fontWeight: 600,

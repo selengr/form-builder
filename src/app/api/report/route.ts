@@ -1,7 +1,6 @@
 // route.ts
-import { NextResponse } from 'next/server';
 import { destroyReportSchema } from '@/validators/destroyReportSchema';
-import { handleGetRequest, handleApiProxy } from '../helper';
+import { handleApiProxy, handleGetRequest } from '../helper';
 
 export const dynamic = 'force-dynamic';
 export const fetchCache = 'force-no-store';
@@ -9,7 +8,7 @@ export const revalidate = 0;
 
 export async function GET(req: Request) {
   const endpoint = '/psya/user/report-destroy-form/response-destroy';
-  return handleGetRequest(req, endpoint, false); 
+  return handleGetRequest(req, endpoint, false);
 }
 
 export async function POST(req: Request) {

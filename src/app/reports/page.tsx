@@ -1,5 +1,5 @@
-import {Suspense} from "react";
-import ListGridWrapper from "@/templates/reports/ListGridWrapper";
+import { Suspense } from 'react';
+import ListGridWrapper from '@/templates/reports/ListGridWrapper';
 
 export default function ReportsPage() {
   return (

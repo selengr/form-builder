@@ -1,5 +1,5 @@
 export type Element = {
-  type: "NEW_FIELD" | "NUMBER" | "OPERATOR" | "PARENTHESIS" | "NEW_FnFx" | "AVG_PARENTHESIS";
+  type: 'NEW_FIELD' | 'NUMBER' | 'OPERATOR' | 'PARENTHESIS' | 'NEW_FnFx' | 'AVG_PARENTHESIS';
   content: string;
   id?: string;
   mainIndex?: number;

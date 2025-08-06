@@ -1,6 +1,6 @@
-"use client";
-import { ComponentType, useState } from "react";
-import { FormElementInstance } from "@/types/FormElements";
+'use client';
+import { ComponentType, useState } from 'react';
+import { FormElementInstance } from '@/types/FormElements';
 
 type WrappedComponentProps = {
   elementInstance: FormElementInstance;
@@ -9,29 +9,16 @@ type WrappedComponentProps = {
   error: string;
 };
 
-const withValidation = <Div extends WrappedComponentProps>(
-    WrappedComponent: ComponentType<Div | any>
-) => {
-  return (props: {
-    elementInstance: FormElementInstance;
-    onValidationUpdate: (isValid: boolean, value: any) => void;
-    formData: string;
-  }) => {
+const withValidation = <Div extends WrappedComponentProps>(WrappedComponent: ComponentType<Div | any>) => {
+  return (props: { elementInstance: FormElementInstance; onValidationUpdate: (isValid: boolean, value: any) => void; formData: string }) => {
     const { elementInstance, onValidationUpdate, formData } = props;
-    const [error, setError] = useState<string>("");
+    const [error, setError] = useState<string>('');
 
-    const minLength = elementInstance?.questionPropertyList?.find(
-        (prop: any) => prop.questionPropertyEnum === "MINIMUM_LEN"
-    )?.value;
+    const minLength = elementInstance?.questionPropertyList?.find((prop: any) => prop.questionPropertyEnum === 'MINIMUM_LEN')?.value;
 
-    const maxLength = elementInstance?.questionPropertyList?.find(
-        (prop: any) => prop.questionPropertyEnum === "MAXIMUM_LEN"
-    )?.value;
+    const maxLength = elementInstance?.questionPropertyList?.find((prop: any) => prop.questionPropertyEnum === 'MAXIMUM_LEN')?.value;
 
-    const requiredField =
-        elementInstance?.questionPropertyList?.find(
-            (prop: any) => prop.questionPropertyEnum === "REQUIRED"
-        )?.value === "true";
+    const requiredField = elementInstance?.questionPropertyList?.find((prop: any) => prop.questionPropertyEnum === 'REQUIRED')?.value === 'true';
 
     const validationRules = {
       required: requiredField,
@@ -41,39 +28,28 @@ const withValidation = <Div extends WrappedComponentProps>(
 
     const validate = (newValue: any) => {
       let isValid = true;
-      let errorMessage = "";
+      let errorMessage = '';
       let val = newValue;
 
+      if (elementInstance.questionType === 'TEXT_FIELD') {
+        const fieldPattern = elementInstance?.questionPropertyList?.find((el: any) => el.questionPropertyEnum === 'TEXT_FIELD_PATTERN')?.value;
 
-      if (elementInstance.questionType === "TEXT_FIELD") {
-        const fieldPattern = elementInstance?.questionPropertyList?.find(
-            (el: any) => el.questionPropertyEnum === "TEXT_FIELD_PATTERN"
-        )?.value;
-
-        if (fieldPattern === "SHORT_TEXT" || fieldPattern === "LONG_TEXT") {
+        if (fieldPattern === 'SHORT_TEXT' || fieldPattern === 'LONG_TEXT') {
           val = newValue.trimStart();
         }
       }
 
       if (validationRules.required && (!val || val.length === 0)) {
         isValid = false;
-        errorMessage = "الزامی است";
+        errorMessage = 'الزامی است';
       }
 
-      if (
-          isValid &&
-          validationRules.minLength &&
-          val?.length < validationRules.minLength
-      ) {
+      if (isValid && validationRules.minLength && val?.length < validationRules.minLength) {
         isValid = false;
         errorMessage = `حداقل باید ${validationRules.minLength} کاراکتر باشد`;
       }
 
-      if (
-          isValid &&
-          validationRules.maxLength &&
-          val?.length > validationRules.maxLength
-      ) {
+      if (isValid && validationRules.maxLength && val?.length > validationRules.maxLength) {
         isValid = false;
         errorMessage = `حداکثر باید ${validationRules.maxLength} کاراکتر باشد`;
       }
@@ -86,14 +62,7 @@ const withValidation = <Div extends WrappedComponentProps>(
       validate(newValue);
     };
 
-    return (
-        <WrappedComponent
-            elementInstance={elementInstance}
-            value={formData}
-            onChange={handleChange}
-            error={error}
-        />
-    );
+    return <WrappedComponent elementInstance={elementInstance} value={formData} onChange={handleChange} error={error} />;
   };
 };
 

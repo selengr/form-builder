@@ -1,4 +1,4 @@
-import {type IFileRestriction} from "./types";
+import { type IFileRestriction } from './types';
 
 export const fileUploaderRestrictions: IFileRestriction = {
   minFileSize: undefined,
@@ -6,5 +6,5 @@ export const fileUploaderRestrictions: IFileRestriction = {
   minNumberOfFiles: 1,
   maxNumberOfFiles: 1,
   maxTotalFileSize: undefined,
-  allowedFileTypes: [".jpeg", ".jpg", ".png"],
+  allowedFileTypes: ['.jpeg', '.jpg', '.png'],
 };

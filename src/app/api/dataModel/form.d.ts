@@ -1,9 +1,9 @@
 export interface FormPayload {
-    formId: number;
-    position: number;
+  formId: number;
+  position: number;
 }
 
 export interface SetFormStatusPayload {
-    id: number;
-    invalid: boolean;
+  id: number;
+  invalid: boolean;
 }

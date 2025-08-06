@@ -32,11 +32,11 @@ export async function GET(req: Request) {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL_PSYA}/psya/user-group/introducer/groups-custom-combo${queryString}`, {
       method: 'GET',
       headers: {
-        'Authorization': token,
+        Authorization: token,
         'Content-Type': 'application/json',
         'Cache-Control': 'no-store',
-        'Pragma': 'no-cache',
-        'Expires': '0',
+        Pragma: 'no-cache',
+        Expires: '0',
       },
       cache: 'no-store',
     });
@@ -54,7 +54,6 @@ export async function GET(req: Request) {
     response.headers.set('Expires', '0');
 
     return response;
-
   } catch (error: any) {
     return NextResponse.json({ error: error?.message || 'Unexpected server error.' }, { status: 500 });
   }

@@ -7,7 +7,7 @@
 //   url: string,
 //   body: object = {},
 //   method: RequestMethodsType = "Get"
-// ) { 
+// ) {
 //   try {
 //     const response = await ApiRequest(method, {}, body, url, true);
 //     return response;

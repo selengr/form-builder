@@ -1,10 +1,10 @@
-import type {OTPResponseType} from ".";
+import type { OTPResponseType } from '.';
 
 type SendOTPUrlType = ((nationalCode: string) => string) | string;
 
 type OTPBodyType<T> = (data: T) => object | object;
 
-export type RequestMethodsType = "Get" | "Post" | "Put";
+export type RequestMethodsType = 'Get' | 'Post' | 'Put';
 
 type IResendOtpInfo<T = any> = Partial<T> &
   Partial<ICheckNationalCodeResponse> & {

@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { notFound, useParams, useSearchParams } from "next/navigation";
-import { createContext, Dispatch, ReactNode, useEffect, useReducer, } from "react";
-import { FormElementInstance } from "@/types/FormElements";
-import { toast } from "react-hot-toast";
-import { IEndPageList } from "@/types/bulider";
-import { AxiosApi } from "@/services/axios/AxiosApi";
+import { notFound, useParams, useSearchParams } from 'next/navigation';
+import { createContext, Dispatch, ReactNode, useEffect, useReducer } from 'react';
+import { FormElementInstance } from '@/types/FormElements';
+import { toast } from 'react-hot-toast';
+import { IEndPageList } from '@/types/bulider';
+import { AxiosApi } from '@/services/axios/AxiosApi';
 
 type IInitialState = {
   questions: any[] | never[];
@@ -35,74 +35,65 @@ export default PreviewContext;
 
 const initialState: IInitialState = {
   questions: [],
-  title: "",
+  title: '',
   // 'loading', 'error', 'ready', "notExist"
-  status: "loading",
+  status: 'loading',
   index: 0,
   answer: null,
   numQuestions: null,
-  dispatch: () => { },
+  dispatch: () => {},
 };
 
 function reducer(state: IInitialState, action: any) {
   switch (action.type) {
-    case "dataReceived":
+    case 'dataReceived':
       return {
         ...state,
         questions: action.payload.questions,
         title: action.payload.title,
-        index:
-          action.payload.index !== null &&
-            action.payload.index <= action.payload.questions.length &&
-            action.payload.index >= 0
-            ? Number(action.payload.index)
-            : 0,
-        status: "ready",
+        index: action.payload.index !== null && action.payload.index <= action.payload.questions.length && action.payload.index >= 0 ? Number(action.payload.index) : 0,
+        status: 'ready',
       };
-    case "dataFailed":
+    case 'dataFailed':
       notFound();
-    case "nextQuestion":
+    case 'nextQuestion':
       return { ...state, index: state.index + 1, answer: null };
-    case "pervQuestion":
+    case 'pervQuestion':
       return { ...state, index: state.index - 1, answer: null };
-    case "noQuestionExist":
-      return { ...state, status: "notExist" };
+    case 'noQuestionExist':
+      return { ...state, status: 'notExist' };
     default:
-      throw new Error("Action unkonwn");
+      throw new Error('Action unkonwn');
   }
 }
 
 export function PreviewProvider({ children }: { children: ReactNode }) {
   const { id } = useParams();
   const searchParams = useSearchParams();
-  const [{ questions, status, index, answer, title }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ questions, status, index, answer, title }, dispatch] = useReducer(reducer, initialState);
   const numQuestions: number = questions.length;
-  const currentIndex = searchParams?.get("question");
-  const search = searchParams.get('rep')
-  const admin = search === "list"
-
+  const currentIndex = searchParams?.get('question');
+  const search = searchParams.get('rep');
+  const admin = search === 'list';
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const { data }: { data: formResDataTypes } = await AxiosApi.get(
-          admin ? `/admin/form/${id}` : `/user/form/${id}`
-        );
+        const {
+          data,
+        }: {
+          data: formResDataTypes;
+        } = await AxiosApi.get(admin ? `/admin/form/${id}` : `/user/form/${id}`);
 
-        const allQuestions = data?.questionGroups
-          ?.map((group: any) => group?.questions)
-          .flat();
+        const allQuestions = data?.questionGroups?.map((group: any) => group?.questions).flat();
 
         if (!allQuestions.length) {
           dispatch({
-            type: "noQuestionExist",
+            type: 'noQuestionExist',
           });
         } else {
           dispatch({
-            type: "dataReceived",
+            type: 'dataReceived',
             payload: {
               questions: allQuestions as FormElementInstance[],
               index: currentIndex,
@@ -111,8 +102,8 @@ export function PreviewProvider({ children }: { children: ReactNode }) {
           });
         }
       } catch (error) {
-        dispatch({ type: "dataFailed" });
-        toast.error("خطا در دریافت اطلاعات");
+        dispatch({ type: 'dataFailed' });
+        toast.error('خطا در دریافت اطلاعات');
       }
     }
 
@@ -130,8 +121,7 @@ export function PreviewProvider({ children }: { children: ReactNode }) {
         title,
 
         dispatch,
-      }}
-    >
+      }}>
       {children}
     </PreviewContext.Provider>
   );

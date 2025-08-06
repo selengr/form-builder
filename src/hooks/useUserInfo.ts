@@ -1,5 +1,5 @@
-import {useEffect, useState} from "react";
-import {fetchUserInfo} from "@/lib/auth";
+import { useEffect, useState } from 'react';
+import { fetchUserInfo } from '@/lib/auth';
 
 export function useUserInfo() {
   const [userInfo, setUserInfo] = useState<any>(null);
@@ -12,7 +12,7 @@ export function useUserInfo() {
     const loadUser = async () => {
       setLoading(true);
       setError(null);
-      const {userInfo, isAuthenticated, error} = await fetchUserInfo();
+      const { userInfo, isAuthenticated, error } = await fetchUserInfo();
       if (isMounted) {
         if (isAuthenticated) {
           setUserInfo(userInfo);
@@ -33,5 +33,5 @@ export function useUserInfo() {
     };
   }, []);
 
-  return {userInfo, loading, error};
+  return { userInfo, loading, error };
 }

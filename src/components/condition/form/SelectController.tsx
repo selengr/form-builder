@@ -1,25 +1,11 @@
-"use client";
-import type React from "react";
-import {
-    Box,
-    Checkbox,
-    Chip,
-    FormControl,
-    FormHelperText,
-    InputLabel,
-    LinearProgress,
-    MenuItem,
-    OutlinedInput,
-    Select,
-    type SelectProps,
-    type SxProps,
-    type Theme,
-} from "@mui/material";
+'use client';
+import type React from 'react';
+import { Box, Checkbox, Chip, FormControl, FormHelperText, InputLabel, LinearProgress, MenuItem, OutlinedInput, Select, type SelectProps, type SxProps, type Theme } from '@mui/material';
 
-import {IoIosArrowDown} from "react-icons/io";
-import {Controller, useFormContext} from "react-hook-form";
+import { IoIosArrowDown } from 'react-icons/io';
+import { Controller, useFormContext } from 'react-hook-form';
 
-interface CustomSelectProps extends Omit<SelectProps, "sx" | "name"> {
+interface CustomSelectProps extends Omit<SelectProps, 'sx' | 'name'> {
   options: { value: string; label: string }[];
   sx?: SxProps<Theme>;
   name: string;
@@ -29,16 +15,7 @@ interface CustomSelectProps extends Omit<SelectProps, "sx" | "name"> {
   isLoading?: boolean;
 }
 
-export const SelectController: React.FC<CustomSelectProps> = ({
-  options,
-  sx,
-  name,
-  onChange,
-  disabled = false,
-  isOperator = false,
-  isLoading = false,
-  ...props
-}) => {
+export const SelectController: React.FC<CustomSelectProps> = ({ options, sx, name, onChange, disabled = false, isOperator = false, isLoading = false, ...props }) => {
   const { control } = useFormContext();
 
   return (
@@ -49,7 +26,7 @@ export const SelectController: React.FC<CustomSelectProps> = ({
         <FormControl error={!!error}>
           <Select
             IconComponent={IoIosArrowDown}
-            variant="outlined"
+            variant='outlined'
             {...field}
             onChange={(value) => {
               field.onChange(value);
@@ -59,73 +36,60 @@ export const SelectController: React.FC<CustomSelectProps> = ({
             displayEmpty
             renderValue={(selected) => {
               if (isLoading) {
-                return (
-                  <LinearProgress
-                    variant="buffer"
-                    value={0}
-                    valueBuffer={0}
-                    sx={{ width: 28, pt: 1 }}
-                  />
-                );
+                return <LinearProgress variant='buffer' value={0} valueBuffer={0} sx={{ width: 28, pt: 1 }} />;
               }
-              const selectedValue = isOperator ? selected?.split("@")[0] : selected;
-              const selectedOption = options?.find(option => {
-               const val = option?.value?.includes("@") ? option?.value?.split("@")[0] : option?.value
-                return  option?.value?.split("@")[0] === selectedValue?.split("@")[0]
+              const selectedValue = isOperator ? selected?.split('@')[0] : selected;
+              const selectedOption = options?.find((option) => {
+                const val = option?.value?.includes('@') ? option?.value?.split('@')[0] : option?.value;
+                return option?.value?.split('@')[0] === selectedValue?.split('@')[0];
               });
-              return selectedOption ? selectedOption.label : "";
+              return selectedOption ? selectedOption.label : '';
             }}
             sx={{
-              "& .MuiSelect-select.MuiSelect-outlined": {
-                fontFamily: "inherit",
-                paddingRight: "33px",
-                paddingLeft: "0 !important",
+              '& .MuiSelect-select.MuiSelect-outlined': {
+                fontFamily: 'inherit',
+                paddingRight: '33px',
+                paddingLeft: '0 !important',
               },
-              "&.MuiInputBase-root": {
-                borderRadius: "8px",
+              '&.MuiInputBase-root': {
+                borderRadius: '8px',
                 paddingLeft: 2,
-                border: error ? "1px solid #FA4D56" : "1px solid #DDE1E6",
+                border: error ? '1px solid #FA4D56' : '1px solid #DDE1E6',
                 height: {
-                  xs: 52,    
-                  // sm: 50,    
-                  // md: 52 
-                }
+                  xs: 52,
+                  // sm: 50,
+                  // md: 52
+                },
               },
-              "& .MuiSelect-icon": {
-                left: "auto",
-                right: "12px",
-                color: error ? "#FA4D56" : "#1758BA",
-                fontSize: "1.2rem",
+              '& .MuiSelect-icon': {
+                left: 'auto',
+                right: '12px',
+                color: error ? '#FA4D56' : '#1758BA',
+                fontSize: '1.2rem',
               },
-              "& .MuiOutlinedInput-notchedOutline": {
-                border: "none",
+              '& .MuiOutlinedInput-notchedOutline': {
+                border: 'none',
               },
               ...(sx as SxProps<Theme>),
             }}
-            {...props}
-          >
+            {...props}>
             {options?.map((option) => (
               <MenuItem
                 key={option.value}
-                value={!isOperator ?option.value:option.value+"@"+option.label}
+                value={!isOperator ? option.value : option.value + '@' + option.label}
                 sx={{
-                  display: "flex",
+                  display: 'flex',
                   py: 1,
                   px: 2,
                   mx: 1,
                   borderRadius: 0.75,
-                  typography: "body2",
-                }}
-              >
+                  typography: 'body2',
+                }}>
                 {option.label}
               </MenuItem>
             ))}
           </Select>
-          {error && (
-            <FormHelperText sx={{ color: "#FA4D56" }}>
-              {error.message}
-            </FormHelperText>
-          )}
+          {error && <FormHelperText sx={{ color: '#FA4D56' }}>{error.message}</FormHelperText>}
         </FormControl>
       )}
     />
@@ -147,26 +111,15 @@ type RHFMultiSelectProps = SelectProps & {
   }[];
 };
 
-export function MultiSelectController({
-  name,
-  chip,
-  label,
-  options,
-  checkbox,
-  placeholder,
-  helperText,
-  sx,
-  ...other
-}: RHFMultiSelectProps) {
+export function MultiSelectController({ name, chip, label, options, checkbox, placeholder, helperText, sx, ...other }: RHFMultiSelectProps) {
   const { control } = useFormContext();
 
   const renderValues = (selectedIds: string[]) => {
-    const selectedItems = options.filter(item => selectedIds.includes(`${item.value}@${item.label}`));
-    
+    const selectedItems = options.filter((item) => selectedIds.includes(`${item.value}@${item.label}`));
 
     if (!selectedItems.length && placeholder) {
       return (
-        <Box component="em" sx={{ color: "text.disabled" }}>
+        <Box component='em' sx={{ color: 'text.disabled' }}>
           {placeholder}
         </Box>
       );
@@ -174,14 +127,14 @@ export function MultiSelectController({
 
     if (chip) {
       return (
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
           {selectedItems.map((item) => (
-            <Chip key={item.value} size="small" label={item.label} />
+            <Chip key={item.value} size='small' label={item.label} />
           ))}
         </Box>
       );
     }
-    return selectedItems.map((item) => item.label).join(", ");
+    return selectedItems.map((item) => item.label).join(', ');
   };
 
   return (
@@ -206,64 +159,62 @@ export function MultiSelectController({
               },
             }}
             sx={{
-              "& .MuiSelect-select.MuiSelect-outlined": {
-                fontFamily: "inherit",
-                paddingRight: "33px",
-                paddingLeft: "0 !important",
+              '& .MuiSelect-select.MuiSelect-outlined': {
+                fontFamily: 'inherit',
+                paddingRight: '33px',
+                paddingLeft: '0 !important',
                 minWidth: 150,
               },
-              "&.MuiInputBase-root": {
-                borderRadius: "8px",
+              '&.MuiInputBase-root': {
+                borderRadius: '8px',
                 paddingLeft: 2,
-                border: error ? "1px solid #FA4D56" : "1px solid #DDE1E6",
+                border: error ? '1px solid #FA4D56' : '1px solid #DDE1E6',
                 height: {
-                  xs: 52,    
-                  // sm: 50,    
-                  // md: 52 
-                }
+                  xs: 52,
+                  // sm: 50,
+                  // md: 52
+                },
               },
-              "& .MuiSelect-icon": {
-                left: "auto",
-                right: "12px",
-                color: error ? "#FA4D56" : "#1758BA",
-                fontSize: "1.2rem",
+              '& .MuiSelect-icon': {
+                left: 'auto',
+                right: '12px',
+                color: error ? '#FA4D56' : '#1758BA',
+                fontSize: '1.2rem',
               },
-              "& .MuiOutlinedInput-notchedOutline": {
-                border: "none",
+              '& .MuiOutlinedInput-notchedOutline': {
+                border: 'none',
               },
             }}
             {...other}
-            value={!!!field.value ? [] : Array.isArray(field.value) ? field.value : field.value.split(",") || []}
+            value={!field.value ? [] : Array.isArray(field.value) ? field.value : field.value.split(',') || []}
             onChange={(event) => {
               const {
                 target: { value },
               } = event;
               const selectedValues = typeof value === 'string' ? value.split(',') : value;
-              const formattedValues = selectedValues.map((val :any) => {
-                const option = options.find(option => option.value === val);
+              const formattedValues = selectedValues.map((val: any) => {
+                const option = options.find((option) => option.value === val);
                 return option ? `${option.value}@${option.label}` : val;
               });
               field.onChange(formattedValues);
             }}
-            {...other}
-          >
+            {...other}>
             {placeholder && (
               <MenuItem
                 disabled
-                value=""
+                value=''
                 sx={{
                   py: 1,
                   px: 2,
                   borderRadius: 0.75,
-                  typography: "body2",
-                }}
-              >
+                  typography: 'body2',
+                }}>
                 <em> {placeholder} </em>
               </MenuItem>
             )}
 
-              {options?.map((option) => {
-                const selected = Array.isArray(field.value) ? field.value.includes(`${option.value}@${option.label}`) : false;
+            {options?.map((option) => {
+              const selected = Array.isArray(field.value) ? field.value.includes(`${option.value}@${option.label}`) : false;
 
               return (
                 <MenuItem
@@ -274,22 +225,19 @@ export function MultiSelectController({
                     py: 1,
                     px: 2,
                     borderRadius: 0.75,
-                    typography: "body2",
+                    typography: 'body2',
                     ...(selected && {
-                      fontWeight: "fontWeightMedium",
-                      color : "red",
-                      backdropFilter : "red",
+                      fontWeight: 'fontWeightMedium',
+                      color: 'red',
+                      backdropFilter: 'red',
                     }),
                     ...(checkbox && {
                       p: 0.25,
                     }),
-                    display: "flex",
-                    justifyContent: "end",
-                  }}
-                >
-                  {checkbox && (
-                    <Checkbox disableRipple size="small" checked={selected} />
-                  )}
+                    display: 'flex',
+                    justifyContent: 'end',
+                  }}>
+                  {checkbox && <Checkbox disableRipple size='small' checked={selected} />}
 
                   {option.label}
                 </MenuItem>
@@ -297,11 +245,7 @@ export function MultiSelectController({
             })}
           </Select>
 
-          {(!!error || helperText) && (
-            <FormHelperText error={!!error}>
-              {error ? error?.message : helperText}
-            </FormHelperText>
-          )}
+          {(!!error || helperText) && <FormHelperText error={!!error}>{error ? error?.message : helperText}</FormHelperText>}
         </FormControl>
       )}
     />

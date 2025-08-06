@@ -1,1 +1,1 @@
-export * from "./useGetReportList"
+export * from './useGetReportList';

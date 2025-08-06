@@ -3,33 +3,33 @@ import { AxiosApi } from '@/services/axios/AxiosApi';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface TTicketFormData {
-    formId : string | string[]
-    ticket : string
-    publicationApprovalByAdmin : boolean
+  formId: string | string[];
+  ticket: string;
+  publicationApprovalByAdmin: boolean;
 }
 
 const postChangeStatus = async (data: TTicketFormData) => {
-    const url = `/admin/form/change-status`;
-    const response = await AxiosApi.put(url, data);
-    return response.data;
+  const url = `/admin/form/change-status`;
+  const response = await AxiosApi.put(url, data);
+  return response.data;
 };
 
 export const usePostChangeStatus = () => {
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
-    const mutation = useMutation({
-        mutationKey: ['change-status'],
-        mutationFn: ({ data}: { data: TTicketFormData}) => postChangeStatus(data),
+  const mutation = useMutation({
+    mutationKey: ['change-status'],
+    mutationFn: ({ data }: { data: TTicketFormData }) => postChangeStatus(data),
 
-        onSuccess: () => {
-            // queryClient.invalidateQueries([''] as any);
-            // queryClient.refetchQueries(['']as any);
-            toast.success(`با موفقیت انجام شد`);
-        },
-        onError: () => {
-            toast.error("انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.");
-        },
-    });
+    onSuccess: () => {
+      // queryClient.invalidateQueries([''] as any);
+      // queryClient.refetchQueries(['']as any);
+      toast.success(`با موفقیت انجام شد`);
+    },
+    onError: () => {
+      toast.error('انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.');
+    },
+  });
 
-    return mutation;
+  return mutation;
 };

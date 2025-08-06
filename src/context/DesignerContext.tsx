@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import {Dispatch, ReactNode, SetStateAction, useCallback, useMemo, useState,} from "react";
-import {FormElementInstance} from "@/types/FormElements";
+import { Dispatch, ReactNode, SetStateAction, useCallback, useMemo, useState } from 'react';
+import { FormElementInstance } from '@/types/FormElements';
 import {
-    ActionDesignerContext,
-    ActionElementsContext,
-    ActionOpenBottomSheetContext,
-    ActionOpenDialogContext,
-    ActionQuestionLoadingContext,
-    ActionSelectedElementContext,
-    DesignerContext,
-    ElementsContext,
-    OpenBottomSheetContext,
-    OpenDialogContext,
-    QuestionLoadingContext,
-    SelectedElementContext,
-} from "./AllContexts";
+  ActionDesignerContext,
+  ActionElementsContext,
+  ActionOpenBottomSheetContext,
+  ActionOpenDialogContext,
+  ActionQuestionLoadingContext,
+  ActionSelectedElementContext,
+  DesignerContext,
+  ElementsContext,
+  OpenBottomSheetContext,
+  OpenDialogContext,
+  QuestionLoadingContext,
+  SelectedElementContext,
+} from './AllContexts';
 
 /* ---------------------------------- Types --------------------------------- */
 export type selectedElementObject = {
@@ -59,25 +59,18 @@ export type DesignerContextType = {
   formSetting: any;
 };
 
-export default function DesignerContextProvider({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export default function DesignerContextProvider({ children }: { children: ReactNode }) {
   const [elements, setElements] = useState<FormElementInstance[]>([]);
   const [questionGroups, setQuestionGroups] = useState<number[]>([]);
-  const [finishPage, setFinishPage] = useState<FormElementInstance | null>(
-    null
-  );
+  const [finishPage, setFinishPage] = useState<FormElementInstance | null>(null);
   const [startPage, setStartPage] = useState<FormElementInstance | null>(null);
-  const [selectedElement, setSelectedElement] =
-    useState<selectedElementObject | null>(null);
+  const [selectedElement, setSelectedElement] = useState<selectedElementObject | null>(null);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [openBottomSheet, setOpenBottomSheet] = useState<boolean>(false);
   const [selectedGroup, setSelectedGroup] = useState<null | number>(null);
   const [questionLoading, setQuestionLoading] = useState<boolean>(false);
-  const [formName, setFormName] = useState<string>("");
-  const [formSetting, setFormSetting] = useState<string>("");
+  const [formName, setFormName] = useState<string>('');
+  const [formSetting, setFormSetting] = useState<string>('');
 
   const addFinishPage = useCallback((element: FormElementInstance) => {
     setFinishPage(element);
@@ -87,16 +80,13 @@ export default function DesignerContextProvider({
     setStartPage(element);
   }, []);
 
-  const addElement = useCallback(
-    (index: number, element: FormElementInstance) => {
-      setElements((prev) => {
-        const newElements = [...prev];
-        newElements.splice(index, 0, element);
-        return newElements;
-      });
-    },
-    []
-  );
+  const addElement = useCallback((index: number, element: FormElementInstance) => {
+    setElements((prev) => {
+      const newElements = [...prev];
+      newElements.splice(index, 0, element);
+      return newElements;
+    });
+  }, []);
 
   const removeStartPage = useCallback(() => {
     setStartPage(null);
@@ -124,17 +114,14 @@ export default function DesignerContextProvider({
     }));
   }, []);
 
-  const updateElement = useCallback(
-    (id: number, element: FormElementInstance) => {
-      setElements((prev) => {
-        const newElements = [...prev];
-        const index = newElements.findIndex((el) => el?.questionId === id);
-        newElements[index] = element;
-        return newElements;
-      });
-    },
-    []
-  );
+  const updateElement = useCallback((id: number, element: FormElementInstance) => {
+    setElements((prev) => {
+      const newElements = [...prev];
+      const index = newElements.findIndex((el) => el?.questionId === id);
+      newElements[index] = element;
+      return newElements;
+    });
+  }, []);
 
   const createNewQuestionGroup = useCallback((id: number) => {
     setQuestionGroups((questionGroups) => [...questionGroups, id]);
@@ -153,11 +140,11 @@ export default function DesignerContextProvider({
       finishPage,
       selectedGroup,
       formName,
-      formSetting
+      formSetting,
     }),
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [questionGroups, startPage, finishPage, selectedGroup, formName, formSetting]
+    [questionGroups, startPage, finishPage, selectedGroup, formName, formSetting],
   );
 
   const memoizedFuncs = useMemo(
@@ -184,7 +171,7 @@ export default function DesignerContextProvider({
     }),
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [],
   );
 
   return (
@@ -198,12 +185,8 @@ export default function DesignerContextProvider({
                   <OpenDialogContext.Provider value={openDialog}>
                     <SelectedElementContext.Provider value={selectedElement}>
                       <QuestionLoadingContext.Provider value={questionLoading}>
-                        <OpenBottomSheetContext.Provider
-                          value={openBottomSheet}
-                        >
-                          <DesignerContext.Provider value={memoizedValues}>
-                            {children}
-                          </DesignerContext.Provider>
+                        <OpenBottomSheetContext.Provider value={openBottomSheet}>
+                          <DesignerContext.Provider value={memoizedValues}>{children}</DesignerContext.Provider>
                         </OpenBottomSheetContext.Provider>
                       </QuestionLoadingContext.Provider>
                     </SelectedElementContext.Provider>

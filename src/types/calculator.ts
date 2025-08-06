@@ -1,5 +1,5 @@
-import {Dispatch, SetStateAction} from "react";
-import {QueryObserverResult} from "@tanstack/react-query";
+import { Dispatch, SetStateAction } from 'react';
+import { QueryObserverResult } from '@tanstack/react-query';
 
 export type TRefetchFunction = () => Promise<QueryObserverResult<any, unknown>>;
 
@@ -8,12 +8,12 @@ export interface ICalculator {
   name: string;
   theFormula: string;
   formBuilderId: number;
-  frontCalcData: string
+  frontCalcData: string;
 }
 
 export interface ICalculatorCardProps {
-  index:number;
-  disabled?:boolean
+  index: number;
+  disabled?: boolean;
   calculator: ICalculator;
 }
 
@@ -31,11 +31,9 @@ export interface ICreateCalculatorDialogProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface IEditCalculatorDialogProps extends ICreateCalculatorDialogProps  {
-  calcId : number
+export interface IEditCalculatorDialogProps extends ICreateCalculatorDialogProps {
+  calcId: number;
 }
-
-
 
 export interface IFrontCalcData {
   type: string;
@@ -50,8 +48,6 @@ export interface ICalculatorFindDataResponse {
   theFormula: string;
   frontCalcData: IFrontCalcData | string;
 }
-
-
 
 interface IOptions {
   [key: string]: [number, string];
@@ -88,7 +84,6 @@ export interface IFieldQuestionData {
   page: number;
   rows: number;
 }
-
 
 export interface IAdvancedFormulaEditorProps {
   questionList: IFieldQuestionData;

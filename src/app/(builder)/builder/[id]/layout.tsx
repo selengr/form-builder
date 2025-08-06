@@ -1,10 +1,6 @@
-import {ReactNode} from "react";
-import DesignerContextProvider from "@/context/DesignerContext";
+import { ReactNode } from 'react';
+import DesignerContextProvider from '@/context/DesignerContext';
 
-export default function BuilderIdPageLayout({
-                                              children,
-                                            }: {
-  children: ReactNode;
-}) {
+export default function BuilderIdPageLayout({ children }: { children: ReactNode }) {
   return <DesignerContextProvider>{children}</DesignerContextProvider>;
 }

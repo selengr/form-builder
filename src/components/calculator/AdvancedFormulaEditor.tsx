@@ -552,14 +552,15 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
   if (!isClient) return null;
 
   return (
-    <Container maxWidth='sm' sx={{ padding: '0px !important', marginTop: '-15px !important' }}>
+    <Container maxWidth='sm' sx={{ padding: '0px', marginTop: { xs: "10px", md: "'-15px'" } }}>
       <Typography
         variant='subtitle1'
         sx={{
-          display: 'flex',
+          display: { xs: "none", md: 'flex' },
           justifyContent: 'center',
           color: '#404040',
           fontWeight: 700,
+
         }}>
         محاسبه‌گر
       </Typography>
@@ -571,6 +572,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
           height: '100%',
           direction: 'ltr',
           width: '100%',
+          paddingX: { xs: 3, md: 0 }
         }}>
         <Stack spacing={1}>
           <Typography variant='subtitle2' color='#161616'>
@@ -604,19 +606,25 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
         <Box
           sx={{
             width: '100%',
-            display: 'flex',
+            display: "flex",
             flexDirection: { xs: 'row', sm: 'row' },
             my: 3,
           }}>
-          <FormulaKeypad
-            handleFnFX={handleFnFX}
-            handleNewField={handleNewField}
-            handleParenthesis={handleParenthesis}
-            handleOperator={handleOperator}
-            handleNumber={handleNumber}
-            handleUndo={handleUndo}
-            contentEditableRef={contentEditable}
-          />
+          <Stack
+            sx={{
+              display: { xs: "none", md: "flex" }
+            }}
+          >
+            <FormulaKeypad
+              handleFnFX={handleFnFX}
+              handleNewField={handleNewField}
+              handleParenthesis={handleParenthesis}
+              handleOperator={handleOperator}
+              handleNumber={handleNumber}
+              handleUndo={handleUndo}
+              contentEditableRef={contentEditable}
+            />
+          </Stack>
 
           <Box
             sx={{

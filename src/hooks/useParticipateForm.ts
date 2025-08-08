@@ -194,9 +194,6 @@ export const useParticipateForm = () => {
   const handleValidationUpdate = (valid: boolean, value: any) => {
     setIsValid(valid);
     setFormData(value);
-    if (answerId) {
-      setAnswerId(undefined);
-    }
   };
 
   const handleNext = async () => {
@@ -206,20 +203,28 @@ export const useParticipateForm = () => {
     try {
       const props = question.questionPropertyList;
       const isMultiSelect = extractProperty(props, 'MULTI_SELECT') === 'true';
-      const spectralType = extractProperty(props, 'SPECTRAL_TYPE');
+      const isChoiceType = ['MULTIPLE_CHOICE', 'MULTIPLE_CHOICE_IMAGE'].includes(
+        question.questionType
+      );
 
-      const needsOption =
-        isMultiSelect ||
-        ['MULTIPLE_CHOICE', 'MULTIPLE_CHOICE_IMAGE'].includes(question.questionType);
       let answerList;
 
-      if (needsOption) {
-        const ids = Array.isArray(formData) ? formData : [formData];
-
-        answerList = ids.map((item: any) => ({
-          optionId: Number(item),
-          answer: Number(item),
-        }));
+      if (isChoiceType) {
+        if (isMultiSelect) {
+          const ids = Array.isArray(formData) ? formData : [];
+          answerList = ids.map((item: any) => ({
+            optionId: Number(item),
+            answer: String(item),
+          }));
+        } else {
+          answerList = [
+            {
+              optionId: Number(formData),
+              answer: String(formData),
+              id: answerId,
+            },
+          ];
+        }
       } else {
         answerList = [
           {
@@ -238,11 +243,10 @@ export const useParticipateForm = () => {
       });
 
       res.data.questionId
-        ? initializeQuestion(res.data, res.data.nextAnswers ?? [])
+        ? initializeQuestion(res.data, res.data.oldAnswers ?? [])
         : setFinishPage(true);
     } catch (e) {
       console.error('Error in handleNext:', e);
-      // toast.error('خطا در ارسال پاسخ');
     } finally {
       setQuestionLoading(false);
     }
@@ -252,7 +256,7 @@ export const useParticipateForm = () => {
       setQuestionLoading(true);
       const res = await AxiosApi.post('/question/previous-question', { takePartId });
       const q = res.data.questionModel;
-      const a = res.data.userAnswerModel?.answersModel ?? [];
+      const a = res.data.oldAnswers?.answersModel ?? [];
 
       initializeQuestion(q, a);
       setIsValid(true);

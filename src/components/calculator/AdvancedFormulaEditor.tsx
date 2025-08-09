@@ -691,7 +691,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
       </Box>
       <FormulaControls onSubmit={callApi} onCancel={handleClose} isLoading={isLoading} />
 
-      <BottomSheet open={isMobileKeypadOpen} onClose={() => setIsMobileKeypadOpen(false)}>
+      <BottomSheet open={true} onClose={() => setIsMobileKeypadOpen(false)}>
 
         <FormulaKeypad
           handleFnFX={handleFnFX}

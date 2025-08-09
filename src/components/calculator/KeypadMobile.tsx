@@ -22,7 +22,7 @@ const KeypadMobile: React.FC<KeypadMobileProps> = ({ handleFnFX, handleNewField,
   return (
     <Box
       sx={{
-        width: {xs:"100%", md: "26%"},
+        width: { xs: "100%", md: "26%" },
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'start',
@@ -35,7 +35,7 @@ const KeypadMobile: React.FC<KeypadMobileProps> = ({ handleFnFX, handleNewField,
           '& .MuiSelect-select': {
             padding: 1,
           },
-            width: {xs:"100%", md: 135},
+          width: { xs: "100%", md: 135 },
           height: 30,
           fontWeight: 500,
           marginBottom: '2px',
@@ -103,19 +103,31 @@ const KeypadMobile: React.FC<KeypadMobileProps> = ({ handleFnFX, handleNewField,
         ))}
       </Select>
 
-      <Button
+      <Stack
         sx={{
-          border: '1px solid white',
-          width: {xs:"100%", md:135},
-          height: 30,
-          borderRadius: '8px',
-          fontWeight: 600,
-          color: '#1758BA',
-          backgroundColor: '#1758BA1A',
-        }}
-        onClick={handleNewField}>
-        فیلد جدید
-      </Button>
+          width: "100%",
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <CalculatorParenthesis operator={'('} handleParenthesis={handleParenthesis} />
+        <CalculatorParenthesis operator={')'} handleParenthesis={handleParenthesis} />
+
+        <Button
+          sx={{
+            border: '1px solid white',
+            width: "100%",
+            height: 30,
+            borderRadius: '8px',
+            fontWeight: 600,
+            color: '#1758BA',
+            backgroundColor: '#1758BA1A',
+          }}
+          onClick={handleNewField}>
+          فیلد جدید
+        </Button>
+      </Stack>
 
       <Stack
         sx={{
@@ -132,7 +144,7 @@ const KeypadMobile: React.FC<KeypadMobileProps> = ({ handleFnFX, handleNewField,
             flexDirection: 'column',
             marginRight: '4px',
           }}>
-          <CalculatorParenthesis operator={'('} handleParenthesis={handleParenthesis} />
+          {/* <CalculatorParenthesis operator={'('} handleParenthesis={handleParenthesis} /> */}
           {operators.map((op, idx) => (
             <Button
               key={idx}
@@ -153,7 +165,7 @@ const KeypadMobile: React.FC<KeypadMobileProps> = ({ handleFnFX, handleNewField,
           ))}
         </Grid2>
         <Grid2 gridColumn={3} spacing={5} gap={5} rowGap={5} columnGap={6}>
-          <CalculatorParenthesis operator={')'} handleParenthesis={handleParenthesis} />
+          {/* <CalculatorParenthesis operator={')'} handleParenthesis={handleParenthesis} /> */}
           <CalculatorClear handleClear={handleUndo} />
           {numbers.reverse().map((num, idx) => (
             <Button

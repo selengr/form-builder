@@ -61,19 +61,29 @@ export const useParticipateForm = () => {
       const spectralType = extractProperty(props, 'SPECTRAL_TYPE');
 
       let value: any = '';
-      let currentAnswerId: number | undefined;
+      let currentAnswerId: any
 
       if (previousAnswers && previousAnswers.length > 0) {
         const first = previousAnswers[0];
 
         if (q.questionType === 'SPECTRAL') {
-          value =
-            spectralType === 'DOMAIN'
-              ? previousAnswers.map(a => Number(a.answer))
-              : Number(first.answer);
+          if (spectralType === 'DOMAIN') {
+            value = previousAnswers.map(a => Number(a.answer));
+            currentAnswerId = previousAnswers.reduce((acc, a, index) => {
+              acc[index] = a.id;
+              return acc;
+            }, {} as Record<number, number>);
+          } else {
+            value = Number(first.answer);
+            currentAnswerId = first?.id;
+          }
         } else if (['MULTIPLE_CHOICE', 'MULTIPLE_CHOICE_IMAGE'].includes(q.questionType)) {
           if (isMultiSelect) {
             value = previousAnswers.map(a => a.optionId);
+            currentAnswerId = previousAnswers.reduce((acc, a) => {
+              acc[a.optionId] = a.id;
+              return acc;
+            }, {} as Record<number, number>);
           } else {
             value = first.optionId;
             currentAnswerId = first?.id;
@@ -119,6 +129,7 @@ export const useParticipateForm = () => {
     },
     [extractProperty]
   );
+
 
   const fetchInitialData = useCallback(async () => {
     try {
@@ -203,6 +214,7 @@ export const useParticipateForm = () => {
     try {
       const props = question.questionPropertyList;
       const isMultiSelect = extractProperty(props, 'MULTI_SELECT') === 'true';
+      const spectralType = extractProperty(props, 'SPECTRAL_TYPE');
       const isChoiceType = ['MULTIPLE_CHOICE', 'MULTIPLE_CHOICE_IMAGE'].includes(
         question.questionType
       );
@@ -215,13 +227,30 @@ export const useParticipateForm = () => {
           answerList = ids.map((item: any) => ({
             optionId: Number(item),
             answer: String(item),
+            id: typeof answerId === 'object' ? answerId[item] : undefined,
           }));
         } else {
           answerList = [
             {
               optionId: Number(formData),
               answer: String(formData),
-              id: answerId,
+              id: typeof answerId === 'number' ? answerId : undefined,
+            },
+          ];
+        }
+      } else if (question.questionType === 'SPECTRAL') {
+        if (spectralType === 'DOMAIN') {
+          answerList = formData.map((val: number, index: number) => ({
+            optionId: null,
+            answer: String(val),
+            id: typeof answerId === 'object' ? answerId[index] : undefined,
+          }));
+        } else {
+          answerList = [
+            {
+              optionId: null,
+              answer: String(formData),
+              id: typeof answerId === 'number' ? answerId : undefined,
             },
           ];
         }
@@ -229,7 +258,7 @@ export const useParticipateForm = () => {
         answerList = [
           {
             optionId: null,
-            id: answerId,
+            id: typeof answerId === 'number' ? answerId : undefined,
             answer: String(formData),
           },
         ];
@@ -251,6 +280,7 @@ export const useParticipateForm = () => {
       setQuestionLoading(false);
     }
   };
+
   const handlePrev = async () => {
     try {
       setQuestionLoading(true);

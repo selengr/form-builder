@@ -10,13 +10,13 @@ interface FormulaControlsProps {
 
 const FormulaControls: React.FC<FormulaControlsProps> = ({ onSubmit, onCancel, isLoading }) => {
   return (
-    <Box display='flex' gap={3} width='100%' marginBottom={2} sx={{ justifyContent: 'center' }}>
+    <Box display='flex' gap={3} width='100%' sx={{ justifyContent: 'center', marginBottom : {xs : 0, md :2} }}>
       <Button
         onClick={onSubmit}
         variant='contained'
         sx={{
           backgroundColor: '#1758BA',
-          fontWeight: '500',
+          fontWeight: '500',  
           fontSize: '15px',
           borderRadius: '8px',
           height: '50px',

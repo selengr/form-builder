@@ -131,13 +131,14 @@ const Keypad: React.FC<KeypadProps> = ({ handleFnFX, handleNewField, handleParen
             display: 'flex',
             flexDirection: 'column',
             marginRight: '4px',
+            minWidth: 32,
           }}>
           <CalculatorParenthesis operator={'('} handleParenthesis={handleParenthesis} />
           {operators.map((op, idx) => (
             <Button
               key={idx}
               sx={{
-                border: '1px solid white',
+                border: '1px solid white',  
                 width: 30,
                 height: 30,
                 minWidth: 30,

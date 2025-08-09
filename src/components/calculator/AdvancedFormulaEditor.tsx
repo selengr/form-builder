@@ -1,9 +1,9 @@
 'use client';
 import { toast } from 'sonner';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Box, Container, IconButton, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
 
 import { htmlToFormula } from '@/lib/htmlToFormula';
@@ -21,6 +21,7 @@ const FN_FX_OPTIONS = [{ fnValue: 'avg', fnCaption: 'میانگین()' }];
 
 const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ questionList, handleClose, editList, isEdit }) => {
   const { id } = useParams();
+    const router = useRouter();
   const queryClient = useQueryClient();
   const isDesktop = useMediaQuery('(min-width:768px)');
 
@@ -46,6 +47,20 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
       initializeFieldRefs();
     }
   }, [isEdit]);
+
+
+    useLayoutEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        router.push(`/builder/${id}/calculator/create`); 
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [router]);
 
   const initializeFieldRefs = () => {
     if (!elements) return;
@@ -557,7 +572,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
   if (!isClient) return null;
 
   return (
-    <Container maxWidth='sm' sx={{ padding: '0px', marginTop: { xs: "10px", md: "'-15px'" } }}>
+    <Container maxWidth='sm' sx={{ padding: '0px',marginTop: { xs: "10px", md: "'-15px'" ,position : "relative"} }}>
       <Typography
         variant='subtitle1'
         sx={{
@@ -656,7 +671,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
                 padding: 1,
                 width: '100%',
                 height: '100%',
-                minHeight: 200,
+                minHeight: { xs: 250,  md: 200 },
                 display: 'flex',
                 flexWrap: 'wrap',
                 flexDirection: 'row',
@@ -676,20 +691,31 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
           </Box>
         </Box>
 
+
+   <Stack
+        sx={{
+          width: "100%",
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'end'
+          
+        }}>
         <IconButton
           sx={{
-            display: { sx: "flex", md: "none" }
-            // position: 'absolute',
-            // right: '0.2rem',
-            // bottom : 10
-            // transform: open ? 'rotate(180deg)' : undefined,
+            display: { sx: "flex", md: "none" },
+            // transform: open ? 'rotate(180deg)' : undefined,  
+            width : 72,
+            hight : 72,
           }}
           onClick={() => setIsMobileKeypadOpen(true)}
         >
           <Image src='/images/calc/ic_keypad.svg' width={52} height={52} alt='keypad' />
         </IconButton>
-      </Box>
+
+        </Stack>
       <FormulaControls onSubmit={callApi} onCancel={handleClose} isLoading={isLoading} />
+      </Box>
 
       <BottomSheet open={isMobileKeypadOpen} onClose={() => setIsMobileKeypadOpen(false)} title="ماشین حساب">
 

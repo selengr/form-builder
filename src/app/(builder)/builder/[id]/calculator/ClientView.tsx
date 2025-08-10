@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 // templates
 import { CalculatorSkeleton } from '@/templates/calculator';
 import DesignerTabs from '@/templates/builder/TabComponent';
+import ErrorDisplay from '@/templates/condition/ErrorDisplay';
 
 const CalculatorList = dynamic(() => import('@/templates/calculator/CalculatorList'));
 
@@ -19,12 +20,7 @@ export default function ClientView<T>({ calculators, isPending, error }: IProps<
         <DesignerTabs />
         {!error && isPending && <CalculatorSkeleton />}
         {!error && !isPending && <CalculatorList calculators={calculators} />}
-        {error && (
-          <div className='flex flex-col absolute top-[250px] justify-center items-center'>
-            <span className='text-red-500'>!!خطا در بارگذاری لیست محاسبه گر</span>
-            <span>{error?.message}</span>
-          </div>
-        )}
+        {error && <ErrorDisplay title='محاسبه گر' message={error?.message} />}
       </div>
     </div>
   );

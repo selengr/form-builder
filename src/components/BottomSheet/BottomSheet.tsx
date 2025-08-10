@@ -78,7 +78,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ open, onClose, icon, title, c
                     id='bottom-sheet-title'
                     variant='h2'
                     sx={{
-                      fontSize: 'font-size: 0.75rem',
+                      fontSize: '0.75rem',
                       fontWeight: '400',
                     }}>
                     {title}

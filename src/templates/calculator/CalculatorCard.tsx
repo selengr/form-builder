@@ -2,7 +2,7 @@
 // React & Libs
 import Image from 'next/image';
 import { useState } from 'react';
-import { Button, CircularProgress, Menu, Typography } from '@mui/material';
+import { Button, CircularProgress, Menu, Typography, useMediaQuery } from '@mui/material';
 // types
 import { ICalculatorCardProps } from '@/types/calculator';
 // components
@@ -14,6 +14,7 @@ import { WeuiDeleteOutlined } from '../../../public/images/icons/DeleteIcon';
 import { PhDotsThreeVerticalBold } from '../../../public/images/icons/PhDotsThreeVerticalBold';
 // hooks
 import { useCheckDependency, useDeleteCalculator } from '../../app/(builder)/builder/[id]/calculator/_hooks';
+import { useParams, useRouter } from 'next/navigation';
 
 const buttonStyles = {
   height: '50px',
@@ -45,7 +46,10 @@ const buttonStylesError = {
 };
 
 export function CalculatorCard({ calculator, index, disabled = false }: ICalculatorCardProps) {
+  const { push } = useRouter();
+  const { id : pageId } = useParams();
   const [open, setOpen] = useState<boolean>(false);
+  const isDesktop = useMediaQuery('(min-width:768px)');
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [hasDependencies, setHasDependencies] = useState<boolean>(false);
@@ -67,10 +71,15 @@ export function CalculatorCard({ calculator, index, disabled = false }: ICalcula
     setAnchorEl(null);
   };
 
+
   const handleOpenEditDialog = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
-    setOpenEditDialog(true);
-    handleCloseMenu();
+    if (isDesktop) {
+      setOpenEditDialog(true);
+      handleCloseMenu();
+    } else {
+      push(`/builder/${pageId}/calculator/create?calcId=${id}`)
+    }
   };
 
   const handleCheckDependency = () => {

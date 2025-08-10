@@ -85,6 +85,11 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
     }
   };
 
+  const handleNavigation = () => {
+    localStorage.setItem("stats", "/builder")
+    router.push(`stats/${data.id}`)
+  }
+
   return (
     <>
       <div className='border p-4 rounded-[20px] border-[#DDE1E6] flex flex-col gap-4 w-full max-w-full relative'>
@@ -127,11 +132,11 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
               </Link>
             )}
 
-            <Link href={`stats/${data.id}`}>
+            <div onClick={handleNavigation}>
               <IconButton disabled={loading}>
                 <AiOutlinePieChart color='#424242' />
               </IconButton>
-            </Link>
+            </div>
           </div>
         </div>
       </div>

@@ -34,7 +34,7 @@ export default function NotFound({ error }: { error: Error }) {
           }}
         >
           <Link href="/" className="text-white text-base no-underline">
-            بازشگت به خانه
+            بازگشت به خانه
           </Link>
         </Button>
       </div>

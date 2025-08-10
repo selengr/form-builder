@@ -41,7 +41,6 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
 
   useEffect(() => {
     setIsClient(true);
-    console.log('pathname', pathname.includes("/create"))
   }, []);
 
   useEffect(() => {
@@ -54,7 +53,11 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
   useLayoutEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        router.push(`/builder/${id}/calculator/create`);
+        if(isEdit){
+          router.push(`/builder/${id}/calculator/create?calcId=${isEdit}`);
+        }else {
+          router.push(`/builder/${id}/calculator/create`);
+        }
       }
     };
     handleResize();
@@ -62,7 +65,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [router]);
+  }, []);
 
   const initializeFieldRefs = () => {
     if (!elements) return;

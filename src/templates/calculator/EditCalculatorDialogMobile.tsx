@@ -67,7 +67,7 @@ export const EditCalculatorDialogMobile: React.FC<IProps> = ({ calcId }) => {
           </div>
         ))}
       {error && <p>Error loading calculators: {(error as Error).message}</p>}
-      {data && editData && <AdvancedFormulaEditor questionList={data} handleClose={handleClose} editList={editData} isEdit={true} />}
+      {data && editData && <AdvancedFormulaEditor questionList={data} handleClose={handleClose} editList={editData} isEdit={calcId} />}
     </>
   );
 };

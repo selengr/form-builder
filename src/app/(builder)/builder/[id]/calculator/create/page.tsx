@@ -17,7 +17,7 @@ export default function PageMobile() {
   useLayoutEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 768) {
-        // router.push(`/builder/${id}/calculator`);
+        router.push(`/builder/${id}/calculator`);
       }
     };
     handleResize();
@@ -25,7 +25,7 @@ export default function PageMobile() {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [router]);
+  }, []);
 
   return (
     <div className='w-full h-[calc(100vh)] pt-5'>

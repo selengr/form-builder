@@ -89,5 +89,5 @@ export interface IAdvancedFormulaEditorProps {
   questionList: IFieldQuestionData;
   handleClose: () => void;
   editList?: ICalculatorFindDataResponse;
-  isEdit?: boolean;
+  isEdit?: string;
 }

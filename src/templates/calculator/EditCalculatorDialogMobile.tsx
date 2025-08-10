@@ -3,10 +3,13 @@ import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosApi } from '@/services/axios/AxiosApi';
 
-import { IEditCalculatorDialogProps } from '@/types/calculator';
-import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
+import BuilderLoading from '@/app/(builder)/builder/[id]/loading';
 import AdvancedFormulaEditor from '@/components/calculator/AdvancedFormulaEditor';
 
+
+interface IProps {
+  calcId: number;
+}
 
 const fetchCalculators = async (id: string) => {
   const customComboFilterModel = {
@@ -32,7 +35,7 @@ const fetchEditCalculators = async (calcId: number) => {
   return response.data;
 };
 
-export const EditCalculatorDialogMobile: React.FC<IEditCalculatorDialogProps> = ({ open, setOpen, calcId }) => {
+export const EditCalculatorDialogMobile: React.FC<IProps> = ({ calcId }) => {
   const { id } = useParams();
   const { data, isLoading, error } = useQuery({
     queryKey: ['calculators'],
@@ -52,19 +55,19 @@ export const EditCalculatorDialogMobile: React.FC<IEditCalculatorDialogProps> = 
     gcTime: 0,
   });
 
-  const handleClose = () => {};
+  const handleClose = () => { };
 
   return (
     <>
-        {isLoading ||
-          (editLoading && (
-            <div className='flex flex-col items-center justify-center w-full h-full min-w-[600px] min-h-[300px] bg-white bg-opacity-80 border border-gray-300 rounded-lg shadow-lg'>
-              <PreviewLoading />
-              <p className='text-lg text-gray-800'>در حال بارگیری ماشین حساب ...</p>
-            </div>
-          ))}
-        {error && <p>Error loading calculators: {(error as Error).message}</p>}
-        {data && editData && <AdvancedFormulaEditor questionList={data} handleClose={handleClose} editList={editData} isEdit={true} />}
+      {isLoading ||
+        (editLoading && (
+          <div className='flex flex-col items-center justify-center w-full h-full min-w-[600px] min-h-[300px] bg-white bg-opacity-80 border border-gray-300 rounded-lg shadow-lg'>
+            <p>در حال بارگیری محاسبه‌گر...</p>
+            <BuilderLoading className='min-h-16' />
+          </div>
+        ))}
+      {error && <p>Error loading calculators: {(error as Error).message}</p>}
+      {data && editData && <AdvancedFormulaEditor questionList={data} handleClose={handleClose} editList={editData} isEdit={true} />}
     </>
   );
 };

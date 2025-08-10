@@ -30,7 +30,7 @@ export default function BuilderErrorPage({ error }: { error: Error }) {
             },
           }}>
           <Link href='/builder' className='text-white text-base no-underline'>
-            بازشگت به فرم ساز
+          بازگشت به فرم ساز
           </Link>
         </Button>
       </div>

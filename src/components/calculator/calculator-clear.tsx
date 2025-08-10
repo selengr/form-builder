@@ -13,8 +13,8 @@ const CalculatorClear = ({ handleClear }: ICalculatorClear) => {
       <Button
         sx={{
           border: '1px solid white',
-          width: 64,
-          minWidth: 64,
+          width: { xs: 75, md: 64 },
+          minWidth: { xs: 75, md: 64 },
           height: 30,
           color: '#FA4D56',
           backgroundColor: '#FA4D561A',

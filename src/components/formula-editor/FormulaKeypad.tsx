@@ -1,5 +1,7 @@
 import React from 'react';
+import { useMediaQuery } from '@mui/material';
 import Keypad from '@/components/calculator/Keypad';
+import KeypadMobile from '../calculator/KeypadMobile';
 
 interface FormulaKeypadProps {
   handleFnFX: () => void;
@@ -12,16 +14,30 @@ interface FormulaKeypadProps {
 }
 
 const FormulaKeypad: React.FC<FormulaKeypadProps> = ({ handleFnFX, handleNewField, handleParenthesis, handleOperator, handleNumber, handleUndo, contentEditableRef }) => {
+  const isDesktop = useMediaQuery('(min-width:768px)');
   return (
-    <Keypad
-      handleFnFX={handleFnFX}
-      handleNewField={handleNewField}
-      handleParenthesis={handleParenthesis}
-      handleOperator={handleOperator}
-      handleNumber={handleNumber}
-      handleUndo={handleUndo}
-      contentEditable={contentEditableRef}
-    />
+    <>
+      {isDesktop && <Keypad
+        handleFnFX={handleFnFX}
+        handleNewField={handleNewField}
+        handleParenthesis={handleParenthesis}
+        handleOperator={handleOperator}
+        handleNumber={handleNumber}
+        handleUndo={handleUndo}
+        contentEditable={contentEditableRef}
+      />
+      }
+      {!isDesktop && <KeypadMobile
+        handleFnFX={handleFnFX}
+        handleNewField={handleNewField}
+        handleParenthesis={handleParenthesis}
+        handleOperator={handleOperator}
+        handleNumber={handleNumber}
+        handleUndo={handleUndo}
+        contentEditable={contentEditableRef}
+      />
+      }
+    </>
   );
 };
 

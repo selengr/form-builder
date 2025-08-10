@@ -33,9 +33,9 @@ export default function DesignerTabs() {
 
     const lastSegment = segments.at(-1);
     let tabValue = 2;
-
     if (lastSegment === 'condition') tabValue = 0;
     else if (lastSegment === 'calculator') tabValue = 1;
+    else if (lastSegment === 'create') tabValue = 1;
 
     setValue(tabValue);
   }, [pathname]);

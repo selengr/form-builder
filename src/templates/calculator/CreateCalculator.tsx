@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
-import { Button, SxProps, Theme } from '@mui/material';
+import { useRouter, useParams } from 'next/navigation';
+import { Button, SxProps, Theme, useMediaQuery } from '@mui/material';
 // view
 import CreateCalculatorDialog from './CreateCalculatorDialog';
 
@@ -22,10 +23,22 @@ const buttonSx: SxProps<Theme> = {
 };
 
 const CreateCalculator = () => {
+  const { push } = useRouter();
+  const { id } = useParams();
   const [open, setOpen] = useState<boolean>(false);
+  const isDesktop = useMediaQuery('(min-width:768px)');
+
+  const handleCreationsCalc = () => {
+    if (isDesktop) {
+      setOpen(true)
+    } else {
+      push(`/builder/${id}/calculator/create`)
+    }
+  }
+
   return (
     <>
-      <Button variant='text' onClick={() => setOpen(true)} fullWidth sx={buttonSx}>
+      <Button variant='text' onClick={handleCreationsCalc} fullWidth sx={buttonSx}>
         ایجاد محاسبه‌گر
       </Button>
       <CreateCalculatorDialog open={open} setOpen={setOpen} />

@@ -2,15 +2,16 @@
 
 import { CgClose } from 'react-icons/cg';
 import Dialog from '@mui/material/Dialog';
-import { IconButton } from '@mui/material';
+import { useParams } from 'next/navigation';
 import { styled } from '@mui/material/styles';
+import { useQuery } from '@tanstack/react-query';
 import { AxiosApi } from '@/services/axios/AxiosApi';
+import { Container, IconButton } from '@mui/material';
 import DialogContent from '@mui/material/DialogContent';
 
+import BuilderLoading from '@/app/(builder)/builder/[id]/loading';
 import { ICreateCalculatorDialogProps } from '@/types/calculator';
 import AdvancedFormulaEditor from '@/components/calculator/AdvancedFormulaEditor';
-import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
 
 const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   direction: 'ltr',
@@ -74,8 +75,11 @@ export const CreateCalculatorDialog: React.FC<ICreateCalculatorDialogProps> = ({
             <CgClose color='#404040' width={25} height={20} size='1.5rem' onClick={() => handleClose()} />
           </IconButton>
         </div>
-        {isLoading && <p>Loading calculators...</p>}
-        {error && <p>Error loading calculators: {(error as Error).message}</p>}
+        {isLoading && <Container maxWidth='sm' sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", minWidth: 576, height: 400 }}>
+          <p>در حال بارگیری ماشین حساب...</p>
+          <BuilderLoading  className='min-h-16'/>
+        </Container>}
+        {error && <p> خطا در بارگیری ماشین حساب.: {(error as Error).message}</p>}
         {data && <AdvancedFormulaEditor questionList={data} handleClose={handleClose} />}
       </StyledDialogContent>
     </StyledDialog>

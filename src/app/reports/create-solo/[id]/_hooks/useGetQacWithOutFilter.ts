@@ -27,8 +27,8 @@ export const useGetQacWithOutFilter = () => {
     queryFn: () => fetchData(id),
     staleTime: 0,
     gcTime: 600000,
-    refetchOnWindowFocus: true,
-    refetchOnReconnect: true,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
     retry: 3,
   });
 

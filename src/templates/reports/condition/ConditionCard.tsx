@@ -109,7 +109,7 @@ export function ConditionCard({ condition, index, admin }: IConditionCardProps) 
         id,
         invalid: !invalid,
       };
-      await AxiosApi.put(`/report/solo/main-list/${id}/duplicate`, body);
+      await AxiosApi.put(`/report/solo/main-list/invalid`, body);
       queryClient.invalidateQueries(['Report_List'] as any);
       queryClient.refetchQueries(['Report_List'] as any);
     } catch (error) {
@@ -160,7 +160,7 @@ export function ConditionCard({ condition, index, admin }: IConditionCardProps) 
                 loading={loadingStatus}
                 disabled={loadingStatus}>
                 <Typography>وضعیت</Typography>
-                <SwitchButton checked={invalid} disabled={loadingStatus} onClick={handleStatus} />
+                <SwitchButton checked={!invalid} disabled={loadingStatus} onClick={handleStatus} />
               </Button>
               <Button
                 sx={{

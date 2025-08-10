@@ -1,9 +1,15 @@
 import { ImSpinner2 } from 'react-icons/im';
 
-export default function BuilderLoading() {
+interface IProps {
+  className?: string; 
+}
+
+const BuilderLoading: React.FC<IProps> = ({ className }) => {
   return (
-    <div className='flex items-center justify-center w-full min-h-screen'>
+    <div className={`flex items-center justify-center w-full min-h-screen ${className}`}>
       <ImSpinner2 className='animate-spin h-12 w-12' />
     </div>
   );
-}
+};
+
+export default BuilderLoading;

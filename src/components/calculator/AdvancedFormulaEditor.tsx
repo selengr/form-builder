@@ -520,7 +520,13 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
     }
   };
 
-  
+  const handleClosePage = () => {
+    if (pathname.includes("/create")) {
+      router.push(`/builder/${id}/calculator`);
+    } else {
+      handleClose()
+    }
+  }
 
   const callApi = async () => {
     if (!formName) {
@@ -562,13 +568,9 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
           frontCalcData: JSON.stringify(elements),
         });
       }
-      if (pathname.includes("/create")) {
-        router.push(`/builder/${id}/calculator`);
-      } else {
-        handleClose();
-      }
       queryClient.invalidateQueries({ queryKey: ['calculators'] });
       queryClient.invalidateQueries({ queryKey: ['Calculation_List'] });
+      handleClosePage()
       toast.success('محاسبه گر با موفقیت ثبت شد');
     } catch (error) {
       toast.error('عملیات ناموفق بود مجددا امتحان نمایید');

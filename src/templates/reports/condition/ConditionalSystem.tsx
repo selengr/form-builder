@@ -11,6 +11,7 @@ import { SubCondition } from './SubCondition';
 import { RHFSwitch } from '@/components/hook-form';
 import { CircleDivider } from '@/components/condition/CircleDivider';
 import { SubmitButtons } from '@/components/condition/form/SubmitButtons';
+import AdvancedTextareaEditor from '@/components/AdvancedTextareaEditor/AdvancedTextareaEditor';
 // types
 import { IDropdownItem } from '@/components/AdvancedTextareaEditor/types';
 import { IConditionalSystemProps, IPostCondition } from '@/types/conditionReportSolo';
@@ -18,13 +19,12 @@ import { IConditionalSystemProps, IPostCondition } from '@/types/conditionReport
 import { formatContainText } from '@/lib/formatContainText';
 import { TConditionData, type TConditionFormData, TSubConditionData } from '@/lib/CreateSoloReportSchema';
 // hooks
+import { usePostCondition } from '@/app/reports/create-solo/[id]/_hooks/usePostCondition';
+import { useFormValidation } from '@/app/reports/create-solo/[id]/_hooks/useFormValidation';
 import { createNewSubCondition, useConditionalForm } from '@/app/reports/create-solo/[id]/_hooks/useConditionalForm';
-import { useGetQacWithOutFilter } from '@/app/reports/create-solo/[id]/_hooks/useGetQacWithOutFilter';
 import { useGetOnlyAllQuestions } from '@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllQuestions';
 import { useGetOnlyAllCalculation } from '@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllCalculation';
-import { usePostCondition } from '@/app/reports/create-solo/[id]/_hooks/usePostCondition';
-import AdvancedTextareaEditor from '@/components/AdvancedTextareaEditor/AdvancedTextareaEditor';
-import { useFormValidation } from '@/app/reports/create-solo/[id]/_hooks/useFormValidation';
+import { useGetQacWithOutFilter } from '@/app/reports/create-solo/[id]/_hooks/useGetQacWithOutFilter';
 
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClose, condition, isEdit = false }) => {
   const { id } = useParams();

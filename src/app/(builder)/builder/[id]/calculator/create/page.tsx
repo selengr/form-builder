@@ -1,14 +1,18 @@
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
+import { useLayoutEffect } from 'react';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 // templates
 import DesignerTabs from '@/templates/builder/TabComponent';
 import CreateCalculatorMobile from '@/templates/calculator/CreateCalculatorMobile';
-import { useLayoutEffect } from 'react';
+import EditCalculatorDialog from '@/templates/calculator/EditCalculatorDialog';
 
 export default function PageMobile() {
     const { id } = useParams();
       const router = useRouter();
+        const searchParams = useSearchParams();
+        const search = searchParams.get('calcId');
+console.log('search', search)
 
       useLayoutEffect(() => {
       const handleResize = () => {
@@ -27,8 +31,8 @@ export default function PageMobile() {
     <div className='w-full h-[calc(100vh)] pt-5'>
       <div className='md:container mx-auto flex pb-3 flex-col min-w-screen h-full justify-start items-center bg-white w-full'>
         <DesignerTabs />
-         <CreateCalculatorMobile />
-        {/* {!error && !isPending && <CalculatorList calculators={calculators} />} */}
+        {!search && <CreateCalculatorMobile />}
+        {search &&  <EditCalculatorDialog  calcId={JSON.parse(search)} />}
       </div>
     </div>
   );

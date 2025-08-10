@@ -1,7 +1,7 @@
 'use client';
 import { toast } from 'sonner';
 import Image from 'next/image';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Box, Container, IconButton, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
@@ -21,7 +21,8 @@ const FN_FX_OPTIONS = [{ fnValue: 'avg', fnCaption: 'میانگین()' }];
 
 const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ questionList, handleClose, editList, isEdit }) => {
   const { id } = useParams();
-    const router = useRouter();
+  const router = useRouter();
+  const pathname = usePathname();
   const queryClient = useQueryClient();
   const isDesktop = useMediaQuery('(min-width:768px)');
 
@@ -40,6 +41,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
 
   useEffect(() => {
     setIsClient(true);
+    console.log('pathname', pathname.includes("/create"))
   }, []);
 
   useEffect(() => {
@@ -49,10 +51,10 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
   }, [isEdit]);
 
 
-    useLayoutEffect(() => {
+  useLayoutEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        router.push(`/builder/${id}/calculator/create`); 
+        router.push(`/builder/${id}/calculator/create`);
       }
     };
     handleResize();
@@ -518,6 +520,8 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
     }
   };
 
+  
+
   const callApi = async () => {
     if (!formName) {
       toast.error('ابتدا نام محاسبه گر را وارد کنید');
@@ -558,7 +562,11 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
           frontCalcData: JSON.stringify(elements),
         });
       }
-      handleClose();
+      if (pathname.includes("/create")) {
+        router.push(`/builder/${id}/calculator`);
+      } else {
+        handleClose();
+      }
       queryClient.invalidateQueries({ queryKey: ['calculators'] });
       queryClient.invalidateQueries({ queryKey: ['Calculation_List'] });
       toast.success('محاسبه گر با موفقیت ثبت شد');
@@ -572,7 +580,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
   if (!isClient) return null;
 
   return (
-    <Container maxWidth='sm' sx={{ padding: '0px',marginTop: { xs: "10px", md: "'-15px'" ,position : "relative"} }}>
+    <Container maxWidth='sm' sx={{ padding: '0px', marginTop: { xs: "10px", md: "'-15px'", position: "relative" } }}>
       <Typography
         variant='subtitle1'
         sx={{
@@ -671,7 +679,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
                 padding: 1,
                 width: '100%',
                 height: '100%',
-                minHeight: { xs: 250,  md: 200 },
+                minHeight: { xs: 250, md: 200 },
                 display: 'flex',
                 flexWrap: 'wrap',
                 flexDirection: 'row',
@@ -692,29 +700,29 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
         </Box>
 
 
-   <Stack
-        sx={{
-          width: "100%",
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'end'
-          
-        }}>
-        <IconButton
+        <Stack
           sx={{
-            display: { sx: "flex", md: "none" },
-            // transform: open ? 'rotate(180deg)' : undefined,  
-            width : 72,
-            hight : 72,
-          }}
-          onClick={() => setIsMobileKeypadOpen(true)}
-        >
-          <Image src='/images/calc/ic_keypad.svg' width={52} height={52} alt='keypad' />
-        </IconButton>
+            width: "100%",
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'end'
+
+          }}>
+          <IconButton
+            sx={{
+              display: { sx: "flex", md: "none" },
+              // transform: open ? 'rotate(180deg)' : undefined,  
+              width: 72,
+              hight: 72,
+            }}
+            onClick={() => setIsMobileKeypadOpen(true)}
+          >
+            <Image src='/images/calc/ic_keypad.svg' width={52} height={52} alt='keypad' />
+          </IconButton>
 
         </Stack>
-      <FormulaControls onSubmit={callApi} onCancel={handleClose} isLoading={isLoading} />
+        <FormulaControls onSubmit={callApi} onCancel={handleClosePage} isLoading={isLoading} />
       </Box>
 
       <BottomSheet open={isMobileKeypadOpen} onClose={() => setIsMobileKeypadOpen(false)} title="ماشین حساب">

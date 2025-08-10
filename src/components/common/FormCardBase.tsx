@@ -47,7 +47,7 @@ export default function FormCardBase({ data, buttonText, buttonLink }: FormCardB
       <InfoRow label='وضعیت' value={formStatusPersian[data.status]} bold />
 
       <div className='flex w-full gap-2'>
-        <button className='bg-[#1758BA] hover:bg-[#216ee1] transition-all duration-200 max-w-full sm:max-w-[200px] px-2 h-[42px] w-full text-[14px] rounded-lg text-white' onClick={handleClick}>
+        <button disabled={true} className='bg-[#1758BA] disabled:bg-slate-300 hover:bg-[#216ee1] transition-all duration-200 max-w-full sm:max-w-[200px] px-2 h-[42px] w-full text-[14px] rounded-lg text-white' onClick={handleClick}>
           {buttonText}
         </button>
       </div>

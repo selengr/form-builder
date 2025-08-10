@@ -1,5 +1,6 @@
 'use client';
 import { toast } from 'sonner';
+import { idGenerator } from '@/lib';
 import { useCallback, useState } from 'react';
 import { FormProvider, useWatch } from 'react-hook-form';
 import { useParams, useRouter } from 'next/navigation';
@@ -7,22 +8,22 @@ import { Box, Button, Stack, Typography } from '@mui/material';
 
 import { SubCondition } from './SubCondition';
 // components
+import { RHFSwitch } from '@/components/hook-form';
 import { CircleDivider } from '@/components/condition/CircleDivider';
 import { SubmitButtons } from '@/components/condition/form/SubmitButtons';
+// types
+import { IDropdownItem } from '@/components/AdvancedTextareaEditor/types';
+import { IConditionalSystemProps, IPostCondition } from '@/types/conditionReportSolo';
 // lib
 import { formatContainText } from '@/lib/formatContainText';
 import { TConditionData, type TConditionFormData, TSubConditionData } from '@/lib/CreateSoloReportSchema';
 // hooks
-import { IConditionalSystemProps, IPostCondition } from '@/types/conditionReportSolo';
 import { createNewSubCondition, useConditionalForm } from '@/app/reports/create-solo/[id]/_hooks/useConditionalForm';
 import { useGetQacWithOutFilter } from '@/app/reports/create-solo/[id]/_hooks/useGetQacWithOutFilter';
 import { useGetOnlyAllQuestions } from '@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllQuestions';
 import { useGetOnlyAllCalculation } from '@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllCalculation';
 import { usePostCondition } from '@/app/reports/create-solo/[id]/_hooks/usePostCondition';
 import AdvancedTextareaEditor from '@/components/AdvancedTextareaEditor/AdvancedTextareaEditor';
-import { idGenerator } from '@/lib';
-import { RHFSwitch } from '@/components/hook-form';
-import { IDropdownItem } from '@/components/AdvancedTextareaEditor/types';
 import { useFormValidation } from '@/app/reports/create-solo/[id]/_hooks/useFormValidation';
 
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClose, condition, isEdit = false }) => {

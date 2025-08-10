@@ -1,37 +1,10 @@
 'use client';
-
-import { CgClose } from 'react-icons/cg';
-import Dialog from '@mui/material/Dialog';
-import { IconButton } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { AxiosApi } from '@/services/axios/AxiosApi';
-import DialogContent from '@mui/material/DialogContent';
-
-import { ICreateCalculatorDialogProps } from '@/types/calculator';
-import AdvancedFormulaEditor from '@/components/calculator/AdvancedFormulaEditor';
-import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import { AxiosApi } from '@/services/axios/AxiosApi';
 
-const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
-  direction: 'ltr',
-  maxHeight: '75vh',
-  scrollbarWidth: 'thin',
-  maxWidth: '100%',
-  padding: theme.spacing(3.8),
-}));
+import AdvancedFormulaEditor from '@/components/calculator/AdvancedFormulaEditor';
 
-const StyledDialog = styled(Dialog)(({ theme }) => ({
-  overflow: 'hidden',
-  scrollbarWidth: 'none',
-  '& .MuiPaper-root': {
-    borderRadius: '24px',
-    margin: '10px',
-  },
-  '& .MuiDialog-container': {
-    backdropFilter: 'blur(4px)',
-    backgroundColor: 'hsl(0deg 0% 100% / 50%)',
-  },
-}));
 
 const fetchCalculators = async (id: string) => {
   const customComboFilterModel = {
@@ -63,17 +36,17 @@ export const CreateCalculatorMobile = () => {
   });
 
   const handleClose = () => {
-   
+
   };
 
   return (
 
-      <>
-        {isLoading && <p>Loading calculators...</p>}
-        {error && <p>Error loading calculators: {(error as Error).message}</p>}
-        {data && <AdvancedFormulaEditor questionList={data} handleClose={handleClose} />}
+    <>
+      {isLoading && <p>Loading calculators...</p>}
+      {error && <p>Error loading calculators: {(error as Error).message}</p>}
+      {data && <AdvancedFormulaEditor questionList={data} handleClose={handleClose} />}
 
-      </>
+    </>
   );
 };
 

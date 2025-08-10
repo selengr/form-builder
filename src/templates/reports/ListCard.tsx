@@ -51,6 +51,11 @@ const ListCard: FC<ListCardProps> = ({ data }) => {
   const router = useRouter();
   const { id, name, type, accessType } = data;
 
+  const handleNavigation = () => {
+    localStorage.setItem("stats", "/reports")
+    router.push(`/stats/${id}`)
+  }
+
   return (
     <div className='flex flex-col gap-4 rounded-2xl border border-[#DDE1E6] p-5 shadow-sm'>
       <InfoRow label='نام' value={name} bold />
@@ -58,7 +63,7 @@ const ListCard: FC<ListCardProps> = ({ data }) => {
       <InfoRow label='دسترسی' value={accessType || 'عمومی'} bold />
 
       <div className='flex flex-col gap-2 sm:flex-row'>
-        <ActionButton label='مشاهده نتایج' onClick={() => router.push(`/stats/${id}`)} color='#1758BA' hoverColor='#216ee1' />
+        <ActionButton label='مشاهده نتایج' onClick={handleNavigation} color='#1758BA' hoverColor='#216ee1' />
         <ActionButton label='ساخت گزارش' onClick={() => router.push(`/reports/create-solo/${id}`)} color='#2CDFC9' />
       </div>
     </div>

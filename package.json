@@ -1,7 +1,19 @@
 {
-  "name": "psya",
-  "version": "4.5.18",
+  "name": "psya_client",
+  "version": "4.5.20",
+  "description": "Psya is an innovative platform for designing, conducting, and analyzing psychological assessments. With its simple, intuitive, and integrated user interface, it enables the creation of interactive online forms and the generation of accurate, personalized reports.",
+  "keywords": ["psychology", "assessment", "nextjs", "react", "form", "uppy", "mui"],
+  "homepage": "https://psya.mresalat.ir/",
+  "author": "FARDUP (https://mresalat.ir/)",
+  "license": "UNLICENSED",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+http://gitlab.fardup.ir/fardup/psya_client"
+  },
+  "bugs": {
+    "url": "http://gitlab.fardup.ir/fardup/psya_client/issues"
+  },
   "scripts": {
     "dev": "next dev -p 80 --turbo",
     "build": "next build",
@@ -9,7 +21,8 @@
     "lint": "next lint"
   },
   "engines": {
-    "node": ">=22"
+    "node": "22.x",
+    "npm": "11.x"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -21,15 +34,15 @@
     "@hookform/resolvers": "^3.10.0",
     "@mui/material": "^6.5.0",
     "@mui/material-nextjs": "^6.5.0",
-    "@mui/x-charts": "^8.9.2",
+    "@mui/x-charts": "^8.10.0",
     "@tanstack/react-query": "^5.84.1",
     "@tanstack/react-query-devtools": "^5.84.1",
     "@uppy/core": "^4.5.2",
-    "@uppy/dashboard": "^4.4.2",
+    "@uppy/dashboard": "^4.4.3",
     "@uppy/drag-drop": "^4.2.2",
     "@uppy/file-input": "^4.2.2",
     "@uppy/image-editor": "^3.4.2",
-    "@uppy/locales": "^4.8.2",
+    "@uppy/locales": "^4.8.4",
     "@uppy/progress-bar": "^4.3.2",
     "@uppy/react": "^4.5.2",
     "@uppy/tus": "^4.3.2",
@@ -71,7 +84,7 @@
     "eslint-config-next": "^14.2.31",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-prettier": "^5.5.3",
+    "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-unused-imports": "^4.1.4",

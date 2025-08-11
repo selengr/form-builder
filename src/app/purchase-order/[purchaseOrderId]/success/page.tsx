@@ -40,37 +40,12 @@ export default function PaymentSuccessPage() {
 
           <div className="space-y-4 mb-8">
             <div className="border-t-2 border-dashed border-[#1758BA] pt-4">
-              <div className="flex justify-between items-center py-2">
-                <span className="text-gray-600">مبلغ سبد خرید</span>
-                <span className="font-semibold">۲,۰۰۰,۰۰۰ تومان</span>
-              </div>
-
-              <div className="flex justify-between items-center py-2">
-                <span className="text-gray-600">اعتبار ام حساب عادی:</span>
-                <span className="font-semibold">۲۰۰,۰۰۰ تومان</span>
-              </div>
-
-              <div className="flex justify-between items-center py-2">
-                <span className="text-gray-600">اعتبار ام حساب اهدایی:</span>
-                <span className="font-semibold">۱,۰۰۰,۰۰۰ تومان</span>
-              </div>
-
-              <div className="flex justify-between items-center py-2">
-                <span className="text-gray-600">اعتبار ام حساب بن اهدایی:</span>
-                <span className="font-semibold">۵۰۰,۰۰۰ تومان</span>
-              </div>
 
 
-
-              <div className="flex justify-between items-center py-2 border-t border-gray-200 mt-4 pt-4">
-                <span className="text-gray-600">تاریخ :</span>
-                <span className="font-semibold">۱۴۰۱/۰۵/۲۱</span>
-              </div>
-
-              <div className="flex justify-between items-center py-2">
+              {/* <div className="flex justify-between items-center py-2">
                 <span className="text-gray-600">کد رهگیری در سامانه:</span>
-                <span className="font-semibold text-blue-600">۲۵۶۹۸F۵</span>
-              </div>
+                <span className="font-semibold text-blue-600">----</span>
+              </div> */}
             </div>
           </div>
 

@@ -40,7 +40,7 @@ export default function PayWithMHesam() {
   const {
     data,
     mutate: getServiceCost,
-  // @ts-ignore
+    // @ts-ignore
     isPendingIssueRequest,
   } = useMutation({
     mutationFn: () => serviceCost(),
@@ -120,7 +120,7 @@ export default function PayWithMHesam() {
       } else {
         setOpenModal(undefined);
         toast.success('پرداخت با موفقیت انجام شد.');
-        
+
       }
     },
   });
@@ -151,7 +151,7 @@ export default function PayWithMHesam() {
 
   const { mutate: connectToGatewayMutation } = useMutation({
     mutationFn: (amount: number) => {
-      return connectToGateway(window.location.href.replace('/gateway', '/purchaseOrderId'), amount);
+      return connectToGateway(window.location.href.replace('/gateway', '/success'), amount);
     },
     onSuccess: (response) => {
       if (response.message) {

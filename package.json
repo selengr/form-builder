@@ -1,7 +1,15 @@
 {
-  "name": "psya",
+  "name": "psya_client",
   "version": "4.5.20",
+  "description": "Psya is an innovative platform for designing, conducting, and analyzing psychological assessments. With its simple, intuitive, and integrated user interface, it enables the creation of interactive online forms and the generation of accurate, personalized reports.",
+  "homepage": "https://psya.mresalat.ir/",
+  "author": "FARDUP (https://mresalat.ir/)",
+  "license": "UNLICENSED",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+http://gitlab.fardup.ir/fardup/psya_client"
+  },
   "scripts": {
     "dev": "next dev -p 80 --turbo",
     "build": "next build",

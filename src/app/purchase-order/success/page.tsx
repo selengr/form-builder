@@ -1,4 +1,5 @@
-
+import Image from 'next/image';
+import SuccessIcon from '@/../public/images/purchase-order/success.svg';
 
 export default function PaymentSuccessPage() {
   return (
@@ -10,8 +11,10 @@ export default function PaymentSuccessPage() {
 
           {/* Success Icon */}
           <div className="relative mb-6">
-            <div className="w-24 h-24 bg-green-100 rounded-full mx-auto flex items-center justify-center">
-           
+            <div className="w-full h-full bg-green-100 rounded-full mx-auto flex items-center justify-center">
+            <Image src="/public/images/purchase-order/success.svg" alt='delete'
+             width={240} height={240}
+             className='w-full' />
             </div>
             <div className="absolute -bottom-1 -right-8 w-3 h-3 bg-green-400 rounded-full"></div>
           </div>

@@ -63,7 +63,7 @@ export async function connectToGateway(redirectUrl: string, amount: number) {
     const baseUrl = '/mhesam/profile/credit/before-gateway';
     const response = await AxiosApi.post(
       baseUrl,
-      { redirectUrl, amount, failedRedirectUrl: redirectUrl },
+      { redirectUrl, amount, failedRedirectUrl: window.location.href.replace('/gateway', '/failed') },
       {
         baseURL: process.env.NEXT_PUBLIC_BASE_URL_PSYA,
       },

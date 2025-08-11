@@ -1,17 +1,20 @@
-
+import Image from 'next/image';
+import SuccessIcon from '@/../public/images/purchase-order/success.svg';
 
 export default function PaymentSuccessPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
-        {/* Header */}
+  
         <div className="text-center mb-8">
           <h1 className="text-lg font-semibold text-gray-800 mb-8">صفحه پرداخت</h1>
 
-          {/* Success Icon */}
+
           <div className="relative mb-6">
-            <div className="w-24 h-24 bg-green-100 rounded-full mx-auto flex items-center justify-center">
-           
+            <div className="w-full h-full bg-green-100 rounded-full mx-auto flex items-center justify-center">
+            <Image src={SuccessIcon} alt='delete'
+             width={240} height={240}
+             className='w-full' />
             </div>
             <div className="absolute -bottom-1 -right-8 w-3 h-3 bg-green-400 rounded-full"></div>
           </div>

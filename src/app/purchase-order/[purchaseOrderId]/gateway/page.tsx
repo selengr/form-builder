@@ -120,7 +120,7 @@ export default function PayWithMHesam() {
       } else {
         setOpenModal(undefined);
         toast.success('پرداخت با موفقیت انجام شد.');
-        router.push('/purchase-order');
+        
       }
     },
   });

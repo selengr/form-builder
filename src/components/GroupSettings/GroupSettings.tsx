@@ -208,21 +208,21 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId }) => 
         </Typography>
       )}
 
-      <Box display='flex' justifyContent='space-between' alignItems='center' mt={2} px={2}>
-        <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>
-          نمایش نتیجه به پاسخ دهنده
-        </Typography>
-        <RHFSwitch
-          name='showUser'
-          label={undefined}
-          sx={{
-            mb: 1,
-            mx: 0,
-            width: 1,
-            justifyContent: 'space-between',
-          }}
-        />
-      </Box>
+      {/*<Box display='flex' justifyContent='space-between' alignItems='center' mt={2} px={2}>*/}
+      {/*  <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>*/}
+      {/*    نمایش نتیجه به پاسخ دهنده*/}
+      {/*  </Typography>*/}
+      {/*  <RHFSwitch*/}
+      {/*    name='showUser'*/}
+      {/*    label={undefined}*/}
+      {/*    sx={{*/}
+      {/*      mb: 1,*/}
+      {/*      mx: 0,*/}
+      {/*      width: 1,*/}
+      {/*      justifyContent: 'space-between',*/}
+      {/*    }}*/}
+      {/*  />*/}
+      {/*</Box>*/}
 
       <Box display='flex' justifyContent='space-between' alignItems='center' gap='16px' px='16px' mt='24px'>
         <Button

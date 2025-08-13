@@ -252,22 +252,22 @@ function IndividualSettings({ handleOpen, formId }: { handleOpen: () => void; fo
         </Box>
       </Box>
 
-      <Box display='flex' flexDirection='row' justifyContent='space-between' alignItems='center' className={'px-3'}>
-        <Typography variant='subtitle2' fontWeight='500' color='#393939' fontSize='14px'>
-          نمایش نتیجه به پاسخ دهنده
-        </Typography>
-        <RHFSwitch
-          label=''
-          name='show'
-          labelPlacement='start'
-          sx={{
-            mb: 1,
-            mx: 0,
-            width: 1,
-            justifyContent: 'space-between',
-          }}
-        />
-      </Box>
+      {/*<Box display='flex' flexDirection='row' justifyContent='space-between' alignItems='center' className={'px-3'}>*/}
+      {/*  <Typography variant='subtitle2' fontWeight='500' color='#393939' fontSize='14px'>*/}
+      {/*    نمایش نتیجه به پاسخ دهنده*/}
+      {/*  </Typography>*/}
+      {/*  <RHFSwitch*/}
+      {/*    label=''*/}
+      {/*    name='show'*/}
+      {/*    labelPlacement='start'*/}
+      {/*    sx={{*/}
+      {/*      mb: 1,*/}
+      {/*      mx: 0,*/}
+      {/*      width: 1,*/}
+      {/*      justifyContent: 'space-between',*/}
+      {/*    }}*/}
+      {/*  />*/}
+      {/*</Box>*/}
 
       <Box
         sx={{

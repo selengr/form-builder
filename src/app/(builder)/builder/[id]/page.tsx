@@ -14,6 +14,7 @@ export default function BuilderPage() {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [settingsData, setSettingsData] = useState<any>();
 
   const setElements = useActionElements();
   const { setQuestionGroups, addStartPage, addFinishPage, setFormName, setFormSetting } = useActionDesigner();
@@ -21,6 +22,7 @@ export default function BuilderPage() {
   const fetchFormData = useCallback(async () => {
     try {
       const { data } = await AxiosApi.get(`/form/${id}`);
+      setSettingsData(data);
       const questionGroupIds = data?.questionGroups?.map((group: any) => group.questionGroupId) || [];
       setQuestionGroups(questionGroupIds);
       setFormSetting(data.formSettingModel);
@@ -65,5 +67,5 @@ export default function BuilderPage() {
   if (loading) return <BuilderLoading />;
   if (error) throw new Error('Form not found');
 
-  return <FormBuilder />;
+  return <FormBuilder data={settingsData}/>;
 }

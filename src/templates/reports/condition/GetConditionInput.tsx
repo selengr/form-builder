@@ -286,7 +286,7 @@ export const getInput = (
                 },
               }}>
               <DatePickerCustome
-                min={new Date().setDate(new Date().getDate() - 1)}
+                // min={new Date().setDate(new Date().getDate() - 1)}
                 value={value}
                 onChange={(date) => {
                   setValue(field?.name, date);

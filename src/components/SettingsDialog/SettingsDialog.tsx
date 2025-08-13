@@ -14,7 +14,9 @@ import { convertObject } from '@/lib/settingsUtils';
 
 interface Props {
   formName: string;
+  data:any;
   onChangeName: (newName: string) => void;
+
 }
 
 const responseLimitationOptions = [
@@ -37,32 +39,35 @@ const fieldsConfig = [
     name: 'timeToComplete',
     label: 'زمان شروع',
     type: 'time-picker',
+    disabled: false,
   },
   {
     name: 'expireDate',
     label: 'تاریخ فعال سازی و انقضا فرم',
     type: 'date-picker',
+    disabled: false,
   },
   {
     name: 'responseLimitation',
     label: 'محدودیت پاسخ‌‌دهی',
     type: 'select',
     options: responseLimitationOptions,
+    disabled: false,
   },
-  {
-    name: 'layout',
-    label: 'حالت نمایش',
-    type: 'multi-select',
-    options: layoutOptions,
-    disabled: true,
-  },
-  {
-    name: 'theme',
-    label: 'پوسته',
-    type: 'select',
-    options: themeOptions,
-    disabled: true,
-  },
+  // {
+  //   name: 'layout',
+  //   label: 'حالت نمایش',
+  //   type: 'multi-select',
+  //   options: layoutOptions,
+  //   disabled: true,
+  // },
+  // {
+  //   name: 'theme',
+  //   label: 'پوسته',
+  //   type: 'select',
+  //   options: themeOptions,
+  //   disabled: true,
+  // },
 ];
 
 const propertiesSchema = z.object({
@@ -75,14 +80,14 @@ const propertiesSchema = z.object({
     value: z.string(),
     checked: z.boolean(),
   }),
-  layout: z.object({
-    value: z.array(z.string()),
-    checked: z.boolean(),
-  }),
-  theme: z.object({
-    value: z.string(),
-    checked: z.boolean(),
-  }),
+  // layout: z.object({
+  //   value: z.array(z.string()),
+  //   checked: z.boolean(),
+  // }),
+  // theme: z.object({
+  //   value: z.string(),
+  //   checked: z.boolean(),
+  // }),
   expireDate: z.object({
     value: z.any(),
     checked: z.boolean(),
@@ -95,12 +100,12 @@ const propertiesSchema = z.object({
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
-export default function SettingsDialog({ formName, onChangeName }: Props) {
+export default function SettingsDialog({ formName, onChangeName,data }: Props) {
   const [openDialog, setOpenDialog] = useState(false);
   const [formFieldName, setFormFieldName] = useState<string>(formName);
   const { id: formId } = useParams();
   // const { name: name} = useParams();
-
+console.log("data", data.formSettingModel)
   const handleOpen = useCallback(() => {
     setOpenDialog((prev) => !prev);
     reset();
@@ -114,8 +119,8 @@ export default function SettingsDialog({ formName, onChangeName }: Props) {
       expireDate: { checked: false, value: '' },
       timeToComplete: { checked: false, value: '' },
       responseLimitation: { checked: false, value: '' },
-      layout: { checked: false, value: [] },
-      theme: { checked: false, value: '' },
+      // layout: { checked: false, value: [] },
+      // theme: { checked: false, value: '' },
     },
   });
 
@@ -139,6 +144,28 @@ export default function SettingsDialog({ formName, onChangeName }: Props) {
       console.log(error);
     }
   }
+
+  useEffect(() => {
+    if (data?.formSettingModel) {
+      // فقط فیلدهای سوئیچ‌پیر
+      const serverValues = {
+        expireDate: {
+          checked: !!data.formSettingModel.expireDate,
+          value: data.formSettingModel.expireDate || '',
+        },
+        timeToComplete: {
+          checked: !!data.formSettingModel.timeToComplete,
+          value: data.formSettingModel.timeToComplete || '',
+        },
+        responseLimitation: {
+          checked: !!data.formSettingModel.responseLimitation,
+          value: data.formSettingModel.responseLimitation || '',
+        },
+      };
+
+      reset((prev) => ({ ...prev, ...serverValues }));
+    }
+  }, [data, reset]);
 
   useEffect(() => {
     reset();

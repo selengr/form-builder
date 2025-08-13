@@ -119,6 +119,7 @@ export default function PayWithMHesam() {
         toast.error(JSON.parse(response.message).message[0].title);
       } else {
         setOpenModal(undefined);
+        router.push("/purchase-order")
         toast.success('پرداخت با موفقیت انجام شد.');
 
       }
@@ -186,7 +187,7 @@ export default function PayWithMHesam() {
         setRemainedAmount(+data?.totalAmount);
         setPrevServiceCost(data.totalAmount);
         if (data.totalAmount === 0) {
-          router.replace('/association/list');
+          router.replace('/purchase-order');
         }
       },
     });

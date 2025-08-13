@@ -179,9 +179,9 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
             <Typography fontWeight={700} fontSize='14px'>
               ظرفیت:
             </Typography>
-            <Typography fontWeight={400} fontSize='12px' color='text.secondary'>
-              ظرفیت از پیش موجود 100 نفر
-            </Typography>
+            {/*<Typography fontWeight={400} fontSize='12px' color='text.secondary'>*/}
+            {/*  ظرفیت از پیش موجود 100 نفر*/}
+            {/*</Typography>*/}
             <RHFTextField
               type='number'
               name='capacityPublicLink'
@@ -211,21 +211,21 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
             </Typography>
           </Box>
 
-          <Box display='flex' justifyContent='space-between' alignItems='center'>
-            <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>
-              نمایش نتیجه به پاسخ دهنده
-            </Typography>
-            <RHFSwitch
-              name='showUser'
-              sx={{
-                mb: 1,
-                mx: 0,
-                width: 1,
-                justifyContent: 'space-between',
-              }}
-              label={undefined}
-            />
-          </Box>
+          {/*<Box display='flex' justifyContent='space-between' alignItems='center'>*/}
+          {/*  <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>*/}
+          {/*    نمایش نتیجه به پاسخ دهنده*/}
+          {/*  </Typography>*/}
+          {/*  <RHFSwitch*/}
+          {/*    name='showUser'*/}
+          {/*    sx={{*/}
+          {/*      mb: 1,*/}
+          {/*      mx: 0,*/}
+          {/*      width: 1,*/}
+          {/*      justifyContent: 'space-between',*/}
+          {/*    }}*/}
+          {/*    label={undefined}*/}
+          {/*  />*/}
+          {/*</Box>*/}
         </Box>
       </Box>
 

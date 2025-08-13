@@ -27,11 +27,11 @@ const InvoiceSection = ({ purchaseOrder, handlePayment }: any) => {
           <span>مجموع:</span>
           <span className='font-bold'>{formatCurrency(subtotal)}</span>
         </div>
-        <hr className='border-gray-300 border-dashed border-b-1 mx-3' />
-        <div className='flex justify-between text-sm text-[#393939] font-medium'>
-          <span>مالیات:</span>
-          <span className='font-bold'>{formatCurrency(tax || 0)}</span>
-        </div>
+        {/*<hr className='border-gray-300 border-dashed border-b-1 mx-3' />*/}
+        {/*<div className='flex justify-between text-sm text-[#393939] font-medium'>*/}
+        {/*  <span>مالیات:</span>*/}
+        {/*  <span className='font-bold'>{formatCurrency(tax || 0)}</span>*/}
+        {/*</div>*/}
         <hr className='border-gray-300 border-dashed border-b-1 mx-3' />
         <div className='flex justify-between text-sm text-[#1758BA] font-bold'>
           <span>قابل پرداخت:</span>

@@ -12,23 +12,15 @@ import { GoClock } from 'react-icons/go';
 import TimePickerStyled from './TimePicker.styled';
 
 const FieldSwitchPair = memo(function FieldSwitchPair({ fieldName, label, type, options, disabled = false }: any) {
-  const { setValue, control } = useFormContext();
-  const [isChecked, setIsChecked] = useState(false);
+  const { setValue, control, watch } = useFormContext();
+  const isChecked = watch(`${fieldName}.checked`);
 
   const handleChange = (event: any) => {
     if (disabled) return;
-
-    const isChecked = event.target.checked;
-
-    setValue(`${fieldName}.checked`, isChecked);
-    setIsChecked((prev) => !prev);
-
-    if (!isChecked) {
-      if (type === 'multi-select') {
-        setValue(`${fieldName}.value`, []);
-      } else {
-        setValue(`${fieldName}.value`, '');
-      }
+    const checked = event.target.checked;
+    setValue(`${fieldName}.checked`, checked);
+    if (!checked) {
+      setValue(`${fieldName}.value`, type === 'multi-select' ? [] : '');
     }
   };
 

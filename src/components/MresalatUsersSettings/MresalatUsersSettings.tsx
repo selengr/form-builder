@@ -261,23 +261,23 @@ function MresalatUsersSettings({ handleOpen }: { handleOpen: () => void }) {
           <MyRangeSlider marks={marks} valueLabelDisplay='auto' valueLabelFormat={(val: any) => <CustomValueLabel value={val} />} step={1} min={0} max={3000} />
         </Box>
       </Box>
-      <Typography fontSize='10px'>ظرفیت باقی‌مانده 300 نفر.</Typography>
-      <Box display='flex' flexDirection='row' justifyContent='space-between' alignItems='center'>
-        <Typography variant='subtitle2' fontWeight='500' color='#393939' fontSize='14px'>
-          نمایش نتیجه به پاسخ دهنده
-        </Typography>
-        <RHFSwitch
-          label=''
-          name='show'
-          labelPlacement='start'
-          sx={{
-            mb: 1,
-            mx: 0,
-            width: 1,
-            justifyContent: 'space-between',
-          }}
-        />
-      </Box>
+      {/*<Typography fontSize='10px'>ظرفیت باقی‌مانده 300 نفر.</Typography>*/}
+      {/*<Box display='flex' flexDirection='row' justifyContent='space-between' alignItems='center'>*/}
+      {/*  <Typography variant='subtitle2' fontWeight='500' color='#393939' fontSize='14px'>*/}
+      {/*    نمایش نتیجه به پاسخ دهنده*/}
+      {/*  </Typography>*/}
+      {/*  <RHFSwitch*/}
+      {/*    label=''*/}
+      {/*    name='show'*/}
+      {/*    labelPlacement='start'*/}
+      {/*    sx={{*/}
+      {/*      mb: 1,*/}
+      {/*      mx: 0,*/}
+      {/*      width: 1,*/}
+      {/*      justifyContent: 'space-between',*/}
+      {/*    }}*/}
+      {/*  />*/}
+      {/*</Box>*/}
       <Box
         sx={{
           display: 'flex',

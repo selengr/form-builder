@@ -16,6 +16,7 @@ import { toast } from 'sonner';
 import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
 import { fetchData } from './dataService';
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface SearchBoxItem {
   fieldName: string;
@@ -66,6 +67,7 @@ const ListGrid: React.FC<Props> = ({
   const searchParams = useSearchParams();
   const query = searchParams.get('query')?.toString() || '';
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const queryClient = useQueryClient();
 
   useEffect(() => {
     if (searchParams.get('new') !== null) {
@@ -105,7 +107,7 @@ const ListGrid: React.FC<Props> = ({
     isFetchingNextPage,
     refetch,
   } = useInfiniteQuery({
-    queryKey: ['datas', query, searchQueryFilter, filterBoxList],
+    queryKey: ["Report_List2"],
     queryFn: ({ pageParam }) => fetchData({ pageParam }, updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
@@ -120,6 +122,8 @@ const ListGrid: React.FC<Props> = ({
       setIsFilterOpen(false);
     }
     refetch();
+     queryClient.invalidateQueries(['Report_List2'] as any);
+      queryClient.refetchQueries(['Report_List2'] as any);
   }, [isFilterOpen, refetch]);
 
   const openFilter = useCallback(() => {
@@ -135,9 +139,11 @@ const ListGrid: React.FC<Props> = ({
   }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   useEffect(() => {
-    if (refreshGrid) {
+    console.log("Refresh Grid Triggered:", refreshGrid);
+    // debugger
+    // if (refreshGrid) {
       handleRefreshGrid();
-    }
+    // }
   }, [refreshGrid, handleRefreshGrid]);
 
   useEffect(() => {

@@ -462,14 +462,22 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
     // prevoius group and add one item after that
     const firstIndexAfterThePreviousSelectedGroup = elements.findLastIndex((el: any) => el.questionGroupId === questionGroups[findSelectedGroupPreviousGroup]) + 1;
 
-    delete element.temp;
+     delete element.temp;
+
+      const updatedSpectralPlaceList = optionList.map(option => {
+      return {
+        title: option.title,
+        value: option.score
+      };
+    });
 
     const finalFieldData = {
       ...element,
       title,
       position: selectedElement?.position?.apiPosition ?? group.length,
       questionPropertyList: propertiesData,
-      optionList: optionListData,
+      optionList: [],
+      spectralPlaceList: updatedSpectralPlaceList,
     };
 
     if (!selectedYet) {

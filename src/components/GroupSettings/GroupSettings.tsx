@@ -55,10 +55,10 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId }) => 
 
     try {
       const searchFilterModel = {
-        searchFilterBoxList: [{ restrictionList: [] }],
+        searchFilterBoxList: [{ "restrictionList": [{ "fieldName": "groupName", "fieldOperation": "MATCH", "fieldValue": "", "nextConditionOperator": "OR" }] }],
         sortList: [{ fieldName: 'id', type: 'DSC' }],
         page: 0,
-        rows: 10,
+        rows: 100,
       };
 
       const encoded = encodeURIComponent(JSON.stringify(searchFilterModel));

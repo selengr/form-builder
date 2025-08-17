@@ -53,9 +53,9 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
   useLayoutEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        if(isEdit){
+        if (isEdit) {
           router.push(`/builder/${id}/calculator/create?calcId=${isEdit}`);
-        }else {
+        } else {
           router.push(`/builder/${id}/calculator/create`);
         }
       }
@@ -538,6 +538,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
     }
 
     const newFormula = htmlToFormula(elements, selectFieldRef, selectAvgRef);
+
     if (!newFormula) {
       toast.error('هیچ محاسبه‌ای افزوده نشده');
       return;
@@ -550,7 +551,8 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
     let formula = '';
     const avgNum = newFormula.split('#avg');
     avgNum.forEach((item) => {
-      formula += item.includes('Number') ? `#avg${item.replaceAll('}{', '},{')}` : item;
+      if (item.length === 0) return
+      formula += item.includes('Number') ? `#avg${item.replaceAll('}{', '},{')}` : `#avg${item}`;
     });
 
     try {

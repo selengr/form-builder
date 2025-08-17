@@ -135,9 +135,9 @@ const ListGrid: React.FC<Props> = ({
   }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   useEffect(() => {
-    if (refreshGrid) {
+    // if (refreshGrid) {
       handleRefreshGrid();
-    }
+    // }
   }, [refreshGrid, handleRefreshGrid]);
 
   useEffect(() => {

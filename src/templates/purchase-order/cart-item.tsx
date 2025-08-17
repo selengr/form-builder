@@ -19,6 +19,8 @@ function CartItem({detail, onSelect, onRemove, toggleConfirm, loading, open, ind
     onRemove(purchaseOrderDetailId);
   };
 
+  // text local branch
+
   return (
     <>
       <div onClick={onSelect} className={`flex items-center gap-4 p-4 rounded-2xl border border-neutral-200`}>

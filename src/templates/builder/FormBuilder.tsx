@@ -13,16 +13,16 @@ interface FormBuilderProps {
 const FormBuilder = memo(function FormBuilder({ data }: FormBuilderProps) {
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
-      delay: 50,
-      distance: 100,
+      delay: 100,
+      distance: 15,
       tolerance: 0,
     },
   });
 
   const touchSensor = useSensor(TouchSensor, {
     activationConstraint: {
-      delay: 50,
-      tolerance: 10,
+      delay: 100,
+      tolerance: 15,
     },
   });
 

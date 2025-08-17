@@ -45,8 +45,8 @@ export default function FormCardBase({data, buttonText, buttonLink, buttonDisabl
 
       <InfoRow label='نام' value={data.name} bold/>
       <InfoRow label='نوع' value={formTypePersian[data.type]} bold/>
-      <InfoRow label='دسترسی' value={data.accessType || 'عمومی'} bold/>
-      <InfoRow label='وضعیت' value={formStatusPersian[data.status]} bold/>
+      {/*<InfoRow label='دسترسی' value={data.accessType || 'عمومی'} bold/>*/}
+      <InfoRow label='وضعیت' value={data?.isCompleted ? "انجام شده" : "انجام نشده"} bold/>
 
       <div className='flex w-full gap-2'>
         <button disabled={buttonDisabled}

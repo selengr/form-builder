@@ -77,9 +77,9 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport }: Re
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          username,
           formId,
           description: reportText.trim(),
-          username,
           responseForDestroyerReport: selectedReportKey,
           typeOfReport,
         }),
@@ -94,7 +94,7 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport }: Re
         onClose();
       }
     } catch (error) {
-      // toast.error("خطا در ارسال گزارش");
+      toast.error("خطا در ارسال گزارش");
     }
   };
 

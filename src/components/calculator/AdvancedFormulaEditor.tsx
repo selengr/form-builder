@@ -15,6 +15,7 @@ import BottomSheet from '@/components/BottomSheet/BottomSheet';
 import FormulaInput from '@/components/formula-editor/FormulaInput';
 import FormulaKeypad from '@/components/formula-editor/FormulaKeypad';
 import FormulaControls from '@/components/formula-editor/FormulaControls';
+import { replaceNestedParentheses } from './parentheses-replacer';
 
 const OPERATOR_TYPES = ['-', '+', '*', '/'];
 const FN_FX_OPTIONS = [{ fnValue: 'avg', fnCaption: 'میانگین()' }];
@@ -554,6 +555,12 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
       if (item.length === 0) return
       formula += item.includes('Number') ? `#avg${item.replaceAll('}{', '},{')}` : `#avg${item}`;
     });
+
+    const finalFormula = replaceNestedParentheses(formula)
+    // console.log('newFormula', newFormula)
+    console.log('formula', formula)
+    // console.log('replac===========', replaceNestedParentheses(newFormula))
+    return
 
     try {
       setLoading(true);

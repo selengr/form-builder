@@ -12,10 +12,10 @@ import { Element, FnFxItem } from '@/types/formulaEditor';
 import { IAdvancedFormulaEditorProps } from '@/types/calculator';
 // components
 import BottomSheet from '@/components/BottomSheet/BottomSheet';
+import { replaceNestedParentheses } from './parentheses-replacer';
 import FormulaInput from '@/components/formula-editor/FormulaInput';
 import FormulaKeypad from '@/components/formula-editor/FormulaKeypad';
 import FormulaControls from '@/components/formula-editor/FormulaControls';
-import { replaceNestedParentheses } from './parentheses-replacer';
 
 const OPERATOR_TYPES = ['-', '+', '*', '/'];
 const FN_FX_OPTIONS = [{ fnValue: 'avg', fnCaption: 'میانگین()' }];
@@ -553,14 +553,19 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
     const avgNum = newFormula.split('#avg');
     avgNum.forEach((item) => {
       if (item.length === 0) return
-      formula += item.includes('Number') ? `#avg${item.replaceAll('}{', '},{')}` : `#avg${item}`;
+      else if (item.includes("MultiSelect")) {
+        formula += `#avg${item}`;
+      }
+      else if (item.includes("SpectralDouble")) {
+        formula += `#avg${item}`;
+      }
+      else if (item.includes('Number')) {
+        formula += `#avg${item.replaceAll('}{', '},{')}`
+      }
+      else formula += item;
     });
 
     const finalFormula = replaceNestedParentheses(formula)
-    // console.log('newFormula', newFormula)
-    console.log('formula', formula)
-    // console.log('replac===========', replaceNestedParentheses(newFormula))
-    return
 
     try {
       setLoading(true);
@@ -576,7 +581,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
           id: editList?.id,
           name: formName,
           formBuilderId: id,
-          theFormula: formula,
+          theFormula: finalFormula,
           frontCalcData: JSON.stringify(elements),
         });
       }

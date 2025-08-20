@@ -5,12 +5,12 @@ import ListCard from './ListCard';
 import ListGrid from '@/components/ListGrid/ListGrid';
 
 export default function ListGridWrapper() {
-  const [formType] = useState<any>({
+  const [formType] = useState({
     type: 'ALL',
     status: 'ALL',
   });
-  const filterBoxList: any = [];
-  const searchBoxList: any = [
+
+  const searchBoxList = [
     {
       fieldName: 'formSetting.name',
       fieldOperation: 'MATCH',
@@ -19,16 +19,18 @@ export default function ListGridWrapper() {
     },
   ];
 
+  const filterBoxList: any[] = [];
+
   return (
     <ListGrid
       searchBoxList={searchBoxList}
       filterBoxList={filterBoxList}
-      url='/public-page/form/main-list'
+      url="/public-page/form/main-list"
       filterComponent={null}
-      CartComponent={(item: any) => <ListCard {...item} />}
+      CartComponent={(item) => <ListCard {...item} />}
       disableFilter
       searchQueryFilter={formType}
-      title='فرم‌های عمومی'
+      title="فرم‌های عمومی"
     />
   );
 }

@@ -109,7 +109,7 @@ const ListGrid: React.FC<Props> = ({
     queryFn: ({ pageParam }) => fetchData({ pageParam }, updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
-      const PAGE_SIZE = 1000;
+      const PAGE_SIZE = 10;
       return lastPage.data && lastPage.data.length === PAGE_SIZE ? allPages.length : undefined;
     },
     refetchOnWindowFocus: false,
@@ -136,7 +136,7 @@ const ListGrid: React.FC<Props> = ({
 
   useEffect(() => {
     // if (refreshGrid) {
-      handleRefreshGrid();
+    handleRefreshGrid();
     // }
   }, [refreshGrid, handleRefreshGrid]);
 

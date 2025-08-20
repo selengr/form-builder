@@ -86,8 +86,7 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport }: Re
       });
 
       if (!res.ok) {
-        const errorData = await res.json();
-        toast.error(errorData.error);
+          toast.error("خطا در ارسال گزارش");
       } else {
         await res.json();
         toast.success('گزارش با موفقیت ارسال شد');

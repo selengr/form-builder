@@ -571,7 +571,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
       setLoading(true);
       if (!isEdit) {
         await AxiosApi.post('/calculation', {
-          name: formName,
+          name: finalFormula,
           formBuilderId: id,
           theFormula: formula,
           frontCalcData: JSON.stringify(elements),

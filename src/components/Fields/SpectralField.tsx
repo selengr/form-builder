@@ -105,7 +105,8 @@ const optionsSchema = z.object({
           message: 'برچسب باید حداقل 1 و حداکثر 20 کاراکتر باشد',
         }),
     ),
-  score: z.number({ invalid_type_error: 'مکان الزامی است' }).min(0, { message: 'نمیتواند منفی باشد' }).nonnegative({ message: 'نمیتواند منفی باشد' }),
+    score: z.number({ invalid_type_error: 'مکان الزامی است' }).min(0, { message: 'نمیتواند منفی باشد' }).nonnegative({ message: 'نمیتواند منفی باشد' }),
+    id: z.number().nullable(),
 });
 
 const propertiesSchema = z
@@ -371,9 +372,20 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
       return acc;
     }, {});
-
     values.title = element.title;
-    values.optionList = element.optionList;
+
+    let optionList
+    if (element.optionList.length > 0) {
+      optionList = element.optionList
+    } else {
+      optionList = element?.spectralPlaceList?.map((item: any) => ({
+        id: item.id ?? null,
+        title: item.title,
+        score: Number(item?.value),
+      }));
+    }
+
+    values.optionList = optionList
 
     return values;
   }, []);
@@ -462,10 +474,11 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
     // prevoius group and add one item after that
     const firstIndexAfterThePreviousSelectedGroup = elements.findLastIndex((el: any) => el.questionGroupId === questionGroups[findSelectedGroupPreviousGroup]) + 1;
 
-     delete element.temp;
+    delete element.temp;
 
-      const updatedSpectralPlaceList = optionList.map(option => {
+    const updatedSpectralPlaceList = optionListData.map(option => {
       return {
+        id : option.id,
         title: option.title,
         value: option.score
       };

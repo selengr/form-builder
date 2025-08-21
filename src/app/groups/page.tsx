@@ -2,9 +2,10 @@
 // React & Libs
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { LinearProgress } from '@mui/material';
+import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import React, { Suspense, useState, useRef, useEffect } from 'react';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 // utils
 import { getAuthToken } from '@/utils/getAuthToken';
 // images
@@ -15,7 +16,6 @@ import SearchInput from '@/components/ListGrid/SearchInput';
 import { GroupListItem, IGroup } from './components/groupListItem';
 import { GroupDialogTrigger } from './components/GroupDialogTrigger';
 import { CreateGroupDialog } from '@/app/groups/components/createGroupDialog';
-import { LinearProgress } from '@mui/material';
 
 export interface GroupItemAPI {
   groupName: string;

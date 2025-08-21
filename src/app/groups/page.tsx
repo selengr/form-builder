@@ -2,8 +2,8 @@
 // React & Libs
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { Suspense, useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import React, { Suspense, useState, useRef, useEffect } from 'react';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 // utils
 import { getAuthToken } from '@/utils/getAuthToken';
@@ -15,6 +15,7 @@ import SearchInput from '@/components/ListGrid/SearchInput';
 import { GroupListItem, IGroup } from './components/groupListItem';
 import { GroupDialogTrigger } from './components/GroupDialogTrigger';
 import { CreateGroupDialog } from '@/app/groups/components/createGroupDialog';
+import { LinearProgress } from '@mui/material';
 
 export interface GroupItemAPI {
   groupName: string;
@@ -27,13 +28,13 @@ export interface GroupListResponse {
   totalElements: number;
 }
 
-const fetchGroups = async (): Promise<{ groups: IGroup[]; total: number }> => {
+const fetchGroups = async ({ pageParam = 0 }): Promise<{ groups: IGroup[]; total: number; nextPage: number | null }> => {
   const token = await getAuthToken();
 
   const defaultSearchFilterModel = {
     searchFilterBoxList: [{ restrictionList: [] }],
     sortList: [{ fieldName: 'id', type: 'DSC' }],
-    page: 0,
+    page: pageParam,
     rows: 10,
   };
   const encodedSearchFilterModel = encodeURIComponent(
@@ -65,6 +66,7 @@ const fetchGroups = async (): Promise<{ groups: IGroup[]; total: number }> => {
       userCount: item.groupMemberCount,
     })),
     total: data.totalElements,
+    nextPage: data.content.length > 0 ? pageParam + 1 : null,
   };
 };
 
@@ -73,17 +75,42 @@ export default function GroupsPage() {
   const [showCreateGroupDialog, setShowCreateGroupDialog] = useState(false);
   const queryClient = useQueryClient();
   const pathWithoutQuery = '/groups';
-
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const {
     data,
     isLoading,
     isError,
     error,
-  } = useQuery({
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: ['groups'],
     queryFn: fetchGroups,
+    getNextPageParam: (lastPage) => lastPage.nextPage,
   });
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 1 }
+    );
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => {
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current);
+      }
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const handleViewGroup = (groupId: string | number) => {
     router.push(`/groups/${groupId}`);
@@ -117,7 +144,7 @@ export default function GroupsPage() {
                 </Suspense>
                 <span>تعداد کل گروه‌ها:</span>
               </div>
-              <span className='font-semibold text-[#2a2a2a]'> {data?.total ?? 0} عدد</span>
+              <span className='font-semibold text-[#2a2a2a]'> {data?.pages[0]?.total ?? 0} عدد</span>
             </div>
 
             <button
@@ -144,13 +171,23 @@ export default function GroupsPage() {
             <p className='text-gray-600'>در حال بارگذاری گروه‌ها...</p>
           ) : isError ? (
             <p className='text-red-500'>خطا در بارگذاری گروه‌ها: {(error as Error).message}</p>
-          ) : data?.groups.length === 0 ? (
-            <p className='text-gray-500'>هیچ گروهی برای نمایش وجود ندارد.</p>
           ) : (
             <div className='w-full max-w-lg flex flex-col gap-[10px]'>
-              {data?.groups.map((group) => (
-                <GroupListItem key={group.id} group={group} onViewGroup={handleViewGroup} onDeleteGroup={handleDeleteGroup} />
-              ))}
+              {data?.pages.flatMap((page) =>
+                page.groups.map((group) => (
+                  <GroupListItem key={group.id} group={group} onViewGroup={handleViewGroup} onDeleteGroup={handleDeleteGroup} />
+                ))
+              )}
+
+              <div ref={loadMoreRef} className='flex justify-center p-4'>
+                {isFetchingNextPage ? (
+                  <div className='w-full'>
+                  <LinearProgress />
+                  </div>
+                ) : !hasNextPage ? (
+                  <p className='text-gray-400'>همه گروه‌ها بارگذاری شدند.</p>
+                ) : null}
+              </div>
             </div>
           )}
         </div>

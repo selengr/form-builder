@@ -66,7 +66,10 @@ export const useParticipateForm = () => {
       if (previousAnswers && previousAnswers.length > 0) {
         const first = previousAnswers[0];
 
-        if (q.questionType === 'SPECTRAL') {
+        if (q.questionType === 'SPECTRAL'
+
+          
+        ) {
           if (spectralType === 'DOMAIN') {
             value = previousAnswers.map(a => Number(a.answer));
             currentAnswerId = previousAnswers.reduce((acc, a, index) => {

@@ -89,6 +89,7 @@ export default function GroupsPage() {
     queryKey: ['groups'],
     queryFn: fetchGroups,
     getNextPageParam: (lastPage) => lastPage.nextPage,
+    initialPageParam: 0,
   });
 
   useEffect(() => {

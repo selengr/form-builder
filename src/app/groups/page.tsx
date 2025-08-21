@@ -1,16 +1,20 @@
 'use client';
-
+// React & Libs
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { Suspense, useCallback, useEffect, useState } from 'react';
+import React, { Suspense, useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
-import TotalGrid from '@/../public/images/home-page/total-grid.svg';
+// utils
+import { getAuthToken } from '@/utils/getAuthToken';
+// images
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
+import TotalGrid from '@/../public/images/home-page/total-grid.svg';
+// components
 import SearchInput from '@/components/ListGrid/SearchInput';
 import { GroupListItem, IGroup } from './components/groupListItem';
-import { CreateGroupDialog } from '@/app/groups/components/createGroupDialog';
 import { GroupDialogTrigger } from './components/GroupDialogTrigger';
-import { getAuthToken } from '@/utils/getAuthToken';
+import { CreateGroupDialog } from '@/app/groups/components/createGroupDialog';
 
 export interface GroupItemAPI {
   groupName: string;
@@ -23,63 +27,63 @@ export interface GroupListResponse {
   totalElements: number;
 }
 
+const fetchGroups = async (): Promise<{ groups: IGroup[]; total: number }> => {
+  const token = await getAuthToken();
+
+  const defaultSearchFilterModel = {
+    searchFilterBoxList: [{ restrictionList: [] }],
+    sortList: [{ fieldName: 'id', type: 'DSC' }],
+    page: 0,
+    rows: 10,
+  };
+  const encodedSearchFilterModel = encodeURIComponent(
+    JSON.stringify(defaultSearchFilterModel)
+  );
+
+  const response = await fetch(
+    `/api/group/list?searchFilterModel=${encodedSearchFilterModel}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || 'Failed to fetch groups');
+  }
+
+  const data: GroupListResponse = await response.json();
+
+  return {
+    groups: data.content.map((item) => ({
+      id: item.groupId,
+      name: item.groupName,
+      description: '',
+      userCount: item.groupMemberCount,
+    })),
+    total: data.totalElements,
+  };
+};
+
 export default function GroupsPage() {
   const router = useRouter();
   const [showCreateGroupDialog, setShowCreateGroupDialog] = useState(false);
-  const [groups, setGroups] = useState<IGroup[]>([]);
-  const [totalGroups, setTotalGroups] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
   const pathWithoutQuery = '/groups';
 
-  const fetchGroups = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    const token = await getAuthToken();
-    try {
-      const defaultSearchFilterModel = {
-        searchFilterBoxList: [{ restrictionList: [] }],
-        sortList: [{ fieldName: 'id', type: 'DSC' }],
-        page: 0,
-        rows: 10,
-      };
-      const encodedSearchFilterModel = encodeURIComponent(JSON.stringify(defaultSearchFilterModel));
 
-      const response = await fetch(`/api/group/list?searchFilterModel=${encodedSearchFilterModel}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to fetch groups');
-      }
-
-      const data: GroupListResponse = await response.json();
-
-      const transformedGroups: IGroup[] = data.content.map((item) => ({
-        id: item.groupId,
-        name: item.groupName,
-        description: '',
-        userCount: item.groupMemberCount,
-      }));
-
-      setGroups(transformedGroups);
-      setTotalGroups(data.totalElements);
-    } catch (err: any) {
-      setError(err.message || 'An unknown error occurred.');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      await fetchGroups();
-    })();
-  }, [fetchGroups]);
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ['groups'],
+    queryFn: fetchGroups,
+  });
 
   const handleViewGroup = (groupId: string | number) => {
     router.push(`/groups/${groupId}`);
@@ -91,7 +95,7 @@ export default function GroupsPage() {
 
   const handleCreateGroupSubmit = async () => {
     router.replace(pathWithoutQuery);
-    await fetchGroups();
+    await queryClient.invalidateQueries({ queryKey: ['groups'] });
   };
 
   return (
@@ -113,7 +117,7 @@ export default function GroupsPage() {
                 </Suspense>
                 <span>تعداد کل گروه‌ها:</span>
               </div>
-              <span className='font-semibold text-[#2a2a2a]'>{totalGroups} عدد</span>
+              <span className='font-semibold text-[#2a2a2a]'> {data?.total ?? 0} عدد</span>
             </div>
 
             <button
@@ -136,15 +140,15 @@ export default function GroupsPage() {
         </div>
 
         <div className='flex justify-center flex-1 overflow-y-auto pb-6 min-h-0'>
-          {loading ? (
+          {isLoading ? (
             <p className='text-gray-600'>در حال بارگذاری گروه‌ها...</p>
-          ) : error ? (
-            <p className='text-red-500'>خطا در بارگذاری گروه‌ها: {error}</p>
-          ) : groups.length === 0 ? (
+          ) : isError ? (
+            <p className='text-red-500'>خطا در بارگذاری گروه‌ها: {(error as Error).message}</p>
+          ) : data?.groups.length === 0 ? (
             <p className='text-gray-500'>هیچ گروهی برای نمایش وجود ندارد.</p>
           ) : (
             <div className='w-full max-w-lg flex flex-col gap-[10px]'>
-              {groups.map((group) => (
+              {data?.groups.map((group) => (
                 <GroupListItem key={group.id} group={group} onViewGroup={handleViewGroup} onDeleteGroup={handleDeleteGroup} />
               ))}
             </div>

@@ -86,8 +86,8 @@ export function CalculatorCard({ calculator, index, disabled = false }: ICalcula
     checkDependency(
       { id },
       {
-        onSuccess: (data) => {
-          if (data) {
+        onSuccess: ({response}) => {
+          if (response) {
             setHasDependencies(true);
           } else {
             handleDelete();

@@ -17,7 +17,7 @@ import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
 import { fetchData } from './dataService';
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 
-interface SearchBoxItem {
+export interface SearchBoxItem {
   fieldName: string;
   fieldOperation: 'MATCH' | 'EQUAL' | 'DSC' | 'ASC' | 'IN';
   fieldValue: string | string[];

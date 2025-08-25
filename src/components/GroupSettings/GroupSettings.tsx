@@ -34,7 +34,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId }) => 
   const [inputValue, setInputValue] = useState("");
   const [searchBoxList, setSearchBoxList] = useState<SearchBoxItem[]>([
     {
-      fieldName: 'groupName',
+      fieldName: 'name',
       fieldOperation: 'MATCH',
       fieldValue: '16',
       nextConditionOperator: 'OR',

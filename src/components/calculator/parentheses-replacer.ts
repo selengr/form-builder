@@ -33,7 +33,7 @@ export function replaceNestedParentheses(input: string) {
 
 
 function replaceWholeNormalParentheses(text: string): string {
-  let input = text
+  const input = text
   let output = "";
   let skip = false;
   let depth = 0;

@@ -1,4 +1,4 @@
-export function replaceNestedParentheses(input:string) {
+export function replaceNestedParentheses(input: string) {
   let result = input
   let hasChanges = true
 
@@ -27,10 +27,54 @@ export function replaceNestedParentheses(input:string) {
     }
   }
 
+  result = replaceWholeNormalParentheses(result)
   return result
 }
 
-function findAllFunctions(text:string) {
+
+function replaceWholeNormalParentheses(text: string): string {
+  const input = text
+  let output = "";
+  let skip = false;
+  let depth = 0;
+
+  for (let i = 0; i < input.length; i++) {
+    if (!skip && input.startsWith("#avgNumber(", i)) {
+      skip = true;
+      depth = 0;
+      output += "#avgNumber(";
+      i += "#avgNumber(".length - 1;
+      continue;
+    }
+
+    if (skip) {
+      if (input[i] === "(") depth++;
+      if (input[i] === ")") {
+        if (depth === 0) {
+          skip = false;
+          output += ")";
+          continue;
+        } else {
+          depth--;
+        }
+      }
+      output += input[i];
+      continue;
+    }
+
+    if (input[i] === "(") {
+      output += "$(";
+    } else if (input[i] === ")") {
+      output += ")$";
+    } else {
+      output += input[i];
+    }
+  }
+
+  return output
+}
+
+function findAllFunctions(text: string) {
   const functions = []
   const functionPattern = /#\w+\(/g
   let match
@@ -44,7 +88,7 @@ function findAllFunctions(text:string) {
     if (closeInfo.index !== -1) {
       functions.push({
         start: startIndex,
-        functionName: match[0].slice(0, -1), 
+        functionName: match[0].slice(0, -1),
         openParenIndex: openParenIndex,
         closeParenIndex: closeInfo.index,
         depth: closeInfo.depth,
@@ -55,7 +99,7 @@ function findAllFunctions(text:string) {
   return functions
 }
 
-function findMatchingCloseParen(text:string, startIndex:number) {
+function findMatchingCloseParen(text: string, startIndex: number) {
   let depth = 1
   let maxDepth = 1
   let functionCount = 0
@@ -83,7 +127,7 @@ function findMatchingCloseParen(text:string, startIndex:number) {
   return { index: -1, depth: 0 }
 }
 
-function findNestedFunctionsInContent(content:string) {
+function findNestedFunctionsInContent(content: string) {
   const nestedFunctions = []
   const functionPattern = /#\w+\(/g
   let match
@@ -106,7 +150,7 @@ function findNestedFunctionsInContent(content:string) {
   return nestedFunctions
 }
 
-function findMatchingCloseParenSimple(text:string, startIndex:number) {
+function findMatchingCloseParenSimple(text: string, startIndex: number) {
   let depth = 1
 
   for (let i = startIndex + 1; i < text.length; i++) {
@@ -127,7 +171,7 @@ function findMatchingCloseParenSimple(text:string, startIndex:number) {
   return -1
 }
 
-function replaceContentParentheses(content:string, nestedFunctions: any[]) {
+function replaceContentParentheses(content: string, nestedFunctions: any[]) {
   const protectedPositions = new Set()
 
   nestedFunctions.forEach((func) => {
@@ -135,7 +179,7 @@ function replaceContentParentheses(content:string, nestedFunctions: any[]) {
     protectedPositions.add(func.closeParen)
   })
 
-  let result= ""
+  let result = ""
 
   for (let i = 0; i < content.length; i++) {
     const char = content[i]

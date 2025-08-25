@@ -1,17 +1,20 @@
 'use client';
 
+import { z } from 'zod';
+import Image from 'next/image';
+import { toast } from 'sonner';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useState } from 'react';
 import { Box, Button, Checkbox, CircularProgress, IconButton, InputBase, Paper, Typography } from '@mui/material';
-import Image from 'next/image';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import FormProvider from '../hook-form/FormProvider';
-import RHFSwitch from '../hook-form/RHFSwitch';
-import { IGroup } from '@/app/groups/components/groupListItem';
-import { GroupListResponse } from '@/app/groups/page';
+// utils
 import { getAuthToken } from '@/utils/getAuthToken';
-import { toast } from 'sonner';
+// hook
+import { useDebounce } from '@/hooks/useDebounce';
+import FormProvider from '../hook-form/FormProvider';
+import { SearchBoxItem } from '../ListGrid/ListGrid';
+import { GroupListResponse } from '@/app/groups/page';
+import { IGroup } from '@/app/groups/components/groupListItem';
 
 const groupFormSchema = z.object({
   groupsId: z.array(z.number()).min(1, 'حداقل یک گروه را انتخاب کنید.'),
@@ -28,6 +31,16 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId }) => 
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [inputValue, setInputValue] = useState("");
+  const [searchBoxList, setSearchBoxList] = useState<SearchBoxItem[]>([
+    {
+      fieldName: 'groupName',
+      fieldOperation: 'MATCH',
+      fieldValue: '16',
+      nextConditionOperator: 'OR',
+    },
+  ])
+  const debouncedValue = useDebounce(inputValue, 500);
 
   const methods = useForm<GroupFormSchemaType>({
     resolver: zodResolver(groupFormSchema),
@@ -48,20 +61,50 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId }) => 
   const selectedGroupIds = watch('groupsId');
   const allSelected = groups.length > 0 && selectedGroupIds.length === groups.length;
 
+  const handleSearchFilter = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setInputValue(event.target.value);
+    },
+    []
+  );
+
+  useEffect(() => {
+    setSearchBoxList(prev =>
+      prev.map((item: SearchBoxItem) => ({
+        ...item,
+        fieldValue: debouncedValue || "",
+      }))
+    );
+  }, [debouncedValue, setSearchBoxList]);
+
+
   const fetchGroups = useCallback(async () => {
     setLoading(true);
     setError(null);
     const token = await getAuthToken();
 
-    try {
-      const searchFilterModel = {
-        searchFilterBoxList: [{ "restrictionList": [{ "fieldName": "groupName", "fieldOperation": "MATCH", "fieldValue": "", "nextConditionOperator": "OR" }] }],
-        sortList: [{ fieldName: 'id', type: 'DSC' }],
-        page: 0,
-        rows: 100,
-      };
+    const validCombinedRestrictionList = [...searchBoxList].filter((item) => {
+      if (item === undefined || item === null) return false;
+      if (typeof item.fieldValue === 'string') {
+        return item.fieldValue !== '';
+      }
+      if (Array.isArray(item.fieldValue)) {
+        return item.fieldValue.length > 0;
+      }
+      return true;
+    });
 
-      const encoded = encodeURIComponent(JSON.stringify(searchFilterModel));
+    const searchFilterBoxListPayload = [{ restrictionList: validCombinedRestrictionList }];
+
+    const params = {
+      searchFilterBoxList: searchFilterBoxListPayload,
+      sortList: [{ fieldName: 'id', type: 'DSC' }],
+      page: 0,
+      rows: 100,
+    };
+
+    try {
+      const encoded = encodeURIComponent(JSON.stringify(params));
       const res = await fetch(`/api/group/list?searchFilterModel=${encoded}`, {
         headers: {
           'Content-Type': 'application/json',
@@ -88,7 +131,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId }) => 
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [searchBoxList]);
 
   useEffect(() => {
     fetchGroups();
@@ -170,7 +213,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId }) => 
             borderRadius: '12px',
             mb: 2,
           }}>
-          <InputBase sx={{ ml: 1, flex: 1, textAlign: 'end' }} placeholder='کاوش بر اساس نام پایگاه داده' inputProps={{ 'aria-label': 'جستجو' }} />
+          <InputBase onChange={handleSearchFilter} sx={{ ml: 1, flex: 1, textAlign: 'end' }} placeholder='کاوش بر اساس نام پایگاه داده' inputProps={{ 'aria-label': 'جستجو' }} />
           <IconButton sx={{ p: '8px' }}>
             <Image src='/images/home-page/search.svg' width={23} height={23} alt='جستجو' style={{ cursor: 'pointer' }} />
           </IconButton>

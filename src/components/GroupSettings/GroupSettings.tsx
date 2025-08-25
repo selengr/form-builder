@@ -36,7 +36,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId }) => 
     {
       fieldName: 'name',
       fieldOperation: 'MATCH',
-      fieldValue: '16',
+      fieldValue: '',
       nextConditionOperator: 'OR',
     },
   ])

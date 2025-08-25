@@ -106,7 +106,7 @@ const optionsSchema = z.object({
         }),
     ),
     score: z.number({ invalid_type_error: 'مکان الزامی است' }).min(0, { message: 'نمیتواند منفی باشد' }).nonnegative({ message: 'نمیتواند منفی باشد' }),
-    id: z.number().nullable(),
+    id: z.number().nullable().default(null),
 });
 
 const propertiesSchema = z
@@ -478,7 +478,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
     const updatedSpectralPlaceList = optionListData.map(option => {
       return {
-        id : option.id,
+        id : option.id || null,
         title: option.title,
         value: option.score
       };

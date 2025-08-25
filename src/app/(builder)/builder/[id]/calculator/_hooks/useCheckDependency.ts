@@ -3,7 +3,6 @@ import { AxiosApi } from '@/services/axios/AxiosApi';
 import { useMutation } from '@tanstack/react-query';
 
 const checkDependency = async (id: number) => {
-  console.log('id2 :>> ', id);
   const url = `/calculation/check-dependency/${id}`;
   const response = await AxiosApi.get(url);
   return response.data;

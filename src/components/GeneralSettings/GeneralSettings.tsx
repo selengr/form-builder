@@ -1,20 +1,20 @@
 'use client';
-import FormProvider, { RHFCheckBox, RHFSwitch, RHFTextField } from '../hook-form';
 import { z } from 'zod';
+import { toast } from 'sonner';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { IoShareSocialSharp } from 'react-icons/io5';
+import { useQueryClient } from '@tanstack/react-query';
 import { LuCopy, LuRefreshCcw } from 'react-icons/lu';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Button, Typography } from '@mui/material';
+import FormProvider, { RHFCheckBox, RHFTextField } from '../hook-form';
 
 import Share from '../share-media/Share';
-import CopyToClipboardButton from '../clipboard-button/CopyToClipBoardButton';
 import { getAuthToken } from '@/utils/getAuthToken';
-import { toast } from 'sonner';
+import CopyToClipboardButton from '../clipboard-button/CopyToClipBoardButton';
 
 const DEFAULT_LINK = `${process.env.NEXT_PUBLIC_MBZ_DOMAIN}form`;
-
 const propertiesSchema = z.object({
   link: z
     .string()
@@ -33,6 +33,10 @@ interface GeneralSettingsProps {
   formId: string | number;
   formData: {
     publicLink: string;
+    formPublishSetting: {
+      capacityPublicLink: number;
+      publicationMainPageMethod: boolean
+    }
   };
 }
 
@@ -56,14 +60,14 @@ const IconButtonContainer = ({ children }: { children: React.ReactNode }) => (
 
 export default function GeneralSettings({ handleOpen, formId, formData }: GeneralSettingsProps) {
   const FINAL_LINK = `${DEFAULT_LINK}/${formData.publicLink}`;
-
+  const queryClient = useQueryClient();
   const methods = useForm<PropertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     mode: 'all',
     defaultValues: {
       link: FINAL_LINK,
-      publicationMainPageMethod: false,
-      capacityPublicLink: 0,
+      publicationMainPageMethod: formData?.formPublishSetting?.publicationMainPageMethod || false,
+      capacityPublicLink: formData?.formPublishSetting?.capacityPublicLink || 0,
       showUser: false,
     },
   });
@@ -111,10 +115,10 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
           }
           return;
         }
-
-        toast.success('با موفقیت به سبد خرید افزوده شد.');
+        queryClient.invalidateQueries({ queryKey: ['datas_builder_query'] });
         handleOpen();
         reset();
+        toast.success('با موفقیت به سبد خرید افزوده شد.');
       } catch (error: any) {
         toast.error('خطای ارتباط با سرور. لطفاً دوباره تلاش کنید.');
       }

@@ -73,7 +73,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
 
     elements.forEach((elem) => {
       if (elem.type === 'NEW_FIELD') {
-        questionList.dataList.forEach((item: any) => {debugger
+        questionList.dataList.forEach((item: any) => {
           const { UNIC_NAME, STICKY_FUNC } = item.extMap;
           if (UNIC_NAME === elem.id || STICKY_FUNC === elem.id) {
             selectFieldRef.current[elem.id as string] = STICKY_FUNC || UNIC_NAME;
@@ -376,9 +376,11 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
     const { UNIC_NAME, STICKY_FUNC } = item.extMap;
     const finalId = STICKY_FUNC ?? UNIC_NAME;
 
+    const elementIndex = elements.findIndex((elem) => elem.id === dropdownId && element.mainIndex === elem.mainIndex);
+    if (elementIndex === -1) return;
     const newElements = [...elements];
 
-    newElements[element.mainIndex] = {
+    newElements[elementIndex] = {
       type: 'NEW_FIELD',
       content: item.caption,
       id: finalId,
@@ -389,8 +391,8 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
     setElements(newElements);
     selectFieldRef.current[finalId] = finalId;
 
-    setCursorIndex(element.mainIndex + 1);
-    updateCursorPosition(element.mainIndex + 1);
+    setCursorIndex(elementIndex + 1);
+    updateCursorPosition(elementIndex + 1);
     closeDropdown(dropdownId);
   };
 

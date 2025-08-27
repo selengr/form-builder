@@ -45,7 +45,20 @@ function replaceWholeNormalParentheses(text: string): string {
       output += "#avgNumber(";
       i += "#avgNumber(".length - 1;
       continue;
+    } else if (!skip &&  input.startsWith("#avgSpectralDouble(", i)) {
+      skip = true;
+      depth = 0;
+      output += "#avgSpectralDouble(";
+      i += "#avgSpectralDouble(".length - 1;
+      continue;
+    } else if (!skip &&  input.startsWith("#avgMultiSelect(", i)) {
+      skip = true;
+      depth = 0;
+      output += "#avgMultiSelect(";
+      i += "#avgMultiSelect(".length - 1;
+      continue;
     }
+
 
     if (skip) {
       if (input[i] === "(") depth++;

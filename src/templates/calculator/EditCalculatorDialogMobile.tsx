@@ -44,32 +44,32 @@ export const EditCalculatorDialogMobile: React.FC<IProps> = ({ calcId }) => {
     gcTime: 0,
   });
 
-  const {
-    data: editData,
-    isLoading: editLoading,
-    error: errorLoading,
-  } = useQuery({
-    queryKey: ['edit-calculators'],
-    queryFn: () => fetchEditCalculators(calcId as number),
-    staleTime: 0,
-    gcTime: 0,
-  });
+    const {
+      data: editData,
+      isLoading: editLoading,
+      error: errorLoading,
+    } = useQuery({
+      queryKey: ['edit-calculators'],
+      queryFn: () => fetchEditCalculators(calcId as number),
+      staleTime: 0,
+      gcTime: 0,
+    });
 
-  const handleClose = () => { };
+    const handleClose = () => { };
 
-  return (
-    <>
-      {isLoading ||
-        (editLoading && (
-          <div className='flex flex-col items-center justify-center w-full h-full min-w-[600px] min-h-[300px] bg-white bg-opacity-80 border border-gray-300 rounded-lg shadow-lg'>
-            <p>در حال بارگیری محاسبه‌گر...</p>
-            <BuilderLoading className='min-h-16' />
-          </div>
-        ))}
-      {error && <p>Error loading calculators: {(error as Error).message}</p>}
-      {data && editData && <AdvancedFormulaEditor questionList={data} handleClose={handleClose} editList={editData} isEdit={calcId} />}
-    </>
-  );
-};
+    return (
+      <>
+        {isLoading ||
+          (editLoading && (
+            <div className='flex flex-col items-center justify-center w-full h-full min-w-[600px] min-h-[300px] bg-white bg-opacity-80 border border-gray-300 rounded-lg shadow-lg'>
+              <p>در حال بارگیری محاسبه‌گر...</p>
+              <BuilderLoading className='min-h-16' />
+            </div>
+          ))}
+        {error && <p>Error loading calculators: {(error as Error).message}</p>}
+        {data && editData && <AdvancedFormulaEditor questionList={data} handleClose={handleClose} editList={editData} isEdit={calcId} />}
+      </>
+    );
+  };
 
-export default EditCalculatorDialogMobile;
+  export default EditCalculatorDialogMobile;

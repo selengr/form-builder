@@ -1,6 +1,6 @@
 {
   "name": "psya_client",
-  "version": "4.6.5",
+  "version": "4.6.6",
   "description": "Psya is an innovative platform for designing, conducting, and analyzing psychological assessments. With its simple, intuitive, and integrated user interface, it enables the creation of interactive online forms and the generation of accurate, personalized reports.",
   "keywords": ["psychology", "assessment", "nextjs", "react", "form", "uppy", "mui"],
   "homepage": "https://psya.mresalat.ir/",

@@ -27,7 +27,7 @@ export type tempObj = {
 
 export type IFormOptionList = {
   score: number;
-  value?: number;
+  value: number;
   position?: number;
   isTarget?: boolean;
   title: string;

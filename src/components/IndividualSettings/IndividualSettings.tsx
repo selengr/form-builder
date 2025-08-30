@@ -393,20 +393,20 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
         </Button>
       </Box>
       <ConfirmDialog
-              content='تا زمانی که قالب گزارش انفرادی نساخته باشید نمیتواند این تیک را بزند '
-              open={openShowReportForResponderDialog}
-              title='اخطار'
-              onClose={toggleConfirm}
-              cancelText='انصراف'
-              action={
-                <Button type='submit' fullWidth disableRipple variant='contained'
-                  sx={{ ...buttonStylesAlert }}
-                  onClick={handleRedirection}
-                >
-                  برو به قالب گزارش
-                </Button>
-              }
-            />
+        content='تا زمانی که قالب گزارش انفرادی نساخته باشید نمیتواند این تیک را بزند '
+        open={openShowReportForResponderDialog}
+        title='اخطار'
+        onClose={toggleConfirm}
+        cancelText='انصراف'
+        action={
+          <Button type='submit' fullWidth disableRipple variant='contained'
+            sx={{ ...buttonStylesAlert }}
+            onClick={handleRedirection}
+          >
+            برو به قالب گزارش
+          </Button>
+        }
+      />
     </FormProvider>
   );
 }

@@ -4,13 +4,17 @@ import Image from 'next/image';
 import { IconButton } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { IoIosArrowForward } from 'react-icons/io';
-import { useParams, useSearchParams } from 'next/navigation';
-import { ITakeParts } from '@/components/common/FormCardBase';
+import { useSearchParams } from 'next/navigation';
 
+interface ResultRow {
+  row: string;
+}
+interface Result {
+  resultRows: ResultRow[];
+}
 
 const ResultsPage = () => {
-  const { id } = useParams();
-  const [results, setResults] = useState<ITakeParts[]>([]);
+  const [results, setResults] = useState<Result[]>([]);
 
   const searchParams = useSearchParams();
   const search = searchParams.get('name');
@@ -20,13 +24,16 @@ const ResultsPage = () => {
     if (storedResults) {
       setResults(JSON.parse(storedResults));
     }
+    return () => {
+      localStorage.removeItem("testResult");
+    };
   }, []);
 
   return (
-    <div className='w-full min-h-screen h-full px-4 py-4 bg-[#f7f7f7]'>
+     <div className='w-full min-h-screen h-full px-4 py-4 bg-[#f7f7f7]'>
       <div className='md:container mx-auto flex p-3 flex-col justify-start items-center min-w-screen h-full bg-white rounded-xl w-full '>
         <div className='relative flex w-full justify-center items-center min-h-[52px] h-[52px] rounded-lg bg-[#F7F7FF]'>
-          <Link href={`/stats/${id}`} className='absolute right-4'>
+          <Link href={`/my-assessments`} className='absolute right-4'>
             <IconButton
               sx={{
                 borderRadius: '9999px',
@@ -44,10 +51,11 @@ const ResultsPage = () => {
             {results?.map((result, index) => (
               <div key={index} className='mb-4 last:mb-0'>
                 {/* <h2 className="text-right text-[15px] font-bold text-[#161616] mb-1"></h2> */}
-                <p key={index} className='text-justify font-medium text-[#161616] mb-2'>
-                    {result.formName}
+                {result.resultRows.map((row, rowIndex) => (
+                  <p key={rowIndex} className='text-justify font-medium text-[#161616] mb-2'>
+                    {row.row}
                   </p>
-          
+                ))}
               </div>
             ))}
           </div>

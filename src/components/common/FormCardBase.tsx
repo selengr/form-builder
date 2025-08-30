@@ -8,6 +8,7 @@ import { InfoRow } from '@/components/common/infoRow';
 import { formTypePersian } from '@/constants/formDictionaries';
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
 import BugIcon from '@/../public/images/home-page/menu/bugIcon.svg';
+import { useShowResultUser } from '@/app/my-assessments/[id]/show-result/hooks/useShowResultUser';
 
 interface FormCardBaseProps {
   data: any;
@@ -38,7 +39,7 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
 }) => {
   const router = useRouter();
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
-  console.log('data', data)
+  const { mutate } = useShowResultUser();
 
   const handleClick = () => {
     if (!buttonLink) return;
@@ -47,8 +48,11 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
   };
 
   const handleShowResult = () => {
-    localStorage.setItem('testResult', JSON.stringify([data.takeParts[data.takeParts.length - 1]]));
-    router.push(`/my-assessments/${data.id}/show-result?name=${data.name}`);
+    const tkId = data.takeParts[data.takeParts.length - 1]
+    mutate({
+      data: [{ formId : data.id, takePartId : tkId?.takePartId }],
+      name : data.name,
+    });
   };
 
   return (
@@ -85,7 +89,8 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
         >
           {buttonText}
         </button>
-        {data.showReportForResponder && data.takeParts.length > 0 &&
+        { data.takeParts.length > 0 &&
+        // {data.showReportForResponder && data.takeParts.length > 0 &&
           <button
             className="bg-[#2CDFC9] disabled:bg-slate-300 hover:bg-[#2CDFC9] transition duration-200 max-w-full sm:max-w-[200px] px-2 h-[42px] w-full text-[14px] rounded-lg text-white"
             onClick={handleShowResult}

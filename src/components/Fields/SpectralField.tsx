@@ -273,7 +273,6 @@ type CustomInstance = FormElementInstance & {
 
 function FormComponent({ elementInstance, value, onChange, error }: { elementInstance?: FormElementInstance; value?: string; onChange?: (value: string) => void; error?: string }) {
   const element = elementInstance as CustomInstance;
-debugger
   const start: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SPECTRAL_START')?.value);
   const end: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SPECTRAL_END')?.value);
   const step: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'STEP')?.value);

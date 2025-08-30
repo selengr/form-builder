@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { AxiosApi } from '@/services/axios/AxiosApi';
 
 const showResultUser = async (data: { formId: number; takePartId: number }[]) => {
-  const url = '/report/solo/show-solo-report';
+  const url = '/report/user/solo/show-solo-report-for-responder';
   const response = await AxiosApi.post(url, data);
   return response.data;
 };

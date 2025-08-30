@@ -8,6 +8,7 @@ export type IFormElementConstructor = {
   position?: number | null;
   temp?: boolean | tempObj;
   optionList?: IFormOptionList;
+  spectralPlaceList?: IFormOptionList;
   startPageMsg?: string;
   description?: string;
   endPageId?: number;
@@ -26,6 +27,7 @@ export type tempObj = {
 
 export type IFormOptionList = {
   score: number;
+  value?: number;
   position?: number;
   isTarget?: boolean;
   title: string;

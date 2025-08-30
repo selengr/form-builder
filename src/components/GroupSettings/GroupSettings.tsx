@@ -15,9 +15,32 @@ import FormProvider from '../hook-form/FormProvider';
 import { SearchBoxItem } from '../ListGrid/ListGrid';
 import { GroupListResponse } from '@/app/groups/page';
 import { IGroup } from '@/app/groups/components/groupListItem';
+// components
+import { SwitchButton } from '../Switch/SwitchButton';
+import ConfirmDialog from '@/components/confirm-dialog';
+import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
+
+const buttonStylesAlert = {
+  height: '50px',
+  fontWeight: '400',
+  fontSize: '15px',
+  borderRadius: '10px',
+  boxShadow: 'none',
+  transition: 'background-color 0.3s, border-color 0.3s',
+  bgcolor: '#1758BA',
+  borderColor: '#1758BA',
+  '&:hover': {
+    bgcolor: '#0F4C8A',
+  },
+  '&:active': {
+    bgcolor: '#0A3A6A',
+  },
+};
 
 const groupFormSchema = z.object({
   groupsId: z.array(z.number()).min(1, 'حداقل یک گروه را انتخاب کنید.'),
+  showReportForResponder: z.boolean(),
 });
 
 type GroupFormSchemaType = z.infer<typeof groupFormSchema>;
@@ -25,9 +48,14 @@ type GroupFormSchemaType = z.infer<typeof groupFormSchema>;
 interface GroupSettingsProps {
   handleOpen: () => void;
   formId: string | number;
+  formData: {
+    isCreatedSoloReport: boolean | null
+    showReportForResponder: boolean | null
+  };
 }
 
-const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId }) => {
+const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formData }) => {
+  const { push } = useRouter()
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,6 +68,10 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId }) => 
       nextConditionOperator: 'OR',
     },
   ])
+  const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(false);
+  const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false);
+
+  const queryClient = useQueryClient();
   const debouncedValue = useDebounce(inputValue, 500);
 
   const methods = useForm<GroupFormSchemaType>({
@@ -47,11 +79,13 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId }) => 
     mode: 'onChange',
     defaultValues: {
       groupsId: [],
+      showReportForResponder: formData?.showReportForResponder || false,
     },
   });
 
   const {
     watch,
+    getValues,
     setValue,
     handleSubmit,
     reset,
@@ -163,6 +197,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId }) => 
           body: JSON.stringify({
             formId: Number(formId),
             groupsId: values.groupsId,
+            showReportForResponder: values.showReportForResponder,
           }),
         });
 
@@ -188,6 +223,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId }) => 
           return;
         }
 
+        queryClient.invalidateQueries({ queryKey: ['datas_builder_query'] });
         toast.success('با موفقیت به سبد خرید افزوده شد.');
         handleOpen();
         reset();
@@ -198,6 +234,24 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId }) => 
     },
     [formId, handleOpen, reset, methods],
   );
+
+  const handleShowReportForResponder = () => {
+    if (formData?.isCreatedSoloReport) {
+      const currentValue = getValues("showReportForResponder");
+      setValue("showReportForResponder", !currentValue, { shouldDirty: false });
+      setIsShowReportForResponder((prev) => !prev)
+    } else {
+      setOpenShowReportForResponderDialog(true)
+    }
+  }
+
+  const toggleConfirm = () => {
+    setOpenShowReportForResponderDialog((prev) => !prev)
+  }
+
+  const handleRedirection = () => {
+    push("/reports")
+  }
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -251,21 +305,22 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId }) => 
         </Typography>
       )}
 
-      {/*<Box display='flex' justifyContent='space-between' alignItems='center' mt={2} px={2}>*/}
-      {/*  <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>*/}
-      {/*    نمایش نتیجه به پاسخ دهنده*/}
-      {/*  </Typography>*/}
-      {/*  <RHFSwitch*/}
-      {/*    name='showUser'*/}
-      {/*    label={undefined}*/}
-      {/*    sx={{*/}
-      {/*      mb: 1,*/}
-      {/*      mx: 0,*/}
-      {/*      width: 1,*/}
-      {/*      justifyContent: 'space-between',*/}
-      {/*    }}*/}
-      {/*  />*/}
-      {/*</Box>*/}
+      <Box display='flex' justifyContent='space-between' alignItems='center' mx={2} mt={3}>
+        <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>
+          نمایش نتیجه به پاسخ دهنده
+        </Typography>
+        <SwitchButton
+          onChange={handleShowReportForResponder}
+          checked={isShowReportForResponder}
+          sx={{
+            '& .MuiInputBase-root': {
+              borderRadius: '10px',
+              fontWeight: 600,
+              height: 42,
+            },
+          }}
+        />
+      </Box>
 
       <Box display='flex' justifyContent='space-between' alignItems='center' gap='16px' px='16px' mt='24px'>
         <Button
@@ -317,6 +372,21 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId }) => 
           انصراف
         </Button>
       </Box>
+      <ConfirmDialog
+              content='تا زمانی که قالب گزارش انفرادی نساخته باشید نمیتواند این تیک را بزند '
+              open={openShowReportForResponderDialog}
+              title='اخطار'
+              onClose={toggleConfirm}
+              cancelText='انصراف'
+              action={
+                <Button type='submit' fullWidth disableRipple variant='contained'
+                  sx={{ ...buttonStylesAlert }}
+                  onClick={handleRedirection}
+                >
+                  برو به قالب گزارش
+                </Button>
+              }
+            />
     </FormProvider>
   );
 };

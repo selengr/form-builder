@@ -53,7 +53,7 @@ export type FormElementInstance = {
   draft?: draftObj;
   startPageMsg?: string;
   description?: string;
-  spectralPlaceList?: [];
+  spectralPlaceList?: IFormOptionList[] | [] | null | undefined;
 };
 
 type draftObj = {

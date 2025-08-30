@@ -50,7 +50,7 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
   const handleShowResult = () => {
     const tkId = data.takeParts[data.takeParts.length - 1]
     mutate({
-      data: [{ formId : data.id, takePartId : tkId?.takePartId }],
+      data: { formId : data.id, takePartId : tkId?.takePartId },
       name : data.name,
     });
   };

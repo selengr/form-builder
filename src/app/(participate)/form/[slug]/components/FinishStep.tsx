@@ -8,11 +8,12 @@ import { Header } from './header';
 import AnimatedBox from '@/templates/form/AnimatedBox';
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
 import finalStep from '@/../public/images/home-page/finalStep.svg';
-import { useShowResultUser } from '@/app/my-assessments/[id]/show-result/hooks/useShowResultUser';
+import { useShowResultUser } from '../show-result/hooks/useShowResultUser';
 
 interface FinishStepProps {
   question: any;
   formName: string;
+  takePartId: number;
   replace: (path: string) => void;
   isReportDialogOpen: boolean;
   handleOpenReportDialog: () => void;
@@ -20,17 +21,15 @@ interface FinishStepProps {
   formId: any;
 }
 
-export function FinishStep({ question, formName, replace, formId, isReportDialogOpen, handleOpenReportDialog, handleCloseReportDialog }: FinishStepProps) {
+export function FinishStep({ question,takePartId, formName, replace, formId, isReportDialogOpen, handleOpenReportDialog, handleCloseReportDialog }: FinishStepProps) {
     const { mutate } = useShowResultUser();
 
   useEffect(()=>{
     if(!question?.showReportForResponder){
-       debugger
-    // const tkId = data.takeParts[data.takeParts.length - 1]
-    // mutate({
-    //   data: [{ formId : data.id, takePartId : tkId?.takePartId }],
-    //   name : data.name,
-    // });
+    mutate({
+      data: { formId : question.formId, takePartId },
+      name : formName,
+    });
 
     }
   },[])

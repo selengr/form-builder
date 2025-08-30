@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { IconButton } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { IoIosArrowForward } from 'react-icons/io';
-import { useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 
 interface ResultRow {
   row: string;
@@ -14,18 +14,19 @@ interface Result {
 }
 
 const ResultsPage = () => {
+    const { id } = useParams();
   const [results, setResults] = useState<Result[]>([]);
 
   const searchParams = useSearchParams();
   const search = searchParams.get('name');
 
   useEffect(() => {
-    const storedResults = localStorage.getItem('Show_User_Solo_Result');
+    const storedResults = localStorage.getItem('Show_Solo_Result');
     if (storedResults) {
       setResults(JSON.parse(storedResults));
     }
     return () => {
-      localStorage.removeItem("Show_User_Solo_Result");
+      localStorage.removeItem("Show_Solo_Result");
     };
   }, []);
 
@@ -33,7 +34,7 @@ const ResultsPage = () => {
      <div className='w-full min-h-screen h-full px-4 py-4 bg-[#f7f7f7]'>
       <div className='md:container mx-auto flex p-3 flex-col justify-start items-center min-w-screen h-full bg-white rounded-xl w-full '>
         <div className='relative flex w-full justify-center items-center min-h-[52px] h-[52px] rounded-lg bg-[#F7F7FF]'>
-          <Link href={`/my-assessments`} className='absolute right-4'>
+          <Link href={`/form/${id}`} className='absolute right-4'>
             <IconButton
               sx={{
                 borderRadius: '9999px',

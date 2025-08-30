@@ -29,6 +29,7 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
     initializeQuestion,
     realFormID,
     hasError,
+    takePartId,
     isCurrentFirstQuestion,
   } = useParticipateForm();
 
@@ -53,7 +54,8 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
   if (finishPage) {
     return (
       <FinishStep
-      question={question}
+        question={question}
+        takePartId={takePartId}
         formName={formName}
         replace={replace}
         formId={realFormID}

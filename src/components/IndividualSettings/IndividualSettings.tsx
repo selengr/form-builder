@@ -312,7 +312,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
         </Box>
       </Box>
 
-      <Box display='flex' justifyContent='space-between' alignItems='center' mx={2} mt={1}>
+      <Box display='flex' justifyContent='space-between' alignItems='center' mx={2} mt={2}>
         <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>
           نمایش نتیجه به پاسخ دهنده
         </Typography>
@@ -392,6 +392,21 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
           انصراف
         </Button>
       </Box>
+      <ConfirmDialog
+              content='تا زمانی که قالب گزارش انفرادی نساخته باشید نمیتواند این تیک را بزند '
+              open={openShowReportForResponderDialog}
+              title='اخطار'
+              onClose={toggleConfirm}
+              cancelText='انصراف'
+              action={
+                <Button type='submit' fullWidth disableRipple variant='contained'
+                  sx={{ ...buttonStylesAlert }}
+                  onClick={handleRedirection}
+                >
+                  برو به قالب گزارش
+                </Button>
+              }
+            />
     </FormProvider>
   );
 }

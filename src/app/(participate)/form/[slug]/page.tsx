@@ -53,6 +53,7 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
   if (finishPage) {
     return (
       <FinishStep
+      question={question}
         formName={formName}
         replace={replace}
         formId={realFormID}

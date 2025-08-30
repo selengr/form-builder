@@ -1,14 +1,17 @@
 'use client';
 
-import React from 'react';
-import { Button } from '@mui/material';
 import Image from 'next/image';
-import AnimatedBox from '@/templates/form/AnimatedBox';
-import finalStep from '@/../public/images/home-page/finalStep.svg';
+import { Button } from '@mui/material';
+import React, { useEffect } from 'react';
+// components
 import { Header } from './header';
+import AnimatedBox from '@/templates/form/AnimatedBox';
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
+import finalStep from '@/../public/images/home-page/finalStep.svg';
+import { useShowResultUser } from '@/app/my-assessments/[id]/show-result/hooks/useShowResultUser';
 
 interface FinishStepProps {
+  question: any;
   formName: string;
   replace: (path: string) => void;
   isReportDialogOpen: boolean;
@@ -17,7 +20,21 @@ interface FinishStepProps {
   formId: any;
 }
 
-export function FinishStep({ formName, replace, formId, isReportDialogOpen, handleOpenReportDialog, handleCloseReportDialog }: FinishStepProps) {
+export function FinishStep({ question, formName, replace, formId, isReportDialogOpen, handleOpenReportDialog, handleCloseReportDialog }: FinishStepProps) {
+    const { mutate } = useShowResultUser();
+
+  useEffect(()=>{
+    if(!question?.showReportForResponder){
+       debugger
+    // const tkId = data.takeParts[data.takeParts.length - 1]
+    // mutate({
+    //   data: [{ formId : data.id, takePartId : tkId?.takePartId }],
+    //   name : data.name,
+    // });
+
+    }
+  },[])
+ 
   return (
     <div className='w-full flex flex-col p-4 overflow-hidden'>
       <div className='flex flex-col bg-white rounded-xl h-[calc(100vh-120px)] md:h-full max-h-screen'>

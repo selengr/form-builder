@@ -48,14 +48,14 @@ type GroupFormSchemaType = z.infer<typeof groupFormSchema>;
 interface GroupSettingsProps {
   handleOpen: () => void;
   formId: string | number;
-    formData: {
+  formData: {
     isCreatedSoloReport: boolean | null
     showReportForResponder: boolean | null
   };
 }
 
 const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formData }) => {
-   const { push } = useRouter()
+  const { push } = useRouter()
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -68,7 +68,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
       nextConditionOperator: 'OR',
     },
   ])
-    const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(false);
+  const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(false);
   const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false);
 
   const queryClient = useQueryClient();
@@ -197,7 +197,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
           body: JSON.stringify({
             formId: Number(formId),
             groupsId: values.groupsId,
-             showReportForResponder: values.showReportForResponder,
+            showReportForResponder: values.showReportForResponder,
           }),
         });
 
@@ -235,7 +235,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
     [formId, handleOpen, reset, methods],
   );
 
-    const handleShowReportForResponder = () => {
+  const handleShowReportForResponder = () => {
     if (formData?.isCreatedSoloReport) {
       const currentValue = getValues("showReportForResponder");
       setValue("showReportForResponder", !currentValue, { shouldDirty: false });
@@ -306,21 +306,21 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
       )}
 
       <Box display='flex' justifyContent='space-between' alignItems='center' mx={2} mt={1}>
-                 <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>
-                   نمایش نتیجه به پاسخ دهنده
-                 </Typography>
-                 <SwitchButton
-                   onChange={handleShowReportForResponder}
-                   checked={isShowReportForResponder}
-                   sx={{
-                     '& .MuiInputBase-root': {
-                       borderRadius: '10px',
-                       fontWeight: 600,
-                       height: 42,
-                     },
-                   }}
-                 />
-               </Box>
+        <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>
+          نمایش نتیجه به پاسخ دهنده
+        </Typography>
+        <SwitchButton
+          onChange={handleShowReportForResponder}
+          checked={isShowReportForResponder}
+          sx={{
+            '& .MuiInputBase-root': {
+              borderRadius: '10px',
+              fontWeight: 600,
+              height: 42,
+            },
+          }}
+        />
+      </Box>
 
       <Box display='flex' justifyContent='space-between' alignItems='center' gap='16px' px='16px' mt='24px'>
         <Button

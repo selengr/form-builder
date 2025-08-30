@@ -39,7 +39,7 @@ interface GroupComboItem {
 interface IndividualSettingsProps {
   handleOpen: () => void;
   formId: string | number;
-    formData: {
+  formData: {
     isCreatedSoloReport: boolean | null
     showReportForResponder: boolean | null
   };
@@ -90,13 +90,13 @@ const propertiesSchema = z.object({
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
 const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, formId, formData }) => {
-   const { push } = useRouter()
+  const { push } = useRouter()
   const [groupOptions, setGroupOptions] = useState<GroupComboItem[]>([]);
   const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(false);
   const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false);
 
-    const queryClient = useQueryClient();
-    
+  const queryClient = useQueryClient();
+
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     mode: 'onChange',
@@ -175,7 +175,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
           username: values.phone,
           gender: values.gender,
           groupId: values.group || null,
-           showReportForResponder: values.showReportForResponder,
+          showReportForResponder: values.showReportForResponder,
         }),
       });
 
@@ -208,7 +208,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
     }
   }
 
-    const handleShowReportForResponder = () => {
+  const handleShowReportForResponder = () => {
     if (formData?.isCreatedSoloReport) {
       const currentValue = getValues("showReportForResponder");
       setValue("showReportForResponder", !currentValue, { shouldDirty: false });
@@ -313,21 +313,21 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
       </Box>
 
       <Box display='flex' justifyContent='space-between' alignItems='center' mx={2} mt={1}>
-                 <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>
-                   نمایش نتیجه به پاسخ دهنده
-                 </Typography>
-                 <SwitchButton
-                   onChange={handleShowReportForResponder}
-                   checked={isShowReportForResponder}
-                   sx={{
-                     '& .MuiInputBase-root': {
-                       borderRadius: '10px',
-                       fontWeight: 600,
-                       height: 42,
-                     },
-                   }}
-                 />
-               </Box>
+        <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>
+          نمایش نتیجه به پاسخ دهنده
+        </Typography>
+        <SwitchButton
+          onChange={handleShowReportForResponder}
+          checked={isShowReportForResponder}
+          sx={{
+            '& .MuiInputBase-root': {
+              borderRadius: '10px',
+              fontWeight: 600,
+              height: 42,
+            },
+          }}
+        />
+      </Box>
 
       <Box
         sx={{

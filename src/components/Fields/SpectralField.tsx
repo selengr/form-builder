@@ -71,13 +71,11 @@ const optionList: IFormOptionList[] = [
   {
     title: 'گزینه 1',
     score: 0,
-    value: 0,
     id: null,
   },
   {
     title: 'گزینه 2',
     score: 100,
-    value: 100,
     id: null,
   },
 ];
@@ -85,13 +83,11 @@ const spectralPlaceList: IFormOptionList[] = [
   {
     title: 'گزینه 1',
     score: 0,
-    value: 0,
     id: null,
   },
   {
     title: 'گزینه 2',
     score: 100,
-    value: 100,
     id: null,
   },
 ];
@@ -282,7 +278,7 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
   const spectralType = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SPECTRAL_TYPE')?.value;
 
   const marks = element.spectralPlaceList.map((option) => {
-    return { value: option?.value, label: option.title };
+    return { value: option.value!, label: option.title };
   });
 
   const description = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'DESCRIPTION')?.value;

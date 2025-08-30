@@ -330,6 +330,7 @@ export const useParticipateForm = () => {
     handleNext,
     handlePrev,
     replace,
+    takePartId,
     setLimitation,
     setQuestion,
     initializeQuestion,

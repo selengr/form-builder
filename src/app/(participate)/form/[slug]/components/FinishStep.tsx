@@ -1,15 +1,19 @@
 'use client';
 
-import React from 'react';
-import { Button } from '@mui/material';
 import Image from 'next/image';
-import AnimatedBox from '@/templates/form/AnimatedBox';
-import finalStep from '@/../public/images/home-page/finalStep.svg';
+import { Button } from '@mui/material';
+import React, { useEffect } from 'react';
+// components
 import { Header } from './header';
+import AnimatedBox from '@/templates/form/AnimatedBox';
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
+import finalStep from '@/../public/images/home-page/finalStep.svg';
+import { useShowResultUser } from '../show-result/hooks/useShowResultUser';
 
 interface FinishStepProps {
+  question: any;
   formName: string;
+  takePartId: number;
   replace: (path: string) => void;
   isReportDialogOpen: boolean;
   handleOpenReportDialog: () => void;
@@ -17,7 +21,19 @@ interface FinishStepProps {
   formId: any;
 }
 
-export function FinishStep({ formName, replace, formId, isReportDialogOpen, handleOpenReportDialog, handleCloseReportDialog }: FinishStepProps) {
+export function FinishStep({ question,takePartId, formName, replace, formId, isReportDialogOpen, handleOpenReportDialog, handleCloseReportDialog }: FinishStepProps) {
+    const { mutate } = useShowResultUser();
+
+  useEffect(()=>{
+    if(!question?.showReportForResponder){
+    mutate({
+      data: { formId : question.formId, takePartId },
+      name : formName,
+    });
+
+    }
+  },[])
+ 
   return (
     <div className='w-full flex flex-col p-4 overflow-hidden'>
       <div className='flex flex-col bg-white rounded-xl h-[calc(100vh-120px)] md:h-full max-h-screen'>

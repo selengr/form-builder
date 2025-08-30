@@ -79,6 +79,18 @@ const optionList: IFormOptionList[] = [
     id: null,
   },
 ];
+const spectralPlaceList: IFormOptionList[] = [
+  {
+    title: 'گزینه 1',
+    score: 0,
+    id: null,
+  },
+  {
+    title: 'گزینه 2',
+    score: 100,
+    id: null,
+  },
+];
 
 const tapTypeOptions: ISpectralQTapAndOptionsType = [
   { value: 'CONTINUOUS', label: 'پیوسته' },
@@ -252,11 +264,11 @@ export const SpectralFormElement: FormElement = {
 type CustomInstance = FormElementInstance & {
   questionPropertyList: typeof questionPropertyList;
   optionList: typeof optionList;
+  spectralPlaceList: typeof spectralPlaceList;
 };
 
 function FormComponent({ elementInstance, value, onChange, error }: { elementInstance?: FormElementInstance; value?: string; onChange?: (value: string) => void; error?: string }) {
   const element = elementInstance as CustomInstance;
-
   const start: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SPECTRAL_START')?.value);
   const end: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SPECTRAL_END')?.value);
   const step: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'STEP')?.value);
@@ -265,8 +277,8 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
 
   const spectralType = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SPECTRAL_TYPE')?.value;
 
-  const marks = element.optionList.map((option) => {
-    return { value: option.score, label: option.title };
+  const marks = element.spectralPlaceList.map((option) => {
+    return { value: option.value!, label: option.title };
   });
 
   const description = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'DESCRIPTION')?.value;

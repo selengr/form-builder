@@ -8,10 +8,41 @@ import FormProvider, { RHFMultiSelect, RHFSelect, RHFSwitch, RHFTextField } from
 import { Box, Button, MenuItem, Typography } from '@mui/material';
 import { toast } from 'sonner';
 import { getAuthToken } from '@/utils/getAuthToken';
+// components
+import { SwitchButton } from '../Switch/SwitchButton';
+import ConfirmDialog from '@/components/confirm-dialog';
+import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
+
+const buttonStylesAlert = {
+  height: '50px',
+  fontWeight: '400',
+  fontSize: '15px',
+  borderRadius: '10px',
+  boxShadow: 'none',
+  transition: 'background-color 0.3s, border-color 0.3s',
+  bgcolor: '#1758BA',
+  borderColor: '#1758BA',
+  '&:hover': {
+    bgcolor: '#0F4C8A',
+  },
+  '&:active': {
+    bgcolor: '#0A3A6A',
+  },
+};
 
 interface GroupComboItem {
   value: string;
-  caption: string;
+  caption: string
+}
+
+interface IndividualSettingsProps {
+  handleOpen: () => void;
+  formId: string | number;
+    formData: {
+    isCreatedSoloReport: boolean | null
+    showReportForResponder: boolean | null
+  };
 }
 
 const textFieldCommonSx = {
@@ -53,13 +84,19 @@ const propertiesSchema = z.object({
   }),
   group: z.string().optional(),
   show: z.boolean().default(false).optional(),
+  showReportForResponder: z.boolean(),
 });
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
-function IndividualSettings({ handleOpen, formId }: { handleOpen: () => void; formId: string | number }) {
+const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, formId, formData }) => {
+   const { push } = useRouter()
   const [groupOptions, setGroupOptions] = useState<GroupComboItem[]>([]);
+  const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(false);
+  const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false);
 
+    const queryClient = useQueryClient();
+    
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     mode: 'onChange',
@@ -70,12 +107,15 @@ function IndividualSettings({ handleOpen, formId }: { handleOpen: () => void; fo
       gender: undefined,
       group: '',
       show: false,
+      showReportForResponder: formData?.showReportForResponder || false,
     },
   });
 
   const {
     handleSubmit,
     reset,
+    getValues,
+    setValue,
     formState: { isSubmitting, isValid },
     setError,
   } = methods;
@@ -135,6 +175,7 @@ function IndividualSettings({ handleOpen, formId }: { handleOpen: () => void; fo
           username: values.phone,
           gender: values.gender,
           groupId: values.group || null,
+           showReportForResponder: values.showReportForResponder,
         }),
       });
 
@@ -158,12 +199,31 @@ function IndividualSettings({ handleOpen, formId }: { handleOpen: () => void; fo
         return;
       }
 
+      queryClient.invalidateQueries({ queryKey: ['datas_builder_query'] });
       toast.success('با موفقیت به سبد خرید افزوده شد.');
       handleOpen();
       reset();
     } catch (error) {
       toast.error('خطا در برقراری ارتباط با سرور.');
     }
+  }
+
+    const handleShowReportForResponder = () => {
+    if (formData?.isCreatedSoloReport) {
+      const currentValue = getValues("showReportForResponder");
+      setValue("showReportForResponder", !currentValue, { shouldDirty: false });
+      setIsShowReportForResponder((prev) => !prev)
+    } else {
+      setOpenShowReportForResponderDialog(true)
+    }
+  }
+
+  const toggleConfirm = () => {
+    setOpenShowReportForResponderDialog((prev) => !prev)
+  }
+
+  const handleRedirection = () => {
+    push("/reports")
   }
 
   return (
@@ -252,22 +312,22 @@ function IndividualSettings({ handleOpen, formId }: { handleOpen: () => void; fo
         </Box>
       </Box>
 
-      {/*<Box display='flex' flexDirection='row' justifyContent='space-between' alignItems='center' className={'px-3'}>*/}
-      {/*  <Typography variant='subtitle2' fontWeight='500' color='#393939' fontSize='14px'>*/}
-      {/*    نمایش نتیجه به پاسخ دهنده*/}
-      {/*  </Typography>*/}
-      {/*  <RHFSwitch*/}
-      {/*    label=''*/}
-      {/*    name='show'*/}
-      {/*    labelPlacement='start'*/}
-      {/*    sx={{*/}
-      {/*      mb: 1,*/}
-      {/*      mx: 0,*/}
-      {/*      width: 1,*/}
-      {/*      justifyContent: 'space-between',*/}
-      {/*    }}*/}
-      {/*  />*/}
-      {/*</Box>*/}
+      <Box display='flex' justifyContent='space-between' alignItems='center' mx={2} mt={1}>
+                 <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>
+                   نمایش نتیجه به پاسخ دهنده
+                 </Typography>
+                 <SwitchButton
+                   onChange={handleShowReportForResponder}
+                   checked={isShowReportForResponder}
+                   sx={{
+                     '& .MuiInputBase-root': {
+                       borderRadius: '10px',
+                       fontWeight: 600,
+                       height: 42,
+                     },
+                   }}
+                 />
+               </Box>
 
       <Box
         sx={{

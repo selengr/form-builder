@@ -89,8 +89,8 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
         >
           {buttonText}
         </button>
-        { data.takeParts.length > 0 &&
-        // {data.showReportForResponder && data.takeParts.length > 0 &&
+        {/* { data.takeParts.length > 0 && */}
+        {data.showReportForResponder && data.takeParts.length > 0 &&
           <button
             className="bg-[#2CDFC9] disabled:bg-slate-300 hover:bg-[#2CDFC9] transition duration-200 max-w-full sm:max-w-[200px] px-2 h-[42px] w-full text-[14px] rounded-lg text-white"
             onClick={handleShowResult}

@@ -84,11 +84,11 @@ export default function PublishSettingsTabValue({ handleOpen, formId, formData }
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index='individual'>
-        <IndividualSettings handleOpen={handleOpen} formId={formId} />
+        <IndividualSettings handleOpen={handleOpen} formData={formData} formId={formId} />
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index='group'>
-        <GroupSettings handleOpen={handleOpen} formId={formId} />
+        <GroupSettings handleOpen={handleOpen} formData={formData} formId={formId} />
       </CustomTabPanel>
 
       <CustomTabPanel value={value} index='mresalat'>

@@ -12,11 +12,11 @@ import { Box, Button, Typography } from '@mui/material';
 import FormProvider, { RHFCheckBox, RHFTextField } from '../hook-form';
 
 // components
+import { SwitchButton } from '../Switch/SwitchButton';
 import ConfirmDialog from '@/components/confirm-dialog';
 
 import Share from '../share-media/Share';
 import { getAuthToken } from '@/utils/getAuthToken';
-import { SwitchButton } from '../Switch/SwitchButton';
 import CopyToClipboardButton from '../clipboard-button/CopyToClipBoardButton';
 
 const buttonStylesAlert = {
@@ -111,6 +111,8 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
 
   const onSubmit = useCallback(
     async (values: PropertiesFormSchemaType) => {
+      console.log('value', values.showReportForResponder)
+
       const token = await getAuthToken();
       try {
         const response = await fetch('/api/publish/general', {
@@ -264,21 +266,10 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
             </Typography>
           </Box>
 
-          {/* {Boolean(formData?.showReportForResponder) && ( */}
           <Box display='flex' justifyContent='space-between' alignItems='center'>
             <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>
               نمایش نتیجه به پاسخ دهنده
             </Typography>
-            {/* <RHFSwitch
-                name='showReportForResponder'
-                sx={{
-                  mb: 1,
-                  mx: 0,
-                  width: 1,
-                  justifyContent: 'space-between',
-                }}
-                label={undefined}
-              /> */}
             <SwitchButton
               onChange={handleShowReportForResponder}
               checked={isShowReportForResponder}
@@ -291,7 +282,7 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
               }}
             />
           </Box>
-          {/* )} */}
+
         </Box>
       </Box>
 

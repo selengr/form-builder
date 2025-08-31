@@ -16,7 +16,7 @@ import { PhDotsThreeVerticalBold } from '../../../public/images/icons/PhDotsThre
 import { useCheckDependency, useDeleteCalculator } from '../../app/(builder)/builder/[id]/calculator/_hooks';
 import { useParams, useRouter } from 'next/navigation';
 
-const buttonStyles = {
+export const buttonStyles = {
   height: '50px',
   fontWeight: '400',
   fontSize: '15px',
@@ -24,7 +24,7 @@ const buttonStyles = {
   boxShadow: 'none',
   transition: 'background-color 0.3s, border-color 0.3s',
 };
-const buttonStylesAlert = {
+export const buttonStylesAlert = {
   bgcolor: '#1758BA',
   borderColor: '#1758BA',
   '&:hover': {
@@ -34,7 +34,7 @@ const buttonStylesAlert = {
     bgcolor: '#0A3A6A',
   },
 };
-const buttonStylesError = {
+export const buttonStylesError = {
   bgcolor: '#FA4D56',
   borderColor: '#FA4D56',
   '&:hover': {

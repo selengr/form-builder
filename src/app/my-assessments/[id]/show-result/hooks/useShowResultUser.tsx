@@ -18,7 +18,7 @@ export const useShowResultUser = () => {
 
     onSuccess: (result, { name }) => {
       localStorage.setItem('Show_User_Solo_Result', JSON.stringify(result));
-      push(`/my-assessments/${result?.[0].formId}/show-result?name=${name}`);
+      push(`/my-assessments/${result?.formId}/show-result?name=${name}`);
     },
     onError: () => {
       toast.error('عملیات ناموفق بود مجددا تلاش کنید');

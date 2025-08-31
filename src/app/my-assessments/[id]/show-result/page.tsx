@@ -22,14 +22,13 @@ const ResultsPage = () => {
   useEffect(() => {
     const storedResults = localStorage.getItem('Show_User_Solo_Result');
     if (storedResults) {
-      let res = JSON.parse(storedResults)
-      setResults(res);
+      setResults(JSON.parse(storedResults));
     }
     return () => {
       localStorage.removeItem("Show_User_Solo_Result");
     };
   }, []);
-  
+
   return (
      <div className='w-full min-h-screen h-full px-4 py-4 bg-[#f7f7f7]'>
       <div className='md:container mx-auto flex p-3 flex-col justify-start items-center min-w-screen h-full bg-white rounded-xl w-full '>

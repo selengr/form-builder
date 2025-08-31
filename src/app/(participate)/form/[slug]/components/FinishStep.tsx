@@ -21,19 +21,18 @@ interface FinishStepProps {
   formId: any;
 }
 
-export function FinishStep({ question,takePartId, formName, replace, formId, isReportDialogOpen, handleOpenReportDialog, handleCloseReportDialog }: FinishStepProps) {
-    const { mutate } = useShowResultUser();
+export function FinishStep({ question, takePartId, formName, replace, formId, isReportDialogOpen, handleOpenReportDialog, handleCloseReportDialog }: FinishStepProps) {
+  const { mutate } = useShowResultUser();
 
-  useEffect(()=>{
-    if(!question?.showReportForResponder){
-    mutate({
-      data: { formId : question.formId, takePartId },
-      name : formName,
-    });
-
+  useEffect(() => {
+    if (!question?.showReportForResponder) {
+      mutate({
+        data: { formId: question.formId, takePartId },
+        name: formName,
+      });
     }
-  },[])
- 
+  }, [])
+
   return (
     <div className='w-full flex flex-col p-4 overflow-hidden'>
       <div className='flex flex-col bg-white rounded-xl h-[calc(100vh-120px)] md:h-full max-h-screen'>

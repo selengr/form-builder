@@ -14,9 +14,14 @@ import useActionQuestionLoading from '@/hooks/useActionQuestionLoading';
 import useActionDesigner from '@/hooks/useActionDesigner';
 import { AxiosApi } from '@/services/axios/AxiosApi';
 import { toast } from 'sonner';
-import { Button } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
+import { useCheckQuestionDependency } from '@/hooks/useCheckQuestionDependency';
+import ConfirmDialog from '@/components/confirm-dialog';
+import { useParams } from 'next/navigation';
+import { buttonStyles, buttonStylesError } from '@/templates/calculator/CalculatorCard';
 
 const QuestionMenu = memo(function QuestionMenu({ questionID, position, index }: { questionID: number; position: number; index: number }) {
+  const { id } = useParams()
   const setOpenDialog = useActionOpenDialog();
   const elements = useElements();
   const setSelectedElement = useActionSelectedElement();
@@ -24,8 +29,12 @@ const QuestionMenu = memo(function QuestionMenu({ questionID, position, index }:
   const { removeElement, addElement } = useActionDesigner();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const [hasDependencies, setHasDependencies] = useState<boolean>(false);
   const [loadingDeleteData, setLoadingDeleteData] = useState(false);
   const [loadingDuplicateData, setLoadingDuplicateData] = useState(false);
+
+  const { mutate: checkDependency, isPending: checkDependencyLoading } = useCheckQuestionDependency();
+
 
   async function getQuestionData() {
     const realPositionInElements = elements.findIndex((el: any) => el.questionId === questionID);
@@ -56,6 +65,48 @@ const QuestionMenu = memo(function QuestionMenu({ questionID, position, index }:
     if (loadingDeleteData || loadingDuplicateData) return;
     setAnchorEl(null);
   }, []);
+
+
+  const handleCheckDependency = () => {
+    checkDependency(
+      {
+        formBuilderId: id,
+        questionId: questionID
+      },
+      {
+        onSuccess: ({ response }) => {
+          if (response) {
+            setHasDependencies(true);
+          } else {
+            handleDelete();
+          }
+        },
+      },
+    );
+  };
+
+
+  const handleDelete = async () => {
+    try {
+      setLoadingDeleteData(true);
+      const res = await AxiosApi.delete(`/question/${questionID}`);
+      if (res?.data?.response) {
+        removeElement(questionID);
+      } else {
+        toast.error('عملیات ناموفق بود مجددا تلاش نمایید');
+      }
+    } catch (error) {
+      toast.error('خطایی رخ داده است');
+    } finally {
+      setAnchorEl(null);
+      setHasDependencies(false);
+      setLoadingDeleteData(false);
+    }
+  };
+
+  const toggleDependencies = () => {
+    setHasDependencies((prev) => !prev);
+  };
 
   return (
     <Fragment>
@@ -137,31 +188,37 @@ const QuestionMenu = memo(function QuestionMenu({ questionID, position, index }:
               justifyContent: 'space-between',
               color: '#FA4D56',
             }}
-            onClick={async (e) => {
-              e.stopPropagation();
-              try {
-                setLoadingDeleteData(true);
-                const res = await AxiosApi.delete(`/question/${questionID}`);
-                if (res?.data?.response) {
-                  removeElement(questionID);
-                } else {
-                  toast.error('عملیات ناموفق بود مجددا تلاش نمایید');
-                }
-              } catch (error) {
-                toast.error('خطایی رخ داده است');
-              } finally {
-                setAnchorEl(null);
-                setLoadingDeleteData(false);
-              }
-            }}
+            onClick={handleCheckDependency}
             fullWidth
             disabled={loadingDuplicateData}
-            loading={loadingDeleteData}>
+            loading={loadingDeleteData||checkDependencyLoading}>
             <Typography>حذف</Typography>
             <WeuiDeleteOutlined width={20} height={20} />
           </Button>
         </Menu>
       )}
+
+
+      <ConfirmDialog
+        content='با توجه به اینکه شما از این محاسبه‌گر در شرط‌ها یا محاسبه‌گرهای دیگر استفاده کرده‌اید، حذف آن منجر به پاک شدن خودکار آن شرط‌ها/محاسبه‌گرها خواهد شد.'
+        open={hasDependencies}
+        title='هشدار'
+        loading={loadingDeleteData}
+        onClose={toggleDependencies}
+        cancelText='لغو'
+        action={
+          <Button type='submit' fullWidth disableRipple variant='contained' disabled={loadingDeleteData} sx={{ ...buttonStyles, ...buttonStylesError }} onClick={handleDelete}>
+            {loadingDeleteData ? (
+              <>
+                <CircularProgress size={20} color='inherit' thickness={5} style={{ marginLeft: 10 }} />
+                در حال حذف…
+              </>
+            ) : (
+              'حذف'
+            )}
+          </Button>
+        }
+      />
     </Fragment>
   );
 });

@@ -14,7 +14,7 @@ interface Result {
 }
 
 const ResultsPage = () => {
-  const [results, setResults] = useState<Result[]>([]);
+  const [results, setResults] = useState<Result>();
 
   const searchParams = useSearchParams();
   const search = searchParams.get('name');
@@ -48,16 +48,14 @@ const ResultsPage = () => {
           <Image src='/images/calc/ic_empty_report.svg' alt='سایا لوگو' width={416} height={250} priority draggable={false} className='w-full sm:w-[50%] lg:w-[450px]' />
 
           <div className='p-8 pt-0 max-w-[600px]'>
-            {results?.map((result, index) => (
-              <div key={index} className='mb-4 last:mb-0'>
+              <div className='mb-4 last:mb-0'>
                 {/* <h2 className="text-right text-[15px] font-bold text-[#161616] mb-1"></h2> */}
-                {result.resultRows.map((row, rowIndex) => (
+                {results?.resultRows?.map((row, rowIndex) => (
                   <p key={rowIndex} className='text-justify font-medium text-[#161616] mb-2'>
                     {row.row}
                   </p>
                 ))}
               </div>
-            ))}
           </div>
         </div>
       </div>

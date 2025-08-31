@@ -9,6 +9,7 @@ const publicMethodSchema = z.object({
   formId: z.union([z.string(), z.number()]),
   publicationMainPageMethod: z.boolean(),
   capacityPublicLink: z.number().min(0),
+  showReportForResponder: z.boolean(),
 });
 
 export async function POST(req: Request) {

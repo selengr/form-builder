@@ -15,7 +15,7 @@
     "url": "http://gitlab.fardup.ir/fardup/psya_client/issues"
   },
   "scripts": {
-    "dev": "next dev -p 80 --turbo",
+    "dev": "next dev -p 80",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

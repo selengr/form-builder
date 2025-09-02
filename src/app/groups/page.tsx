@@ -167,13 +167,13 @@ export default function GroupsPage() {
           </div>
         </div>
 
-        <div className='flex justify-center flex-1 overflow-y-auto pb-6 min-h-0'>
+        <div className='flex justify-center flex-1 pb-6 min-h-0'>
           {isLoading ? (
             <p className='text-gray-600'>در حال بارگذاری گروه‌ها...</p>
           ) : isError ? (
             <p className='text-red-500'>خطا در بارگذاری گروه‌ها: {(error as Error).message}</p>
           ) : (
-            <div className='w-full max-w-lg flex flex-col gap-[10px]'>
+            <div className='w-full max-w-lg flex flex-col gap-[10px] overflow-y-auto'>
               {data?.pages.flatMap((page) =>
                 page.groups.map((group) => (
                   <GroupListItem key={group.id} group={group} onViewGroup={handleViewGroup} onDeleteGroup={handleDeleteGroup} />

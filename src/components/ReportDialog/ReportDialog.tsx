@@ -87,8 +87,8 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport }: Re
 
       if (!res.ok) {
         const errorData = await res.json();
-        let err = JSON.parse(errorData.error)
-        let text = err.message[0].title
+        const err = JSON.parse(errorData?.error ?? "{}");
+        const text = err?.message?.[0]?.title || "خطا در ارسال گزارش";
         toast.error(text);
       } else {
         await res.json();

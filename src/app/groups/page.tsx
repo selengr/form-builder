@@ -94,12 +94,12 @@ export default function GroupsPage() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => {
+      (entries) => {debugger
         if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
           fetchNextPage();
         }
       },
-      { threshold: 1 }
+      // { threshold: 1 }
     );
 
     if (loadMoreRef.current) {

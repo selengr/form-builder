@@ -23,7 +23,7 @@ interface FinishStepProps {
 
 export function FinishStep({ question, takePartId, formName, replace, formId, isReportDialogOpen, handleOpenReportDialog, handleCloseReportDialog }: FinishStepProps) {
   const { mutate } = useShowResultUser();
-
+// test
   useEffect(() => {
     if (question?.showReportForResponder) {
       mutate({

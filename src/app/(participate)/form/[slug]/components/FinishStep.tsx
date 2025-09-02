@@ -25,7 +25,7 @@ export function FinishStep({ question, takePartId, formName, replace, formId, is
   const { mutate } = useShowResultUser();
 // test
   useEffect(() => {
-    if (!question?.showReportForResponder) {
+    if (question?.showReportForResponder) {
       mutate({
         data: { formId: question.formId, takePartId },
         name: formName,

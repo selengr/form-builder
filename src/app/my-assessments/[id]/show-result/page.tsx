@@ -28,7 +28,6 @@ const ResultsPage = () => {
       localStorage.removeItem("Show_User_Solo_Result");
     };
   }, []);
-  // test pipelines
 
   return (
      <div className='w-full min-h-screen h-full px-4 py-4 bg-[#f7f7f7]'>

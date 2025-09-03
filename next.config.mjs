@@ -29,7 +29,7 @@ const nextConfig = {
         ],
     },
     compiler:{
-        removeConsole:true,
+//         removeConsole:true,
         styledComponents:true,
     }
 };

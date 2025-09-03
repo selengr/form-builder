@@ -3,9 +3,10 @@ import { TConditionData, TSubConditionData } from '@/lib/ConditionFormSchema';
 
 interface IConditionCardOperatorProps {
   condition: IGetCondition;
+  qacWithOutFilterOptions?: any[];
 }
 
-export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ condition }) => {
+export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ condition, qacWithOutFilterOptions }) => {
   const parseCondition: TConditionData = JSON.parse(condition?.frontConditionData);
 
   const formatValue = (item: TSubConditionData) => {
@@ -20,7 +21,8 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
       CALCULATION: ['MULTIPLE_CHOICE', 'TEXT_FIELD_NUMBER', 'SPECTRAL', 'CALCULATION'],
     };
     if (operatorMapping[operatorType]?.includes(questionType)) {
-      return item.operatorType?.split('@')[1] || '';
+      const find: any = item.value
+      return valueFound(find.split('@')[0]);
     }
     return item.value?.toString()?.split('@')[0] || '';
   };
@@ -30,18 +32,60 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
     '&&': 'و',
   };
 
+  const valueFound = (compared: string) => {
+    if (!parseCondition?.returnQuestionId) return "null";
+
+    const found = qacWithOutFilterOptions?.find(
+      (val) => val?.value.includes(compared)
+    );
+    return found?.label ?? "null";
+  };
+
+  const returnQuestionIdFound = () => {
+    if (!parseCondition?.returnQuestionId) return "null";
+
+    const compared = parseCondition?.returnQuestionId?.split('@')[0]
+    const found = qacWithOutFilterOptions?.find(
+      (val) => val?.value.includes(compared)
+    );
+    return found?.label ?? "null";
+  };
+
+  const elseQuestionIdFound = () => {
+    if (!parseCondition?.returnQuestionId) return "null";
+
+    const compared = parseCondition?.elseQuestionId?.split('@')[0]
+
+    const found = qacWithOutFilterOptions?.find(
+      (val) => val?.value.includes(compared)
+    );
+    return found?.label ?? "null";
+  };
+
   return (
     <div className='flex flex-col'>
       {parseCondition?.subConditions?.map((item: TSubConditionData) => {
         const logicalOperator = item.logicalOperator ? logicalOperatorMap[item.logicalOperator] || 'اگر' : 'اگر';
         const conditionType = item.conditionType?.split('@')[1];
-        const questionType = item.questionType?.split('@')[1];
         const formattedValue = formatValue(item);
+
+        const extractedFromList = () => {
+          if (!item?.questionType) return "null";
+
+          const compared = item.questionType.split('@')[0];
+
+          const found = qacWithOutFilterOptions?.find(
+            (val) => val?.value.includes(compared)
+          );
+          return found?.label ?? "null";
+        };
+
+
 
         return (
           <div key={item.id} className='flex flex-row gap-2'>
             <span className='text-[#161616] text-sm'>{logicalOperator}</span>
-            <span className='text-[#1758BA] text-sm'>{questionType}</span>
+            <span className='text-[#1758BA] text-sm'>{extractedFromList()}</span>
             <span className='text-[#161616] text-sm'>{conditionType}</span>
             <span className='text-[#1758BA] text-sm'>{formattedValue}</span>
           </div>
@@ -49,12 +93,12 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
       })}
       <span className='text-[#161616] text-sm'>
         <span>در اینصورت برو به: </span>
-        <span className='text-[#1758BA]'>{parseCondition?.returnQuestionId?.split('@')[1]}</span>
+        <span className='text-[#1758BA]'>{returnQuestionIdFound()}</span>
       </span>
       {parseCondition?.elseQuestionId && (
         <span className='text-[#161616] text-sm'>
-          <span>در غیر اینصورت برو به:</span>
-          <span className='text-[#1758BA]'>{parseCondition?.elseQuestionId.toString()?.split('@')[1]}</span>
+          <span>در غیر اینصورت برو به: </span>
+          <span className='text-[#1758BA]'>{elseQuestionIdFound()}</span>
         </span>
       )}
     </div>

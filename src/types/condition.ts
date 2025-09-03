@@ -65,6 +65,7 @@ export interface IConditionCardProps {
   index: number;
   disabled?: boolean;
   condition: IGetCondition;
+  qacWithOutFilterOptions: any[];
 }
 
 export interface ICreateConditionDialogProps {

@@ -8,6 +8,7 @@ import { IGetCondition } from '@/types/condition';
 // view
 import { ConditionCard } from './ConditionCard';
 import CreateCondition from './CreateCondition';
+import { useGetQacWithOutFilterList } from '@/app/reports/create-solo/[id]/_hooks/useGetQacWithOutFilterList';
 
 interface IProps {
   conditions: IGetCondition[];
@@ -15,6 +16,7 @@ interface IProps {
 
 const ConditionList: React.FC<IProps> = ({ conditions }) => {
   const { formData, isLoading } = useFormData();
+  const { qacWithOutFilterOptions } = useGetQacWithOutFilterList();
 
   return (
     <>
@@ -24,7 +26,8 @@ const ConditionList: React.FC<IProps> = ({ conditions }) => {
           {Array.isArray(conditions) && conditions.length > 0 && (
             <div dir='rtl' className='bg-[#F7F7FF] rounded-lg p-[10px] w-full flex flex-col gap-3  mb-10'>
               {conditions?.map((condition: IGetCondition, index: number) => (
-                <ConditionCard key={idGenerator()} condition={condition} index={index} disabled={isLoading || formData?.formSettingModel?.formStatus !== 'CREATE'} />
+                <ConditionCard  qacWithOutFilterOptions={qacWithOutFilterOptions} 
+                key={idGenerator()} condition={condition} index={index} disabled={isLoading || formData?.formSettingModel?.formStatus !== 'CREATE'} />
               ))}
             </div>
           )}

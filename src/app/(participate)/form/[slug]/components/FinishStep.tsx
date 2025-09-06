@@ -9,9 +9,11 @@ import AnimatedBox from '@/templates/form/AnimatedBox';
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
 import finalStep from '@/../public/images/home-page/finalStep.svg';
 import { useShowResultUser } from '../show-result/hooks/useShowResultUser';
+import BuilderLoading from '@/app/(builder)/builder/[id]/loading';
 
 interface FinishStepProps {
   question: any;
+  showReportForResponder: boolean | null;
   formName: string;
   takePartId: number;
   replace: (path: string) => void;
@@ -21,17 +23,20 @@ interface FinishStepProps {
   formId: any;
 }
 
-export function FinishStep({ question, takePartId, formName, replace, formId, isReportDialogOpen, handleOpenReportDialog, handleCloseReportDialog }: FinishStepProps) {
-  const { mutate } = useShowResultUser();
+export function FinishStep({ question, showReportForResponder, takePartId, formName, replace, formId, isReportDialogOpen, handleOpenReportDialog, handleCloseReportDialog }: FinishStepProps) {
+  const { mutate, isPending } = useShowResultUser();
   
   useEffect(() => {
-    if (question?.showReportForResponder) {
+    if (showReportForResponder) {
       mutate({
         data: { formId: question.formId, takePartId },
         name: formName,
       });
     }
-  }, [])
+  }, [question.formId, takePartId])
+
+  if(isPending) return <BuilderLoading />;
+  if(showReportForResponder) return null
 
   return (
     <div className='w-full flex flex-col p-4 overflow-hidden'>

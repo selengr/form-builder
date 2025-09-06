@@ -20,16 +20,16 @@ const fetchData = async (id: string | string[]) => {
   return response.data;
 };
 
-export const useGetQacWithOutFilter = () => {
+export const useGetQacWithOutFilterList = () => {
   const { id } = useParams();
-  const { data, isFetching } = useQuery({
-    queryKey: ['QAC_WIHT_OUT_FILTER'],
+  const { data } = useQuery({
+    queryKey: ['QAC_WIHT_OUT_FILTER_LIST'],
     queryFn: () => fetchData(id),
     staleTime: 0,
     gcTime: 600000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    retry: 3,   
+    retry: 3,
   });
 
   const qacWithOutFilterOptions = data?.dataList?.map((item: IConditionQuestionType) => {
@@ -38,7 +38,6 @@ export const useGetQacWithOutFilter = () => {
     const isSpectralDouble = item.extMap.SPECTRAL_TYPE === 'DOMAIN';
     const isTextFieldNumber = item.extMap.TEXT_FIELD_PATTERN === 'NUMBER';
     const isMultiSelect = item.extMap.MULTI_SELECT ? JSON.parse(item.extMap.MULTI_SELECT) : false;
-
     const questionType = isCalculation
       ? `${item.elementStr}*${item.extMap.UNIC_NAME}`
       : isTextFieldDate
@@ -52,14 +51,12 @@ export const useGetQacWithOutFilter = () => {
               : `${item.extMap.QUESTION_TYPE}*${item.extMap.UNIC_NAME || ''}`;
 
     return {
-      value: `${questionType}@${item.caption}`,
+      value: `${questionType}`,
       label: item.caption,
     };
   });
 
   return {
-    isFetchingQacWithOutFilter: isFetching,
-    qacWithOutFilter: data?.dataList,
     qacWithOutFilterOptions,
   };
 };

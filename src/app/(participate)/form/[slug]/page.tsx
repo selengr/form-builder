@@ -31,6 +31,7 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
     hasError,
     takePartId,
     isCurrentFirstQuestion,
+    showReportForResponder
   } = useParticipateForm();
 
   if (firstLoading) return <LoadingScreen />;
@@ -55,6 +56,7 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
     return (
       <FinishStep
         question={question}
+        showReportForResponder={showReportForResponder}
         takePartId={takePartId}
         formName={formName}
         replace={replace}

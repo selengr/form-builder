@@ -34,7 +34,7 @@ const buttonStylesError = {
   },
 };
 
-export function ConditionCard({ index, condition, disabled = true }: IConditionCardProps) {
+export function ConditionCard({ qacWithOutFilterOptions, index, condition, disabled = true }: IConditionCardProps) {
   const [open, setOpen] = useState<boolean>(false);
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -138,7 +138,7 @@ export function ConditionCard({ index, condition, disabled = true }: IConditionC
 
       <div className='rounded-lg p-[10px] flex justify-between w-full cursor-pointer border-[1px] border-[#1758BA] bg-[#fff]'>
         <div className='flex justify-center items-center gap-[10px]'>
-          <ConditionCardOperator condition={condition} />
+          <ConditionCardOperator qacWithOutFilterOptions={qacWithOutFilterOptions} condition={condition} />
         </div>
       </div>
 

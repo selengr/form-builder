@@ -29,6 +29,7 @@ export const useParticipateForm = () => {
   const [answerId, setAnswerId] = useState<number>();
   const [formName, setFormName] = useState('');
   const [firstQuestionId, setFirstQuestionId] = useState<number | string | null>(null);
+  const [showReportForResponder, setShowReportForResponder] = useState<boolean>(false);
   const [realFormID, setRealFormID] = useState();
   const [hasError, setHasError] = useState<HasError>({ status: false, message: '' });
   const [limitation, setLimitation] = useState<ILimitation>({
@@ -68,7 +69,7 @@ export const useParticipateForm = () => {
 
         if (q.questionType === 'SPECTRAL'
 
-          
+
         ) {
           if (spectralType === 'DOMAIN') {
             value = previousAnswers.map(a => Number(a.answer));
@@ -273,10 +274,13 @@ export const useParticipateForm = () => {
         questionId: question.questionId,
         answerList,
       });
+      if (res.data.questionId) {
+        initializeQuestion(res.data, res.data.oldAnswers ?? []);
+      } else {
+        setFinishPage(true);
+        setShowReportForResponder(res.data?.showReportForResponder);
+      }
 
-      res.data.questionId
-        ? initializeQuestion(res.data, res.data.oldAnswers ?? [])
-        : setFinishPage(true);
     } catch (e) {
       console.error('Error in handleNext:', e);
     } finally {
@@ -337,5 +341,6 @@ export const useParticipateForm = () => {
     hasError,
     realFormID,
     isCurrentFirstQuestion,
+    showReportForResponder
   };
 };

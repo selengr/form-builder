@@ -18,7 +18,7 @@ const ConditionList: React.FC<IProps> = ({ conditions }) => {
   const { formData, isLoading } = useFormData();
   const { qacWithOutFilterOptions } = useGetQacWithOutFilterList();
 
-  return (
+  return (      
     <>
       <div className='w-full max-w-[530px] -mr-3'>{formData?.formSettingModel?.formStatus === 'CREATE' && <CreateCondition />}</div>
       <div dir='rtl' className='w-full overflow-y-auto h-full flex justify-center'>

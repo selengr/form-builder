@@ -38,7 +38,6 @@ export const useGetQacWithOutFilterList = () => {
     const isSpectralDouble = item.extMap.SPECTRAL_TYPE === 'DOMAIN';
     const isTextFieldNumber = item.extMap.TEXT_FIELD_PATTERN === 'NUMBER';
     const isMultiSelect = item.extMap.MULTI_SELECT ? JSON.parse(item.extMap.MULTI_SELECT) : false;
-debugger
     const questionType = isCalculation
       ? `${item.elementStr}*${item.extMap.UNIC_NAME}`
       : isTextFieldDate

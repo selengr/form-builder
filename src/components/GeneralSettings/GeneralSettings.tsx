@@ -85,7 +85,7 @@ const IconButtonContainer = ({ children }: { children: React.ReactNode }) => (
 export default function GeneralSettings({ handleOpen, formId, formData }: GeneralSettingsProps) {
   const { push } = useRouter()
   const FINAL_LINK = `${DEFAULT_LINK}/${formData.publicLink}`;
-  const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(false);
+  const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(formData?.showReportForResponder || false);
   const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false);
 
   const queryClient = useQueryClient();

@@ -39,6 +39,7 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
       (val) => val?.value.includes(compared)
     );
     return found?.label ?? "null";
+    
   };
 
   const returnQuestionIdFound = () => {

@@ -29,7 +29,7 @@ export const useGetQacWithOutFilter = () => {
     gcTime: 600000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    retry: 3,
+    retry: 3,   
   });
 
   const qacWithOutFilterOptions = data?.dataList?.map((item: IConditionQuestionType) => {

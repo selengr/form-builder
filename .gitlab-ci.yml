@@ -29,17 +29,25 @@ compile-job:
     - sharemodel-ci
   only:
     - newpl1
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .next/cache
+      - node_modules
+    policy: pull-push
   script:
-  - set +e
-  - export NVM_DIR="$HOME/.nvm"
-  - [ -s "$NVM_DIR/nvm.sh" ]
-  -  \. "$NVM_DIR/nvm.sh"
-  - rm -rf .env.local
-  - rm -rf node_modules package-lock.json
-  - nvm use 22
-  - npm i -g npm
-  - npm i -f
-  - npm run build
+    - set +e
+    - export NVM_DIR="$HOME/.nvm"
+    - [ -s "$NVM_DIR/nvm.sh" ]
+    -  \. "$NVM_DIR/nvm.sh"
+    - rm -rf .env.local
+    - rm -rf node_modules package-lock.json
+    - nvm use 22
+    - npm i -g npm
+    - npm i -f
+    - npm run build
 
   #- mvn clean package -DskipTests
   artifacts:

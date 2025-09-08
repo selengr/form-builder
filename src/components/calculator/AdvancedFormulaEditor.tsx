@@ -131,8 +131,13 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
       const prevElement = elements[cursorIndex - 1];
       return prevElement.type === 'OPERATOR' || (prevElement.type === 'PARENTHESIS' && prevElement.content === '(') || (prevElement.type === 'AVG_PARENTHESIS' && prevElement.content === '(');
     } else {
-      if (cursorIndex === 0) return false;
       const prevElement = elements[cursorIndex - 1];
+      if (content === ')') {
+        if (prevElement.type === "NEW_FnFx") {
+          return false
+        }
+      }
+      if (cursorIndex === 0) return false;
       return (
         prevElement.type === 'NEW_FIELD' ||
         prevElement.type === 'NUMBER' ||
@@ -169,6 +174,9 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
       return !(prevElement?.type === 'OPERATOR' && nextElement?.type === 'OPERATOR');
     }
 
+    if (prevElement?.type === "NEW_FnFx" && nextElement?.type === "AVG_PARENTHESIS") {
+      return false
+    }
     if (prevElement?.type === 'OPERATOR' && nextElement?.type === 'OPERATOR') {
       return false;
     }
@@ -191,7 +199,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
           if (elements[i].content === '(') {
             parenthesisCount++;
           } else if (elements[i].content === ')') {
-            if (parenthesisCount === 0) {
+            if (parenthesisCount === 1) {
               endIndex = i;
               break;
             }
@@ -202,7 +210,9 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
       elementsToRemove = endIndex - cursorIndex + 2;
       mainIndex.current += -elementsToRemove;
     } else if (elements[cursorIndex - 1].type === 'AVG_PARENTHESIS') {
-      // Prevent removing avg parentheses individually
+      toast.info("این پرانتز مربوط به تابع میانگین است.", {
+        description: "لطفاً برای حذف تابع میانگین، مکان‌نما را بلافاصله بعد از تابع قرار دهید."
+      })
       return;
     }
 

@@ -37,7 +37,7 @@ const ResponsiveContainer: FC<{ children: ReactNode }> = ({ children }) => {
       <StyledBox>
         <ContentBox>
           <Box></Box>
-          {/*{children}*/}
+          {children}
         </ContentBox>
       </StyledBox>
     </div>

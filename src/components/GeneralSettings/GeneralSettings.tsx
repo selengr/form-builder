@@ -95,7 +95,7 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
     defaultValues: {
       link: FINAL_LINK,
       publicationMainPageMethod: formData?.formPublishSetting?.publicationMainPageMethod || false,
-      capacityPublicLink: formData?.formPublishSetting?.capacityPublicLink || 0,
+      capacityPublicLink: 0,
       showReportForResponder: formData?.showReportForResponder || false,
     },
   });
@@ -300,8 +300,8 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
           type='submit'
           fullWidth
           variant='contained'
-          // disabled={isSubmitting || !isDirty || methods.watch('capacityPublicLink') === 0}
-          disabled={isSubmitting || methods.watch('capacityPublicLink') < 1}
+          disabled={isSubmitting}
+          loading={isSubmitting}
           sx={{
             bgcolor: 'primary.main',
             height: 54,
@@ -315,7 +315,9 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
               boxShadow: 'none',
             },
           }}>
-          افزودن به سبد خرید
+          {methods.watch('capacityPublicLink') > 0
+            ? 'افزودن به سبد خرید'
+            : 'اعمال تغییرات'}
         </Button>
 
         <Button

@@ -56,7 +56,6 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
   );
 
   const onSubmit = (input: TConditionFormData, e: any) => {
-    debugger;
     e?.preventDefault();
     let flag: boolean = true;
 

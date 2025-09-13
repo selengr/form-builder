@@ -20,7 +20,6 @@ export default function FormLimitation({ type, setLimitation, setQuestion, addQu
   const isPhone = type === 'PHONE_NUMBER';
   const label = isPhone ? 'شماره موبایل' : 'ایمیل';
   const placeholder = isPhone ? '09129876543' : 'example@gmail.com';
-
   return (
     <>
       <AnimatedBox key='form-limitation'>

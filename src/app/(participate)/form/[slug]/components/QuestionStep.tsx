@@ -61,7 +61,7 @@ export function QuestionStep({
         </div>
       </div>
 
-      <ReportDialog open={isReportDialogOpen} onClose={handleCloseReportDialog} formId={formId} typeOfReport={'FORM'} />
+      <ReportDialog questionId={question?.questionId} open={isReportDialogOpen} onClose={handleCloseReportDialog} formId={formId} typeOfReport={'FORM'} />
     </div>
   );
 }

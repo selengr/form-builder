@@ -10,10 +10,11 @@ interface ReportDialogProps {
   onClose: () => void;
   formId: any;
   userPhone?: any;
+  questionId? : number
   typeOfReport: 'REPORT' | 'FORM';
 }
 
-export default function ReportDialog({ open, onClose, formId, typeOfReport, userPhone }: ReportDialogProps) {
+export default function ReportDialog({ open, onClose, formId, typeOfReport, userPhone, questionId }: ReportDialogProps) {
   const [reportData, setReportData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -71,6 +72,7 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport, user
     const { userInfo } = await fetchUserInfo();
     const username = userInfo?.user?.username || userPhone || '';
 
+    
     try {
       const res = await fetch('/api/report', {
         method: 'POST',
@@ -83,6 +85,7 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport, user
           description: reportText.trim(),
           responseForDestroyerReport: selectedReportKey,
           typeOfReport,
+          questionId
         }),
       });
 

@@ -72,9 +72,14 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
 
   const parentSubmit = () => {
     if (handleSubmit()) {
-      reset()
       setDialogState('report');
     }
+  };
+  const handleCloseReportDialog = () => {
+    if (handleSubmit()) {
+      reset()
+    }
+    setDialogState('none')
   };
 
   return (
@@ -141,7 +146,7 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
         <ReportDialog
           userPhone={formValue}
           open
-          onClose={() => setDialogState('none')}
+          onClose={handleCloseReportDialog}
           formId={data.id}
           typeOfReport="FORM"
         />

@@ -72,6 +72,17 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport, user
     const { userInfo } = await fetchUserInfo();
     const username = userInfo?.user?.username || userPhone || '';
 
+    const body: any = {
+      username,
+      formId,
+      description: reportText.trim(),
+      responseForDestroyerReport: selectedReportKey,
+      typeOfReport,
+    };
+
+    if (questionId) {
+      body.questionId = questionId;
+    }
     
     try {
       const res = await fetch('/api/report', {
@@ -79,14 +90,7 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport, user
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          username,
-          formId,
-          description: reportText.trim(),
-          responseForDestroyerReport: selectedReportKey,
-          typeOfReport,
-          questionId
-        }),
+        body: JSON.stringify(body),
       });
 
       if (!res.ok) {

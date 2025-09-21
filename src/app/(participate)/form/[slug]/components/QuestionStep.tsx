@@ -1,34 +1,32 @@
 'use client';
 
 import React from 'react';
-import { useState } from 'react';
+// hooks
+import { useReportFlow } from '@/hooks/useReportFlow';
+// templates
 import AnimatedBox from '@/templates/form/AnimatedBox';
 import ActionButtons from '@/templates/form/ActionButtons';
+// components
+import LoginWithPhone from '@/components/common/loginWithPhone';
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
 import Header from '@/app/(participate)/form/[slug]/components/header';
-import LoginWithPhone from '@/components/common/loginWithPhone';
-import { fetchUserInfo } from '@/lib/auth';
-import { useLoginWithPhone } from '@/hooks/useLoginWithPhone';
-import { useReportFlow } from '@/hooks/useReportFlow';
 
 interface QuestionStepProps {
+  formId: any;
   question: any;
-  formName: string;
   formData: any;
+  formName: string;
+  prevBlock: boolean;
   ValidatedInput: any;
-  handleValidationUpdate: any;
   handleNext: () => void;
   handlePrev: () => void;
   questionLoading: boolean;
-  prevBlock: boolean;
   isReportDialogOpen: boolean;
+  handleValidationUpdate: any;
+  replace: (path: string) => void;
   handleOpenReportDialog: () => void;
   handleCloseReportDialog: () => void;
-  formId: any;
-  replace: (path: string) => void;
 }
-
-type DialogState = 'none' | 'login' | 'report';
 
 export function QuestionStep({
   question,
@@ -57,33 +55,6 @@ export function QuestionStep({
     handleCloseReport,
     setDialogState,
   } = useReportFlow();
-
-  // const handleReportDialog = async () => {
-  //   const { userInfo } = await fetchUserInfo();
-  //   const username = userInfo?.user?.username || null;
-
-  //   if (username) {
-  //     setDialogState('report');
-  //     handleOpenReportDialog()
-  //   } else {
-  //     setDialogState('login');
-  //   }
-  // };
-
-  // const parentSubmit = () => {
-  //   if (handleSubmit()) {
-  //     setDialogState('report');
-  //     handleOpenReportDialog()
-  //   }
-  // };
-
-  // const handleCloseReport = () => {
-  //   if (handleSubmit()) {
-  //     reset()
-  //   }
-  //   handleCloseReportDialog()
-  //   setDialogState('none')
-  // };
 
   return (
     <div className='w-full flex flex-col p-4 overflow-hidden'>

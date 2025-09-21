@@ -3,13 +3,17 @@
 import Image from 'next/image';
 import { Button } from '@mui/material';
 import React, { useEffect } from 'react';
+// templates
+import AnimatedBox from '@/templates/form/AnimatedBox';
+// images
+import finalStep from '@/../public/images/home-page/finalStep.svg';
 // components
 import { Header } from './header';
-import AnimatedBox from '@/templates/form/AnimatedBox';
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
-import finalStep from '@/../public/images/home-page/finalStep.svg';
-import { useShowResultUser } from '../show-result/hooks/useShowResultUser';
 import BuilderLoading from '@/app/(builder)/builder/[id]/loading';
+// hooks
+import { useReportFlow } from '@/hooks/useReportFlow';
+import { useShowResultUser } from '../show-result/hooks/useShowResultUser';
 
 interface FinishStepProps {
   question: any;
@@ -22,6 +26,17 @@ interface FinishStepProps {
 
 export function FinishStep({ question, showReportForResponder, takePartId, formName, replace, formId}: FinishStepProps) {
   const { mutate, isPending } = useShowResultUser();
+     const {
+      dialogState,
+      formValue,
+      error,
+      helperText,
+      handleChange,
+      handleReportDialog,
+      handleLoginSubmit,
+      handleCloseReport,
+      setDialogState,
+    } = useReportFlow();
   
   useEffect(() => {
     if (showReportForResponder) {
@@ -38,7 +53,7 @@ export function FinishStep({ question, showReportForResponder, takePartId, formN
   return (
     <div className='w-full flex flex-col p-4 overflow-hidden'>
       <div className='flex flex-col bg-white rounded-xl h-[calc(100vh-120px)] md:h-full max-h-screen'>
-        <Header handleOpenReportDialog={handleOpenReportDialog} replace={replace} formName={'پایان'} />
+        <Header handleOpenReportDialog={handleReportDialog} replace={replace} formName={'پایان'} />
 
         <div className='flex-1 flex items-center justify-center overflow-y-auto px-4'>
           <div className='w-full max-w-3xl'>

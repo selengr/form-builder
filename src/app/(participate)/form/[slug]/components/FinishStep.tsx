@@ -17,13 +17,10 @@ interface FinishStepProps {
   formName: string;
   takePartId: number;
   replace: (path: string) => void;
-  isReportDialogOpen: boolean;
-  handleOpenReportDialog: () => void;
-  handleCloseReportDialog: () => void;
   formId: any;
 }
 
-export function FinishStep({ question, showReportForResponder, takePartId, formName, replace, formId, isReportDialogOpen, handleOpenReportDialog, handleCloseReportDialog }: FinishStepProps) {
+export function FinishStep({ question, showReportForResponder, takePartId, formName, replace, formId}: FinishStepProps) {
   const { mutate, isPending } = useShowResultUser();
   
   useEffect(() => {

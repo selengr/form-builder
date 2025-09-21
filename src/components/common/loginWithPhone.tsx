@@ -55,7 +55,7 @@ export default function LoginWithPhone({
 
           <TextField
             placeholder={placeholder}
-            type={'tel'}
+            type="tel"
             value={formValue}
             onChange={(e) => onChange(e.target.value)}
             error={error}

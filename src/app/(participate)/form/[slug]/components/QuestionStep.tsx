@@ -21,11 +21,8 @@ interface QuestionStepProps {
   handleNext: () => void;
   handlePrev: () => void;
   questionLoading: boolean;
-  isReportDialogOpen: boolean;
   handleValidationUpdate: any;
   replace: (path: string) => void;
-  handleOpenReportDialog: () => void;
-  handleCloseReportDialog: () => void;
 }
 
 export function QuestionStep({
@@ -37,9 +34,6 @@ export function QuestionStep({
   handleNext,
   handlePrev,
   questionLoading,
-  isReportDialogOpen,
-  handleOpenReportDialog,
-  handleCloseReportDialog,
   formId,
   replace,
   prevBlock,

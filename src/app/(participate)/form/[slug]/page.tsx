@@ -83,9 +83,6 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
       handlePrev={handlePrev}
       prevBlock={isCurrentFirstQuestion}
       questionLoading={questionLoading}
-      isReportDialogOpen={isReportDialogOpen}
-      handleOpenReportDialog={() => setIsReportDialogOpen(true)}
-      handleCloseReportDialog={() => setIsReportDialogOpen(false)}
       formId={realFormID}
       replace={replace}
     />

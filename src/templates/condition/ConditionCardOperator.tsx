@@ -9,12 +9,32 @@ interface IConditionCardOperatorProps {
 export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ condition, qacWithOutFilterOptions }) => {
   const parseCondition: TConditionData = JSON.parse(condition?.frontConditionData);
 
+  function findOptionLabel(item: any, key: string) {
+    const option = item.options?.[key];
+    return option ? option[1] : undefined;
+  }
+
   const formatValue = (item: TSubConditionData) => {
     const operatorType = item.operatorType?.split('@')[0];
     const questionType = item.questionType?.split('*')[0];
-    if (operatorType === 'OPTION' && questionType === 'MULTIPLE_CHOICE_MULTI_SELECT') {
-      return Array.isArray(item.value) ? item.value.map((val: string) => val.split('@')[1]).join(' , ') : '';
+    if (operatorType === 'OPTION' && questionType === 'MULTIPLE_CHOICE_MULTI_SELECT' || questionType === "MULTIPLE_CHOICE") {
+      const questionId = item.questionType?.split('*')[1];
+      const compared = questionId?.split('@')[0];
+      const found = qacWithOutFilterOptions?.find(
+        (val) => val?.value.includes(compared)
+      );
+
+      if (found) {
+        if (Array.isArray(item.value)) {
+          return item.value
+            .map((val: string) => findOptionLabel(found, val.split('@')[0]))
+            .join(", ");
+        } else {
+          return findOptionLabel(found, (item.value as string).split('@')[0]);
+        }
+      }
     }
+
     const operatorMapping: Record<string, string[]> = {
       OPTION: ['MULTIPLE_CHOICE', 'TEXT_FIELD_NUMBER'],
       QUESTION: ['MULTIPLE_CHOICE', 'TEXT_FIELD_NUMBER', 'TEXT_FIELD_DATE', 'CALCULATION', 'SPECTRAL'],
@@ -22,7 +42,9 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
     };
     if (operatorMapping[operatorType]?.includes(questionType)) {
       const find: any = item.value
-      return valueFound(find.split('@')[0]);
+      if (qacWithOutFilterOptions) {
+        return valueFound(find.split('@')[0]);
+      } else return ""
     }
     return item.value?.toString()?.split('@')[0] || '';
   };
@@ -33,13 +55,13 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
   };
 
   const valueFound = (compared: string) => {
-    if (!parseCondition?.returnQuestionId) return "null";
 
     const found = qacWithOutFilterOptions?.find(
       (val) => val?.value.includes(compared)
     );
+    debugger
     return found?.label ?? "null";
-    
+
   };
 
   const returnQuestionIdFound = () => {

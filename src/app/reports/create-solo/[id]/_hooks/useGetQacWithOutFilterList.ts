@@ -38,18 +38,27 @@ export const useGetQacWithOutFilterList = () => {
     const isSpectralDouble = item.extMap.SPECTRAL_TYPE === 'DOMAIN';
     const isTextFieldNumber = item.extMap.TEXT_FIELD_PATTERN === 'NUMBER';
     const isMultiSelect = item.extMap.MULTI_SELECT ? JSON.parse(item.extMap.MULTI_SELECT) : false;
+    const isMultiCHOICE = item.extMap.MULTI_SELECT === "false" && item.extMap.QUESTION_TYPE ==="MULTIPLE_CHOICE" ? !JSON.parse(item.extMap.MULTI_SELECT) : false;
     const questionType = isCalculation
       ? `${item.elementStr}*${item.extMap.UNIC_NAME}`
       : isTextFieldDate
         ? `${item.extMap.QUESTION_TYPE}_${item.extMap.TEXT_FIELD_PATTERN}*${item.extMap.UNIC_NAME}`
         : isMultiSelect
-          ? `${item.extMap.QUESTION_TYPE}_MULTI_SELECT*${item.extMap.UNIC_NAME}`
+          ? `${item.extMap.QUESTION_TYPE}_MULTI_SELECT*${item.extMap.UNIC_NAME}` 
+          : isMultiCHOICE
+             ? `${item.extMap.QUESTION_TYPE}*${item.extMap.UNIC_NAME}` 
           : isSpectralDouble
             ? `${item.extMap.QUESTION_TYPE}_${item.extMap.SPECTRAL_TYPE}*${item.extMap.UNIC_NAME}`
             : isTextFieldNumber
               ? `${item.extMap.QUESTION_TYPE}_${item.extMap.TEXT_FIELD_PATTERN}*${item.extMap.UNIC_NAME}`
               : `${item.extMap.QUESTION_TYPE}*${item.extMap.UNIC_NAME || ''}`;
-
+    if (isMultiSelect || isMultiCHOICE) {
+      return {
+        value: `${questionType}`,
+        label: item.caption,
+        options: item.extMap.OPTIONS
+      };
+    }
     return {
       value: `${questionType}`,
       label: item.caption,

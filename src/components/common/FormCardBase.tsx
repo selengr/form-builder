@@ -11,7 +11,7 @@ import BugIcon from '@/../public/images/home-page/menu/bugIcon.svg';
 import { useShowResultUser } from '@/app/my-assessments/[id]/show-result/hooks/useShowResultUser';
 import { fetchUserInfo } from '@/lib/auth';
 import LoginWithPhone from './loginWithPhone';
-import { useLoginWithPhone } from './useLoginWithPhone';
+import { useLoginWithPhone } from '../../hooks/useLoginWithPhone';
 
 interface FormCardBaseProps {
   data: any;
@@ -46,9 +46,9 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
   const [dialogState, setDialogState] = useState<DialogState>('none');
   const { mutate } = useShowResultUser();
 
-  const {
-    formValue, error, reset, helperText, handleChange, handleSubmit
-  } = useLoginWithPhone('');
+    const {
+      formValue, error, reset, helperText, handleChange, handleSubmit
+    } = useLoginWithPhone('');
 
   const handleClick = () => {
     if (!buttonLink) return;

@@ -1,10 +1,11 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { IconButton } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { IoIosArrowForward } from 'react-icons/io';
 import { useSearchParams } from 'next/navigation';
+import BugIcon from '@/../public/images/home-page/menu/bugIcon.svg';
 
 interface ResultRow {
   row: string;
@@ -43,6 +44,13 @@ const ResultsPage = () => {
             </IconButton>
           </Link>
           <span className='text-[#161616]'>گزارش فرم {search ?? '---'}</span>
+            <Button 
+            // onClick={handleOpenReportDialog} 
+            size='medium' className='rounded-full'
+             sx={{ position: 'absolute', right: '8px' }} endIcon={<Image alt='report' 
+            src={BugIcon} height={24} width={24} />}>
+        <span className='text-xs'>گزارش</span>
+      </Button>
         </div>
 
         <div className='overflow-y-auto w-full flex justif flex-col items-center'>
@@ -60,6 +68,33 @@ const ResultsPage = () => {
           </div>
         </div>
       </div>
+
+      {dialogState === 'login' && (
+              <LoginWithPhone
+                open
+                onClose={() => setDialogState('none')}
+                label={'شماره موبایل'}
+                placeholder={'09129876543'}
+                formValue={formValue}
+                error={error}
+                helperText={helperText}
+                onChange={handleChange}
+                onSubmit={handleLoginSubmit}
+              />
+            )}
+      
+            {/* دیالوگ گزارش */}
+            {dialogState === 'report' && (
+              <ReportDialog
+                userPhone={formValue}
+                questionId={question?.questionId}
+                open
+                onClose={handleCloseReport}
+                formId={formId}
+                typeOfReport={'FORM'}
+              />
+            )}
+            
     </div>
   );
 };

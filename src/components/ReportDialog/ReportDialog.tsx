@@ -11,10 +11,11 @@ interface ReportDialogProps {
   formId: any;
   userPhone?: any;
   questionId? : number
-  typeOfReport: 'REPORT' | 'FORM';
+  resultReportText? : string
+  typeOfReport: 'REPORT' | 'FORM' | 'RESULT_REPORT';
 }
 
-export default function ReportDialog({ open, onClose, formId, typeOfReport, userPhone, questionId }: ReportDialogProps) {
+export default function ReportDialog({ open, onClose, formId, typeOfReport, userPhone, questionId, resultReportText }: ReportDialogProps) {
   const [reportData, setReportData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,11 +54,10 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport, user
     if (!open) {
       setSelectedReportKey(null);
       setReportText('');
-      setReportData([]);
       setError(null);
-      setLoading(false);
     }
   }, [open]);
+
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedReportKey(event.target.value);
@@ -82,6 +82,10 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport, user
 
     if (questionId) {
       body.questionId = questionId;
+    }
+    
+    if (resultReportText) {
+      body.resultReportText = resultReportText;
     }
     
     try {

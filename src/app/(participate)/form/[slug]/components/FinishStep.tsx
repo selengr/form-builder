@@ -9,6 +9,7 @@ import AnimatedBox from '@/templates/form/AnimatedBox';
 import finalStep from '@/../public/images/home-page/finalStep.svg';
 // components
 import { Header } from './header';
+import LoginWithPhone from '@/components/common/loginWithPhone';
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
 import BuilderLoading from '@/app/(builder)/builder/[id]/loading';
 // hooks
@@ -24,20 +25,20 @@ interface FinishStepProps {
   formId: any;
 }
 
-export function FinishStep({ question, showReportForResponder, takePartId, formName, replace, formId}: FinishStepProps) {
+export function FinishStep({ question, showReportForResponder, takePartId, formName, replace, formId }: FinishStepProps) {
   const { mutate, isPending } = useShowResultUser();
-     const {
-      dialogState,
-      formValue,
-      error,
-      helperText,
-      handleChange,
-      handleReportDialog,
-      handleLoginSubmit,
-      handleCloseReport,
-      setDialogState,
-    } = useReportFlow();
-  
+  const {
+    dialogState,
+    formValue,
+    error,
+    helperText,
+    handleChange,
+    handleReportDialog,
+    handleLoginSubmit,
+    handleCloseReport,
+    setDialogState,
+  } = useReportFlow();
+
   useEffect(() => {
     if (showReportForResponder) {
       mutate({
@@ -47,8 +48,8 @@ export function FinishStep({ question, showReportForResponder, takePartId, formN
     }
   }, [question.formId, takePartId])
 
-  if(isPending) return <BuilderLoading />;
-  if(showReportForResponder) return null
+  if (isPending) return <BuilderLoading />;
+  if (showReportForResponder) return null
 
   return (
     <div className='w-full flex flex-col p-4 overflow-hidden'>
@@ -88,7 +89,32 @@ export function FinishStep({ question, showReportForResponder, takePartId, formN
           </div>
         </div>
       </div>
-      <ReportDialog open={isReportDialogOpen} onClose={handleCloseReportDialog} formId={formId} typeOfReport={'FORM'} />
+
+      {dialogState === 'login' && (
+        <LoginWithPhone
+          open
+          onClose={() => setDialogState('none')}
+          label={'شماره موبایل'}
+          placeholder={'09129876543'}
+          formValue={formValue}
+          error={error}
+          helperText={helperText}
+          onChange={handleChange}
+          onSubmit={handleLoginSubmit}
+        />
+      )}
+
+      {/* دیالوگ گزارش */}
+      {dialogState === 'report' && (
+        <ReportDialog
+          userPhone={formValue}
+          questionId={question?.questionId}
+          open
+          onClose={handleCloseReport}
+          formId={formId}
+          typeOfReport={'FORM'}
+        />
+      )}
     </div>
   );
 }

@@ -20,7 +20,7 @@ export const createNewCondition = () => ({
   returnQuestionId: '',
 });
 
-const transformOutputToInput = (conditionJson: IGetCondition): TConditionData => {
+const TransformOutputToInput = (conditionJson: IGetCondition): TConditionData => {
   const { frontConditionData } = conditionJson;
   const { qacWithOutFilterOptions } = useGetQacWithOutFilterList();
 
@@ -58,7 +58,7 @@ const transformOutputToInput = (conditionJson: IGetCondition): TConditionData =>
 
       if (found) {
         if (Array.isArray(subCondition.value)) {
-          let optionList: string[] = []
+          const optionList: string[] = []
           subCondition.value
             .map((val: string, index) => optionList[index] = findOptionLabel(found, val.split('@')[0]))
             .join(", ");
@@ -91,7 +91,7 @@ export const useConditionalForm = (condition: IGetCondition | undefined) => {
   const methods = useForm<TConditionFormData>({
     resolver: zodResolver(ConditionFormSchema),
     defaultValues: {
-      conditions: [condition ? transformOutputToInput(condition) : createNewCondition()],
+      conditions: [condition ? TransformOutputToInput(condition) : createNewCondition()],
     },
   });
 

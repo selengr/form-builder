@@ -15,6 +15,17 @@ interface Result {
 
 const ResultsPage = () => {
   const [results, setResults] = useState<Result>();
+    const {
+      dialogState,
+      formValue,
+      error,
+      helperText,
+      handleChange,
+      handleReportDialog,
+      handleLoginSubmit,
+      handleCloseReport,
+      setDialogState,
+    } = useReportFlow();
 
   const searchParams = useSearchParams();
   const search = searchParams.get('name');
@@ -22,12 +33,22 @@ const ResultsPage = () => {
   useEffect(() => {
     const storedResults = localStorage.getItem('Show_User_Solo_Result');
     if (storedResults) {
-      setResults(JSON.parse(storedResults));
+       try {
+          const parsed: Result = JSON.parse(storedResults);
+          setResults(parsed);
+        } catch (err) {
+          console.error('Failed to parse stored results:', err);
+        }
     }
     return () => {
       localStorage.removeItem("Show_User_Solo_Result");
     };
   }, []);
+
+   const fullText = useMemo(
+      () => results?.resultRows?.map((row) => row.row).join(' ') ?? '',
+      [results]
+    );  
 
   return (
      <div className='w-full min-h-screen h-full px-4 py-4 bg-[#f7f7f7]'>

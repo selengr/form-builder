@@ -1,7 +1,6 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { Button, IconButton } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import { IoIosArrowForward } from 'react-icons/io';
@@ -22,7 +21,6 @@ interface Result {
 }
 
 const ResultsPage = () => {
-  const router = useRouter();
   const [results, setResults] = useState<Result>();
   const {
     dialogState,
@@ -77,7 +75,7 @@ const ResultsPage = () => {
           <span className='text-[#161616]'>گزارش فرم {search ?? '---'}</span>
           <Button
             onClick={handleReportDialog}
-            size='medium' className='rounded-full'
+            size='medium' className='rounded-full absolute left-4'
             sx={{ position: 'absolute', right: '8px' }} endIcon={<Image alt='report'
               src={BugIcon} height={24} width={24} />}>
             <span className='text-xs'>گزارش</span>

@@ -3,13 +3,18 @@
 import Image from 'next/image';
 import { Button } from '@mui/material';
 import React, { useEffect } from 'react';
+// templates
+import AnimatedBox from '@/templates/form/AnimatedBox';
+// images
+import finalStep from '@/../public/images/home-page/finalStep.svg';
 // components
 import { Header } from './header';
-import AnimatedBox from '@/templates/form/AnimatedBox';
+import LoginWithPhone from '@/components/common/loginWithPhone';
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
-import finalStep from '@/../public/images/home-page/finalStep.svg';
-import { useShowResultUser } from '../show-result/hooks/useShowResultUser';
 import BuilderLoading from '@/app/(builder)/builder/[id]/loading';
+// hooks
+import { useReportFlow } from '@/hooks/useReportFlow';
+import { useShowResultUser } from '../show-result/hooks/useShowResultUser';
 
 interface FinishStepProps {
   question: any;
@@ -17,15 +22,23 @@ interface FinishStepProps {
   formName: string;
   takePartId: number;
   replace: (path: string) => void;
-  isReportDialogOpen: boolean;
-  handleOpenReportDialog: () => void;
-  handleCloseReportDialog: () => void;
   formId: any;
 }
 
-export function FinishStep({ question, showReportForResponder, takePartId, formName, replace, formId, isReportDialogOpen, handleOpenReportDialog, handleCloseReportDialog }: FinishStepProps) {
+export function FinishStep({ question, showReportForResponder, takePartId, formName, replace, formId }: FinishStepProps) {
   const { mutate, isPending } = useShowResultUser();
-  
+  const {
+    dialogState,
+    formValue,
+    error,
+    helperText,
+    handleChange,
+    handleReportDialog,
+    handleLoginSubmit,
+    handleCloseReport,
+    setDialogState,
+  } = useReportFlow();
+
   useEffect(() => {
     if (showReportForResponder) {
       mutate({
@@ -35,13 +48,13 @@ export function FinishStep({ question, showReportForResponder, takePartId, formN
     }
   }, [question.formId, takePartId])
 
-  if(isPending) return <BuilderLoading />;
-  if(showReportForResponder) return null
+  if (isPending) return <BuilderLoading />;
+  if (showReportForResponder) return null
 
   return (
     <div className='w-full flex flex-col p-4 overflow-hidden'>
       <div className='flex flex-col bg-white rounded-xl h-[calc(100vh-120px)] md:h-full max-h-screen'>
-        <Header handleOpenReportDialog={handleOpenReportDialog} replace={replace} formName={'پایان'} />
+        <Header handleOpenReportDialog={handleReportDialog} replace={replace} formName={'پایان'} />
 
         <div className='flex-1 flex items-center justify-center overflow-y-auto px-4'>
           <div className='w-full max-w-3xl'>
@@ -76,7 +89,32 @@ export function FinishStep({ question, showReportForResponder, takePartId, formN
           </div>
         </div>
       </div>
-      <ReportDialog open={isReportDialogOpen} onClose={handleCloseReportDialog} formId={formId} typeOfReport={'FORM'} />
+
+      {dialogState === 'login' && (
+        <LoginWithPhone
+          open
+          onClose={() => setDialogState('none')}
+          label={'شماره موبایل'}
+          placeholder={'09129876543'}
+          formValue={formValue}
+          error={error}
+          helperText={helperText}
+          onChange={handleChange}
+          onSubmit={handleLoginSubmit}
+        />
+      )}
+
+      {/* دیالوگ گزارش */}
+      {dialogState === 'report' && (
+        <ReportDialog
+          userPhone={formValue}
+          questionId={question?.questionId}
+          open
+          onClose={handleCloseReport}
+          formId={formId}
+          typeOfReport={'FORM'}
+        />
+      )}
     </div>
   );
 }

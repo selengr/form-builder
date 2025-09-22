@@ -5,7 +5,7 @@ export const destroyReportSchema = z.object({
   description: z.string().min(1),
   username: z.string().min(5),
   responseForDestroyerReport: z.enum(['PRIVACY_VIOLATION', 'INTELLECTUAL_PROPERTY_INFRINGMENT', 'INAPPROPRIATE_CONTENT', 'OTHER']),
-  typeOfReport: z.enum(['REPORT', 'FORM']),
+  typeOfReport: z.enum(['REPORT', 'FORM', 'RESULT_REPORT']),
   questionId: z.number().optional(),
   resultReportText: z.string().optional(),
 });

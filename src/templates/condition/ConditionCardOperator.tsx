@@ -17,7 +17,7 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
   const formatValue = (item: TSubConditionData) => {
     const operatorType = item.operatorType?.split('@')[0];
     const questionType = item.questionType?.split('*')[0];
-    if (operatorType === 'OPTION' && questionType === 'MULTIPLE_CHOICE_MULTI_SELECT' || questionType === "MULTIPLE_CHOICE") {
+    if (operatorType === 'OPTION' && questionType === 'MULTIPLE_CHOICE_MULTI_SELECT' || questionType === "MULTIPLE_CHOICE" && operatorType === 'OPTION') {
       const questionId = item.questionType?.split('*')[1];
       const compared = questionId?.split('@')[0];
       const found = qacWithOutFilterOptions?.find(
@@ -35,16 +35,24 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
       }
     }
 
+    if (operatorType === 'QUESTION' && questionType === "MULTIPLE_CHOICE") {
+        const find: any = item.value
+        if (qacWithOutFilterOptions) {
+          return valueFound(find.split('@')[0]);
+        }
+    }
+
     const operatorMapping: Record<string, string[]> = {
       OPTION: ['MULTIPLE_CHOICE', 'TEXT_FIELD_NUMBER'],
       QUESTION: ['MULTIPLE_CHOICE', 'TEXT_FIELD_NUMBER', 'TEXT_FIELD_DATE', 'CALCULATION', 'SPECTRAL'],
       CALCULATION: ['MULTIPLE_CHOICE', 'TEXT_FIELD_NUMBER', 'SPECTRAL', 'CALCULATION'],
     };
+
     if (operatorMapping[operatorType]?.includes(questionType)) {
       const find: any = item.value
       if (qacWithOutFilterOptions) {
         return valueFound(find.split('@')[0]);
-      } else return ""
+      }
     }
     return item.value?.toString()?.split('@')[0] || '';
   };
@@ -59,7 +67,7 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
     const found = qacWithOutFilterOptions?.find(
       (val) => val?.value.includes(compared)
     );
-    debugger
+
     return found?.label ?? "null";
 
   };

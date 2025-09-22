@@ -1,8 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useFieldArray, useForm } from 'react-hook-form';
-import { ConditionFormSchema, TConditionData, type TConditionFormData, TSubConditionData } from '@/lib/ConditionFormSchema';
 import { idGenerator } from '@/lib/idGenerator';
 import { IGetCondition } from '@/types/condition';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { ConditionFormSchema, TConditionData, type TConditionFormData, TSubConditionData } from '@/lib/ConditionFormSchema';
+import { useGetQacWithOutFilterList } from '@/app/reports/create-solo/[id]/_hooks/useGetQacWithOutFilterList';
 
 export const createNewSubCondition = () => ({
   logicalOperator: '',
@@ -21,8 +22,16 @@ export const createNewCondition = () => ({
 
 const transformOutputToInput = (conditionJson: IGetCondition): TConditionData => {
   const { frontConditionData } = conditionJson;
+  const { qacWithOutFilterOptions } = useGetQacWithOutFilterList();
+
   const conditions = JSON.parse(frontConditionData);
   const { subConditions, returnQuestionId, elseQuestionId } = conditions;
+
+  function findOptionLabel(item: any, key: string) {
+    const option = item.options?.[key];
+    const caption = option ? option[1] : undefined;
+    return `${key}@${caption}`;
+  }
 
   const SubConditionsData: TSubConditionData[] = subConditions?.map((subCondition: TSubConditionData) => {
     const id = subCondition.id;
@@ -32,16 +41,34 @@ const transformOutputToInput = (conditionJson: IGetCondition): TConditionData =>
     const logicalOperator = subCondition.logicalOperator;
     let value: string | string[] = '';
 
-    // if(questionType === "MULTIPLE_CHOICE_MULTI_SELECT_OPTION"){}
+    const splitedOperatorType = subCondition.operatorType?.split('@')[0];
+    const splitedQuestionType = questionType?.split('*')[0]
 
-    if (operatorType === 'OPTION' && questionType?.split('*')[0] === 'MULTIPLE_CHOICE_MULTI_SELECT') {
-      const op: string[] = [];
-      if (Array.isArray(subCondition.value)) {
-        subCondition.value?.map((item: string) => op.push(item?.toString()));
-        value = op;
+    if (splitedOperatorType === 'OPTION' && splitedQuestionType === 'MULTIPLE_CHOICE_MULTI_SELECT' || splitedQuestionType === "MULTIPLE_CHOICE") {
+      // const op: string[] = [];
+      // if (Array.isArray(subCondition.value)) {
+      //   subCondition.value?.map((item: string) => op.push(item?.toString()));
+      //   value = op;
+      // }
+      const questionId = subCondition.questionType?.split('*')[1];
+      const compared = questionId?.split('@')[0];
+      const found = qacWithOutFilterOptions?.find(
+        (val: any) => val?.value.includes(compared)
+      );
+
+      if (found) {
+        if (Array.isArray(subCondition.value)) {
+          let optionList: string[] = []
+          subCondition.value
+            .map((val: string, index) => optionList[index] = findOptionLabel(found, val.split('@')[0]))
+            .join(", ");
+          value = optionList
+        } else {
+          value = findOptionLabel(found, (subCondition.value as string).split('@')[0]);
+        }
       }
-    } else value = subCondition.value.toString();
 
+    } else value = subCondition.value.toString();
     return {
       id: subCondition.id,
       conditionType,

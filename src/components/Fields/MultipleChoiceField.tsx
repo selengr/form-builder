@@ -78,6 +78,7 @@ const optionsSchema = z.object({
         }),
     ),
   score: z.number(),
+   id: z.number().nullable().default(null),
 });
 
 const propertiesSchema = z.object({

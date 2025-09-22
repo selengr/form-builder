@@ -9,10 +9,13 @@ interface ReportDialogProps {
   open: boolean;
   onClose: () => void;
   formId: any;
-  typeOfReport: 'REPORT' | 'FORM';
+  userPhone?: any;
+  questionId? : number
+  resultReportText? : string
+  typeOfReport: 'REPORT' | 'FORM' | 'RESULT_REPORT';
 }
 
-export default function ReportDialog({ open, onClose, formId, typeOfReport }: ReportDialogProps) {
+export default function ReportDialog({ open, onClose, formId, typeOfReport, userPhone, questionId, resultReportText }: ReportDialogProps) {
   const [reportData, setReportData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -51,11 +54,10 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport }: Re
     if (!open) {
       setSelectedReportKey(null);
       setReportText('');
-      setReportData([]);
       setError(null);
-      setLoading(false);
     }
   }, [open]);
+
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedReportKey(event.target.value);
@@ -68,21 +70,31 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport }: Re
     }
 
     const { userInfo } = await fetchUserInfo();
-    const username = userInfo?.user?.username || '';
+    const username = userInfo?.user?.username || userPhone || '';
 
+    const body: any = {
+      username,
+      formId,
+      description: reportText.trim(),
+      responseForDestroyerReport: selectedReportKey,
+      typeOfReport,
+    };
+
+    if (questionId) {
+      body.questionId = questionId;
+    }
+    
+    if (resultReportText) {
+      body.resultReportText = resultReportText;
+    }
+    
     try {
       const res = await fetch('/api/report', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          username,
-          formId,
-          description: reportText.trim(),
-          responseForDestroyerReport: selectedReportKey,
-          typeOfReport,
-        }),
+        body: JSON.stringify(body),
       });
 
       if (!res.ok) {

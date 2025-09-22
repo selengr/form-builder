@@ -21,7 +21,6 @@ import { useGetOnlyAllCalculation } from '@/app/(builder)/builder/[id]/condition
 
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClose, condition, isEdit = false }) => {
   const { id } = useParams();
-  const { refresh } = useRouter();
   const { methods, conditions, handleAddCondition, handleRemoveCondition, handleAddSubCondition, handleRemoveSubCondition } = useConditionalForm(condition);
 
   const { qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter();

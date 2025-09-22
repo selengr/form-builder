@@ -9,6 +9,9 @@ import { formTypePersian } from '@/constants/formDictionaries';
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
 import BugIcon from '@/../public/images/home-page/menu/bugIcon.svg';
 import { useShowResultUser } from '@/app/my-assessments/[id]/show-result/hooks/useShowResultUser';
+import { fetchUserInfo } from '@/lib/auth';
+import LoginWithPhone from './loginWithPhone';
+import { useLoginWithPhone } from '../../hooks/useLoginWithPhone';
 
 interface FormCardBaseProps {
   data: any;
@@ -30,6 +33,8 @@ export interface ITakeParts {
   takePartId: number;
 }
 
+type DialogState = 'none' | 'login' | 'report';
+
 const FormCardBase: React.FC<FormCardBaseProps> = ({
   data,
   buttonText,
@@ -38,8 +43,12 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
   showStatus = true,
 }) => {
   const router = useRouter();
-  const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
+  const [dialogState, setDialogState] = useState<DialogState>('none');
   const { mutate } = useShowResultUser();
+
+    const {
+      formValue, error, reset, helperText, handleChange, handleSubmit
+    } = useLoginWithPhone('');
 
   const handleClick = () => {
     if (!buttonLink) return;
@@ -50,9 +59,27 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
   const handleShowResult = () => {
     const tkId = data.takeParts[data.takeParts.length - 1]
     mutate({
-      data: { formId : data.id, takePartId : tkId?.takePartId },
-      name : data.name,
+      data: { formId: data.id, takePartId: tkId?.takePartId },
+      name: data.name,
     });
+  };
+
+  const handleReport = async () => {
+    const { userInfo } = await fetchUserInfo();
+    const username = userInfo?.user?.username || null;
+    setDialogState(username ? 'report' : 'login');
+  };
+
+  const parentSubmit = () => {
+    if (handleSubmit()) {
+      setDialogState('report');
+    }
+  };
+  const handleCloseReportDialog = () => {
+    if (handleSubmit()) {
+      reset()
+    }
+    setDialogState('none')
   };
 
   return (
@@ -60,7 +87,7 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
       {/* دکمه گزارش */}
       <div className="absolute top-2 left-2 z-10">
         <Button
-          onClick={() => setIsReportDialogOpen(true)}
+          onClick={handleReport}
           size="medium"
           className="rounded-full"
           endIcon={<Image alt="report" src={BugIcon} height={24} width={24} />}
@@ -90,7 +117,7 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
           {buttonText}
         </button>
         {/* { data.takeParts.length > 0 && */}
-        { data.takeParts.length > 0 &&
+        {data.takeParts.length > 0 &&
           <button
             className="bg-[#2CDFC9] disabled:bg-slate-300 hover:bg-[#2CDFC9] transition duration-200 max-w-full sm:max-w-[200px] px-2 h-[42px] w-full text-[14px] rounded-lg text-white"
             onClick={handleShowResult}
@@ -100,13 +127,30 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
         }
       </div>
 
+      {dialogState === 'login' && (
+        <LoginWithPhone
+          open
+          onClose={() => setDialogState('none')}
+          label={'شماره موبایل'}
+          placeholder={'09129876543'}
+          formValue={formValue}
+          error={error}
+          helperText={helperText}
+          onChange={handleChange}
+          onSubmit={parentSubmit}
+        />
+      )}
+
       {/* دیالوگ گزارش */}
-      <ReportDialog
-        open={isReportDialogOpen}
-        onClose={() => setIsReportDialogOpen(false)}
-        formId={data.id}
-        typeOfReport="FORM"
-      />
+      {dialogState === 'report' && (
+        <ReportDialog
+          userPhone={formValue}
+          open
+          onClose={handleCloseReportDialog}
+          formId={data.id}
+          typeOfReport="FORM"
+        />
+      )}
     </div>
   );
 };

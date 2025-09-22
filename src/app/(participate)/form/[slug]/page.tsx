@@ -9,7 +9,6 @@ import { ErrorStep, FinishStep, QuestionStep } from './components';
 
 export default function ParticipateFormPage({ params }: { params: { slug: string } }) {
   const [limitationStepPassed, setLimitationStepPassed] = useState(false);
-  const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
 
   const {
     firstLoading,
@@ -61,9 +60,6 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
         formName={formName}
         replace={replace}
         formId={realFormID}
-        isReportDialogOpen={isReportDialogOpen}
-        handleOpenReportDialog={() => setIsReportDialogOpen(true)}
-        handleCloseReportDialog={() => setIsReportDialogOpen(false)}
       />
     );
   }
@@ -83,9 +79,6 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
       handlePrev={handlePrev}
       prevBlock={isCurrentFirstQuestion}
       questionLoading={questionLoading}
-      isReportDialogOpen={isReportDialogOpen}
-      handleOpenReportDialog={() => setIsReportDialogOpen(true)}
-      handleCloseReportDialog={() => setIsReportDialogOpen(false)}
       formId={realFormID}
       replace={replace}
     />

@@ -12,6 +12,6 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   const endpoint = '/psya/user/report-destroy-form';
-
+  
   return handleApiProxy(req, {schema: destroyReportSchema, endpoint: endpoint, requiresAuth: false});
 }

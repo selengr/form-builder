@@ -5,6 +5,7 @@ import { Button, IconButton } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import { IoIosArrowForward } from 'react-icons/io';
 import { useSearchParams } from 'next/navigation';
+// images
 import BugIcon from '@/../public/images/home-page/menu/bugIcon.svg';
 // hooks
 import { useReportFlow } from '@/hooks/useReportFlow';

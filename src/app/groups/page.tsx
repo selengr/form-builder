@@ -94,7 +94,7 @@ export default function GroupsPage() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => {debugger
+      (entries) => {
         if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
           fetchNextPage();
         }

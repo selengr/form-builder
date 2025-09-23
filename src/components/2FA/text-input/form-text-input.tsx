@@ -35,7 +35,6 @@ const TextInput = forwardRef<
     onBlur: () => void;
   }
 >(function TextInput(props, ref) {
-  // debugger;
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [inputValueST, setInputValueST] = useState(props.value);
 

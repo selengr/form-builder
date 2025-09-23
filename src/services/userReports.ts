@@ -53,7 +53,6 @@ export default new (class StatsService {
       };
     } catch (error) {
       console.error('Error in getStatsData:', error);
-      debugger;
       throw error;
     }
   }

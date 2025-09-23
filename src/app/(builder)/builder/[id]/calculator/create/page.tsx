@@ -12,7 +12,6 @@ export default function PageMobile() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const search = searchParams.get('calcId');
-  console.log('search', search)
 
   useLayoutEffect(() => {
     const handleResize = () => {

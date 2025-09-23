@@ -44,7 +44,6 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
           setLimitation={setLimitation}
           setQuestion={setQuestion}
           addQuestion={(data) => {
-            debugger
             setTakePartId(data.takePart)
             initializeQuestion(data);
             setLimitationStepPassed(true);

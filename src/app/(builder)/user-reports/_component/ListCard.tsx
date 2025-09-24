@@ -10,22 +10,22 @@ const ListCard = ({ data }: IProps) => {
   return (
     <div className='rounded-lg flex flex-col transition-all bg-[#F7F7FF] p-4 pb-8 relative max-w-[450px]'>
       <div className='rounded-lg p-2 flex justify-between w-full border border-[#1758BA] bg-white'>
-        <div className='flex flex-col gap-2 p-1'>
+        <div className='flex flex-col gap-2 p-1 max-w-[350px]'>
           <div className='flex gap-2'>
             <span className='text-[#161616] text-sm'>گزارش دهنده:</span>
             <span className='text-[#1758BA] text-sm'>{username}</span>
           </div>
           <div className='flex gap-2'>
             <span className='text-[#161616] text-sm'>مورد گزارش:</span>
-            <span className='text-[#1758BA] text-sm'>{responseModel?.key}</span>
+            <span className='text-[#1758BA] text-sm break-all'>{responseModel?.key}</span>
           </div>
           <div className='flex gap-2'>
             <span className='text-[#161616] text-sm'>نوع گزارش:</span>
-            <span className='text-[#1758BA] text-sm'>{typeOfReportModel?.key}</span>
+            <span className='text-[#1758BA] text-sm break-all'>{typeOfReportModel?.key}</span>
           </div>
           <div className='flex gap-2'>
             <span className='text-[#161616] whitespace-nowrap text-sm'>دلیل گزارش:</span>
-            <span className='text-[#1758BA] text-sm'>{description}</span>
+            <span className='text-[#1758BA] text-sm break-all'>{description}</span>
           </div>
         </div>
       </div>

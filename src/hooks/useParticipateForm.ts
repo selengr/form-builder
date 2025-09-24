@@ -134,10 +134,6 @@ export const useParticipateForm = () => {
     [extractProperty]
   );
 
-  useEffect(() => {
-    
-    console.log('takePartId', takePartId)
-  }, [takePartId,setTakePartId]);
 
   const fetchInitialData = useCallback(async () => {
     try {

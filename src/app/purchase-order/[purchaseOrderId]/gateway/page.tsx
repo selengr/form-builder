@@ -79,7 +79,7 @@ export default function PayWithMHesam() {
     if (selectedCredits.findIndex((item) => item.accountId === credit.accountId) === -1 && remainedAmount > 0) {
       setSelectedCreditAmount((prev) => {
         const totalCredit = prev + credit.availableAmount;
-        const remained = +data?.totalAmount - totalCredit;
+        const remained = +data?.payAble - totalCredit;
         setRemainedAmount(Math.max(remained, 0));
         return totalCredit;
       });
@@ -94,7 +94,7 @@ export default function PayWithMHesam() {
   function handleRemoveCredit(credit: UserCreditListResponse): void {
     setSelectedCreditAmount((prev) => {
       const totalCredit = prev - credit.availableAmount;
-      const remained = +data?.totalAmount - totalCredit;
+      const remained = +data?.payAble - totalCredit;
       setRemainedAmount(Math.max(remained, 0));
       return totalCredit;
     });
@@ -105,10 +105,10 @@ export default function PayWithMHesam() {
   const handleCalculateRemainedSelectedCredit = (index: number) => {
     const item = selectedCredits[index];
     if (index === 0) {
-      return Math.max(item.availableAmount - +data?.totalAmount, 0);
+      return Math.max(item.availableAmount - +data?.payAble, 0);
     }
     const prevItemsAmount = selectedCredits.slice(0, index).reduce((prevValue, currentValue) => prevValue + +currentValue.availableAmount, 0);
-    const remained = Math.max(+data?.totalAmount - prevItemsAmount, 0);
+    const remained = Math.max(+data?.payAble - prevItemsAmount, 0);
     return Math.max(item!.availableAmount - remained, 0);
   };
 
@@ -139,9 +139,9 @@ export default function PayWithMHesam() {
   const handleCheckServiceCost = (nextStep: () => void) => {
     getServiceCost({} as unknown as void, {
       onSuccess: (data) => {
-        if (data.totalAmount === 0) {
+        if (data.payAble === 0) {
           router.back();
-        } else if (data.totalAmount === prevServiceCost) {
+        } else if (data.payAble === prevServiceCost) {
           nextStep();
         } else {
           router.back();
@@ -184,9 +184,9 @@ export default function PayWithMHesam() {
   useEffect(() => {
     getServiceCost({} as unknown as void, {
       onSuccess: (data) => {
-        setRemainedAmount(+data?.totalAmount);
-        setPrevServiceCost(data.totalAmount);
-        if (data.totalAmount === 0) {
+        setRemainedAmount(+data?.payAble);
+        setPrevServiceCost(data.payAble);
+        if (data.payAble === 0) {
           router.replace('/purchase-order');
         }
       },
@@ -224,7 +224,7 @@ export default function PayWithMHesam() {
               مبلغ سبد خرید
             </Typography>
             <Typography variant='h6' fontSize='1.3rem' component='p' fontWeight='bold'>
-              {isPendingIssueRequest ? '---' : formatNumberWithCommas(data?.totalAmount) + 'تومان'}
+              {isPendingIssueRequest ? '---' : formatNumberWithCommas(data?.payAble) + 'تومان'}
             </Typography>
           </Box>
           <Typography marginTop='1.5rem' paddingX='0.5rem'>
@@ -261,7 +261,7 @@ export default function PayWithMHesam() {
             <Box display='flex' justifyContent='space-between'>
               <Typography variant='body2'>مبلغ کل استفاده شده</Typography>
               <Typography variant='body1' fontWeight='bold' color={palette.primary.main}>
-                {formatNumberWithCommas(Math.min(selectedCreditAmount, +data?.totalAmount).toString())}
+                {formatNumberWithCommas(Math.min(selectedCreditAmount, +data?.payAble).toString())}
                 تومان
               </Typography>
             </Box>

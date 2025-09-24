@@ -106,7 +106,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
           <InfoRow label='دسترسی' value={data.accessType || 'عمومی'} bold />
           <InfoRow label='تعداد شرکت‌کننده' value={data.participants} bold />
           <InfoRow label='تعداد گویه' value={data.questionListSize} bold />
-          <InfoRow label='ظرفیت'  value={data.formPublishSetting.capacityPublicLink ?? 0} bold />
+          <InfoRow label='عمومی ظرفیت'  value={data.formPublishSetting.capacityPublicLink ?? 0} bold />
           <InfoRow label='وضعیت' value={formStatusPersian[data.status]} bold />
         </div>
 

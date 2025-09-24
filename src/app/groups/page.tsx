@@ -1,7 +1,7 @@
 'use client';
 // React & Libs
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { LinearProgress } from '@mui/material';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import React, { Suspense, useState, useRef, useEffect } from 'react';
@@ -28,11 +28,30 @@ export interface GroupListResponse {
   totalElements: number;
 }
 
-const fetchGroups = async ({ pageParam = 0 }): Promise<{ groups: IGroup[]; total: number; nextPage: number | null }> => {
+const fetchGroups = async ({
+  pageParam = 0,
+  query = '',
+}: {
+  pageParam?: number;
+  query?: string;
+}): Promise<{ groups: IGroup[]; total: number; nextPage: number | null }> => {
   const token = await getAuthToken();
 
   const defaultSearchFilterModel = {
-    searchFilterBoxList: [{ restrictionList: [] }],
+    searchFilterBoxList: [
+      {
+        restrictionList: query
+          ? [
+              {
+                fieldName: 'groupName', 
+                fieldOperation: 'MATCH',
+                fieldValue: query,
+                nextConditionOperator: 'AND',
+              },
+            ]
+          : [],
+      },
+    ],
     sortList: [{ fieldName: 'id', type: 'DSC' }],
     page: pageParam,
     rows: 10,
@@ -76,6 +95,8 @@ export default function GroupsPage() {
   const queryClient = useQueryClient();
   const pathWithoutQuery = '/groups';
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const searchParams = useSearchParams();
+  const query = searchParams.get('query') ?? '';
 
   const {
     data,
@@ -86,8 +107,8 @@ export default function GroupsPage() {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ['groups'],
-    queryFn: fetchGroups,
+    queryKey: ['groups', query],
+      queryFn: ({ pageParam }) => fetchGroups({ pageParam, query }),
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 0,
   });

@@ -1,5 +1,7 @@
+import { ReactNode } from "react";
+
 interface TableCellProps {
-  content: string | number;
+  content: ReactNode;
   rowIndex: number;
 }
 

@@ -45,7 +45,6 @@ const TextInput = forwardRef<
   };
 
   const _HandleOnChange = (event: ChangeEvent<HTMLInputElement>): void | null => {
-    debugger;
     let inputValue2 = '0';
     if (props.inputAdornment) {
       const checkSpacingRegex = /\s/g;

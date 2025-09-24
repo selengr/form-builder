@@ -89,14 +89,14 @@ const fetchGroups = async ({
   };
 };
 
-export default function GroupsPage() {
+const GroupsPage: React.FC = () => {
   const router = useRouter();
+  // const searchParams = useSearchParams();
+  // const query = searchParams.get('query')?.toString() || '';
   const [showCreateGroupDialog, setShowCreateGroupDialog] = useState(false);
   const queryClient = useQueryClient();
   const pathWithoutQuery = '/groups';
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
-  const searchParams = useSearchParams();
-  const query = searchParams.get('query') ?? '';
 
   const {
     data,
@@ -107,8 +107,10 @@ export default function GroupsPage() {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ['groups', query],
-      queryFn: ({ pageParam }) => fetchGroups({ pageParam, query }),
+    // queryKey: ['groups', query],
+    //   queryFn: ({ pageParam }) => fetchGroups({ pageParam, query }),
+    queryKey: ['groups'],
+      queryFn: ({ pageParam }) => fetchGroups({ pageParam }),
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 0,
   });
@@ -223,3 +225,5 @@ export default function GroupsPage() {
     </div>
   );
 }
+
+export default GroupsPage

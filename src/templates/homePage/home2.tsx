@@ -145,19 +145,19 @@ export default function HomePageX() {
             <Image alt={''} src={`/api/images?folder=faq&file=gr.svg`} width={100} height={100} className={'w-screen h-screen animate-bounce-slow'} draggable={false} />
           </div>
 
-          <footer className='absolute inset-0 z-40 top-[75%] lg:top-[95%] px-4 sm:px-6 md:px-10 pb-24'>
-            <div className='max-w-[1440px] mx-auto bg-white rounded-3xl shadow-2xl shadow-blue-700/20 p-6 sm:p-8 md:p-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-center'>
-              {statistics.map((item, i) => (
-                <div key={i} className='flex flex-col items-center'>
-                  <span className='text-[#183B56] text-3xl sm:text-4xl md:text-5xl font-bold'>
-                    <CountUp end={item.value} duration={7} separator=',' smartEasingAmount={i} />
-                    {i === 0 ? '+' : ''}
-                  </span>
-                  <span className='text-gray-600 text-sm sm:text-base mt-2'>{item.label}</span>
-                </div>
-              ))}
-            </div>
-          </footer>
+//           <footer className='absolute inset-0 z-40 top-[75%] lg:top-[95%] px-4 sm:px-6 md:px-10 pb-24'>
+//             <div className='max-w-[1440px] mx-auto bg-white rounded-3xl shadow-2xl shadow-blue-700/20 p-6 sm:p-8 md:p-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-center'>
+//               {statistics.map((item, i) => (
+//                 <div key={i} className='flex flex-col items-center'>
+//                   <span className='text-[#183B56] text-3xl sm:text-4xl md:text-5xl font-bold'>
+//                     <CountUp end={item.value} duration={7} separator=',' smartEasingAmount={i} />
+//                     {i === 0 ? '+' : ''}
+//                   </span>
+//                   <span className='text-gray-600 text-sm sm:text-base mt-2'>{item.label}</span>
+//                 </div>
+//               ))}
+//             </div>
+//           </footer>
         </section>
       </main>
     </div>

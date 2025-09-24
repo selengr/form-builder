@@ -12,9 +12,10 @@ import LoadingCart from '@/templates/purchase-order/loading-cart';
 const formatCurrency = (amount: number) => new Intl.NumberFormat('fa-IR').format(amount) + ' تومان';
 
 const InvoiceSection = ({ purchaseOrder, handlePayment }: any) => {
-  const { totalAmount, tax, payAble, purchaseOrderId } = purchaseOrder || {};
+  const { totalAmount, infrastructureCost, tax, payAble, purchaseOrderId } = purchaseOrder || {};
   const subtotal = totalAmount || 0;
-  const total = payAble ?? subtotal + (tax || 0);
+  // const total = payAble ?? subtotal + (tax || 0);
+  const total = payAble 
 
   return (
     <div className='bg-white rounded-2xl p-4 shadow-sm flex flex-col lg:max-h-screen w-full'>
@@ -32,6 +33,12 @@ const InvoiceSection = ({ purchaseOrder, handlePayment }: any) => {
         {/*  <span>مالیات:</span>*/}
         {/*  <span className='font-bold'>{formatCurrency(tax || 0)}</span>*/}
         {/*</div>*/}
+        <hr className='border-gray-300 border-dashed border-b-1 mx-3' />
+        <div className='flex justify-between text-sm text-[#393939] font-medium'>
+          <span>هزینه زیرساخت:</span>
+          <span className='font-bold'>{formatCurrency(infrastructureCost)}</span>
+        </div>
+
         <hr className='border-gray-300 border-dashed border-b-1 mx-3' />
         <div className='flex justify-between text-sm text-[#1758BA] font-bold'>
           <span>قابل پرداخت:</span>

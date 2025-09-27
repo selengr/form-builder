@@ -1,0 +1,32 @@
+'use client';
+
+import Image from 'next/image';
+import { useState } from 'react';
+import SearchIcon from '@/../public/images/home-page/search.svg';
+
+interface ImmediateSearchInputProps {
+  onSearch: (query: string) => void;
+}
+
+export default function ImmediateSearchInput({ onSearch }: ImmediateSearchInputProps) {
+  const [value, setValue] = useState('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setValue(newValue);
+    onSearch(newValue);
+  };
+
+  return (
+    <div className='flex items-center w-full border border-[#DDE1E6] rounded-2xl px-3 py-1 gap-2 bg-white'>
+      <input
+        type='text'
+        className='flex-1 bg-transparent focus:outline-none text-right placeholder:text-gray-400 text-sm'
+        placeholder='کاوش'
+        value={value}
+        onChange={handleChange}
+      />
+      <Image src={SearchIcon} alt='search' draggable={false} priority />
+    </div>
+  );
+}

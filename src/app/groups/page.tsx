@@ -43,7 +43,7 @@ const fetchGroups = async ({
         restrictionList: query
           ? [
               {
-                fieldName: 'groupName', 
+                fieldName: 'name', 
                 fieldOperation: 'MATCH',
                 fieldValue: query,
                 nextConditionOperator: 'AND',
@@ -91,8 +91,8 @@ const fetchGroups = async ({
 
 const GroupsPage: React.FC = () => {
   const router = useRouter();
-  // const searchParams = useSearchParams();
-  // const query = searchParams.get('query')?.toString() || '';
+  const searchParams = useSearchParams();
+  const query = searchParams.get('query')?.toString() || '';
   const [showCreateGroupDialog, setShowCreateGroupDialog] = useState(false);
   const queryClient = useQueryClient();
   const pathWithoutQuery = '/groups';
@@ -107,10 +107,10 @@ const GroupsPage: React.FC = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    // queryKey: ['groups', query],
-    //   queryFn: ({ pageParam }) => fetchGroups({ pageParam, query }),
-    queryKey: ['groups'],
-      queryFn: ({ pageParam }) => fetchGroups({ pageParam }),
+    queryKey: ['groups', query],
+      queryFn: ({ pageParam }) => fetchGroups({ pageParam, query }),
+    // queryKey: ['groups'],
+    //   queryFn: ({ pageParam }) => fetchGroups({ pageParam }),
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 0,
   });

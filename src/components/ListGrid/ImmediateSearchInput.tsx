@@ -1,7 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useDebounce } from '@/hooks/useDebounce';
 import SearchIcon from '@/../public/images/home-page/search.svg';
 
 interface ImmediateSearchInputProps {
@@ -10,12 +11,16 @@ interface ImmediateSearchInputProps {
 
 export default function ImmediateSearchInput({ onSearch }: ImmediateSearchInputProps) {
   const [value, setValue] = useState('');
+  const debouncedValue = useDebounce(value, 500); 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setValue(newValue);
-    onSearch(newValue);
   };
+
+  useEffect(() => {
+    onSearch(debouncedValue);
+  }, [debouncedValue, onSearch]);
 
   return (
     <div className='flex items-center w-full border border-[#DDE1E6] rounded-2xl px-3 py-1 gap-2 bg-white'>

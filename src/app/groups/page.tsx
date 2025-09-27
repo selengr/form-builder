@@ -107,7 +107,7 @@ const GroupsPage: React.FC = () => {
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: ['groups', query],
-    queryFn: ({ pageParam }) => fetchGroups({ pageParam, query }),
+      queryFn: ({ pageParam }) => fetchGroups({ pageParam, query }),
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 0,
   });

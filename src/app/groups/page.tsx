@@ -12,7 +12,7 @@ import { getAuthToken } from '@/utils/getAuthToken';
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 import TotalGrid from '@/../public/images/home-page/total-grid.svg';
 // components
-import SearchInput from '@/components/ListGrid/SearchInput';
+import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
 import { GroupListItem, IGroup } from './components/groupListItem';
 import { GroupDialogTrigger } from './components/GroupDialogTrigger';
 import { CreateGroupDialog } from '@/app/groups/components/createGroupDialog';
@@ -91,8 +91,7 @@ const fetchGroups = async ({
 
 const GroupsPage: React.FC = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const query = searchParams.get('query')?.toString() || '';
+   const [query, setQuery] = useState('');
   const [showCreateGroupDialog, setShowCreateGroupDialog] = useState(false);
   const queryClient = useQueryClient();
   const pathWithoutQuery = '/groups';
@@ -108,9 +107,7 @@ const GroupsPage: React.FC = () => {
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: ['groups', query],
-      queryFn: ({ pageParam }) => fetchGroups({ pageParam, query }),
-    // queryKey: ['groups'],
-    //   queryFn: ({ pageParam }) => fetchGroups({ pageParam }),
+    queryFn: ({ pageParam }) => fetchGroups({ pageParam, query }),
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 0,
   });
@@ -185,7 +182,7 @@ const GroupsPage: React.FC = () => {
         <div className='flex justify-center mb-3'>
           <div className='w-full max-w-lg'>
             <Suspense fallback={<div>در حال بارگذاری جستجو...</div>}>
-              <SearchInput />
+              <ImmediateSearchInput onSearch={setQuery} />
             </Suspense>
           </div>
         </div>

@@ -10,12 +10,13 @@ import { useGetPurchaseOrder } from './_hook/useGetPurchaseOrder';
 import LoadingCart from '@/templates/purchase-order/loading-cart';
 
 const formatCurrency = (amount: number) => new Intl.NumberFormat('fa-IR').format(amount) + ' تومان';
+const formatCurrencyNumber = (amount: number) => new Intl.NumberFormat('fa-IR').format(amount);
 
 const InvoiceSection = ({ purchaseOrder, handlePayment }: any) => {
-  const { totalAmount, infrastructureCost, tax, payAble, purchaseOrderId } = purchaseOrder || {};
+  const { totalAmount, infrastructureCost, purchaseOrderDetailModels, tax, payAble, purchaseOrderId } = purchaseOrder || {};
   const subtotal = totalAmount || 0;
-  // const total = payAble ?? subtotal + (tax || 0);
-  const total = payAble 
+  const infrastructureCostFinal = purchaseOrderDetailModels.length * infrastructureCost;
+  const total = payAble
 
   return (
     <div className='bg-white rounded-2xl p-4 shadow-sm flex flex-col lg:max-h-screen w-full'>
@@ -35,8 +36,9 @@ const InvoiceSection = ({ purchaseOrder, handlePayment }: any) => {
         {/*</div>*/}
         <hr className='border-gray-300 border-dashed border-b-1 mx-3' />
         <div className='flex justify-between text-sm text-[#393939] font-medium'>
-          <span>هزینه زیرساخت:</span>
-          <span className='font-bold'>{formatCurrency(infrastructureCost)}</span>
+          <span> هزینه زیرساخت:</span>
+          <span className='font-bold'>{formatCurrencyNumber(infrastructureCostFinal)}</span>
+          <span className='flex justify-end font-light'> = ({purchaseOrderDetailModels.length} * {formatCurrencyNumber(infrastructureCost)})</span>
         </div>
 
         <hr className='border-gray-300 border-dashed border-b-1 mx-3' />

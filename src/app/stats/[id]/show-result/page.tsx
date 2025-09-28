@@ -50,8 +50,14 @@ const ResultsPage = () => {
               <div key={index} className='mb-4 last:mb-0'>
                 {/* <h2 className="text-right text-[15px] font-bold text-[#161616] mb-1"></h2> */}
                 {result.resultRows.map((row, rowIndex) => (
+
                   <p key={rowIndex} className='text-justify font-medium text-[#161616] mb-2'>
-                    {row.row}
+                    {row.row.split("\n").map((part, i) => (
+                      <React.Fragment key={i}>
+                        {part}
+                        {i < row.row.split("\n").length - 1 && <br />}
+                      </React.Fragment>
+                    ))}
                   </p>
                 ))}
               </div>

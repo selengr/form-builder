@@ -41,8 +41,8 @@ const InvoiceSection = ({ purchaseOrder, handlePayment }: any) => {
             <span>زیرساخت</span>
           </div>
           <div className='flex flex-row'>
-            <span className='font-bold'>{formatCurrencyNumber(infrastructureCostFinal)}</span>
-            <span className='flex justify-end font-light'> = ({purchaseOrderDetailModels.length} * {formatCurrencyNumber(infrastructureCost)})</span>
+            <span className='flex justify-end font-light text-xs'>({purchaseOrderDetailModels.length}*{formatCurrencyNumber(infrastructureCost)})</span>
+            <span className='font-bold'>{formatCurrency(infrastructureCostFinal)}</span>
           </div>
         </div>
 

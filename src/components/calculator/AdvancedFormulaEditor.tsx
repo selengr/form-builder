@@ -79,6 +79,8 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
             selectFieldRef.current[elem.id as string] = STICKY_FUNC || UNIC_NAME;
           }
         });
+      } else if (elem.type === "NEW_FnFx"){
+            selectAvgRef.current[elem.id as string] = "#avgNumber";
       }
     });
   };

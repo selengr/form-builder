@@ -14,6 +14,7 @@ import { RHFTextField } from '@/components/hook-form';
 import { SubmitButtons } from '@/components/condition/form/SubmitButtons';
 // style
 import { StyledDialog, StyledDialogContent } from './userReports.style';
+import { useQueryClient } from '@tanstack/react-query';
 
 export interface IProps {
   open: boolean;
@@ -30,6 +31,8 @@ export const ChangeStatusDialog: React.FC<IProps> = ({ open, setOpen, publicatio
   const { id } = useParams();
   const { refresh } = useRouter();
   const postChangeStatus = usePostChangeStatus();
+
+   const queryClient = useQueryClient();
 
   const methods = useForm<TTicketFormData>({
     resolver: zodResolver(TicketSchema),
@@ -52,8 +55,8 @@ export const ChangeStatusDialog: React.FC<IProps> = ({ open, setOpen, publicatio
         },
       },
       {
-        onSuccess: () => {
-          refresh();
+        onSuccess: async() => {
+          queryClient.invalidateQueries({ queryKey: ['datas'] });
           handleClose();
         },
       },

@@ -50,7 +50,9 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
   const { ref, inView } = useInView();
   const searchParams = useSearchParams();
   const query = searchParams.get('query')?.toString() || '';
+  const formName = searchParams.get('formName')
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
+  const [publicationApprovalByAdmin, setPublicationApprovalByAdmin] = useState<boolean|null>(null);
 
   const router = useRouter();
 
@@ -74,7 +76,17 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
     refetchOnWindowFocus: false,
   });
 
-  const handleRefreshGrid = useCallback(() => {
+    useEffect(() => {
+      const storedFormName = localStorage.getItem('publicationApprovalByAdmin');
+      if (storedFormName) {
+        setPublicationApprovalByAdmin(JSON.parse(storedFormName));
+      }
+       return () => {
+      localStorage.removeItem('publicationApprovalByAdmin');
+    };
+  }, []);
+
+ const handleRefreshGrid = useCallback(() => {
     if (isFilterOpen) {
       setIsFilterOpen(false);
     }
@@ -109,7 +121,7 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
         <IconButton sx={{ position: 'absolute', left: '8px' }} onClick={() => router.push('/user-reports')}>
           <MdOutlineKeyboardArrowRight color='#292D32' />
         </IconButton>
-        <p className='text-[16px] text-center font-bold text-[#161616]'>{pages?.pages[0].data.formName}</p>
+        <p className='text-[16px] text-center font-bold text-[#161616]'>{formName}</p>
         {!disableFilter && (
           <IconButton
             onClick={openFilter}
@@ -129,7 +141,7 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
         )}
       </div>
     ),
-    [pages?.pages[0].data.formName, router],
+    [formName, router],
   );
 
   const renderContent = useCallback(() => {
@@ -160,14 +172,11 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
     }
 
     // @ts-ignore
-    return pages.pages.map((page, pageIndex) =>
-      page.data.reporterInformation?.map((data: TReporterInformationItem, index: number) => {
-        const key = `${pageIndex}-${index}`;
-        // @ts-ignore
-        const isLastItem = pageIndex === pages.pages.length - 1 && index === page.data.length - 1;
-
+ return pages.pages[0]?.data?.content?.map(
+  (data: TReporterInformationItem, pageIndex: number, array: TReporterInformationItem[]) => {
+    const isLastItem = pageIndex === array.length - 1;
         return (
-          <Grid sx={{ width: 1, mx: 'auto' }} key={key} size={{ xs: 12, md: 10, xl: 9 }}>
+          <Grid sx={{ width: 1, mx: 'auto' }} key={pageIndex} size={{ xs: 12, md: 10, xl: 9 }}>
             {CartComponent && <CartComponent onCheck={onCheck} data={data} />}
             {isLastItem && (
               <>
@@ -177,7 +186,7 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
             )}
           </Grid>
         );
-      }),
+      }
     );
   }, [pages, isFetching, isFetchingNextPage, CartComponent, onCheck, ref, handleRefreshGrid]);
 
@@ -261,7 +270,7 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
                 {renderContent()}
               </Grid>
             </Grid>
-            <RenderAction name={pages?.pages[0].data.formName} publicationApprovalByAdmin={pages?.pages[0].publicationApprovalByAdmin} />
+            <RenderAction setPublicationApprovalByAdmin={setPublicationApprovalByAdmin} name={formName as string} publicationApprovalByAdmin={publicationApprovalByAdmin as boolean} />
             <BottomSheet open={isFilterOpen} onClose={() => setIsFilterOpen(false)}>
               <Grid>{filterComponent}</Grid>
             </BottomSheet>

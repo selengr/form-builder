@@ -109,7 +109,7 @@ export default function ListGridWrapper() {
                   <RadioGroup aria-labelledby='demo-controlled-radio-buttons-group' name='controlled-radio-buttons-group' value={formType.typeOfReport} onChange={handleTypeOfReportChange}>
                     <FormControlLabel value='ALL' control={<Radio />} label='همه' />
                     <FormControlLabel value='FORM' control={<Radio />} label='فرم' />
-                    <FormControlLabel value='REPORT' control={<Radio />} label='گزارش نتایج' />
+                    <FormControlLabel value='RESULT_REPORT' control={<Radio />} label='گزارش نتایج' />
                   </RadioGroup>
                 </FormControl>
               </div>
@@ -225,7 +225,7 @@ export default function ListGridWrapper() {
     <ListGrid
       searchBoxList={searchBoxList}
       filterBoxList={filterBoxList}
-      url={`/admin/destroy-form/${id}`}
+      url={`/admin/destroy-form/listgrid-reporters-on-form/${id}`}
       filterComponent={<FilterSidebar />}
       CartComponent={(item: any) => <ListCard data={item.data} />}
       disableFilter={false}

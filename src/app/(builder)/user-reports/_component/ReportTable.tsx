@@ -22,8 +22,11 @@ interface StatsTableProps {
 export function ReportTable({ headData, allData, isLoading }: StatsTableProps) {
   const { push } = useRouter();
 
-  const handleShow = (id: number) => {
-    push(`/user-reports/${id}`);
+  const handleShow = (id: number, formName : string, publicationApprovalByAdmin: boolean) => {
+     if (typeof window !== 'undefined') {
+      localStorage.setItem('publicationApprovalByAdmin', JSON.stringify(publicationApprovalByAdmin));
+    }
+    push(`/user-reports/${id}?formName=${formName}`);
   };
 
   return (
@@ -78,7 +81,7 @@ export function ReportTable({ headData, allData, isLoading }: StatsTableProps) {
                 {/* ستون عملیات */}
                 <td className='px-4 py-2 border-l-0 border-slate-300 align-middle'>
                   <div className='flex items-center justify-center gap-2 align-middle'>
-                    <button onClick={() => handleShow(row.formId)} className='rounded-[8px] border-none p-2 bg-[#1758BA]'>
+                    <button onClick={() => handleShow(row.formId,row.formName, row.publicationApprovalByAdmin)} className='rounded-[8px] border-none p-2 bg-[#1758BA]'>
                       <VscEye className='text-white w-6 h-6' width={24} height={24} />
                     </button>
                   </div>

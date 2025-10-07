@@ -19,7 +19,7 @@ const ActionButton = ({ label, Icon, onClick }: IProps) => (
   </button>
 );
 
-export const RenderAction = ({ publicationApprovalByAdmin, name }: { publicationApprovalByAdmin: boolean; name: string }) => {
+export const RenderAction = ({ publicationApprovalByAdmin, name, setPublicationApprovalByAdmin }: { publicationApprovalByAdmin: boolean; name: string, setPublicationApprovalByAdmin : any }) => {
   const { push } = useRouter();
   const { id } = useParams();
   const [openDestroy, setOpenDestroy] = useState<boolean>(false);
@@ -49,12 +49,12 @@ export const RenderAction = ({ publicationApprovalByAdmin, name }: { publication
       </div>
       <div className='flex w-full gap-3 justify-end'>
         <ActionButton label='مشاهده وقایع' Icon={ReceiptTextIcon} onClick={handleViewEventsClick} />
-        {!publicationApprovalByAdmin && <ActionButton label='معلق کردن' Icon={SlashIcon} onClick={handleSuspendClick} />}
-        {publicationApprovalByAdmin && <ActionButton label='عدم تعلیق' Icon={TicketCircleIcon} onClick={handleSuspendClick} />}
+        {!publicationApprovalByAdmin && <ActionButton label='غیرفعال' Icon={SlashIcon} onClick={handleSuspendClick} />}
+        {publicationApprovalByAdmin && <ActionButton label='فعال' Icon={TicketCircleIcon} onClick={handleSuspendClick} />}
       </div>
 
       {openDestroy && <DestroyTicketDialog open={openDestroy} setOpen={setOpenDestroy} />}
-      <ChangeStatusDialog open={openChangeStatus} setOpen={setOpenChangeStatus} publicationApprovalByAdmin={publicationApprovalByAdmin} />
+      <ChangeStatusDialog setPublicationApprovalByAdmin={setPublicationApprovalByAdmin}  open={openChangeStatus} setOpen={setOpenChangeStatus} publicationApprovalByAdmin={publicationApprovalByAdmin} />
     </div>
   );
 };

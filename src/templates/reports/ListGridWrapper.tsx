@@ -10,10 +10,10 @@ export default function ListGridWrapper() {
   const filterBoxList: any = [];
   const searchBoxList: any = [
     {
-      fieldName: 'formSetting.statusEnum',
-      fieldOperation: 'NOT_EQUAL',
-      fieldValue: 'CREATE',
-      nextConditionOperator: 'AND',
+      fieldName: 'formSetting.name',
+      fieldOperation: 'MATCH',
+      fieldValue: '',
+      nextConditionOperator: 'OR',
     },
   ];
 

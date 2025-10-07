@@ -79,6 +79,8 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
             selectFieldRef.current[elem.id as string] = STICKY_FUNC || UNIC_NAME;
           }
         });
+      } else if (elem.type === "NEW_FnFx") {
+        selectAvgRef.current[elem.id as string] = "#avgNumber";
       }
     });
   };
@@ -116,9 +118,35 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
     }, 10);
   }, []);
 
+  // ----- changed from this
+  //   const updateElements = useCallback(
+  //     (newElements: Element[], newCursorIndex: number) => {
+  //       setElements(newElements);
+  //       setCursorIndex(newCursorIndex);
+  //       updateCursorPosition(newCursorIndex);
+  //     },
+  //     [updateCursorPosition],
+  //   );
+
   const updateElements = useCallback(
-    (newElements: Element[], newCursorIndex: number) => {
-      setElements(newElements);
+    (incomingElements: Element[], newCursorIndex: number, normalize: boolean = true) => {
+      //-------- Beta test
+      const cloned = incomingElements.map((e) => ({ ...e })) as Element[];
+      if (normalize) {
+        mainIndex.current = -2;
+
+        for (let i = 0; i < cloned.length; i++) {
+          const elem = cloned[i] as Element & { mainIndex?: number };
+          if (elem.type === 'NEW_FIELD' || elem.type === 'NEW_FnFx') {
+            mainIndex.current += 2;
+            elem.mainIndex = mainIndex.current;
+          } else {
+            delete (elem as any).mainIndex;
+          }
+        }
+      }
+      setElements(cloned);
+      //-------- Beta test
       setCursorIndex(newCursorIndex);
       updateCursorPosition(newCursorIndex);
     },
@@ -454,6 +482,13 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
     };
 
     const newElements = [...elements];
+    //-------- Beta test
+    for (let i = cursorIndex; i < newElements.length; i++) {
+      if (typeof newElements[i].mainIndex === 'number') {
+        newElements[i].mainIndex! -= 2;
+      }
+    }
+    // -------
     newElements.splice(cursorIndex, 0, newElement);
     updateElements(newElements, cursorIndex + 1);
   };
@@ -502,8 +537,8 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
       { type: 'AVG_PARENTHESIS', content: ')' },
     );
 
-    mainIndex.current += 4;
-    setElements(newElements);
+    // mainIndex.current += 4;
+    // setElements(newElements);
     selectAvgRef.current[selectId] = '#avgNumber';
     updateElements(newElements, cursorIndex + 3);
   };

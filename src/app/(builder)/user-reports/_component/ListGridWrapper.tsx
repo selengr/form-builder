@@ -225,6 +225,7 @@ export default function ListGridWrapper() {
     <ListGrid
       searchBoxList={searchBoxList}
       filterBoxList={filterBoxList}
+      //  url={`/admin/destroy-form/${id}`}
       url={`/admin/destroy-form/listgrid-reporters-on-form/${id}`}
       filterComponent={<FilterSidebar />}
       CartComponent={(item: any) => <ListCard data={item.data} />}

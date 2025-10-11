@@ -52,7 +52,12 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
               formattedValue = `{#v_${value}}`;
             } else if (operatorType === 'TEXT') {
               if (conditionType === '#startWithText' || conditionType === '#endWithText') {
-                formattedValue = `{"${value}"}`;
+                const InfoField = questionType.split('*')[0]
+                if(InfoField === "INFO_FIELD"){
+                  formattedValue = `{""}`;
+                } else {
+                  formattedValue = `{"${value}"}`;
+                }
               } else if (conditionType === '!#containAnyText' || conditionType === '#containAnyText') {
                 formattedValue = `{${formatContainText(value as string)}}`;
               } else if (conditionType === '#lenEqualText' || conditionType === '#lenGraterThanText' || conditionType === '!#lenGraterThanText') {

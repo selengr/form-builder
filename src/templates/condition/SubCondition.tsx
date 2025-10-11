@@ -92,10 +92,17 @@ export const SubCondition: React.FC<SubConditionProps> = ({
             maxWidth: 240,
             flexShrink: 0,
           }}
-          onChange={() => {
-            setValue(`conditions.${index}.subConditions.${subIndex}.operatorType`, '');
-            setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, '');
-            setValue(`conditions.${index}.subConditions.${subIndex}.value`, '');
+          onChange={(e:any) => {
+              const combinedKey = `${e.target?.value?.split('*')[0]}`;
+              if(combinedKey === "INFO_FIELD"){
+                setValue(`conditions.${index}.subConditions.${subIndex}.operatorType`, "TEXT");
+                setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, "#startWithText");
+                setValue(`conditions.${index}.subConditions.${subIndex}.value`, "0");
+              }else {
+                setValue(`conditions.${index}.subConditions.${subIndex}.operatorType`, '');
+                setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, '');
+                setValue(`conditions.${index}.subConditions.${subIndex}.value`, '');
+              }
           }}
         />
         <SelectController

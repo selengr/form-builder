@@ -52,7 +52,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
               formattedValue = `{#v_${value}}`;
             } else if (operatorType === 'TEXT') {
               if (conditionType === '#startWithText' || conditionType === '#endWithText') {
-                let InfoField = questionType.split('*')[0]
+                const InfoField = questionType.split('*')[0]
                 if(InfoField === "INFO_FIELD"){
                   formattedValue = `{""}`;
                 } else {

@@ -41,10 +41,10 @@ interface Props {
   refreshData?: () => void;
   refreshGrid?: boolean;
   disableFilter?: boolean;
-  searchQueryFilter?: { responseForDestroyerReport: string; typeOfReport: string };
+  searchQueryFilter?: { responseForDestroyerReport: string; typeOfReport: string, fieldOperation : string };
 }
 
-const DEFAULT_SEARCH_FILTER = { responseForDestroyerReport: 'ALL', typeOfReport: 'ALL' };
+const DEFAULT_SEARCH_FILTER = { responseForDestroyerReport: 'ALL', typeOfReport: 'ALL', fieldOperation : "DSC" };
 
 const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxList, CartComponent, url, onCheck, refreshGrid, disableFilter, searchQueryFilter = DEFAULT_SEARCH_FILTER }) => {
   const { ref, inView } = useInView();

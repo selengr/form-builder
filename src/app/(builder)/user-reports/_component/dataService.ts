@@ -8,7 +8,7 @@ interface SearchBoxItem {
 }
 
 const PAGE_SIZE = 10;
-const DEFAULT_SEARCH_FILTER = { responseForDestroyerReport: 'ALL', typeOfReport: 'ALL' };
+const DEFAULT_SEARCH_FILTER = { responseForDestroyerReport: 'ALL', typeOfReport: 'ALL', fieldOperation : "DSC" };
 
 export async function fetchData(
   {
@@ -54,7 +54,7 @@ export async function fetchData(
 
   const params = {
     searchFilterBoxList: searchFilterBoxListPayload,
-    sortList: [{ fieldName: 'id', type: 'DSC' }],
+    sortList: [{ fieldName: 'id', type: searchQueryFilter.fieldOperation  }],
     page: pageParam,
     rows: PAGE_SIZE,
   };

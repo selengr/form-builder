@@ -41,10 +41,10 @@ interface Props {
   refreshData?: () => void;
   refreshGrid?: boolean;
   disableFilter?: boolean;
-  searchQueryFilter?: { responseForDestroyerReport: string; typeOfReport: string };
+  searchQueryFilter?: { responseForDestroyerReport: string; typeOfReport: string, fieldOperation : string };
 }
 
-const DEFAULT_SEARCH_FILTER = { responseForDestroyerReport: 'ALL', typeOfReport: 'ALL' };
+const DEFAULT_SEARCH_FILTER = { responseForDestroyerReport: 'ALL', typeOfReport: 'ALL', fieldOperation : "DSC" };
 
 const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxList, CartComponent, url, onCheck, refreshGrid, disableFilter, searchQueryFilter = DEFAULT_SEARCH_FILTER }) => {
   const { ref, inView } = useInView();
@@ -52,7 +52,7 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
   const query = searchParams.get('query')?.toString() || '';
   const formName = searchParams.get('formName')
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
-  const [publicationApprovalByAdmin, setPublicationApprovalByAdmin] = useState<boolean|null>(null);
+  const [publicationApprovalByAdmin, setPublicationApprovalByAdmin] = useState<boolean | null>(null);
 
   const router = useRouter();
 
@@ -70,23 +70,39 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       // Assuming PAGE_SIZE is defined in dataService or passed as a prop/constant
+      // debugger
       const PAGE_SIZE = 10;
-      return lastPage.data && lastPage.data.length === PAGE_SIZE ? allPages.length : undefined;
+      return lastPage.data && lastPage.data.content.length === PAGE_SIZE ? allPages?.length : undefined;
     },
     refetchOnWindowFocus: false,
   });
 
-    useEffect(() => {
-      const storedFormName = localStorage.getItem('publicationApprovalByAdmin');
-      if (storedFormName) {
-        setPublicationApprovalByAdmin(JSON.parse(storedFormName));
+  useEffect(() => {
+    const stored = localStorage.getItem('publicationApprovalByAdmin');
+    if (stored !== null) {
+      try {
+        const parsed = JSON.parse(stored);
+        setPublicationApprovalByAdmin(parsed);
+      } catch (err) {
+        console.error('Error parsing stored publicationApprovalByAdmin:', err);
       }
-       return () => {
+    }
+
+    return () => {
       localStorage.removeItem('publicationApprovalByAdmin');
     };
   }, []);
 
- const handleRefreshGrid = useCallback(() => {
+  useEffect(() => {
+    if (publicationApprovalByAdmin !== null) {
+      localStorage.setItem(
+        'publicationApprovalByAdmin',
+        JSON.stringify(publicationApprovalByAdmin)
+      );
+    }
+  }, [publicationApprovalByAdmin]);
+
+  const handleRefreshGrid = useCallback(() => {
     if (isFilterOpen) {
       setIsFilterOpen(false);
     }
@@ -145,7 +161,7 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
   );
 
   const renderContent = useCallback(() => {
-    const allItems = pages?.pages.flatMap((page) => page.data) || [];
+    const allItems = pages?.pages.flatMap((page) => page.data.content) || [];
     if (isFetching && !isFetchingNextPage) {
       return (
         <Box sx={{ width: '100%', mt: 2 }}>
@@ -172,9 +188,9 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
     }
 
     // @ts-ignore
- return pages.pages[0]?.data?.content?.map(
-  (data: TReporterInformationItem, pageIndex: number, array: TReporterInformationItem[]) => {
-    const isLastItem = pageIndex === array.length - 1;
+    return allItems?.map(
+      (data: TReporterInformationItem, pageIndex: number, array: TReporterInformationItem[]) => {
+        const isLastItem = pageIndex === array.length - 1;
         return (
           <Grid sx={{ width: 1, mx: 'auto' }} key={pageIndex} size={{ xs: 12, md: 10, xl: 9 }}>
             {CartComponent && <CartComponent onCheck={onCheck} data={data} />}

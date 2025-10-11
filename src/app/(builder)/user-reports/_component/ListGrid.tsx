@@ -52,7 +52,7 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
   const query = searchParams.get('query')?.toString() || '';
   const formName = searchParams.get('formName')
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
-  const [publicationApprovalByAdmin, setPublicationApprovalByAdmin] = useState<boolean|null>(null);
+  const [publicationApprovalByAdmin, setPublicationApprovalByAdmin] = useState<boolean | null>(null);
 
   const router = useRouter();
 
@@ -76,17 +76,32 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
     refetchOnWindowFocus: false,
   });
 
-    useEffect(() => {
-      const storedFormName = localStorage.getItem('publicationApprovalByAdmin');
-      if (storedFormName) {
-        setPublicationApprovalByAdmin(JSON.parse(storedFormName));
+  useEffect(() => {
+    const stored = localStorage.getItem('publicationApprovalByAdmin');
+    if (stored !== null) {
+      try {
+        const parsed = JSON.parse(stored);
+        setPublicationApprovalByAdmin(parsed);
+      } catch (err) {
+        console.error('Error parsing stored publicationApprovalByAdmin:', err);
       }
-       return () => {
+    }
+
+    return () => {
       localStorage.removeItem('publicationApprovalByAdmin');
     };
   }, []);
 
- const handleRefreshGrid = useCallback(() => {
+  useEffect(() => {
+    if (publicationApprovalByAdmin !== null) {
+      localStorage.setItem(
+        'publicationApprovalByAdmin',
+        JSON.stringify(publicationApprovalByAdmin)
+      );
+    }
+  }, [publicationApprovalByAdmin]);
+
+  const handleRefreshGrid = useCallback(() => {
     if (isFilterOpen) {
       setIsFilterOpen(false);
     }
@@ -172,9 +187,9 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
     }
 
     // @ts-ignore
- return pages.pages[0]?.data?.content?.map(
-  (data: TReporterInformationItem, pageIndex: number, array: TReporterInformationItem[]) => {
-    const isLastItem = pageIndex === array.length - 1;
+    return pages.pages[0]?.data?.content?.map(
+      (data: TReporterInformationItem, pageIndex: number, array: TReporterInformationItem[]) => {
+        const isLastItem = pageIndex === array.length - 1;
         return (
           <Grid sx={{ width: 1, mx: 'auto' }} key={pageIndex} size={{ xs: 12, md: 10, xl: 9 }}>
             {CartComponent && <CartComponent onCheck={onCheck} data={data} />}

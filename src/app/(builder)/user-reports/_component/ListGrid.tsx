@@ -70,8 +70,9 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       // Assuming PAGE_SIZE is defined in dataService or passed as a prop/constant
+      // debugger
       const PAGE_SIZE = 10;
-      return lastPage.data && lastPage.data.length === PAGE_SIZE ? allPages.length : undefined;
+      return lastPage.data && lastPage.data.content.length === PAGE_SIZE ? allPages?.length : undefined;
     },
     refetchOnWindowFocus: false,
   });
@@ -160,7 +161,7 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
   );
 
   const renderContent = useCallback(() => {
-    const allItems = pages?.pages.flatMap((page) => page.data) || [];
+    const allItems = pages?.pages.flatMap((page) => page.data.content) || [];
     if (isFetching && !isFetchingNextPage) {
       return (
         <Box sx={{ width: '100%', mt: 2 }}>
@@ -187,7 +188,7 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
     }
 
     // @ts-ignore
-    return pages.pages[0]?.data?.content?.map(
+    return allItems?.map(
       (data: TReporterInformationItem, pageIndex: number, array: TReporterInformationItem[]) => {
         const isLastItem = pageIndex === array.length - 1;
         return (

@@ -32,7 +32,6 @@ export default function ListGridWrapper() {
     },
   ];
 
-  console.log('formType', formType)
 
   const FilterSidebar = () => {
     return (
@@ -225,7 +224,6 @@ export default function ListGridWrapper() {
   };
   const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormType((prev: any) => {
-      console.log('event.target.value', event.target.value)
       return { ...prev, fieldOperation: (event.target as HTMLInputElement).value };
     });
   };

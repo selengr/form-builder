@@ -20,7 +20,7 @@ export default function ListGridWrapper() {
   const [formType, setFormType] = useState<any>({
     responseForDestroyerReport: 'ALL',
     typeOfReport: 'ALL',
-    fieldOperation : "DSC"
+    fieldOperation : "ASC"
   });
   const filterBoxList: any = [];
   const searchBoxList: any = [
@@ -201,7 +201,7 @@ export default function ListGridWrapper() {
                   params.delete('query');
                 }
                 push(`${pathname}?${params.toString()}`);
-                setFormType({ responseForDestroyerReport: 'ALL', typeOfReport: 'ALL', fieldOperation : "DSC" });
+                setFormType({ responseForDestroyerReport: 'ALL', typeOfReport: 'ALL', fieldOperation : "ASC" });
                 setRefreshGrid((prev) => !prev);
               }}>
               حذف فیلتر

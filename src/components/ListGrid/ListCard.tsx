@@ -25,6 +25,7 @@ interface ListCardProps {
     status: string;
     accessType?: string;
     participants: number;
+    accessibility: string[];
     formPublishSetting : {
       capacityPublicLink : number | null;
     };
@@ -93,6 +94,22 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
     router.push(`stats/${data.id}`)
   }
 
+    const getAccessLabel = (accessType?: string[]) => {
+      if (!accessType || accessType.length === 0) return 'نامشخص';
+
+      const hasPublic = accessType.includes('PUBLIC');
+      const hasAssign = accessType.includes('ASSIGN');
+      const hasNoAccess = accessType.includes('NO_ACCESS');
+
+      if (hasPublic && hasAssign) return 'عمومی - اختصاصی';
+      if (hasPublic) return 'عمومی';
+      if (hasAssign) return 'اختصاصی';
+      if (hasNoAccess) return 'بدون دسترسی';
+
+      return 'نامشخص';
+    };
+
+
   return (
     <>
       <div className='border p-4 rounded-[20px] border-[#DDE1E6] flex flex-col gap-4 w-full max-w-full relative'>
@@ -103,7 +120,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
 
         <div className='grid grid-cols-1 gap-2'>
           <InfoRow label='نوع' value={formTypePersian[data.type]} bold />
-          <InfoRow label='دسترسی' value={data.accessType || 'عمومی'} bold />
+          <InfoRow label='دسترسی' value={getAccessLabel(data.accessibility)} bold />
           <InfoRow label='تعداد شرکت‌کننده' value={data.participants} bold />
           <InfoRow label='تعداد گویه' value={data.questionListSize} bold />
           <InfoRow label='ظرفیت عمومی'  value={data.formPublishSetting.capacityPublicLink ?? 0} bold />

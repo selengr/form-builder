@@ -8,7 +8,7 @@ interface SearchBoxItem {
 }
 
 const PAGE_SIZE = 10;
-const DEFAULT_SEARCH_FILTER = { responseForDestroyerReport: 'ALL', typeOfReport: 'ALL', fieldOperation : "DSC" };
+const DEFAULT_SEARCH_FILTER = { responseForDestroyerReport: 'ALL', typeOfReport: 'ALL', fieldOperation : "ASC" };
 
 export async function fetchData(
   {

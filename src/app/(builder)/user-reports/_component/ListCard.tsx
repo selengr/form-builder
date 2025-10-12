@@ -33,9 +33,10 @@ const ListCard = ({ data }: IProps) => {
             <span className='text-[#1758BA] text-sm break-all'>{description}</span>
           </div>
           {typeOfReportModel.value === "RESULT_REPORT" && (
-            <div className='flex gap-2 cursor-pointer' onClick={() => setIsModalOpen(true)}>
+            <div className='flex gap-2 cursor-pointer relative w-full' onClick={() => setIsModalOpen(true)}>
               <span className='text-[#161616] whitespace-nowrap text-sm'>متن گزارش:</span>
-              <span className='text-[#1758BA] text-sm break-all line-clamp-1'>{resultReportText}</span>
+              <span className='text-[#1758BA] text-sm break-all line-clamp-1 w-[67%]'>{resultReportText}</span>
+              <div className='absolute bottom-0 left-0 bg-[#1758BA] text-white flex justify-center items-center h-[25px] w-[30px] rounded-md'>...</div>
             </div>
           )}
         </div>

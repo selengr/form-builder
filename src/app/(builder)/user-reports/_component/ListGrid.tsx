@@ -44,7 +44,7 @@ interface Props {
   searchQueryFilter?: { responseForDestroyerReport: string; typeOfReport: string, fieldOperation : string };
 }
 
-const DEFAULT_SEARCH_FILTER = { responseForDestroyerReport: 'ALL', typeOfReport: 'ALL', fieldOperation : "DSC" };
+const DEFAULT_SEARCH_FILTER = { responseForDestroyerReport: 'ALL', typeOfReport: 'ALL', fieldOperation : "ASC" };
 
 const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxList, CartComponent, url, onCheck, refreshGrid, disableFilter, searchQueryFilter = DEFAULT_SEARCH_FILTER }) => {
   const { ref, inView } = useInView();

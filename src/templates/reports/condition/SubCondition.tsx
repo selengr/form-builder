@@ -34,7 +34,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
   onlyAllQuestions,
   onlyAllDateOptions,
 }) => {
-  const { control, setValue } = useFormContext();
+  const { control, setValue, getValues } = useFormContext();
   const currentValues = useWatch({
     control,
     name: `conditions.${index}.subConditions.${subIndex}`,
@@ -97,7 +97,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
               if(combinedKey === "INFO_FIELD"){
                 setValue(`conditions.${index}.subConditions.${subIndex}.operatorType`, "TEXT");
                 setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, "#startWithText");
-                setValue(`conditions.${index}.subConditions.${subIndex}.value`, "0");
+                setValue(`conditions.${index}.subConditions.${subIndex}.value`, "---");
               }else {
                 setValue(`conditions.${index}.subConditions.${subIndex}.operatorType`, '');
                 setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, '');
@@ -114,8 +114,15 @@ export const SubCondition: React.FC<SubConditionProps> = ({
             flexShrink: 0,
           }}
           onChange={() => {
-            setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, '');
-            setValue(`conditions.${index}.subConditions.${subIndex}.value`, '');
+            const questionType = getValues(`conditions.${index}.subConditions.${subIndex}.questionType`)
+            const combinedKey = `${questionType?.split('*')[0]}`;
+            if (combinedKey === "INFO_FIELD") {
+              setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, "#startWithText");
+              setValue(`conditions.${index}.subConditions.${subIndex}.value`, "---");
+            } else {
+              setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, '');
+              setValue(`conditions.${index}.subConditions.${subIndex}.value`, '');
+            }
           }}
           isOperator={true}
           disabled={!currentValues.questionType}
@@ -129,7 +136,13 @@ export const SubCondition: React.FC<SubConditionProps> = ({
             flexShrink: 0,
           }}
           onChange={() => {
-            setValue(`conditions.${index}.subConditions.${subIndex}.value`, '');
+           const questionType = getValues(`conditions.${index}.subConditions.${subIndex}.questionType`)
+            const combinedKey = `${questionType?.split('*')[0]}`;
+            if (combinedKey === "INFO_FIELD") {
+              setValue(`conditions.${index}.subConditions.${subIndex}.value`, "---");
+            } else {
+              setValue(`conditions.${index}.subConditions.${subIndex}.value`, '');
+            }
           }}
           isOperator={true}
           disabled={!currentValues.operatorType}

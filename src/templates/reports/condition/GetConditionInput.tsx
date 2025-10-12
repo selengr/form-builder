@@ -57,7 +57,7 @@ export const getQuestion = (type: string, values: any) => {
       ];
        case 'INFO_FIELD':
       return [
-         { value: 'TEXT', label: 'متن' },
+         { value: 'TEXT', label: '---' },
       ];
 
 
@@ -152,7 +152,7 @@ export const getCondition = (type: string, operator: string, values: any) => {
       ];
         case 'INFO_FIELD_TEXT':
       return [
-         { value: '#startWithText', label: 'شروع شدن با ' },
+         { value: '#startWithText', label: '---' },
       ];
 
     default:

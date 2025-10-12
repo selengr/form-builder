@@ -114,7 +114,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
             flexShrink: 0,
           }}
           onChange={() => {
-            let questionType = getValues(`conditions.${index}.subConditions.${subIndex}.questionType`)
+            const questionType = getValues(`conditions.${index}.subConditions.${subIndex}.questionType`)
             const combinedKey = `${questionType?.split('*')[0]}`;
             if (combinedKey === "INFO_FIELD") {
               setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, "#startWithText");
@@ -136,7 +136,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
             flexShrink: 0,
           }}
           onChange={() => {
-            let questionType = getValues(`conditions.${index}.subConditions.${subIndex}.questionType`)
+            const questionType = getValues(`conditions.${index}.subConditions.${subIndex}.questionType`)
             const combinedKey = `${questionType?.split('*')[0]}`;
             if (combinedKey === "INFO_FIELD") {
               setValue(`conditions.${index}.subConditions.${subIndex}.value`, "---");

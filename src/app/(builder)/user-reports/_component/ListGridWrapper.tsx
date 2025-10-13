@@ -20,6 +20,7 @@ export default function ListGridWrapper() {
   const [formType, setFormType] = useState<any>({
     responseForDestroyerReport: 'ALL',
     typeOfReport: 'ALL',
+    fieldOperation : "ASC"
   });
   const filterBoxList: any = [];
   const searchBoxList: any = [
@@ -30,6 +31,7 @@ export default function ListGridWrapper() {
       nextConditionOperator: 'OR',
     },
   ];
+
 
   const FilterSidebar = () => {
     return (
@@ -109,7 +111,7 @@ export default function ListGridWrapper() {
                   <RadioGroup aria-labelledby='demo-controlled-radio-buttons-group' name='controlled-radio-buttons-group' value={formType.typeOfReport} onChange={handleTypeOfReportChange}>
                     <FormControlLabel value='ALL' control={<Radio />} label='همه' />
                     <FormControlLabel value='FORM' control={<Radio />} label='فرم' />
-                    <FormControlLabel value='REPORT' control={<Radio />} label='گزارش نتایج' />
+                    <FormControlLabel value='RESULT_REPORT' control={<Radio />} label='گزارش نتایج' />
                   </RadioGroup>
                 </FormControl>
               </div>
@@ -137,9 +139,9 @@ export default function ListGridWrapper() {
                     id='demo-controlled-radio-buttons-group'>
                     بر اساس زمان
                   </FormLabel>
-                  <RadioGroup aria-labelledby='demo-controlled-radio-buttons-group' name='controlled-radio-buttons-group' value={formType.typeOfReport} onChange={handleTypeOfReportChange}>
-                    <FormControlLabel value='ALL' control={<Radio />} label='جدیدترین' />
-                    <FormControlLabel value='PUBLIC' control={<Radio />} label='قدیمیترین' />
+                  <RadioGroup aria-labelledby='demo-controlled-radio-buttons-group' name='controlled-radio-buttons-group' value={formType.fieldOperation} onChange={handleTypeChange}>
+                    <FormControlLabel value='ASC' control={<Radio />} label='جدیدترین' />
+                    <FormControlLabel value='DSC' control={<Radio />} label='قدیمیترین' />
                   </RadioGroup>
                 </FormControl>
               </div>
@@ -199,7 +201,7 @@ export default function ListGridWrapper() {
                   params.delete('query');
                 }
                 push(`${pathname}?${params.toString()}`);
-                setFormType({ responseForDestroyerReport: 'ALL', typeOfReport: 'ALL' });
+                setFormType({ responseForDestroyerReport: 'ALL', typeOfReport: 'ALL', fieldOperation : "ASC" });
                 setRefreshGrid((prev) => !prev);
               }}>
               حذف فیلتر
@@ -220,12 +222,18 @@ export default function ListGridWrapper() {
       return { ...prev, typeOfReport: (event.target as HTMLInputElement).value };
     });
   };
+  const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormType((prev: any) => {
+      return { ...prev, fieldOperation: (event.target as HTMLInputElement).value };
+    });
+  };
 
   return (
     <ListGrid
       searchBoxList={searchBoxList}
       filterBoxList={filterBoxList}
-      url={`/admin/destroy-form/${id}`}
+      //  url={`/admin/destroy-form/${id}`}
+      url={`/admin/destroy-form/listgrid-reporters-on-form/${id}`}
       filterComponent={<FilterSidebar />}
       CartComponent={(item: any) => <ListCard data={item.data} />}
       disableFilter={false}

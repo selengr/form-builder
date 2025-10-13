@@ -56,6 +56,10 @@ export const getQuestion = (type: string, values: any) => {
         { value: 'QUESTION', label: 'سوال ' },
         { value: 'CALCULATION', label: 'محاسبه‌گر' },
       ];
+    case 'INFO_FIELD':
+      return [
+         { value: 'TEXT', label: '---' },
+      ];
 
     default:
       return [];
@@ -64,7 +68,6 @@ export const getQuestion = (type: string, values: any) => {
 
 export const getCondition = (type: string, operator: string, values: any) => {
   const combinedKey = `${type?.split('*')[0]}_${operator.split('@')[0]}`;
-
   switch (combinedKey) {
     case 'MULTIPLE_CHOICE_VALUE':
     case 'MULTIPLE_CHOICE_OPTION':
@@ -145,6 +148,11 @@ export const getCondition = (type: string, operator: string, values: any) => {
         { value: '!#greaterEqualThanNumber', label: ' کوچکتر مساوی' },
         { value: '#equalThanNumber', label: 'برابر  با' },
         { value: '!#equalThanNumber', label: 'نابرابر با' },
+      ];
+
+    case 'INFO_FIELD_TEXT':
+      return [
+         { value: '#startWithText', label: '---' },
       ];
 
     default:
@@ -344,6 +352,9 @@ export const getInput = (
     case 'CALCULATION_CALCULATION_#greaterEqualThanNumber':
     case 'CALCULATION_CALCULATION_!#greaterEqualThanNumber':
       return <SelectController name={field.name} options={onlyAllCalculationOptions} isLoading={isFetchingOnlyAllCalculation} sx={{ minWidth: 215 }} />;
+
+    case 'INFO_FIELD_TEXT_#equalThanNumber':
+      return <TextFieldController disabled name={field.name} type="number" />;
 
     default:
       return <TextFieldController name={field.name} disabled />;

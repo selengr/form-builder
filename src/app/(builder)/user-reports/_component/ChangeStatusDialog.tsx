@@ -14,11 +14,13 @@ import { RHFTextField } from '@/components/hook-form';
 import { SubmitButtons } from '@/components/condition/form/SubmitButtons';
 // style
 import { StyledDialog, StyledDialogContent } from './userReports.style';
+import { useQueryClient } from '@tanstack/react-query';
 
 export interface IProps {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   publicationApprovalByAdmin: boolean;
+  setPublicationApprovalByAdmin: Dispatch<SetStateAction<boolean>>;
 }
 
 const TicketSchema = z.object({
@@ -26,10 +28,12 @@ const TicketSchema = z.object({
 });
 type TTicketFormData = z.infer<typeof TicketSchema>;
 
-export const ChangeStatusDialog: React.FC<IProps> = ({ open, setOpen, publicationApprovalByAdmin }) => {
+export const ChangeStatusDialog: React.FC<IProps> = ({ open, setOpen, publicationApprovalByAdmin, setPublicationApprovalByAdmin }) => {
   const { id } = useParams();
   const { refresh } = useRouter();
   const postChangeStatus = usePostChangeStatus();
+
+   const queryClient = useQueryClient();
 
   const methods = useForm<TTicketFormData>({
     resolver: zodResolver(TicketSchema),
@@ -52,8 +56,9 @@ export const ChangeStatusDialog: React.FC<IProps> = ({ open, setOpen, publicatio
         },
       },
       {
-        onSuccess: () => {
-          refresh();
+        onSuccess: async() => {
+          queryClient.invalidateQueries({ queryKey: ['datas'] });
+          setPublicationApprovalByAdmin(!publicationApprovalByAdmin)
           handleClose();
         },
       },

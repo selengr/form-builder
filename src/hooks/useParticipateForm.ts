@@ -222,6 +222,7 @@ export const useParticipateForm = () => {
       const isChoiceType = ['MULTIPLE_CHOICE', 'MULTIPLE_CHOICE_IMAGE'].includes(
         question.questionType
       );
+      const INFO_FIELD = ['INFO_FIELD'].includes(question.questionType);
 
       let answerList;
 
@@ -258,6 +259,14 @@ export const useParticipateForm = () => {
             },
           ];
         }
+      } else if (INFO_FIELD) {
+        answerList = [
+            {
+              optionId: null,
+              id: typeof answerId === 'number' ? answerId : undefined,
+              answer: "#",
+            },
+          ];
       } else {
         answerList = [
           {

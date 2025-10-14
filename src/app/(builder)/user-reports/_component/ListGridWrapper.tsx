@@ -20,7 +20,7 @@ export default function ListGridWrapper() {
   const [formType, setFormType] = useState<any>({
     responseForDestroyerReport: 'ALL',
     typeOfReport: 'ALL',
-    fieldOperation : "ASC"
+    fieldOperation : "DSC"
   });
   const filterBoxList: any = [];
   const searchBoxList: any = [
@@ -140,8 +140,8 @@ export default function ListGridWrapper() {
                     بر اساس زمان
                   </FormLabel>
                   <RadioGroup aria-labelledby='demo-controlled-radio-buttons-group' name='controlled-radio-buttons-group' value={formType.fieldOperation} onChange={handleTypeChange}>
-                    <FormControlLabel value='ASC' control={<Radio />} label='جدیدترین' />
-                    <FormControlLabel value='DSC' control={<Radio />} label='قدیمیترین' />
+                    <FormControlLabel value='DSC' control={<Radio />} label='جدیدترین' />
+                    <FormControlLabel value='ASC' control={<Radio />} label='قدیمیترین' />
                   </RadioGroup>
                 </FormControl>
               </div>
@@ -201,7 +201,7 @@ export default function ListGridWrapper() {
                   params.delete('query');
                 }
                 push(`${pathname}?${params.toString()}`);
-                setFormType({ responseForDestroyerReport: 'ALL', typeOfReport: 'ALL', fieldOperation : "ASC" });
+                setFormType({ responseForDestroyerReport: 'ALL', typeOfReport: 'ALL', fieldOperation : "DSC" });
                 setRefreshGrid((prev) => !prev);
               }}>
               حذف فیلتر

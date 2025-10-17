@@ -20,7 +20,6 @@ import { SwitchButton } from '../Switch/SwitchButton';
 import ConfirmDialog from '@/components/confirm-dialog';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { CancelGroupAllocationModal } from './CancelGroupAllocationModal';
 
 const buttonStylesAlert = {
   height: '50px',
@@ -46,7 +45,7 @@ const groupFormSchema = z.object({
 
 type GroupFormSchemaType = z.infer<typeof groupFormSchema>;
 
-interface GroupSettingsProps {
+interface MemberSettingsProps {
   handleOpen: () => void;
   formId: string | number;
   formData: {
@@ -55,7 +54,7 @@ interface GroupSettingsProps {
   };
 }
 
-const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formData }) => {
+const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, formData }) => {
   const { push } = useRouter()
   const [groups, setGroups] = useState<IGroup[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -298,11 +297,6 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
               <Box key={group.id} display='flex' gap={1} bgcolor='white' alignItems='center' justifyContent='space-between' px={2} py={1} borderRadius='12px'>
                 <Checkbox checked={selectedGroupIds.includes(group.id)} onChange={() => handleToggleGroup(group.id)} disabled={group.userCount < 1} />
                 <Typography flex={1}>{group.name}</Typography>
-                  //----  here
-                 <CancelGroupAllocationModal 
-                    setOpenCancelGroupAllocationDialog={setOpenCancelGroupAllocationDialog}
-                    openCancelGroupAllocationDialog={openCancelGroupAllocationDialog}
-                  />
                 <Typography fontSize='14px'>عضو: {group.userCount} نفر</Typography>
               </Box>
             ))
@@ -398,8 +392,9 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
                 </Button>
               }
             />
+
     </FormProvider>
   );
 };
 
-export default GroupSettings;
+export default MemberSettings;

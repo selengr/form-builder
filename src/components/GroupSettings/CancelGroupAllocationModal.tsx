@@ -2,24 +2,29 @@
 import { Box, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { CgClose } from 'react-icons/cg';
-import { IoSettingsOutline } from 'react-icons/io5';
-import PublishSettingsTabValue from './PublishSettingsTabValue';
+import { CiEdit } from "react-icons/ci";
 
-interface PublishSettingsDialogProps {
-  formId: string;
-  formData: any;
+
+interface ICancelGroupAllocationModalProps {
+  openCancelGroupAllocationDialog: boolean;
+  setOpenCancelGroupAllocationDialog: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function PublishSettingsDialog({ formId = "5145", formData }: PublishSettingsDialogProps) {
-  const [openDialog, setOpenDialog] = useState(true);
 
-  const handleOpen = useCallback(() => {
-    setOpenDialog((prev) => !prev);
-  }, []);
+export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalProps> = ({
+  openCancelGroupAllocationDialog,
+  setOpenCancelGroupAllocationDialog,
+}) => {
+  
+
+    
+        const handleOpen = () => {
+            setOpenCancelGroupAllocationDialog((prev) => !prev);
+        };
 
   return (
     <>
-      <IconButton
+     <IconButton
         onClick={handleOpen}
         sx={{
           height: '40px',
@@ -29,10 +34,10 @@ export default function PublishSettingsDialog({ formId = "5145", formData }: Pub
           alignItems: 'center',
         }}
         aria-label='تنظیمات انتشار'>
-        <IoSettingsOutline color='#2A2A2A' />
+          <CiEdit  color='#2A2A2A' />
       </IconButton>
       <Dialog
-        open={openDialog}
+        open={openCancelGroupAllocationDialog}
         onClose={handleOpen}
         dir='ltr'
         sx={{
@@ -69,9 +74,10 @@ export default function PublishSettingsDialog({ formId = "5145", formData }: Pub
               تنظیمات انتشار
             </Typography>
           </Box>
-          <PublishSettingsTabValue handleOpen={handleOpen} formId={formId} formData={formData} />
+          {/* <PublishSettingsTabValue handleOpen={handleOpen} formId={formId} formData={formData} /> */}
         </DialogContent>
-      </Dialog>
+      </Dialog> 
     </>
-  );
+  )
 }
+

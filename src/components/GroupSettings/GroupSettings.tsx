@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import Image from 'next/image';
 import { toast } from 'sonner';
+import { CiEdit } from "react-icons/ci";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useState } from 'react';
@@ -72,6 +73,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
   const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(false);
   const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false);
   const [openCancelGroupAllocationDialog, setOpenCancelGroupAllocationDialog] = useState(false);
+  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
 
   const queryClient = useQueryClient();
   const debouncedValue = useDebounce(inputValue, 500);
@@ -255,9 +257,15 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
     push("/reports")
   }
 
-    const handleOpenCancelGroupAllocation = useCallback(() => {
-        setOpenCancelGroupAllocationDialog((prev) => !prev);
-    }, []);
+  const handleOpenCancelGroupAllocation = useCallback((groupId: number) => {
+    setSelectedGroupId(groupId);
+    setOpenCancelGroupAllocationDialog(true);
+  }, []);
+
+  const handleCloseCancelGroupAllocation = useCallback(() => {
+    setOpenCancelGroupAllocationDialog(false);
+    setSelectedGroupId(null);
+  }, []);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -298,11 +306,19 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
               <Box key={group.id} display='flex' gap={1} bgcolor='white' alignItems='center' justifyContent='space-between' px={2} py={1} borderRadius='12px'>
                 <Checkbox checked={selectedGroupIds.includes(group.id)} onChange={() => handleToggleGroup(group.id)} disabled={group.userCount < 1} />
                 <Typography flex={1}>{group.name}</Typography>
-                  //----  here
-                 <CancelGroupAllocationModal 
-                    setOpenCancelGroupAllocationDialog={setOpenCancelGroupAllocationDialog}
-                    openCancelGroupAllocationDialog={openCancelGroupAllocationDialog}
-                  />
+                
+                <IconButton
+                         onClick={() => handleOpenCancelGroupAllocation(group.id)}
+                        sx={{
+                          height: '40px',
+                          width: '40px',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                        aria-label='تنظیمات انتشار'>
+                          <CiEdit  color='#2A2A2A' />
+                      </IconButton>
                 <Typography fontSize='14px'>عضو: {group.userCount} نفر</Typography>
               </Box>
             ))
@@ -398,6 +414,13 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
                 </Button>
               }
             />
+
+            <CancelGroupAllocationModal
+            openCancelGroupAllocationDialog={openCancelGroupAllocationDialog}
+            setOpenCancelGroupAllocationDialog={setOpenCancelGroupAllocationDialog}
+            groupId={selectedGroupId}
+          />
+
     </FormProvider>
   );
 };

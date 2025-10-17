@@ -2,13 +2,41 @@
 import { Box, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { CgClose } from 'react-icons/cg';
-import { CiEdit } from "react-icons/ci";
 
 
 interface ICancelGroupAllocationModalProps {
   openCancelGroupAllocationDialog: boolean;
   setOpenCancelGroupAllocationDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  groupId: number | null;
 }
+
+export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalProps> = ({
+  openCancelGroupAllocationDialog,
+  setOpenCancelGroupAllocationDialog,
+  groupId,
+}) => {
+  const handleClose = () => {
+    setOpenCancelGroupAllocationDialog(false);
+  };
+
+  return (
+    <Dialog open={openCancelGroupAllocationDialog} onClose={handleClose}>
+      <Box p={3}>
+        <Typography variant="h6">لغو تخصیص گروه</Typography>
+        <Typography mt={2}>
+          آیا از لغو تخصیص گروه با شناسه {groupId} اطمینان دارید؟
+        </Typography>
+
+        <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
+          <Button onClick={handleClose}>انصراف</Button>
+          <Button variant="contained" color="error">
+            تایید
+          </Button>
+        </Box>
+      </Box>
+    </Dialog>
+  );
+};
 
 
 export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalProps> = ({
@@ -24,18 +52,7 @@ export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalPro
 
   return (
     <>
-     <IconButton
-        onClick={handleOpen}
-        sx={{
-          height: '40px',
-          width: '40px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-        aria-label='تنظیمات انتشار'>
-          <CiEdit  color='#2A2A2A' />
-      </IconButton>
+
       <Dialog
         open={openCancelGroupAllocationDialog}
         onClose={handleOpen}

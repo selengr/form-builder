@@ -15,47 +15,17 @@ export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalPro
   setOpenCancelGroupAllocationDialog,
   groupId,
 }) => {
+    
   const handleClose = () => {
     setOpenCancelGroupAllocationDialog(false);
   };
-
-  return (
-    <Dialog open={openCancelGroupAllocationDialog} onClose={handleClose}>
-      <Box p={3}>
-        <Typography variant="h6">لغو تخصیص گروه</Typography>
-        <Typography mt={2}>
-          آیا از لغو تخصیص گروه با شناسه {groupId} اطمینان دارید؟
-        </Typography>
-
-        <Box display="flex" justifyContent="flex-end" gap={2} mt={3}>
-          <Button onClick={handleClose}>انصراف</Button>
-          <Button variant="contained" color="error">
-            تایید
-          </Button>
-        </Box>
-      </Box>
-    </Dialog>
-  );
-};
-
-
-export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalProps> = ({
-  openCancelGroupAllocationDialog,
-  setOpenCancelGroupAllocationDialog,
-}) => {
-  
-
-    
-        const handleOpen = () => {
-            setOpenCancelGroupAllocationDialog((prev) => !prev);
-        };
 
   return (
     <>
 
       <Dialog
         open={openCancelGroupAllocationDialog}
-        onClose={handleOpen}
+        onClose={handleClose}
         dir='ltr'
         sx={{
           overflow: 'hidden',
@@ -72,7 +42,7 @@ export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalPro
           },
         }}>
         <Box className='flex items-center justify-start' sx={{ p: 2 }}>
-          <IconButton onClick={handleOpen} aria-label='بستن'>
+          <IconButton onClick={handleClose} aria-label='بستن'>
             <CgClose color='#404040' size='1.5rem' />
           </IconButton>
         </Box>

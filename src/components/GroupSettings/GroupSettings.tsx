@@ -303,21 +303,23 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
             </Typography>
           ) : (
             groups.map((group) => (
-              <Box key={group.id} display='flex' gap={1} bgcolor='white' alignItems='center' justifyContent='space-between' px={2} py={1} borderRadius='12px'>
+              <Box key={group.id} display='flex' gap={1} position={"relative"} bgcolor='white' alignItems='center' justifyContent='space-between' px={2} py={1} borderRadius='12px'>
                 <Checkbox checked={selectedGroupIds.includes(group.id)} onChange={() => handleToggleGroup(group.id)} disabled={group.userCount < 1} />
                 <Typography flex={1}>{group.name}</Typography>
                 
                 <IconButton
                          onClick={() => handleOpenCancelGroupAllocation(group.id)}
                         sx={{
-                          height: '40px',
-                          width: '40px',
+                          height: '45px',
+                          width: '45px',
                           display: 'flex',
                           justifyContent: 'center',
                           alignItems: 'center',
+                          position: "absolute",
+                          right: 10
                         }}
                         aria-label='تنظیمات انتشار'>
-                          <CiEdit  color='#2A2A2A' />
+                          <CiEdit  color='#1758BA' />
                       </IconButton>
                 <Typography fontSize='14px'>عضو: {group.userCount} نفر</Typography>
               </Box>

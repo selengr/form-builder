@@ -75,6 +75,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
   const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false);
   const [openCancelGroupAllocationDialog, setOpenCancelGroupAllocationDialog] = useState(false);
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
+  const [initialSelectedGroupIds, setInitialSelectedGroupIds] = useState<number[]>([]);
 
   const queryClient = useQueryClient();
   const debouncedValue = useDebounce(inputValue, 500);
@@ -158,15 +159,25 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
 
       // const data2: GroupListResponse = await res.json();
       const data: any = FakeData
-      
-      const transformed: IGroup[] = data.content.map((item:any) => ({
+
+      const transformed: IGroup[] = data.content.map((item: any) => ({
         id: item.groupId,
         name: item.groupName,
         description: '',
         userCount: item.groupMemberCount,
+        isSelected: item.isSelected || false,
       }));
 
       setGroups(transformed);
+
+      const selectedIds = transformed
+        .filter((group) => group.isSelected)
+        .map((group) => group.id);
+
+      if (selectedIds.length > 0) {
+        setValue('groupsId', selectedIds, { shouldValidate: true });
+        setInitialSelectedGroupIds(selectedIds);
+      }
     } catch (err: any) {
       setError(err?.message || 'خطای نامشخصی رخ داده است.');
     } finally {
@@ -193,53 +204,81 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
   const onSubmit = useCallback(
     async (values: GroupFormSchemaType) => {
       const token = await getAuthToken();
+      const currentSelected = values.groupsId;
+
+      const addedGroups = currentSelected.filter(id => !initialSelectedGroupIds.includes(id));
+      const removedGroups = initialSelectedGroupIds.filter(id => !currentSelected.includes(id));
 
       try {
-        const response = await fetch('/api/publish/group', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            formId: Number(formId),
-            groupsId: values.groupsId,
-            showReportForResponder: values.showReportForResponder,
-          }),
-        });
+        if (addedGroups.length > 0) {
+          const response = await fetch('/api/publish/group', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              formId: Number(formId),
+              groupsId: values.groupsId,
+              showReportForResponder: values.showReportForResponder,
+            }),
+          });
 
-        const data = await response.json();
+          const data = await response.json();
 
-        if (!response.ok) {
-          if (data.error && data.details) {
-            data.details.forEach((err: any) => {
-              if (err.path && err.path[0]) {
-                if (err.path[0] === 'groupsId') {
-                  methods.setError('groupsId', {
-                    type: 'manual',
-                    message: err.message || 'خطا در فیلد گروه',
-                  });
+          if (!response.ok) {
+            if (data.error && data.details) {
+              data.details.forEach((err: any) => {
+                if (err.path && err.path[0]) {
+                  if (err.path[0] === 'groupsId') {
+                    methods.setError('groupsId', {
+                      type: 'manual',
+                      message: err.message || 'خطا در فیلد گروه',
+                    });
+                  }
                 }
-              }
-            });
-          } else if (data.error) {
-            toast.error(data.error);
-          } else {
-            toast.error('خطای ناشناخته از سمت سرور');
+              });
+            } else if (data.error) {
+              toast.error(data.error);
+            } else {
+              toast.error('خطای ناشناخته از سمت سرور');
+            }
+            return;
           }
-          return;
-        }
 
-        queryClient.invalidateQueries({ queryKey: ['datas_builder_query'] });
-        toast.success('با موفقیت به سبد خرید افزوده شد.');
-        handleOpen();
-        reset();
+          queryClient.invalidateQueries({ queryKey: ['datas_builder_query'] });
+          toast.success('با موفقیت به سبد خرید افزوده شد.');
+          handleOpen();
+          reset();
+        }
+        if (removedGroups.length > 0) {
+          const cancelResponse = await fetch('/api/group/cancel', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              formId: Number(formId),
+              unselectedGroupsId: removedGroups,
+            }),
+          }
+          );
+
+          const cancelData = await cancelResponse.json();
+          if (!cancelResponse.ok) {
+            toast.error(cancelData.error || 'خطا در لغو گروه‌ها');
+          } else {
+            toast.success('گروه(های) لغوشده با موفقیت حذف شد.');
+          }
+        }
+        setInitialSelectedGroupIds(currentSelected);
       } catch (err) {
         toast.error('خطا در برقراری ارتباط با سرور.');
         console.error('Group publish error:', err);
       }
     },
-    [formId, handleOpen, reset, methods],
+    [formId, handleOpen, reset, methods, initialSelectedGroupIds],
   );
 
   const handleShowReportForResponder = () => {
@@ -307,23 +346,27 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
           ) : (
             groups.map((group) => (
               <Box key={group.id} display='flex' gap={1} position={"relative"} bgcolor='white' alignItems='center' justifyContent='space-between' px={2} py={1} borderRadius='12px'>
-                <Checkbox checked={selectedGroupIds.includes(group.id)} onChange={() => handleToggleGroup(group.id)} disabled={group.userCount < 1} />
+                <Checkbox
+                  checked={selectedGroupIds.includes(group.id)}
+                  onChange={() => handleToggleGroup(group.id)}
+                  disabled={group.userCount < 1}
+                />
                 <Typography flex={1}>{group.name}</Typography>
-                
+
                 <IconButton
-                         onClick={() => handleOpenCancelGroupAllocation(group.id)}
-                        sx={{
-                          height: '45px',
-                          width: '45px',
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          position: "absolute",
-                          right: 90
-                        }}
-                        aria-label='تنظیمات انتشار'>
-                          <CiEdit  color='#1758BA' />
-                      </IconButton>
+                  onClick={() => handleOpenCancelGroupAllocation(group.id)}
+                  sx={{
+                    height: '45px',
+                    width: '45px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    position: "absolute",
+                    right: 90
+                  }}
+                  aria-label='تنظیمات انتشار'>
+                  <CiEdit color='#1758BA' />
+                </IconButton>
                 <Typography fontSize='14px'>عضو: {group.userCount} نفر</Typography>
               </Box>
             ))
@@ -405,27 +448,27 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
         </Button>
       </Box>
       <ConfirmDialog
-              content='تا زمانی که قالب گزارش انفرادی نساخته باشید نمیتواند این تیک را بزند '
-              open={openShowReportForResponderDialog}
-              title='اخطار'
-              onClose={toggleConfirm}
-              cancelText='انصراف'
-              action={
-                <Button type='submit' fullWidth disableRipple variant='contained'
-                  sx={{ ...buttonStylesAlert }}
-                  onClick={handleRedirection}
-                >
-                  برو به قالب گزارش
-                </Button>
-              }
-            />
+        content='تا زمانی که قالب گزارش انفرادی نساخته باشید نمیتواند این تیک را بزند '
+        open={openShowReportForResponderDialog}
+        title='اخطار'
+        onClose={toggleConfirm}
+        cancelText='انصراف'
+        action={
+          <Button type='submit' fullWidth disableRipple variant='contained'
+            sx={{ ...buttonStylesAlert }}
+            onClick={handleRedirection}
+          >
+            برو به قالب گزارش
+          </Button>
+        }
+      />
 
-            <CancelGroupAllocationModal
-            openCancelGroupAllocationDialog={openCancelGroupAllocationDialog}
-            setOpenCancelGroupAllocationDialog={setOpenCancelGroupAllocationDialog}
-            groupId={selectedGroupId}
-             handleOpen={handleOpen} formId={formId} formData={formData}
-          />
+      <CancelGroupAllocationModal
+        openCancelGroupAllocationDialog={openCancelGroupAllocationDialog}
+        setOpenCancelGroupAllocationDialog={setOpenCancelGroupAllocationDialog}
+        groupId={selectedGroupId}
+        handleOpen={handleOpen} formId={formId} formData={formData}
+      />
 
     </FormProvider>
   );

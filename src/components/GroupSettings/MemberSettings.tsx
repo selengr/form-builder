@@ -13,17 +13,14 @@ import { getAuthToken } from '@/utils/getAuthToken';
 import { useDebounce } from '@/hooks/useDebounce';
 import FormProvider from '../hook-form/FormProvider';
 import { SearchBoxItem } from '../ListGrid/ListGrid';
-import { GroupListResponse } from '@/app/groups/page';
-import { IGroup } from '@/app/groups/components/groupListItem';
 // components
 import { SwitchButton } from '../Switch/SwitchButton';
 import ConfirmDialog from '@/components/confirm-dialog';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import FakeData from "../ListGrid/fakedata.json"
 import { AxiosApi } from '@/services/axios/AxiosApi';
 
- interface IUserGroupMemmerInfo {
+interface IUserGroupMemmerInfo {
   activationLink: boolean;
   formBuilderId: number;
   groupId: number;
@@ -68,10 +65,10 @@ interface MemberSettingsProps {
     isCreatedSoloReport: boolean | null
     showReportForResponder: boolean | null
   };
-    groupId: number | null;
+  groupId: number | null;
 }
 
-const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, formData, groupId = 87 }) => { 
+const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, formData, groupId = 87 }) => {
   const { push } = useRouter()
   const [members, setMembers] = useState<IUserGroupMemmerInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -90,7 +87,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
   const [openCancelGroupAllocationDialog, setOpenCancelGroupAllocationDialog] = useState(false);
 
   const [introducedUserJTGroupIdList, setIntroducedUserJTGroupIdList] = useState<number[]>([]);
- const [introducedUserPublishIdList, setIntroducedUserPublishIdList] = useState<number[]>([]);
+  const [introducedUserPublishIdList, setIntroducedUserPublishIdList] = useState<number[]>([]);
 
   const queryClient = useQueryClient();
   const debouncedValue = useDebounce(inputValue, 500);
@@ -160,8 +157,8 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
 
     try {
       const encoded = encodeURIComponent(JSON.stringify(params));
-      
-         const { data } = await AxiosApi.get(`/user-group/introducer/group-listgrid/${Number(groupId)}/members?searchFilterModel=${encoded}&formId=${638}`);
+
+      const { data } = await AxiosApi.get(`/user-group/introducer/group-listgrid/${Number(groupId)}/members?searchFilterModel=${encoded}&formId=${638}`);
       // const res = await fetch(`/api/group/list/${formId}`, {
       //   headers: {
       //     'Content-Type': 'application/json',
@@ -175,13 +172,13 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
       // }
 
       // const data: GroupListResponse = await res.json();
-       const members = Array.isArray(data?.content) ? data.content : [];
-       setMembers(members);
+      const members = Array.isArray(data?.content) ? data.content : [];
+      setMembers(members);
 
       const activeIds = members
-        .filter((m:any) => m.activationLink)
-        .map((m:any) => m.introducedUserJTGroupId);
-        setValue('memberId', activeIds);
+        .filter((m: any) => m.activationLink)
+        .map((m: any) => m.introducedUserJTGroupId);
+      setValue('memberId', activeIds);
 
     } catch (err: any) {
       setError(err?.message || 'خطای نامشخصی رخ داده است.');
@@ -194,40 +191,40 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
     fetchGroups();
   }, [fetchGroups]);
 
-const handleToggleGroup = (member: IUserGroupMemmerInfo) => {
-  const current = getValues("memberId");
-  const isSelected = current.includes(member.introducedUserJTGroupId);
+  const handleToggleGroup = (member: IUserGroupMemmerInfo) => {
+    const current = getValues("memberId");
+    const isSelected = current.includes(member.introducedUserJTGroupId);
 
-  const updated = isSelected
-    ? current.filter((id) => id !== member.introducedUserJTGroupId)
-    : [...current, member.introducedUserJTGroupId];
-  setValue("memberId", updated, { shouldDirty: true, shouldValidate: true });
+    const updated = isSelected
+      ? current.filter((id) => id !== member.introducedUserJTGroupId)
+      : [...current, member.introducedUserJTGroupId];
+    setValue("memberId", updated, { shouldDirty: true, shouldValidate: true });
 
-  if (isSelected) {
-    if (member.activationLink) {
-      if (member.introducedUserPublishId)
-        setIntroducedUserPublishIdList((prev) => {
-          if (prev.includes(member.introducedUserPublishId!)) return prev;
-          return [...prev, member.introducedUserPublishId!];
+    if (isSelected) {
+      if (member.activationLink) {
+        if (member.introducedUserPublishId)
+          setIntroducedUserPublishIdList((prev) => {
+            if (prev.includes(member.introducedUserPublishId!)) return prev;
+            return [...prev, member.introducedUserPublishId!];
+          });
+      } else {
+        setIntroducedUserJTGroupIdList((prev) =>
+          prev.filter((id) => id !== member.introducedUserJTGroupId)
+        );
+      }
+    } else {
+      if (member.activationLink) {
+        setIntroducedUserPublishIdList((prev) =>
+          prev.filter((id) => id !== member.introducedUserPublishId)
+        );
+      } else {
+        setIntroducedUserJTGroupIdList((prev) => {
+          if (prev.includes(member.introducedUserJTGroupId)) return prev;
+          return [...prev, member.introducedUserJTGroupId];
         });
-    } else {
-       setIntroducedUserJTGroupIdList((prev) =>
-        prev.filter((id) => id !== member.introducedUserJTGroupId)
-      );
+      }
     }
-  } else {
-    if (member.activationLink) {
-      setIntroducedUserPublishIdList((prev) =>
-        prev.filter((id) => id !== member.introducedUserPublishId)
-      );
-    } else {
-      setIntroducedUserJTGroupIdList((prev) => {
-        if (prev.includes(member.introducedUserJTGroupId)) return prev;
-        return [...prev, member.introducedUserJTGroupId];
-      });
-    }
-  }
-};
+  };
 
 
   const handleToggleAll = () => {
@@ -243,19 +240,19 @@ const handleToggleGroup = (member: IUserGroupMemmerInfo) => {
 
         if (introducedUserJTGroupIdList.length > 0) {
           await AxiosApi.post('/form-publish-setting/new-member-allocation', {
-          formId: Number(formId),
-          introducedUserJTGroupIdList,
-          showReportForResponder: getValues('showReportForResponder'),
+            formId: Number(formId),
+            introducedUserJTGroupIdList,
+            showReportForResponder: getValues('showReportForResponder'),
           });
-          }
+        }
 
 
-          if (introducedUserPublishIdList.length > 0) {
-            await AxiosApi.post('/form-publish-setting/cancel-member-allocation', {
-              formId: Number(formId),
-              introducedUserPublishIdList,
-            });
-  }
+        if (introducedUserPublishIdList.length > 0) {
+          await AxiosApi.post('/form-publish-setting/cancel-member-allocation', {
+            formId: Number(formId),
+            introducedUserPublishIdList,
+          });
+        }
 
         // const response = await fetch('/api/publish/group', {
         //   method: 'POST',
@@ -301,7 +298,7 @@ const handleToggleGroup = (member: IUserGroupMemmerInfo) => {
         console.error('Group publish error:', err);
       }
     },
-      [formId, handleOpen, reset, methods, introducedUserJTGroupIdList, introducedUserPublishIdList]
+    [formId, handleOpen, reset, methods, introducedUserJTGroupIdList, introducedUserPublishIdList]
 
   );
 
@@ -323,9 +320,9 @@ const handleToggleGroup = (member: IUserGroupMemmerInfo) => {
     push("/reports")
   }
 
-    const handleOpenCancelGroupAllocation = useCallback(() => {
-        setOpenCancelGroupAllocationDialog((prev) => !prev);
-    }, []);
+  const handleOpenCancelGroupAllocation = useCallback(() => {
+    setOpenCancelGroupAllocationDialog((prev) => !prev);
+  }, []);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -364,10 +361,10 @@ const handleToggleGroup = (member: IUserGroupMemmerInfo) => {
           ) : (
             members.map((member) => (
               <Box key={member.introducedUserJTGroupId} display='flex' gap={1} bgcolor='white' alignItems='center' justifyContent='space-between' px={2} py={1} borderRadius='12px'>
-             <Checkbox
-  checked={selectedGroupIds.includes(member.introducedUserJTGroupId)}
-  onChange={() => handleToggleGroup(member)}
-/>
+                <Checkbox
+                  checked={selectedGroupIds.includes(member.introducedUserJTGroupId)}
+                  onChange={() => handleToggleGroup(member)}
+                />
                 <Typography flex={1}>{member.userName}</Typography>
                 <Typography fontSize='14px'>عضو: {member.userGender} نفر</Typography>
               </Box>
@@ -450,20 +447,20 @@ const handleToggleGroup = (member: IUserGroupMemmerInfo) => {
         </Button>
       </Box>
       <ConfirmDialog
-              content='تا زمانی که قالب گزارش انفرادی نساخته باشید نمیتواند این تیک را بزند '
-              open={openShowReportForResponderDialog}
-              title='اخطار'
-              onClose={toggleConfirm}
-              cancelText='انصراف'
-              action={
-                <Button type='submit' fullWidth disableRipple variant='contained'
-                  sx={{ ...buttonStylesAlert }}
-                  onClick={handleRedirection}
-                >
-                  برو به قالب گزارش
-                </Button>
-              }
-            />
+        content='تا زمانی که قالب گزارش انفرادی نساخته باشید نمیتواند این تیک را بزند '
+        open={openShowReportForResponderDialog}
+        title='اخطار'
+        onClose={toggleConfirm}
+        cancelText='انصراف'
+        action={
+          <Button type='submit' fullWidth disableRipple variant='contained'
+            sx={{ ...buttonStylesAlert }}
+            onClick={handleRedirection}
+          >
+            برو به قالب گزارش
+          </Button>
+        }
+      />
 
     </FormProvider>
   );

@@ -55,7 +55,7 @@ const buttonStylesAlert = {
 };
 
 const groupFormSchema = z.object({
-  groupsId: z.array(z.number()).min(1, 'حداقل یک گروه را انتخاب کنید.'),
+  memberId: z.array(z.number()).min(1, 'حداقل یک گروه را انتخاب کنید.'),
   showReportForResponder: z.boolean(),
 });
 
@@ -73,7 +73,7 @@ interface MemberSettingsProps {
 
 const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, formData, groupId = 87 }) => { 
   const { push } = useRouter()
-  const [groups, setGroups] = useState<IUserGroupMemmerInfo[]>([]);
+  const [members, setMembers] = useState<IUserGroupMemmerInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState("");
@@ -89,6 +89,9 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
   const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false);
   const [openCancelGroupAllocationDialog, setOpenCancelGroupAllocationDialog] = useState(false);
 
+  const [introducedUserJTGroupIdList, setIntroducedUserJTGroupIdList] = useState<number[]>([]);
+ const [introducedUserPublishIdList, setIntroducedUserPublishIdList] = useState<number[]>([]);
+
   const queryClient = useQueryClient();
   const debouncedValue = useDebounce(inputValue, 500);
 
@@ -96,7 +99,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
     resolver: zodResolver(groupFormSchema),
     mode: 'onChange',
     defaultValues: {
-      groupsId: [],
+      memberId: [],
       showReportForResponder: formData?.showReportForResponder || false,
     },
   });
@@ -110,8 +113,8 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
     formState: { isSubmitting, isValid, errors },
   } = methods;
 
-  const selectedGroupIds = watch('groupsId');
-  const allSelected = groups.length > 0 && selectedGroupIds.length === groups.length;
+  const selectedGroupIds = watch('memberId');
+  const allSelected = members.length > 0 && selectedGroupIds.length === members.length;
 
   const handleSearchFilter = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -154,9 +157,6 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
       page: 0,
       rows: 100,
     };
-    const formIdParams = {
-      formId : 638
-    };
 
     try {
       const encoded = encodeURIComponent(JSON.stringify(params));
@@ -168,80 +168,129 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
       //     Authorization: `Bearer ${token}`,
       //   },
       // });
-      // console.log('res===============', await res.json())
 
       // if (!res.ok) {
       //   const errorData = await res.json();
       //   throw new Error(errorData.error || 'دریافت لیست گروه‌ها ناموفق بود.');
       // }
 
-      // const data2: GroupListResponse = await res.json();
-      console.log('data2', data)
-  
+      // const data: GroupListResponse = await res.json();
+       const members = Array.isArray(data?.content) ? data.content : [];
+       setMembers(members);
 
-      setGroups(data.content);
+      const activeIds = members
+        .filter((m:any) => m.activationLink)
+        .map((m:any) => m.introducedUserJTGroupId);
+        setValue('memberId', activeIds);
+
     } catch (err: any) {
       setError(err?.message || 'خطای نامشخصی رخ داده است.');
     } finally {
       setLoading(false);
     }
-  }, [searchBoxList]);
+  }, [groupId, formId, searchBoxList, setValue, searchBoxList]);
 
   useEffect(() => {
     fetchGroups();
   }, [fetchGroups]);
 
-  const handleToggleGroup = (groupId: number) => {
-    setValue('groupsId', selectedGroupIds.includes(groupId) ? selectedGroupIds.filter((id) => id !== groupId) : [...selectedGroupIds, groupId], {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-  };
+const handleToggleGroup = (member: IUserGroupMemmerInfo) => {
+  const current = getValues("memberId");
+  const isSelected = current.includes(member.introducedUserJTGroupId);
+
+  const updated = isSelected
+    ? current.filter((id) => id !== member.introducedUserJTGroupId)
+    : [...current, member.introducedUserJTGroupId];
+  setValue("memberId", updated, { shouldDirty: true, shouldValidate: true });
+
+  if (isSelected) {
+    if (member.activationLink) {
+      if (member.introducedUserPublishId)
+        setIntroducedUserPublishIdList((prev) => {
+          if (prev.includes(member.introducedUserPublishId!)) return prev;
+          return [...prev, member.introducedUserPublishId!];
+        });
+    } else {
+       setIntroducedUserJTGroupIdList((prev) =>
+        prev.filter((id) => id !== member.introducedUserJTGroupId)
+      );
+    }
+  } else {
+    if (member.activationLink) {
+      setIntroducedUserPublishIdList((prev) =>
+        prev.filter((id) => id !== member.introducedUserPublishId)
+      );
+    } else {
+      setIntroducedUserJTGroupIdList((prev) => {
+        if (prev.includes(member.introducedUserJTGroupId)) return prev;
+        return [...prev, member.introducedUserJTGroupId];
+      });
+    }
+  }
+};
+
 
   const handleToggleAll = () => {
-    const newSelectedIds = allSelected ? [] : groups.map((group) => group.introducedUserJTGroupId);
-    setValue('groupsId', newSelectedIds, { shouldDirty: true, shouldValidate: true });
+    const newSelectedIds = allSelected ? [] : members.map((group) => group.introducedUserJTGroupId);
+    setValue('memberId', newSelectedIds, { shouldDirty: true, shouldValidate: true });
   };
 
   const onSubmit = useCallback(
-    async (values: GroupFormSchemaType) => {
+    async () => {
       const token = await getAuthToken();
 
       try {
-        const response = await fetch('/api/publish/group', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            formId: Number(formId),
-            groupsId: values.groupsId,
-            showReportForResponder: values.showReportForResponder,
-          }),
-        });
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          if (data.error && data.details) {
-            data.details.forEach((err: any) => {
-              if (err.path && err.path[0]) {
-                if (err.path[0] === 'groupsId') {
-                  methods.setError('groupsId', {
-                    type: 'manual',
-                    message: err.message || 'خطا در فیلد گروه',
-                  });
-                }
-              }
-            });
-          } else if (data.error) {
-            toast.error(data.error);
-          } else {
-            toast.error('خطای ناشناخته از سمت سرور');
+        if (introducedUserJTGroupIdList.length > 0) {
+          await AxiosApi.post('/form-publish-setting/new-member-allocation', {
+          formId: Number(formId),
+          introducedUserJTGroupIdList,
+          showReportForResponder: getValues('showReportForResponder'),
+          });
           }
-          return;
-        }
+
+
+          if (introducedUserPublishIdList.length > 0) {
+            await AxiosApi.post('/form-publish-setting/cancel-member-allocation', {
+              formId: Number(formId),
+              introducedUserPublishIdList,
+            });
+  }
+
+        // const response = await fetch('/api/publish/group', {
+        //   method: 'POST',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //     Authorization: `Bearer ${token}`,
+        //   },
+        //   body: JSON.stringify({
+        //     formId: Number(formId),
+        //     memberId: values.memberId,
+        //     showReportForResponder: values.showReportForResponder,
+        //   }),
+        // });
+
+        // const data = await response.json();
+
+        // if (!response.ok) {
+        //   if (data.error && data.details) {
+        //     data.details.forEach((err: any) => {
+        //       if (err.path && err.path[0]) {
+        //         if (err.path[0] === 'memberId') {
+        //           methods.setError('memberId', {
+        //             type: 'manual',
+        //             message: err.message || 'خطا در فیلد گروه',
+        //           });
+        //         }
+        //       }
+        //     });
+        //   } else if (data.error) {
+        //     toast.error(data.error);
+        //   } else {
+        //     toast.error('خطای ناشناخته از سمت سرور');
+        //   }
+        //   return;
+        // }
 
         queryClient.invalidateQueries({ queryKey: ['datas_builder_query'] });
         toast.success('با موفقیت به سبد خرید افزوده شد.');
@@ -252,7 +301,8 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
         console.error('Group publish error:', err);
       }
     },
-    [formId, handleOpen, reset, methods],
+      [formId, handleOpen, reset, methods, introducedUserJTGroupIdList, introducedUserPublishIdList]
+
   );
 
   const handleShowReportForResponder = () => {
@@ -298,7 +348,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
         </Paper>
 
         <Box display='flex' alignItems='center' gap={1} mb={1}>
-          <Checkbox checked={allSelected} indeterminate={selectedGroupIds.length > 0 && selectedGroupIds.length < groups.length} onChange={handleToggleAll} />
+          <Checkbox checked={allSelected} indeterminate={selectedGroupIds.length > 0 && selectedGroupIds.length < members.length} onChange={handleToggleAll} />
           <Typography>انتخاب همه</Typography>
         </Box>
 
@@ -312,20 +362,23 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
               {error}
             </Typography>
           ) : (
-            groups.map((group) => (
-              <Box key={group.introducedUserJTGroupId} display='flex' gap={1} bgcolor='white' alignItems='center' justifyContent='space-between' px={2} py={1} borderRadius='12px'>
-                <Checkbox checked={selectedGroupIds.includes(group.introducedUserJTGroupId)} onChange={() => handleToggleGroup(group.introducedUserJTGroupId)} />
-                <Typography flex={1}>{group.userName}</Typography>
-                <Typography fontSize='14px'>عضو: {group.userGender} نفر</Typography>
+            members.map((member) => (
+              <Box key={member.introducedUserJTGroupId} display='flex' gap={1} bgcolor='white' alignItems='center' justifyContent='space-between' px={2} py={1} borderRadius='12px'>
+             <Checkbox
+  checked={selectedGroupIds.includes(member.introducedUserJTGroupId)}
+  onChange={() => handleToggleGroup(member)}
+/>
+                <Typography flex={1}>{member.userName}</Typography>
+                <Typography fontSize='14px'>عضو: {member.userGender} نفر</Typography>
               </Box>
             ))
           )}
         </Box>
       </Box>
 
-      {errors.groupsId && (
+      {errors.memberId && (
         <Typography color='error' fontSize='12px' sx={{ mt: 1, px: 2 }}>
-          {errors.groupsId.message}
+          {errors.memberId.message}
         </Typography>
       )}
 

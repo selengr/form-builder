@@ -20,6 +20,22 @@ import { SwitchButton } from '../Switch/SwitchButton';
 import ConfirmDialog from '@/components/confirm-dialog';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
+import FakeData from "../ListGrid/fakedata.json"
+import { AxiosApi } from '@/services/axios/AxiosApi';
+
+ interface IUserGroupMemmerInfo {
+  activationLink: boolean;
+  formBuilderId: number;
+  groupId: number;
+  introducedUserJTGroupId: number;
+  introducedUserPublishId: number | null;
+  showReportForResponder: boolean;
+  userFamily: string;
+  userGender: string;
+  userName: string;
+  userUsername: string;
+}
+
 
 const buttonStylesAlert = {
   height: '50px',
@@ -52,11 +68,12 @@ interface MemberSettingsProps {
     isCreatedSoloReport: boolean | null
     showReportForResponder: boolean | null
   };
+    groupId: number | null;
 }
 
-const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, formData }) => {
+const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, formData, groupId = 87 }) => { 
   const { push } = useRouter()
-  const [groups, setGroups] = useState<IGroup[]>([]);
+  const [groups, setGroups] = useState<IUserGroupMemmerInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState("");
@@ -137,30 +154,32 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
       page: 0,
       rows: 100,
     };
+    const formIdParams = {
+      formId : 638
+    };
 
     try {
       const encoded = encodeURIComponent(JSON.stringify(params));
-      const res = await fetch(`/api/group/list?searchFilterModel=${encoded}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      
+         const { data } = await AxiosApi.get(`/user-group/introducer/group-listgrid/${Number(groupId)}/members?searchFilterModel=${encoded}&formId=${638}`);
+      // const res = await fetch(`/api/group/list/${formId}`, {
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
+      // console.log('res===============', await res.json())
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || 'دریافت لیست گروه‌ها ناموفق بود.');
-      }
+      // if (!res.ok) {
+      //   const errorData = await res.json();
+      //   throw new Error(errorData.error || 'دریافت لیست گروه‌ها ناموفق بود.');
+      // }
 
-      const data: GroupListResponse = await res.json();
-      const transformed: IGroup[] = data.content.map((item) => ({
-        id: item.groupId,
-        name: item.groupName,
-        description: '',
-        userCount: item.groupMemberCount,
-      }));
+      // const data2: GroupListResponse = await res.json();
+      console.log('data2', data)
+  
 
-      setGroups(transformed);
+      setGroups(data.content);
     } catch (err: any) {
       setError(err?.message || 'خطای نامشخصی رخ داده است.');
     } finally {
@@ -180,7 +199,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
   };
 
   const handleToggleAll = () => {
-    const newSelectedIds = allSelected ? [] : groups.map((group) => group.id);
+    const newSelectedIds = allSelected ? [] : groups.map((group) => group.introducedUserJTGroupId);
     setValue('groupsId', newSelectedIds, { shouldDirty: true, shouldValidate: true });
   };
 
@@ -294,10 +313,10 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
             </Typography>
           ) : (
             groups.map((group) => (
-              <Box key={group.id} display='flex' gap={1} bgcolor='white' alignItems='center' justifyContent='space-between' px={2} py={1} borderRadius='12px'>
-                <Checkbox checked={selectedGroupIds.includes(group.id)} onChange={() => handleToggleGroup(group.id)} disabled={group.userCount < 1} />
-                <Typography flex={1}>{group.name}</Typography>
-                <Typography fontSize='14px'>عضو: {group.userCount} نفر</Typography>
+              <Box key={group.introducedUserJTGroupId} display='flex' gap={1} bgcolor='white' alignItems='center' justifyContent='space-between' px={2} py={1} borderRadius='12px'>
+                <Checkbox checked={selectedGroupIds.includes(group.introducedUserJTGroupId)} onChange={() => handleToggleGroup(group.introducedUserJTGroupId)} />
+                <Typography flex={1}>{group.userName}</Typography>
+                <Typography fontSize='14px'>عضو: {group.userGender} نفر</Typography>
               </Box>
             ))
           )}

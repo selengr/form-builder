@@ -22,6 +22,7 @@ import ConfirmDialog from '@/components/confirm-dialog';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { CancelGroupAllocationModal } from './CancelGroupAllocationModal';
+import FakeData from "../ListGrid/fakedata.json"
 
 const buttonStylesAlert = {
   height: '50px',
@@ -142,21 +143,23 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
     };
 
     try {
-      const encoded = encodeURIComponent(JSON.stringify(params));
-      const res = await fetch(`/api/group/list?searchFilterModel=${encoded}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      // const encoded = encodeURIComponent(JSON.stringify(params));
+      // const res = await fetch(`/api/group/list?searchFilterModel=${encoded}`, {
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || 'دریافت لیست گروه‌ها ناموفق بود.');
-      }
+      // if (!res.ok) {
+      //   const errorData = await res.json();
+      //   throw new Error(errorData.error || 'دریافت لیست گروه‌ها ناموفق بود.');
+      // }
 
-      const data: GroupListResponse = await res.json();
-      const transformed: IGroup[] = data.content.map((item) => ({
+      // const data2: GroupListResponse = await res.json();
+      const data: any = FakeData
+      
+      const transformed: IGroup[] = data.content.map((item:any) => ({
         id: item.groupId,
         name: item.groupName,
         description: '',
@@ -316,7 +319,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
                           justifyContent: 'center',
                           alignItems: 'center',
                           position: "absolute",
-                          right: 10
+                          right: 90
                         }}
                         aria-label='تنظیمات انتشار'>
                           <CiEdit  color='#1758BA' />
@@ -421,6 +424,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
             openCancelGroupAllocationDialog={openCancelGroupAllocationDialog}
             setOpenCancelGroupAllocationDialog={setOpenCancelGroupAllocationDialog}
             groupId={selectedGroupId}
+             handleOpen={handleOpen} formId={formId} formData={formData}
           />
 
     </FormProvider>

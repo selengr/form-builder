@@ -2,18 +2,26 @@
 import { Box, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { CgClose } from 'react-icons/cg';
+import MemberSettings from './MemberSettings';
 
 
 interface ICancelGroupAllocationModalProps {
   openCancelGroupAllocationDialog: boolean;
   setOpenCancelGroupAllocationDialog: React.Dispatch<React.SetStateAction<boolean>>;
   groupId: number | null;
+   handleOpen: () => void;
+  formId: string | number;
+  formData: {
+    isCreatedSoloReport: boolean | null
+    showReportForResponder: boolean | null
+  };
 }
 
 export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalProps> = ({
   openCancelGroupAllocationDialog,
   setOpenCancelGroupAllocationDialog,
   groupId,
+   handleOpen, formId, formData
 }) => {
     
   const handleClose = () => {
@@ -62,6 +70,7 @@ export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalPro
             </Typography>
           </Box>
           {/* <PublishSettingsTabValue handleOpen={handleOpen} formId={formId} formData={formData} /> */}
+          <MemberSettings groupId={groupId} handleOpen={handleOpen} formId={formId} formData={formData} />
         </DialogContent>
       </Dialog> 
     </>

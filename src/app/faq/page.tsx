@@ -1,10 +1,36 @@
 'use client';
 
+import { useState, useMemo } from 'react';
 import Image from 'next/image';
 import CustomAccordionGroup from './components/accordion';
+// import { Se } from 'react-icons/md';
+import React from 'react';
+
+const HighlightedText = ({ text, highlight }: { text: string; highlight: string }) => {
+  if (!highlight.trim()) {
+    return <span>{text}</span>;
+  }
+  const escapedHighlight = highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`(${escapedHighlight})`, 'gi');
+  const parts = text.split(regex);
+
+  return (
+    <span>
+      {parts.map((part, index) =>
+        regex.test(part) && highlight.trim() ? (
+          <mark key={index} className="bg-yellow-200 dark:bg-yellow-400 text-black rounded px-1 mx-0.5">
+            {part}
+          </mark>
+        ) : (
+          part
+        )
+      )}
+    </span>
+  );
+};
 
 export default function HomePage() {
-  const accordionItems = [
+  const accordionItemsOriginal = useMemo(() => [
     {
       id: 'panel1',
       title: 'سایا چیست؟',
@@ -64,12 +90,31 @@ export default function HomePage() {
       title: 'چگونه می‌توانم با پشتیبانی سایا تماس بگیرم؟',
       content: 'برای دریافت پشتیبانی یا هرگونه سوال، می‌توانید از طریق بخش تماس با ما با تیم پشتیبانی در ارتباط باشید.',
     },
-  ];
+  ], []);
+
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredAndHighlightedItems = useMemo(() => {
+    const term = searchTerm.toLowerCase().trim();
+    if (!term) {
+      return accordionItemsOriginal;
+    }
+
+    return accordionItemsOriginal
+      .filter(item =>
+        item.title.toLowerCase().includes(term) ||
+        item.content.toLowerCase().includes(term)
+      )
+      .map(item => ({
+        ...item,
+        title: <HighlightedText text={item.title} highlight={searchTerm} />,
+        content: <HighlightedText text={item.content} highlight={searchTerm} />,
+      }));
+  }, [searchTerm, accordionItemsOriginal]);
 
   return (
     <div className='relative h-[calc(100vh-60px)] md:h-full max-h-screen overflow-hidden w-full' style={{ userSelect: 'none' }}>
       <div className='absolute inset-0 -z-10 pointer-events-none bg-[#fcfcfe]'></div>
-
       <div className='absolute inset-0 -z-10 -top-[2%] -left-[70%] opacity-10'>
         <Image alt={''} src={`/api/images?folder=faq&file=curvy.svg`} width={100} height={100} className={'w-full h-full '} draggable={false} />
       </div>
@@ -77,18 +122,43 @@ export default function HomePage() {
         <Image alt={''} src={`/api/images?folder=faq&file=gr.svg`} width={100} height={100} className={'w-screen h-screen floating-3d-f'} draggable={false} />
       </div>
 
-      <div className='flex flex-col w-full items-center justify-center h-full z-20'>
-        <div className='relative flex items-center justify-center xs:h-1/5 lg:h-2/5'>
+      <div className='flex flex-col w-full items-center justify-start h-full z-20 pt-10 md:pt-16'>
+        <div className='relative flex flex-col items-center justify-center xs:h-auto lg:h-auto mb-6 md:mb-8'>
           <div className='absolute inset-0 -z-10 flex items-center justify-center blur-[5px] opacity-85'>
             <Image alt='' src='/api/images?folder=faq&file=faq.svg' className={'animate-pulse floating-3d opacity-75'} width={500} height={500} draggable={false} />
           </div>
-          <div className='absolute inset-0 -z-10 flex items-center justify-center opacity-35 top-[380px]'>
+          <div className='absolute inset-0 -z-10 flex items-center justify-center opacity-35 top-[150px] md:top-[200px]'>
             <Image alt={''} src={`/api/images?folder=faq&file=circle-bg.svg`} width={500} height={500} draggable={false} />
           </div>
-          <h1 className='xs:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 font-d7'>سوالات پرتکرار</h1>
+          <h1 className='xs:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 font-d7 mb-6'>سوالات پرتکرار</h1>
+
+
         </div>
-        <div className='p-4 overflow-y-scroll  scroll-hide'>
-          <CustomAccordionGroup items={accordionItems} />
+        <div className="relative w-full xs:min-w-[80vw] xs:max-w-[90vw] md:min-w-[40vw] md:max-w-[50vw] lg:min-w-[30vw] lg:max-w-[40vw] px-4">
+          <input
+            type="text"
+            placeholder="جستجو در سوالات و پاسخ‌ها..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full rounded-2xl border
+                         bg-white
+                         py-3 pl-12 pr-5 text-gray-800
+                         mb-3
+                          focus:border-transparent transition"
+            dir="rtl"
+          />
+          <div className="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-500 pointer-events-none">
+            {/*<Search size={20} />*/}
+          </div>
+        </div>
+        <div className='flex-grow w-full overflow-y-auto scroll-hide px-4 pb-4'>
+          {filteredAndHighlightedItems.length > 0 ? (
+             <CustomAccordionGroup items={filteredAndHighlightedItems} />
+          ) : (
+            <div className="text-center text-gray-500 dark:text-gray-400 py-10">
+              <p>موردی مطابق با جستجوی شما یافت نشد.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

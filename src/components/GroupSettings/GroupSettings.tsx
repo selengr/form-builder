@@ -23,6 +23,7 @@ import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { CancelGroupAllocationModal } from './CancelGroupAllocationModal';
 import FakeData from "../ListGrid/fakedata.json"
+import { useFetchGroupsSetting } from './hook/useFetchGroupsSetting';
 
 const buttonStylesAlert = {
   height: '50px',
@@ -59,9 +60,6 @@ interface GroupSettingsProps {
 
 const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formData }) => {
   const { push } = useRouter()
-  const [groups, setGroups] = useState<IGroup[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState("");
   const [searchBoxList, setSearchBoxList] = useState<SearchBoxItem[]>([
     {
@@ -79,6 +77,11 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
 
   const queryClient = useQueryClient();
   const debouncedValue = useDebounce(inputValue, 500);
+
+  const { data: groups = [], isLoading: loading, error } = useFetchGroupsSetting({
+  formId,
+  searchBoxList,
+});
 
   const methods = useForm<GroupFormSchemaType>({
     resolver: zodResolver(groupFormSchema),
@@ -118,74 +121,85 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
   }, [debouncedValue, setSearchBoxList]);
 
 
-  const fetchGroups = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    const token = await getAuthToken();
+  // const fetchGroups = useCallback(async () => {
+  //   setLoading(true);
+  //   setError(null);
+  //   const token = await getAuthToken();
 
-    const validCombinedRestrictionList = [...searchBoxList].filter((item) => {
-      if (item === undefined || item === null) return false;
-      if (typeof item.fieldValue === 'string') {
-        return item.fieldValue !== '';
-      }
-      if (Array.isArray(item.fieldValue)) {
-        return item.fieldValue.length > 0;
-      }
-      return true;
-    });
+  //   const validCombinedRestrictionList = [...searchBoxList].filter((item) => {
+  //     if (item === undefined || item === null) return false;
+  //     if (typeof item.fieldValue === 'string') {
+  //       return item.fieldValue !== '';
+  //     }
+  //     if (Array.isArray(item.fieldValue)) {
+  //       return item.fieldValue.length > 0;
+  //     }
+  //     return true;
+  //   });
 
-    const searchFilterBoxListPayload = [{ restrictionList: validCombinedRestrictionList }];
+  //   const searchFilterBoxListPayload = [{ restrictionList: validCombinedRestrictionList }];
 
-    const params = {
-      searchFilterBoxList: searchFilterBoxListPayload,
-      sortList: [{ fieldName: 'id', type: 'DSC' }],
-      page: 0,
-      rows: 100,
-    };
+  //   const params = {
+  //     searchFilterBoxList: searchFilterBoxListPayload,
+  //     sortList: [{ fieldName: 'id', type: 'DSC' }],
+  //     page: 0,
+  //     rows: 100,
+  //   };
 
-    try {
-      const encoded = encodeURIComponent(JSON.stringify(params));
-      const res = await fetch(`/api/group/list?searchFilterModel=${encoded}&formId=${Number(formId)}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  //   try {
+  //     const encoded = encodeURIComponent(JSON.stringify(params));
+  //     const res = await fetch(`/api/group/list?searchFilterModel=${encoded}&formId=${Number(formId)}`, {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || 'دریافت لیست گروه‌ها ناموفق بود.');
-      }
+  //     if (!res.ok) {
+  //       const errorData = await res.json();
+  //       throw new Error(errorData.error || 'دریافت لیست گروه‌ها ناموفق بود.');
+  //     }
 
-      const data: GroupListResponse = await res.json();
-      const transformed: IGroup[] = data.content.map((item: any) => ({
-        id: item.groupId,
-        name: item.groupName,
-        description: '',
-        userCount: item.groupMemberCount,
-        isSelected: item.isSelected || false,
-      }));
+  //     const data: GroupListResponse = await res.json();
+  //     const transformed: IGroup[] = data.content.map((item: any) => ({
+  //       id: item.groupId,
+  //       name: item.groupName,
+  //       description: '',
+  //       userCount: item.groupMemberCount,
+  //       isSelected: item.isSelected || false,
+  //     }));
 
-      setGroups(transformed);
+  //     setGroups(transformed);
 
-      const selectedIds = transformed
-        .filter((group) => group.isSelected)
-        .map((group) => group.id);
+  //     const selectedIds = transformed
+  //       .filter((group) => group.isSelected)
+  //       .map((group) => group.id);
 
-      if (selectedIds.length > 0) {
-        setValue('groupsId', selectedIds, { shouldValidate: true });
-        setInitialSelectedGroupIds(selectedIds);
-      }
-    } catch (err: any) {
-      setError(err?.message || 'خطای نامشخصی رخ داده است.');
-    } finally {
-      setLoading(false);
-    }
-  }, [searchBoxList]);
+  //     if (selectedIds.length > 0) {
+  //       setValue('groupsId', selectedIds, { shouldValidate: true });
+  //       setInitialSelectedGroupIds(selectedIds);
+  //     }
+  //   } catch (err: any) {
+  //     setError(err?.message || 'خطای نامشخصی رخ داده است.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, [searchBoxList]);
+
+  // useEffect(() => {
+  //   fetchGroups();
+  // }, [fetchGroups]);
 
   useEffect(() => {
-    fetchGroups();
-  }, [fetchGroups]);
+  if (groups.length > 0) {
+    const selectedIds = groups.filter(g => g.isSelected).map(g => g.id);
+    if (selectedIds.length > 0) {
+      setValue('groupsId', selectedIds, { shouldValidate: true });
+      setInitialSelectedGroupIds(selectedIds);
+    }
+  }
+}, [groups, setValue]);
+
 
   const handleToggleGroup = (groupId: number) => {
     setValue('groupsId', selectedGroupIds.includes(groupId) ? selectedGroupIds.filter((id) => id !== groupId) : [...selectedGroupIds, groupId], {
@@ -334,7 +348,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
             </Box>
           ) : error ? (
             <Typography color='error' textAlign='center'>
-              {error}
+              {error.message}
             </Typography>
           ) : (
             groups.map((group) => (

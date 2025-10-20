@@ -21,7 +21,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { AxiosApi } from '@/services/axios/AxiosApi';
 // type
 import { MemberSettingsProps, IUserGroupMemmerInfo } from '@/types/setting';
-import { useFetchMembersSetting } from '@/hooks/useFetchMembersSetting';
+import { useFetchMembersSetting } from './hook/useFetchMembersSetting';
 
 
 const buttonStylesAlert = {
@@ -303,6 +303,8 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
   const handleRedirection = () => {
     push("/reports")
   }
+
+  console.log('members------', members)
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

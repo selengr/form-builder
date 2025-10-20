@@ -35,7 +35,7 @@ const fetchMembers = async ({
 
   const encoded = encodeURIComponent(JSON.stringify(params));
 
-   const res = await fetch(`/api/group/list/${formId}?groupId=${groupId}&searchFilterModel=${encoded}`, {
+   const res = await fetch(`/api/group/list/${groupId}?searchFilterModel=${encoded}&formId=${formId}`, {
         headers: {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,

@@ -144,22 +144,20 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
     };
 
     try {
-      // const encoded = encodeURIComponent(JSON.stringify(params));
-      // const res = await fetch(`/api/group/list?searchFilterModel=${encoded}`, {
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // });
+      const encoded = encodeURIComponent(JSON.stringify(params));
+      const res = await fetch(`/api/group/list?searchFilterModel=${encoded}&formId=${Number(formId)}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      // if (!res.ok) {
-      //   const errorData = await res.json();
-      //   throw new Error(errorData.error || 'دریافت لیست گروه‌ها ناموفق بود.');
-      // }
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'دریافت لیست گروه‌ها ناموفق بود.');
+      }
 
-      // const data2: GroupListResponse = await res.json();
-      const data: any = FakeData
-
+      const data: GroupListResponse = await res.json();
       const transformed: IGroup[] = data.content.map((item: any) => ({
         id: item.groupId,
         name: item.groupName,
@@ -302,11 +300,6 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
   const handleOpenCancelGroupAllocation = useCallback((groupId: number) => {
     setSelectedGroupId(groupId);
     setOpenCancelGroupAllocationDialog(true);
-  }, []);
-
-  const handleCloseCancelGroupAllocation = useCallback(() => {
-    setOpenCancelGroupAllocationDialog(false);
-    setSelectedGroupId(null);
   }, []);
 
   return (

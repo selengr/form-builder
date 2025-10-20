@@ -19,19 +19,9 @@ import ConfirmDialog from '@/components/confirm-dialog';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { AxiosApi } from '@/services/axios/AxiosApi';
-
-interface IUserGroupMemmerInfo {
-  activationLink: boolean;
-  formBuilderId: number;
-  groupId: number;
-  introducedUserJTGroupId: number;
-  introducedUserPublishId: number | null;
-  showReportForResponder: boolean;
-  userFamily: string;
-  userGender: string;
-  userName: string;
-  userUsername: string;
-}
+// type
+import { MemberSettingsProps, IUserGroupMemmerInfo } from '@/types/setting';
+import { useFetchMembersSetting } from '@/hooks/useFetchMembersSetting';
 
 
 const buttonStylesAlert = {
@@ -58,21 +48,8 @@ const groupFormSchema = z.object({
 
 type GroupFormSchemaType = z.infer<typeof groupFormSchema>;
 
-interface MemberSettingsProps {
-  handleOpen: () => void;
-  formId: string | number;
-  formData: {
-    isCreatedSoloReport: boolean | null
-    showReportForResponder: boolean | null
-  };
-  groupId: number | null;
-}
-
-const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, formData, groupId = 87 }) => {
+const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, formData, groupId }) => {
   const { push } = useRouter()
-  const [members, setMembers] = useState<IUserGroupMemmerInfo[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState("");
   const [searchBoxList, setSearchBoxList] = useState<SearchBoxItem[]>([
     {
@@ -84,13 +61,19 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
   ])
   const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(false);
   const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false);
-  const [openCancelGroupAllocationDialog, setOpenCancelGroupAllocationDialog] = useState(false);
-
   const [introducedUserJTGroupIdList, setIntroducedUserJTGroupIdList] = useState<number[]>([]);
   const [introducedUserPublishIdList, setIntroducedUserPublishIdList] = useState<number[]>([]);
 
   const queryClient = useQueryClient();
   const debouncedValue = useDebounce(inputValue, 500);
+
+  const { data: members = [], isLoading: loading, error } = useFetchMembersSetting({
+    formId,
+    groupId,
+    searchBoxList,
+  });
+
+  console.log('members======', members)
 
   const methods = useForm<GroupFormSchemaType>({
     resolver: zodResolver(groupFormSchema),
@@ -130,66 +113,67 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
   }, [debouncedValue, setSearchBoxList]);
 
 
-  const fetchGroups = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    const token = await getAuthToken();
+  // const fetchGroups = useCallback(async () => {
+  //   setLoading(true);
+  //   setError(null);
+  //   const token = await getAuthToken();
 
-    const validCombinedRestrictionList = [...searchBoxList].filter((item) => {
-      if (item === undefined || item === null) return false;
-      if (typeof item.fieldValue === 'string') {
-        return item.fieldValue !== '';
-      }
-      if (Array.isArray(item.fieldValue)) {
-        return item.fieldValue.length > 0;
-      }
-      return true;
-    });
+  //   const validCombinedRestrictionList = [...searchBoxList].filter((item) => {
+  //     if (item === undefined || item === null) return false;
+  //     if (typeof item.fieldValue === 'string') {
+  //       return item.fieldValue !== '';
+  //     }
+  //     if (Array.isArray(item.fieldValue)) {
+  //       return item.fieldValue.length > 0;
+  //     }
+  //     return true;
+  //   });
 
-    const searchFilterBoxListPayload = [{ restrictionList: validCombinedRestrictionList }];
+  //   const searchFilterBoxListPayload = [{ restrictionList: validCombinedRestrictionList }];
 
-    const params = {
-      searchFilterBoxList: searchFilterBoxListPayload,
-      sortList: [{ fieldName: 'id', type: 'DSC' }],
-      page: 0,
-      rows: 100,
-    };
+  //   const params = {
+  //     searchFilterBoxList: searchFilterBoxListPayload,
+  //     sortList: [{ fieldName: 'id', type: 'DSC' }],
+  //     page: 0,
+  //     rows: 100,
+  //   };
 
-    try {
-      const encoded = encodeURIComponent(JSON.stringify(params));
+  //   try {
+  //     const encoded = encodeURIComponent(JSON.stringify(params));
 
-      const { data } = await AxiosApi.get(`/user-group/introducer/group-listgrid/${Number(groupId)}/members?searchFilterModel=${encoded}&formId=${638}`);
-      // const res = await fetch(`/api/group/list/${formId}`, {
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // });
+  //     const { data } = await AxiosApi.get(`/user-group/introducer/group-listgrid/${Number(groupId)}/members?searchFilterModel=${encoded}&formId=${638}`);
+  //      const res = await fetch(`/api/group/list/${formId}?groupId=${groupId}&searchFilterModel=${encoded}`, {
+  //       headers: {
+  //             'Content-Type': 'application/json',
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //           cache: 'no-store',
+  //       });
 
-      // if (!res.ok) {
-      //   const errorData = await res.json();
-      //   throw new Error(errorData.error || 'دریافت لیست گروه‌ها ناموفق بود.');
-      // }
+  //     if (!res.ok) {
+  //       const errorData = await res.json();
+  //       throw new Error(errorData.error || 'دریافت لیست گروه‌ها ناموفق بود.');
+  //     }
 
-      // const data: GroupListResponse = await res.json();
-      const members = Array.isArray(data?.content) ? data.content : [];
-      setMembers(members);
+  //     const members: IGroupListResponse = await res.json();
+  //     // const members = Array.isArray(data?.content) ? data.content : [];
+  //     // setMembers(members);
 
-      const activeIds = members
-        .filter((m: any) => m.activationLink)
-        .map((m: any) => m.introducedUserJTGroupId);
-      setValue('memberId', activeIds);
+  //     const activeIds = members
+  //       .filter((m: any) => m.activationLink)
+  //       .map((m: any) => m.introducedUserJTGroupId);
+  //     setValue('memberId', activeIds);
 
-    } catch (err: any) {
-      setError(err?.message || 'خطای نامشخصی رخ داده است.');
-    } finally {
-      setLoading(false);
-    }
-  }, [groupId, formId, searchBoxList, setValue, searchBoxList]);
+  //   } catch (err: any) {
+  //     setError(err?.message || 'خطای نامشخصی رخ داده است.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, [groupId, formId, searchBoxList, setValue, searchBoxList]);
 
-  useEffect(() => {
-    fetchGroups();
-  }, [fetchGroups]);
+  // useEffect(() => {
+  //   fetchGroups();
+  // }, [fetchGroups]);
 
   const handleToggleGroup = (member: IUserGroupMemmerInfo) => {
     const current = getValues("memberId");
@@ -320,13 +304,9 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
     push("/reports")
   }
 
-  const handleOpenCancelGroupAllocation = useCallback(() => {
-    setOpenCancelGroupAllocationDialog((prev) => !prev);
-  }, []);
-
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Box bgcolor='#f7f7f7' mt={2} p={2} display='flex' flexDirection='column'>
+      <Box bgcolor='#f7f7f7' borderRadius={2} width={"100%"} p={2} display='flex' alignItems="center" flexDirection='column'>
         <Paper
           sx={{
             boxShadow: 'unset',
@@ -337,36 +317,38 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
             py: 1,
             borderRadius: '12px',
             mb: 2,
+            maxWidth: "80% !important"
           }}>
-          <InputBase onChange={handleSearchFilter} sx={{ ml: 1, flex: 1, textAlign: 'end' }} placeholder='کاوش بر اساس نام پایگاه داده' inputProps={{ 'aria-label': 'جستجو' }} />
-          <IconButton sx={{ p: '8px' }}>
+          <InputBase onChange={handleSearchFilter} sx={{ ml: 1, flex: 1, textAlign: 'end' }} placeholder='جستجو با نام و نام خانوادگی، کانون و ... انجام می‌شود' inputProps={{ 'aria-label': 'جستجو' }} />
+          <IconButton sx={{ p: '8px', mr: 2 }}>
             <Image src='/images/home-page/search.svg' width={23} height={23} alt='جستجو' style={{ cursor: 'pointer' }} />
           </IconButton>
         </Paper>
 
-        <Box display='flex' alignItems='center' gap={1} mb={1}>
+        <Box display='flex' alignItems='center' gap={1} mb={1} mt={8} width={"100%"}>
           <Checkbox checked={allSelected} indeterminate={selectedGroupIds.length > 0 && selectedGroupIds.length < members.length} onChange={handleToggleAll} />
           <Typography>انتخاب همه</Typography>
         </Box>
 
-        <Box display='flex' flexDirection='column' gap={2}>
+        <Box display='flex' flexDirection='column' gap={2} width={"100%"}>
           {loading ? (
             <Box display='flex' justifyContent='center' my={4}>
               <CircularProgress />
             </Box>
           ) : error ? (
             <Typography color='error' textAlign='center'>
-              {error}
+              {error.message}
             </Typography>
           ) : (
             members.map((member) => (
-              <Box key={member.introducedUserJTGroupId} display='flex' gap={1} bgcolor='white' alignItems='center' justifyContent='space-between' px={2} py={1} borderRadius='12px'>
+              <Box key={member.introducedUserJTGroupId} display='flex' bgcolor='white' alignItems='center' justifyContent='space-between' px={1} py={1} borderRadius='12px'>
                 <Checkbox
                   checked={selectedGroupIds.includes(member.introducedUserJTGroupId)}
                   onChange={() => handleToggleGroup(member)}
                 />
-                <Typography flex={1}>{member.userName}</Typography>
-                <Typography fontSize='14px'>عضو: {member.userGender} نفر</Typography>
+                <Typography flex={1}>{member.userName} {member.userFamily}</Typography>
+                {/* <Typography fontSize='14px'>عضو: {member.userUsername}</Typography> */}
+                <Typography fontSize='14px' className='pl-2'>{member.userGender}</Typography>
               </Box>
             ))
           )}
@@ -415,7 +397,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
               boxShadow: 'none',
             },
           }}>
-          افزودن به سبد خرید
+          ثبت موقت
         </Button>
 
         <Button

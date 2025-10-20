@@ -30,7 +30,7 @@ export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalPro
 
   return (
     <>
-
+    
       <Dialog
         open={openCancelGroupAllocationDialog}
         onClose={handleClose}
@@ -49,7 +49,7 @@ export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalPro
             backgroundColor: 'hsl(0deg 0% 100% / 50%)',
           },
         }}>
-        <Box className='flex items-center justify-start' sx={{ p: 2 }}>
+        <Box className='flex items-center justify-start' sx={{ px: 2, pt :2 }}>
           <IconButton onClick={handleClose} aria-label='بستن'>
             <CgClose color='#404040' size='1.5rem' />
           </IconButton>
@@ -64,9 +64,9 @@ export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalPro
             display: 'flex',
             flexDirection: 'column',
           }}>
-          <Box className='flex justify-center items-baseline' sx={{ mb: 3, pt: 1 }}>
+          <Box className='flex justify-center items-baseline'>
             <Typography variant='h6' component='p' fontWeight='bold' textAlign='center'>
-              تنظیمات انتشار
+                 انتخاب اعضای پایگاه داده ۱
             </Typography>
           </Box>
           {/* <PublishSettingsTabValue handleOpen={handleOpen} formId={formId} formData={formData} /> */}

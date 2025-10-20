@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { CiEdit } from "react-icons/ci";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Box, Button, Checkbox, CircularProgress, IconButton, InputBase, Paper, Typography } from '@mui/material';
 // utils
 import { getAuthToken } from '@/utils/getAuthToken';
@@ -78,10 +78,25 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
   const queryClient = useQueryClient();
   const debouncedValue = useDebounce(inputValue, 500);
 
-  const { data: groups = [], isLoading: loading, error } = useFetchGroupsSetting({
-  formId,
-  searchBoxList,
-});
+  const loaderRef = useRef<HTMLDivElement | null>(null);
+
+//   const { data: groups = [], isLoading: loading, error } = useFetchGroupsSetting({
+//   formId,
+//   searchBoxList,
+// });
+
+
+const {
+  data,
+  error,
+  isLoading,
+  isFetchingNextPage,
+  fetchNextPage,
+  hasNextPage,
+} = useFetchGroupsSetting({ formId, searchBoxList });
+
+const groups = data?.pages.flatMap((page) => page.data) ?? [];
+
 
   const methods = useForm<GroupFormSchemaType>({
     resolver: zodResolver(groupFormSchema),
@@ -110,6 +125,18 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
     },
     []
   );
+
+  useEffect(() => {
+  if (!loaderRef.current) return;
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  });
+
+  observer.observe(loaderRef.current);
+  return () => observer.disconnect();
+}, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   useEffect(() => {
     setSearchBoxList(prev =>
@@ -342,7 +369,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
         </Box>
 
         <Box display='flex' flexDirection='column' gap={2}>
-          {loading ? (
+          {isLoading ? (
             <Box display='flex' justifyContent='center' my={4}>
               <CircularProgress />
             </Box>
@@ -379,6 +406,9 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
             ))
           )}
         </Box>
+          <Box ref={loaderRef} display='flex' justifyContent='center' my={2}>
+               {isFetchingNextPage && <CircularProgress size={24} />}
+          </Box>
       </Box>
 
       {errors.groupsId && (

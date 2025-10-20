@@ -1,18 +1,28 @@
-import { useQuery } from '@tanstack/react-query';
+'use client';
+
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { getAuthToken } from '@/utils/getAuthToken';
 import { IGroup } from '@/app/groups/components/groupListItem';
 import { SearchBoxItem } from '@/components/ListGrid/ListGrid';
 
-interface UseFetchGroupsParams {
+interface UseInfiniteGroupsParams {
   formId: string | number;
   searchBoxList: SearchBoxItem[];
+  pageSize?: number;
 }
 
-export interface GroupListResponse {
+interface GroupListResponse {
   content: any[];
+  totalPages: number;
+  totalElements: number;
 }
 
-const fetchGroups = async ({ formId, searchBoxList }: UseFetchGroupsParams): Promise<IGroup[]> => {
+const fetchGroupsPage = async ({
+  formId,
+  searchBoxList,
+  pageParam = 0,
+  pageSize = 30,
+}: UseInfiniteGroupsParams & { pageParam?: number }): Promise<{ data: IGroup[]; nextPage: number | null }> => {
   const token = await getAuthToken();
 
   const validCombinedRestrictionList = searchBoxList.filter((item) => {
@@ -27,8 +37,8 @@ const fetchGroups = async ({ formId, searchBoxList }: UseFetchGroupsParams): Pro
 
   const params: any = {
     sortList: [{ fieldName: 'id', type: 'DSC' }],
-    page: 0,
-    rows: 100,
+    page: pageParam,
+    rows: pageSize,
   };
 
   if (searchFilterBoxListPayload.length > 0) {
@@ -36,12 +46,12 @@ const fetchGroups = async ({ formId, searchBoxList }: UseFetchGroupsParams): Pro
   }
 
   const queryParams = new URLSearchParams();
-  queryParams.set('searchFilterModel', JSON.stringify(params));
   queryParams.set('formId', String(formId));
+  queryParams.set('searchFilterModel', JSON.stringify(params));
 
   const res = await fetch(`/api/group/list?${queryParams.toString()}`, {
     headers: {
-    //   'Content-Type': 'application/json',
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
     cache: 'no-store',
@@ -52,9 +62,9 @@ const fetchGroups = async ({ formId, searchBoxList }: UseFetchGroupsParams): Pro
     throw new Error(errorData.error || 'دریافت لیست گروه‌ها ناموفق بود.');
   }
 
-  const data: GroupListResponse = await res.json();
+  const json: GroupListResponse = await res.json();
 
-  const transformed: IGroup[] = data.content.map((item: any) => ({
+  const mapped: IGroup[] = json.content.map((item) => ({
     id: item.groupId,
     name: item.groupName,
     description: '',
@@ -62,13 +72,17 @@ const fetchGroups = async ({ formId, searchBoxList }: UseFetchGroupsParams): Pro
     isSelected: item.isSelected || false,
   }));
 
-  return transformed;
+  const nextPage = json.totalPages && pageParam + 1 < json.totalPages ? pageParam + 1 : null;
+
+  return { data: mapped, nextPage };
 };
 
-export const useFetchGroupsSetting = ({ formId, searchBoxList }: UseFetchGroupsParams) => {
-  return useQuery({
+export const useFetchGroupsSetting = ({ formId, searchBoxList, pageSize = 10 }: UseInfiniteGroupsParams) => {
+  return useInfiniteQuery({
     queryKey: ['groups', formId, searchBoxList],
-    queryFn: () => fetchGroups({ formId, searchBoxList }),
+    queryFn: ({ pageParam = 0 }) => fetchGroupsPage({ formId, searchBoxList, pageParam, pageSize }),
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    initialPageParam: 0,
     enabled: !!formId,
   });
 };

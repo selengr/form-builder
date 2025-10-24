@@ -338,6 +338,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
           paddingX: '16px',
           width: '100%',
           marginTop: '24px',
+          marginBottom: '16px',
         }}>
         <Button
           type='submit'

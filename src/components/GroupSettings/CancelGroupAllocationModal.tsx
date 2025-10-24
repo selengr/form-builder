@@ -61,6 +61,7 @@ export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalPro
             scrollbarWidth: 'thin',
             paddingX: 1,
             paddingTop: 0,
+            paddingBottom: 0,
             display: 'flex',
             flexDirection: 'column',
           }}>
@@ -70,7 +71,7 @@ export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalPro
             </Typography>
           </Box>
           {/* <PublishSettingsTabValue handleOpen={handleOpen} formId={formId} formData={formData} /> */}
-          <MemberSettings groupId={groupId} handleOpen={handleOpen} formId={formId} formData={formData} />
+          <MemberSettings groupId={groupId} handleClose={handleClose} formId={formId} formData={formData} />
         </DialogContent>
       </Dialog> 
     </>

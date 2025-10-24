@@ -24,6 +24,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { CancelGroupAllocationModal } from "./CancelGroupAllocationModal"
 import { useFetchGroupsSetting } from "./hook/useFetchGroupsSetting"
 import { useInView } from "react-intersection-observer"
+import { UserWithSearchIcon } from "../../../public/images/icons/UserWithSearchIcon "
 
 const buttonStylesAlert = {
   height: "50px",
@@ -283,8 +284,9 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
   }, [])
 
   return (
+    <Box sx={{position:"relative"}}>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Box bgcolor="#f7f7f7" mt={2} p={2} display="flex" flexDirection="column">
+      <Box width={"100%"} alignItems="center" bgcolor="#f7f7f7" p={2} display="flex" flexDirection="column">
         <Paper
           sx={{
             boxShadow: "unset",
@@ -292,9 +294,11 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
             display: "flex",
             alignItems: "center",
             width: "100%",
-            py: 1,
-            borderRadius: "12px",
-            mb: 2,
+            py: "4px",
+            borderRadius: "15px !important",
+            margin: "0px !important",
+            marginBottom: "8px",
+              maxWidth: "80% !important",
           }}
         >
           <InputBase
@@ -314,7 +318,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
           </IconButton>
         </Paper>
 
-        <Box display="flex" alignItems="center" gap={1} mb={1}>
+        <Box display="flex" alignItems="center" gap={1} mb={1} width={"100%"}>
           <Checkbox
             checked={allSelected}
             indeterminate={selectedGroupIds.length > 0 && selectedGroupIds.length < groups.length}
@@ -323,7 +327,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
           <Typography>انتخاب همه</Typography>
         </Box>
 
-        <Box display="flex" flexDirection="column" gap={2}>
+        <Box display="flex" flexDirection="column" gap="6px" mb={2} width={"100%"}>
           {isLoading ? (
             <Box display="flex" justifyContent="center" my={4}>
               <CircularProgress />
@@ -343,7 +347,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
                 alignItems="center"
                 justifyContent="space-between"
                 px={2}
-                py={1}
+                py="1px"
                 borderRadius="12px"
               >
                 <Checkbox
@@ -366,7 +370,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
                   }}
                   aria-label="تنظیمات انتشار"
                 >
-                  <CiEdit color="#1758BA" />
+                  <UserWithSearchIcon stroke="#000" width={26} height={26} />
                 </IconButton>
                 <Typography fontSize="14px">عضو: {group.userCount} نفر</Typography>
               </Box>
@@ -380,13 +384,22 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
         )}
       </Box>
 
-      {errors.groupsId && (
-        <Typography color="error" fontSize="12px" sx={{ mt: 1, px: 2 }}>
-          {errors.groupsId.message}
-        </Typography>
-      )}
 
-      <Box display="flex" justifyContent="space-between" alignItems="center" mx={2} mt={3}>
+      <Box  sx={{
+        position: "sticky",
+        bottom: '0px',
+        background : "#FFF",
+        // borderTop : "1px solid #dde1e6"
+      }}
+        pr={1} pl={2}
+        >
+        {errors.groupsId && (
+          <Typography color="error" fontSize="12px" sx={{ pt: 1, px: 2 }}>
+            {errors.groupsId.message}
+          </Typography>
+        )}
+
+      <Box display="flex" justifyContent="space-between" alignItems="center" pt={1}>
         <Typography variant="subtitle2" fontWeight={500} fontSize="14px">
           نمایش نتیجه به پاسخ دهنده
         </Typography>
@@ -403,10 +416,9 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
         />
       </Box>
 
-      <Box display="flex" justifyContent="space-between" alignItems="center" gap="16px" px="16px" mt="24px">
+      <Box display="flex" justifyContent="center" alignItems="center" pb={2} gap="16px" px="16px" mt="14px">
         <Button
           type="submit"
-          fullWidth
           variant="contained"
           disabled={isSubmitting || !isValid}
           sx={{
@@ -415,6 +427,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
             color: "white",
             fontSize: { xs: "13px", sm: "16px" },
             fontWeight: "700",
+            width : "161px",
             borderRadius: "10px",
             boxShadow: "none",
             "&:hover": {
@@ -426,8 +439,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
           افزودن به سبد خرید
         </Button>
 
-        <Button
-          fullWidth
+        <Button          
           variant="outlined"
           onClick={() => {
             handleOpen()
@@ -435,6 +447,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
           }}
           disabled={isSubmitting}
           sx={{
+            width : "161px",
             height: "54px",
             fontWeight: "700",
             borderRadius: "10px",
@@ -454,6 +467,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
         >
           انصراف
         </Button>
+      </Box>
       </Box>
       <ConfirmDialog
         content="تا زمانی که قالب گزارش انفرادی نساخته باشید نمیتواند این تیک را بزند "
@@ -484,6 +498,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
         formData={formData}
       />
     </FormProvider>
+    </Box>
   )
 }
 

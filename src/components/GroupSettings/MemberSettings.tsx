@@ -44,13 +44,13 @@ const buttonStylesAlert = {
 }
 
 const groupFormSchema = z.object({
-  memberId: z.array(z.number()).min(1, "حداقل یک گروه را انتخاب کنید."),
+  memberId: z.array(z.number()).min(1, "حداقل یک عضو را انتخاب کنید."),
   showReportForResponder: z.boolean(),
 })
 
 type GroupFormSchemaType = z.infer<typeof groupFormSchema>
 
-const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, formData, groupId }) => {
+const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, formData, groupId }) => {
   const { push } = useRouter()
   const [inputValue, setInputValue] = useState("")
   const [searchBoxList, setSearchBoxList] = useState<SearchBoxItem[]>([
@@ -202,13 +202,13 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
 
       queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
       toast.success("با موفقیت به سبد خرید افزوده شد.")
-      handleOpen()
+      handleClose()
       reset()
     } catch (err) {
       toast.error("خطا در برقراری ارتباط با سرور.")
       console.error("Group publish error:", err)
     }
-  }, [formId, handleOpen, reset, methods, introducedUserJTGroupIdList, introducedUserPublishIdList])
+  }, [formId, handleClose, reset, methods, introducedUserJTGroupIdList, introducedUserPublishIdList])
 
   const handleShowReportForResponder = () => {
     if (formData?.isCreatedSoloReport) {
@@ -229,6 +229,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
   }
 
   return (
+     <Box sx={{position:"relative"}}>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Box
         bgcolor="#f7f7f7"
@@ -246,9 +247,10 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
             display: "flex",
             alignItems: "center",
             width: "100%",
-            py: 1,
-            borderRadius: "12px",
-            mb: 2,
+            py: "4px",
+            borderRadius: "15px !important",
+            margin: "0px !important",
+            marginBottom: "8px",
             maxWidth: "80% !important",
           }}
         >
@@ -269,7 +271,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
           </IconButton>
         </Paper>
 
-        <Box display="flex" alignItems="center" gap={1} mb={1} mt={8} width={"100%"}>
+        <Box display="flex" alignItems="center" gap={1} mb={1} mt={4} width={"100%"}>
           <Checkbox
             checked={allSelected}
             indeterminate={selectedGroupIds.length > 0 && selectedGroupIds.length < members.length}
@@ -278,7 +280,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
           <Typography>انتخاب همه</Typography>
         </Box>
 
-        <Box display="flex" flexDirection="column" gap={2} width={"100%"}>
+        <Box display="flex" flexDirection="column" gap="6px" mb={2} width={"100%"}>
           {loading ? (
             <Box display="flex" justifyContent="center" my={4}>
               <CircularProgress />
@@ -296,7 +298,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
                 alignItems="center"
                 justifyContent="space-between"
                 px={1}
-                py={1}
+                py="1px"
                 borderRadius="12px"
               >
                 <Checkbox
@@ -321,13 +323,22 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
         )}
       </Box>
 
+
+   <Box  sx={{
+        position: "sticky",
+        bottom: '0px',
+        background : "#FFF",
+      }}
+        pr={1} pl={2}
+        >
+
       {errors.memberId && (
-        <Typography color="error" fontSize="12px" sx={{ mt: 1, px: 2 }}>
+        <Typography color="error" fontSize="12px" sx={{ pt: 1, px: 2 }}>
           {errors.memberId.message}
         </Typography>
       )}
 
-      <Box display="flex" justifyContent="space-between" alignItems="center" mx={2} mt={3}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" pt={1}>
         <Typography variant="subtitle2" fontWeight={500} fontSize="14px">
           نمایش نتیجه به پاسخ دهنده
         </Typography>
@@ -344,15 +355,15 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
         />
       </Box>
 
-      <Box display="flex" justifyContent="space-between" alignItems="center" gap="16px" px="16px" mt="24px">
+      <Box  display="flex" justifyContent="center" alignItems="center" pb={2} gap="16px" px="16px" mt="14px">
         <Button
           type="submit"
-          fullWidth
           variant="contained"
           disabled={isSubmitting || !isValid}
           sx={{
             bgcolor: "#1758BA",
             height: "54px",
+            width : "131px",
             color: "white",
             fontSize: { xs: "13px", sm: "16px" },
             fontWeight: "700",
@@ -364,20 +375,20 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
             },
           }}
         >
-          ثبت موقت
+          ثبت
         </Button>
 
         <Button
-          fullWidth
           variant="outlined"
           onClick={() => {
-            handleOpen()
+            handleClose()
             reset()
           }}
           disabled={isSubmitting}
           sx={{
             height: "54px",
             fontWeight: "700",
+              width : "131px",
             borderRadius: "10px",
             fontSize: "16px",
             color: "#1758BA",
@@ -395,6 +406,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
         >
           انصراف
         </Button>
+      </Box>
       </Box>
       <ConfirmDialog
         content="تا زمانی که قالب گزارش انفرادی نساخته باشید نمیتواند این تیک را بزند "
@@ -416,6 +428,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleOpen, formId, for
         }
       />
     </FormProvider>
+    </Box>
   )
 }
 

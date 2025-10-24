@@ -49,7 +49,7 @@ export default function PublishSettingsDialog({ formId , formData }: PublishSett
             backgroundColor: 'hsl(0deg 0% 100% / 50%)',
           },
         }}>
-        <Box className='flex items-center justify-start' sx={{ p: 2 }}>
+        <Box className='flex items-center justify-start' sx={{ p: 2, pb : 0 }}>
           <IconButton onClick={handleOpen} aria-label='بستن'>
             <CgClose color='#404040' size='1.5rem' />
           </IconButton>
@@ -61,10 +61,11 @@ export default function PublishSettingsDialog({ formId , formData }: PublishSett
             scrollbarWidth: 'thin',
             paddingX: 1,
             paddingTop: 0,
+               paddingBottom: 0,
             display: 'flex',
             flexDirection: 'column',
           }}>
-          <Box className='flex justify-center items-baseline' sx={{ mb: 3, pt: 1 }}>
+          <Box className='flex justify-center items-baseline' sx={{ mb: 2 }}>
             <Typography variant='h6' component='p' fontWeight='bold' textAlign='center'>
               تنظیمات انتشار
             </Typography>

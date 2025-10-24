@@ -13,7 +13,8 @@ export interface IUserGroupMemmerInfo {
 }
 
 export interface MemberSettingsProps {
-  handleOpen: () => void;
+  handleOpen?: () => void;
+  handleClose: () => void;
   formId: string | number;
   formData: {
     isCreatedSoloReport: boolean | null

@@ -295,6 +295,7 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
           px: 2,
           width: '100%',
           mt: 3,
+          marginBottom: '16px',
         }}>
         <Button
           type='submit'

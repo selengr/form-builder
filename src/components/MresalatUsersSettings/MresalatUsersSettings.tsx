@@ -287,6 +287,7 @@ function MresalatUsersSettings({ handleOpen }: { handleOpen: () => void }) {
           paddingX: '16px',
           width: '100%',
           marginTop: '24px',
+          marginBottom: '15px',
         }}>
         <Button
           type='submit'

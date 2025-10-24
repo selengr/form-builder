@@ -21,7 +21,8 @@ export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalPro
   openCancelGroupAllocationDialog,
   setOpenCancelGroupAllocationDialog,
   groupId,
-   handleOpen, formId, formData
+   formId,
+    formData
 }) => {
     
   const handleClose = () => {
@@ -70,7 +71,6 @@ export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalPro
                  انتخاب اعضای پایگاه داده ۱
             </Typography>
           </Box>
-          {/* <PublishSettingsTabValue handleOpen={handleOpen} formId={formId} formData={formData} /> */}
           <MemberSettings groupId={groupId} handleClose={handleClose} formId={formId} formData={formData} />
         </DialogContent>
       </Dialog> 

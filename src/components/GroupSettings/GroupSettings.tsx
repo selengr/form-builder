@@ -76,9 +76,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
   const [initialSelectedGroupIds, setInitialSelectedGroupIds] = useState<number[]>([])
   const hasSetInitialValues = useRef(false)
-  const hasLoadedInitialData = useRef(false)
   const isFetchingRef = useRef(false)
-  const hasMounted = useRef(false)
 
   const queryClient = useQueryClient()
   const debouncedValue = useDebounce(inputValue, 500)
@@ -123,7 +121,6 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
     if (isFetchingNextPage) {
       isFetchingRef.current = true
     } else {
-      // Small delay to ensure state is fully updated
       const timer = setTimeout(() => {
         isFetchingRef.current = false
       }, 100)
@@ -284,220 +281,219 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
   }, [])
 
   return (
-    <Box sx={{position:"relative"}}>
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Box width={"100%"} alignItems="center" bgcolor="#f7f7f7" p={2} display="flex" flexDirection="column">
-        <Paper
-          sx={{
-            boxShadow: "unset",
-            border: "1px solid #C9C9C9",
-            display: "flex",
-            alignItems: "center",
-            width: "100%",
-            py: "4px",
-            borderRadius: "15px !important",
-            margin: "0px !important",
-            marginBottom: "8px",
+    <Box sx={{ position: "relative" }}>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Box width={"100%"} alignItems="center" bgcolor="#f7f7f7" p={2} display="flex" flexDirection="column">
+          <Paper
+            sx={{
+              boxShadow: "unset",
+              border: "1px solid #C9C9C9",
+              display: "flex",
+              alignItems: "center",
+              width: "100%",
+              py: "4px",
+              borderRadius: "15px !important",
+              margin: "0px !important",
+              marginBottom: "8px",
               maxWidth: "80% !important",
-          }}
-        >
-          <InputBase
-            onChange={handleSearchFilter}
-            sx={{ ml: 1, flex: 1, textAlign: "end" }}
-            placeholder="کاوش بر اساس نام پایگاه داده"
-            inputProps={{ "aria-label": "جستجو" }}
-          />
-          <IconButton sx={{ p: "8px" }}>
-            <Image
-              src="/images/home-page/search.svg"
-              width={23}
-              height={23}
-              alt="جستجو"
-              style={{ cursor: "pointer" }}
+            }}
+          >
+            <InputBase
+              onChange={handleSearchFilter}
+              sx={{ ml: 1, flex: 1, textAlign: "end" }}
+              placeholder="کاوش بر اساس نام پایگاه داده"
+              inputProps={{ "aria-label": "جستجو" }}
             />
-          </IconButton>
-        </Paper>
+            <IconButton sx={{ p: "8px" }}>
+              <Image
+                src="/images/home-page/search.svg"
+                width={23}
+                height={23}
+                alt="جستجو"
+                style={{ cursor: "pointer" }}
+              />
+            </IconButton>
+          </Paper>
 
-        <Box display="flex" alignItems="center" gap={1} mb={1} width={"100%"}>
-          <Checkbox
-            checked={allSelected}
-            indeterminate={selectedGroupIds.length > 0 && selectedGroupIds.length < groups.length}
-            onChange={handleToggleAll}
-          />
-          <Typography>انتخاب همه</Typography>
-        </Box>
+          <Box display="flex" alignItems="center" gap={1} mb={1} width={"100%"}>
+            <Checkbox
+              checked={allSelected}
+              indeterminate={selectedGroupIds.length > 0 && selectedGroupIds.length < groups.length}
+              onChange={handleToggleAll}
+            />
+            <Typography>انتخاب همه</Typography>
+          </Box>
 
-        <Box display="flex" flexDirection="column" gap="6px" mb={2} width={"100%"}>
-          {isLoading ? (
-            <Box display="flex" justifyContent="center" my={4}>
-              <CircularProgress />
-            </Box>
-          ) : error ? (
-            <Typography color="error" textAlign="center">
-              {error.message}
-            </Typography>
-          ) : (
-            groups.map((group) => (
-              <Box
-                key={group.id}
-                display="flex"
-                gap={1}
-                position={"relative"}
-                bgcolor="white"
-                alignItems="center"
-                justifyContent="space-between"
-                px={2}
-                py="1px"
-                borderRadius="12px"
-              >
-                <Checkbox
-                  checked={selectedGroupIds.includes(group.id)}
-                  onChange={() => handleToggleGroup(group.id)}
-                  disabled={group.userCount < 1}
-                />
-                <Typography flex={1}>{group.name}</Typography>
-
-                <IconButton
-                  onClick={() => handleOpenCancelGroupAllocation(group.id)}
-                  sx={{
-                    height: "45px",
-                    width: "45px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    position: "absolute",
-                    right: 90,
-                  }}
-                  aria-label="تنظیمات انتشار"
-                >
-                  <UserWithSearchIcon stroke="#000" width={26} height={26} />
-                </IconButton>
-                <Typography fontSize="14px">عضو: {group.userCount} نفر</Typography>
+          <Box display="flex" flexDirection="column" gap="6px" mb={2} width={"100%"}>
+            {isLoading ? (
+              <Box display="flex" justifyContent="center" my={4}>
+                <CircularProgress />
               </Box>
-            ))
+            ) : error ? (
+              <Typography color="error" textAlign="center">
+                {error.message}
+              </Typography>
+            ) : (
+              groups.map((group) => (
+                <Box
+                  key={group.id}
+                  display="flex"
+                  gap={1}
+                  position={"relative"}
+                  bgcolor="white"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  px={2}
+                  py="1px"
+                  borderRadius="12px"
+                >
+                  <Checkbox
+                    checked={selectedGroupIds.includes(group.id)}
+                    onChange={() => handleToggleGroup(group.id)}
+                    disabled={group.userCount < 1}
+                  />
+                  <Typography flex={1}>{group.name}</Typography>
+
+                  <IconButton
+                    onClick={() => handleOpenCancelGroupAllocation(group.id)}
+                    sx={{
+                      height: "45px",
+                      width: "45px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      position: "absolute",
+                      right: 90,
+                    }}
+                    aria-label="تنظیمات انتشار"
+                  >
+                    <UserWithSearchIcon stroke="#000" width={26} height={26} />
+                  </IconButton>
+                  <Typography fontSize="14px">عضو: {group.userCount} نفر</Typography>
+                </Box>
+              ))
+            )}
+          </Box>
+          {!isLoading && hasNextPage && (
+            <Box ref={loaderRef} display="flex" justifyContent="center" my={2}>
+              {isFetchingNextPage && <CircularProgress size={24} />}
+            </Box>
           )}
         </Box>
-        {!isLoading && hasNextPage && (
-          <Box ref={loaderRef} display="flex" justifyContent="center" my={2}>
-            {isFetchingNextPage && <CircularProgress size={24} />}
+
+
+        <Box sx={{
+          position: "sticky",
+          bottom: '0px',
+          background: "#FFF",
+        }}
+          pr={1} pl={2}
+        >
+          {errors.groupsId && (
+            <Typography color="error" fontSize="12px" sx={{ pt: 1, px: 2 }}>
+              {errors.groupsId.message}
+            </Typography>
+          )}
+
+          <Box display="flex" justifyContent="space-between" alignItems="center" pt={1}>
+            <Typography variant="subtitle2" fontWeight={500} fontSize="14px">
+              نمایش نتیجه به پاسخ دهنده
+            </Typography>
+            <SwitchButton
+              onChange={handleShowReportForResponder}
+              checked={isShowReportForResponder}
+              sx={{
+                "& .MuiInputBase-root": {
+                  borderRadius: "10px",
+                  fontWeight: 600,
+                  height: 42,
+                },
+              }}
+            />
           </Box>
-        )}
-      </Box>
 
+          <Box display="flex" justifyContent="center" alignItems="center" pb={2} gap="16px" px="16px" mt="14px">
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={isSubmitting || !isValid}
+              sx={{
+                bgcolor: "#1758BA",
+                height: "54px",
+                color: "white",
+                fontSize: { xs: "13px", sm: "16px" },
+                fontWeight: "700",
+                width: "161px",
+                borderRadius: "10px",
+                boxShadow: "none",
+                "&:hover": {
+                  bgcolor: "#1758BA",
+                  boxShadow: "none",
+                },
+              }}
+            >
+              افزودن به سبد خرید
+            </Button>
 
-      <Box  sx={{
-        position: "sticky",
-        bottom: '0px',
-        background : "#FFF",
-        // borderTop : "1px solid #dde1e6"
-      }}
-        pr={1} pl={2}
-        >
-        {errors.groupsId && (
-          <Typography color="error" fontSize="12px" sx={{ pt: 1, px: 2 }}>
-            {errors.groupsId.message}
-          </Typography>
-        )}
-
-      <Box display="flex" justifyContent="space-between" alignItems="center" pt={1}>
-        <Typography variant="subtitle2" fontWeight={500} fontSize="14px">
-          نمایش نتیجه به پاسخ دهنده
-        </Typography>
-        <SwitchButton
-          onChange={handleShowReportForResponder}
-          checked={isShowReportForResponder}
-          sx={{
-            "& .MuiInputBase-root": {
-              borderRadius: "10px",
-              fontWeight: 600,
-              height: 42,
-            },
-          }}
+            <Button
+              variant="outlined"
+              onClick={() => {
+                handleOpen()
+                reset()
+              }}
+              disabled={isSubmitting}
+              sx={{
+                width: "161px",
+                height: "54px",
+                fontWeight: "700",
+                borderRadius: "10px",
+                fontSize: "16px",
+                color: "#1758BA",
+                borderColor: "#1758BA",
+                bgcolor: "white",
+                "&:hover": {
+                  bgcolor: "transparent",
+                  boxShadow: "none",
+                },
+                "&.Mui-disabled": {
+                  borderColor: "#d9d9d9",
+                  color: "#b0b0b0",
+                },
+              }}
+            >
+              انصراف
+            </Button>
+          </Box>
+        </Box>
+        <ConfirmDialog
+          content="تا زمانی که قالب گزارش انفرادی نساخته باشید نمیتواند این تیک را بزند "
+          open={openShowReportForResponderDialog}
+          title="اخطار"
+          onClose={toggleConfirm}
+          cancelText="انصراف"
+          action={
+            <Button
+              type="submit"
+              fullWidth
+              disableRipple
+              variant="contained"
+              sx={{ ...buttonStylesAlert }}
+              onClick={handleRedirection}
+            >
+              برو به قالب گزارش
+            </Button>
+          }
         />
-      </Box>
 
-      <Box display="flex" justifyContent="center" alignItems="center" pb={2} gap="16px" px="16px" mt="14px">
-        <Button
-          type="submit"
-          variant="contained"
-          disabled={isSubmitting || !isValid}
-          sx={{
-            bgcolor: "#1758BA",
-            height: "54px",
-            color: "white",
-            fontSize: { xs: "13px", sm: "16px" },
-            fontWeight: "700",
-            width : "161px",
-            borderRadius: "10px",
-            boxShadow: "none",
-            "&:hover": {
-              bgcolor: "#1758BA",
-              boxShadow: "none",
-            },
-          }}
-        >
-          افزودن به سبد خرید
-        </Button>
-
-        <Button          
-          variant="outlined"
-          onClick={() => {
-            handleOpen()
-            reset()
-          }}
-          disabled={isSubmitting}
-          sx={{
-            width : "161px",
-            height: "54px",
-            fontWeight: "700",
-            borderRadius: "10px",
-            fontSize: "16px",
-            color: "#1758BA",
-            borderColor: "#1758BA",
-            bgcolor: "white",
-            "&:hover": {
-              bgcolor: "transparent",
-              boxShadow: "none",
-            },
-            "&.Mui-disabled": {
-              borderColor: "#d9d9d9",
-              color: "#b0b0b0",
-            },
-          }}
-        >
-          انصراف
-        </Button>
-      </Box>
-      </Box>
-      <ConfirmDialog
-        content="تا زمانی که قالب گزارش انفرادی نساخته باشید نمیتواند این تیک را بزند "
-        open={openShowReportForResponderDialog}
-        title="اخطار"
-        onClose={toggleConfirm}
-        cancelText="انصراف"
-        action={
-          <Button
-            type="submit"
-            fullWidth
-            disableRipple
-            variant="contained"
-            sx={{ ...buttonStylesAlert }}
-            onClick={handleRedirection}
-          >
-            برو به قالب گزارش
-          </Button>
-        }
-      />
-
-      <CancelGroupAllocationModal
-        openCancelGroupAllocationDialog={openCancelGroupAllocationDialog}
-        setOpenCancelGroupAllocationDialog={setOpenCancelGroupAllocationDialog}
-        groupId={selectedGroupId}
-        handleOpen={handleOpen}
-        formId={formId}
-        formData={formData}
-      />
-    </FormProvider>
+        <CancelGroupAllocationModal
+          openCancelGroupAllocationDialog={openCancelGroupAllocationDialog}
+          setOpenCancelGroupAllocationDialog={setOpenCancelGroupAllocationDialog}
+          groupId={selectedGroupId}
+          handleOpen={handleOpen}
+          formId={formId}
+          formData={formData}
+        />
+      </FormProvider>
     </Box>
   )
 }

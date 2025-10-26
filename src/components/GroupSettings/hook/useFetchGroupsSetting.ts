@@ -2,8 +2,15 @@
 
 import { getAuthToken } from "@/utils/getAuthToken"
 import { useInfiniteQuery } from "@tanstack/react-query"
-import type { IGroup } from "@/app/groups/components/groupListItem"
 import type { SearchBoxItem } from "@/components/ListGrid/ListGrid"
+interface IGroup {
+  id: number;
+  name: string;
+  description: string;
+  userCount: number;
+  fullyPublished: boolean
+  incompletelyPublished: boolean
+}
 
 interface UseInfiniteGroupsParams {
   formId: string | number
@@ -69,7 +76,8 @@ const fetchGroupsPage = async ({
     name: item.groupName,
     description: "",
     userCount: item.groupMemberCount,
-    isSelected: item.isSelected || false,
+    fullyPublished: item.fullyPublished || false,
+    incompletelyPublished: item.incompletelyPublished || false,
   }))
 
   const nextPage = json.totalPages && pageParam + 1 < json.totalPages ? pageParam + 1 : null

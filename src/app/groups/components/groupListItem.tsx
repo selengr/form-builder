@@ -6,7 +6,8 @@ export interface IGroup {
   name: string;
   description: string;
   userCount: number;
-  isSelected?: boolean;
+  fullyPublished: boolean
+  incompletelyPublished: boolean
 }
 
 interface IGroupListItemProps {

@@ -71,12 +71,11 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
       nextConditionOperator: "OR",
     },
   ])
-  const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(formData?.showReportForResponder || false)
+  const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(false)
   const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false)
   const [openCancelGroupAllocationDialog, setOpenCancelGroupAllocationDialog] = useState(false)
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
   const [initialSelectedGroupIds, setInitialSelectedGroupIds] = useState<number[]>([])
-  const hasSetInitialValues = useRef(false)
   const isFetchingRef = useRef(false)
   const [isRemoving, setIsRemoving] = useState(false);
 
@@ -155,26 +154,26 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
     )
   }, [debouncedValue, setSearchBoxList])
 
-useEffect(() => {
-  if (groups.length > 0) {
-    const currentSelected = getValues("groupsId")
-    const newDefaults = groups
-      .filter(
-        (g) =>
-          g.isSelected &&
-          !currentSelected.includes(g.id) &&
-          !initialSelectedGroupIds.includes(g.id),
-      )
-      .map((g) => g.id)
+  useEffect(() => {
+    if (groups.length > 0) {
+      const currentSelected = getValues("groupsId")
+      const newDefaults = groups
+        .filter(
+          (g) =>
+            g.fullyPublished &&
+            !currentSelected.includes(g.id) &&
+            !initialSelectedGroupIds.includes(g.id),
+        )
+        .map((g) => g.id)
 
-    if (newDefaults.length > 0) {
-      setValue("groupsId", [...currentSelected, ...newDefaults], {
-        shouldValidate: true,
-      })
-      setInitialSelectedGroupIds((prev) => [...prev, ...newDefaults])
+      if (newDefaults.length > 0) {
+        setValue("groupsId", [...currentSelected, ...newDefaults], {
+          shouldValidate: true,
+        })
+        setInitialSelectedGroupIds((prev) => [...prev, ...newDefaults])
+      }
     }
-  }
-}, [groups, getValues, setValue, initialSelectedGroupIds])
+  }, [groups, getValues, setValue, initialSelectedGroupIds])
 
 
   const handleToggleGroup = (groupId: number) => {
@@ -201,8 +200,6 @@ useEffect(() => {
     const currentSelected = values.groupsId
     const addedGroups = currentSelected.filter((id) => !initialSelectedGroupIds.includes(id))
     const removedGroups = initialSelectedGroupIds.filter((id) => !currentSelected.includes(id))
-    console.log('removedGroups', removedGroups)
-    console.log('addedGroups', addedGroups)
 
     try {
       if (addedGroups.length > 0) {
@@ -263,9 +260,9 @@ useEffect(() => {
           toast.success("گروه(های) لغوشده با موفقیت حذف شد.")
         }
       }
-       queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
-        handleOpen()
-        reset()
+      queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
+      handleOpen()
+      reset()
       setInitialSelectedGroupIds(currentSelected)
     } catch (err) {
       toast.error("خطا در برقراری ارتباط با سرور.")
@@ -280,7 +277,7 @@ useEffect(() => {
     const removedGroups = initialSelectedGroupIds.filter((id) => !currentSelected.includes(id));
     if (removedGroups.length > 0) {
       const removed = groups.filter((g) => removedGroups.includes(g.id));
-      
+
       setGroupsToRemove(removed);
       setOpenRemoveConfirmDialog(true);
       return;
@@ -390,6 +387,7 @@ useEffect(() => {
                   <Checkbox
                     checked={selectedGroupIds.includes(group.id)}
                     onChange={() => handleToggleGroup(group.id)}
+                    indeterminate={group.incompletelyPublished && !selectedGroupIds.includes(group.id)}
                     disabled={group.userCount < 1}
                   />
                   <Typography flex={1}>{group.name}</Typography>

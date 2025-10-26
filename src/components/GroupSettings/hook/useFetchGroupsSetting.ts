@@ -69,7 +69,8 @@ const fetchGroupsPage = async ({
     name: item.groupName,
     description: "",
     userCount: item.groupMemberCount,
-    isSelected: item.isSelected || false,
+    fullyPublished: item.fullyPublished || false,
+    incompletelyPublished: item.incompletelyPublished || false,
   }))
 
   const nextPage = json.totalPages && pageParam + 1 < json.totalPages ? pageParam + 1 : null

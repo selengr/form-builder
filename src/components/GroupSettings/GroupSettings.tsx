@@ -25,6 +25,7 @@ import { CancelGroupAllocationModal } from "./CancelGroupAllocationModal"
 import { useFetchGroupsSetting } from "./hook/useFetchGroupsSetting"
 import { useInView } from "react-intersection-observer"
 import { UserWithSearchIcon } from "../../../public/images/icons/UserWithSearchIcon "
+import { RemoveGroupConfirmModal } from "./RemoveConfirmDialog"
 
 const buttonStylesAlert = {
   height: "50px",
@@ -44,7 +45,7 @@ const buttonStylesAlert = {
 }
 
 const groupFormSchema = z.object({
-  groupsId: z.array(z.number()).min(1, "حداقل یک گروه را انتخاب کنید."),
+  groupsId: z.array(z.number()).min(0, "حداقل یک گروه را انتخاب کنید."),
   showReportForResponder: z.boolean(),
 })
 
@@ -75,8 +76,12 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
   const [openCancelGroupAllocationDialog, setOpenCancelGroupAllocationDialog] = useState(false)
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
   const [initialSelectedGroupIds, setInitialSelectedGroupIds] = useState<number[]>([])
-  const hasSetInitialValues = useRef(false)
   const isFetchingRef = useRef(false)
+  const [isRemoving, setIsRemoving] = useState(false);
+
+  const [openRemoveConfirmDialog, setOpenRemoveConfirmDialog] = useState(false);
+  const [groupsToRemove, setGroupsToRemove] = useState<{ id: number; name: string }[]>([]);
+
 
   const queryClient = useQueryClient()
   const debouncedValue = useDebounce(inputValue, 500)
@@ -150,15 +155,26 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
   }, [debouncedValue, setSearchBoxList])
 
   useEffect(() => {
-    if (groups.length > 0 && !hasSetInitialValues.current) {
-      const selectedIds = groups.filter((g) => g.isSelected).map((g) => g.id)
-      if (selectedIds.length > 0) {
-        setValue("groupsId", selectedIds, { shouldValidate: true })
-        setInitialSelectedGroupIds(selectedIds)
-        hasSetInitialValues.current = true
+    if (groups.length > 0) {
+      const currentSelected = getValues("groupsId")
+      const newDefaults = groups
+        .filter(
+          (g) =>
+            g.fullyPublished &&
+            !currentSelected.includes(g.id) &&
+            !initialSelectedGroupIds.includes(g.id),
+        )
+        .map((g) => g.id)
+
+      if (newDefaults.length > 0) {
+        setValue("groupsId", [...currentSelected, ...newDefaults], {
+          shouldValidate: true,
+        })
+        setInitialSelectedGroupIds((prev) => [...prev, ...newDefaults])
       }
     }
-  }, [groups, setValue])
+  }, [groups, getValues, setValue, initialSelectedGroupIds])
+
 
   const handleToggleGroup = (groupId: number) => {
     setValue(
@@ -178,84 +194,97 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
     setValue("groupsId", newSelectedIds, { shouldDirty: true, shouldValidate: true })
   }
 
-  const onSubmit = useCallback(
-    async (values: GroupFormSchemaType) => {
-      const token = await getAuthToken()
-      const currentSelected = values.groupsId
+  const handleGroupSubmit = useCallback(async () => {
+    const token = await getAuthToken()
+    const values = getValues();
+    const currentSelected = values.groupsId
+    const addedGroups = currentSelected.filter((id) => !initialSelectedGroupIds.includes(id))
+    const removedGroups = initialSelectedGroupIds.filter((id) => !currentSelected.includes(id))
 
-      const addedGroups = currentSelected.filter((id) => !initialSelectedGroupIds.includes(id))
-      const removedGroups = initialSelectedGroupIds.filter((id) => !currentSelected.includes(id))
+    try {
+      if (addedGroups.length > 0) {
+        const response = await fetch("/api/publish/group", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            formId: Number(formId),
+            groupsId: values.groupsId,
+            showReportForResponder: values.showReportForResponder,
+          }),
+        })
 
-      try {
-        if (addedGroups.length > 0) {
-          const response = await fetch("/api/publish/group", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              formId: Number(formId),
-              groupsId: values.groupsId,
-              showReportForResponder: values.showReportForResponder,
-            }),
-          })
+        const data = await response.json()
 
-          const data = await response.json()
-
-          if (!response.ok) {
-            if (data.error && data.details) {
-              data.details.forEach((err: any) => {
-                if (err.path && err.path[0]) {
-                  if (err.path[0] === "groupsId") {
-                    methods.setError("groupsId", {
-                      type: "manual",
-                      message: err.message || "خطا در فیلد گروه",
-                    })
-                  }
+        if (!response.ok) {
+          if (data.error && data.details) {
+            data.details.forEach((err: any) => {
+              if (err.path && err.path[0]) {
+                if (err.path[0] === "groupsId") {
+                  methods.setError("groupsId", {
+                    type: "manual",
+                    message: err.message || "خطا در فیلد گروه",
+                  })
                 }
-              })
-            } else if (data.error) {
-              toast.error(data.error)
-            } else {
-              toast.error("خطای ناشناخته از سمت سرور")
-            }
-            return
-          }
-
-          queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
-          toast.success("با موفقیت به سبد خرید افزوده شد.")
-          handleOpen()
-          reset()
-        }
-        if (removedGroups.length > 0) {
-          const cancelResponse = await fetch("/api/group/cancel", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              formId: Number(formId),
-              unselectedGroupsId: removedGroups,
-            }),
-          })
-
-          const cancelData = await cancelResponse.json()
-          if (!cancelResponse.ok) {
-            toast.error(cancelData.error || "خطا در لغو گروه‌ها")
+              }
+            })
+          } else if (data.error) {
+            toast.error(data.error)
           } else {
-            toast.success("گروه(های) لغوشده با موفقیت حذف شد.")
+            toast.error("خطای ناشناخته از سمت سرور")
           }
+          return
         }
-        setInitialSelectedGroupIds(currentSelected)
-      } catch (err) {
-        toast.error("خطا در برقراری ارتباط با سرور.")
-        console.error("Group publish error:", err)
+
+        toast.success("با موفقیت به سبد خرید افزوده شد.")
       }
-    },
+      if (removedGroups.length > 0) {
+        const cancelResponse = await fetch("/api/group/cancel", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            formId: Number(formId),
+            unselectedGroupsId: removedGroups,
+          }),
+        })
+
+        const cancelData = await cancelResponse.json()
+        if (!cancelResponse.ok) {
+          toast.error(cancelData.error || "خطا در لغو گروه‌ها")
+        } else {
+          toast.success("گروه(های) لغوشده با موفقیت حذف شد.")
+        }
+      }
+      queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
+      handleOpen()
+      reset()
+      setInitialSelectedGroupIds(currentSelected)
+    } catch (err) {
+      toast.error("خطا در برقراری ارتباط با سرور.")
+      console.error("Group publish error:", err)
+    }
+  },
     [formId, handleOpen, reset, methods, initialSelectedGroupIds],
   )
+
+  const onSubmit = async (values: GroupFormSchemaType) => {
+    const currentSelected = getValues("groupsId")
+    const removedGroups = initialSelectedGroupIds.filter((id) => !currentSelected.includes(id));
+    if (removedGroups.length > 0) {
+      const removed = groups.filter((g) => removedGroups.includes(g.id));
+
+      setGroupsToRemove(removed);
+      setOpenRemoveConfirmDialog(true);
+      return;
+    }
+    await handleGroupSubmit();
+  };
+
 
   const handleShowReportForResponder = () => {
     if (formData?.isCreatedSoloReport) {
@@ -279,6 +308,14 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
     setSelectedGroupId(groupId)
     setOpenCancelGroupAllocationDialog(true)
   }, [])
+
+  const buttonLabel =
+    selectedGroupIds.filter((id) => !initialSelectedGroupIds.includes(id)).length > 0
+      ? "افزودن به سبد خرید"
+      : "اعمال تغییرات";
+
+
+
 
   return (
     <Box sx={{ position: "relative" }}>
@@ -350,6 +387,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
                   <Checkbox
                     checked={selectedGroupIds.includes(group.id)}
                     onChange={() => handleToggleGroup(group.id)}
+                    indeterminate={group.incompletelyPublished && !selectedGroupIds.includes(group.id)}
                     disabled={group.userCount < 1}
                   />
                   <Typography flex={1}>{group.name}</Typography>
@@ -432,7 +470,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
                 },
               }}
             >
-              افزودن به سبد خرید
+              {buttonLabel}
             </Button>
 
             <Button
@@ -493,6 +531,23 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
           formId={formId}
           formData={formData}
         />
+        <RemoveGroupConfirmModal
+          open={openRemoveConfirmDialog}
+          onClose={() => setOpenRemoveConfirmDialog(false)}
+          groupsToRemove={groupsToRemove}
+          loading={isRemoving}
+          title={"گروه‌ها"}
+          onConfirm={async () => {
+            setIsRemoving(true);
+            try {
+              await handleGroupSubmit();
+            } finally {
+              setIsRemoving(false);
+              setOpenRemoveConfirmDialog(false);
+            }
+          }}
+        />
+
       </FormProvider>
     </Box>
   )

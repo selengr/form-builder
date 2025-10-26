@@ -13,6 +13,6 @@ const groupMethodSchema = z.object({
 export async function POST(req: Request) {
   return handleApiProxy(req, {
     schema: groupMethodSchema,
-    endpoint: '/form-publish-setting/cancel-group-allocation',
+    endpoint: '/psya/form-publish-setting/cancel-group-allocation',
   });
 }

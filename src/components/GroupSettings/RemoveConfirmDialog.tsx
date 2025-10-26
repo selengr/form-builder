@@ -1,21 +1,26 @@
 'use client';
 
-import { Box, Button, CircularProgress, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
-import { CgClose } from 'react-icons/cg';
 import React from 'react';
+import { CgClose } from 'react-icons/cg';
+import { Box, Button, CircularProgress, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
+
+type TMemberToRemove =
+    | { id: number; name: string }
+    | { id: number; userName: string; userFamily: string };
 
 interface IRemoveGroupConfirmModalProps {
     open: boolean;
     loading: boolean;
+    title: string;
     onClose: () => void;
-    groupsToRemove: { id: number; name: string }[];
+    groupsToRemove: TMemberToRemove[]
     onConfirm: () => void;
 }
 
 export const buttonStylesError = {
     bgcolor: '#FA4D56',
     borderColor: '#FA4D56',
-    minWidth : "100px",
+    minWidth: "100px",
     '&:hover': {
         bgcolor: '#C6394D',
     },
@@ -33,14 +38,19 @@ export const buttonStyles = {
     transition: 'background-color 0.3s, border-color 0.3s',
 };
 
+function getDisplayName(g: TMemberToRemove): string {
+    return "name" in g ? g.name : `${g.userName} ${g.userFamily}`;
+}
 
 export const RemoveGroupConfirmModal: React.FC<IRemoveGroupConfirmModalProps> = ({
     open,
+    title,
     loading,
     onClose,
     groupsToRemove,
     onConfirm,
 }) => {
+
     return (
         <Dialog
             open={open}
@@ -80,17 +90,17 @@ export const RemoveGroupConfirmModal: React.FC<IRemoveGroupConfirmModalProps> = 
                 }}
             >
                 <Typography variant="h6" fontWeight="bold" mb={2}>
-                    شما در حال لغو تخصیص گروه‌های زیر هستید:
+                    شما در حال لغو تخصیص {title}ی زیر هستید:
                 </Typography>
 
-                {groupsToRemove.map((g, index) => (
+                {groupsToRemove.map((g: TMemberToRemove, index) => (
                     <Typography variant="subtitle1" key={g.id} sx={{ mb: 0.5 }}>
-                        {g.name} -{index+1}
+                        {getDisplayName(g)} - {index + 1}
                     </Typography>
                 ))}
 
                 <Typography color="error" mt={2}>
-                    آیا از لغو تخصیص این گروه‌ها مطمئن هستید؟
+                    آیا از لغو تخصیص این {title} مطمئن هستید؟
                 </Typography>
 
                 <Box display="flex" justifyContent="center" alignItems="center" pb={2} gap="16px" px="16px" mt="14px">
@@ -100,7 +110,7 @@ export const RemoveGroupConfirmModal: React.FC<IRemoveGroupConfirmModalProps> = 
                         disabled={loading}
                         sx={{ ...buttonStyles, ...buttonStylesError }}
                     >
-                        {loading ? <CircularProgress size={22} /> : "بله، لغو تخصیص" }
+                        {loading ? <CircularProgress size={22} /> : "بله، لغو تخصیص"}
                     </Button>
 
                     <Button
@@ -131,7 +141,5 @@ export const RemoveGroupConfirmModal: React.FC<IRemoveGroupConfirmModalProps> = 
                 </Box>
             </DialogContent>
         </Dialog>
-
-
     );
 };

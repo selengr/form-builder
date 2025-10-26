@@ -25,6 +25,7 @@ import { AxiosApi } from "@/services/axios/AxiosApi"
 import type { MemberSettingsProps, IUserGroupMemmerInfo } from "@/types/setting"
 import { useFetchMembersSetting } from "./hook/useFetchMembersSetting"
 import { useInView } from "react-intersection-observer"
+import { RemoveGroupConfirmModal } from "./RemoveConfirmDialog"
 
 const buttonStylesAlert = {
   height: "50px",
@@ -44,7 +45,7 @@ const buttonStylesAlert = {
 }
 
 const groupFormSchema = z.object({
-  memberId: z.array(z.number()).min(1, "حداقل یک عضو را انتخاب کنید."),
+  memberId: z.array(z.number()).min(0, "حداقل یک عضو را انتخاب کنید."),
   showReportForResponder: z.boolean(),
 })
 
@@ -55,16 +56,20 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
   const [inputValue, setInputValue] = useState("")
   const [searchBoxList, setSearchBoxList] = useState<SearchBoxItem[]>([
     {
-      fieldName: "name",
+      fieldName: "introducedUser.name",
       fieldOperation: "MATCH",
       fieldValue: "",
       nextConditionOperator: "OR",
     },
   ])
-  const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(false)
+  const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(formData?.showReportForResponder || false)
   const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false)
   const [introducedUserJTGroupIdList, setIntroducedUserJTGroupIdList] = useState<number[]>([])
   const [introducedUserPublishIdList, setIntroducedUserPublishIdList] = useState<number[]>([])
+
+    const [isRemoving, setIsRemoving] = useState(false);
+  const [openRemoveConfirmDialog, setOpenRemoveConfirmDialog] = useState(false);
+  const [membersToRemove, setMembersToRemove] = useState<{ id: number; name: string }[]>([]);
   const isFetchingRef = useRef(false)
 
   const queryClient = useQueryClient()
@@ -145,31 +150,25 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
     )
   }, [debouncedValue, setSearchBoxList])
 
-//   useEffect(() => {
-//   if (members.length > 0) {
-//     const activeIds = members.filter(m => m.activationLink).map(m => m.introducedUserJTGroupId)
-//     const current = getValues("memberId")
-//     const merged = Array.from(new Set([...current, ...activeIds]))
-//     setValue("memberId", merged, { shouldValidate: true })
-//   }
-// }, [members, setValue, getValues])
-
-const didSetDefault = useRef(false)
+const autoSelectedRef = useRef<Set<number>>(new Set())
 
 useEffect(() => {
-  if (members.length === 0 || didSetDefault.current) return
+  if (members.length === 0) return
 
+  const currentSelected = methods.getValues("memberId")
   const activeIds = members
     .filter((m) => m.activationLink)
     .map((m) => m.introducedUserJTGroupId)
+  const newActiveIds = activeIds.filter(
+    (id) => !currentSelected.includes(id) && !autoSelectedRef.current.has(id)
+  )
 
-  if (activeIds.length > 0) {
-    methods.setValue("memberId", activeIds, { shouldValidate: true })
-    didSetDefault.current = true 
+  if (newActiveIds.length > 0) {
+    const merged = [...currentSelected, ...newActiveIds]
+    methods.setValue("memberId", merged, { shouldValidate: true })
+    newActiveIds.forEach((id) => autoSelectedRef.current.add(id))
   }
-}, [members, methods])
-
-
+}, [members])
 
 
 
@@ -204,17 +203,49 @@ useEffect(() => {
     }
   }
 
-  const handleToggleAll = () => {
-    const newSelectedIds = allSelected ? [] : members.map((group) => group.introducedUserJTGroupId)
-    setValue("memberId", newSelectedIds, { shouldDirty: true, shouldValidate: true })
+ const handleToggleAll = () => {
+  if (members.length === 0) return
+
+  const current = getValues("memberId")
+  const allIds = members.map((m) => m.introducedUserJTGroupId)
+  const allSelected = current.length === members.length
+
+  let newSelectedIds: number[]
+
+  if (allSelected) {
+    newSelectedIds = []
+    const publishIdsToRemove = members
+      .filter((m) => m.activationLink && m.introducedUserPublishId)
+      .map((m) => m.introducedUserPublishId!)
+
+    setIntroducedUserPublishIdList((prev) => [
+      ...new Set([...prev, ...publishIdsToRemove]),
+    ])
+    setIntroducedUserJTGroupIdList([])
+  } else {
+    newSelectedIds = allIds
+
+    const addedJTGroupIds = members
+      .filter((m) => !m.activationLink)
+      .map((m) => m.introducedUserJTGroupId)
+    const removedPublishIds = members
+      .filter((m) => m.activationLink && m.introducedUserPublishId)
+      .map((m) => m.introducedUserPublishId!)
+
+    setIntroducedUserJTGroupIdList(addedJTGroupIds)
+    setIntroducedUserPublishIdList((prev) =>
+      prev.filter((id) => !removedPublishIds.includes(id))
+    )
   }
+
+  setValue("memberId", newSelectedIds, { shouldDirty: true, shouldValidate: true })
+}
+
 
   console.log('introducedUserJTGroupIdList', introducedUserJTGroupIdList)
   console.log('introducedUserPublishIdList', introducedUserPublishIdList)
 
-  const onSubmit = useCallback(async () => {
-    const token = await getAuthToken()
-
+  const handleMembersSubmit = useCallback(async () => {
     try {
       if (introducedUserJTGroupIdList.length > 0) {
         await AxiosApi.post("/form-publish-setting/new-member-allocation", {
@@ -222,6 +253,7 @@ useEffect(() => {
           introducedUserJTGroupIdList,
           showReportForResponder: getValues("showReportForResponder"),
         })
+         toast.success("با موفقیت به سبد خرید افزوده شد.")
       }
 
       if (introducedUserPublishIdList.length > 0) {
@@ -229,10 +261,10 @@ useEffect(() => {
           formId: Number(formId),
           introducedUserPublishIdList,
         })
+         toast.success("اعضای لغوشده با موفقیت حذف شد.")
       }
 
       queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
-      toast.success("با موفقیت به سبد خرید افزوده شد.")
       handleClose()
       reset()
     } catch (err) {
@@ -240,6 +272,20 @@ useEffect(() => {
       console.error("Group publish error:", err)
     }
   }, [formId, handleClose, reset, methods, introducedUserJTGroupIdList, introducedUserPublishIdList])
+
+
+    const onSubmit = async () => {
+    const currentSelected = getValues("memberId")
+    const removedGroups = introducedUserPublishIdList.filter((id) => !currentSelected.includes(id));
+   console.log('removedGroups', removedGroups)
+    if (removedGroups.length > 0) {
+      const removed : any = members.filter((g) => removedGroups.includes(g.introducedUserPublishId!));
+      setMembersToRemove(removed);
+      setOpenRemoveConfirmDialog(true);
+      return
+    }
+    await handleMembersSubmit();
+  };
 
   const handleShowReportForResponder = () => {
     if (formData?.isCreatedSoloReport) {
@@ -261,7 +307,9 @@ useEffect(() => {
 
   return (
      <Box sx={{position:"relative"}}>
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+    <FormProvider methods={methods} 
+    // onSubmit={handleSubmit(onSubmit)}
+    >
       <Box
         bgcolor="#f7f7f7"
         borderRadius={2}
@@ -388,7 +436,8 @@ useEffect(() => {
 
       <Box  display="flex" justifyContent="center" alignItems="center" pb={2} gap="16px" px="16px" mt="14px">
         <Button
-          type="submit"
+          // type="submit"
+          onClick={onSubmit}
           variant="contained"
           disabled={isSubmitting || !isValid}
           sx={{
@@ -459,6 +508,22 @@ useEffect(() => {
         }
       />
     </FormProvider>
+     <RemoveGroupConfirmModal
+              open={openRemoveConfirmDialog}
+              onClose={() => setOpenRemoveConfirmDialog(false)}
+              groupsToRemove={membersToRemove}
+              loading={isRemoving}
+              title={"اعضا"}
+              onConfirm={async () => {
+                setIsRemoving(true);
+                try {
+                  await handleMembersSubmit();
+                } finally {
+                  setIsRemoving(false);
+                  setOpenRemoveConfirmDialog(false);
+                }
+              }}
+            />
     </Box>
   )
 }

@@ -71,7 +71,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
       nextConditionOperator: "OR",
     },
   ])
-  const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(false)
+  const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(formData?.showReportForResponder || false)
   const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false)
   const [openCancelGroupAllocationDialog, setOpenCancelGroupAllocationDialog] = useState(false)
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
@@ -155,16 +155,27 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
     )
   }, [debouncedValue, setSearchBoxList])
 
-  useEffect(() => {
-    if (groups.length > 0 && !hasSetInitialValues.current) {
-      const selectedIds = groups.filter((g) => g.isSelected).map((g) => g.id)
-      if (selectedIds.length > 0) {
-        setValue("groupsId", selectedIds, { shouldValidate: true })
-        setInitialSelectedGroupIds(selectedIds)
-        hasSetInitialValues.current = true
-      }
+useEffect(() => {
+  if (groups.length > 0) {
+    const currentSelected = getValues("groupsId")
+    const newDefaults = groups
+      .filter(
+        (g) =>
+          g.isSelected &&
+          !currentSelected.includes(g.id) &&
+          !initialSelectedGroupIds.includes(g.id),
+      )
+      .map((g) => g.id)
+
+    if (newDefaults.length > 0) {
+      setValue("groupsId", [...currentSelected, ...newDefaults], {
+        shouldValidate: true,
+      })
+      setInitialSelectedGroupIds((prev) => [...prev, ...newDefaults])
     }
-  }, [groups, setValue])
+  }
+}, [groups, getValues, setValue, initialSelectedGroupIds])
+
 
   const handleToggleGroup = (groupId: number) => {
     setValue(
@@ -184,19 +195,15 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
     setValue("groupsId", newSelectedIds, { shouldDirty: true, shouldValidate: true })
   }
 
-  // const handleOpenCancelGroupAllocation = useCallback((groupId: number) => {
   const handleGroupSubmit = useCallback(async () => {
     const token = await getAuthToken()
     const values = getValues();
     const currentSelected = values.groupsId
-
-    // const addedGroups = currentSelected.filter((id) => !initialSelectedGroupIds.includes(id))
     const addedGroups = currentSelected.filter((id) => !initialSelectedGroupIds.includes(id))
     const removedGroups = initialSelectedGroupIds.filter((id) => !currentSelected.includes(id))
     console.log('removedGroups', removedGroups)
     console.log('addedGroups', addedGroups)
-    // return
-    // debugger
+
     try {
       if (addedGroups.length > 0) {
         const response = await fetch("/api/publish/group", {
@@ -234,10 +241,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
           return
         }
 
-        queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
         toast.success("با موفقیت به سبد خرید افزوده شد.")
-        handleOpen()
-        reset()
       }
       if (removedGroups.length > 0) {
         const cancelResponse = await fetch("/api/group/cancel", {
@@ -259,6 +263,9 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
           toast.success("گروه(های) لغوشده با موفقیت حذف شد.")
         }
       }
+       queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
+        handleOpen()
+        reset()
       setInitialSelectedGroupIds(currentSelected)
     } catch (err) {
       toast.error("خطا در برقراری ارتباط با سرور.")
@@ -273,6 +280,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
     const removedGroups = initialSelectedGroupIds.filter((id) => !currentSelected.includes(id));
     if (removedGroups.length > 0) {
       const removed = groups.filter((g) => removedGroups.includes(g.id));
+      
       setGroupsToRemove(removed);
       setOpenRemoveConfirmDialog(true);
       return;
@@ -530,14 +538,15 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
           onClose={() => setOpenRemoveConfirmDialog(false)}
           groupsToRemove={groupsToRemove}
           loading={isRemoving}
+          title={"گروه‌ها"}
           onConfirm={async () => {
-            // setIsRemoving(true);
-            // try {
+            setIsRemoving(true);
+            try {
               await handleGroupSubmit();
-            // } finally {
+            } finally {
               setIsRemoving(false);
               setOpenRemoveConfirmDialog(false);
-            // }
+            }
           }}
         />
 

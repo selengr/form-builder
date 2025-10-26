@@ -145,6 +145,34 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
     )
   }, [debouncedValue, setSearchBoxList])
 
+//   useEffect(() => {
+//   if (members.length > 0) {
+//     const activeIds = members.filter(m => m.activationLink).map(m => m.introducedUserJTGroupId)
+//     const current = getValues("memberId")
+//     const merged = Array.from(new Set([...current, ...activeIds]))
+//     setValue("memberId", merged, { shouldValidate: true })
+//   }
+// }, [members, setValue, getValues])
+
+const didSetDefault = useRef(false)
+
+useEffect(() => {
+  if (members.length === 0 || didSetDefault.current) return
+
+  const activeIds = members
+    .filter((m) => m.activationLink)
+    .map((m) => m.introducedUserJTGroupId)
+
+  if (activeIds.length > 0) {
+    methods.setValue("memberId", activeIds, { shouldValidate: true })
+    didSetDefault.current = true 
+  }
+}, [members, methods])
+
+
+
+
+
   const handleToggleGroup = (member: IUserGroupMemmerInfo) => {
     const current = getValues("memberId")
     const isSelected = current.includes(member.introducedUserJTGroupId)
@@ -180,6 +208,9 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
     const newSelectedIds = allSelected ? [] : members.map((group) => group.introducedUserJTGroupId)
     setValue("memberId", newSelectedIds, { shouldDirty: true, shouldValidate: true })
   }
+
+  console.log('introducedUserJTGroupIdList', introducedUserJTGroupIdList)
+  console.log('introducedUserPublishIdList', introducedUserPublishIdList)
 
   const onSubmit = useCallback(async () => {
     const token = await getAuthToken()

@@ -2,8 +2,15 @@
 
 import { getAuthToken } from "@/utils/getAuthToken"
 import { useInfiniteQuery } from "@tanstack/react-query"
-import type { IGroup } from "@/app/groups/components/groupListItem"
 import type { SearchBoxItem } from "@/components/ListGrid/ListGrid"
+interface IGroup {
+  id: number;
+  name: string;
+  description: string;
+  userCount: number;
+  fullyPublished: boolean
+  incompletelyPublished: boolean
+}
 
 interface UseInfiniteGroupsParams {
   formId: string | number

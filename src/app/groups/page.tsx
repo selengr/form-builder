@@ -133,10 +133,6 @@ const GroupsPage: React.FC = () => {
     };
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const handleViewGroup = (groupId: string | number) => {
-    router.push(`/groups/${groupId}`);
-  };
-
   const handleDeleteGroup = (groupId: string | number) => {
     console.log(`Delete group with ID: ${groupId}`);
   };
@@ -196,7 +192,7 @@ const GroupsPage: React.FC = () => {
             <div className='w-full max-w-lg flex flex-col gap-[10px] overflow-y-auto'>
               {data?.pages.flatMap((page) =>
                 page.groups.map((group) => (
-                  <GroupListItem key={group.id} group={group} onViewGroup={handleViewGroup} onDeleteGroup={handleDeleteGroup} />
+                  <GroupListItem key={group.id} group={group} onDeleteGroup={handleDeleteGroup} />
                 ))
               )}
 

@@ -1,5 +1,9 @@
-import React, { Suspense } from 'react';
+'use client';
+
+import { useRouter } from 'next/navigation';
 import { InfoRow } from '@/components/common/infoRow';
+import React, { Suspense, useCallback, useState } from 'react';
+import { SwitchButton } from '@/components/Switch/SwitchButton';
 
 export interface IGroup {
   id: number;
@@ -11,33 +15,53 @@ export interface IGroup {
 
 interface IGroupListItemProps {
   group: IGroup;
-  onViewGroup: (groupId: number) => void;
   onDeleteGroup: (groupId: number) => void;
 }
 
-export function GroupListItem({ group, onViewGroup, onDeleteGroup }: IGroupListItemProps) {
+export function GroupListItem({ group, onDeleteGroup }: IGroupListItemProps) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+
+  const handlePublishStatus = useCallback(async () => {
+    // try {
+    //   setLoading(true);
+    //   const newStatus = group.status === 'PUBLISH' ? 'UN_PUBLISH' : 'PUBLISH';
+    //   const res = await AxiosApi.put('/form/change-status', {
+    //     formId: group.id,
+    //     formBuilderStatusEnum: newStatus,
+    //   });
+    //   if (res.data) {
+    //     toast.success('عملیات با موفقیت انجام شد');
+    //     // setRefreshGrid((prev) => !prev);
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    //   toast.error('عملیات ناموفق بود. مجدداً تلاش کنید.');
+    // } finally {
+    //   setLoading(false);
+    // }
+  }, [group.id]);
+
+  const handleViewGroup = (groupId: string | number) => {
+    router.push(`/groups/${groupId}`);
+  };
+
   return (
-    <div className='border border-gray-200 rounded-xl p-4 transition flex flex-col gap-[10px]'>
+    <div className='relative border border-gray-200 rounded-xl p-4 transition flex flex-col gap-[10px]'>
       <Suspense fallback={<div>در حال بارگذاری...</div>}>
         <InfoRow label='نام' value={group.name} bold />
         <InfoRow label='تعداد اعضا' value={`${group.userCount} نفر`} bold />
       </Suspense>
-      {/*<div className="flex w-full gap-2">*/}
-      {/*  <button*/}
-      {/*    className="bg-[#1758BA] hover:bg-[#216ee1] transition duration-200 px-2 h-[42px] w-full text-sm rounded-lg text-white"*/}
-      {/*    onClick={() => onViewGroup(group.id)}*/}
-      {/*  >*/}
-      {/*    مشاهده*/}
-      {/*  </button>*/}
-      {/*  <button*/}
-      {/*    onClick={() => onDeleteGroup(group.id)}*/}
-      {/*    className="w-[42px] h-[42px] flex items-center justify-center hover:bg-gray-100 rounded-lg transition"*/}
-      {/*  >*/}
-      {/*    <Suspense fallback={<div>...</div>}>*/}
-      {/*      <Image src={TrashIcon} alt="trash" width={24} height={24} draggable={false} />*/}
-      {/*    </Suspense>*/}
-      {/*  </button>*/}
-      {/*</div>*/}
+      <div className="flex w-full gap-2">
+        <button
+          className="bg-[#1758BA] hover:bg-[#216ee1] transition duration-200 px-2 h-[42px] w-[50%] text-sm rounded-lg text-white"
+          onClick={() => handleViewGroup(group.id)}
+        >
+          مشاهده
+        </button>
+        <SwitchButton sx={{ position: "absolute", top: 15, right: 15 }} checked={true} onChange={handlePublishStatus} />
+      </div>
     </div>
   );
 }

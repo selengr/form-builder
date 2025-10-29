@@ -10,7 +10,8 @@ interface MembersResponse {
   totalElements: number
 }
 
-interface FetchMembersPageParams extends IUseFetchMembersParams {
+interface FetchMembersPageParams extends Omit<IUseFetchMembersParams, "formId"> {
+  formId?: number
   pageParam?: number
   pageSize?: number
 }
@@ -43,7 +44,11 @@ const fetchMembersPage = async ({
 
   const encoded = encodeURIComponent(JSON.stringify(params))
 
-  const res = await fetch(`/api/group/list/${groupId}?searchFilterModel=${encoded}&formId=${formId}`, {
+  const url = formId
+    ? `/api/group/list/${groupId}?searchFilterModel=${encoded}&formId=${formId}`
+    : `/api/group/list/${groupId}?searchFilterModel=${encoded}`
+
+  const res = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -52,7 +57,7 @@ const fetchMembersPage = async ({
   })
 
   if (!res.ok) {
-    const errorData = await res.json()
+    const errorData = await res.json().catch(() => ({}))
     throw new Error(errorData.error || "دریافت لیست اعضا ناموفق بود.")
   }
 
@@ -69,13 +74,14 @@ export const useFetchMembersSetting = ({
   groupId,
   searchBoxList,
   pageSize = 10,
-}: IUseFetchMembersParams & { pageSize?: number }) => {
+}: Omit<IUseFetchMembersParams, "formId"> & { formId?: number; pageSize?: number }) => {
   return useInfiniteQuery({
-    queryKey: ["members-setting", formId, groupId, searchBoxList],
-    queryFn: ({ pageParam = 0 }) => fetchMembersPage({ formId, groupId, searchBoxList, pageParam, pageSize }),
+    queryKey: ["members-setting", groupId, searchBoxList, formId ?? "no-form"],
+    queryFn: ({ pageParam = 0 }) =>
+      fetchMembersPage({ formId, groupId, searchBoxList, pageParam, pageSize }),
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 0,
-    enabled: !!formId && !!groupId,
+    enabled: !!groupId,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   })

@@ -11,7 +11,7 @@ interface MembersResponse {
 }
 
 interface FetchMembersPageParams extends Omit<IUseFetchMembersParams, "formId"> {
-  formId?: number
+  formId?: number | string
   pageParam?: number
   pageSize?: number
 }
@@ -74,7 +74,7 @@ export const useFetchMembersSetting = ({
   groupId,
   searchBoxList,
   pageSize = 10,
-}: Omit<IUseFetchMembersParams, "formId"> & { formId?: number; pageSize?: number }) => {
+}: Omit<IUseFetchMembersParams, "formId"> & { formId?: number | string; pageSize?: number }) => {
   return useInfiniteQuery({
     queryKey: ["members-setting", groupId, searchBoxList, formId ?? "no-form"],
     queryFn: ({ pageParam = 0 }) =>

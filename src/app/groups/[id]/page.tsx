@@ -1,8 +1,8 @@
 'use client'
 
 import Image from 'next/image'
-import { useParams, useRouter } from 'next/navigation'
-import React, { Suspense, useEffect, useState, useRef } from 'react'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import React, { Suspense, useEffect, useState, useRef, useCallback } from 'react'
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md'
 import TrashIcon from '@/../public/images/purchase-order/trashMts.svg'
 import { CreateGroupDialog } from '@/app/groups/components/createGroupDialog'
@@ -10,21 +10,31 @@ import { InfoRow } from '@/components/common/infoRow'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { Box, CircularProgress, Typography } from '@mui/material'
+// components
+import { SwitchButton } from "@/components/Switch/SwitchButton"
+// images
+import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 
 // Hook + types
 import { useFetchMembersSetting } from '@/components/GroupSettings/hook/useFetchMembersSetting'
 import type { IUserGroupMemmerInfo } from '@/types/setting'
 import { SearchBoxItem } from '@/components/ListGrid/ListGrid'
+import { CancelGroupAllocationModal } from '../components/createMemberDialog'
 
 export default function GroupDetailsPage() {
   const router = useRouter()
   const params = useParams()
   const groupId = typeof params.id === 'string' ? parseInt(params.id, 10) : null
-
+    const searchParams = useSearchParams();
+   const groupName = searchParams.get('groupName');
+console.log('groupId', groupId)
   const [selectedUsers, setSelectedUsers] = useState<number[]>([])
   const [searchBoxList, setSearchBoxList] = useState<SearchBoxItem[]>([
     { fieldName: 'introducedUser.name', fieldOperation: 'MATCH', fieldValue: '', nextConditionOperator: 'OR' },
   ])
+    const [loading, setLoading] = useState(false);
+      const [showCreateMemberDialog, setShowCreateMemberDialog] = useState(false);
+
 
   // Fetch members
   const {
@@ -67,6 +77,30 @@ export default function GroupDetailsPage() {
       setSelectedUsers([])
     }
   }
+  
+    const handleOpen = useCallback(() => {
+      setShowCreateMemberDialog((prev) => !prev);
+    }, []);
+
+   const handlePublishStatus = useCallback(async () => {
+      // try {
+      //   setLoading(true);
+      //   const newStatus = group.status === 'PUBLISH' ? 'UN_PUBLISH' : 'PUBLISH';
+      //   const res = await AxiosApi.put('/form/change-status', {
+      //     formId: group.id,
+      //     formBuilderStatusEnum: newStatus,
+      //   });
+      //   if (res.data) {
+      //     toast.success('عملیات با موفقیت انجام شد');
+      //     // setRefreshGrid((prev) => !prev);
+      //   }
+      // } catch (error) {
+      //   console.error(error);
+      //   toast.error('عملیات ناموفق بود. مجدداً تلاش کنید.');
+      // } finally {
+      //   setLoading(false);
+      // }
+    }, []);
 
   if (isLoading) {
     return (
@@ -84,6 +118,8 @@ export default function GroupDetailsPage() {
     )
   }
 
+  console.log('members', members)
+
   return (
     <div className='p-2 w-full h-[calc(100vh-60px)] flex flex-col'>
       <main className='p-4 bg-white flex flex-col rounded-xl h-full'>
@@ -99,9 +135,20 @@ export default function GroupDetailsPage() {
           </button>
         </div>
 
-        <div className='border border-gray-200 rounded-xl p-4 flex flex-col gap-[10px] mb-4'>
+        <div className='border justify-between w-full border-gray-200 rounded-xl p-4 flex mb-4'>
+        <div className='flex flex-col gap-[10px]'>
           <InfoRow label='شناسه گروه' value={groupId ?? '---'} bold />
           <InfoRow label='تعداد اعضا' value={`${members.length} نفر`} bold />
+        </div>
+
+           <button
+                        onClick={() => setShowCreateMemberDialog(true)}
+                        className='w-[50px] h-[50px] border border-[#1758BA] rounded-xl flex items-center justify-center hover:bg-gray-100 transition'
+                        aria-label='افزودن گروه جدید'>
+                        <Suspense fallback={<div>...</div>}>
+                          <Image src={PlusIcon} alt='افزودن' width={24} height={24} draggable={false} />
+                        </Suspense>
+                      </button>
         </div>
 
         <div className='flex flex-col flex-1 min-h-0'>
@@ -138,7 +185,7 @@ export default function GroupDetailsPage() {
             ) : (
               <ul className='divide-y divide-gray-200'>
                 {members.map((m) => (
-                  <li key={m.introducedUserJTGroupId} className='flex items-center justify-between p-4 hover:bg-gray-50'>
+                  <li key={m.introducedUserJTGroupId} className='relative flex items-center justify-between p-4 hover:bg-gray-50'>
                     <div className='flex items-center gap-3'>
                       <Checkbox
                         checked={selectedUsers.includes(m.introducedUserJTGroupId)}
@@ -152,6 +199,7 @@ export default function GroupDetailsPage() {
                         نام کاربری: {m.userUsername}
                       </span>
                     </div>
+                       <SwitchButton sx={{ position: "absolute", top: 20, right: 25 }} checked={m.invalid} onChange={handlePublishStatus} />
                   </li>
                 ))}
               </ul>
@@ -167,6 +215,14 @@ export default function GroupDetailsPage() {
           </div>
         </div>
       </main>
+
+         {showCreateMemberDialog && <CancelGroupAllocationModal
+          showCreateMemberDialog={showCreateMemberDialog}
+           handleOpen={handleOpen}
+            groupName={groupName!}
+            groupId={groupId!}
+            />}
+         
     </div>
   )
 }

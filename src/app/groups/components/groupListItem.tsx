@@ -43,8 +43,8 @@ export function GroupListItem({ group, onDeleteGroup }: IGroupListItemProps) {
     // }
   }, [group.id]);
 
-  const handleViewGroup = (groupId: string | number) => {
-    router.push(`/groups/${groupId}`);
+  const handleViewGroup = (groupId: string | number, groupName: string) => {
+    router.push(`/groups/${groupId}?groupName=${groupName}`);
   };
 
   return (
@@ -56,7 +56,7 @@ export function GroupListItem({ group, onDeleteGroup }: IGroupListItemProps) {
       <div className="flex w-full gap-2">
         <button
           className="bg-[#1758BA] hover:bg-[#216ee1] transition duration-200 px-2 h-[42px] w-[50%] text-sm rounded-lg text-white"
-          onClick={() => handleViewGroup(group.id)}
+          onClick={() => handleViewGroup(group.id, group.name)}
         >
           مشاهده
         </button>

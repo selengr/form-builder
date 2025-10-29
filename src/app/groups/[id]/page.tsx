@@ -1,43 +1,47 @@
 'use client'
 
+import { toast } from 'sonner'
 import Image from 'next/image'
-import { useParams, useRouter, useSearchParams } from 'next/navigation'
-import React, { Suspense, useEffect, useState, useRef, useCallback } from 'react'
-import { MdOutlineKeyboardArrowRight } from 'react-icons/md'
-import TrashIcon from '@/../public/images/purchase-order/trashMts.svg'
-import { CreateGroupDialog } from '@/app/groups/components/createGroupDialog'
-import { InfoRow } from '@/components/common/infoRow'
 import Checkbox from '@mui/material/Checkbox'
+import { Box, CircularProgress } from '@mui/material'
+import { useQueryClient } from '@tanstack/react-query'
+import { MdOutlineKeyboardArrowRight } from 'react-icons/md'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import { Box, CircularProgress, Typography } from '@mui/material'
-// components
-import { SwitchButton } from "@/components/Switch/SwitchButton"
+import React, { Suspense, useState, useCallback } from 'react'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 // images
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
-
-// Hook + types
-import { useFetchMembersSetting } from '@/components/GroupSettings/hook/useFetchMembersSetting'
+// type
 import type { IUserGroupMemmerInfo } from '@/types/setting'
-import { SearchBoxItem } from '@/components/ListGrid/ListGrid'
-import { CancelGroupAllocationModal } from '../components/createMemberDialog'
+// services
 import { AxiosApi } from '@/services/axios/AxiosApi'
-import { toast } from 'sonner'
-import { useQueryClient } from '@tanstack/react-query'
+// components
+import { InfoRow } from '@/components/common/infoRow'
+import { MemberListItem } from '../components/MemberListItem'
+import { SearchBoxItem } from '@/components/ListGrid/ListGrid'
+import { InvalidConfirmDialog } from '../components/invalidConfirmDialog'
+import { CancelGroupAllocationModal } from '../components/createMemberDialog'
+import { useFetchMembersSetting } from '@/components/GroupSettings/hook/useFetchMembersSetting'
 
 export default function GroupDetailsPage() {
   const router = useRouter()
   const params = useParams()
-  const groupId = typeof params.id === 'string' ? parseInt(params.id, 10) : null
   const searchParams = useSearchParams();
   const groupName = searchParams.get('groupName');
+  const groupId = typeof params.id === 'string' ? parseInt(params.id, 10) : null
+
+  const queryClient = useQueryClient()
+
+  const [loading, setLoading] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState<number[]>([])
+  const [storedisActive, setStoredisActive] = useState<boolean>(false)
+  const [disabledSwitches, setDisabledSwitches] = useState<number[]>([])
+  const [showCreateMemberDialog, setShowCreateMemberDialog] = useState(false);
+  const [onenConfirmationDialog, setOnenConfirmationDialog] = useState(false);
+  const [storedIntroducedUserJTGroupId, setStoredIntroducedUserJTGroupId] = useState<number>(0)
   const [searchBoxList, setSearchBoxList] = useState<SearchBoxItem[]>([
     { fieldName: 'introducedUser.name', fieldOperation: 'MATCH', fieldValue: '', nextConditionOperator: 'OR' },
   ])
-  const [loading, setLoading] = useState(false);
-  const [showCreateMemberDialog, setShowCreateMemberDialog] = useState(false);
-  const queryClient = useQueryClient()
-  const [disabledSwitches, setDisabledSwitches] = useState<number[]>([])
 
   // Fetch members
   const {
@@ -74,8 +78,7 @@ export default function GroupDetailsPage() {
       return
     }
     if (confirm(`آیا از حذف ${selectedUsers.length} کاربر انتخاب شده مطمئن هستید؟`)) {
-      // Here you would call API to delete users if such endpoint exists
-      alert('کاربران انتخاب‌شده حذف شدند (API حذف واقعی را جایگزین کنید).')
+      alert(`آیا از حذف ${selectedUsers.length} کاربر انتخاب شده مطمئن هستید؟`)
       setSelectedUsers([])
     }
   }
@@ -84,19 +87,33 @@ export default function GroupDetailsPage() {
     setShowCreateMemberDialog((prev) => !prev);
   }, []);
 
-  const handleChangeStatus = useCallback(async (nextActive: boolean, introducedUserJTGroupId: number) => {
-    setDisabledSwitches((prev) => [...prev, introducedUserJTGroupId])
-    try {
+  const onConfirm = (rememberAllocation: boolean) => {
+    setLoading(true)
+    handleChangeStatus(storedisActive, storedIntroducedUserJTGroupId, rememberAllocation)
+  }
 
+  const handleChangeStatus = useCallback(async (isActive: boolean, introducedUserJTGroupId: number, rememberAllocation?: boolean) => {
+    setDisabledSwitches((prev) => [...prev, introducedUserJTGroupId])
+    if (rememberAllocation === undefined) {
+      if (isActive) {
+        setOnenConfirmationDialog(true)
+        setStoredIntroducedUserJTGroupId(introducedUserJTGroupId)
+        setStoredisActive(isActive)
+        return
+      }
+    }
+
+    try {
       const res = await AxiosApi.post('/user-group/introducer/change-status-member', {
         groupId,
         introducedUserJTGroupId,
-        invalid: !nextActive,
-        rememberAllocation: !nextActive,
+        invalid: !isActive,
+        rememberAllocation: rememberAllocation ?? !isActive,
       });
 
       if (res.status === 200) {
         toast.success("عملیات با موفقیت انجام شد")
+        setOnenConfirmationDialog(false)
         await queryClient.invalidateQueries({
           queryKey: ["members-setting", groupId],
           exact: false,
@@ -106,19 +123,12 @@ export default function GroupDetailsPage() {
     } catch (error) {
       toast.error('عملیات ناموفق بود. مجدداً تلاش کنید.');
     } finally {
+      setLoading(false)
       setDisabledSwitches((prev) =>
         prev.filter((id) => id !== introducedUserJTGroupId)
       )
     }
   }, [groupId, queryClient]);
-
-  if (isLoading) {
-    return (
-      <div className='flex justify-center items-center h-screen'>
-        <CircularProgress />
-      </div>
-    )
-  }
 
   if (error) {
     return (
@@ -128,20 +138,20 @@ export default function GroupDetailsPage() {
     )
   }
 
-  console.log('members', members)
+  const handleCloseConfirmationDialog = () => {
+    setDisabledSwitches((prev) =>
+      prev.filter((id) => id !== storedIntroducedUserJTGroupId)
+    )
+    setOnenConfirmationDialog(false)
+  }
 
   return (
-    <div className='p-2 w-full h-[calc(100vh-60px)] flex flex-col'>
+    <div className='p-2 w-full h-[calc(100vh-20px)] flex flex-col'>
       <main className='p-4 bg-white flex flex-col rounded-xl h-full'>
         <div className='min-h-[52px] flex items-center justify-center relative rounded-xl bg-[#F7F7FF] mb-4 px-2'>
           <p className='text-[16px] font-bold text-[#2a2a2a]'>جزئیات گروه</p>
           <button onClick={() => router.push('/groups')} className='absolute right-2 p-1 rounded-full hover:bg-gray-200'>
             <MdOutlineKeyboardArrowRight size={24} color='#292D32' />
-          </button>
-          <button onClick={() => router.push(`/groups/${groupId}?edit`)} className='absolute left-2 p-1 rounded-full hover:bg-gray-200'>
-            <Suspense fallback={<div>...</div>}>
-              <Image src={TrashIcon} width={24} height={24} alt='ویرایش' draggable={false} />
-            </Suspense>
           </button>
         </div>
 
@@ -190,31 +200,24 @@ export default function GroupDetailsPage() {
           </div>
 
           <div className='flex-1 overflow-y-auto border border-gray-200 rounded-xl'>
+            {isLoading && (
+              <div className='flex justify-center items-center h-full w-full'>
+                <CircularProgress />
+              </div>
+            )}
             {members.length === 0 ? (
               <p className='p-4 text-center text-gray-500'>هیچ کاربری در این گروه وجود ندارد.</p>
             ) : (
               <ul className='divide-y divide-gray-200'>
                 {members.map((m) => (
-                  <li key={m.introducedUserJTGroupId} className='relative flex items-center justify-between p-4 hover:bg-gray-50'>
-                    <div className='flex items-center gap-3'>
-                      <Checkbox
-                        checked={selectedUsers.includes(m.introducedUserJTGroupId)}
-                        onChange={(e) => handleUserCheckboxChange(m.introducedUserJTGroupId, e.target.checked)}
-                        sx={{ color: '#1758BA', '&.Mui-checked': { color: '#1758BA' } }}
-                      />
-                      <span className='text-gray-800 font-medium'>
-                        {m.userName} {m.userFamily}
-                      </span>
-                      <span className='text-gray-500 text-sm hidden sm:block'>
-                        نام کاربری: {m.userUsername}
-                      </span>
-                    </div>
-                    <SwitchButton
-                      sx={{ position: "absolute", top: 20, right: 25 }}
-                      checked={m.invalid}
-                      disabled={disabledSwitches.includes(m.introducedUserJTGroupId)}
-                      onChange={() => handleChangeStatus(m.invalid!, m.introducedUserJTGroupId)} />
-                  </li>
+                  <MemberListItem
+                    key={m.introducedUserJTGroupId}
+                    member={m}
+                    selectedUsers={selectedUsers}
+                    handleUserCheckboxChange={handleUserCheckboxChange}
+                    handleChangeStatus={handleChangeStatus}
+                    disabledSwitches={disabledSwitches}
+                  />
                 ))}
               </ul>
             )}
@@ -237,6 +240,12 @@ export default function GroupDetailsPage() {
         groupId={groupId!}
       />}
 
+      {onenConfirmationDialog && <InvalidConfirmDialog
+        open={onenConfirmationDialog}
+        onClose={handleCloseConfirmationDialog}
+        onConfirm={onConfirm}
+        loading={loading}
+      />}
     </div>
   )
 }

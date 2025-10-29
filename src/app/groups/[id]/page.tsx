@@ -27,7 +27,6 @@ export default function GroupDetailsPage() {
   const groupId = typeof params.id === 'string' ? parseInt(params.id, 10) : null
     const searchParams = useSearchParams();
    const groupName = searchParams.get('groupName');
-console.log('groupId', groupId)
   const [selectedUsers, setSelectedUsers] = useState<number[]>([])
   const [searchBoxList, setSearchBoxList] = useState<SearchBoxItem[]>([
     { fieldName: 'introducedUser.name', fieldOperation: 'MATCH', fieldValue: '', nextConditionOperator: 'OR' },
@@ -45,7 +44,6 @@ console.log('groupId', groupId)
     isLoading,
     error,
   } = useFetchMembersSetting({
-    formId: 100010, 
     groupId,
     searchBoxList,
   })

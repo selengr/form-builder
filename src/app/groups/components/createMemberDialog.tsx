@@ -2,7 +2,7 @@
 import { Box, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { CgClose } from 'react-icons/cg';
-import IndividualSettings from './IndividualSettings';
+import AddMember from './addMember';
 
 
 interface ICancelGroupAllocationModalProps {
@@ -62,7 +62,7 @@ export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalPro
                  افزودن عضو به گروه {groupName}
             </Typography>
           </Box>
-             <IndividualSettings handleOpen={handleOpen} groupId={groupId} />
+             <AddMember handleOpen={handleOpen} groupId={groupId} />
           </DialogContent>
       </Dialog> 
     </>

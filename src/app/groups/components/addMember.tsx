@@ -1,42 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import FormProvider, { RHFMultiSelect, RHFSelect, RHFSwitch, RHFTextField } from '@/components/hook-form';
-import { Box, Button, MenuItem, Typography } from '@mui/material';
 import { toast } from 'sonner';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
+import { Box, Button, MenuItem, Typography } from '@mui/material';
+// utils
 import { getAuthToken } from '@/utils/getAuthToken';
 // components
-import { SwitchButton } from '@/components/Switch/SwitchButton';
-import ConfirmDialog from '@/components/confirm-dialog';
-import { useRouter } from 'next/navigation';
-import { useQueryClient } from '@tanstack/react-query';
+import FormProvider, { RHFSelect, RHFTextField } from '@/components/hook-form';
 
-const buttonStylesAlert = {
-  height: '50px',
-  fontWeight: '400',
-  fontSize: '15px',
-  borderRadius: '10px',
-  boxShadow: 'none',
-  transition: 'background-color 0.3s, border-color 0.3s',
-  bgcolor: '#1758BA',
-  borderColor: '#1758BA',
-  '&:hover': {
-    bgcolor: '#0F4C8A',
-  },
-  '&:active': {
-    bgcolor: '#0A3A6A',
-  },
-};
-
-interface GroupComboItem {
-  value: string;
-  caption: string
-}
-
-interface IndividualSettingsProps {
+interface AddMemberProps {
   handleOpen: () => void;
   groupId: number;
 }
@@ -77,19 +52,12 @@ const propertiesSchema = z.object({
     ),
   gender: z.enum(['MALE', 'FEMALE'], {
     message: 'جنسیت الزامی است و باید male یا female باشد',
-  }),
-  group: z.string().optional(),
-  show: z.boolean().default(false).optional(),
-  showReportForResponder: z.boolean(),
+  })
 });
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
-const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, groupId }) => {
-  const { push } = useRouter()
-  const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(false);
-  const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false);
-
+const AddMember: React.FC<AddMemberProps> = ({ handleOpen, groupId }) => {
   const queryClient = useQueryClient();
 
   const methods = useForm<propertiesFormSchemaType>({
@@ -106,8 +74,6 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, gro
   const {
     handleSubmit,
     reset,
-    getValues,
-    setValue,
     formState: { isSubmitting, isValid },
     setError,
   } = methods;
@@ -116,7 +82,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, gro
     const token = await getAuthToken();
 
     try {
-      const response = await fetch('/api/publish/individual', {
+      const response = await fetch('/api/group/add/member', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -144,28 +110,26 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, gro
             }
           });
         } else if (data.error) {
-          toast.error(data.error);
+          const title = JSON.parse(data.error)?.message?.[0]?.title ||
+            data.error?.title || data.error
+
+          toast.error(title)
         } else {
           toast.error('خطای ناشناخته از سمت سرور');
         }
         return;
       }
 
-      queryClient.invalidateQueries({ queryKey: ['datas_builder_query'] });
-      toast.success('با موفقیت به سبد خرید افزوده شد.');
+      queryClient.invalidateQueries({
+        queryKey: ["members-setting", groupId],
+        exact: false,
+      })
+      toast.success('با موفقیت به گروه افزوده شد.');
       handleOpen();
       reset();
     } catch (error) {
       toast.error('خطا در برقراری ارتباط با سرور.');
     }
-  }
-
-  const toggleConfirm = () => {
-    setOpenShowReportForResponderDialog((prev) => !prev)
-  }
-
-  const handleRedirection = () => {
-    push("/reports")
   }
 
   return (
@@ -232,45 +196,8 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, gro
             </RHFSelect>
           </Box>
         </Box>
-{/* 
-        <Box sx={inputFieldContainerSx}>
-          <Typography variant='subtitle2' fontWeight='700'>
-            گروه:
-          </Typography>
-          <RHFMultiSelect
-            sx={{
-              ...textFieldCommonSx,
-              '& .MuiInputBase-root': {
-                ...textFieldCommonSx['& .MuiInputBase-root'],
-                paddingY: '8px',
-              },
-            }}
-            fullWidth
-            name='group'
-            options={groupOptions.map((item) => ({
-              value: item.value,
-              label: item.caption,
-            }))}
-          />
-        </Box>
-      </Box> */}
 
-      {/* <Box display='flex' justifyContent='space-between' alignItems='center' mx={2} mt={2}>
-        <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>
-          نمایش نتیجه به پاسخ دهنده
-        </Typography>
-        <SwitchButton
-          onChange={handleShowReportForResponder}
-          checked={isShowReportForResponder}
-          sx={{
-            '& .MuiInputBase-root': {
-              borderRadius: '10px',
-              fontWeight: 600,
-              height: 42,
-            },
-          }}
-        /> */}
-      </Box> 
+      </Box>
 
       <Box
         sx={{
@@ -288,6 +215,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, gro
           fullWidth
           variant='contained'
           disabled={isSubmitting || !isValid}
+          loading={isSubmitting}
           sx={{
             bgcolor: '#1758BA',
             height: '54px',
@@ -304,7 +232,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, gro
               boxShadow: 'none',
             },
           }}>
-            افزودن عضو
+          افزودن عضو
         </Button>
         <Button
           disabled={isSubmitting}
@@ -336,23 +264,8 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, gro
           انصراف
         </Button>
       </Box>
-      <ConfirmDialog
-        content='تا زمانی که قالب گزارش انفرادی نساخته باشید نمیتواند این تیک را بزند '
-        open={openShowReportForResponderDialog}
-        title='اخطار'
-        onClose={toggleConfirm}
-        cancelText='انصراف'
-        action={
-          <Button type='submit' fullWidth disableRipple variant='contained'
-            sx={{ ...buttonStylesAlert }}
-            onClick={handleRedirection}
-          >
-            برو به قالب گزارش
-          </Button>
-        }
-      />
     </FormProvider>
   );
 }
 
-export default IndividualSettings;
+export default AddMember;

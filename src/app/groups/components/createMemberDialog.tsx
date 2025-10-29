@@ -1,9 +1,8 @@
 'use client';
-import { Box, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
-import { useCallback, useState } from 'react';
-import { CgClose } from 'react-icons/cg';
-import AddMember from './addMember';
 
+import AddMember from './addMember';
+import { CgClose } from 'react-icons/cg';
+import { Box, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
 
 interface ICancelGroupAllocationModalProps {
   showCreateMemberDialog: boolean;
@@ -16,13 +15,11 @@ export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalPro
   showCreateMemberDialog,
   groupId,
   groupName,
-    handleOpen
+  handleOpen
 }) => {
-
 
   return (
     <>
-    
       <Dialog
         open={showCreateMemberDialog}
         onClose={handleOpen}
@@ -41,7 +38,7 @@ export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalPro
             backgroundColor: 'hsl(0deg 0% 100% / 50%)',
           },
         }}>
-        <Box className='flex items-center justify-start' sx={{ px: 2, pt :2 }}>
+        <Box className='flex items-center justify-start' sx={{ px: 2, pt: 2 }}>
           <IconButton onClick={handleOpen} aria-label='بستن'>
             <CgClose color='#404040' size='1.5rem' />
           </IconButton>
@@ -59,12 +56,12 @@ export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalPro
           }}>
           <Box className='flex justify-center items-baseline'>
             <Typography variant='h6' component='p' fontWeight='bold' textAlign='center'>
-                 افزودن عضو به گروه {groupName}
+              افزودن عضو به گروه {groupName}
             </Typography>
           </Box>
-             <AddMember handleOpen={handleOpen} groupId={groupId} />
-          </DialogContent>
-      </Dialog> 
+          <AddMember handleOpen={handleOpen} groupId={groupId} />
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

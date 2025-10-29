@@ -20,20 +20,24 @@ import { useFetchMembersSetting } from '@/components/GroupSettings/hook/useFetch
 import type { IUserGroupMemmerInfo } from '@/types/setting'
 import { SearchBoxItem } from '@/components/ListGrid/ListGrid'
 import { CancelGroupAllocationModal } from '../components/createMemberDialog'
+import { AxiosApi } from '@/services/axios/AxiosApi'
+import { toast } from 'sonner'
+import { useQueryClient } from '@tanstack/react-query'
 
 export default function GroupDetailsPage() {
   const router = useRouter()
   const params = useParams()
   const groupId = typeof params.id === 'string' ? parseInt(params.id, 10) : null
-    const searchParams = useSearchParams();
-   const groupName = searchParams.get('groupName');
+  const searchParams = useSearchParams();
+  const groupName = searchParams.get('groupName');
   const [selectedUsers, setSelectedUsers] = useState<number[]>([])
   const [searchBoxList, setSearchBoxList] = useState<SearchBoxItem[]>([
     { fieldName: 'introducedUser.name', fieldOperation: 'MATCH', fieldValue: '', nextConditionOperator: 'OR' },
   ])
-    const [loading, setLoading] = useState(false);
-      const [showCreateMemberDialog, setShowCreateMemberDialog] = useState(false);
-
+  const [loading, setLoading] = useState(false);
+  const [showCreateMemberDialog, setShowCreateMemberDialog] = useState(false);
+  const queryClient = useQueryClient()
+  const [disabledSwitches, setDisabledSwitches] = useState<number[]>([])
 
   // Fetch members
   const {
@@ -75,30 +79,38 @@ export default function GroupDetailsPage() {
       setSelectedUsers([])
     }
   }
-  
-    const handleOpen = useCallback(() => {
-      setShowCreateMemberDialog((prev) => !prev);
-    }, []);
 
-   const handlePublishStatus = useCallback(async () => {
-      // try {
-      //   setLoading(true);
-      //   const newStatus = group.status === 'PUBLISH' ? 'UN_PUBLISH' : 'PUBLISH';
-      //   const res = await AxiosApi.put('/form/change-status', {
-      //     formId: group.id,
-      //     formBuilderStatusEnum: newStatus,
-      //   });
-      //   if (res.data) {
-      //     toast.success('عملیات با موفقیت انجام شد');
-      //     // setRefreshGrid((prev) => !prev);
-      //   }
-      // } catch (error) {
-      //   console.error(error);
-      //   toast.error('عملیات ناموفق بود. مجدداً تلاش کنید.');
-      // } finally {
-      //   setLoading(false);
-      // }
-    }, []);
+  const handleOpen = useCallback(() => {
+    setShowCreateMemberDialog((prev) => !prev);
+  }, []);
+
+  const handleChangeStatus = useCallback(async (nextActive: boolean, introducedUserJTGroupId: number) => {
+    setDisabledSwitches((prev) => [...prev, introducedUserJTGroupId])
+    try {
+
+      const res = await AxiosApi.post('/user-group/introducer/change-status-member', {
+        groupId,
+        introducedUserJTGroupId,
+        invalid: !nextActive,
+        rememberAllocation: !nextActive,
+      });
+
+      if (res.status === 200) {
+        toast.success("عملیات با موفقیت انجام شد")
+        await queryClient.invalidateQueries({
+          queryKey: ["members-setting", groupId],
+          exact: false,
+        })
+      }
+
+    } catch (error) {
+      toast.error('عملیات ناموفق بود. مجدداً تلاش کنید.');
+    } finally {
+      setDisabledSwitches((prev) =>
+        prev.filter((id) => id !== introducedUserJTGroupId)
+      )
+    }
+  }, [groupId, queryClient]);
 
   if (isLoading) {
     return (
@@ -134,19 +146,19 @@ export default function GroupDetailsPage() {
         </div>
 
         <div className='border justify-between w-full border-gray-200 rounded-xl p-4 flex mb-4'>
-        <div className='flex flex-col gap-[10px]'>
-          <InfoRow label='شناسه گروه' value={groupId ?? '---'} bold />
-          <InfoRow label='تعداد اعضا' value={`${members.length} نفر`} bold />
-        </div>
+          <div className='flex flex-col gap-[10px]'>
+            <InfoRow label='شناسه گروه' value={groupId ?? '---'} bold />
+            <InfoRow label='تعداد اعضا' value={`${members.length} نفر`} bold />
+          </div>
 
-           <button
-                        onClick={() => setShowCreateMemberDialog(true)}
-                        className='w-[50px] h-[50px] border border-[#1758BA] rounded-xl flex items-center justify-center hover:bg-gray-100 transition'
-                        aria-label='افزودن گروه جدید'>
-                        <Suspense fallback={<div>...</div>}>
-                          <Image src={PlusIcon} alt='افزودن' width={24} height={24} draggable={false} />
-                        </Suspense>
-                      </button>
+          <button
+            onClick={() => setShowCreateMemberDialog(true)}
+            className='w-[50px] h-[50px] border border-[#1758BA] rounded-xl flex items-center justify-center hover:bg-gray-100 transition'
+            aria-label='افزودن گروه جدید'>
+            <Suspense fallback={<div>...</div>}>
+              <Image src={PlusIcon} alt='افزودن' width={24} height={24} draggable={false} />
+            </Suspense>
+          </button>
         </div>
 
         <div className='flex flex-col flex-1 min-h-0'>
@@ -197,7 +209,11 @@ export default function GroupDetailsPage() {
                         نام کاربری: {m.userUsername}
                       </span>
                     </div>
-                       <SwitchButton sx={{ position: "absolute", top: 20, right: 25 }} checked={m.invalid} onChange={handlePublishStatus} />
+                    <SwitchButton
+                      sx={{ position: "absolute", top: 20, right: 25 }}
+                      checked={m.invalid}
+                      disabled={disabledSwitches.includes(m.introducedUserJTGroupId)}
+                      onChange={() => handleChangeStatus(m.invalid!, m.introducedUserJTGroupId)} />
                   </li>
                 ))}
               </ul>
@@ -214,13 +230,13 @@ export default function GroupDetailsPage() {
         </div>
       </main>
 
-         {showCreateMemberDialog && <CancelGroupAllocationModal
-          showCreateMemberDialog={showCreateMemberDialog}
-           handleOpen={handleOpen}
-            groupName={groupName!}
-            groupId={groupId!}
-            />}
-         
+      {showCreateMemberDialog && <CancelGroupAllocationModal
+        showCreateMemberDialog={showCreateMemberDialog}
+        handleOpen={handleOpen}
+        groupName={groupName!}
+        groupId={groupId!}
+      />}
+
     </div>
   )
 }

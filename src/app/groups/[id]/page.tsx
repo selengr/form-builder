@@ -176,7 +176,7 @@ export default function GroupDetailsPage() {
           <div className='flex justify-between items-center mb-3'>
             <h3 className='text-lg font-bold text-[#2a2a2a]'>لیست کاربران</h3>
             <div className='flex items-center gap-2'>
-              <FormControlLabel
+              {/* <FormControlLabel
                 control={
                   <Checkbox
                     checked={allUsersSelected}
@@ -196,7 +196,7 @@ export default function GroupDetailsPage() {
                 disabled={selectedUsers.length === 0}
                 className='bg-red-500 hover:bg-red-600 transition px-4 py-2 text-sm rounded-lg text-white disabled:opacity-50'>
                 حذف موارد انتخابی
-              </button>
+              </button> */}
             </div>
           </div>
 

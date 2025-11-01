@@ -82,7 +82,7 @@ const AddMember: React.FC<AddMemberProps> = ({ handleOpen, groupId }) => {
     const token = await getAuthToken();
 
     try {
-      const response = await fetch('/api/group/memberadd', {
+      const response = await fetch('/api/group/member/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

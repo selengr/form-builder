@@ -61,7 +61,7 @@
     "next": "^14.2.33",
     "next-auth": "^4.24.13",
     "nextjs-toploader": "^3.9.17",
-    "pine": "^1.1.1",
+    "pino": "^10.1.0",
     "react": "^18.3.1",
     "react-auth-code-input": "^3.2.1",
     "react-countdown": "^2.3.6",

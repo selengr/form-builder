@@ -173,6 +173,7 @@ export async function apiProxy<T>(req: Request, options: ApiProxyOptions<T>): Pr
     timeout: { request: timeoutMs },
     retry: { limit: retryLimit },
     agent: { https: httpsAgent },
+    responseType: 'json',
     throwHttpErrors: false,
     ...(requestBody !== undefined && { json: requestBody }),
   };

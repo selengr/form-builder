@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { ZodError, ZodSchema } from 'zod';
+import got from 'got';
 
 export const dynamic = 'force-dynamic';
 export const fetchCache = 'force-no-store';
@@ -12,99 +13,96 @@ interface ApiProxyOptions<T> {
   method?: 'GET' | 'POST';
 }
 
-async function parseError(res: Response): Promise<{ error: string; status: number }> {
+async function parseError(error: any): Promise<{ error: string; status: number }> {
   let message = 'An unexpected error occurred.';
-  try {
-    const contentType = res.headers.get('content-type');
-    if (contentType?.includes('application/json')) {
-      const errData = await res.json();
+  let status = 500;
+
+  if (error.response) {
+    status = error.response.statusCode ?? 500;
+
+    try {
+      const errData = error.response.body ? JSON.parse(error.response.body) : null;
       if (Array.isArray(errData?.error) && errData.error[0]?.title) {
         message = errData.error[0].title;
       } else if (typeof errData?.error === 'string') {
         message = errData.error;
       } else if (typeof errData?.message === 'string') {
         message = errData.message;
-      } else if (typeof errData === 'string') {
-        message = errData;
-      } else {
+      } else if (errData) {
         message = JSON.stringify(errData);
       }
-    } else {
-      const errText = await res.text();
-      message = errText || message;
+    } catch {
+      message = error.response.body || message;
     }
-  } catch (e) {}
-  return { error: message, status: res.status };
+  }
+
+  return { error: message, status };
 }
 
 async function apiProxy<T>(req: Request, options: ApiProxyOptions<T>): Promise<NextResponse> {
   const { schema, endpoint, requiresAuth = true, method = 'GET' } = options;
 
   try {
-    const headers = new Headers({
+    const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
       Pragma: 'no-cache',
       Expires: '0',
-    });
+    };
 
     if (requiresAuth) {
       const token = req.headers.get('Authorization');
       if (!token) {
         return NextResponse.json({ error: 'Authorization token is required.' }, { status: 401 });
       }
-      headers.set('Authorization', token);
+      headers['Authorization'] = token;
     }
 
-    let requestBody = null;
-    let queryString = '';
+    let body;
+    let searchParams: string | undefined;
 
     if (method === 'POST' && schema) {
-      const body: unknown = await req.json();
-      const parsed = schema.safeParse(body);
+      const rawBody: unknown = await req.json();
+      const parsed = schema.safeParse(rawBody);
       if (!parsed.success) {
         return NextResponse.json({ error: 'Validation error.', details: parsed.error.errors }, { status: 400 });
       }
-      requestBody = JSON.stringify(parsed.data);
+      body = JSON.stringify(parsed.data);
     } else {
       const url = new URL(req.url);
-      queryString = url.search;
+      searchParams = url.searchParams.toString();
     }
 
-    const fullUrl = `${process.env.NEXT_PUBLIC_BASE_URL_PSYA}${endpoint}${queryString}`;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL_PSYA_SSR;
+    const fullUrl = `${baseUrl}${endpoint}${searchParams ? '?' + searchParams : ''}`;
 
-    const res = await fetch(fullUrl, {
+    const response = await got(fullUrl, {
       method,
       headers,
-      body: requestBody,
-      cache: 'no-store',
+      body,
+      responseType: 'json',
+      throwHttpErrors: true,
     });
 
-    if (!res.ok) {
-      const { error, status } = await parseError(res);
-      return NextResponse.json({ error }, { status });
+    const nextRes = NextResponse.json(response.body, { status: 200 });
+    nextRes.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    nextRes.headers.set('Pragma', 'no-cache');
+    nextRes.headers.set('Expires', '0');
+
+    return nextRes;
+  } catch (err: any) {
+    if (err instanceof ZodError) {
+      return NextResponse.json({ error: 'Validation error.', details: err.errors }, { status: 400 });
     }
-
-    const data = await res.json();
-    const response = NextResponse.json(data, { status: 200 });
-
-    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-    response.headers.set('Pragma', 'no-cache');
-    response.headers.set('Expires', '0');
-
-    return response;
-  } catch (error: any) {
-    if (error instanceof ZodError) {
-      return NextResponse.json({ error: 'Validation error.', details: error.errors }, { status: 400 });
-    }
-    return NextResponse.json({ error: error?.message || 'Unexpected server error.' }, { status: 500 });
+    const { error, status } = await parseError(err);
+    return NextResponse.json({ error }, { status });
   }
 }
 
-export function handleGetRequest(req: Request, endpoint: string, requiresAuth: boolean = true): Promise<NextResponse> {
+export function handleGetRequest(req: Request, endpoint: string, requiresAuth: boolean = true) {
   return apiProxy(req, { method: 'GET', endpoint, requiresAuth });
 }
 
-export function handleApiProxy<T>(req: Request, options: Omit<ApiProxyOptions<T>, 'method'>): Promise<NextResponse> {
+export function handleApiProxy<T>(req: Request, options: Omit<ApiProxyOptions<T>, 'method'>) {
   return apiProxy(req, { ...options, method: 'POST' });
 }

@@ -20,7 +20,8 @@ export const MemberListItem = ({ member, selectedUsers, handleUserCheckboxChange
         sx={{ color: '#1758BA', '&.Mui-checked': { color: '#1758BA' } }}
       />
       <span className='text-gray-800 font-medium'>{member.userName} {member.userFamily}</span>
-      <span className='text-gray-500 text-sm hidden sm:block'>نام کاربری: {member.userUsername}</span>
+      <span className='absolute left-40 text-gray-500 text-sm flex sm:block'>نام کاربری: {member.userUsername}</span>
+      <span className='absolute left-28 text-gray-500 text-sm flex sm:block'>{member.userGender}</span>
     </div>
     <SwitchButton
       sx={{ position: 'absolute', top: 20, right: 25 }}

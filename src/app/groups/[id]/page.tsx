@@ -7,7 +7,7 @@ import { Box, CircularProgress } from '@mui/material'
 import { useQueryClient } from '@tanstack/react-query'
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import React, { Suspense, useState, useCallback } from 'react'
+import React, { Suspense, useState, useCallback, useEffect } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 // images
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
@@ -22,6 +22,7 @@ import { SearchBoxItem } from '@/components/ListGrid/ListGrid'
 import { InvalidConfirmDialog } from '../components/invalidConfirmDialog'
 import { CancelGroupAllocationModal } from '../components/createMemberDialog'
 import { useFetchMembersSetting } from '@/components/GroupSettings/hook/useFetchMembersSetting'
+import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput'
 
 export default function GroupDetailsPage() {
   const router = useRouter()
@@ -32,6 +33,7 @@ export default function GroupDetailsPage() {
 
   const queryClient = useQueryClient()
 
+  const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState<number[]>([])
   const [storedisActive, setStoredisActive] = useState<boolean>(false)
@@ -51,6 +53,7 @@ export default function GroupDetailsPage() {
     isFetchingNextPage,
     isLoading,
     error,
+    refetch
   } = useFetchMembersSetting({
     groupId,
     searchBoxList,
@@ -58,29 +61,26 @@ export default function GroupDetailsPage() {
 
   const members: IUserGroupMemmerInfo[] = data?.pages.flatMap((page) => page.data) ?? []
 
-  // Checkbox logic
-  const allUsersSelected = members.length > 0 && selectedUsers.length === members.length
-  const someUsersSelected = selectedUsers.length > 0 && selectedUsers.length < members.length
+
+  useEffect(() => {
+    setSearchBoxList([
+      {
+        fieldName: 'introducedUser.name',
+        fieldOperation: 'MATCH',
+        fieldValue: query.trim(),
+        nextConditionOperator: 'OR',
+      },
+    ]);
+  }, [query]);
+
+  useEffect(() => {
+    refetch();
+  }, [searchBoxList, refetch]);
 
   const handleUserCheckboxChange = (userId: number, isChecked: boolean) => {
     setSelectedUsers((prev) =>
       isChecked ? [...prev, userId] : prev.filter((id) => id !== userId)
     )
-  }
-
-  const handleSelectAllUsers = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedUsers(event.target.checked && members.length > 0 ? members.map((m) => m.introducedUserJTGroupId) : [])
-  }
-
-  const handleDeleteSelectedUsers = () => {
-    if (selectedUsers.length === 0) {
-      alert('هیچ کاربری برای حذف انتخاب نشده است.')
-      return
-    }
-    if (confirm(`آیا از حذف ${selectedUsers.length} کاربر انتخاب شده مطمئن هستید؟`)) {
-      alert(`آیا از حذف ${selectedUsers.length} کاربر انتخاب شده مطمئن هستید؟`)
-      setSelectedUsers([])
-    }
   }
 
   const handleOpen = useCallback(() => {
@@ -162,6 +162,14 @@ export default function GroupDetailsPage() {
             <InfoRow label='تعداد اعضا' value={`${members.length} نفر`} bold />
           </div>
 
+          <div className='flex justify-center mb-3 w-[50%]'>
+            <div className='w-full max-w-lg'>
+              <Suspense fallback={<div>در حال بارگذاری جستجو...</div>}>
+                <ImmediateSearchInput onSearch={setQuery} />
+              </Suspense>
+            </div>
+          </div>
+
           <button
             onClick={() => setShowCreateMemberDialog(true)}
             className='w-[50px] h-[50px] border border-[#1758BA] rounded-xl flex items-center justify-center hover:bg-gray-100 transition'
@@ -176,27 +184,6 @@ export default function GroupDetailsPage() {
           <div className='flex justify-between items-center mb-3'>
             <h3 className='text-lg font-bold text-[#2a2a2a]'>لیست کاربران</h3>
             <div className='flex items-center gap-2'>
-              {/* <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={allUsersSelected}
-                    indeterminate={someUsersSelected}
-                    onChange={handleSelectAllUsers}
-                    sx={{
-                      color: '#1758BA',
-                      '&.Mui-checked': { color: '#1758BA' },
-                      '&.MuiCheckbox-indeterminate': { color: '#1758BA' },
-                    }}
-                  />
-                }
-                label='انتخاب همه'
-              />
-              <button
-                onClick={handleDeleteSelectedUsers} 
-                disabled={selectedUsers.length === 0}
-                className='bg-red-500 hover:bg-red-600 transition px-4 py-2 text-sm rounded-lg text-white disabled:opacity-50'>
-                حذف موارد انتخابی
-              </button> */}
             </div>
           </div>
 

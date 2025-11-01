@@ -1,8 +1,8 @@
 'use client';
 
+import React, { Suspense} from 'react';
 import { useRouter } from 'next/navigation';
 import { InfoRow } from '@/components/common/infoRow';
-import React, { Suspense, useCallback, useState } from 'react';
 import { SwitchButton } from '@/components/Switch/SwitchButton';
 
 export interface IGroup {
@@ -10,38 +10,18 @@ export interface IGroup {
   name: string;
   description: string;
   userCount: number;
-  isSelected?: boolean;
+  invalid?: boolean;
 }
 
 interface IGroupListItemProps {
   group: IGroup;
-  onDeleteGroup: (groupId: number) => void;
+  handleChangeStatus: (isActive: boolean, id: number, rememberAllocation?: boolean) => void;
+  disabledSwitches: number[];
 }
 
-export function GroupListItem({ group, onDeleteGroup }: IGroupListItemProps) {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
 
-  const handlePublishStatus = useCallback(async () => {
-    // try {
-    //   setLoading(true);
-    //   const newStatus = group.status === 'PUBLISH' ? 'UN_PUBLISH' : 'PUBLISH';
-    //   const res = await AxiosApi.put('/form/change-status', {
-    //     formId: group.id,
-    //     formBuilderStatusEnum: newStatus,
-    //   });
-    //   if (res.data) {
-    //     toast.success('عملیات با موفقیت انجام شد');
-    //     // setRefreshGrid((prev) => !prev);
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    //   toast.error('عملیات ناموفق بود. مجدداً تلاش کنید.');
-    // } finally {
-    //   setLoading(false);
-    // }
-  }, [group.id]);
+export function GroupListItem({ group, handleChangeStatus, disabledSwitches }: IGroupListItemProps) {
+  const router = useRouter();
 
   const handleViewGroup = (groupId: string | number, groupName: string) => {
     router.push(`/groups/${groupId}?groupName=${groupName}`);
@@ -60,7 +40,13 @@ export function GroupListItem({ group, onDeleteGroup }: IGroupListItemProps) {
         >
           مشاهده
         </button>
-        <SwitchButton sx={{ position: "absolute", top: 15, right: 15 }} checked={true} onChange={handlePublishStatus} />
+
+        <SwitchButton
+          sx={{ position: "absolute", top: 15, right: 15 }}
+          checked={group.invalid}
+          disabled={disabledSwitches.includes(group.id)}
+          onChange={() => handleChangeStatus(group.invalid!, group.id)}
+        />
       </div>
     </div>
   );

@@ -158,6 +158,7 @@ export default function GroupDetailsPage() {
         <div className='border justify-between w-full border-gray-200 rounded-xl p-4 flex mb-4'>
           <div className='flex flex-col gap-[10px]'>
             <InfoRow label='شناسه گروه' value={groupId ?? '---'} bold />
+            <InfoRow label='اسم گروه' value={groupName ?? '---'} bold />
             <InfoRow label='تعداد اعضا' value={`${members.length} نفر`} bold />
           </div>
 
@@ -191,7 +192,7 @@ export default function GroupDetailsPage() {
                 label='انتخاب همه'
               />
               <button
-                onClick={handleDeleteSelectedUsers}
+                onClick={handleDeleteSelectedUsers} 
                 disabled={selectedUsers.length === 0}
                 className='bg-red-500 hover:bg-red-600 transition px-4 py-2 text-sm rounded-lg text-white disabled:opacity-50'>
                 حذف موارد انتخابی

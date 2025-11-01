@@ -47,7 +47,7 @@ async function apiProxy<T>(req: Request, options: ApiProxyOptions<T>): Promise<N
   const startTime = Date.now();
   const { schema, endpoint, requiresAuth = true, method = 'GET' } = options;
 
-  let requestLog: any = {
+  const requestLog: any = {
     type: 'request',
     method,
     endpoint,

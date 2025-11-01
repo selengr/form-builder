@@ -91,7 +91,7 @@ async function apiProxy<T>(req: Request, options: ApiProxyOptions<T>): Promise<N
       searchParams = url.searchParams.toString();
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL_PSYA_SSR;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL_SSR;
     const fullUrl = `${baseUrl}${endpoint}${searchParams ? '?' + searchParams : ''}`;
 
     logger.info('📤 Outgoing Request', {

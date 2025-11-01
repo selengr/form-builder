@@ -44,7 +44,6 @@ compile-job:
     -  \. "$NVM_DIR/nvm.sh"
     - rm -rf node_modules package-lock.json
     - nvm use 22
-    - npm i -g npm
     - npm i -f
     - rm -rf .env.local
     - npm run build

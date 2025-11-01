@@ -92,7 +92,7 @@ async function apiProxy<T>(req: Request, options: ApiProxyOptions<T>): Promise<N
 
     logger.debug(requestLog, 'Proxy Request Sent');
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL_PSYA_SSR;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL_SSR;
     const fullUrl = `${baseUrl}${endpoint}${searchParams ? '?' + searchParams : ''}`;
 
     const response = await got(fullUrl, {

@@ -89,7 +89,7 @@ export const InvalidConfirmDialog: React.FC<IInvalidConfirmDialogProps> = ({
 
                 <Box display="flex" justifyContent="center" alignItems="center" pb={2} gap="16px" px="16px" mt="24px" mb={2}>
                     <Button
-                        onClick={() => onConfirm(false)}
+                        onClick={() => onConfirm(true)}
                         variant="contained"
                         disabled={loading}
                         sx={{ ...buttonStyles, }}
@@ -97,7 +97,7 @@ export const InvalidConfirmDialog: React.FC<IInvalidConfirmDialogProps> = ({
                         بله، نگه دارید
                     </Button>
                     <Button
-                        onClick={() => onConfirm(true)}
+                        onClick={() => onConfirm(false)}
                         variant="contained"
                         disabled={loading}
                         sx={{ ...buttonStyles, ...buttonStylesError }}

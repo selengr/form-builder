@@ -43,7 +43,7 @@ export function GroupListItem({ group, handleChangeStatus, disabledSwitches }: I
 
         <SwitchButton
           sx={{ position: "absolute", top: 15, right: 15 }}
-          checked={group.invalid}
+          checked={!group.invalid}
           disabled={disabledSwitches.includes(group.id)}
           onChange={() => handleChangeStatus(group.invalid!, group.id)}
         />

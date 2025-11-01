@@ -1,24 +1,25 @@
 'use client';
 // React & Libs
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 import { LinearProgress } from '@mui/material';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import React, { Suspense, useState, useRef, useEffect, useCallback } from 'react';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 // utils
 import { getAuthToken } from '@/utils/getAuthToken';
+// services
+import { AxiosApi } from '@/services/axios/AxiosApi';
 // images
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 import TotalGrid from '@/../public/images/home-page/total-grid.svg';
 // components
-import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
 import { GroupListItem, IGroup } from './components/groupListItem';
 import { GroupDialogTrigger } from './components/GroupDialogTrigger';
-import { CreateGroupDialog } from '@/app/groups/components/createGroupDialog';
 import { InvalidConfirmDialog } from './components/invalidConfirmDialog';
-import { AxiosApi } from '@/services/axios/AxiosApi';
-import { toast } from 'sonner';
+import { CreateGroupDialog } from '@/app/groups/components/createGroupDialog';
+import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
 
 export interface GroupItemAPI {
   groupName: string;
@@ -104,10 +105,9 @@ const GroupsPage: React.FC = () => {
   const [onenConfirmationDialog, setOnenConfirmationDialog] = useState(false);
 
   const [loading, setLoading] = useState(false);
-  const [selectedUsers, setSelectedUsers] = useState<number[]>([])
+  const [storedGroupId, setStoredGroupId] = useState<number>(0)
   const [storedisActive, setStoredisActive] = useState<boolean>(false)
   const [disabledSwitches, setDisabledSwitches] = useState<number[]>([])
-  const [storedGroupId, setStoredGroupId] = useState<number>(0)
 
 
   const {

@@ -24,7 +24,7 @@ export const MemberListItem = ({ member, selectedUsers, handleUserCheckboxChange
     </div>
     <SwitchButton
       sx={{ position: 'absolute', top: 20, right: 25 }}
-      checked={member.invalid}
+      checked={!member.invalid}
       disabled={disabledSwitches.includes(member.introducedUserJTGroupId)}
       onChange={() => handleChangeStatus(member.invalid!, member.introducedUserJTGroupId)}
     />

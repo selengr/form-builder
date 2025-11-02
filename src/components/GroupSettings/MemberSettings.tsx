@@ -364,42 +364,44 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
               </Typography>
             ) : (
               members.map((member) => (
-                <Box
-                  key={member.introducedUserJTGroupId}
-                  display="flex"
-                  bgcolor="white"
-                  alignItems="center"
-                  // justifyContent="space-between"
-                  position={"relative"}
-                  px={1}
-                  py="1px"
-                  borderRadius="12px"
-                >
-                  <Checkbox
-                    checked={selectedGroupIds.includes(member.introducedUserJTGroupId)}
-                    onChange={() => handleToggleGroup(member)}
-                  />
-                  <Typography flex={1}>
-                    {member.userName} {member.userFamily}
-                  </Typography>
-                  <Typography position="absolute" right={120} fontSize="14px">
-                    نام کاربری: {member.userUsername}
-                  </Typography>
+                <>{
+                  (!member.invalid && <Box
+                    key={member.introducedUserJTGroupId}
+                    display="flex"
+                    bgcolor="white"
+                    alignItems="center"
+                    // justifyContent="space-between"
+                    position={"relative"}
+                    px={1}
+                    py="1px"
+                    borderRadius="12px"
+                  >
+                    <Checkbox
+                      checked={selectedGroupIds.includes(member.introducedUserJTGroupId)}
+                      onChange={() => handleToggleGroup(member)}
+                    />
+                    <Typography flex={1}>
+                      {member.userName} {member.userFamily}
+                    </Typography>
+                    <Typography position="absolute" right={120} fontSize="14px">
+                      نام کاربری: {member.userUsername}
+                    </Typography>
 
-                  {member.showReportForResponder && (
-                    <Box sx={{ position: "absolute", right: 35 }}>
-                      <Tooltip key={member.userUsername} title="نمایش نتیجه به پاسخ دهنده" followCursor arrow placement='top'>
-                        <div className='truncate' title="نمایش نتیجه به پاسخ دهنده" dir='rtl'>
-                          <FaEye color='#1758BA' />
-                        </div>
-                      </Tooltip>
-                    </Box>
-                  )}
-                  <Typography position="absolute" right={1} fontSize="14px" className="pl-2">
-                    {member.userGender}
-                  </Typography>
+                    {member.showReportForResponder && (
+                      <Box sx={{ position: "absolute", right: 35 }}>
+                        <Tooltip key={member.userUsername} title="نمایش نتیجه به پاسخ دهنده" followCursor arrow placement='top'>
+                          <div className='truncate' title="نمایش نتیجه به پاسخ دهنده" dir='rtl'>
+                            <FaEye color='#1758BA' />
+                          </div>
+                        </Tooltip>
+                      </Box>
+                    )}
+                    <Typography position="absolute" right={1} fontSize="14px" className="pl-2">
+                      {member.userGender}
+                    </Typography>
 
-                </Box>
+                  </Box>)
+                }</>
               ))
             )}
           </Box>

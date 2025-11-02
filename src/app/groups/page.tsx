@@ -1,26 +1,31 @@
 'use client';
 // React & Libs
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 import { LinearProgress } from '@mui/material';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
-import React, { Suspense, useState, useRef, useEffect } from 'react';
+import React, { Suspense, useState, useRef, useEffect, useCallback } from 'react';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 // utils
 import { getAuthToken } from '@/utils/getAuthToken';
+// services
+import { AxiosApi } from '@/services/axios/AxiosApi';
 // images
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 import TotalGrid from '@/../public/images/home-page/total-grid.svg';
 // components
-import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
 import { GroupListItem, IGroup } from './components/groupListItem';
 import { GroupDialogTrigger } from './components/GroupDialogTrigger';
+import { InvalidConfirmDialog } from './components/invalidConfirmDialog';
 import { CreateGroupDialog } from '@/app/groups/components/createGroupDialog';
+import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
 
 export interface GroupItemAPI {
   groupName: string;
   groupId: number;
   groupMemberCount: number;
+  invalid?: boolean
 }
 
 export interface GroupListResponse {
@@ -42,13 +47,13 @@ const fetchGroups = async ({
       {
         restrictionList: query
           ? [
-              {
-                fieldName: 'name', 
-                fieldOperation: 'MATCH',
-                fieldValue: query,
-                nextConditionOperator: 'AND',
-              },
-            ]
+            {
+              fieldName: 'name',
+              fieldOperation: 'MATCH',
+              fieldValue: query,
+              nextConditionOperator: 'AND',
+            },
+          ]
           : [],
       },
     ],
@@ -83,6 +88,7 @@ const fetchGroups = async ({
       name: item.groupName,
       description: '',
       userCount: item.groupMemberCount,
+      invalid: item.invalid,
     })),
     total: data.totalElements,
     nextPage: data.content.length > 0 ? pageParam + 1 : null,
@@ -91,11 +97,18 @@ const fetchGroups = async ({
 
 const GroupsPage: React.FC = () => {
   const router = useRouter();
-   const [query, setQuery] = useState('');
-  const [showCreateGroupDialog, setShowCreateGroupDialog] = useState(false);
   const queryClient = useQueryClient();
   const pathWithoutQuery = '/groups';
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const [query, setQuery] = useState('');
+  const [showCreateGroupDialog, setShowCreateGroupDialog] = useState(false);
+  const [onenConfirmationDialog, setOnenConfirmationDialog] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const [storedGroupId, setStoredGroupId] = useState<number>(0)
+  const [storedisActive, setStoredisActive] = useState<boolean>(false)
+  const [disabledSwitches, setDisabledSwitches] = useState<number[]>([])
+
 
   const {
     data,
@@ -107,7 +120,7 @@ const GroupsPage: React.FC = () => {
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: ['groups', query],
-      queryFn: ({ pageParam }) => fetchGroups({ pageParam, query }),
+    queryFn: ({ pageParam }) => fetchGroups({ pageParam, query }),
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 0,
   });
@@ -133,18 +146,62 @@ const GroupsPage: React.FC = () => {
     };
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const handleViewGroup = (groupId: string | number) => {
-    router.push(`/groups/${groupId}`);
-  };
-
-  const handleDeleteGroup = (groupId: string | number) => {
-    console.log(`Delete group with ID: ${groupId}`);
-  };
 
   const handleCreateGroupSubmit = async () => {
     router.replace(pathWithoutQuery);
     await queryClient.invalidateQueries({ queryKey: ['groups'] });
   };
+
+  const handleCloseConfirmationDialog = () => {
+    setDisabledSwitches((prev) =>
+      prev.filter((id) => id !== storedGroupId)
+    )
+    setOnenConfirmationDialog(false)
+  }
+
+
+  const onConfirm = (rememberAllocation: boolean) => {
+    setLoading(true)
+    handleChangeStatus(storedisActive, storedGroupId, rememberAllocation)
+  }
+
+  const handleChangeStatus = useCallback(async (isActive: boolean, groupId: number, rememberAllocation?: boolean) => {
+    debugger
+    setDisabledSwitches((prev) => [...prev, groupId])
+    if (rememberAllocation === undefined) {
+      if (isActive) {
+        setOnenConfirmationDialog(true)
+        setStoredGroupId(groupId)
+        setStoredisActive(isActive)
+        return
+      }
+    }
+
+    try {
+      const res = await AxiosApi.post('/user-group/introducer/change-status-group', {
+        groupId,
+        invalid: !isActive,
+        rememberAllocation: rememberAllocation ?? !isActive,
+      });
+
+      if (res.status === 200) {
+        toast.success("عملیات با موفقیت انجام شد")
+        setOnenConfirmationDialog(false)
+        await queryClient.invalidateQueries({
+          queryKey: ["groups", query],
+          exact: false,
+        })
+      }
+
+    } catch (error) {
+      toast.error('عملیات ناموفق بود. مجدداً تلاش کنید.');
+    } finally {
+      setLoading(false)
+      setDisabledSwitches((prev) =>
+        prev.filter((id) => id !== groupId)
+      )
+    }
+  }, [queryClient]);
 
   return (
     <div className='p-2 w-full h-[calc(100vh - 60px)] md:h-screen flex flex-col' draggable={false}>
@@ -196,14 +253,18 @@ const GroupsPage: React.FC = () => {
             <div className='w-full max-w-lg flex flex-col gap-[10px] overflow-y-auto'>
               {data?.pages.flatMap((page) =>
                 page.groups.map((group) => (
-                  <GroupListItem key={group.id} group={group} onViewGroup={handleViewGroup} onDeleteGroup={handleDeleteGroup} />
+                  <GroupListItem
+                    key={group.id} group={group}
+                    handleChangeStatus={handleChangeStatus}
+                    disabledSwitches={disabledSwitches}
+                  />
                 ))
               )}
 
               <div ref={loadMoreRef} className='flex justify-center p-4'>
                 {isFetchingNextPage ? (
                   <div className='w-full'>
-                  <LinearProgress />
+                    <LinearProgress />
                   </div>
                 ) : !hasNextPage ? (
                   <p className='text-gray-400'>همه گروه‌ها بارگذاری شدند.</p>
@@ -219,6 +280,13 @@ const GroupsPage: React.FC = () => {
       </Suspense>
 
       {showCreateGroupDialog && <CreateGroupDialog onClose={() => router.back()} onSubmit={handleCreateGroupSubmit} />}
+
+      {onenConfirmationDialog && <InvalidConfirmDialog
+        open={onenConfirmationDialog}
+        onClose={handleCloseConfirmationDialog}
+        onConfirm={onConfirm}
+        loading={loading}
+      />}
     </div>
   );
 }

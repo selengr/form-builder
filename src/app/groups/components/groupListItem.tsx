@@ -1,43 +1,53 @@
-import React, { Suspense } from 'react';
+'use client';
+
+import React, { Suspense} from 'react';
+import { useRouter } from 'next/navigation';
 import { InfoRow } from '@/components/common/infoRow';
+import { SwitchButton } from '@/components/Switch/SwitchButton';
 
 export interface IGroup {
   id: number;
   name: string;
   description: string;
   userCount: number;
-  isSelected?: boolean;
+  invalid?: boolean;
 }
 
 interface IGroupListItemProps {
   group: IGroup;
-  onViewGroup: (groupId: number) => void;
-  onDeleteGroup: (groupId: number) => void;
+  handleChangeStatus: (isActive: boolean, id: number, rememberAllocation?: boolean) => void;
+  disabledSwitches: number[];
 }
 
-export function GroupListItem({ group, onViewGroup, onDeleteGroup }: IGroupListItemProps) {
+
+export function GroupListItem({ group, handleChangeStatus, disabledSwitches }: IGroupListItemProps) {
+  const router = useRouter();
+
+  const handleViewGroup = (groupId: string | number, groupName: string) => {
+    router.push(`/groups/${groupId}?groupName=${groupName}`);
+  };
+
   return (
-    <div className='border border-gray-200 rounded-xl p-4 transition flex flex-col gap-[10px]'>
+    <div className='relative border border-gray-200 rounded-xl p-4 transition flex flex-col gap-[10px]'>
       <Suspense fallback={<div>در حال بارگذاری...</div>}>
         <InfoRow label='نام' value={group.name} bold />
         <InfoRow label='تعداد اعضا' value={`${group.userCount} نفر`} bold />
       </Suspense>
-      {/*<div className="flex w-full gap-2">*/}
-      {/*  <button*/}
-      {/*    className="bg-[#1758BA] hover:bg-[#216ee1] transition duration-200 px-2 h-[42px] w-full text-sm rounded-lg text-white"*/}
-      {/*    onClick={() => onViewGroup(group.id)}*/}
-      {/*  >*/}
-      {/*    مشاهده*/}
-      {/*  </button>*/}
-      {/*  <button*/}
-      {/*    onClick={() => onDeleteGroup(group.id)}*/}
-      {/*    className="w-[42px] h-[42px] flex items-center justify-center hover:bg-gray-100 rounded-lg transition"*/}
-      {/*  >*/}
-      {/*    <Suspense fallback={<div>...</div>}>*/}
-      {/*      <Image src={TrashIcon} alt="trash" width={24} height={24} draggable={false} />*/}
-      {/*    </Suspense>*/}
-      {/*  </button>*/}
-      {/*</div>*/}
+      <div className="flex w-full gap-2">
+        <button
+          className="bg-[#1758BA] hover:bg-[#216ee1] transition duration-200 px-2 h-[42px] w-[50%] text-sm rounded-lg text-white"
+          onClick={() => handleViewGroup(group.id, group.name)}
+        >
+          مشاهده
+        </button>
+
+        <SwitchButton
+          sx={{ position: "absolute", top: 15, right: 15 }}
+          checked={!group.invalid}
+          disabled={disabledSwitches.includes(group.id)}
+          onChange={() => handleChangeStatus(group.invalid!, group.id)}
+        />
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { SearchBoxItem } from '@/components/ListGrid/ListGrid';
 export interface IUserGroupMemmerInfo {
   activationLink: boolean;
+  invalid?: boolean;
   formBuilderId: number;
   groupId: number;
   introducedUserJTGroupId: number;
@@ -11,6 +12,7 @@ export interface IUserGroupMemmerInfo {
   userName: string;
   userUsername: string;
 }
+
 
 export interface MemberSettingsProps {
   handleOpen?: () => void;

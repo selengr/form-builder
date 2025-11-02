@@ -10,6 +10,7 @@ interface IGroup {
   userCount: number;
   fullyPublished: boolean
   incompletelyPublished: boolean
+  invalid?: boolean
 }
 
 interface UseInfiniteGroupsParams {
@@ -78,6 +79,7 @@ const fetchGroupsPage = async ({
     userCount: item.groupMemberCount,
     fullyPublished: item.fullyPublished || false,
     incompletelyPublished: item.incompletelyPublished || false,
+    invalid: item.invalid || false,
   }))
 
   const nextPage = json.totalPages && pageParam + 1 < json.totalPages ? pageParam + 1 : null

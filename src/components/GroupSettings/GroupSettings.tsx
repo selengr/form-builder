@@ -5,7 +5,6 @@ import type React from "react"
 import { z } from "zod"
 import Image from "next/image"
 import { toast } from "sonner"
-import { CiEdit } from "react-icons/ci"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useCallback, useEffect, useRef, useState } from "react"
@@ -372,43 +371,45 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
               </Typography>
             ) : (
               groups.map((group) => (
-                <Box
-                  key={group.id}
-                  display="flex"
-                  gap={1}
-                  position={"relative"}
-                  bgcolor="white"
-                  alignItems="center"
-                  justifyContent="space-between"
-                  px={2}
-                  py="1px"
-                  borderRadius="12px"
-                >
-                  <Checkbox
-                    checked={selectedGroupIds.includes(group.id)}
-                    onChange={() => handleToggleGroup(group.id)}
-                    indeterminate={group.incompletelyPublished && !selectedGroupIds.includes(group.id)}
-                    disabled={group.userCount < 1}
-                  />
-                  <Typography flex={1}>{group.name}</Typography>
-
-                  <IconButton
-                    onClick={() => handleOpenCancelGroupAllocation(group.id)}
-                    sx={{
-                      height: "45px",
-                      width: "45px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      position: "absolute",
-                      right: 90,
-                    }}
-                    aria-label="تنظیمات انتشار"
+                <>{!group.invalid && (
+                  <Box
+                    key={group.id}
+                    display="flex"
+                    gap={1}
+                    position={"relative"}
+                    bgcolor="white"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    px={2}
+                    py="1px"
+                    borderRadius="12px"
                   >
-                    <UserWithSearchIcon stroke="#000" width={26} height={26} />
-                  </IconButton>
-                  <Typography fontSize="14px">عضو: {group.userCount} نفر</Typography>
-                </Box>
+                    <Checkbox
+                      checked={selectedGroupIds.includes(group.id)}
+                      onChange={() => handleToggleGroup(group.id)}
+                      indeterminate={group.incompletelyPublished && !selectedGroupIds.includes(group.id)}
+                      disabled={group.userCount < 1}
+                    />
+                    <Typography flex={1}>{group.name}</Typography>
+
+                    <IconButton
+                      onClick={() => handleOpenCancelGroupAllocation(group.id)}
+                      sx={{
+                        height: "45px",
+                        width: "45px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "absolute",
+                        right: 90,
+                      }}
+                      aria-label="تنظیمات انتشار"
+                    >
+                      <UserWithSearchIcon stroke="#000" width={26} height={26} />
+                    </IconButton>
+                    <Typography fontSize="14px">عضو: {group.userCount} نفر</Typography>
+                  </Box>
+                )}</>
               ))
             )}
           </Box>

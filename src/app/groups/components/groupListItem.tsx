@@ -1,7 +1,12 @@
 'use client';
-
-import React, { Suspense} from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import React, { Suspense } from 'react';
+import { IconButton } from '@mui/material';
 import { useRouter } from 'next/navigation';
+// icon 
+import EditIcon from '@/../public/images/home-page/edit-2.svg';
+// components
 import { InfoRow } from '@/components/common/infoRow';
 import { SwitchButton } from '@/components/Switch/SwitchButton';
 
@@ -23,10 +28,6 @@ interface IGroupListItemProps {
 export function GroupListItem({ group, handleChangeStatus, disabledSwitches }: IGroupListItemProps) {
   const router = useRouter();
 
-  const handleViewGroup = (groupId: string | number, groupName: string) => {
-    router.push(`/groups/${groupId}?groupName=${groupName}`);
-  };
-
   return (
     <div className='relative border border-gray-200 rounded-xl p-4 transition flex flex-col gap-[10px]'>
       <Suspense fallback={<div>در حال بارگذاری...</div>}>
@@ -34,12 +35,11 @@ export function GroupListItem({ group, handleChangeStatus, disabledSwitches }: I
         <InfoRow label='تعداد اعضا' value={`${group.userCount} نفر`} bold />
       </Suspense>
       <div className="flex w-full gap-2">
-        <button
-          className="bg-[#1758BA] hover:bg-[#216ee1] transition duration-200 px-2 h-[42px] w-[50%] text-sm rounded-lg text-white"
-          onClick={() => handleViewGroup(group.id, group.name)}
-        >
-          مشاهده
-        </button>
+        <Link className='absolute top-[6px] left-16' href={`/groups/${group.id}?groupName=${group.name}`}>
+          <IconButton color='primary'>
+            <Image src={EditIcon} alt='edit' width={24} height={24} />
+          </IconButton>
+        </Link>
 
         <SwitchButton
           sx={{ position: "absolute", top: 15, right: 15 }}

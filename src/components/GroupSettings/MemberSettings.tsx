@@ -163,7 +163,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
     )
 
     if (newActiveIds.length > 0) {
-      const merged = [...currentSelected, ...newActiveIds]
+      const merged = [...newActiveIds]
       methods.setValue("memberId", merged, { shouldValidate: true })
       newActiveIds.forEach((id) => autoSelectedRef.current.add(id))
     }
@@ -258,7 +258,8 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
         toast.success("اعضای لغوشده با موفقیت حذف شد.")
       }
 
-      queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
+      queryClient.invalidateQueries({ queryKey: ["members-setting"] })
+      queryClient.invalidateQueries({ queryKey: ["groups-setting"] })
       handleClose()
       reset()
     } catch (err) {
@@ -364,8 +365,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
               </Typography>
             ) : (
               members.map((member) => (
-                <>{
-                  (!member.invalid && <Box
+                  !member.invalid && <Box
                     key={member.introducedUserJTGroupId}
                     display="flex"
                     bgcolor="white"
@@ -390,7 +390,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
                     {member.showReportForResponder && (
                       <Box sx={{ position: "absolute", right: 35 }}>
                         <Tooltip key={member.userUsername} title="نمایش نتیجه به پاسخ دهنده" followCursor arrow placement='top'>
-                          <div className='truncate' title="نمایش نتیجه به پاسخ دهنده" dir='rtl'>
+                          <div className='truncate' dir='rtl'>
                             <FaEye color='#1758BA' />
                           </div>
                         </Tooltip>
@@ -400,9 +400,8 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
                       {member.userGender}
                     </Typography>
 
-                  </Box>)
-                }</>
-              ))
+                  </Box>) 
+              )
             )}
           </Box>
 
@@ -519,7 +518,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
           }
         />
       </FormProvider>
-      <RemoveGroupConfirmModal
+      {openRemoveConfirmDialog && <RemoveGroupConfirmModal
         open={openRemoveConfirmDialog}
         onClose={() => setOpenRemoveConfirmDialog(false)}
         groupsToRemove={membersToRemove}
@@ -535,6 +534,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
           }
         }}
       />
+    }
     </Box>
   )
 }

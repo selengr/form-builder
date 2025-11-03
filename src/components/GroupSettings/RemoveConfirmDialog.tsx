@@ -87,17 +87,19 @@ export const RemoveGroupConfirmModal: React.FC<IRemoveGroupConfirmModalProps> = 
                     display: 'flex',
                     flexDirection: 'column',
                     textAlign: 'center',
+                      overflow: 'hidden',
                 }}
             >
                 <Typography variant="h6" fontWeight="bold" mb={2}>
                     شما در حال لغو تخصیص {title}ی زیر هستید:
                 </Typography>
-
+                    <Box sx={{overflowY:"scroll",display:"flex",flexDirection:"column",alignItems: "center"}}>
                 {groupsToRemove.map((g: TMemberToRemove, index) => (
-                    <Typography variant="subtitle1" key={g.id} sx={{ mb: 0.5 }}>
-                        {getDisplayName(g)} - {index + 1}
+                    <Typography variant="subtitle1" key={g.id} sx={{ mb: 0.5, display:"flex", justifyContent: "center", width :"60%" }}>
+                           {index + 1}-   <span> {getDisplayName(g)} </span>
                     </Typography>
                 ))}
+                </Box>
 
                 <Typography color="error" mt={2}>
                     آیا از لغو تخصیص این {title} مطمئن هستید؟

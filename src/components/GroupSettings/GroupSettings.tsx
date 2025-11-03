@@ -423,14 +423,13 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
                     const isSelected = selectedGroupIds.includes(group.id)
                     const isExplicitlyUnchecked = explicitlyUncheckedIncompleteIds.includes(group.id)
                     const isIndeterminate = group.incompletelyPublished && !isSelected && !isExplicitlyUnchecked
-
-const values = getValues();
-const currentSelected = values.groupsId
-const removedGroups = [
-  ...initialSelectedGroupIds.filter((id) => !currentSelected.includes(id)),
-  ...explicitlyUncheckedIncompleteIds,
-]
-let shouldShowRedBackground = removedGroups.includes(group.id)
+                    const values = getValues();
+                    const currentSelected = values.groupsId
+                    const removedGroups = [
+                      ...initialSelectedGroupIds.filter((id) => !currentSelected.includes(id)),
+                      ...explicitlyUncheckedIncompleteIds,
+                    ]
+                    const shouldShowRedBackground = removedGroups.includes(group.id)
 
                     return !group.invalid && (
                       <Box

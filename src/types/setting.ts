@@ -20,7 +20,7 @@ export interface MemberSettingsProps {
   formId: string | number;
   formData: {
     isCreatedSoloReport: boolean | null
-    showReportForResponder: boolean | null
+    showReportForResponder?: boolean | null
   };
   groupId: number | null;
 }

@@ -7,27 +7,24 @@ import MemberSettings from './MemberSettings';
 
 interface ICancelGroupAllocationModalProps {
   openCancelGroupAllocationDialog: boolean;
-  setOpenCancelGroupAllocationDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  handleClose:() => void;
   groupId: number | null;
    handleOpen: () => void;
   formId: string | number;
   formData: {
     isCreatedSoloReport: boolean | null
-    showReportForResponder: boolean | null
+    // showReportForResponder: boolean | null
   };
 }
 
 export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalProps> = ({
   openCancelGroupAllocationDialog,
-  setOpenCancelGroupAllocationDialog,
+  handleClose,
   groupId,
    formId,
     formData
 }) => {
-    
-  const handleClose = () => {
-    setOpenCancelGroupAllocationDialog(false);
-  };
+
 
   return (
     <>

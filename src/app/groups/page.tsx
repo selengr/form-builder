@@ -166,7 +166,6 @@ const GroupsPage: React.FC = () => {
   }
 
   const handleChangeStatus = useCallback(async (isActive: boolean, groupId: number, rememberAllocation?: boolean) => {
-    debugger
     setDisabledSwitches((prev) => [...prev, groupId])
     if (rememberAllocation === undefined) {
       if (isActive) {
@@ -181,16 +180,15 @@ const GroupsPage: React.FC = () => {
       const res = await AxiosApi.post('/user-group/introducer/change-status-group', {
         groupId,
         invalid: !isActive,
-        rememberAllocation: rememberAllocation ?? !isActive,
+        rememberAllocation: rememberAllocation ?? false,
       });
 
       if (res.status === 200) {
         toast.success("عملیات با موفقیت انجام شد")
-        setOnenConfirmationDialog(false)
         await queryClient.invalidateQueries({
-          queryKey: ["groups", query],
-          exact: false,
+          queryKey: ["groups"]
         })
+        setOnenConfirmationDialog(false)
       }
 
     } catch (error) {
@@ -286,6 +284,7 @@ const GroupsPage: React.FC = () => {
         onClose={handleCloseConfirmationDialog}
         onConfirm={onConfirm}
         loading={loading}
+        title='اعضای این گروه'
       />}
     </div>
   );

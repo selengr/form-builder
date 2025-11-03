@@ -108,7 +108,7 @@ export default function GroupDetailsPage() {
         groupId,
         introducedUserJTGroupId,
         invalid: !isActive,
-        rememberAllocation: rememberAllocation ?? !isActive,
+        rememberAllocation: rememberAllocation ?? false,
       });
 
       if (res.status === 200) {
@@ -155,10 +155,9 @@ export default function GroupDetailsPage() {
           </button>
         </div>
 
-        <div className='border justify-between w-full border-gray-200 rounded-xl p-4 flex mb-4'>
+        <div className='border justify-between w-full border-gray-200 rounded-xl p-4 pt-6 pb-3 flex mb-4'>
           <div className='flex flex-col gap-[10px]'>
-            <InfoRow label='شناسه گروه' value={groupId ?? '---'} bold />
-            <InfoRow label='اسم گروه' value={groupName ?? '---'} bold />
+            <InfoRow label='نام گروه' value={groupName ?? '---'} bold />
             <InfoRow label='تعداد اعضا' value={`${members.length} نفر`} bold />
           </div>
 
@@ -233,6 +232,7 @@ export default function GroupDetailsPage() {
         onClose={handleCloseConfirmationDialog}
         onConfirm={onConfirm}
         loading={loading}
+        title='این عضو'
       />}
     </div>
   )

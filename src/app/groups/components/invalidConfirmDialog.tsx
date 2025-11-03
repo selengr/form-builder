@@ -79,7 +79,7 @@ export const InvalidConfirmDialog: React.FC<IInvalidConfirmDialogProps> = ({
                 }}
             >
                 <Typography variant="h6" fontWeight="bold" mb={2}>
-                    ایا میخواهید تخصیص های قبلی این عضو را نگه دارید
+                    ایا میخواهید تخصیص های قبلی {title} را نگه دارید
                 </Typography>
 
 

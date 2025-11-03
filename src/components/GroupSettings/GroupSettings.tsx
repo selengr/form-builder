@@ -6,7 +6,10 @@ import { z } from "zod"
 import Image from "next/image"
 import { toast } from "sonner"
 import { useForm } from "react-hook-form"
+import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
+import { useInView } from "react-intersection-observer"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Box, Button, Checkbox, CircularProgress, IconButton, InputBase, Paper, Typography } from "@mui/material"
 // utils
@@ -16,15 +19,12 @@ import { useDebounce } from "@/hooks/useDebounce"
 import FormProvider from "../hook-form/FormProvider"
 import type { SearchBoxItem } from "../ListGrid/ListGrid"
 // components
-import { SwitchButton } from "../Switch/SwitchButton"
-import ConfirmDialog from "@/components/confirm-dialog"
-import { useRouter } from "next/navigation"
-import { useQueryClient } from "@tanstack/react-query"
-import { CancelGroupAllocationModal } from "./CancelGroupAllocationModal"
-import { useFetchGroupsSetting } from "./hook/useFetchGroupsSetting"
-import { useInView } from "react-intersection-observer"
-import { UserWithSearchIcon } from "../../../public/images/icons/UserWithSearchIcon "
+// import { SwitchButton } from "../Switch/SwitchButton"
+// import ConfirmDialog from "@/components/confirm-dialog"
 import { RemoveGroupConfirmModal } from "./RemoveConfirmDialog"
+import { useFetchGroupsSetting } from "./hook/useFetchGroupsSetting"
+import { CancelGroupAllocationModal } from "./CancelGroupAllocationModal"
+import { UserWithSearchIcon } from "../../../public/images/icons/UserWithSearchIcon "
 
 const buttonStylesAlert = {
   height: "50px",
@@ -45,7 +45,7 @@ const buttonStylesAlert = {
 
 const groupFormSchema = z.object({
   groupsId: z.array(z.number()).min(0, "حداقل یک گروه را انتخاب کنید."),
-  showReportForResponder: z.boolean(),
+  // showReportForResponder: z.boolean(),
 })
 
 type GroupFormSchemaType = z.infer<typeof groupFormSchema>
@@ -55,12 +55,11 @@ interface GroupSettingsProps {
   formId: string | number
   formData: {
     isCreatedSoloReport: boolean | null
-    showReportForResponder: boolean | null
+    // showReportForResponder: boolean | null
   }
 }
 
 const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formData }) => {
-  const { push } = useRouter()
   const [inputValue, setInputValue] = useState("")
   const [searchBoxList, setSearchBoxList] = useState<SearchBoxItem[]>([
     {
@@ -70,17 +69,17 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
       nextConditionOperator: "OR",
     },
   ])
-  const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(false)
-  const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false)
-  const [openCancelGroupAllocationDialog, setOpenCancelGroupAllocationDialog] = useState(false)
-  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
-  const [initialSelectedGroupIds, setInitialSelectedGroupIds] = useState<number[]>([])
-  const isFetchingRef = useRef(false)
   const [isRemoving, setIsRemoving] = useState(false);
-
+  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
   const [openRemoveConfirmDialog, setOpenRemoveConfirmDialog] = useState(false);
+  const [initialSelectedGroupIds, setInitialSelectedGroupIds] = useState<number[]>([])
+  // const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(false)
   const [groupsToRemove, setGroupsToRemove] = useState<{ id: number; name: string }[]>([]);
-
+  const [openCancelGroupAllocationDialog, setOpenCancelGroupAllocationDialog] = useState(false)
+  // const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false)
+  const [explicitlyUncheckedIncompleteIds, setExplicitlyUncheckedIncompleteIds] = useState<number[]>([])
+  
+  const isFetchingRef = useRef(false)
 
   const queryClient = useQueryClient()
   const debouncedValue = useDebounce(inputValue, 500)
@@ -89,7 +88,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
     threshold: 0.1,
   })
 
-  const { data, error, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } = useFetchGroupsSetting({
+  const { data,refetch, error, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } = useFetchGroupsSetting({
     formId,
     searchBoxList,
   })
@@ -101,7 +100,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
     mode: "onChange",
     defaultValues: {
       groupsId: [],
-      showReportForResponder: formData?.showReportForResponder || false,
+      // showReportForResponder: formData?.showReportForResponder || false,
     },
   })
 
@@ -164,28 +163,53 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
             !initialSelectedGroupIds.includes(g.id),
         )
         .map((g) => g.id)
-
       if (newDefaults.length > 0) {
+   
         setValue("groupsId", [...currentSelected, ...newDefaults], {
           shouldValidate: true,
         })
         setInitialSelectedGroupIds((prev) => [...prev, ...newDefaults])
       }
     }
-  }, [groups, getValues, setValue, initialSelectedGroupIds])
-
+  }, [groups, getValues, initialSelectedGroupIds])
 
   const handleToggleGroup = (groupId: number) => {
-    setValue(
-      "groupsId",
-      selectedGroupIds.includes(groupId)
-        ? selectedGroupIds.filter((id) => id !== groupId)
-        : [...selectedGroupIds, groupId],
-      {
-        shouldDirty: true,
-        shouldValidate: true,
-      },
-    )
+    const group = groups.find((g) => g.id === groupId)
+
+    if (group?.incompletelyPublished) {
+      const isSelected = selectedGroupIds.includes(groupId)
+      const isExplicitlyUnchecked = explicitlyUncheckedIncompleteIds.includes(groupId)
+
+      if (!isSelected && !isExplicitlyUnchecked) {
+        setValue("groupsId", [...selectedGroupIds, groupId], {
+          shouldDirty: true,
+          shouldValidate: true,
+        })
+      } else if (isSelected) {
+        setValue(
+          "groupsId",
+          selectedGroupIds.filter((id) => id !== groupId),
+          {
+            shouldDirty: true,
+            shouldValidate: true,
+          },
+        )
+        setExplicitlyUncheckedIncompleteIds((prev) => [...prev, groupId])
+      } else if (isExplicitlyUnchecked) {
+        setExplicitlyUncheckedIncompleteIds((prev) => prev.filter((id) => id !== groupId))
+      }
+    } else {
+      setValue(
+        "groupsId",
+        selectedGroupIds.includes(groupId)
+          ? selectedGroupIds.filter((id) => id !== groupId)
+          : [...selectedGroupIds, groupId],
+        {
+          shouldDirty: true,
+          shouldValidate: true,
+        },
+      )
+    }
   }
 
   const handleToggleAll = () => {
@@ -198,7 +222,13 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
     const values = getValues();
     const currentSelected = values.groupsId
     const addedGroups = currentSelected.filter((id) => !initialSelectedGroupIds.includes(id))
-    const removedGroups = initialSelectedGroupIds.filter((id) => !currentSelected.includes(id))
+
+    const removedGroups = [
+        ...initialSelectedGroupIds.filter((id) => !currentSelected.includes(id)),
+        ...explicitlyUncheckedIncompleteIds,
+      ]
+      console.log('addedGroups', addedGroups)
+      console.log('removedGroups', removedGroups)
 
     try {
       if (addedGroups.length > 0) {
@@ -210,8 +240,8 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
           },
           body: JSON.stringify({
             formId: Number(formId),
-            groupsId: values.groupsId,
-            showReportForResponder: values.showReportForResponder,
+            groupsId: addedGroups,
+            showReportForResponder: false,
           }),
         })
 
@@ -263,17 +293,21 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
       handleOpen()
       reset()
       setInitialSelectedGroupIds(currentSelected)
+      setExplicitlyUncheckedIncompleteIds([])
     } catch (err) {
       toast.error("خطا در برقراری ارتباط با سرور.")
       console.error("Group publish error:", err)
     }
   },
-    [formId, handleOpen, reset, methods, initialSelectedGroupIds],
+    [formId, handleOpen, reset, methods, initialSelectedGroupIds, explicitlyUncheckedIncompleteIds],
   )
 
-  const onSubmit = async (values: GroupFormSchemaType) => {
+  const onSubmit = async () => {
     const currentSelected = getValues("groupsId")
-    const removedGroups = initialSelectedGroupIds.filter((id) => !currentSelected.includes(id));
+    const removedGroups = [
+        ...initialSelectedGroupIds.filter((id) => !currentSelected.includes(id)),
+        ...explicitlyUncheckedIncompleteIds,
+      ]
     if (removedGroups.length > 0) {
       const removed = groups.filter((g) => removedGroups.includes(g.id));
 
@@ -285,23 +319,40 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
   };
 
 
-  const handleShowReportForResponder = () => {
-    if (formData?.isCreatedSoloReport) {
-      const currentValue = getValues("showReportForResponder")
-      setValue("showReportForResponder", !currentValue, { shouldDirty: false })
-      setIsShowReportForResponder((prev) => !prev)
-    } else {
-      setOpenShowReportForResponderDialog(true)
-    }
-  }
+  // const handleShowReportForResponder = () => {
+  //   if (formData?.isCreatedSoloReport) {
+  //     const currentValue = getValues("showReportForResponder")
+  //     setValue("showReportForResponder", !currentValue, { shouldDirty: false })
+  //     setIsShowReportForResponder((prev) => !prev)
+  //   } else {
+  //     setOpenShowReportForResponderDialog(true)
+  //   }
+  // }
 
-  const toggleConfirm = () => {
-    setOpenShowReportForResponderDialog((prev) => !prev)
-  }
+  // const toggleConfirm = () => {
+  //   setOpenShowReportForResponderDialog((prev) => !prev)
+  // }
 
-  const handleRedirection = () => {
-    push("/reports")
-  }
+  // const handleRedirection = () => {
+  //   push("/reports")
+  // }
+
+  
+  const handleClose = useCallback(async () => {
+  const { data: newData } = await refetch();
+
+  const newGroups = newData?.pages.flatMap((page) => page.data) ?? [];
+  const newInitialSelectedIds = newGroups
+    .filter(g => g.fullyPublished)
+    .map(g => g.id);
+
+  reset({
+    groupsId: newInitialSelectedIds,
+  });
+  
+  setInitialSelectedGroupIds(newInitialSelectedIds);
+  setOpenCancelGroupAllocationDialog(false);
+}, [refetch, reset]);
 
   const handleOpenCancelGroupAllocation = useCallback((groupId: number) => {
     setSelectedGroupId(groupId)
@@ -312,8 +363,6 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
     selectedGroupIds.filter((id) => !initialSelectedGroupIds.includes(id)).length > 0
       ? "افزودن به سبد خرید"
       : "اعمال تغییرات";
-
-
 
 
   return (
@@ -370,47 +419,59 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
                 {error.message}
               </Typography>
             ) : (
-              groups.map((group) => (
-                <>{!group.invalid && (
-                  <Box
-                    key={group.id}
-                    display="flex"
-                    gap={1}
-                    position={"relative"}
-                    bgcolor="white"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    px={2}
-                    py="1px"
-                    borderRadius="12px"
-                  >
-                    <Checkbox
-                      checked={selectedGroupIds.includes(group.id)}
-                      onChange={() => handleToggleGroup(group.id)}
-                      indeterminate={group.incompletelyPublished && !selectedGroupIds.includes(group.id)}
-                      disabled={group.userCount < 1}
-                    />
-                    <Typography flex={1}>{group.name}</Typography>
+                groups.map((group) => {
+                    const isSelected = selectedGroupIds.includes(group.id)
+                    const isExplicitlyUnchecked = explicitlyUncheckedIncompleteIds.includes(group.id)
+                    const isIndeterminate = group.incompletelyPublished && !isSelected && !isExplicitlyUnchecked
+                    const values = getValues();
+                    const currentSelected = values.groupsId
+                    const removedGroups = [
+                      ...initialSelectedGroupIds.filter((id) => !currentSelected.includes(id)),
+                      ...explicitlyUncheckedIncompleteIds,
+                    ]
+                    const shouldShowRedBackground = removedGroups.includes(group.id)
 
-                    <IconButton
-                      onClick={() => handleOpenCancelGroupAllocation(group.id)}
-                      sx={{
-                        height: "45px",
-                        width: "45px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        position: "absolute",
-                        right: 90,
-                      }}
-                      aria-label="تنظیمات انتشار"
-                    >
-                      <UserWithSearchIcon stroke="#000" width={26} height={26} />
-                    </IconButton>
-                    <Typography fontSize="14px">عضو: {group.userCount} نفر</Typography>
-                  </Box>
-                )}</>
-              ))
+                    return !group.invalid && (
+                      <Box
+                        key={group.id}
+                        display="flex"
+                        gap={1}
+                        position={"relative"}
+                        alignItems="center"
+                        justifyContent="space-between"
+                        px={2}
+                        py="1px"
+                        borderRadius="12px"
+                        bgcolor={shouldShowRedBackground ? "#ffebee" : "white"}
+                    border={shouldShowRedBackground ? "1px solid #ef5350" : "1px solid white"}
+                      >
+                        <Checkbox
+                          checked={isSelected}
+                          onChange={() => handleToggleGroup(group.id)}
+                          indeterminate={isIndeterminate}
+                          disabled={group.userCount < 1}
+                        />
+                        <Typography flex={1}>{group.name}</Typography>
+    
+                        <IconButton
+                          onClick={() => handleOpenCancelGroupAllocation(group.id)}
+                          sx={{
+                            height: "45px",
+                            width: "45px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            position: "absolute",
+                            right: 90,
+                          }}
+                          aria-label="تنظیمات انتشار"
+                        >
+                          <UserWithSearchIcon stroke="#000" width={26} height={26} />
+                        </IconButton>
+                        <Typography fontSize="14px">عضو: {group.userCount} نفر</Typography>
+                      </Box>
+                    )
+                  })
             )}
           </Box>
           {!isLoading && hasNextPage && (
@@ -434,7 +495,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
             </Typography>
           )}
 
-          <Box display="flex" justifyContent="space-between" alignItems="center" pt={1}>
+          {/* <Box display="flex" justifyContent="space-between" alignItems="center" pt={1}>
             <Typography variant="subtitle2" fontWeight={500} fontSize="14px">
               نمایش نتیجه به پاسخ دهنده
             </Typography>
@@ -449,7 +510,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
                 },
               }}
             />
-          </Box>
+          </Box> */}
 
           <Box display="flex" justifyContent="center" alignItems="center" pb={2} gap="16px" px="16px" mt="14px">
             <Button
@@ -504,7 +565,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
             </Button>
           </Box>
         </Box>
-        <ConfirmDialog
+        {/* <ConfirmDialog
           content="تا زمانی که قالب گزارش انفرادی نساخته باشید نمیتواند این تیک را بزند "
           open={openShowReportForResponderDialog}
           title="اخطار"
@@ -522,11 +583,11 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
               برو به قالب گزارش
             </Button>
           }
-        />
+        /> */}
 
         <CancelGroupAllocationModal
           openCancelGroupAllocationDialog={openCancelGroupAllocationDialog}
-          setOpenCancelGroupAllocationDialog={setOpenCancelGroupAllocationDialog}
+          handleClose={handleClose}
           groupId={selectedGroupId}
           handleOpen={handleOpen}
           formId={formId}
@@ -555,3 +616,616 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
 }
 
 export default GroupSettings
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// "use client"
+
+// import type React from "react"
+
+// import { z } from "zod"
+// import Image from "next/image"
+// import { toast } from "sonner"
+// import { useForm } from "react-hook-form"
+// import { zodResolver } from "@hookform/resolvers/zod"
+// import { useCallback, useEffect, useRef, useState } from "react"
+// import { Box, Button, Checkbox, CircularProgress, IconButton, InputBase, Paper, Typography } from "@mui/material"
+// // utils
+// import { getAuthToken } from "@/utils/getAuthToken"
+// // hook
+// import { useDebounce } from "@/hooks/useDebounce"
+// import FormProvider from "../hook-form/FormProvider"
+// import type { SearchBoxItem } from "../ListGrid/ListGrid"
+// // components
+// import { SwitchButton } from "../Switch/SwitchButton"
+// import ConfirmDialog from "@/components/confirm-dialog"
+// import { useRouter } from "next/navigation"
+// import { useQueryClient } from "@tanstack/react-query"
+// import { CancelGroupAllocationModal } from "./CancelGroupAllocationModal"
+// import { useFetchGroupsSetting } from "./hook/useFetchGroupsSetting"
+// import { useInView } from "react-intersection-observer"
+// import { UserWithSearchIcon } from "../../../public/images/icons/UserWithSearchIcon "
+// import { RemoveGroupConfirmModal } from "./RemoveConfirmDialog"
+
+// const buttonStylesAlert = {
+//   height: "50px",
+//   fontWeight: "400",
+//   fontSize: "15px",
+//   borderRadius: "10px",
+//   boxShadow: "none",
+//   transition: "background-color 0.3s, border-color 0.3s",
+//   bgcolor: "#1758BA",
+//   borderColor: "#1758BA",
+//   "&:hover": {
+//     bgcolor: "#0F4C8A",
+//   },
+//   "&:active": {
+//     bgcolor: "#0A3A6A",
+//   },
+// }
+
+// const groupFormSchema = z.object({
+//   groupsId: z.array(z.number()).min(0, "حداقل یک گروه را انتخاب کنید."),
+//   showReportForResponder: z.boolean(),
+// })
+
+// type GroupFormSchemaType = z.infer<typeof groupFormSchema>
+
+// interface GroupSettingsProps {
+//   handleOpen: () => void
+//   formId: string | number
+//   formData: {
+//     isCreatedSoloReport: boolean | null
+//     showReportForResponder: boolean | null
+//   }
+// }
+
+// const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formData }) => {
+//   const { push } = useRouter()
+//   const [inputValue, setInputValue] = useState("")
+//   const [searchBoxList, setSearchBoxList] = useState<SearchBoxItem[]>([
+//     {
+//       fieldName: "name",
+//       fieldOperation: "MATCH",
+//       fieldValue: "",
+//       nextConditionOperator: "OR",
+//     },
+//   ])
+//   const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(false)
+//   const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false)
+//   const [openCancelGroupAllocationDialog, setOpenCancelGroupAllocationDialog] = useState(false)
+//   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null)
+//   const [initialSelectedGroupIds, setInitialSelectedGroupIds] = useState<number[]>([])
+//   const isFetchingRef = useRef(false)
+//   const [isRemoving, setIsRemoving] = useState(false);
+
+//   const [openRemoveConfirmDialog, setOpenRemoveConfirmDialog] = useState(false);
+//   const [groupsToRemove, setGroupsToRemove] = useState<{ id: number; name: string }[]>([]);
+//   const [manuallyUnselected, setManuallyUnselected] = useState<Set<number>>(new Set())
+
+
+//   const queryClient = useQueryClient()
+//   const debouncedValue = useDebounce(inputValue, 500)
+
+//   const { ref: loaderRef, inView } = useInView({
+//     threshold: 0.1,
+//   })
+
+//   const { data, error, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } = useFetchGroupsSetting({
+//     formId,
+//     searchBoxList,
+//   })
+
+//   const groups = data?.pages.flatMap((page) => page.data) ?? []
+
+//   const methods = useForm<GroupFormSchemaType>({
+//     resolver: zodResolver(groupFormSchema),
+//     mode: "onChange",
+//     defaultValues: {
+//       groupsId: [],
+//       showReportForResponder: formData?.showReportForResponder || false,
+//     },
+//   })
+
+//   const {
+//     watch,
+//     getValues,
+//     setValue,
+//     handleSubmit,
+//     reset,
+//     formState: { isSubmitting, isValid, errors },
+//   } = methods
+
+//   const selectedGroupIds = watch("groupsId")
+//   const allSelected = groups.length > 0 && selectedGroupIds.length === groups.length
+
+//   const handleSearchFilter = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+//     setInputValue(event.target.value)
+//   }, [])
+
+//   useEffect(() => {
+//     if (isFetchingNextPage) {
+//       isFetchingRef.current = true
+//     } else {
+//       const timer = setTimeout(() => {
+//         isFetchingRef.current = false
+//       }, 100)
+//       return () => clearTimeout(timer)
+//     }
+//   }, [isFetchingNextPage])
+
+//   useEffect(() => {
+//     return () => {
+//       queryClient.removeQueries({ queryKey: ["groups-setting", formId] })
+//     }
+//   }, [queryClient, formId])
+
+//   useEffect(() => {
+//     if (inView && hasNextPage && !isFetchingRef.current && !isLoading) {
+//       fetchNextPage()
+//     }
+//   }, [inView, hasNextPage, isLoading])
+
+//   useEffect(() => {
+//     setSearchBoxList((prev) =>
+//       prev.map((item: SearchBoxItem) => ({
+//         ...item,
+//         fieldValue: debouncedValue || "",
+//       })),
+//     )
+//   }, [debouncedValue, setSearchBoxList])
+
+//   // useEffect(() => {
+//   //   if (groups.length > 0) {
+//   //     const currentSelected = getValues("groupsId")
+//   //     const newDefaults = groups
+//   //       .filter(
+//   //         (g) =>
+//   //           g.fullyPublished &&
+//   //           !currentSelected.includes(g.id) &&
+//   //           !initialSelectedGroupIds.includes(g.id),
+//   //       )
+//   //       .map((g) => g.id)
+
+//   //     if (newDefaults.length > 0) {
+//   //       setValue("groupsId", [...currentSelected, ...newDefaults], {
+//   //         shouldValidate: true,
+//   //       })
+//   //       setInitialSelectedGroupIds((prev) => [...prev, ...newDefaults])
+//   //     }
+//   //   }
+//   // }, [groups, getValues, setValue, initialSelectedGroupIds])
+//   useEffect(() => {
+//   if (groups.length > 0 && initialSelectedGroupIds.length === 0) {
+//     const initiallySelected = groups
+//       .filter(group => group.fullyPublished || group.incompletelyPublished)
+//       .map(group => Number(group.id)); 
+    
+//     setInitialSelectedGroupIds(initiallySelected);
+//     setValue("groupsId", initiallySelected, { shouldValidate: true });
+//   }
+// }, [groups, setValue]);
+// const [everTouched, setEverTouched] = useState<Set<number>>(new Set())
+// console.log('initiallySelected', initialSelectedGroupIds)
+// console.log('selectedGroupIds', selectedGroupIds)
+// console.log('manu===============', everTouched)
+
+// // Replace manuallyUnselected with:
+
+// // Update toggle:
+// const handleToggleGroup = (groupId: number) => {
+//   const isSelected = selectedGroupIds.includes(groupId)
+
+//   setEverTouched(prev => new Set(prev).add(groupId))
+
+//   if (isSelected) {
+//     setValue("groupsId", selectedGroupIds.filter(id => id !== groupId), {
+//       shouldDirty: true,
+//       shouldValidate: true,
+//     })
+//   } else {
+//     setValue("groupsId", [...selectedGroupIds, groupId], {
+//       shouldDirty: true,
+//       shouldValidate: true,
+//     })
+//   }
+// }
+
+// // Update Checkbox:
+
+    
+
+//   const handleToggleAll = () => {
+//     const newSelectedIds = allSelected ? [] : groups.map((group) => group.id)
+//     setValue("groupsId", newSelectedIds, { shouldDirty: true, shouldValidate: true })
+//   }
+
+//   const handleGroupSubmit = useCallback(async () => {
+//     const token = await getAuthToken()
+//     const values = getValues();
+//     const currentSelected = values.groupsId
+//     const addedGroups = currentSelected.filter((id) => !initialSelectedGroupIds.includes(id))
+//     const removedGroups = initialSelectedGroupIds.filter((id) => !currentSelected.includes(id))
+//     console.log('addedGroups', addedGroups)
+// console.log('removedGroups', removedGroups)
+//     // return
+//     try {
+//       if (addedGroups.length > 0) {
+//         const response = await fetch("/api/publish/group", {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${token}`,
+//           },
+//           body: JSON.stringify({
+//             formId: Number(formId),
+//             // groupsId: values.groupsId,
+//             groupsId: addedGroups,
+//             showReportForResponder: values.showReportForResponder,
+//           }),
+//         })
+
+//         const data = await response.json()
+
+//         if (!response.ok) {
+//           if (data.error && data.details) {
+//             data.details.forEach((err: any) => {
+//               if (err.path && err.path[0]) {
+//                 if (err.path[0] === "groupsId") {
+//                   methods.setError("groupsId", {
+//                     type: "manual",
+//                     message: err.message || "خطا در فیلد گروه",
+//                   })
+//                 }
+//               }
+//             })
+//           } else if (data.error) {
+//             toast.error(data.error)
+//           } else {
+//             toast.error("خطای ناشناخته از سمت سرور")
+//           }
+//           return
+//         }
+
+//         toast.success("با موفقیت به سبد خرید افزوده شد.")
+//       }
+//       if (removedGroups.length > 0) {
+//         const cancelResponse = await fetch("/api/group/cancel", {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${token}`,
+//           },
+//           body: JSON.stringify({
+//             formId: Number(formId),
+//             unselectedGroupsId: removedGroups,
+//           }),
+//         })
+
+//         const cancelData = await cancelResponse.json()
+//         if (!cancelResponse.ok) {
+//           toast.error(cancelData.error || "خطا در لغو گروه‌ها")
+//         } else {
+//           toast.success("گروه(های) لغوشده با موفقیت حذف شد.")
+//         }
+//       }
+//       queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
+//       handleOpen()
+//       reset()
+//       setInitialSelectedGroupIds(currentSelected)
+//     } catch (err) {
+//       toast.error("خطا در برقراری ارتباط با سرور.")
+//       console.error("Group publish error:", err)
+//     }
+//   },
+//     [formId, handleOpen, reset, methods, initialSelectedGroupIds],
+//   )
+
+//   const onSubmit = async (values: GroupFormSchemaType) => {
+//     const currentSelected = getValues("groupsId")
+//     const removedGroups = initialSelectedGroupIds.filter((id) => !currentSelected.includes(id));
+//     if (removedGroups.length > 0) {
+//       const removed = groups.filter((g) => removedGroups.includes(g.id));
+
+//       setGroupsToRemove(removed);
+//       setOpenRemoveConfirmDialog(true);
+//       return;
+//     }
+//     await handleGroupSubmit();
+//   };
+
+
+//   const handleShowReportForResponder = () => {
+//     if (formData?.isCreatedSoloReport) {
+//       const currentValue = getValues("showReportForResponder")
+//       setValue("showReportForResponder", !currentValue, { shouldDirty: false })
+//       setIsShowReportForResponder((prev) => !prev)
+//     } else {
+//       setOpenShowReportForResponderDialog(true)
+//     }
+//   }
+
+//   const toggleConfirm = () => {
+//     setOpenShowReportForResponderDialog((prev) => !prev)
+//   }
+
+//   const handleRedirection = () => {
+//     push("/reports")
+//   }
+
+//   const handleOpenCancelGroupAllocation = useCallback((groupId: number) => {
+//     setSelectedGroupId(groupId)
+//     setOpenCancelGroupAllocationDialog(true)
+//   }, [])
+
+//   const buttonLabel =
+//     selectedGroupIds.filter((id) => !initialSelectedGroupIds.includes(id)).length > 0
+//       ? "افزودن به سبد خرید"
+//       : "اعمال تغییرات";
+
+
+
+
+//   return (
+//     <Box sx={{ position: "relative" }}>
+//       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+//         <Box width={"100%"} alignItems="center" bgcolor="#f7f7f7" p={2} display="flex" flexDirection="column">
+//           <Paper
+//             sx={{
+//               boxShadow: "unset",
+//               border: "1px solid #C9C9C9",
+//               display: "flex",
+//               alignItems: "center",
+//               width: "100%",
+//               py: "4px",
+//               borderRadius: "15px !important",
+//               margin: "0px !important",
+//               marginBottom: "8px",
+//               maxWidth: "80% !important",
+//             }}
+//           >
+//             <InputBase
+//               onChange={handleSearchFilter}
+//               sx={{ ml: 1, flex: 1, textAlign: "end" }}
+//               placeholder="کاوش بر اساس نام پایگاه داده"
+//               inputProps={{ "aria-label": "جستجو" }}
+//             />
+//             <IconButton sx={{ p: "8px" }}>
+//               <Image
+//                 src="/images/home-page/search.svg"
+//                 width={23}
+//                 height={23}
+//                 alt="جستجو"
+//                 style={{ cursor: "pointer" }}
+//               />
+//             </IconButton>
+//           </Paper>
+
+//           <Box display="flex" alignItems="center" gap={1} mb={1} width={"100%"}>
+//             <Checkbox
+//               checked={allSelected}
+//               indeterminate={selectedGroupIds.length > 0 && selectedGroupIds.length < groups.length}
+//               onChange={handleToggleAll}
+//             />
+//             <Typography>انتخاب همه</Typography>
+//           </Box>
+
+//           <Box display="flex" flexDirection="column" gap="6px" mb={2} width={"100%"}>
+//             {isLoading ? (
+//               <Box display="flex" justifyContent="center" my={4}>
+//                 <CircularProgress />
+//               </Box>
+//             ) : error ? (
+//               <Typography color="error" textAlign="center">
+//                 {error.message}
+//               </Typography>
+//             ) : (
+//               groups.map((group) => (
+//          !group.invalid && (
+//                   <Box
+//                     key={group.id}
+//                     display="flex"
+//                     gap={1}
+//                     position={"relative"}
+//                     bgcolor="white"
+//                     alignItems="center"
+//                     justifyContent="space-between"
+//                     px={2}
+//                     py="1px"
+//                     borderRadius="12px"
+//                   >
+//    <Checkbox
+//   checked={selectedGroupIds.includes(group.id)}
+//   onChange={() => handleToggleGroup(group.id)}
+//   indeterminate={
+//     group.incompletelyPublished &&
+//     !selectedGroupIds.includes(group.id) &&
+//     !everTouched.has(group.id)
+//   }
+//   disabled={group.userCount < 1}
+// />       
+//                     <Typography flex={1}>{group.name}</Typography>
+
+//                     <IconButton
+//                       onClick={() => handleOpenCancelGroupAllocation(group.id)}
+//                       sx={{
+//                         height: "45px",
+//                         width: "45px",
+//                         display: "flex",
+//                         justifyContent: "center",
+//                         alignItems: "center",
+//                         position: "absolute",
+//                         right: 90,
+//                       }}
+//                       aria-label="تنظیمات انتشار"
+//                     >
+//                       <UserWithSearchIcon stroke="#000" width={26} height={26} />
+//                     </IconButton>
+//                     <Typography fontSize="14px">عضو: {group.userCount} نفر</Typography>
+//                   </Box>
+//                 )
+//               ))
+//             )}
+//           </Box>
+//           {!isLoading && hasNextPage && (
+//             <Box ref={loaderRef} display="flex" justifyContent="center" my={2}>
+//               {isFetchingNextPage && <CircularProgress size={24} />}
+//             </Box>
+//           )}
+//         </Box>
+
+
+//         <Box sx={{
+//           position: "sticky",
+//           bottom: '0px',
+//           background: "#FFF",
+//         }}
+//           pr={1} pl={2}
+//         >
+//           {errors.groupsId && (
+//             <Typography color="error" fontSize="12px" sx={{ pt: 1, px: 2 }}>
+//               {errors.groupsId.message}
+//             </Typography>
+//           )}
+
+//           <Box display="flex" justifyContent="space-between" alignItems="center" pt={1}>
+//             <Typography variant="subtitle2" fontWeight={500} fontSize="14px">
+//               نمایش نتیجه به پاسخ دهنده
+//             </Typography>
+//             <SwitchButton
+//               onChange={handleShowReportForResponder}
+//               checked={isShowReportForResponder}
+//               sx={{
+//                 "& .MuiInputBase-root": {
+//                   borderRadius: "10px",
+//                   fontWeight: 600,
+//                   height: 42,
+//                 },
+//               }}
+//             />
+//           </Box>
+
+//           <Box display="flex" justifyContent="center" alignItems="center" pb={2} gap="16px" px="16px" mt="14px">
+//             <Button
+//               type="submit"
+//               variant="contained"
+//               disabled={isSubmitting || !isValid}
+//               sx={{
+//                 bgcolor: "#1758BA",
+//                 height: "54px",
+//                 color: "white",
+//                 fontSize: { xs: "13px", sm: "16px" },
+//                 fontWeight: "700",
+//                 width: "161px",
+//                 borderRadius: "10px",
+//                 boxShadow: "none",
+//                 "&:hover": {
+//                   bgcolor: "#1758BA",
+//                   boxShadow: "none",
+//                 },
+//               }}
+//             >
+//               {buttonLabel}
+//             </Button>
+
+//             <Button
+//               variant="outlined"
+//               onClick={() => {
+//                 handleOpen()
+//                 reset()
+//               }}
+//               disabled={isSubmitting}
+//               sx={{
+//                 width: "161px",
+//                 height: "54px",
+//                 fontWeight: "700",
+//                 borderRadius: "10px",
+//                 fontSize: "16px",
+//                 color: "#1758BA",
+//                 borderColor: "#1758BA",
+//                 bgcolor: "white",
+//                 "&:hover": {
+//                   bgcolor: "transparent",
+//                   boxShadow: "none",
+//                 },
+//                 "&.Mui-disabled": {
+//                   borderColor: "#d9d9d9",
+//                   color: "#b0b0b0",
+//                 },
+//               }}
+//             >
+//               انصراف
+//             </Button>
+//           </Box>
+//         </Box>
+//         <ConfirmDialog
+//           content="تا زمانی که قالب گزارش انفرادی نساخته باشید نمیتواند این تیک را بزند "
+//           open={openShowReportForResponderDialog}
+//           title="اخطار"
+//           onClose={toggleConfirm}
+//           cancelText="انصراف"
+//           action={
+//             <Button
+//               type="submit"
+//               fullWidth
+//               disableRipple
+//               variant="contained"
+//               sx={{ ...buttonStylesAlert }}
+//               onClick={handleRedirection}
+//             >
+//               برو به قالب گزارش
+//             </Button>
+//           }
+//         />
+
+//         <CancelGroupAllocationModal
+//           openCancelGroupAllocationDialog={openCancelGroupAllocationDialog}
+//           setOpenCancelGroupAllocationDialog={setOpenCancelGroupAllocationDialog}
+//           groupId={selectedGroupId}
+//           handleOpen={handleOpen}
+//           formId={formId}
+//           formData={formData}
+//         />
+//         <RemoveGroupConfirmModal
+//           open={openRemoveConfirmDialog}
+//           onClose={() => setOpenRemoveConfirmDialog(false)}
+//           groupsToRemove={groupsToRemove}
+//           loading={isRemoving}
+//           title={"گروه‌ها"}
+//           onConfirm={async () => {
+//             setIsRemoving(true);
+//             try {
+//               await handleGroupSubmit();
+//             } finally {
+//               setIsRemoving(false);
+//               setOpenRemoveConfirmDialog(false);
+//             }
+//           }}
+//         />
+
+//       </FormProvider>
+//     </Box>
+//   )
+// }
+
+// export default GroupSettings

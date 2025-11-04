@@ -103,6 +103,6 @@ export function handleGetRequest(req: Request, endpoint: string, requiresAuth: b
   return apiProxy(req, { method: 'GET', endpoint, requiresAuth });
 }
 
-export function handleApiProxy<T>(req: Request, options: Omit<ApiProxyOptions<T>, 'method'>) {
-  return apiProxy(req, { ...options, method: 'POST' });
+export function handleApiProxy<T>(req: Request, options: Omit<ApiProxyOptions<T>, 'method'> & { method?: string }) {
+  return apiProxy(req, { ...options, method: (options.method as "GET" | "POST") || 'POST' });
 }

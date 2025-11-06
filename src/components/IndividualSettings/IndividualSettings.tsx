@@ -31,10 +31,6 @@ const buttonStylesAlert = {
   },
 };
 
-interface GroupComboItem {
-  value: string;
-  caption: string
-}
 
 interface IndividualSettingsProps {
   handleOpen: () => void;
@@ -82,7 +78,6 @@ const propertiesSchema = z.object({
   gender: z.enum(['MALE', 'FEMALE'], {
     message: 'جنسیت الزامی است و باید male یا female باشد',
   }),
-  group: z.string().optional(),
   show: z.boolean().default(false).optional(),
   showReportForResponder: z.boolean(),
 });
@@ -91,7 +86,6 @@ type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
 const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, formId, formData }) => {
   const { push } = useRouter()
-  const [groupOptions, setGroupOptions] = useState<GroupComboItem[]>([]);
   const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(false);
   const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false);
 
@@ -104,8 +98,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
       name: '',
       family: '',
       phone: '',
-      gender: undefined,
-      group: '',
+      gender: undefined,  
       show: false,
       showReportForResponder: formData?.showReportForResponder || false,
     },
@@ -146,7 +139,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
         const data = await response.json();
 
         if (response.ok) {
-          setGroupOptions(data.dataList);
+          // setGroupOptions(data.dataList);
         } else {
           toast.error(data.error || 'خطا در دریافت گروه‌ها');
         }
@@ -174,7 +167,6 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
           lname: values.family,
           username: values.phone,
           gender: values.gender,
-          groupId: values.group || null,
           showReportForResponder: values.showReportForResponder,
         }),
       });
@@ -289,30 +281,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
             </RHFSelect>
           </Box>
         </Box>
-
-        <Box sx={inputFieldContainerSx}>
-          <Typography variant='subtitle2' fontWeight='700'>
-            گروه:
-          </Typography>
-          <RHFMultiSelect
-            sx={{
-              ...textFieldCommonSx,
-              '& .MuiInputBase-root': {
-                ...textFieldCommonSx['& .MuiInputBase-root'],
-                paddingY: '8px',
-              },
-            }}
-            fullWidth
-            name='group'
-            options={groupOptions.map((item) => ({
-              value: item.value,
-              label: item.caption,
-            }))}
-          />
-        </Box>
-      </Box>
-
-      <Box display='flex' justifyContent='space-between' alignItems='center' mx={2} mt={2}>
+         <Box display='flex' justifyContent='space-between' alignItems='center' mx={2} mt={2}>
         <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>
           نمایش نتیجه به پاسخ دهنده
         </Typography>
@@ -328,6 +297,10 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
           }}
         />
       </Box>
+
+      </Box>
+
+     
 
       <Box
         sx={{

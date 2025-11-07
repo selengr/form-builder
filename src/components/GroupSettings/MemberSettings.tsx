@@ -7,24 +7,26 @@ import Image from "next/image"
 import { toast } from "sonner"
 import { FaEye } from "react-icons/fa";
 import { useForm } from "react-hook-form"
+import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useInView } from "react-intersection-observer"
+import { useQueryClient } from "@tanstack/react-query"
 import { useCallback, useEffect, useState, useRef } from "react"
 import { Box, Button, Checkbox, CircularProgress, IconButton, InputBase, Paper, Tooltip, Typography } from "@mui/material"
 // hook
 import { useDebounce } from "@/hooks/useDebounce"
 import FormProvider from "../hook-form/FormProvider"
 import type { SearchBoxItem } from "../ListGrid/ListGrid"
+// services
+import { AxiosApi } from "@/services/axios/AxiosApi"
 // components
 import { SwitchButton } from "../Switch/SwitchButton"
 import ConfirmDialog from "@/components/confirm-dialog"
-import { useRouter } from "next/navigation"
-import { useQueryClient } from "@tanstack/react-query"
-import { AxiosApi } from "@/services/axios/AxiosApi"
+import { RemoveGroupConfirmModal } from "./RemoveConfirmDialog"
+// hook
+import { useFetchMembersSetting } from "./hook/useFetchMembersSetting"
 // type
 import type { MemberSettingsProps, IUserGroupMemmerInfo } from "@/types/setting"
-import { useFetchMembersSetting } from "./hook/useFetchMembersSetting"
-import { useInView } from "react-intersection-observer"
-import { RemoveGroupConfirmModal } from "./RemoveConfirmDialog"
 
 const buttonStylesAlert = {
   height: "50px",
@@ -69,7 +71,10 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
   const [isRemoving, setIsRemoving] = useState(false);
   const [openRemoveConfirmDialog, setOpenRemoveConfirmDialog] = useState(false);
   const [membersToRemove, setMembersToRemove] = useState<{ id: number; name: string }[]>([]);
+ 
+ 
   const isFetchingRef = useRef(false)
+  const autoSelectedRef = useRef<Set<number>>(new Set())
 
   const queryClient = useQueryClient()
   const debouncedValue = useDebounce(inputValue, 500)
@@ -89,7 +94,6 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
     groupId,
     searchBoxList,
   })
-// test git comit
   const members = data?.pages.flatMap((page) => page.data) ?? []
 
   const methods = useForm<GroupFormSchemaType>({
@@ -103,10 +107,10 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
 
   const {
     watch,
-    getValues,
-    setValue,
-    handleSubmit,
     reset,
+    setValue,
+    getValues,
+    handleSubmit,
     formState: { isSubmitting, isValid, errors },
   } = methods
 
@@ -148,8 +152,6 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
       })),
     )
   }, [debouncedValue, setSearchBoxList])
-
-  const autoSelectedRef = useRef<Set<number>>(new Set())
 
   useEffect(() => {
     if (members.length === 0) return

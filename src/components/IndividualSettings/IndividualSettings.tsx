@@ -1,18 +1,25 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import FormProvider, { RHFMultiSelect, RHFSelect, RHFSwitch, RHFTextField } from '../hook-form';
-import { Box, Button, MenuItem, Typography } from '@mui/material';
 import { toast } from 'sonner';
+import { FaEye } from "react-icons/fa";
+import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { zodResolver } from '@hookform/resolvers/zod';
+import FormProvider, { RHFSelect, RHFTextField } from '../hook-form';
+import { Box, Button,Tooltip ,Checkbox, CircularProgress, MenuItem, Typography } from '@mui/material';
+// utils
 import { getAuthToken } from '@/utils/getAuthToken';
 // components
 import { SwitchButton } from '../Switch/SwitchButton';
 import ConfirmDialog from '@/components/confirm-dialog';
-import { useRouter } from 'next/navigation';
-import { useQueryClient } from '@tanstack/react-query';
+// hook
+import { useFetchMembersSetting } from "../GroupSettings/hook/useFetchMembersSetting"
+import { SearchBoxItem } from '../ListGrid/ListGrid';
+import { IUserGroupMemmerInfo } from '@/types/setting';
+import { useInView } from 'react-intersection-observer';
 
 const buttonStylesAlert = {
   height: '50px',
@@ -36,6 +43,7 @@ interface IndividualSettingsProps {
   handleOpen: () => void;
   formId: string | number;
   formData: {
+    id?: number | null
     isCreatedSoloReport: boolean | null
     showReportForResponder: boolean | null
   };
@@ -78,8 +86,9 @@ const propertiesSchema = z.object({
   gender: z.enum(['MALE', 'FEMALE'], {
     message: 'جنسیت الزامی است و باید male یا female باشد',
   }),
-  show: z.boolean().default(false).optional(),
   showReportForResponder: z.boolean(),
+  show: z.boolean().default(false).optional(),
+  memberId: z.array(z.number()).min(0, "حداقل یک عضو را انتخاب کنید."),
 });
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
@@ -88,30 +97,80 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
   const { push } = useRouter()
   const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(false);
   const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false);
-
+  const [searchBoxList, setSearchBoxList] = useState<SearchBoxItem[]>([
+    {
+      fieldName: "introducedUser.name",
+      fieldOperation: "MATCH",
+      fieldValue: "",
+      nextConditionOperator: "OR",
+    },
+  ])
+  const groupId : "default" = "default"
   const queryClient = useQueryClient();
+
+  const autoSelectedRef = useRef<Set<number>>(new Set())
+    const { ref, inView } = useInView({
+      threshold: 0.1,
+    })
+  
+
+    const {
+      data,
+      fetchNextPage,
+      hasNextPage,
+      isFetchingNextPage,
+      isLoading: loading,
+      error,
+    } = useFetchMembersSetting({
+      formId,
+      groupId,
+      searchBoxList,
+    })
+  const members = data?.pages.flatMap((page) => page.data) ?? []
 
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     mode: 'onChange',
     defaultValues: {
       name: '',
-      family: '',
       phone: '',
-      gender: undefined,  
+      family: '',
       show: false,
+      memberId: [],
+      gender: undefined,  
       showReportForResponder: formData?.showReportForResponder || false,
     },
   });
 
+  
   const {
-    handleSubmit,
+    watch,
     reset,
-    getValues,
     setValue,
-    formState: { isSubmitting, isValid },
     setError,
+    getValues,
+    handleSubmit,
+    formState: { isSubmitting, isValid },
   } = methods;
+  const selectedGroupIds = watch("memberId")
+
+    useEffect(() => {
+    if (members.length === 0) return
+
+    const currentSelected = methods.getValues("memberId")
+    const activeIds = members
+      .filter((m) => m.activationLink)
+      .map((m) => m.introducedUserJTGroupId)
+    const newActiveIds = activeIds.filter(
+      (id) => !currentSelected.includes(id) && !autoSelectedRef.current.has(id)
+    )
+
+    if (newActiveIds.length > 0) {
+      const merged = [...newActiveIds]
+      methods.setValue("memberId", merged, { shouldValidate: true })
+      newActiveIds.forEach((id) => autoSelectedRef.current.add(id))
+    }
+  }, [members])
 
   useEffect(() => {
     async function fetchGroups() {
@@ -218,6 +277,37 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
     push("/reports")
   }
 
+  const handleToggleGroup = (member: IUserGroupMemmerInfo) => {
+      // const current = getValues("memberId")
+      // const isSelected = current.includes(member.introducedUserJTGroupId)
+  
+      // const updated = isSelected
+      //   ? current.filter((id) => id !== member.introducedUserJTGroupId)
+      //   : [...current, member.introducedUserJTGroupId]
+      // setValue("memberId", updated, { shouldDirty: true, shouldValidate: true })
+  
+      // if (isSelected) {
+      //   if (member.activationLink) {
+      //     if (member.introducedUserPublishId)
+      //       setIntroducedUserPublishIdList((prev) => {
+      //         if (prev.includes(member.introducedUserPublishId!)) return prev
+      //         return [...prev, member.introducedUserPublishId!]
+      //       })
+      //   } else {
+      //     setIntroducedUserJTGroupIdList((prev) => prev.filter((id) => id !== member.introducedUserJTGroupId))
+      //   }
+      // } else {
+      //   if (member.activationLink) {
+      //     setIntroducedUserPublishIdList((prev) => prev.filter((id) => id !== member.introducedUserPublishId))
+      //   } else {
+      //     setIntroducedUserJTGroupIdList((prev) => {
+      //       if (prev.includes(member.introducedUserJTGroupId)) return prev
+      //       return [...prev, member.introducedUserJTGroupId]
+      //     })
+      //   }
+      // }
+    }
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Box
@@ -298,8 +388,63 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
         />
       </Box>
 
+   <Box display="flex" flexDirection="column" gap="7px" mt={5} mb={2} width={"100%"}>
+            {loading ? (
+              <Box display="flex" justifyContent="center" my={4}>
+                <CircularProgress />
+              </Box>
+            ) : error ? (
+              <Typography color="error" textAlign="center">
+                {error.message}
+              </Typography>
+            ) : (
+              members.map((member) => (
+                  !member.invalid && <Box
+                    key={member.introducedUserJTGroupId}
+                    display="flex"
+                    bgcolor="white"
+                    alignItems="center"
+                    // justifyContent="space-between"
+                    position={"relative"}
+                    px={1}
+                    py="1px"
+                    borderRadius="12px"
+                  >
+                    <Checkbox
+                      checked={selectedGroupIds.includes(member.introducedUserJTGroupId)}
+                      onChange={() => handleToggleGroup(member)}
+                    />
+                    <Typography flex={1}>
+                      {member.userName} {member.userFamily}
+                    </Typography>
+                    <Typography position="absolute" right={120} fontSize="14px">
+                      نام کاربری: {member.userUsername}
+                    </Typography>
+
+                    {member.showReportForResponder && (
+                      <Box sx={{ position: "absolute", right: 35 }}>
+                        <Tooltip key={member.userUsername} title="نمایش نتیجه به پاسخ دهنده" followCursor arrow placement='top'>
+                          <div className='truncate' dir='rtl'>
+                            <FaEye color='#1758BA' />
+                          </div>
+                        </Tooltip>
+                      </Box>
+                    )}
+                    <Typography position="absolute" right={1} fontSize="14px" className="pl-2">
+                      {member.userGender}
+                    </Typography>
+
+                  </Box>) 
+              )
+            )}
+          </Box>
       </Box>
 
+          {!loading && hasNextPage && (
+            <Box ref={ref} display="flex" justifyContent="center" my={2}>
+              {isFetchingNextPage && <CircularProgress size={24} />}
+            </Box>
+          )}
      
 
       <Box

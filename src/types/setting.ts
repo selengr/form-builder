@@ -27,6 +27,6 @@ export interface MemberSettingsProps {
 
 export interface IUseFetchMembersParams {
   formId: number | string;
-  groupId: number | null;
+  groupId: number | null | "default";
   searchBoxList: SearchBoxItem[];
 }

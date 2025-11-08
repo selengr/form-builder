@@ -5,11 +5,11 @@ import { toast } from 'sonner';
 import { FaEye } from "react-icons/fa";
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormProvider, { RHFSelect, RHFTextField } from '../hook-form';
-import { Box, Button,Tooltip ,Checkbox, CircularProgress, MenuItem, Typography } from '@mui/material';
+import { Box, Button, Tooltip, Checkbox, CircularProgress, MenuItem, Typography } from '@mui/material';
 // utils
 import { getAuthToken } from '@/utils/getAuthToken';
 // components
@@ -20,6 +20,7 @@ import { useFetchMembersSetting } from "../GroupSettings/hook/useFetchMembersSet
 import { SearchBoxItem } from '../ListGrid/ListGrid';
 import { IUserGroupMemmerInfo } from '@/types/setting';
 import { useInView } from 'react-intersection-observer';
+import { AxiosApi } from '@/services/axios/AxiosApi';
 
 const buttonStylesAlert = {
   height: '50px',
@@ -83,12 +84,10 @@ const propertiesSchema = z.object({
         message: 'شماره تلفن باید با 09 شروع شود و دقیقاً 11 رقم داشته باشد',
       }),
     ),
-  gender: z.enum(['MALE', 'FEMALE'], {
-    message: 'جنسیت الزامی است و باید male یا female باشد',
-  }),
-  showReportForResponder: z.boolean(),
-  show: z.boolean().default(false).optional(),
-  memberId: z.array(z.number()).min(0, "حداقل یک عضو را انتخاب کنید."),
+  gender: z.union([z.literal('MALE'), z.literal('FEMALE'), z.literal('')]).optional(),
+
+
+  showReportForResponder: z.boolean()
 });
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
@@ -105,28 +104,37 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
       nextConditionOperator: "OR",
     },
   ])
-  const groupId : "default" = "default"
+  const [introducedUserJTGroupId, setIntroducedUserJTGroupId] = useState<number | null>(null)
+  const [introducedUserPublishIdList, setIntroducedUserPublishIdList] = useState<number[]>([])
+  const [storedIntroducedUserPublishId, setStoredIntroducedUserPublishId] = useState<number[]>([])
+  const [removedMember, setRemovedMember] = useState<number[]>([])
+
+
+  const groupId: "default" = "default"
   const queryClient = useQueryClient();
 
   const autoSelectedRef = useRef<Set<number>>(new Set())
-    const { ref, inView } = useInView({
-      threshold: 0.1,
-    })
-  
 
-    const {
-      data,
-      fetchNextPage,
-      hasNextPage,
-      isFetchingNextPage,
-      isLoading: loading,
-      error,
-    } = useFetchMembersSetting({
-      formId,
-      groupId,
-      searchBoxList,
-    })
-  const members = data?.pages.flatMap((page) => page.data) ?? []
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+  })
+
+
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: loading,
+    error,
+  } = useFetchMembersSetting({
+    formId,
+    groupId,
+    searchBoxList,
+  })
+  // const members = data?.pages.flatMap((page) => page.data) ?? []
+  const members = useMemo(() => data?.pages.flatMap((page) => page.data) ?? [], [data]);
+
 
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
@@ -135,14 +143,12 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
       name: '',
       phone: '',
       family: '',
-      show: false,
-      memberId: [],
-      gender: undefined,  
+      gender: '',
       showReportForResponder: formData?.showReportForResponder || false,
     },
   });
 
-  
+
   const {
     watch,
     reset,
@@ -152,102 +158,77 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
     handleSubmit,
     formState: { isSubmitting, isValid },
   } = methods;
-  const selectedGroupIds = watch("memberId")
-
-    useEffect(() => {
-    if (members.length === 0) return
-
-    const currentSelected = methods.getValues("memberId")
-    const activeIds = members
-      .filter((m) => m.activationLink)
-      .map((m) => m.introducedUserJTGroupId)
-    const newActiveIds = activeIds.filter(
-      (id) => !currentSelected.includes(id) && !autoSelectedRef.current.has(id)
-    )
-
-    if (newActiveIds.length > 0) {
-      const merged = [...newActiveIds]
-      methods.setValue("memberId", merged, { shouldValidate: true })
-      newActiveIds.forEach((id) => autoSelectedRef.current.add(id))
-    }
-  }, [members])
 
   useEffect(() => {
-    async function fetchGroups() {
-      try {
-        const params = {
-          type: 'COMBO',
-          entity: 'QUESTIONS',
-          mode: 'QUESTIONS_IN_FORM_BUILDER__ALL',
-          input: '',
-          page: 0,
-          rows: 10000,
-        };
+    if (members.length === 0) return
 
-        const search = new URLSearchParams({
-          customComboFilterModel: JSON.stringify(params),
-        });
-        const token = await getAuthToken();
+    const activeIds: any = members
+      .filter((m) => m.activationLink)
+      .map((m) => m.introducedUserPublishId!)
 
-        const response = await fetch(`/api/group/combo?${search.toString()}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+    setIntroducedUserPublishIdList(activeIds)
+    setStoredIntroducedUserPublishId(activeIds)
 
-        const data = await response.json();
+  }, [members])
 
-        if (response.ok) {
-          // setGroupOptions(data.dataList);
-        } else {
-          toast.error(data.error || 'خطا در دریافت گروه‌ها');
-        }
-      } catch (err) {
-        toast.error('ارتباط با سرور برقرار نشد');
-      }
-    }
+  const handleFormSubmit = async () => {
 
-    fetchGroups();
-  }, []);
+    if (removedMember.length > 0) {
+      await onSubmit(getValues());
+    } else {
+      await handleSubmit(onSubmit)();
+    };
+  }
+
 
   async function onSubmit(values: propertiesFormSchemaType) {
     const token = await getAuthToken();
 
     try {
-      const response = await fetch('/api/publish/individual', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          formId: formId.toString(),
-          name: values.name,
-          lname: values.family,
-          username: values.phone,
-          gender: values.gender,
-          showReportForResponder: values.showReportForResponder,
-        }),
-      });
+      if (!!introducedUserJTGroupId) {
+        const response = await fetch('/api/publish/individual', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            formId: formId.toString(),
+            name: values.name,
+            lname: values.family,
+            username: values.phone,
+            gender: values.gender,
+            showReportForResponder: values.showReportForResponder,
+            introducedUserJTGroupId: introducedUserJTGroupId,
+          }),
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (!response.ok) {
-        if (data.error && data.details) {
-          data.details.forEach((err: any) => {
-            if (err.path && err.path[0]) {
-              setError(err.path[0], {
-                type: 'manual',
-                message: err.message || 'خطا در ورودی',
-              });
-            }
-          });
-        } else if (data.error) {
-          toast.error(data.error);
-        } else {
-          toast.error('خطای ناشناخته از سمت سرور');
+        if (!response.ok) {
+          if (data.error && data.details) {
+            data.details.forEach((err: any) => {
+              if (err.path && err.path[0]) {
+                setError(err.path[0], {
+                  type: 'manual',
+                  message: err.message || 'خطا در ورودی',
+                });
+              }
+            });
+          } else if (data.error) {
+            toast.error(data.error);
+          } else {
+            toast.error('خطای ناشناخته از سمت سرور');
+          }
+          return;
         }
-        return;
+      }
+      if (removedMember.length > 0) {
+        await AxiosApi.post("/form-publish-setting/cancel-member-allocation", {
+          formId: Number(formId),
+          introducedUserPublishIdList: removedMember,
+        })
+        toast.success("اعضای لغوشده با موفقیت حذف شد.")
       }
 
       queryClient.invalidateQueries({ queryKey: ['datas_builder_query'] });
@@ -277,39 +258,52 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
     push("/reports")
   }
 
+
   const handleToggleGroup = (member: IUserGroupMemmerInfo) => {
-      // const current = getValues("memberId")
-      // const isSelected = current.includes(member.introducedUserJTGroupId)
-  
-      // const updated = isSelected
-      //   ? current.filter((id) => id !== member.introducedUserJTGroupId)
-      //   : [...current, member.introducedUserJTGroupId]
-      // setValue("memberId", updated, { shouldDirty: true, shouldValidate: true })
-  
-      // if (isSelected) {
-      //   if (member.activationLink) {
-      //     if (member.introducedUserPublishId)
-      //       setIntroducedUserPublishIdList((prev) => {
-      //         if (prev.includes(member.introducedUserPublishId!)) return prev
-      //         return [...prev, member.introducedUserPublishId!]
-      //       })
-      //   } else {
-      //     setIntroducedUserJTGroupIdList((prev) => prev.filter((id) => id !== member.introducedUserJTGroupId))
-      //   }
-      // } else {
-      //   if (member.activationLink) {
-      //     setIntroducedUserPublishIdList((prev) => prev.filter((id) => id !== member.introducedUserPublishId))
-      //   } else {
-      //     setIntroducedUserJTGroupIdList((prev) => {
-      //       if (prev.includes(member.introducedUserJTGroupId)) return prev
-      //       return [...prev, member.introducedUserJTGroupId]
-      //     })
-      //   }
-      // }
+    const isSelected = introducedUserJTGroupId === member.introducedUserJTGroupId
+    const isDefaultSlected = storedIntroducedUserPublishId.includes(member.introducedUserPublishId!)
+    if (isDefaultSlected) {
+      const isSelectedCancel = introducedUserPublishIdList.includes(member.introducedUserPublishId!)
+      if (isSelectedCancel) {
+        setIntroducedUserPublishIdList((prev) => prev.filter((id) => id !== member.introducedUserPublishId))
+        setRemovedMember((prev) => {
+          return [...prev, member.introducedUserPublishId!]
+        })
+      } else {
+        setIntroducedUserPublishIdList((prev) => {
+          return [...prev, member.introducedUserPublishId!]
+        })
+        setRemovedMember((prev) => prev.filter((id) => id !== member.introducedUserPublishId))
+
+      }
+
+    } else {
+      if (isSelected) {
+        setIntroducedUserJTGroupId(null)
+        setValue("name", "", { shouldValidate: true })
+        setValue("family", "", { shouldValidate: true })
+        setValue("phone", "", { shouldValidate: true })
+        setValue("gender", '' as any, { shouldValidate: true })
+      } else {
+        setIntroducedUserJTGroupId(member.introducedUserJTGroupId)
+        setValue("name", member.userName, { shouldValidate: true })
+        setValue("family", member.userFamily, { shouldValidate: true })
+        setValue("phone", member.userUsername, { shouldValidate: true })
+        const genderValue = member.userGender === "آقا" ? "MALE" : member.userGender === "خانم" ? "FEMALE" : ''
+        setValue("gender", genderValue as any, { shouldValidate: true })
+      }
     }
+  }
+
+  const buttonLabel = () => {
+    if (removedMember.length > 0 && typeof introducedUserJTGroupId !== "number" && !introducedUserJTGroupId) {
+      return "اعمال تغییرات"
+    } return "افزودن به سبد خرید"
+  }
+
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+    <FormProvider methods={methods} onSubmit={handleFormSubmit}>
       <Box
         sx={{
           display: 'flex',
@@ -327,13 +321,13 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
             <Typography variant='subtitle2' fontWeight='700'>
               نام:
             </Typography>
-            <RHFTextField sx={textFieldCommonSx} name='name' fullWidth />
+            <RHFTextField disabled={!!introducedUserJTGroupId} sx={textFieldCommonSx} name='name' fullWidth />
           </Box>
           <Box sx={inputFieldContainerSx}>
             <Typography variant='subtitle2' fontWeight='700'>
               نام خانوادگی:
             </Typography>
-            <RHFTextField sx={textFieldCommonSx} name='family' fullWidth />
+            <RHFTextField disabled={!!introducedUserJTGroupId} sx={textFieldCommonSx} name='family' fullWidth />
           </Box>
         </Box>
 
@@ -343,6 +337,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
               تلفن همراه:
             </Typography>
             <RHFTextField
+              disabled={!!introducedUserJTGroupId}
               sx={textFieldCommonSx}
               name='phone'
               type='tel'
@@ -352,17 +347,18 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
                 },
               }}
               fullWidth
+
             />
           </Box>
           <Box sx={inputFieldContainerSx}>
             <Typography variant='subtitle2' fontWeight='700'>
               جنسیت:
             </Typography>
-            <RHFSelect fullWidth name='gender' sx={textFieldCommonSx}>
+            <RHFSelect disabled={!!introducedUserJTGroupId} fullWidth name='gender' sx={textFieldCommonSx} >
               <MenuItem value=''>انتخاب کنید</MenuItem>
               {[
-                { value: 'MALE', label: 'مرد' },
-                { value: 'FEMALE', label: 'زن' },
+                { value: 'MALE', label: 'آقا' },
+                { value: 'FEMALE', label: 'خانم' },
               ].map((item) => (
                 <MenuItem key={item.value} value={item.value}>
                   {item.label}
@@ -371,81 +367,81 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
             </RHFSelect>
           </Box>
         </Box>
-         <Box display='flex' justifyContent='space-between' alignItems='center' mx={2} mt={2}>
-        <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>
-          نمایش نتیجه به پاسخ دهنده
-        </Typography>
-        <SwitchButton
-          onChange={handleShowReportForResponder}
-          checked={isShowReportForResponder}
-          sx={{
-            '& .MuiInputBase-root': {
-              borderRadius: '10px',
-              fontWeight: 600,
-              height: 42,
-            },
-          }}
-        />
-      </Box>
+        <Box display='flex' justifyContent='space-between' alignItems='center' mx={2} mt={2}>
+          <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>
+            نمایش نتیجه به پاسخ دهنده
+          </Typography>
+          <SwitchButton
+            onChange={handleShowReportForResponder}
+            checked={isShowReportForResponder}
+            sx={{
+              '& .MuiInputBase-root': {
+                borderRadius: '10px',
+                fontWeight: 600,
+                height: 42,
+              },
+            }}
+          />
+        </Box>
 
-   <Box display="flex" flexDirection="column" gap="7px" mt={5} mb={2} width={"100%"}>
-            {loading ? (
-              <Box display="flex" justifyContent="center" my={4}>
-                <CircularProgress />
-              </Box>
-            ) : error ? (
-              <Typography color="error" textAlign="center">
-                {error.message}
-              </Typography>
-            ) : (
-              members.map((member) => (
-                  !member.invalid && <Box
-                    key={member.introducedUserJTGroupId}
-                    display="flex"
-                    bgcolor="white"
-                    alignItems="center"
-                    // justifyContent="space-between"
-                    position={"relative"}
-                    px={1}
-                    py="1px"
-                    borderRadius="12px"
-                  >
-                    <Checkbox
-                      checked={selectedGroupIds.includes(member.introducedUserJTGroupId)}
-                      onChange={() => handleToggleGroup(member)}
-                    />
-                    <Typography flex={1}>
-                      {member.userName} {member.userFamily}
-                    </Typography>
-                    <Typography position="absolute" right={120} fontSize="14px">
-                      نام کاربری: {member.userUsername}
-                    </Typography>
-
-                    {member.showReportForResponder && (
-                      <Box sx={{ position: "absolute", right: 35 }}>
-                        <Tooltip key={member.userUsername} title="نمایش نتیجه به پاسخ دهنده" followCursor arrow placement='top'>
-                          <div className='truncate' dir='rtl'>
-                            <FaEye color='#1758BA' />
-                          </div>
-                        </Tooltip>
-                      </Box>
-                    )}
-                    <Typography position="absolute" right={1} fontSize="14px" className="pl-2">
-                      {member.userGender}
-                    </Typography>
-
-                  </Box>) 
-              )
-            )}
-          </Box>
-      </Box>
-
-          {!loading && hasNextPage && (
-            <Box ref={ref} display="flex" justifyContent="center" my={2}>
-              {isFetchingNextPage && <CircularProgress size={24} />}
+        <Box display="flex" flexDirection="column" gap="7px" mt={5} mb={2} width={"100%"}>
+          {loading ? (
+            <Box display="flex" justifyContent="center" my={4}>
+              <CircularProgress />
             </Box>
+          ) : error ? (
+            <Typography color="error" textAlign="center">
+              {error.message}
+            </Typography>
+          ) : (
+            members.map((member) => (
+              !member.invalid && <Box
+                key={member.introducedUserJTGroupId}
+                display="flex"
+                bgcolor="white"
+                alignItems="center"
+                // justifyContent="space-between"
+                position={"relative"}
+                px={1}
+                py="1px"
+                borderRadius="12px"
+              >
+                <Checkbox
+                  checked={introducedUserJTGroupId === member.introducedUserJTGroupId || introducedUserPublishIdList.includes(member.introducedUserPublishId!)}
+                  onChange={() => handleToggleGroup(member)}
+                />
+                <Typography flex={1}>
+                  {member.userName} {member.userFamily}
+                </Typography>
+                <Typography position="absolute" right={120} fontSize="14px">
+                  نام کاربری: {member.userUsername}
+                </Typography>
+
+                {member.showReportForResponder && (
+                  <Box sx={{ position: "absolute", right: 35 }}>
+                    <Tooltip key={member.userUsername} title="نمایش نتیجه به پاسخ دهنده" followCursor arrow placement='top'>
+                      <div className='truncate' dir='rtl'>
+                        <FaEye color='#1758BA' />
+                      </div>
+                    </Tooltip>
+                  </Box>
+                )}
+                <Typography position="absolute" right={1} fontSize="14px" className="pl-2">
+                  {member.userGender}
+                </Typography>
+
+              </Box>)
+            )
           )}
-     
+        </Box>
+      </Box>
+
+      {!loading && hasNextPage && (
+        <Box ref={ref} display="flex" justifyContent="center" my={2}>
+          {isFetchingNextPage && <CircularProgress size={24} />}
+        </Box>
+      )}
+
 
       <Box
         sx={{
@@ -462,7 +458,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
           type='submit'
           fullWidth
           variant='contained'
-          disabled={isSubmitting || !isValid}
+          disabled={isSubmitting || !isValid && removedMember.length === 0}
           sx={{
             bgcolor: '#1758BA',
             height: '54px',
@@ -479,7 +475,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
               boxShadow: 'none',
             },
           }}>
-          افزودن به سبد خرید
+          {buttonLabel()}
         </Button>
         <Button
           disabled={isSubmitting}

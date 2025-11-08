@@ -11,8 +11,8 @@ const soloMethodSchema = z.object({
   lname: z.string(),
   username: z.string(),
   gender: z.enum(['MALE', 'FEMALE']),
-  groupId: z.string().nullable(),
   showReportForResponder: z.boolean(),
+  introducedUserJTGroupId: z.number().nullable(),
 });
 
 export async function POST(req: Request) {

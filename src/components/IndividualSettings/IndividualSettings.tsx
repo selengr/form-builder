@@ -110,10 +110,8 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
   const [removedMember, setRemovedMember] = useState<number[]>([])
 
 
-  const groupId: "default" = "default"
+  const groupId = "default" as const;
   const queryClient = useQueryClient();
-
-  const autoSelectedRef = useRef<Set<number>>(new Set())
 
   const { ref, inView } = useInView({
     threshold: 0.1,
@@ -132,7 +130,6 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
     groupId,
     searchBoxList,
   })
-  // const members = data?.pages.flatMap((page) => page.data) ?? []
   const members = useMemo(() => data?.pages.flatMap((page) => page.data) ?? [], [data]);
 
 

@@ -182,7 +182,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
     const token = await getAuthToken();
 
     try {
-      if (!!introducedUserJTGroupId) {
+      if (introducedUserJTGroupId) {
         const response = await fetch('/api/publish/individual', {
           method: 'POST',
           headers: {

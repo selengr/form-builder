@@ -27,6 +27,7 @@ import { RemoveGroupConfirmModal } from "./RemoveConfirmDialog"
 import { useFetchMembersSetting } from "./hook/useFetchMembersSetting"
 // type
 import type { MemberSettingsProps, IUserGroupMemmerInfo } from "@/types/setting"
+import { useShowReportForResponder, useUpdateShowReportForResponder } from "./hook/useShowReportForResponder"
 
 const buttonStylesAlert = {
   height: "50px",
@@ -94,6 +95,13 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
     groupId,
     searchBoxList,
   })
+
+  const { data: showReportForResponder } = useShowReportForResponder(Number(formId), Number(groupId))
+
+  const {
+    mutate: updateShowReport
+  } = useUpdateShowReportForResponder(Number(formId), Number(groupId))
+
   const members = data?.pages.flatMap((page) => page.data) ?? []
 
   const methods = useForm<GroupFormSchemaType>({
@@ -101,7 +109,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
     mode: "onChange",
     defaultValues: {
       memberId: [],
-      showReportForResponder: formData?.showReportForResponder || false,
+      showReportForResponder: false,
     },
   })
 
@@ -120,6 +128,13 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
   const handleSearchFilter = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value)
   }, [])
+
+  useEffect(() => {
+    if (showReportForResponder !== undefined) {
+      setValue("showReportForResponder", showReportForResponder)
+      setIsShowReportForResponder(showReportForResponder)
+    }
+  }, [showReportForResponder, setValue])
 
   useEffect(() => {
     if (isFetchingNextPage) {
@@ -243,21 +258,40 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
 
   const handleMembersSubmit = useCallback(async () => {
     try {
+      const promises = [];
       if (introducedUserJTGroupIdList.length > 0) {
-        await AxiosApi.post("/form-publish-setting/new-member-allocation", {
-          formId: Number(formId),
-          introducedUserJTGroupIdList,
-          showReportForResponder: getValues("showReportForResponder"),
-        })
-        toast.success("با موفقیت به سبد خرید افزوده شد.")
+        promises.push(
+          await AxiosApi.post("/form-publish-setting/new-member-allocation", {
+            formId: Number(formId),
+            introducedUserJTGroupIdList
+          })
+        )
       }
 
       if (introducedUserPublishIdList.length > 0) {
-        await AxiosApi.post("/form-publish-setting/cancel-member-allocation", {
-          formId: Number(formId),
-          introducedUserPublishIdList,
-        })
-        toast.success("اعضای لغوشده با موفقیت حذف شد.")
+        promises.push(
+          await AxiosApi.post("/form-publish-setting/cancel-member-allocation", {
+            formId: Number(formId),
+            introducedUserPublishIdList,
+          })
+        )
+      }
+
+      if (promises.length > 0) {
+        await Promise.all(promises);
+
+        if (introducedUserJTGroupIdList.length > 0) {
+          toast.success("با موفقیت به سبد خرید افزوده شد.");
+        }
+        if (introducedUserPublishIdList.length > 0) {
+          toast.success("اعضای لغوشده با موفقیت حذف شد.");
+        }
+      }
+
+
+      const currentShowReportValue = getValues("showReportForResponder");
+      if (currentShowReportValue !== showReportForResponder) {
+        updateShowReport(currentShowReportValue);
       }
 
       queryClient.invalidateQueries({ queryKey: ["members-setting"] })
@@ -274,7 +308,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
   const onSubmit = async () => {
     const currentSelected = getValues("memberId")
     const removedGroups = introducedUserPublishIdList.filter((id) => !currentSelected.includes(id));
-    console.log('removedGroups', removedGroups)
+
     if (removedGroups.length > 0) {
       const removed: any = members.filter((g) => removedGroups.includes(g.introducedUserPublishId!));
       setMembersToRemove(removed);
@@ -300,6 +334,12 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
 
   const handleRedirection = () => {
     push("/reports")
+  }
+
+  const buttonLabel = () => {
+    if (introducedUserJTGroupIdList.length > 0) {
+      return "افزودن به سبد خرید"
+    } return "اعمال تغییرات";
   }
 
   return (
@@ -367,42 +407,42 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
               </Typography>
             ) : (
               members.map((member) => (
-                  !member.invalid && <Box
-                    key={member.introducedUserJTGroupId}
-                    display="flex"
-                    bgcolor="white"
-                    alignItems="center"
-                    // justifyContent="space-between"
-                    position={"relative"}
-                    px={1}
-                    py="1px"
-                    borderRadius="12px"
-                  >
-                    <Checkbox
-                      checked={selectedGroupIds.includes(member.introducedUserJTGroupId)}
-                      onChange={() => handleToggleGroup(member)}
-                    />
-                    <Typography flex={1}>
-                      {member.userName} {member.userFamily}
-                    </Typography>
-                    <Typography position="absolute" right={120} fontSize="14px">
-                      نام کاربری: {member.userUsername}
-                    </Typography>
+                !member.invalid && <Box
+                  key={member.introducedUserJTGroupId}
+                  display="flex"
+                  bgcolor="white"
+                  alignItems="center"
+                  // justifyContent="space-between"
+                  position={"relative"}
+                  px={1}
+                  py="1px"
+                  borderRadius="12px"
+                >
+                  <Checkbox
+                    checked={selectedGroupIds.includes(member.introducedUserJTGroupId)}
+                    onChange={() => handleToggleGroup(member)}
+                  />
+                  <Typography flex={1}>
+                    {member.userName} {member.userFamily}
+                  </Typography>
+                  <Typography position="absolute" right={120} fontSize="14px">
+                    نام کاربری: {member.userUsername}
+                  </Typography>
 
-                    {member.showReportForResponder && (
-                      <Box sx={{ position: "absolute", right: 35 }}>
-                        <Tooltip key={member.userUsername} title="نمایش نتیجه به پاسخ دهنده" followCursor arrow placement='top'>
-                          <div className='truncate' dir='rtl'>
-                            <FaEye color='#1758BA' />
-                          </div>
-                        </Tooltip>
-                      </Box>
-                    )}
-                    <Typography position="absolute" right={1} fontSize="14px" className="pl-2">
-                      {member.userGender}
-                    </Typography>
+                  {member.showReportForResponder && (
+                    <Box sx={{ position: "absolute", right: 35 }}>
+                      <Tooltip key={member.userUsername} title="نمایش نتیجه به پاسخ دهنده" followCursor arrow placement='top'>
+                        <div className='truncate' dir='rtl'>
+                          <FaEye color='#1758BA' />
+                        </div>
+                      </Tooltip>
+                    </Box>
+                  )}
+                  <Typography position="absolute" right={1} fontSize="14px" className="pl-2">
+                    {member.userGender}
+                  </Typography>
 
-                  </Box>) 
+                </Box>)
               )
             )}
           </Box>
@@ -455,7 +495,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
               sx={{
                 bgcolor: "#1758BA",
                 height: "54px",
-                width: "131px",
+                width: "161px",
                 color: "white",
                 fontSize: { xs: "13px", sm: "16px" },
                 fontWeight: "700",
@@ -467,7 +507,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
                 },
               }}
             >
-              ثبت
+              {buttonLabel()}
             </Button>
 
             <Button
@@ -480,7 +520,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
               sx={{
                 height: "54px",
                 fontWeight: "700",
-                width: "131px",
+                width: "161px",
                 borderRadius: "10px",
                 fontSize: "16px",
                 color: "#1758BA",
@@ -536,7 +576,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
           }
         }}
       />
-    }
+      }
     </Box>
   )
 }

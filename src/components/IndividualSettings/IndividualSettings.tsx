@@ -328,7 +328,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
 
   return (
      <Box sx={{ position: "relative" }}>
-    <FormProvider methods={methods} onSubmit={preSubmit}>
+    <FormProvider methods={methods} onSubmit={() => preSubmit(event)}>
       <Box
         sx={{
           display: 'flex',

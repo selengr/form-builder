@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { FaEye } from "react-icons/fa";
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormProvider, { RHFSelect, RHFTextField } from '../hook-form';
@@ -21,6 +21,7 @@ import { SearchBoxItem } from '../ListGrid/ListGrid';
 import { IUserGroupMemmerInfo } from '@/types/setting';
 import { useInView } from 'react-intersection-observer';
 import { AxiosApi } from '@/services/axios/AxiosApi';
+import { RemoveGroupConfirmModal } from '../GroupSettings/RemoveConfirmDialog';
 
 const buttonStylesAlert = {
   height: '50px',
@@ -104,10 +105,13 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
       nextConditionOperator: "OR",
     },
   ])
+  const [isRemoving, setIsRemoving] = useState(false);
+  const [removedMember, setRemovedMember] = useState<number[]>([])
+  const [membersToRemove, setMembersToRemove] = useState<{ id: number; name: string }[]>([]);
+  const [openRemoveConfirmDialog, setOpenRemoveConfirmDialog] = useState<boolean>(false);
   const [introducedUserJTGroupId, setIntroducedUserJTGroupId] = useState<number | null>(null)
   const [introducedUserPublishIdList, setIntroducedUserPublishIdList] = useState<number[]>([])
   const [storedIntroducedUserPublishId, setStoredIntroducedUserPublishId] = useState<number[]>([])
-  const [removedMember, setRemovedMember] = useState<number[]>([])
 
 
   const groupId = "default" as const;
@@ -145,9 +149,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
     },
   });
 
-
   const {
-    watch,
     reset,
     setValue,
     setError,
@@ -155,6 +157,13 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
     handleSubmit,
     formState: { isSubmitting, isValid },
   } = methods;
+
+  useEffect(() => {
+  if (inView && hasNextPage && !isFetchingNextPage) {
+    fetchNextPage();
+  }
+}, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
 
   useEffect(() => {
     if (members.length === 0) return
@@ -167,6 +176,17 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
     setStoredIntroducedUserPublishId(activeIds)
 
   }, [members])
+
+  const preSubmit = async (e:any) => {
+     e.preventDefault();
+    if (removedMember.length > 0) {
+      const removed: any = members.filter((g) => removedMember.includes(g.introducedUserPublishId!));
+      setMembersToRemove(removed);
+      setOpenRemoveConfirmDialog(true);
+      return
+    }
+    await handleFormSubmit();
+  }
 
   const handleFormSubmit = async () => {
 
@@ -182,22 +202,29 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
     const token = await getAuthToken();
 
     try {
-      if (introducedUserJTGroupId) {
+      if (values.name && values.family && values.phone && values.gender) {
+        const bodyData = introducedUserJTGroupId
+          ? {
+            formId: formId.toString(),
+            introducedUserJTGroupId,
+            showReportForResponder: values.showReportForResponder,
+          }
+          : {
+            formId: formId.toString(),
+            introducedUserJTGroupId: null,
+            name: values.name,
+            lname: values.family,
+            username: values.phone,
+            gender: values.gender,
+            showReportForResponder: values.showReportForResponder,
+          };
         const response = await fetch('/api/publish/individual', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            formId: formId.toString(),
-            name: values.name,
-            lname: values.family,
-            username: values.phone,
-            gender: values.gender,
-            showReportForResponder: values.showReportForResponder,
-            introducedUserJTGroupId: introducedUserJTGroupId,
-          }),
+          body: JSON.stringify(bodyData),
         });
 
         const data = await response.json();
@@ -300,7 +327,8 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
 
 
   return (
-    <FormProvider methods={methods} onSubmit={handleFormSubmit}>
+     <Box sx={{ position: "relative" }}>
+    <FormProvider methods={methods} onSubmit={() => preSubmit(event)}>
       <Box
         sx={{
           display: 'flex',
@@ -395,13 +423,14 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
               !member.invalid && <Box
                 key={member.introducedUserJTGroupId}
                 display="flex"
-                bgcolor="white"
                 alignItems="center"
                 // justifyContent="space-between"
                 position={"relative"}
                 px={1}
                 py="1px"
                 borderRadius="12px"
+                bgcolor={removedMember.includes(member.introducedUserPublishId!) ? "#ffebee" : "white"}
+                border={removedMember.includes(member.introducedUserPublishId!) ? "1px solid #ef5350" : "1px solid white"}
               >
                 <Checkbox
                   checked={introducedUserJTGroupId === member.introducedUserJTGroupId || introducedUserPublishIdList.includes(member.introducedUserPublishId!)}
@@ -439,7 +468,14 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
         </Box>
       )}
 
-
+ <Box sx={{
+          position: "sticky",
+          bottom: '0px',
+          background: "#FFF",
+          paddingY : "10px"
+        }}
+          pr={1} pl={2}
+        >
       <Box
         sx={{
           display: 'flex',
@@ -504,7 +540,8 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
           انصراف
         </Button>
       </Box>
-      <ConfirmDialog
+      </Box>
+      {openShowReportForResponderDialog && <ConfirmDialog
         content='تا زمانی که قالب گزارش انفرادی نساخته باشید نمیتواند این تیک را بزند '
         open={openShowReportForResponderDialog}
         title='اخطار'
@@ -519,7 +556,26 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
           </Button>
         }
       />
+      }
+      {openRemoveConfirmDialog && <RemoveGroupConfirmModal
+        open={openRemoveConfirmDialog}
+        onClose={() => setOpenRemoveConfirmDialog(false)}
+        groupsToRemove={membersToRemove}
+        loading={isRemoving}
+        title={"اعضا"}
+        onConfirm={async () => {
+          setIsRemoving(true);
+          try {
+            await handleFormSubmit();
+          } finally {
+            setIsRemoving(false);
+            setOpenRemoveConfirmDialog(false);
+          }
+        }}
+      />
+      }
     </FormProvider>
+    </Box>
   );
 }
 

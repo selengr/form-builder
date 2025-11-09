@@ -107,7 +107,8 @@ export const RemoveGroupConfirmModal: React.FC<IRemoveGroupConfirmModalProps> = 
 
                 <Box display="flex" justifyContent="center" alignItems="center" pb={2} gap="16px" px="16px" mt="14px">
                     <Button
-                        onClick={() => onConfirm()}
+                       type="button"
+                         onClick={() => onConfirm()}
                         variant="contained"
                         disabled={loading}
                         sx={{ ...buttonStyles, ...buttonStylesError }}
@@ -116,6 +117,7 @@ export const RemoveGroupConfirmModal: React.FC<IRemoveGroupConfirmModalProps> = 
                     </Button>
 
                     <Button
+                        type="button"
                         variant="outlined"
                         onClick={() => {
                             onClose()

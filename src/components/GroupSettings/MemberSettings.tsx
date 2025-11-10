@@ -296,6 +296,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
 
       queryClient.invalidateQueries({ queryKey: ["members-setting"] })
       queryClient.invalidateQueries({ queryKey: ["groups-setting"] })
+      queryClient.invalidateQueries({ queryKey: ["SHOW_REPORT"] })
       handleClose()
       reset()
     } catch (err) {

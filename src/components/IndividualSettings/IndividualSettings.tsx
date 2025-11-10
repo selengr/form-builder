@@ -240,7 +240,9 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
               }
             });
           } else if (data.error) {
-            toast.error(data.error);
+            if(Array.isArray(data.error)){
+                toast.error(data.error[0].title);
+            }
           } else {
             toast.error('خطای ناشناخته از سمت سرور');
           }

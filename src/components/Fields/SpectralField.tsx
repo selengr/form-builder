@@ -291,8 +291,12 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
   };
 
   const handleChange = (event: Event, newValue: number | number[]) => {
-    setSliderVal(newValue as any);
-    onChange?.(newValue as any);
+   const cleanValue = Array.isArray(newValue)
+    ? newValue.map(v => parseFloat(v.toFixed(1))) 
+    : parseFloat(newValue.toFixed(1));  
+
+    setSliderVal(cleanValue as any);
+    onChange?.(cleanValue as any);
   };
 
   return (

@@ -2,32 +2,16 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image, { StaticImageData } from 'next/image';
 import { IoIosArrowBack, IoIosArrowDown } from 'react-icons/io';
+import {
+  IMenuListProps,
+  IStaticLink,
+  IMenuItemData,
+  IMenuItemProps,
+  ISubMenuItemProps,
+  IServerMenuItem,
+} from '@/types/menus';
 
-interface StaticLink {
-  id: number;
-  title: string;
-  icon: string;
-  link: string;
-  order: number;
-}
-
-interface MenuItemData {
-  id: number;
-  title: string;
-  icon: string | StaticImageData;
-  link: string;
-  order: number;
-  isStatic: boolean;
-  children?: MenuItemData[];
-  parentLangId?: string;
-  langId?: string;
-}
-interface IProps {
-  menuLinks: any[];
-  onItemClick?: () => void;
-}
-
-const STATIC_LINKS: StaticLink[] = [
+const STATIC_LINKS: IStaticLink[] = [
   { id: 7, title: 'فرم‌های عمومی', icon: 'formsMoney.svg', link: '/public-form', order: 7 },
   { id: 8, title: 'آموزش', icon: 'tour.svg', link: '/underconstruction', order: 8 },
   { id: 9, title: 'سوالات پرتکرار', icon: 'faq.svg', link: '/faq', order: 9 },
@@ -41,13 +25,7 @@ const SubMenuItem = ({
   icon,
   title,
   onClick,
-}: {
-  id: string | number;
-  href: string;
-  icon: string | StaticImageData;
-  title: string;
-  onClick?: () => void;
-}) => (
+}: ISubMenuItemProps) => (
   <div className='gap-1 bg-white transition-all w-full border-b border-[#DDE1E6] border-r-[#0066CC] border-r-4 py-4 rounded-[4px] duration-300 group pr-8' key={id} style={{ userSelect: 'none' }}>
     <Link href={href} onClick={onClick} className='w-full flex items-center justify-between transition-all duration-200'>
       <div className='flex items-center gap-2'>
@@ -72,22 +50,9 @@ const MenuItem = ({
   isExpanded = false,
   onToggle,
   children,
-}: {
-  id: string | number;
-  href: string;
-  icon: string | StaticImageData;
-  title: string;
-  onClick?: () => void;
-  isStatic?: boolean;
-  hasChildren?: boolean;
-  isExpanded?: boolean;
-  onToggle?: () => void;
-  children?: MenuItemData[];
-}) => (
+}: IMenuItemProps) => (
   <div className='w-full' key={id}>
-    <div className={`gap-1 w-full  py-2 rounded-sm duration-300 group border-b border-[#DDE1E6]
-      // ${!isExpanded ? "border-b border-[#DDE1E6]" : ""}
-      `} style={{ userSelect: 'none' }}>
+    <div className="gap-1 w-full  py-2 rounded-sm duration-300 group border-b border-[#DDE1E6]" style={{ userSelect: 'none' }}>
       {hasChildren ? (
         <button onClick={onToggle} className='w-full flex items-center justify-between'>
           <div className='flex items-center gap-2'>
@@ -120,10 +85,9 @@ const MenuItem = ({
   </div>
 );
 
-const MenuList: React.FC<IProps> = ({ menuLinks, onItemClick }) => {
+const MenuList: React.FC<IMenuListProps> = ({ menuLinks, onItemClick }) => {
   const [expandedMenus, setExpandedMenus] = useState<Set<string | number>>(new Set());
-  console.log('menuLinks', JSON.stringify(menuLinks))
-  const serverLinks = menuLinks?.map((item) => ({
+  const serverLinks : IMenuItemData[] = menuLinks?.map((item) => ({
     id: item.id,
     title: item.text,
     icon: item.icon,
@@ -133,7 +97,7 @@ const MenuList: React.FC<IProps> = ({ menuLinks, onItemClick }) => {
     langId: item.data.langId,
   })) || [];
 
-  const staticLinks = STATIC_LINKS.map((item) => ({
+  const staticLinks : IMenuItemData[] = STATIC_LINKS.map((item) => ({
     id: item.id,
     title: item.title,
     icon: item.icon,
@@ -142,7 +106,7 @@ const MenuList: React.FC<IProps> = ({ menuLinks, onItemClick }) => {
     isStatic: true,
   }));
 
-  const allLinks = [...serverLinks, ...staticLinks];
+  const allLinks : IMenuItemData[] = [...serverLinks, ...staticLinks];
 
   const managementMaster = serverLinks.find((item) => item.langId === 'acl.psya.management.master');
   const assessmentsItem = serverLinks.find((item) => item.langId === 'acl.psya.packaging.master');

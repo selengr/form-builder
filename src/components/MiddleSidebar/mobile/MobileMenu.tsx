@@ -10,7 +10,7 @@ import MenuIcon from '@/../public/images/home-page/menu/ic_menu.svg';
 // hooks
 import { useMenu, useUserInfo } from '@/hooks';
 // view
-import MenuList from '../menuItem/MenuItem';
+import MenuList from '../menuList/MenuList';
 import MenuItemSkeleton from '../menuItemSkeleton';
 
 const MobileMenu: React.FC = () => {

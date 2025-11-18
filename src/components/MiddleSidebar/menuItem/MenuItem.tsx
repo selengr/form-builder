@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image, { StaticImageData } from 'next/image';
-import { IoIosArrowBack } from 'react-icons/io';
+import { IoIosArrowBack, IoIosArrowDown } from 'react-icons/io';
 
 interface StaticLink {
   id: number;
@@ -18,8 +18,10 @@ interface MenuItemData {
   link: string;
   order: number;
   isStatic: boolean;
+  children?: MenuItemData[];
+  parentLangId?: string;
+  langId?: string;
 }
-
 interface IProps {
   menuLinks: any[];
   onItemClick?: () => void;
@@ -33,6 +35,32 @@ const STATIC_LINKS: StaticLink[] = [
   { id: 11, title: 'ارتباط با ما', icon: 'contact-us.svg', link: '/underconstruction', order: 11 },
 ];
 
+const SubMenuItem = ({
+  id,
+  href,
+  icon,
+  title,
+  onClick,
+}: {
+  id: string | number;
+  href: string;
+  icon: string | StaticImageData;
+  title: string;
+  onClick?: () => void;
+}) => (
+  <div className='gap-1 bg-white transition-all w-full border-b border-[#DDE1E6] border-r-[#0066CC] border-r-4 py-4 rounded-[4px] duration-300 group pr-8' key={id} style={{ userSelect: 'none' }}>
+    <Link href={href} onClick={onClick} className='w-full flex items-center justify-between transition-all duration-200'>
+      <div className='flex items-center gap-2'>
+        <Image src={`/api/images?folder=menu&file=${icon}`} alt='icon' width={26} height={26} priority draggable={false} className={'group-hover:rotate-6 transition-all'} />
+        <p className='text-[13px] text-black font-normal'>{title}</p>
+      </div>
+      <IoIosArrowBack size='1rem' color='#292D32' className={'group-hover:ml-0.5 transition-all'} />
+    </Link>
+  </div>
+);
+
+
+
 const MenuItem = ({
   id,
   href,
@@ -40,6 +68,10 @@ const MenuItem = ({
   title,
   onClick,
   isStatic = false,
+  hasChildren = false,
+  isExpanded = false,
+  onToggle,
+  children,
 }: {
   id: string | number;
   href: string;
@@ -47,19 +79,50 @@ const MenuItem = ({
   title: string;
   onClick?: () => void;
   isStatic?: boolean;
+  hasChildren?: boolean;
+  isExpanded?: boolean;
+  onToggle?: () => void;
+  children?: MenuItemData[];
 }) => (
-  <div className='gap-1 w-full border-b border-[#DDE1E6] py-2 rounded-sm duration-300 group' key={id} style={{ userSelect: 'none' }}>
-    <Link href={href} onClick={onClick} className='w-full flex items-center justify-between'>
-      <div className='flex items-center gap-2'>
-        <Image src={`/api/images?folder=menu&file=${icon}`} alt='icon' width={32} height={32} priority draggable={false} className={'group-hover:rotate-6 transition-all'} />
-        <p className='text-[14px] text-black font-bold'>{title}</p>
+  <div className='w-full' key={id}>
+    <div className={`gap-1 w-full  py-2 rounded-sm duration-300 group border-b border-[#DDE1E6]
+      // ${!isExpanded ? "border-b border-[#DDE1E6]" : ""}
+      `} style={{ userSelect: 'none' }}>
+      {hasChildren ? (
+        <button onClick={onToggle} className='w-full flex items-center justify-between'>
+          <div className='flex items-center gap-2'>
+            <Image src={`/api/images?folder=menu&file=${icon}`} alt='icon' width={32} height={32} priority draggable={false} className={'group-hover:rotate-6 transition-all'} />
+            <p className='text-[14px] text-black font-bold'>{title}</p>
+          </div>
+          {isExpanded && hasChildren ? (
+            <IoIosArrowDown size='1.3rem' color='#292D32' className={'transition-all'} />
+          ) : (
+            <IoIosArrowBack size='1.3rem' color='#292D32' className={'group-hover:ml-0.5 transition-all'} />
+          )}
+        </button>
+      ) : (
+        <Link href={href} onClick={onClick} className='w-full flex items-center justify-between'>
+          <div className='flex items-center gap-2'>
+            <Image src={`/api/images?folder=menu&file=${icon}`} alt='icon' width={32} height={32} priority draggable={false} className={'group-hover:rotate-6 transition-all'} />
+            <p className='text-[14px] text-black font-bold'>{title}</p>
+          </div>
+          <IoIosArrowBack size='1.3rem' color='#292D32' className={'group-hover:ml-0.5 transition-all'} />
+        </Link>
+      )}
+    </div>
+    {hasChildren && isExpanded && children && (
+      <div className='bg-[#F8F9FA]'>
+        {children.map((child) => (
+          <SubMenuItem key={child.id} id={child.id} href={child.link} icon={child.icon} title={child.title} onClick={onClick} />
+        ))}
       </div>
-      <IoIosArrowBack size='1.3rem' color='#292D32' className={'group-hover:ml-0.5 transition-all'} />
-    </Link>
+    )}
   </div>
 );
 
 const MenuList: React.FC<IProps> = ({ menuLinks, onItemClick }) => {
+  const [expandedMenus, setExpandedMenus] = useState<Set<string | number>>(new Set());
+  console.log('menuLinks', JSON.stringify(menuLinks))
   const serverLinks = menuLinks?.map((item) => ({
     id: item.id,
     title: item.text,
@@ -67,7 +130,8 @@ const MenuList: React.FC<IProps> = ({ menuLinks, onItemClick }) => {
     link: item.a_attr?.href ?? '#',
     order: parseInt(item.data.order, 10),
     isStatic: false,
-  }));
+    langId: item.data.langId,
+  })) || [];
 
   const staticLinks = STATIC_LINKS.map((item) => ({
     id: item.id,
@@ -80,12 +144,54 @@ const MenuList: React.FC<IProps> = ({ menuLinks, onItemClick }) => {
 
   const allLinks = [...serverLinks, ...staticLinks];
 
-  const sortedLinks = allLinks.sort((a, b) => a.order - b.order);
+  const managementMaster = serverLinks.find((item) => item.langId === 'acl.psya.management.master');
+  const assessmentsItem = serverLinks.find((item) => item.langId === 'acl.psya.packaging.master');
+
+  const linksWithHierarchy = allLinks.map((item) => {
+    if (managementMaster && assessmentsItem && item.id === managementMaster.id) {
+      return {
+        ...item,
+        children: [assessmentsItem],
+      };
+    }
+    return item;
+  }).filter((item) => {
+    if (managementMaster && assessmentsItem && item.id === assessmentsItem.id) {
+      return false;
+    }
+    return true;
+  });
+
+  const sortedLinks = linksWithHierarchy.sort((a, b) => a.order - b.order);
+
+  const handleToggle = (id: string | number) => {
+    setExpandedMenus((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
 
   return (
     <>
-      {sortedLinks.map((item) => (
-        <MenuItem key={item.id} id={item.id} href={item.link} icon={item.icon} title={item.title} onClick={onItemClick} isStatic={item.isStatic} />
+      {sortedLinks.map((item: any) => (
+        <MenuItem
+          key={item.id}
+          id={item.id}
+          href={item.link}
+          icon={item.icon}
+          title={item.title}
+          onClick={onItemClick}
+          isStatic={item.isStatic}
+          hasChildren={!!item.children && item.children.length > 0}
+          isExpanded={expandedMenus.has(item.id)}
+          onToggle={() => handleToggle(item.id)}
+          children={item.children}
+        />
       ))}
     </>
   );

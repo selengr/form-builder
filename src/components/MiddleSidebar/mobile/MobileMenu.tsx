@@ -9,6 +9,8 @@ import Logo from '@/../public/images/home-page/psya-logo.svg';
 import MenuIcon from '@/../public/images/home-page/menu/ic_menu.svg';
 // hooks
 import { useMenu, useUserInfo } from '@/hooks';
+// types
+import { IServerMenuItem } from '@/types/menus';
 // view
 import MenuList from '../menuList/MenuList';
 import MenuItemSkeleton from '../menuItemSkeleton';
@@ -19,7 +21,7 @@ const MobileMenu: React.FC = () => {
   const { menu, loading } = useMenu(userInfo);
   const [isRotated, setIsRotated] = useState(false);
 
-  const menuLinks = useMemo(() => {
+  const menuLinks : IServerMenuItem[] | any = useMemo(() => {
     return menu?.aclList?.filter((i) => i.type === 'menu') || [];
   }, [menu]);
 

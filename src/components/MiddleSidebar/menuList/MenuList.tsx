@@ -10,7 +10,7 @@ const MenuList: React.FC<IMenuListProps> = ({ menuLinks, onItemClick }) => {
         menuLinks?.map((item) => ({
             id: item.id,
             title: item.text,
-            icon: item.icon,
+            icon: item.icon ?? '',
             link: item.a_attr?.href ?? "#",
             order: parseInt(item.data.order, 10),
             isStatic: false,

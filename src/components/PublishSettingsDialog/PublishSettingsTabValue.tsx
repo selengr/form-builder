@@ -30,7 +30,7 @@ function CustomTabPanel(props: CustomTabPanelProps) {
 }
 
 export default function PublishSettingsTabValue({ handleOpen, formId, formData }: { handleOpen: () => void; formId: string; formData: any }) {
-  const [value, setValue] = useState<TabValues>('individual');
+  const [value, setValue] = useState<TabValues>('general');
 
   const handleChange = (_: SyntheticEvent, newValue: TabValues) => {
     setValue(newValue);

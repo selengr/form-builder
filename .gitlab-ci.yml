@@ -1,5 +1,4 @@
 stages:
-  - compile
   - build
   - deploy
   - cleanup
@@ -10,7 +9,6 @@ variables:
 
 before_script:
   - |
-    # Compute IMAGE_PROJECT dynamically
     export IMAGE_PROJECT="$(basename $(dirname $CI_PROJECT_DIR))/$(basename $CI_PROJECT_DIR)"
     export COMMIT_ID=$(git log -1 --pretty=format:%h)
     export GIT_TAG=$(git describe --exact-match --tags 2>/dev/null || echo "no-tag")
@@ -23,36 +21,7 @@ before_script:
     which kubectl && echo "kubectl OK" || { echo "ERROR: kubectl not found"; exit 1; }
     whoami
 
-compile-job:
-  stage: compile
-  tags:
-    - sharemodel-ci
-  only:
-    - newpl1
-  cache:
-    key:
-      files:
-        - package-lock.json
-    paths:
-      - .next/cache
-      - node_modules
-    policy: pull-push
-  script:
-    - set +e
-    - export NVM_DIR="$HOME/.nvm"
-    - [ -s "$NVM_DIR/nvm.sh" ]
-    -  \. "$NVM_DIR/nvm.sh"
-    - rm -rf node_modules package-lock.json
-    - nvm use 22
-    - npm i -f
-    - rm -rf .env.local
-    - npm run build
-
-  #- mvn clean package -DskipTests
-  artifacts:
-    paths:
-      - .next/**
-      #- target/*.jar
+# مرحله compile حذف شد چون تمام کارها در Dockerfile انجام می‌شود
 
 build-Docker-job:
   stage: build
@@ -60,8 +29,7 @@ build-Docker-job:
     - sharemodel-ci
   only:
     - newpl1
-  dependencies:
-    - compile-job
+  # دیگر نیازی به dependencies و artifacts از مرحله compile نیست
   script:
     - docker build -t "$IMAGE_TAG" .
     - docker push "$IMAGE_TAG"
@@ -79,7 +47,6 @@ deploy-job:
     - sed -i "s~IMAGE_TAG~${IMAGE_TAG}~g" /home/gitlab-runner/ali-ci/newpl1/psya-client/psya-client.yaml
     - kubectl apply -f /home/gitlab-runner/ali-ci/newpl1/psya-client/psya-client.yaml -n "$NAMESPACE"
     - sed -i "s~${IMAGE_TAG}~IMAGE_TAG~g" /home/gitlab-runner/ali-ci/newpl1/psya-client/psya-client.yaml
-    #- kubectl apply -f manifest.yml -n "$NAMESPACE"
 
 cleanup:
   stage: cleanup

@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { Button } from '@mui/material';
 import React, { useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 // templates
 import AnimatedBox from '@/templates/form/AnimatedBox';
 // images
@@ -26,6 +27,8 @@ interface FinishStepProps {
 }
 
 export function FinishStep({ question, showReportForResponder, takePartId, formName, replace, formId }: FinishStepProps) {
+  const searchParams = useSearchParams();
+  const surveyParam = searchParams.get("survey");
   const { mutate, isPending } = useShowResultUser();
   const {
     dialogState,
@@ -54,7 +57,7 @@ export function FinishStep({ question, showReportForResponder, takePartId, formN
   return (
     <div className='w-full flex flex-col p-4 overflow-hidden'>
       <div className='flex flex-col bg-white rounded-xl h-[calc(100vh-120px)] md:h-full max-h-screen'>
-        <Header handleOpenReportDialog={handleReportDialog} replace={replace} formName={'پایان'} />
+        <Header surveyParam={surveyParam} handleOpenReportDialog={handleReportDialog} replace={replace} formName={'پایان'} />
 
         <div className='flex-1 flex items-center justify-center overflow-y-auto px-4'>
           <div className='w-full max-w-3xl'>

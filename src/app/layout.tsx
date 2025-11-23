@@ -2,12 +2,10 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { RootProvider } from '@/providers';
 import NextTopLoader from 'nextjs-toploader';
-import MobileMenu from '@/components/MiddleSidebar/mobile/MobileMenu';
-import Image from 'next/image';
-import Logo from '../../public/images/logo/logo2.svg';
+import LayoutWrapper from '@/templates/header/HeaderWrapper';
 
 export const metadata: Metadata = {
-  title: 'ام‌رسالت - سکوی سایا',
+  title: 'ام‌رسالت - سکوی سایا', 
   description: 'دستیار هوشمند شناخت',
   icons: {
     icon: '/favicon/favicon.svg',
@@ -31,11 +29,9 @@ export default function RootLayout({
       <body dir='rtl' className={'antialiased'}>
         <NextTopLoader showSpinner={false} />
         <RootProvider>
-          <div className='bg-white w-full mx-auto px-4 py-3 flex justify-between items-center md:hidden fixed top-0 left-0 right-0 z-50'>
-            <MobileMenu />
-            <Image src={Logo} alt='سایا لوگو' width={120} height={40} priority draggable={false} />
-          </div>
-          <div className={'flex grow h-[calc(50vh-60px)] mt-[60px] md:mt-0 md:h-[calc(100vh-0px)]'}>{children}</div>
+           <LayoutWrapper>
+              {children}
+          </LayoutWrapper>
         </RootProvider>
       </body>
     </html>

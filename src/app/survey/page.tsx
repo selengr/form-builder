@@ -114,7 +114,7 @@ export default function BuilderModal() {
                 >
                     <Box sx={{ width: "100%", height: "100%" }}>
                         <iframe
-                            src="http://mbz2.ir/form/5128?survey=PSYA"
+                            src="https://newpl1psya.qhami.com/form/725?survey=PSYA"
                             style={{ width: "100%", height: "100%", border: "none" }}
                             title="Builder"
                             allowFullScreen

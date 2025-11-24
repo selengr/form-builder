@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { Suspense } from "react";
 import { RootProvider } from '@/providers';
 import NextTopLoader from 'nextjs-toploader';
 import LayoutWrapper from '@/templates/header/HeaderWrapper';
 
 export const metadata: Metadata = {
-  title: 'ام‌رسالت - سکوی سایا', 
+  title: 'ام‌رسالت - سکوی سایا',
   description: 'دستیار هوشمند شناخت',
   icons: {
     icon: '/favicon/favicon.svg',
@@ -29,9 +30,11 @@ export default function RootLayout({
       <body dir='rtl' className={'antialiased'}>
         <NextTopLoader showSpinner={false} />
         <RootProvider>
-           <LayoutWrapper>
+          <Suspense fallback={null}>
+            <LayoutWrapper>
               {children}
-          </LayoutWrapper>
+            </LayoutWrapper>
+          </Suspense>
         </RootProvider>
       </body>
     </html>

@@ -248,6 +248,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
           }
           return;
         }
+        toast.success('با موفقیت به سبد خرید افزوده شد.');
       }
       if (removedMember.length > 0) {
         await AxiosApi.post("/form-publish-setting/cancel-member-allocation", {
@@ -258,7 +259,6 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
       }
 
       queryClient.invalidateQueries({ queryKey: ['datas_builder_query'] });
-      toast.success('با موفقیت به سبد خرید افزوده شد.');
       handleOpen();
       reset();
     } catch (error) {

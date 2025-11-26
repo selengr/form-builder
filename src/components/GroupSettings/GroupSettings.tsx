@@ -227,8 +227,6 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
         ...initialSelectedGroupIds.filter((id) => !currentSelected.includes(id)),
         ...explicitlyUncheckedIncompleteIds,
       ]
-      console.log('addedGroups', addedGroups)
-      console.log('removedGroups', removedGroups)
 
     try {
       if (addedGroups.length > 0) {

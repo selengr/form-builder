@@ -8,20 +8,22 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
-import FormProvider, { RHFSelect, RHFTextField } from '../hook-form';
+import { useInView } from 'react-intersection-observer';
 import { Box, Button, Tooltip, Checkbox, CircularProgress, MenuItem, Typography } from '@mui/material';
+// hook
+import FormProvider, { RHFSelect, RHFTextField } from '../hook-form';
 // utils
 import { getAuthToken } from '@/utils/getAuthToken';
+// services
+import { AxiosApi } from '@/services/axios/AxiosApi';
+// type
+import { IUserGroupMemmerInfo } from '@/types/setting';
 // components
+import { SearchBoxItem } from '../ListGrid/ListGrid';
 import { SwitchButton } from '../Switch/SwitchButton';
 import ConfirmDialog from '@/components/confirm-dialog';
-// hook
-import { useFetchMembersSetting } from "../GroupSettings/hook/useFetchMembersSetting"
-import { SearchBoxItem } from '../ListGrid/ListGrid';
-import { IUserGroupMemmerInfo } from '@/types/setting';
-import { useInView } from 'react-intersection-observer';
-import { AxiosApi } from '@/services/axios/AxiosApi';
 import { RemoveGroupConfirmModal } from '../GroupSettings/RemoveConfirmDialog';
+import { useFetchMembersSetting } from "../GroupSettings/hook/useFetchMembersSetting"
 
 const buttonStylesAlert = {
   height: '50px',

@@ -6,7 +6,6 @@ import { z } from "zod"
 import Image from "next/image"
 import { toast } from "sonner"
 import { useForm } from "react-hook-form"
-import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
 import { useInView } from "react-intersection-observer"
@@ -19,11 +18,10 @@ import { useDebounce } from "@/hooks/useDebounce"
 import FormProvider from "../hook-form/FormProvider"
 import type { SearchBoxItem } from "../ListGrid/ListGrid"
 // components
-// import { SwitchButton } from "../Switch/SwitchButton"
-// import ConfirmDialog from "@/components/confirm-dialog"
 import { RemoveGroupConfirmModal } from "./RemoveConfirmDialog"
 import { useFetchGroupsSetting } from "./hook/useFetchGroupsSetting"
 import { CancelGroupAllocationModal } from "./CancelGroupAllocationModal"
+// images
 import { UserWithSearchIcon } from "../../../public/images/icons/UserWithSearchIcon "
 
 const buttonStylesAlert = {

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Dialog, Button, Box } from "@mui/material";
 
-/** Predefined modal sizes */
 const MODAL_SIZES = {
     small: { width: "400px", height: "400px" },
     medium: { width: "600px", height: "500px" },
@@ -11,7 +10,6 @@ const MODAL_SIZES = {
     full: { width: "100%", height: "100%" },
 };
 
-/** Predefined modal positions */
 const MODAL_POSITIONS = {
     center: { top: "50%", left: "50%", transform: "translate(-50%, -50%)" },
     top: { top: "0%", left: "50%", transform: "translateX(-50%)" },

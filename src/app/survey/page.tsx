@@ -3,15 +3,13 @@
 import { useState } from "react";
 import { Dialog, Button, Box } from "@mui/material";
 
-/** Predefined modal sizes */
 const MODAL_SIZES = {
     small: { width: "400px", height: "400px" },
     medium: { width: "600px", height: "500px" },
     large: { width: "800px", height: "600px" },
     full: { width: "100%", height: "100%" },
-};
+} as const;
 
-/** Predefined modal positions */
 const MODAL_POSITIONS = {
     center: { top: "50%", left: "50%", transform: "translate(-50%, -50%)" },
     top: { top: "0%", left: "50%", transform: "translateX(-50%)" },
@@ -21,77 +19,95 @@ const MODAL_POSITIONS = {
     "top-right": { top: "0%", left: "90%", transform: "translateX(-100%)" },
     "bottom-left": { top: "90%", left: "0%", transform: "translateY(-100%)" },
     "bottom-right": { top: "90%", left: "90%", transform: "translate(-100%, -100%)" },
+} as const;
+
+type SizeKey = keyof typeof MODAL_SIZES;
+type PosKey = keyof typeof MODAL_POSITIONS;
+
+type ModalConfig = {
+    open: boolean;
+    width: string;
+    height: string;
+    top: string;
+    left: string;
+    transform: string;
 };
 
 export default function BuilderModal() {
-    const [config, setConfig] = useState({
+    const [config, setConfig] = useState<ModalConfig>({
         open: false,
-        width: "600px",
-        height: "500px",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
+        ...MODAL_SIZES.medium,
+        ...MODAL_POSITIONS.center,
     });
 
-    const openModal = (sizeKey: keyof typeof MODAL_SIZES, posKey: keyof typeof MODAL_POSITIONS) => {
-        const size = MODAL_SIZES[sizeKey];
-        const position = MODAL_POSITIONS[posKey];
 
+    const openModal = (size: SizeKey, position: PosKey) => {
         setConfig({
             open: true,
-            ...size,
-            ...position,
+            ...MODAL_SIZES[size],
+            ...MODAL_POSITIONS[position],
         });
     };
 
-    const closeModal = () => setConfig({ ...config, open: false });
+    const closeModal = () => setConfig((prev) => ({ ...prev, open: false }));
+
+    const btnBase = { width: 170, height: 40 };
+
+    const buttonGroups = [
+        {
+            title: "Small",
+            color: "primary",
+            size: "small" as SizeKey,
+            variants: [
+                { pos: "center", label: "کوچک مرکز" },
+                { pos: "top-left", label: "کوچک بالا-چپ" },
+                { pos: "top-right", label: "کوچک بالا-راست" },
+                { pos: "bottom-left", label: "کوچک پایین-چپ" },
+                { pos: "bottom-right", label: "کوچک پایین-راست" },
+            ],
+        },
+        {
+            title: "Medium",
+            color: "success",
+            size: "medium" as SizeKey,
+            variants: [
+                { pos: "center", label: "متوسط - مرکز" },
+                { pos: "left", label: "متوسط - چپ" },
+                { pos: "right", label: "متوسط - راست" },
+                { pos: "top", label: "متوسط - بالا" },
+            ],
+        },
+        {
+            title: "Large",
+            color: "error",
+            size: "large" as SizeKey,
+            variants: [
+                { pos: "center", label: "بزرگ مرکز" },
+                { pos: "top", label: "بزرگ بالا" },
+            ],
+        },
+    ];
 
     return (
         <div className="w-full flex flex-col overflow-hidden p-4">
             <div className="flex flex-col bg-white rounded-xl md:h-full max-h-screen">
-                <div className="flex gap-4 p-4 flex-wrap">
+                <div className="flex flex-col p-4 gap-6">
 
-                    <div className="flex gap-4 p-4 flex-wrap">
-                        <Button variant="contained" sx={{ width: 170, height: 40 }} onClick={() => openModal("small", "center")}>
-                            کوچک مرکز
-                        </Button>
-                        <Button variant="contained" sx={{ width: 170, height: 40 }} onClick={() => openModal("small", "top-left")}>
-                            کوچک بالا-چپ
-                        </Button>
-                        <Button variant="contained" sx={{ width: 170, height: 40 }} onClick={() => openModal("small", "top-right")}>
-                            کوچک بالا-راست
-                        </Button>
-                        <Button variant="contained" sx={{ width: 170, height: 40 }} onClick={() => openModal("small", "bottom-left")}>
-                            کوچک پایین-چپ
-                        </Button>
-                        <Button variant="contained" sx={{ width: 170, height: 40 }} onClick={() => openModal("small", "bottom-right")}>
-                            کوچک پایین-راست
-                        </Button>
-                    </div>
-
-                    <div className="flex gap-4 p-4 flex-wrap">
-                        <Button color="success" variant="contained" sx={{ width: 170, height: 40 }} onClick={() => openModal("medium", "center")}>
-                            متوسط - مرکز
-                        </Button>
-                        <Button color="success" variant="contained" sx={{ width: 170, height: 40 }} onClick={() => openModal("medium", "left")}>
-                            متوسط - چپ
-                        </Button>
-                        <Button color="success" variant="contained" sx={{ width: 170, height: 40 }} onClick={() => openModal("medium", "right")}>
-                            متوسط - راست
-                        </Button>
-                        <Button color="success" variant="contained" sx={{ width: 170, height: 40 }} onClick={() => openModal("medium", "top")}>
-                            متوسط - بالا
-                        </Button>
-                    </div>
-
-                    <div className="flex gap-4 p-4 flex-wrap">
-                        <Button color="error" variant="outlined" sx={{ width: 170, height: 40 }} onClick={() => openModal("large", "center")}>
-                            بزرگ مرکز
-                        </Button>
-                        <Button color="error" variant="outlined" sx={{ width: 170, height: 40 }} onClick={() => openModal("large", "top")}>
-                            بزرگ بالا
-                        </Button>
-                    </div>
+                    {buttonGroups.map((group, idx) => (
+                        <div key={idx} className="flex gap-4 flex-wrap">
+                            {group.variants.map((v, i) => (
+                                <Button
+                                    key={i}
+                                    variant={group.color === "error" ? "outlined" : "contained"}
+                                    color={group.color as any}
+                                    sx={btnBase}
+                                    onClick={() => openModal(group.size, v.pos as PosKey)}
+                                >
+                                    {v.label}
+                                </Button>
+                            ))}
+                        </div>
+                    ))}
 
                 </div>
 
@@ -121,6 +137,7 @@ export default function BuilderModal() {
                         />
                     </Box>
                 </Dialog>
+
             </div>
         </div>
     );

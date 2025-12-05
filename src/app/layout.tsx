@@ -1,5 +1,5 @@
-import type { Metadata } from 'next';
 import './globals.css';
+import type { Metadata } from 'next';
 import { Suspense } from "react";
 import { RootProvider } from '@/providers';
 import NextTopLoader from 'nextjs-toploader';

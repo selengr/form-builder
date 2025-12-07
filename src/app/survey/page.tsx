@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
-import ListGridWrapper from '@/templates/builder/ListGridWrapper';
+import ListGridWrapper from '@/templates/survey/ListGridWrapper';
 
-export default function DisplayUserReportPage() {
+export default function MyAssessmentPage() {
   return (
     <Suspense>
       <ListGridWrapper />

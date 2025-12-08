@@ -43,6 +43,7 @@ interface Props {
   searchQueryFilter?: { type: string; status: string };
   showCreateButton?: boolean;
   title: string;
+  CreateButton : any
 }
 
 const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'PUBLIC' };
@@ -60,6 +61,7 @@ const ListGrid: React.FC<Props> = ({
   showCreateButton = false,
   title,
   textTotal = ['تعداد کل فرم‌ها', 'عدد'],
+  CreateButton
 }) => {
   const [totalData, setTotalData] = useState<number | null>(null);
   const { ref, inView } = useInView();
@@ -345,6 +347,7 @@ const ListGrid: React.FC<Props> = ({
                     <CreateFormBtn open={isDialogOpen} onClose={handleCloseDialog} />
                   </div>
                 )}
+                {CreateButton && CreateButton()}
               </Box>
               {renderSearchAndFilter()}
               <Grid

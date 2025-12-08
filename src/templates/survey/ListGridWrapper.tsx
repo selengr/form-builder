@@ -2,14 +2,17 @@
 
 import { useState } from 'react';
 import ListGrid from '@/components/ListGrid/ListGrid';
-import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
+import { Button, FormControl, FormControlLabel, FormLabel, IconButton, Radio, RadioGroup } from '@mui/material';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
 import ListCard from './ListCard';
+import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
+import CreateSurveyBtn from './CreateSurveyBtn';
 
 export default function ListGridWrapper() {
   const [refreshGrid, setRefreshGrid] = useState(false);
+  const [openMyCreateModal, setOpenMyCreateModal] = useState(false);
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { push } = useRouter();
@@ -39,7 +42,29 @@ export default function ListGridWrapper() {
     });
   };
 
+  const CreateButton = () => {
+    return (
+      <div className='min-w-[50px] w-[50px] h-full'>
+                    <IconButton
+                      onClick={()=>setOpenMyCreateModal(true)}
+                      sx={{
+                        width: '50px',
+                        height: '50px',
+                        borderRadius: '16px',
+                        border: '1px solid #1758BA',
+                      }}>
+                      <Image src={PlusIcon} alt='' width={22} height={22} />
+                    </IconButton>
+                    </div>
+    )
+  }
+
+ const handleCloseDialog = () => {
+    setOpenMyCreateModal((prev) => !prev)
+  }
+
   return (
+      <>
     <ListGrid
       title='نظرسنجی‌های من'
       textTotal={['تعداد کل نظرسنجی‌ها', 'عدد']}
@@ -178,9 +203,12 @@ export default function ListGridWrapper() {
       }
       CartComponent={(item: any) => <ListCard {...item} />}
       disableFilter={false}
-      showCreateButton={true}
+      showCreateButton={false}
+      CreateButton={CreateButton}
       refreshGrid={refreshGrid}
       searchQueryFilter={formType}
     />
+     <CreateSurveyBtn open={openMyCreateModal} onClose={handleCloseDialog} />
+    </>
   );
 }

@@ -59,7 +59,7 @@ const ListGrid: React.FC<Props> = ({
   searchQueryFilter = DEFAULT_SEARCH_FILTER,
   showCreateButton = false,
   title,
-  textTotal = ['', 'عدد'],
+  textTotal = ['تعداد کل فرم‌ها', 'عدد'],
 }) => {
   const [totalData, setTotalData] = useState<number | null>(null);
   const { ref, inView } = useInView();
@@ -169,7 +169,7 @@ const ListGrid: React.FC<Props> = ({
       <div className='flex justify-between gap-2 bg-[#ECFAFF] rounded-2xl px-[10px] py-4 w-full max-w-[400px]'>
         <div className='flex items-center gap-[10px]'>
           <Image src={TotalGrid} width={20} height={20} alt='filter' draggable={false} />
-          <p className='text-sm text-[#393939]'>تعداد کل فرم‌ها{textTotal[0]}:</p>
+          <p className='text-sm text-[#393939]'>{textTotal[0]}:</p>
         </div>
         <p className='flex items-center text-sm text-[#393939] font-bold'>
           {totalData} {textTotal[1]}

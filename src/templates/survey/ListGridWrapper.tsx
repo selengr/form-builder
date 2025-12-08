@@ -42,6 +42,7 @@ export default function ListGridWrapper() {
   return (
     <ListGrid
       title='نظرسنجی‌های من'
+      textTotal={['تعداد کل نظرسنجی‌ها', 'عدد']}
       searchBoxList={searchBoxList}
       filterBoxList={filterBoxList}
       url='/admin/form/survey/main-list'

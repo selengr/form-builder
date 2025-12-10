@@ -5,12 +5,15 @@ import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, Button, Dialog, DialogContent, IconButton, MenuItem, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogContent, IconButton, MenuItem, Stack, Typography } from '@mui/material';
 import { IoClose } from 'react-icons/io5';
-
+// components
 import FormProvider from '@/components/hook-form/FormProvider';
 import { RHFSelect, RHFTextField } from '@/components/hook-form';
+import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
+// services
 import { AxiosApi } from '@/services/axios/AxiosApi';
+// hooks
 import { useGetSurveyPurpose } from './hooks/useGetSurveyPurpose';
 import { IGetTargetPlatform, useGetTargetPlatform } from './hooks/useGetTargetPlatform';
 
@@ -30,10 +33,8 @@ const propertiesSchema = z.object({
     .trim()
     .transform((value) => value.replace(/\s+/g, ' '))
     .pipe(z.string().min(2, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' }).max(50, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' })),
-  typeEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
-
-  categoryIds: z.array(z.string()).min(1, { message: 'لطفا حداقل یک دسته بندی را انتخاب کنید' }),
-  subCategoryIds: z.array(z.string()).min(1, { message: 'لطفا حداقل یک دسته بندی را انتخاب کنید' }),
+  surveyTargetPlatformEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
+  surveyPurposeEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
 });
 
 type PropertiesFormSchemaType = z.infer<typeof propertiesSchema>;
@@ -52,54 +53,35 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
     resolver: zodResolver(propertiesSchema),
     defaultValues: {
       name: '',
-      typeEnum: 'QUESTION',
-      categoryIds: [],
-      subCategoryIds: [],
+      surveyTargetPlatformEnum: '',
+      surveyPurposeEnum: '',
     },
   });
 
   const {
-    watch,
-    setValue,
-    getValues,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
 
   const onSubmit = async (data: PropertiesFormSchemaType) => {
-    const { name, typeEnum, categoryIds, subCategoryIds } = data;
-    const allCategoryIds = [...categoryIds, ...subCategoryIds];
-
-    const body = {
-      name,
-      typeEnum,
-      formCategorysModel: {
-        categoryId: allCategoryIds,
-      },
-    };
-
-    try {
-      const response = await AxiosApi.post('/form', body);
-      toast.success('عملیات با موفقیت انجام شد');
-      router.push(`/builder/${response?.data?.id}`);
-    } catch (error) {
-      console.error(error);
-      toast.error('خطا در ایجاد فرم');
-    }
+    const { name, surveyPurposeEnum, surveyTargetPlatformEnum } = data;
+console.log('data', data)
+    // try {
+    //   const response = await AxiosApi.post('/admin/form/survey', data);
+    //   toast.success('عملیات با موفقیت انجام شد');
+    //   router.push(`/builder/${response?.data?.id}`);
+    // } catch (error) {
+    //   console.error(error);
+    //   toast.error('خطا در ایجاد فرم');
+    // }
   };
 
   const handleClose = () => {
-    if (isSubmitting || mutation.isPending) return;
+    // if (isSubmitting || mutation.isPending) return;
     onClose();
   };
 
-  const handleTabChange = (_: unknown, newValue: string) => {
-    setValue('typeEnum', newValue);
-  };
-
-  const watchTypeEnum = watch('typeEnum');
-  const watchCategoryIds = watch('categoryIds');
 
   return (
     <Dialog
@@ -155,7 +137,7 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
               direction: 'ltr',
               width: '100%',
             }}>
-            <Stack spacing={1}>
+            <Stack spacing={1} mb='10px'>
               <Typography variant='subtitle2' fontWeight='600' fontSize='15px'>
                 نام نظرسنجی:
               </Typography>
@@ -173,7 +155,7 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
 
 
 
-            <Box display='flex' flexDirection='column' gap='6px' width='100%' mt='10px'>
+            <Box display='flex' flexDirection='column' gap='6px' width='100%' mt='20px'>
               <Typography variant='subtitle2' fontWeight='700'>
                 سرویس‌گیرنده:
               </Typography>
@@ -190,8 +172,9 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
                   },
                 }}>
 
-                <RHFSelect fullWidth name='gender' sx={textFieldCommonSx} >
+                <RHFSelect fullWidth name='surveyTargetPlatformEnum' sx={textFieldCommonSx} >
                   <MenuItem value=''>انتخاب کنید</MenuItem>
+                  {isFetchingSurvey && <MenuItem value=''><PreviewLoading /></MenuItem>}
                   {TargetPlatform?.map((item: IGetTargetPlatform) => (
                     <MenuItem key={item.value} value={item.value}>
                       {item.caption}
@@ -204,7 +187,7 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
 
 
 
-            <Box display='flex' flexDirection='column' gap='6px' width='100%' mt='10px'>
+            <Box display='flex' flexDirection='column' gap='6px' width='100%' mt='16px'>
               <Typography variant='subtitle2' fontWeight='700'>
                 جامعه هدف:
               </Typography>
@@ -221,8 +204,9 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
                   },
                 }}>
 
-                <RHFSelect fullWidth name='gender' sx={textFieldCommonSx} >
+                <RHFSelect fullWidth name='surveyPurposeEnum' sx={textFieldCommonSx}>
                   <MenuItem value=''>انتخاب کنید</MenuItem>
+                  {isFetchingTargetPlatform && <MenuItem value=''><PreviewLoading /></MenuItem>}
                   {Survey?.map((item: IGetTargetPlatform) => (
                     <MenuItem key={item.value} value={item.value}>
                       {item.caption}
@@ -234,7 +218,7 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
             </Box>
 
 
-            <Box display='flex' gap={3} width='100%' marginTop={5} marginBottom={2} paddingX='40px'>
+            <Box display='flex' gap={3} width='100%' marginTop={2} marginBottom={2} paddingX='40px'>
               <Button
                 type='submit'
                 fullWidth

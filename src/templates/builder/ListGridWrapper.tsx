@@ -69,7 +69,7 @@ export default function ListGridWrapper() {
                     <FormControlLabel value='ALL' control={<Radio />} label='همه' />
                     <FormControlLabel value='COMPETITION' control={<Radio />} label='مسابقه' />
                     <FormControlLabel value='QUESTION' control={<Radio />} label='پرسشنامه' />
-                    <FormControlLabel value='SURVEY' control={<Radio />} label='نظرسنجی' />
+                    {/* <FormControlLabel value='SURVEY' control={<Radio />} label='نظرسنجی' /> */}
                     <FormControlLabel value='TEST' control={<Radio />} label='آزمون' />
                   </RadioGroup>
                 </FormControl>

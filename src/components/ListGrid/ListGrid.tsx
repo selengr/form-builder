@@ -43,7 +43,7 @@ interface Props {
   searchQueryFilter?: { type: string; status: string };
   showCreateButton?: boolean;
   title: string;
-  CreateButton : any
+  CreateButton? : any
 }
 
 const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'PUBLIC' };

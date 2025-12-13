@@ -205,8 +205,8 @@ export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
                 {[
                   { value: 'QUESTION', label: 'پرسشنامه' },
                   { value: 'TEST', label: 'آزمون' },
-                  { value: 'COMPETITION', label: 'مسابقه' },
-                  { value: 'SURVEY', label: 'نظرسنجی' },
+                  { value: 'COMPETITION', label: 'مسابقه' }
+                  // { value: 'SURVEY', label: 'نظرسنجی' },
                 ].map((tab) => (
                   <Tab
                     key={tab.value}

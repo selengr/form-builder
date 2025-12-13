@@ -12,7 +12,7 @@ import FormProvider from '@/components/hook-form/FormProvider';
 import { RHFSelect, RHFTextField } from '@/components/hook-form';
 import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
 // hooks
-import { useCreateSurvey } from './hooks/createSurvey';
+import { useCreateSurvey } from './hooks/useCreateSurvey';
 import { useGetSurveyPurpose } from './hooks/useGetSurveyPurpose';
 import { IGetTargetPlatform, useGetTargetPlatform } from './hooks/useGetTargetPlatform';
 
@@ -65,32 +65,15 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
 
 
   const onSubmit = async (data: SurveyFormSchemaType) => {
-      try {
-        const res = await fetch('/api/survey', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
+        mutate(data, {
+          onSuccess: (result) => {    
+            toast.success('عملیات با موفقیت انجام شد');
+            router.push(`/builder/${result.id}`);
+          },
+          onError: (error: any) => {
+            toast.error(error?.message || 'خطا در ایجاد فرم');
+          },
         });
-
-        const result = await res.json();
-           if (!res.ok) {
-        let errorMessage = 'خطا در ثبت گروه.';
-
-        if (Array.isArray(result?.error) && result.error[0]?.title) {
-          errorMessage = result.error[0].title;
-        } else if (typeof result?.error === 'string') {
-          errorMessage = result.error;
-        }
-        throw new Error(errorMessage);
-      }
-
-        
-
-        toast.success('عملیات با موفقیت انجام شد');
-        router.push(`/builder/${result.id}`);
-      } catch (error) {
-        toast.error('خطا در ایجاد فرم');
-      }
      };
 
   const handleClose = () => {
@@ -240,7 +223,7 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
                 fullWidth
                 disableElevation
                 variant='contained'
-                // loading={isSubmitting || mutation.isPending}
+                loading={isSubmitting || isPending}
                 sx={{
                   bgcolor: '#1758BA',
                   fontWeight: '400',
@@ -274,7 +257,7 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
                   },
                 }}
                 onClick={handleClose}
-              // disabled={isSubmitting || mutation.isPending}
+              disabled={isSubmitting || isPending}
               >
                 <Typography color='#1758BA' variant='body2' component={'p'} py={0.5} fontWeight='600'>
                   انصراف

@@ -1,12 +1,17 @@
 import { useMutation } from '@tanstack/react-query';
+import { getAuthToken } from '@/utils/getAuthToken';
 import { SurveyFormSchemaType } from '../CreateSurveyBtn';
 
 export async function createSurvey(
     data: SurveyFormSchemaType
-): Promise<{ id: string }> {
+) {
+    const token = await getAuthToken();
     const res = await fetch('/api/survey', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(data),
     });
 

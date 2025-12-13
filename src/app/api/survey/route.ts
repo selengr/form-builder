@@ -12,6 +12,6 @@ const schema = z.object({
 });
 
 export async function POST(req: Request) {
-      const endpoint = `/admin/form/survey`;
-      return handleApiProxy(req, {schema: schema, endpoint: endpoint, requiresAuth: false});
+  const endpoint = `/psya/admin/form/survey`;
+  return handleApiProxy(req, { schema: schema, endpoint: endpoint });
 }

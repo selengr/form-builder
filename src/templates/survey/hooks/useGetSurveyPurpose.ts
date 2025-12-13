@@ -6,7 +6,9 @@ export interface IGetSurvey {
   caption: string;
 }
 
-const fetchSurveyData = async () => {
+export const SURVEY_PURPOSE_QUERY_KEY = ['survey-purpose'];
+
+export const fetchSurveyData = async () => {
   const customComboFilterModel = {
     type: 'COMBO',
     entity: 'PROJECTS',
@@ -23,12 +25,10 @@ const fetchSurveyData = async () => {
 };
 
 export const useGetSurveyPurpose = () => {
-  const { data, isFetching } = useQuery({
-    queryKey: ['survey-purpose'],
+    const { data, isFetching } = useQuery({
+    queryKey: SURVEY_PURPOSE_QUERY_KEY,
     queryFn: () => fetchSurveyData(),
-    gcTime: 600000,
-    staleTime: 0,
-    retry: 3,
+    staleTime: 5 * 60 * 1000,
   });
 
   return {

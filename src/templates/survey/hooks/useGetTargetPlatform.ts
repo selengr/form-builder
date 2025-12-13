@@ -5,8 +5,9 @@ export interface IGetTargetPlatform {
   value: string;
   caption: string;
 }
+export const TARGET_PLATFORM_QUERY_KEY = ['TargetPlatform'];
 
-const fetchTargetPlatformData = async () => {
+export const fetchTargetPlatformData = async () => {
   const customComboFilterModel = {
     type: 'COMBO',
     entity: 'PROJECTS',
@@ -24,11 +25,9 @@ const fetchTargetPlatformData = async () => {
 
 export const useGetTargetPlatform = () => {
   const { data, isFetching } = useQuery({
-    queryKey: ['TargetPlatform'],
+    queryKey: TARGET_PLATFORM_QUERY_KEY,
     queryFn: () => fetchTargetPlatformData(),
-    gcTime: 600000,
-    staleTime: 0,
-    retry: 3,
+    staleTime: 5 * 60 * 1000,
   });
 
   return {

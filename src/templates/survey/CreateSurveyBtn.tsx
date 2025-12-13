@@ -15,7 +15,7 @@ import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
 import { useCreateSurvey } from './hooks/useCreateSurvey';
 import { useGetSurveyPurpose } from './hooks/useGetSurveyPurpose';
 import { IGetTargetPlatform, useGetTargetPlatform } from './hooks/useGetTargetPlatform';
-
+import { QueryClient } from '@tanstack/react-query';
 
 const textFieldCommonSx = {
   '& .MuiInputBase-root': {
@@ -24,7 +24,6 @@ const textFieldCommonSx = {
     paddingY: '0',
   },
 };
-
 
 const propertiesSchema = z.object({
   name: z
@@ -80,7 +79,6 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
     if (isSubmitting || isPending) return;
     onClose();
   };
-
 
   return (
     <Dialog

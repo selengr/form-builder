@@ -28,7 +28,7 @@ interface DesignerSidebarProps {
 // eslint-disable-next-line react/display-name
 const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarProps) {
   const { id } = useParams();
-  const { refresh } = useRouter();
+  const router = useRouter();
   const isDesktop = useMediaQuery('(min-width:1280px)');
   const { formName, formSetting } = useDesigner();
   const [formTitle, setFormTitle] = useState(formName);
@@ -39,7 +39,8 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
       const IsSuevey = data?.typeEnum === "SURVEY"
       try {
         await publishFormAction(id, IsSuevey);
-        refresh();
+        router.refresh();
+        router.push(`/builder/${id}`);
         toast.success('عملیات با موفقیت انجام شد');
       } catch (e) {
         toast.error('عملیات با خطا مواجه شد');

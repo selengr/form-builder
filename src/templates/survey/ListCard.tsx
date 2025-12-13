@@ -13,6 +13,7 @@ import { ISurveyItem } from '@/types/survey';
 // images
 import CopyIcon from '@/../public/images/home-page/copy.svg';
 import EditIcon from '@/../public/images/home-page/edit-2.svg';
+import PublishIcon from '@/../public/images/home-page/publish-link.svg';
 import TrashIcon from '@/../public/images/home-page/trash.svg';
 
 interface ListCardProps {
@@ -45,7 +46,7 @@ const ListCard: React.FC<ListCardProps> = ({
 }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [openConfirmDialog, setOpenConfirmDialog] = useState<boolean>(false);
 
   const handleClick = () => {
     if (!buttonLink) return;
@@ -53,16 +54,10 @@ const ListCard: React.FC<ListCardProps> = ({
     router.push(href);
   };
 
-
-
   const handleCopy = useCallback(async () => {
-
+      setOpenConfirmDialog((prev) => !prev)
   }, []);
 
-  const handleNavigation = () => {
-    localStorage.setItem("stats", "/builder")
-    router.push(`stats/${data.id}`)
-  }
 
   return (
     <div className="border p-4 rounded-2xl border-[#DDE1E6] flex flex-col gap-3 w-full max-w-full relative">
@@ -96,7 +91,7 @@ const ListCard: React.FC<ListCardProps> = ({
             <Image src={TrashIcon} alt='delete' width={24} height={24} />
           </IconButton>
 
-          <IconButton onClick={handleCopy} disabled={loading}>
+          <IconButton disabled={loading}>
             <Image src={CopyIcon} alt='copy' width={24} height={24} />
           </IconButton>
 
@@ -107,7 +102,11 @@ const ListCard: React.FC<ListCardProps> = ({
               </IconButton>
             </Link>
           )}
-
+          {data.status === 'PUBLISH' && (
+              <IconButton onClick={handleCopy} disabled={loading} color='primary'>
+                <Image src={PublishIcon} alt='edit' width={24} height={24} />
+              </IconButton>
+          )}
 
         </div>
       </div>

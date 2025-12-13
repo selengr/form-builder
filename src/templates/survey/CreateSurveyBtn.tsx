@@ -67,7 +67,7 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
         mutate(data, {
           onSuccess: (result) => {    
             toast.success('عملیات با موفقیت انجام شد');
-            router.push(`/builder/${result.id}`);
+            router.push(`/builder/${result.id}?survey=admin`);
           },
           onError: (error: any) => {
             toast.error(error?.message || 'خطا در ایجاد فرم');

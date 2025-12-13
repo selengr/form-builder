@@ -2,7 +2,7 @@ export interface ISurveyItem {
   id: number;
   name: string;
   type: string;           
-  status: "CREATE";    
+  status: "CREATE" | "PUBLISH";    
   participants: number | null;
   questionListSize: number;
   invalid: boolean;

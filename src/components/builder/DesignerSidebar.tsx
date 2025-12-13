@@ -3,7 +3,6 @@
 import { Fragment, memo, useCallback, useMemo, useState } from 'react';
 import { Button, IconButton, useMediaQuery } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
 
@@ -14,6 +13,10 @@ import SidebarBtnElement from './SidebarBtnElement';
 import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
 import SettingsDialog from '../SettingsDialog/SettingsDialog';
 import DesignerBottomSheet from './DesignerBottomSheet';
+import { usePublishForm } from '@/app/(builder)/builder/_hook/usePublishForm';
+import { useTransition } from 'react';
+import { useParams, useSearchParams } from 'next/navigation';
+import { publishFormAction } from '../../../actions/publishFormAction';
 
 const ELEMENTS = [FormElements.TEXT_FIELD, FormElements.MULTIPLE_CHOICE, FormElements.MULTIPLE_CHOICE_IMAGE, FormElements.SPECTRAL, FormElements.INFO_FIELD];
 
@@ -27,14 +30,21 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
   const isDesktop = useMediaQuery('(min-width:1280px)');
   const { formName, formSetting } = useDesigner();
   const [formTitle, setFormTitle] = useState(formName);
+  const [isPending, startTransition] = useTransition();
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: () => AxiosApi.put(`/form/ready-to-publish/${id}`),
-    onSuccess: () => toast.success('عملیات با موفقیت انجام شد'),
-    onError: () => toast.error('انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.'),
-  });
+  const searchParams = useSearchParams();
+  const survey = searchParams.get('survey');
 
-  const handlePublish = useCallback(() => mutate(), [mutate]);
+    const handlePublish = () => {
+    startTransition(async () => {
+      try {
+        await publishFormAction(id, survey ?? undefined);
+        alert('عملیات با موفقیت انجام شد');
+      } catch (e) {
+        alert('عملیات با خطا مواجه شد');
+      }
+    });
+  };
 
   const renderElements = useMemo(
     () =>

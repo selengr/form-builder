@@ -31,11 +31,6 @@ export const useGetSurveyPurpose = () => {
     retry: 3,
   });
 
-  const Survey = data?.dataList?.map((item: IGetSurvey) => ({
-    value: item.value,
-    label: item.caption,
-  }));
-
   return {
     isFetchingSurvey: isFetching,
     Survey : data?.dataList,

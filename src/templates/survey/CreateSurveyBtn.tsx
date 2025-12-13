@@ -11,9 +11,8 @@ import { IoClose } from 'react-icons/io5';
 import FormProvider from '@/components/hook-form/FormProvider';
 import { RHFSelect, RHFTextField } from '@/components/hook-form';
 import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
-// services
-import { AxiosApi } from '@/services/axios/AxiosApi';
 // hooks
+import { useCreateSurvey } from './hooks/createSurvey';
 import { useGetSurveyPurpose } from './hooks/useGetSurveyPurpose';
 import { IGetTargetPlatform, useGetTargetPlatform } from './hooks/useGetTargetPlatform';
 
@@ -37,7 +36,7 @@ const propertiesSchema = z.object({
   surveyPurposeEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
 });
 
-type PropertiesFormSchemaType = z.infer<typeof propertiesSchema>;
+export type SurveyFormSchemaType = z.infer<typeof propertiesSchema>;
 
 interface CreateSurveyBtnProps {
   open: boolean;
@@ -46,10 +45,11 @@ interface CreateSurveyBtnProps {
 
 export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps) {
   const router = useRouter();
+  const { mutate, isPending } = useCreateSurvey();
   const { Survey, isFetchingSurvey } = useGetSurveyPurpose();
   const { TargetPlatform, isFetchingTargetPlatform } = useGetTargetPlatform();
 
-  const methods = useForm<PropertiesFormSchemaType>({
+  const methods = useForm<SurveyFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     defaultValues: {
       name: '',
@@ -64,21 +64,37 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
   } = methods;
 
 
-  const onSubmit = async (data: PropertiesFormSchemaType) => {
-    const { name, surveyPurposeEnum, surveyTargetPlatformEnum } = data;
-console.log('data', data)
-    // try {
-    //   const response = await AxiosApi.post('/admin/form/survey', data);
-    //   toast.success('عملیات با موفقیت انجام شد');
-    //   router.push(`/builder/${response?.data?.id}`);
-    // } catch (error) {
-    //   console.error(error);
-    //   toast.error('خطا در ایجاد فرم');
-    // }
-  };
+  const onSubmit = async (data: SurveyFormSchemaType) => {
+      try {
+        const res = await fetch('/api/survey', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        const result = await res.json();
+           if (!res.ok) {
+        let errorMessage = 'خطا در ثبت گروه.';
+
+        if (Array.isArray(result?.error) && result.error[0]?.title) {
+          errorMessage = result.error[0].title;
+        } else if (typeof result?.error === 'string') {
+          errorMessage = result.error;
+        }
+        throw new Error(errorMessage);
+      }
+
+        
+
+        toast.success('عملیات با موفقیت انجام شد');
+        router.push(`/builder/${result.id}`);
+      } catch (error) {
+        toast.error('خطا در ایجاد فرم');
+      }
+     };
 
   const handleClose = () => {
-    // if (isSubmitting || mutation.isPending) return;
+    if (isSubmitting || isPending) return;
     onClose();
   };
 

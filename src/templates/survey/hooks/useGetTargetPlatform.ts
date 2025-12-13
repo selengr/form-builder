@@ -31,11 +31,6 @@ export const useGetTargetPlatform = () => {
     retry: 3,
   });
 
-  const TargetPlatform = data?.dataList?.map((item: IGetTargetPlatform) => ({
-    value: item.value,
-    label: item.caption,
-  }));
-
   return {
     isFetchingTargetPlatform: isFetching,
     TargetPlatform : data?.dataList,

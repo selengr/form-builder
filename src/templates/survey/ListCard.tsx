@@ -13,8 +13,8 @@ import { ISurveyItem } from '@/types/survey';
 // images
 import CopyIcon from '@/../public/images/home-page/copy.svg';
 import EditIcon from '@/../public/images/home-page/edit-2.svg';
-import PublishIcon from '@/../public/images/home-page/publish-link.svg';
 import TrashIcon from '@/../public/images/home-page/trash.svg';
+import ShareLink from './shareLink';
 
 interface ListCardProps {
   data: ISurveyItem;
@@ -103,9 +103,7 @@ const ListCard: React.FC<ListCardProps> = ({
             </Link>
           )}
           {data.status === 'PUBLISH' && (
-              <IconButton onClick={handleCopy} disabled={loading} color='primary'>
-                <Image src={PublishIcon} alt='edit' width={24} height={24} />
-              </IconButton>
+              <ShareLink />
           )}
 
         </div>

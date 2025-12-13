@@ -1,27 +1,20 @@
 'use client';
 import { z } from 'zod';
-import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { IoShareSocialSharp } from 'react-icons/io5';
-import { useQueryClient } from '@tanstack/react-query';
 import { LuCopy, LuRefreshCcw } from 'react-icons/lu';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Button, Typography } from '@mui/material';
 import FormProvider, { RHFCheckBox, RHFTextField } from '@/components/hook-form';
 
 // components
-// import { SwitchButton } from '../Switch/SwitchButton';
-import ConfirmDialog from '@/components/confirm-dialog';
-
-// import Share from '../share-media/Share';
-import { getAuthToken } from '@/utils/getAuthToken';
-import CopyToClipboardButton from '@/components/clipboard-button/CopyToClipBoardButton';
 import Share from '@/components/share-media/Share';
+import ConfirmDialog from '@/components/confirm-dialog';
 import { SwitchButton } from '@/components/Switch/SwitchButton';
-// import FormProvider from '@//hook-form/FormProvider';
-// import CopyToClipboardButton from '../clipboard-button/CopyToClipBoardButton';
+import CopyToClipboardButton from '@/components/clipboard-button/CopyToClipBoardButton';
+
 
 const buttonStylesAlert = {
   height: '50px',
@@ -40,7 +33,7 @@ const buttonStylesAlert = {
   },
 };
 
-const DEFAULT_LINK = `${process.env.NEXT_PUBLIC_MBZ_DOMAIN}form`;
+const DEFAULT_LINK = `${process.env.NEXT_PUBLIC_MBZ_DOMAIN}`;
 const propertiesSchema = z.object({
   link: z
     .string()
@@ -55,11 +48,12 @@ type PropertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
 interface ShareLinkSettingProps {
   handleOpen: () => void;
-  formId: string | number;
   formData: {
+    formId: string | number;
     publicLink: string;
     formPublishSetting: {
       publicationMainPageMethod: boolean
+      privateLink : string
     },
     isCreatedSoloReport: boolean | null
     showReportForResponder: boolean | null
@@ -84,13 +78,12 @@ const IconButtonContainer = ({ children }: { children: React.ReactNode }) => (
   </Box>
 );
 
-export default function ShareLinkSetting({ handleOpen, formId, formData }: ShareLinkSettingProps) {
+export default function ShareLinkSetting({ handleOpen, formData }: ShareLinkSettingProps) {
   const { push } = useRouter()
-  const FINAL_LINK = `${DEFAULT_LINK}/${formData?.publicLink}`;
+  const FINAL_LINK = `${DEFAULT_LINK}/${formData?.formPublishSetting?.privateLink}`;
   const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(formData?.showReportForResponder || false);
   const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false);
 
-  const queryClient = useQueryClient();
   const methods = useForm<PropertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     mode: 'all',
@@ -104,60 +97,10 @@ export default function ShareLinkSetting({ handleOpen, formId, formData }: Share
   const {
     handleSubmit,
     reset,
-    setValue,
-    getValues,
-    formState: { isSubmitting, isDirty },
-    setError,
+    formState: { isSubmitting, isDirty }
   } = methods;
 
-  const onSubmit = useCallback(
-    async (values: PropertiesFormSchemaType) => {
-      console.log('value', values.showReportForResponder)
-
-      const token = await getAuthToken();
-      try {
-        const response = await fetch('/api/publish/general', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            formId: Number(formId),
-            publicationMainPageMethod: values.publicationMainPageMethod,
-            showReportForResponder: values.showReportForResponder,
-          }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          if (data.error && data.details) {
-            data.details.forEach((err: any) => {
-              if (err.path && err.path[0]) {
-                setError(err.path[0], {
-                  type: 'manual',
-                  message: err.message || 'خطا در اعتبارسنجی فیلد',
-                });
-              }
-            });
-          } else if (data.error) {
-            toast.error(data.error);
-          } else {
-            toast.error('خطای نامشخص در پاسخ سرور.');
-          }
-          return;
-        }
-        queryClient.invalidateQueries({ queryKey: ['datas_builder_query'] });
-        handleOpen();
-        reset();
-        toast.success('با موفقیت به سبد خرید افزوده شد.');
-      } catch (error: any) {
-        toast.error('خطای ارتباط با سرور. لطفاً دوباره تلاش کنید.');
-      }
-    },
-    [formId, handleOpen, reset, setError],
-  );
+  const onSubmit = () => {}
 
   const handleCancel = useCallback(() => {
     handleOpen();
@@ -165,13 +108,13 @@ export default function ShareLinkSetting({ handleOpen, formId, formData }: Share
   }, [handleOpen, reset]);
 
   const handleShowReportForResponder = () => {
-    if (formData.isCreatedSoloReport) {
-      const currentValue = getValues("showReportForResponder");
-      setValue("showReportForResponder", !currentValue, { shouldDirty: false });
-      setIsShowReportForResponder((prev) => !prev)
-    } else {
-      setOpenShowReportForResponderDialog(true)
-    }
+    // if (formData.isCreatedSoloReport) {
+    //   const currentValue = getValues("showReportForResponder");
+    //   setValue("showReportForResponder", !currentValue, { shouldDirty: false });
+    //   setIsShowReportForResponder((prev) => !prev)
+    // } else {
+    //   setOpenShowReportForResponderDialog(true)
+    // }
   }
 
   const toggleConfirm = () => {
@@ -231,12 +174,6 @@ export default function ShareLinkSetting({ handleOpen, formId, formData }: Share
 
 
         <Box display='flex' flexDirection='column' gap={2} mt={2}>
-          <Box display='flex' alignItems='center'>
-            <RHFCheckBox name='publicationMainPageMethod' label={undefined} />
-            <Typography fontSize='12px' color='text.primary'>
-              در صفحه عمومی سایا قابل مشاهده باشد.
-            </Typography>
-          </Box>
 
           <Box display='flex' justifyContent='space-between' alignItems='center'>
             <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>

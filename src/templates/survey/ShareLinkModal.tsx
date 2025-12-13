@@ -7,11 +7,19 @@ import { Box, Dialog, DialogContent, IconButton, Typography } from '@mui/materia
 import ShareLinkSetting from './ShareLinkSetting';
 
 interface ShareLinkModalProps {
-  formId: string;
-  formData: any;
+  formData: {
+    formId: string | number;
+    publicLink: string;
+    formPublishSetting: {
+      publicationMainPageMethod: boolean
+      privateLink : string
+    },
+    isCreatedSoloReport: boolean | null
+    showReportForResponder: boolean | null
+  };
 }
 
-export default function ShareLinkModal() {
+export default function ShareLinkModal({formData} : {formData : ShareLinkModalProps}) {
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleOpen = useCallback(() => {
@@ -64,7 +72,7 @@ export default function ShareLinkModal() {
             </Typography>
           </Box>
       
-             <ShareLinkSetting />
+             <ShareLinkSetting handleOpen={handleOpen} formData={formData}/>
         </DialogContent>
       </Dialog>
     </>

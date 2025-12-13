@@ -137,9 +137,11 @@ export const useParticipateForm = () => {
 
   const fetchInitialData = useCallback(async () => {
     try {
+       const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
+
       const res = await AxiosApi.post('/take-part/check-response-limitation-form', {
-        link: /^public-|^solo-|group/.test(slug) ? slug : null,
-        id: !/^public-|^solo-|group/.test(slug) ? slug : null,
+        link: isLink ? slug : null,
+        id: !isLink ? slug : null,
       });
 
       const { userInfo } = await fetchUserInfo();
@@ -168,9 +170,11 @@ export const useParticipateForm = () => {
 
   const takePart = async (username: string | null) => {
     try {
+      const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
+
       const res = await AxiosApi.post('/take-part', {
-        link: /^public-|^solo-|group/.test(slug) ? slug : null,
-        formId: !/^public-|^solo-|group/.test(slug) ? slug : null,
+        link: isLink ? slug : null,
+        formId: !isLink ? slug : null,
         username,
       });
 
@@ -193,9 +197,11 @@ export const useParticipateForm = () => {
   const checkAnswerBefore = async (username: string | null) => {
     try {
       const url = '/take-part/check-answer-to-form-before';
+       const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
+
       const res = await AxiosApi.post(url, {
-        link: /^public-|^solo-|group/.test(slug) ? slug : null,
-        formId: !/^public-|^solo-|group/.test(slug) ? slug : null,
+        link: isLink ? slug : null,
+        formId: !isLink ? slug : null,
         username,
       });
       setTakePartId(res.data.takePart);

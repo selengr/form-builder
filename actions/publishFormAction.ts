@@ -5,7 +5,7 @@ import { AxiosApi } from '@/services/axios/AxiosApi';
 
 interface PublishFormParams {
   formId: string | string[];
-  survey?: string | null;
+  survey: boolean;
 }
 
 export async function publishFormServer({ formId, survey }: PublishFormParams) {
@@ -22,7 +22,7 @@ export async function publishFormServer({ formId, survey }: PublishFormParams) {
   }
 }
 
-export async function publishFormAction(formId: string|string[], survey?: string) {
+export async function publishFormAction(formId: string|string[], survey: boolean) {
   await publishFormServer({ formId, survey });
   revalidatePath(`/builder/${formId}`);
 }

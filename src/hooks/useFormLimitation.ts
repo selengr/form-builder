@@ -54,9 +54,10 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
   const takePartApi = async () => {
     try {
       setLoading(true);
+      const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
       const response = await AxiosApi.post('/take-part/check-answer-to-form-before', {
-        link: /^public-|^solo-|^group-/.test(slug) ? slug : null,
-        formId: !/^public-|^solo-|^group-/.test(slug) ? slug : null,
+        link: isLink ? slug : null,
+        formId: !isLink ? slug : null,  
         username: formValue,
       });
         

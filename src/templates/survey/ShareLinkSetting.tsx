@@ -33,7 +33,7 @@ const buttonStylesAlert = {
   },
 };
 
-const DEFAULT_LINK = `${process.env.NEXT_PUBLIC_MBZ_DOMAIN}`;
+const DEFAULT_LINK = `${process.env.NEXT_PUBLIC_MBZ_DOMAIN}form`;
 const propertiesSchema = z.object({
   link: z
     .string()

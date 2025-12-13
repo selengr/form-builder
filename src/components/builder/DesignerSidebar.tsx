@@ -1,21 +1,22 @@
 'use client';
 
-import { Fragment, memo, useCallback, useMemo, useState } from 'react';
-import { Button, IconButton, useMediaQuery } from '@mui/material';
-import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import { toast } from 'sonner';
-
-import { FormElements } from '@/types/FormElements';
-import { AxiosApi } from '@/services/axios/AxiosApi';
-import useDesigner from '@/hooks/useDesigner';
-import SidebarBtnElement from './SidebarBtnElement';
-import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
-import SettingsDialog from '../SettingsDialog/SettingsDialog';
-import DesignerBottomSheet from './DesignerBottomSheet';
-import { usePublishForm } from '@/app/(builder)/builder/_hook/usePublishForm';
 import { useTransition } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import { Fragment, memo, useMemo, useState } from 'react';
+import { Button, IconButton, useMediaQuery } from '@mui/material';
+//type
+import { FormElements } from '@/types/FormElements';
+// hook
+import useDesigner from '@/hooks/useDesigner';
+// component
+import SidebarBtnElement from './SidebarBtnElement';
+import DesignerBottomSheet from './DesignerBottomSheet';
+import SettingsDialog from '../SettingsDialog/SettingsDialog';
+// image
+import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
+// action
 import { publishFormAction } from '../../../actions/publishFormAction';
 
 const ELEMENTS = [FormElements.TEXT_FIELD, FormElements.MULTIPLE_CHOICE, FormElements.MULTIPLE_CHOICE_IMAGE, FormElements.SPECTRAL, FormElements.INFO_FIELD];
@@ -27,21 +28,21 @@ interface DesignerSidebarProps {
 // eslint-disable-next-line react/display-name
 const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarProps) {
   const { id } = useParams();
+  const { refresh } = useRouter();
   const isDesktop = useMediaQuery('(min-width:1280px)');
   const { formName, formSetting } = useDesigner();
   const [formTitle, setFormTitle] = useState(formName);
   const [isPending, startTransition] = useTransition();
 
-  const searchParams = useSearchParams();
-  const survey = searchParams.get('survey');
-
-    const handlePublish = () => {
+  const handlePublish = () => {
     startTransition(async () => {
+      const IsSuevey = data?.typeEnum === "SURVEY"
       try {
-        await publishFormAction(id, survey ?? undefined);
-        alert('عملیات با موفقیت انجام شد');
+        await publishFormAction(id, IsSuevey);
+        refresh();
+        toast.success('عملیات با موفقیت انجام شد');
       } catch (e) {
-        alert('عملیات با خطا مواجه شد');
+        toast.error('عملیات با خطا مواجه شد');
       }
     });
   };

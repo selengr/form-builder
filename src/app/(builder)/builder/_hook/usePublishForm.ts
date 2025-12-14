@@ -1,6 +1,6 @@
 'use client';
 
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { AxiosApi } from '@/services/axios/AxiosApi';
 import { useSearchParams } from 'next/navigation';
@@ -8,6 +8,8 @@ import { useSearchParams } from 'next/navigation';
 export function usePublishForm(formId?: string | string[]) {
   const searchParams = useSearchParams();
   const surveyParam = searchParams.get('survey');
+  // const queryClient = useQueryClient();
+
 
   return useMutation({
     mutationFn: async () => {
@@ -19,7 +21,10 @@ export function usePublishForm(formId?: string | string[]) {
         return AxiosApi.put(`/form/ready-to-publish/${formId}`);
       }
     },
-    onSuccess: () => toast.success('عملیات با موفقیت انجام شد'),
+    onSuccess: () => {
+      toast.success('عملیات با موفقیت انجام شد')
+      // queryClient.invalidateQueries({ queryKey: ['builder', formId] })
+    },
     onError: () => toast.error('انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.'),
   });
 }

@@ -40,7 +40,6 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
       try {
         await publishFormAction(id, IsSuevey);
         router.refresh();
-        router.push(`/builder/${id}`);
         toast.success('عملیات با موفقیت انجام شد');
       } catch (e) {
         toast.error('عملیات با خطا مواجه شد');

@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { AxiosApi } from '@/services/axios/AxiosApi';
 import { ElementsType, FormElements } from '@/types/FormElements';
@@ -19,6 +19,8 @@ interface HasError {
 }
 
 export const useParticipateForm = () => {
+  const searchParams = useSearchParams();
+  const from = searchParams.get('from');
   const [question, setQuestion] = useState<any>(null);
   const [formData, setFormData] = useState<any>('');
   const [isValid, setIsValid] = useState(false);
@@ -176,6 +178,7 @@ export const useParticipateForm = () => {
         link: isLink ? slug : null,
         formId: !isLink ? slug : null,
         username,
+        from : from ?? "PUBLIC_PAGE"
       });
 
       const q = res.data.questionModel;

@@ -21,6 +21,7 @@ import {
 import { fetchSurveyData, SURVEY_PURPOSE_QUERY_KEY } from '@/templates/survey/hooks/useGetSurveyPurpose';
 import { fetchTargetPlatformData, TARGET_PLATFORM_QUERY_KEY } from '@/templates/survey/hooks/useGetTargetPlatform';
 
+export const dynamic = 'force-dynamic';
 
 export default async function SurveyPage() {
   const queryClient = new QueryClient();

@@ -201,12 +201,15 @@ export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
                     borderRadius: '12px',
                     bgcolor: '#1758BA',
                   },
+                  '& .MuiTabs-list': {
+                    width : "100%"
+                  }
                 }}>
                 {[
                   { value: 'QUESTION', label: 'پرسشنامه' },
                   { value: 'TEST', label: 'آزمون' },
-                  { value: 'COMPETITION', label: 'مسابقه' },
-                  { value: 'SURVEY', label: 'نظرسنجی' },
+                  { value: 'COMPETITION', label: 'مسابقه' }
+                  // { value: 'SURVEY', label: 'نظرسنجی' },
                 ].map((tab) => (
                   <Tab
                     key={tab.value}
@@ -216,8 +219,9 @@ export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
                     sx={{
                       color: '#000',
                       fontWeight: 600,
-                      px: 2,
-                      flex: 1,
+                      width:"100%"
+                      // px: 5,
+                      // flex: 1
                     }}
                   />
                 ))}

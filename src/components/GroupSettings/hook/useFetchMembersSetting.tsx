@@ -82,7 +82,8 @@ export const useFetchMembersSetting = ({
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 0,
     enabled: !!groupId,
+    refetchOnMount: true,
+    refetchOnReconnect: true,
     refetchOnWindowFocus: true,
-    refetchOnReconnect: false,
   })
 }

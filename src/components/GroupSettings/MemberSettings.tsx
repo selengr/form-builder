@@ -69,11 +69,11 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
   const [introducedUserJTGroupIdList, setIntroducedUserJTGroupIdList] = useState<number[]>([])
   const [introducedUserPublishIdList, setIntroducedUserPublishIdList] = useState<number[]>([])
 
-  const [isRemoving, setIsRemoving] = useState(false);
-  const [openRemoveConfirmDialog, setOpenRemoveConfirmDialog] = useState(false);
+  const [isRemoving, setIsRemoving] = useState<boolean>(false);
+  const [openRemoveConfirmDialog, setOpenRemoveConfirmDialog] = useState<boolean>(false);
   const [membersToRemove, setMembersToRemove] = useState<{ id: number; name: string }[]>([]);
- 
- 
+
+
   const isFetchingRef = useRef(false)
   const autoSelectedRef = useRef<Set<number>>(new Set())
 
@@ -407,43 +407,49 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
                 {error.message}
               </Typography>
             ) : (
-              members.map((member) => (
-                !member.invalid && <Box
-                  key={member.introducedUserJTGroupId}
-                  display="flex"
-                  bgcolor="white"
-                  alignItems="center"
-                  // justifyContent="space-between"
-                  position={"relative"}
-                  px={1}
-                  py="1px"
-                  borderRadius="12px"
-                >
-                  <Checkbox
-                    checked={selectedGroupIds.includes(member.introducedUserJTGroupId)}
-                    onChange={() => handleToggleGroup(member)}
-                  />
-                  <Typography flex={1}>
-                    {member.userName} {member.userFamily}
-                  </Typography>
-                  <Typography position="absolute" right={120} fontSize="14px">
-                    نام کاربری: {member.userUsername}
-                  </Typography>
+              members.map((member) => {
+                const currentSelected = getValues("memberId")
+                const removedGroups = introducedUserPublishIdList.filter((id) => !currentSelected.includes(id));
+                const shouldShowRedBackground = removedGroups.includes(member.introducedUserPublishId!)
+                return (
+                  !member.invalid && <Box
+                    key={member.introducedUserJTGroupId}
+                    display="flex"
+                    alignItems="center"
+                    // justifyContent="space-between"
+                    position={"relative"}
+                    px={1}
+                    py="1px"
+                    borderRadius="12px"
+                    bgcolor={shouldShowRedBackground ? "#ffebee" : "white"}
+                    border={shouldShowRedBackground ? "1px solid #ef5350" : "1px solid white"}
+                  >
+                    <Checkbox
+                      checked={selectedGroupIds.includes(member.introducedUserJTGroupId)}
+                      onChange={() => handleToggleGroup(member)}
+                    />
+                    <Typography flex={1}>
+                      {member.userName} {member.userFamily}
+                    </Typography>
+                    <Typography position="absolute" right={120} fontSize="14px">
+                      نام کاربری: {member.userUsername}
+                    </Typography>
 
-                  {member.showReportForResponder && (
-                    <Box sx={{ position: "absolute", right: 35 }}>
-                      <Tooltip key={member.userUsername} title="نمایش نتیجه به پاسخ دهنده" followCursor arrow placement='top'>
-                        <div className='truncate' dir='rtl'>
-                          <FaEye color='#1758BA' />
-                        </div>
-                      </Tooltip>
-                    </Box>
-                  )}
-                  <Typography position="absolute" right={1} fontSize="14px" className="pl-2">
-                    {member.userGender}
-                  </Typography>
+                    {member.showReportForResponder && (
+                      <Box sx={{ position: "absolute", right: 35 }}>
+                        <Tooltip key={member.userUsername} title="نمایش نتیجه به پاسخ دهنده" followCursor arrow placement='top'>
+                          <div className='truncate' dir='rtl'>
+                            <FaEye color='#1758BA' />
+                          </div>
+                        </Tooltip>
+                      </Box>
+                    )}
+                    <Typography position="absolute" right={1} fontSize="14px" className="pl-2">
+                      {member.userGender}
+                    </Typography>
 
-                </Box>)
+                  </Box>)
+              }
               )
             )}
           </Box>

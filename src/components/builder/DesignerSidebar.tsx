@@ -1,19 +1,24 @@
 'use client';
 
-import { Fragment, memo, useCallback, useMemo, useState } from 'react';
-import { Button, IconButton, useMediaQuery } from '@mui/material';
-import { useMutation } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
-
+import { useTransition } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { Fragment, memo, useMemo, useState } from 'react';
+import { Button, IconButton, useMediaQuery } from '@mui/material';
+//type
 import { FormElements } from '@/types/FormElements';
-import { AxiosApi } from '@/services/axios/AxiosApi';
+// hook
 import useDesigner from '@/hooks/useDesigner';
+// component
 import SidebarBtnElement from './SidebarBtnElement';
-import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
-import SettingsDialog from '../SettingsDialog/SettingsDialog';
 import DesignerBottomSheet from './DesignerBottomSheet';
+import SettingsDialog from '../SettingsDialog/SettingsDialog';
+// image
+import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
+// action
+import { publishFormAction } from '../../../actions/publishFormAction';
+import { usePublishForm } from '@/app/(builder)/builder/_hook/usePublishForm';
 
 const ELEMENTS = [FormElements.TEXT_FIELD, FormElements.MULTIPLE_CHOICE, FormElements.MULTIPLE_CHOICE_IMAGE, FormElements.SPECTRAL, FormElements.INFO_FIELD];
 
@@ -24,25 +29,37 @@ interface DesignerSidebarProps {
 // eslint-disable-next-line react/display-name
 const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarProps) {
   const { id } = useParams();
+  const router = useRouter();
   const isDesktop = useMediaQuery('(min-width:1280px)');
   const { formName, formSetting } = useDesigner();
   const [formTitle, setFormTitle] = useState(formName);
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: () => AxiosApi.put(`/form/ready-to-publish/${id}`),
-    onSuccess: () => toast.success('عملیات با موفقیت انجام شد'),
-    onError: () => toast.error('انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.'),
-  });
+    const IsSuevey = data?.typeEnum === "SURVEY"
+    const publishMutation = usePublishForm({
+      formId: id,
+      survey: IsSuevey,
+    });
 
-  const handlePublish = useCallback(() => mutate(), [mutate]);
+  const handlePublish = () => {
+    publishMutation.mutate();
+  };
 
-  const renderElements = useMemo(
-    () =>
-      ELEMENTS.map((el, index) => (
-        <SidebarBtnElement key={index} formElement={el} disabled={formSetting.formStatus !== 'CREATE'} />
-      )),
-    []
-  );
+  // const renderElements = useMemo(
+  //   () =>
+  //     ELEMENTS.map((el, index) => (
+  //       <SidebarBtnElement key={index} formElement={el} disabled={formSetting.formStatus !== 'CREATE'} />
+  //     )),
+  //   [formSetting.formStatus]
+  // );
+
+  const renderElements = ELEMENTS.map((el, index) => (
+  <SidebarBtnElement
+    key={index}
+    formElement={el}
+    disabled={formSetting.formStatus !== 'CREATE'}
+  />
+));
+
 
   const TopBar = (
     <div className="flex justify-between items-center gap-1 bg-[#F7F7FF] px-4 py-2 rounded-lg">
@@ -63,8 +80,8 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
     <Button
       onClick={handlePublish}
       variant="contained"
-      loading={isPending}
-      disabled={isPending || formSetting.formStatus !== 'CREATE'}
+      loading={publishMutation.isPending}
+      disabled={publishMutation.isPending || formSetting.formStatus !== 'CREATE'}
       sx={{
         backgroundColor: '#1758BA',
         fontWeight: 500,

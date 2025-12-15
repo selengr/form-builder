@@ -22,7 +22,7 @@ export default function ListGridWrapper() {
       title='گزارش‌ها'
       searchBoxList={searchBoxList}
       filterBoxList={filterBoxList}
-      url='/form/main-list'
+      url='/form/main-list/reports'
       filterComponent={null}
       CartComponent={(item: any) => <ListCard setRefreshGrid={setRefreshGrid} {...item} />}
       disableFilter

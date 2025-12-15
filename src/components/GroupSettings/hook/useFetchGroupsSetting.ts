@@ -95,7 +95,7 @@ export const useFetchGroupsSetting = ({ formId, searchBoxList, pageSize = 10 }: 
     initialPageParam: 0,
     enabled: !!formId,
     staleTime: 0,
-    // gcTime: 1000,
+    gcTime: 1000,
     refetchOnMount: true,
     refetchOnWindowFocus: true
   })

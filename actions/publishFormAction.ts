@@ -10,7 +10,7 @@ interface PublishFormParams {
 
 export async function publishFormServer({ formId, survey }: PublishFormParams) {
   if (!formId) throw new Error('Form id is required');
-
+// test git
   try { 
     if (survey) {
       return await AxiosApi.put(`/admin/form/survey/finalization/${formId}`);

@@ -557,7 +557,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
                 },
               }}
             >
-              انصراف
+              بستن
             </Button>
           </Box>
         </Box>

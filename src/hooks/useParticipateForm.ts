@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { AxiosApi } from '@/services/axios/AxiosApi';
 import { ElementsType, FormElements } from '@/types/FormElements';
@@ -19,6 +19,8 @@ interface HasError {
 }
 
 export const useParticipateForm = () => {
+  const searchParams = useSearchParams();
+  const from = searchParams.get('from');
   const [question, setQuestion] = useState<any>(null);
   const [formData, setFormData] = useState<any>('');
   const [isValid, setIsValid] = useState(false);
@@ -137,9 +139,11 @@ export const useParticipateForm = () => {
 
   const fetchInitialData = useCallback(async () => {
     try {
+       const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
+
       const res = await AxiosApi.post('/take-part/check-response-limitation-form', {
-        link: /^public-|^solo-|group/.test(slug) ? slug : null,
-        id: !/^public-|^solo-|group/.test(slug) ? slug : null,
+        link: isLink ? slug : null,
+        id: !isLink ? slug : null,
       });
 
       const { userInfo } = await fetchUserInfo();
@@ -168,10 +172,13 @@ export const useParticipateForm = () => {
 
   const takePart = async (username: string | null) => {
     try {
+      const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
+
       const res = await AxiosApi.post('/take-part', {
-        link: /^public-|^solo-|group/.test(slug) ? slug : null,
-        formId: !/^public-|^solo-|group/.test(slug) ? slug : null,
+        link: isLink ? slug : null,
+        formId: !isLink ? slug : null,
         username,
+        from : from ?? "PUBLIC_PAGE"
       });
 
       const q = res.data.questionModel;
@@ -193,9 +200,11 @@ export const useParticipateForm = () => {
   const checkAnswerBefore = async (username: string | null) => {
     try {
       const url = '/take-part/check-answer-to-form-before';
+       const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
+
       const res = await AxiosApi.post(url, {
-        link: /^public-|^solo-|group/.test(slug) ? slug : null,
-        formId: !/^public-|^solo-|group/.test(slug) ? slug : null,
+        link: isLink ? slug : null,
+        formId: !isLink ? slug : null,
         username,
       });
       setTakePartId(res.data.takePart);

@@ -46,15 +46,27 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
   const [dialogState, setDialogState] = useState<DialogState>('none');
   const { mutate } = useShowResultUser();
 
-    const {
-      formValue, error, reset, helperText, handleChange, handleSubmit
-    } = useLoginWithPhone('');
+  const {
+    formValue, error, reset, helperText, handleChange, handleSubmit
+  } = useLoginWithPhone('');
 
   const handleClick = () => {
     if (!buttonLink) return;
-    const href = typeof buttonLink === 'function' ? buttonLink(data.id) : buttonLink;
-    router.push(href);
+
+    const basePath =
+      typeof buttonLink === 'function'
+        ? buttonLink(data.id)
+        : buttonLink;
+
+    const params = new URLSearchParams({
+      from: 'MY_ASSESSMENT',
+    });
+
+    router.push(`${basePath}?${params.toString()}`);
   };
+
+
+
 
   const handleShowResult = () => {
     const tkId = data.takeParts[data.takeParts.length - 1]
@@ -117,7 +129,7 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
           {buttonText}
         </button>
         {/* { data.takeParts.length > 0 && */}
-        {data.takeParts.length > 0 &&
+        {data.showReportForResponder   &&
           <button
             className="bg-[#2CDFC9] disabled:bg-slate-300 hover:bg-[#2CDFC9] transition duration-200 max-w-full sm:max-w-[200px] px-2 h-[42px] w-full text-[14px] rounded-lg text-white"
             onClick={handleShowResult}

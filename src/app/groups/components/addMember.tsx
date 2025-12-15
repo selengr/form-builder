@@ -110,10 +110,14 @@ const AddMember: React.FC<AddMemberProps> = ({ handleOpen, groupId }) => {
             }
           });
         } else if (data.error) {
-          const title = JSON.parse(data.error)?.message?.[0]?.title ||
-            data.error?.title || data.error
+          if (Array.isArray(data.error) && data.error.length > 0) {
+            toast.error(data.error[0].title);
+          } else {
+            const title = JSON.parse(data.error)?.message?.[0]?.title ||
+              data.error?.title || data.error
 
-          toast.error(title)
+            toast.error(title)
+          }
         } else {
           toast.error('خطای ناشناخته از سمت سرور');
         }

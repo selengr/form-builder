@@ -1,23 +1,20 @@
 'use client';
 import { z } from 'zod';
-import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { IoShareSocialSharp } from 'react-icons/io5';
-import { useQueryClient } from '@tanstack/react-query';
 import { LuCopy, LuRefreshCcw } from 'react-icons/lu';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Button, Typography } from '@mui/material';
-import FormProvider, { RHFCheckBox, RHFTextField } from '../hook-form';
+import FormProvider, { RHFCheckBox, RHFTextField } from '@/components/hook-form';
 
 // components
-import { SwitchButton } from '../Switch/SwitchButton';
+import Share from '@/components/share-media/Share';
 import ConfirmDialog from '@/components/confirm-dialog';
+import { SwitchButton } from '@/components/Switch/SwitchButton';
+import CopyToClipboardButton from '@/components/clipboard-button/CopyToClipBoardButton';
 
-import Share from '../share-media/Share';
-import { getAuthToken } from '@/utils/getAuthToken';
-import CopyToClipboardButton from '../clipboard-button/CopyToClipBoardButton';
 
 const buttonStylesAlert = {
   height: '50px',
@@ -44,20 +41,19 @@ const propertiesSchema = z.object({
     .transform((value) => value.replace(/\s+/g, ' '))
     .pipe(z.string()),
   publicationMainPageMethod: z.boolean(),
-  capacityPublicLink: z.number().min(0),
   showReportForResponder: z.boolean(),
 });
 
 type PropertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
-interface GeneralSettingsProps {
+interface ShareLinkSettingProps {
   handleOpen: () => void;
-  formId: string | number;
   formData: {
+    formId: string | number;
     publicLink: string;
     formPublishSetting: {
-      capacityPublicLink: number;
       publicationMainPageMethod: boolean
+      privateLink : string
     },
     isCreatedSoloReport: boolean | null
     showReportForResponder: boolean | null
@@ -82,20 +78,18 @@ const IconButtonContainer = ({ children }: { children: React.ReactNode }) => (
   </Box>
 );
 
-export default function GeneralSettings({ handleOpen, formId, formData }: GeneralSettingsProps) {
+export default function ShareLinkSetting({ handleOpen, formData }: ShareLinkSettingProps) {
   const { push } = useRouter()
-  const FINAL_LINK = `${DEFAULT_LINK}/${formData.publicLink}`;
+  const FINAL_LINK = `${DEFAULT_LINK}/${formData?.formPublishSetting?.privateLink}`;
   const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(formData?.showReportForResponder || false);
   const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false);
 
-  const queryClient = useQueryClient();
   const methods = useForm<PropertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     mode: 'all',
     defaultValues: {
       link: FINAL_LINK,
       publicationMainPageMethod: formData?.formPublishSetting?.publicationMainPageMethod || false,
-      capacityPublicLink: 0,
       showReportForResponder: formData?.showReportForResponder || false,
     },
   });
@@ -103,61 +97,10 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
   const {
     handleSubmit,
     reset,
-    setValue,
-    getValues,
-    formState: { isSubmitting, isDirty },
-    setError,
+    formState: { isSubmitting, isDirty }
   } = methods;
 
-  const onSubmit = useCallback(
-    async (values: PropertiesFormSchemaType) => {
-      console.log('value', values.showReportForResponder)
-
-      const token = await getAuthToken();
-      try {
-        const response = await fetch('/api/publish/general', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            formId: Number(formId),
-            publicationMainPageMethod: values.publicationMainPageMethod,
-            capacityPublicLink: values.capacityPublicLink,
-            showReportForResponder: values.showReportForResponder,
-          }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          if (data.error && data.details) {
-            data.details.forEach((err: any) => {
-              if (err.path && err.path[0]) {
-                setError(err.path[0], {
-                  type: 'manual',
-                  message: err.message || 'خطا در اعتبارسنجی فیلد',
-                });
-              }
-            });
-          } else if (data.error) {
-            toast.error(data.error);
-          } else {
-            toast.error('خطای نامشخص در پاسخ سرور.');
-          }
-          return;
-        }
-        queryClient.invalidateQueries({ queryKey: ['datas_builder_query'] });
-        handleOpen();
-        reset();
-        toast.success('با موفقیت به سبد خرید افزوده شد.');
-      } catch (error: any) {
-        toast.error('خطای ارتباط با سرور. لطفاً دوباره تلاش کنید.');
-      }
-    },
-    [formId, handleOpen, reset, setError],
-  );
+  const onSubmit = () => {}
 
   const handleCancel = useCallback(() => {
     handleOpen();
@@ -165,13 +108,13 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
   }, [handleOpen, reset]);
 
   const handleShowReportForResponder = () => {
-    if (formData.isCreatedSoloReport) {
-      const currentValue = getValues("showReportForResponder");
-      setValue("showReportForResponder", !currentValue, { shouldDirty: false });
-      setIsShowReportForResponder((prev) => !prev)
-    } else {
-      setOpenShowReportForResponderDialog(true)
-    }
+    // if (formData.isCreatedSoloReport) {
+    //   const currentValue = getValues("showReportForResponder");
+    //   setValue("showReportForResponder", !currentValue, { shouldDirty: false });
+    //   setIsShowReportForResponder((prev) => !prev)
+    // } else {
+    //   setOpenShowReportForResponderDialog(true)
+    // }
   }
 
   const toggleConfirm = () => {
@@ -229,42 +172,8 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
           </IconButtonContainer>
         </Box>
 
-        <Box display='flex' alignItems='center' justifyContent='space-between' gap={3} mt={1}>
-          <Box display='flex' flexDirection='column' gap={1} flex={1}>
-            <Typography fontWeight={700} fontSize='14px'>
-              ظرفیت:
-            </Typography>
-            {/*<Typography fontWeight={400} fontSize='12px' color='text.secondary'>*/}
-            {/*  ظرفیت از پیش موجود 100 نفر*/}
-            {/*</Typography>*/}
-            <RHFTextField
-              type='number'
-              name='capacityPublicLink'
-              inputProps={{ min: 0, style: { textAlign: 'center' } }}
-              sx={{
-                '& .MuiInputBase-root': {
-                  borderRadius: '10px',
-                  fontWeight: 600,
-                  height: 42,
-                },
-              }}
-            />
-          </Box>
-
-          <Box flex={1} mt={3}>
-            <Typography fontSize='11px' lineHeight={1.6} textAlign='justify' color='text.secondary'>
-              دسترسی به پرسشنامه از طریق پیوند به مقدار ظرفیت تعیین‌شده برای عموم آزاد است و پس از اتمام ظرفیت، دسترسی تا زمان افزودن ظرفیت مجدد محدود خواهد شد.
-            </Typography>
-          </Box>
-        </Box>
 
         <Box display='flex' flexDirection='column' gap={2} mt={2}>
-          <Box display='flex' alignItems='center'>
-            <RHFCheckBox name='publicationMainPageMethod' label={undefined} />
-            <Typography fontSize='12px' color='text.primary'>
-              در صفحه عمومی سایا قابل مشاهده باشد.
-            </Typography>
-          </Box>
 
           <Box display='flex' justifyContent='space-between' alignItems='center'>
             <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>
@@ -316,9 +225,7 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
               boxShadow: 'none',
             },
           }}>
-          {methods.watch('capacityPublicLink') > 0
-            ? 'افزودن به سبد خرید'
-            : 'اعمال تغییرات'}
+              اعمال تغییرات
         </Button>
 
         <Button
@@ -339,7 +246,7 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
               borderColor: 'primary.main',
             },
           }}>
-          بستن
+          انصراف
         </Button>
       </Box>
 

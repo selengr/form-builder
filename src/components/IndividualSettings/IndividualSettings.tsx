@@ -541,7 +541,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
             handleOpen();
             reset();
           }}>
-          انصراف
+          بستن
         </Button>
       </Box>
       </Box>

@@ -339,7 +339,7 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
               borderColor: 'primary.main',
             },
           }}>
-          انصراف
+          بستن
         </Button>
       </Box>
 

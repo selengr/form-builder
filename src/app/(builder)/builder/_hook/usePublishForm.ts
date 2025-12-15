@@ -1,30 +1,30 @@
 'use client';
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { AxiosApi } from '@/services/axios/AxiosApi';
-import { useSearchParams } from 'next/navigation';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { publishFormAction } from '../../../../../actions/publishFormAction';
 
-export function usePublishForm(formId?: string | string[]) {
-  const searchParams = useSearchParams();
-  const surveyParam = searchParams.get('survey');
-  // const queryClient = useQueryClient();
+interface UsePublishFormParams {
+  formId?: string | string[];
+  survey: boolean;
+}
 
+export function usePublishForm({ formId, survey }: UsePublishFormParams) {
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async () => {
       if (!formId) throw new Error('Form id is missing');
-
-      if (surveyParam) {
-        return AxiosApi.put(`/psya/admin/form/survey/finalization/${formId}`);
-      } else {
-        return AxiosApi.put(`/form/ready-to-publish/${formId}`);
-      }
+      await publishFormAction(formId, survey);
     },
     onSuccess: () => {
-      toast.success('عملیات با موفقیت انجام شد')
-      // queryClient.invalidateQueries({ queryKey: ['builder', formId] })
+      toast.success('عملیات با موفقیت انجام شد');
+      queryClient.invalidateQueries({
+        queryKey: ['form-builder', formId],
+      });
     },
-    onError: () => toast.error('انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.'),
+    onError: () => {
+      toast.error('انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.');
+    },
   });
 }

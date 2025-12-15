@@ -24,5 +24,4 @@ export async function publishFormServer({ formId, survey }: PublishFormParams) {
 
 export async function publishFormAction(formId: string|string[], survey: boolean) {
   await publishFormServer({ formId, survey });
-  revalidatePath(`/builder/${formId}`);
 }

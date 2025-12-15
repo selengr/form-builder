@@ -30,9 +30,9 @@ async function fetchFormData(id: string) {
 }
 
 
-export function useGetForm(id: string | undefined) {
+export function useGetForm(id: string | any) {
   return useQuery({
-    queryKey: ["builder", id],
+    queryKey: ["form-builder", id],
     queryFn: () => fetchFormData(id as string),
     enabled: !!id,
     staleTime: 5 * 60 * 1000, 

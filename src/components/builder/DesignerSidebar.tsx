@@ -18,6 +18,7 @@ import SettingsDialog from '../SettingsDialog/SettingsDialog';
 import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
 // action
 import { publishFormAction } from '../../../actions/publishFormAction';
+import { usePublishForm } from '@/app/(builder)/builder/_hook/usePublishForm';
 
 const ELEMENTS = [FormElements.TEXT_FIELD, FormElements.MULTIPLE_CHOICE, FormElements.MULTIPLE_CHOICE_IMAGE, FormElements.SPECTRAL, FormElements.INFO_FIELD];
 
@@ -32,28 +33,33 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
   const isDesktop = useMediaQuery('(min-width:1280px)');
   const { formName, formSetting } = useDesigner();
   const [formTitle, setFormTitle] = useState(formName);
-  const [isPending, startTransition] = useTransition();
+
+    const IsSuevey = data?.typeEnum === "SURVEY"
+    const publishMutation = usePublishForm({
+      formId: id,
+      survey: IsSuevey,
+    });
 
   const handlePublish = () => {
-    startTransition(async () => {
-      const IsSuevey = data?.typeEnum === "SURVEY"
-      try {
-        await publishFormAction(id, IsSuevey);
-        router.refresh();
-        toast.success('عملیات با موفقیت انجام شد');
-      } catch (e) {
-        toast.error('عملیات با خطا مواجه شد');
-      }
-    });
+    publishMutation.mutate();
   };
 
-  const renderElements = useMemo(
-    () =>
-      ELEMENTS.map((el, index) => (
-        <SidebarBtnElement key={index} formElement={el} disabled={formSetting.formStatus !== 'CREATE'} />
-      )),
-    []
-  );
+  // const renderElements = useMemo(
+  //   () =>
+  //     ELEMENTS.map((el, index) => (
+  //       <SidebarBtnElement key={index} formElement={el} disabled={formSetting.formStatus !== 'CREATE'} />
+  //     )),
+  //   [formSetting.formStatus]
+  // );
+
+  const renderElements = ELEMENTS.map((el, index) => (
+  <SidebarBtnElement
+    key={index}
+    formElement={el}
+    disabled={formSetting.formStatus !== 'CREATE'}
+  />
+));
+
 
   const TopBar = (
     <div className="flex justify-between items-center gap-1 bg-[#F7F7FF] px-4 py-2 rounded-lg">
@@ -74,8 +80,8 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
     <Button
       onClick={handlePublish}
       variant="contained"
-      loading={isPending}
-      disabled={isPending || formSetting.formStatus !== 'CREATE'}
+      loading={publishMutation.isPending}
+      disabled={publishMutation.isPending || formSetting.formStatus !== 'CREATE'}
       sx={{
         backgroundColor: '#1758BA',
         fontWeight: 500,

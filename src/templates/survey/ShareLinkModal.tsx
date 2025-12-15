@@ -19,7 +19,7 @@ interface ShareLinkModalProps {
   };
 }
 
-export default function ShareLinkModal({formData} : {formData : ShareLinkModalProps}) {
+export default function ShareLinkModal({formData} : {formData : any}) {
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleOpen = useCallback(() => {

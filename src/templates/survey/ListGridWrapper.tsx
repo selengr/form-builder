@@ -80,7 +80,7 @@ export default function ListGridWrapper() {
               <p className='text-[16px] text-center font-bold text-[#161616]'>فیلتر</p>
             </div>
           </div>
-          <div className='flex flex-col gap-4 w-full'>
+          {/* <div className='flex flex-col gap-4 w-full'>
             <div className='flex flex-col gap-4'>
               <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
                 <FormControl
@@ -143,7 +143,7 @@ export default function ListGridWrapper() {
                 </FormControl>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className='flex gap-4 items-center justify-between w-full mt-8'>
             <Button
               sx={{

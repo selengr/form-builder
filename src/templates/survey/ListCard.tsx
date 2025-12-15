@@ -51,7 +51,7 @@ const ListCard: React.FC<ListCardProps> = ({
 
   const handleClick = () => {
     if (!buttonLink) return;
-    const href = typeof buttonLink === 'function' ? buttonLink(data.id) : buttonLink;
+    const href = typeof buttonLink === 'function' ? buttonLink(data.id as any) : buttonLink;
     router.push(href);
   };
 

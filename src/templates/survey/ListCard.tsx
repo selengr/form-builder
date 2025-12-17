@@ -75,7 +75,7 @@ const ListCard: React.FC<ListCardProps> = ({
       {showStatus && (
         <InfoRow
           label="وضعیت"
-          value={data?.status === "CREATE" ? 'انجام شده' : 'انجام نشده'}
+          value={data?.status === "CREATE" ? 'ایجاد شده' : 'نهایی'}
           bold
         />
       )}

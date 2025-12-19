@@ -1,6 +1,5 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
 import { AxiosApi } from '@/services/axios/AxiosApi';
 
 interface PublishFormParams {
@@ -10,7 +9,7 @@ interface PublishFormParams {
 
 export async function publishFormServer({ formId, survey }: PublishFormParams) {
   if (!formId) throw new Error('Form id is required');
-// test git
+
   try { 
     if (survey) {
       return await AxiosApi.put(`/admin/form/survey/finalization/${formId}`);

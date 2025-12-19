@@ -1,24 +1,21 @@
 'use client';
 
 import Link from 'next/link';
-import { toast } from 'sonner';
-import { useTransition } from 'react';
+import { useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Fragment, memo, useMemo, useState } from 'react';
+import { Fragment, memo, useState } from 'react';
 import { Button, IconButton, useMediaQuery } from '@mui/material';
 //type
 import { FormElements } from '@/types/FormElements';
 // hook
 import useDesigner from '@/hooks/useDesigner';
+import { usePublishForm } from '@/app/(builder)/builder/_hook/usePublishForm';
 // component
 import SidebarBtnElement from './SidebarBtnElement';
 import DesignerBottomSheet from './DesignerBottomSheet';
 import SettingsDialog from '../SettingsDialog/SettingsDialog';
 // image
 import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
-// action
-import { publishFormAction } from '../../../actions/publishFormAction';
-import { usePublishForm } from '@/app/(builder)/builder/_hook/usePublishForm';
 
 const ELEMENTS = [FormElements.TEXT_FIELD, FormElements.MULTIPLE_CHOICE, FormElements.MULTIPLE_CHOICE_IMAGE, FormElements.SPECTRAL, FormElements.INFO_FIELD];
 
@@ -32,13 +29,19 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
   const router = useRouter();
   const isDesktop = useMediaQuery('(min-width:1280px)');
   const { formName, formSetting } = useDesigner();
-  const [formTitle, setFormTitle] = useState(formName);
+  const [formTitle, setFormTitle] = useState("");
 
-    const IsSuevey = data?.typeEnum === "SURVEY"
-    const publishMutation = usePublishForm({
-      formId: id,
-      survey: IsSuevey,
-    });
+  useEffect(() => {
+    if (formName) {
+      setFormTitle(formName);
+    }
+  }, [formName]);
+
+  const IsSurvey = data?.typeEnum === "SURVEY"
+  const publishMutation = usePublishForm({
+    formId: id,
+    IsSurvey: Boolean(IsSurvey),
+  });
 
   const handlePublish = () => {
     publishMutation.mutate();
@@ -52,13 +55,14 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
   //   [formSetting.formStatus]
   // );
 
+
   const renderElements = ELEMENTS.map((el, index) => (
-  <SidebarBtnElement
-    key={index}
-    formElement={el}
-    disabled={formSetting.formStatus !== 'CREATE'}
-  />
-));
+    <SidebarBtnElement
+      key={index}
+      formElement={el}
+      disabled={formSetting.formStatus !== 'CREATE'}
+    />
+  ));
 
 
   const TopBar = (
@@ -71,7 +75,7 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
           </IconButton>
         </Link>
         {/* پاس دادن data به SettingsDialog */}
-        <SettingsDialog formName={formTitle} onChangeName={setFormTitle} data={data} />
+        {formTitle && <SettingsDialog formName={formTitle} onChangeName={setFormTitle} data={data} />}
       </div>
     </div>
   );

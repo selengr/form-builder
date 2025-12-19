@@ -1,22 +1,41 @@
 'use client';
 
 import { toast } from 'sonner';
+import { getAuthToken } from '@/utils/getAuthToken';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { publishFormAction } from '../../../../../actions/publishFormAction';
 
 interface UsePublishFormParams {
   formId?: string | string[];
-  survey: boolean;
+  IsSurvey: boolean;
 }
 
-export function usePublishForm({ formId, survey }: UsePublishFormParams) {
+const API_BASE = '/api/builder';
+
+const publishFormAction = async ({formId, IsSurvey }: UsePublishFormParams) => {
+    const token = await getAuthToken();
+     const url =  `${API_BASE}/${formId}/publish`
+    try {
+       await fetch(url, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          IsSurvey 
+        }),
+      });
+
+    } catch (error) {
+      toast.error('خطا در برقراری ارتباط با سرور.');
+    }
+};  
+
+
+export function usePublishForm({ formId, IsSurvey }: UsePublishFormParams) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => {
-      if (!formId) throw new Error('Form id is missing');
-      await publishFormAction(formId, survey);
-    },
+    mutationFn:() =>  publishFormAction({formId, IsSurvey}),
     onSuccess: () => {
       toast.success('عملیات با موفقیت انجام شد');
       queryClient.invalidateQueries({

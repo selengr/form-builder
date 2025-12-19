@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { Button } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { InfoRow } from '@/components/common/infoRow';
 import { formTypePersian } from '@/constants/formDictionaries';
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
@@ -45,28 +45,30 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
   const router = useRouter();
   const [dialogState, setDialogState] = useState<DialogState>('none');
   const { mutate } = useShowResultUser();
+  const pathname = usePathname();
 
   const {
     formValue, error, reset, helperText, handleChange, handleSubmit
   } = useLoginWithPhone('');
 
-  const handleClick = () => {
-    if (!buttonLink) return;
+ const handleClick = () => {
+  if (!buttonLink) return;
 
-    const basePath =
-      typeof buttonLink === 'function'
-        ? buttonLink(data.id)
-        : buttonLink;
+  const basePath =
+    typeof buttonLink === 'function'
+      ? buttonLink(data.id)
+      : buttonLink;
 
+  if (pathname === '/my-assessments') {
     const params = new URLSearchParams({
       from: 'MY_ASSESSMENT',
     });
 
     router.push(`${basePath}?${params.toString()}`);
-  };
-
-
-
+  } else {
+    router.push(basePath);
+  }
+};
 
   const handleShowResult = () => {
     const tkId = data.takeParts[data.takeParts.length - 1]

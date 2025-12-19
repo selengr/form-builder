@@ -168,23 +168,48 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
     )
   }, [debouncedValue, setSearchBoxList])
 
-  useEffect(() => {
-    if (members.length === 0) return
+  // useEffect(() => {
+  //   if (members.length === 0) return
 
-    const currentSelected = methods.getValues("memberId")
-    const activeIds = members
-      .filter((m) => m.activationLink)
-      .map((m) => m.introducedUserJTGroupId)
-    const newActiveIds = activeIds.filter(
-      (id) => !currentSelected.includes(id) && !autoSelectedRef.current.has(id)
-    )
+  //   const currentSelected = methods.getValues("memberId")
+  //   const activeIds = members
+  //     .filter((m) => m.activationLink)
+  //     .map((m) => m.introducedUserJTGroupId)
+  //   const newActiveIds = activeIds.filter(
+  //     (id) => !currentSelected.includes(id) && !autoSelectedRef.current.has(id)
+  //   )
 
-    if (newActiveIds.length > 0) {
-      const merged = [...newActiveIds]
-      methods.setValue("memberId", merged, { shouldValidate: true })
-      newActiveIds.forEach((id) => autoSelectedRef.current.add(id))
-    }
-  }, [members])
+  //   if (newActiveIds.length > 0) {
+  //     const merged = [...newActiveIds]
+  //     methods.setValue("memberId", merged, { shouldValidate: true })
+  //     newActiveIds.forEach((id) => autoSelectedRef.current.add(id))
+  //   }
+  // }, [members])
+    useEffect(() => {
+      if (members.length === 0) return
+
+      const currentSelected = methods.getValues("memberId")
+
+      const activeIds = members
+        .filter((m) => m.activationLink)
+        .map((m) => m.introducedUserJTGroupId)
+
+      const newActiveIds = activeIds.filter(
+        (id) => !currentSelected.includes(id) &&
+                !autoSelectedRef.current.has(id)
+      )
+
+      if (newActiveIds.length > 0) {
+        const merged = [...currentSelected, ...newActiveIds]
+
+        methods.setValue("memberId", merged, {
+          shouldDirty: false,
+          shouldValidate: true,
+        })
+
+        newActiveIds.forEach((id) => autoSelectedRef.current.add(id))
+      }
+    }, [members])
 
 
 

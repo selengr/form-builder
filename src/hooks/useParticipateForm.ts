@@ -1,12 +1,24 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
-import { AxiosApi } from '@/services/axios/AxiosApi';
-import { ElementsType, FormElements } from '@/types/FormElements';
-import withValidation from '@/components/Fields/FormHOC';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+// lib
 import { fetchUserInfo } from '@/lib/auth';
+// services
+import { AxiosApi } from '@/services/axios/AxiosApi';
+// components
+import withValidation from '@/components/Fields/FormHOC';
+// actions
+import {
+  takePartAction,
+  insertAnswerAction,
+  checkAnswerBeforeAction,
+  getPreviousQuestionAction,
+  checkResponseLimitationAction,
+} from "../../actions/take-part"
+// types
+import { ElementsType, FormElements } from '@/types/FormElements';
 
 export interface ILimitation {
   isLimited: boolean;
@@ -136,64 +148,80 @@ export const useParticipateForm = () => {
     [extractProperty]
   );
 
-
   const fetchInitialData = useCallback(async () => {
     try {
-       const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
+      //  const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
 
-      const res = await AxiosApi.post('/take-part/check-response-limitation-form', {
-        link: isLink ? slug : null,
-        id: !isLink ? slug : null,
-      });
+      // const res = await AxiosApi.post('/take-part/check-response-limitation-form', {
+      //   link: isLink ? slug : null,
+      //   id: !isLink ? slug : null,
+      // });
+      const result = await checkResponseLimitationAction({ slug })
+
+        if (!result.success) {
+        if (result.statusCode === 409) {
+          setHasError({ status: true, message: result.error?.[0]?.title || "خطا در دریافت اطلاعات" })
+        } else {
+          setHasError({ status: true, message: "متأسفیم! فرم مورد نظر در حال حاضر در دسترس نیست." })
+        }
+        return
+      }
 
       const { userInfo } = await fetchUserInfo();
       const username = userInfo?.user?.username || null;
 
-      if (res?.data?.loggedInStatus === false && res?.data?.responseLimitation) {
+      if (result?.data?.loggedInStatus === false && result?.data?.responseLimitation) {
         setLimitation({
           isLimited: true,
-          limitationType: res.data.responseLimitation,
+          limitationType: result?.data?.responseLimitation,
         });
-      } else if (res?.data?.responseLimitation) {
+      } else if (result?.data?.responseLimitation) {
         await checkAnswerBefore(username);
       } else {
         await takePart(username);
       }
-    } catch (e: any) {
-      if (e?.response?.status === 409) {
-        setHasError({ status: true, message: e?.response.data.message[0].title });
-      } else {
-        setHasError({ status: true, message: 'متأسفیم! فرم مورد نظر در حال حاضر در دسترس نیست.' });
-      }
+     } catch (e: any) {
+      setHasError({ status: true, message: "متأسفیم! فرم مورد نظر در حال حاضر در دسترس نیست." })
     } finally {
       setFirstLoading(false);
     }
   }, [slug]);
 
   const takePart = async (username: string | null) => {
+     setFirstLoading(true) 
+      setQuestionLoading(true)
     try {
-      const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
-
-      const res = await AxiosApi.post('/take-part', {
-        link: isLink ? slug : null,
-        formId: !isLink ? slug : null,
+      // const res = await AxiosApi.post('/take-part', {
+      //   link: isLink ? slug : null,
+      //   formId: !isLink ? slug : null,
+      //   username,
+      //   from : from ?? "PUBLIC_PAGE"
+      // });
+       const res = await takePartAction({
+        slug,
         username,
-        from : from ?? "PUBLIC_PAGE"
-      });
+        from: from ?? undefined,
+      })
 
-      const q = res.data.questionModel;
+      if (!res.success) {
+        throw new Error(res.error)
+      }
+
+      const q = res.data?.questionModel;
 
       if (q?.isFirstQuestion) {
         setFirstQuestionId(q.questionId);
       }
 
-      setRealFormID(res.data.formId ?? '');
-      setFormName(res.data.formName);
-      setTakePartId(res.data.takePart);
+      setRealFormID(res.data?.formId ?? '');
+      setFormName(res.data?.formName);
+      setTakePartId(res.data?.takePart);
       initializeQuestion(q);
     } catch (e) {
-      console.error('Error in takePart:', e);
-      throw e;
+      toast.error('خطا! بارگذاری انجام نشد');
+    } finally {
+      setFirstLoading(false) 
+      setQuestionLoading(false)
     }
   };
 
@@ -286,12 +314,23 @@ export const useParticipateForm = () => {
         ];
       }
 
-      const res = await AxiosApi.post('/take-part/insert-answer', {
+      // const res = await AxiosApi.post('/take-part/insert-answer', {
+      //   formId: question.formId,
+      //   takePartId,
+      //   questionId: question.questionId,
+      //   answerList,
+      // });
+        const res = await insertAnswerAction({
         formId: question.formId,
         takePartId,
         questionId: question.questionId,
         answerList,
-      });
+      })
+
+        if (!res.success) {
+        throw new Error(res.error)
+      }
+
       if (res.data.questionId) {
         initializeQuestion(res.data, res.data.oldAnswers ?? []);
       } else {
@@ -300,7 +339,7 @@ export const useParticipateForm = () => {
       }
 
     } catch (e) {
-      console.error('Error in handleNext:', e);
+       toast.error("خطا در ثبت پاسخ")
     } finally {
       setQuestionLoading(false);
     }

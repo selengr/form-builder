@@ -88,7 +88,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
   const isLastElementOperand = (): boolean => {
     if (elements.length === 0) return false;
     const lastElement = elements[elements.length - 1];
-    return lastElement.type === 'NEW_FIELD' || lastElement.type === 'NUMBER' || lastElement.type === 'NEW_FnFx';
+    return lastElement.type === 'NEW_FIELD' || lastElement.type === 'PARENTHESIS' || lastElement.type === 'NUMBER' || lastElement.type === 'NEW_FnFx';
   };
 
   const updateCursorPosition = useCallback((newCursorIndex: number) => {
@@ -445,7 +445,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
     const nextElement = cursorIndex < elements.length ? elements[cursorIndex] : null;
 
     if (prevElement) {
-      if (prevElement.type === 'NEW_FIELD' || prevElement.type === 'NUMBER' || prevElement.type === 'NEW_FnFx') {
+      if (prevElement.type === 'NEW_FIELD' || prevElement.type === 'PARENTHESIS' || prevElement.type === 'NUMBER' || prevElement.type === 'NEW_FnFx') {
         return false;
       }
     }

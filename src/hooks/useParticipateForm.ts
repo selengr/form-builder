@@ -1,12 +1,18 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
-import { AxiosApi } from '@/services/axios/AxiosApi';
-import { ElementsType, FormElements } from '@/types/FormElements';
-import withValidation from '@/components/Fields/FormHOC';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+// lib
 import { fetchUserInfo } from '@/lib/auth';
+// services
+import { AxiosApi } from '@/services/axios/AxiosApi';
+// components
+import withValidation from '@/components/Fields/FormHOC';
+// actions
+import { takePartAction } from "../../actions/take-part"
+// types
+import { ElementsType, FormElements } from '@/types/FormElements';
 
 export interface ILimitation {
   isLimited: boolean;
@@ -136,7 +142,6 @@ export const useParticipateForm = () => {
     [extractProperty]
   );
 
-
   const fetchInitialData = useCallback(async () => {
     try {
        const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
@@ -171,29 +176,36 @@ export const useParticipateForm = () => {
   }, [slug]);
 
   const takePart = async (username: string | null) => {
+     setFirstLoading(true) 
+      setQuestionLoading(true)
     try {
-      const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
-
-      const res = await AxiosApi.post('/take-part', {
-        link: isLink ? slug : null,
-        formId: !isLink ? slug : null,
+      // const res = await AxiosApi.post('/take-part', {
+      //   link: isLink ? slug : null,
+      //   formId: !isLink ? slug : null,
+      //   username,
+      //   from : from ?? "PUBLIC_PAGE"
+      // });
+       const res = await takePartAction({
+        slug,
         username,
-        from : from ?? "PUBLIC_PAGE"
-      });
+        from: from ?? undefined,
+      })
 
-      const q = res.data.questionModel;
+      const q = res.questionModel;
 
       if (q?.isFirstQuestion) {
         setFirstQuestionId(q.questionId);
       }
 
-      setRealFormID(res.data.formId ?? '');
-      setFormName(res.data.formName);
-      setTakePartId(res.data.takePart);
+      setRealFormID(res.formId ?? '');
+      setFormName(res.formName);
+      setTakePartId(res.takePart);
       initializeQuestion(q);
     } catch (e) {
-      console.error('Error in takePart:', e);
-      throw e;
+      toast.error('خطا! بارگذاری انجام نشد');
+    } finally {
+      setFirstLoading(false) 
+      setQuestionLoading(false)
     }
   };
 

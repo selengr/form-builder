@@ -10,7 +10,13 @@ import { AxiosApi } from '@/services/axios/AxiosApi';
 // components
 import withValidation from '@/components/Fields/FormHOC';
 // actions
-import { takePartAction } from "../../actions/take-part"
+import {
+  takePartAction,
+  insertAnswerAction,
+  checkAnswerBeforeAction,
+  getPreviousQuestionAction,
+  checkResponseLimitationAction,
+} from "../../actions/take-part"
 // types
 import { ElementsType, FormElements } from '@/types/FormElements';
 
@@ -144,32 +150,38 @@ export const useParticipateForm = () => {
 
   const fetchInitialData = useCallback(async () => {
     try {
-       const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
+      //  const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
 
-      const res = await AxiosApi.post('/take-part/check-response-limitation-form', {
-        link: isLink ? slug : null,
-        id: !isLink ? slug : null,
-      });
+      // const res = await AxiosApi.post('/take-part/check-response-limitation-form', {
+      //   link: isLink ? slug : null,
+      //   id: !isLink ? slug : null,
+      // });
+      const result = await checkResponseLimitationAction({ slug })
+
+        if (!result.success) {
+        if (result.statusCode === 409) {
+          setHasError({ status: true, message: result.error?.[0]?.title || "خطا در دریافت اطلاعات" })
+        } else {
+          setHasError({ status: true, message: "متأسفیم! فرم مورد نظر در حال حاضر در دسترس نیست." })
+        }
+        return
+      }
 
       const { userInfo } = await fetchUserInfo();
       const username = userInfo?.user?.username || null;
 
-      if (res?.data?.loggedInStatus === false && res?.data?.responseLimitation) {
+      if (result?.data?.loggedInStatus === false && result?.data?.responseLimitation) {
         setLimitation({
           isLimited: true,
-          limitationType: res.data.responseLimitation,
+          limitationType: result?.data?.responseLimitation,
         });
-      } else if (res?.data?.responseLimitation) {
+      } else if (result?.data?.responseLimitation) {
         await checkAnswerBefore(username);
       } else {
         await takePart(username);
       }
-    } catch (e: any) {
-      if (e?.response?.status === 409) {
-        setHasError({ status: true, message: e?.response.data.message[0].title });
-      } else {
-        setHasError({ status: true, message: 'متأسفیم! فرم مورد نظر در حال حاضر در دسترس نیست.' });
-      }
+     } catch (e: any) {
+      setHasError({ status: true, message: "متأسفیم! فرم مورد نظر در حال حاضر در دسترس نیست." })
     } finally {
       setFirstLoading(false);
     }
@@ -191,15 +203,19 @@ export const useParticipateForm = () => {
         from: from ?? undefined,
       })
 
-      const q = res.questionModel;
+      if (!res.success) {
+        throw new Error(res.error)
+      }
+debugger
+      const q = res.data?.questionModel;
 
       if (q?.isFirstQuestion) {
         setFirstQuestionId(q.questionId);
       }
 
-      setRealFormID(res.formId ?? '');
-      setFormName(res.formName);
-      setTakePartId(res.takePart);
+      setRealFormID(res.data?.formId ?? '');
+      setFormName(res.data?.formName);
+      setTakePartId(res.data?.takePart);
       initializeQuestion(q);
     } catch (e) {
       toast.error('خطا! بارگذاری انجام نشد');

@@ -1,6 +1,6 @@
 "use server"
 
-import { AxiosApi } from "@/services/axios/AxiosApi"
+import { serverApi } from "@/services/axios/serverApi"
 
 export async function takePartAction(params: {
   slug: string
@@ -11,7 +11,7 @@ export async function takePartAction(params: {
     const { slug, username, from } = params
     const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
 
-    const res = await AxiosApi.post("/take-part", {
+    const res = await serverApi.post("/take-part", {
       link: isLink ? slug : null,
       formId: !isLink ? slug : null,
       username,
@@ -38,7 +38,7 @@ export async function checkResponseLimitationAction(params: {
     const { slug } = params
     const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
 
-    const res = await AxiosApi.post("/take-part/check-response-limitation-form", {
+    const res = await serverApi.post("/take-part/check-response-limitation-form", {
       link: isLink ? slug : null,
       id: !isLink ? slug : null,
     })
@@ -64,7 +64,7 @@ export async function checkAnswerBeforeAction(params: {
     const { slug, username } = params
     const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
 
-    const res = await AxiosApi.post("/take-part/check-answer-to-form-before", {
+    const res = await serverApi.post("/take-part/check-answer-to-form-before", {
       link: isLink ? slug : null,
       formId: !isLink ? slug : null,
       username,
@@ -100,7 +100,7 @@ export async function insertAnswerAction(params: {
   try {
     const { formId, takePartId, questionId, answerList } = params
 
-    const res = await AxiosApi.post("/take-part/insert-answer", {
+    const res = await serverApi.post("/take-part/insert-answer", {
       formId,
       takePartId,
       questionId,
@@ -125,7 +125,7 @@ export async function getPreviousQuestionAction(params: {
   try {
     const { takePartId } = params
 
-    const res = await AxiosApi.post("/question/previous-question", {
+    const res = await serverApi.post("/question/previous-question", {
       takePartId,
     })
 

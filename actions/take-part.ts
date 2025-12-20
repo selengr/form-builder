@@ -112,7 +112,6 @@ export async function insertAnswerAction(params: {
       data: res.data,
     }
   } catch (e: any) {
-    console.error("Error in insertAnswerAction:", e)
     return {
       success: false,
       error: e?.response?.data?.message || "An error occurred",

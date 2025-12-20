@@ -206,7 +206,7 @@ export const useParticipateForm = () => {
       if (!res.success) {
         throw new Error(res.error)
       }
-debugger
+
       const q = res.data?.questionModel;
 
       if (q?.isFirstQuestion) {
@@ -314,12 +314,23 @@ debugger
         ];
       }
 
-      const res = await AxiosApi.post('/take-part/insert-answer', {
+      // const res = await AxiosApi.post('/take-part/insert-answer', {
+      //   formId: question.formId,
+      //   takePartId,
+      //   questionId: question.questionId,
+      //   answerList,
+      // });
+        const res = await insertAnswerAction({
         formId: question.formId,
         takePartId,
         questionId: question.questionId,
         answerList,
-      });
+      })
+
+        if (!res.success) {
+        throw new Error(res.error)
+      }
+
       if (res.data.questionId) {
         initializeQuestion(res.data, res.data.oldAnswers ?? []);
       } else {
@@ -328,7 +339,7 @@ debugger
       }
 
     } catch (e) {
-      console.error('Error in handleNext:', e);
+       toast.error("خطا در ثبت پاسخ")
     } finally {
       setQuestionLoading(false);
     }

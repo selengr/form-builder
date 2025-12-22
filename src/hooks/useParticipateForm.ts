@@ -181,7 +181,11 @@ export const useParticipateForm = () => {
         await takePart(username);
       }
      } catch (e: any) {
-      setHasError({ status: true, message: "متأسفیم! فرم مورد نظر در حال حاضر در دسترس نیست." })
+    if (e.status === 409) {
+          setHasError({ status: true, message: e.response.data.message?.[0]?.title || "خطا در دریافت اطلاعات" })
+        } else {
+          setHasError({ status: true, message: "متأسفیم! فرم مورد نظر در حال حاضر در دسترس نیست." })
+        }
     } finally {
       setFirstLoading(false);
     }
@@ -236,6 +240,7 @@ export const useParticipateForm = () => {
         username,
       });
       setTakePartId(res.data.takePart);
+      setFormName(res.data?.formName);
       initializeQuestion(res.data.questionModel, res.data.userAnswerModel?.answersModel ?? []);
     } catch (e) {
       console.error('Error in checkAnswerBefore:', e);

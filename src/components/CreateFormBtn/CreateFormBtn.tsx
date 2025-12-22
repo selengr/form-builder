@@ -80,6 +80,7 @@ export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
     try {
       const response = await AxiosApi.post('/form', body);
       toast.success('عملیات با موفقیت انجام شد');
+      onClose()
       router.push(`/builder/${response?.data?.id}`);
     } catch (error) {
       console.error(error);
@@ -300,6 +301,7 @@ export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
                 disableElevation
                 variant='contained'
                 loading={isSubmitting || mutation.isPending}
+                disabled={isSubmitting || mutation.isPending}
                 sx={{
                   bgcolor: '#1758BA',
                   fontWeight: '400',

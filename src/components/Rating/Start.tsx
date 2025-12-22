@@ -18,7 +18,7 @@ export type RatingProps = {
     iconSize?: number;
 };
 
-export default function Rating({
+export default function StarRating({
     max = 5,
     precision = 0.5,
     animateFill = true,

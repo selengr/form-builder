@@ -9,7 +9,7 @@ import { Box, Stack, Typography } from '@mui/material';
 import FormProvider from '../../components/hook-form/FormProvider';
 import { RHFMultiSelect, RHFSwitch, RHFTextField, RHFTextFieldOptionList } from '@/components/hook-form';
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
-import { IFormElementConstructor, IFormOptionList, IQPLSpectral, ISpectralQTapAndOptionsType } from '@/types/bulider';
+import { IFormElementConstructor, IFormOptionList, IQPLSpectral, IRatingQTapAndOptionsType } from '@/types/bulider';
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 import { AxiosApi } from '@/services/axios/AxiosApi';
 import useElements from '@/hooks/useElements';
@@ -92,14 +92,15 @@ const spectralPlaceList: IFormOptionList[] = [
   },
 ];
 
-const tapTypeOptions: ISpectralQTapAndOptionsType = [
-  { value: 'CONTINUOUS', label: 'پیوسته' },
-  { value: 'DISCRETE', label: 'گسسته' },
-];
+// const tapTypeOptions: IRatingQTapAndOptionsType = [
+//   { value: 'CONTINUOUS', label: 'پیوسته' },
+//   { value: 'DISCRETE', label: 'گسسته' },
+// ];
 
-const spectralTypeOptions: ISpectralQTapAndOptionsType = [
-  { value: 'SPECTRAL', label: 'نقطه' },
-  { value: 'DOMAIN', label: 'دامنه' },
+const ratingTypeOptions: IRatingQTapAndOptionsType = [
+ { value: 'STAR', label: 'ستاره‌ایی' },
+  { value: 'HEART', label: 'قلب' },
+  { value: 'EMOJI', label: 'ایموجی' },
 ];
 
 const optionsSchema = z.object({
@@ -563,7 +564,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         }}>
         <Stack spacing={1}>
           <Typography variant='subtitle2' fontWeight='700'>
-            متن سوال:   test
+            متن سوال:
           </Typography>
           <RHFTextField multiline rows={3} name='title' />
         </Stack>
@@ -572,17 +573,17 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
           <Typography variant='subtitle2' fontWeight='700'>
             نوع پاسخ:
           </Typography>
-          <RHFMultiSelect name='SPECTRAL_TYPE.value' options={spectralTypeOptions} />
+          <RHFMultiSelect name='RATING_TYPE.value' options={ratingTypeOptions} />
         </Stack>
 
-        <Stack spacing={1} marginTop={2.5}>
+        {/* <Stack spacing={1} marginTop={2.5}>
           <Typography variant='subtitle2' fontWeight='700'>
             مقیاس پاسخ:
           </Typography>
           <RHFMultiSelect setValue={setValue} name='SELECTION_TYPE.value' clearErros={clearErrors} options={tapTypeOptions} setProp={setDisableInput} />
-        </Stack>
+        </Stack> */}
 
-        <Box display='flex' gap={2} justifyContent='space-between' marginTop={2.5}>
+        {/* <Box display='flex' gap={2} justifyContent='space-between' marginTop={2.5}>
           <Box width='100%'>
             <Typography variant='subtitle2' fontWeight='700'>
               شروع:
@@ -601,7 +602,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
             </Typography>
             <RHFTextField disabled={disableInput} name='STEP.value' type='number' changeValueToDefault={disableInput} />
           </Box>
-        </Box>
+        </Box> */}
 
         <Stack>
           <Box display='flex' justifyContent='space-between' alignItems='center' marginTop={3} marginBottom={0.5}>
@@ -613,7 +614,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
             </Typography>
             <Typography sx={{ width: '12.5%' }}></Typography>
           </Box>
-          <RHFTextFieldOptionList
+          {/* <RHFTextFieldOptionList
             name='optionList'
             errorMessage={
               // @ts-ignore
@@ -623,7 +624,9 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
               // @ts-ignore
               errors?.optionList?.score?.message
             }
-          />
+          /> */}
+            <RHFTextField  name='RATING_START_LABEL.value' placeholder='برچسب'/>
+            <RHFTextField  name='RATING_END_LABEL.value' placeholder='برچسب'/>
         </Stack>
 
         <Stack flexDirection='row' justifyContent='space-between' alignItems='flex-start' marginTop={3}>

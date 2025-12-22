@@ -87,6 +87,7 @@ export type IQPLTextField = [
 ];
 
 export type ISpectralQTapAndOptionsType = { value: string; label: string }[];
+export type IRatingQTapAndOptionsType = { value: string; label: string }[];
 
 export type IQPLSpectral = [
   {

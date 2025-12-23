@@ -20,6 +20,7 @@ import useActionDesigner from '@/hooks/useActionDesigner';
 import CheckIcon from '@/../public/images/home-page/spectral.svg';
 import { SwitchButton } from '../Switch/SwitchButton';
 import StarRating from '../Rating/Start';
+import EmojiRating from '../Rating/Emoji';
 
 const questionType: ElementsType = 'RATING';
 
@@ -209,7 +210,7 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
 
           {!!error && <Typography color='#f44336'>{error}</Typography>}
         </>
-      ) : (
+      ) : ratingType === 'HEART' ? (
         <>
          <StarRating
           value={startValue}
@@ -223,7 +224,11 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
         </>
       ) : (
         <EmojiRating
-        clickableEmojis
+           value={startValue}
+           onChange={handleChange}
+           clickableEmojis
+           startValue={start}
+           endValue={end}
         />
 
       )

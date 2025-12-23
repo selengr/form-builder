@@ -27,17 +27,17 @@ const EMOJIS: EmojiItem[] = [
     {
         id: 1,
         label: "Bad",
-        url: "sad.svg",
+        url: "sad.png",
     },
     {
         id: 2,
         label: "Okay",
-        url: "happy.svg",
+        url: "happy.png",
     },
     {
         id: 3,
         label: "Good",
-        url: "Neutral.svg",
+        url: "Neutral.png",
 
     },
     {
@@ -68,62 +68,65 @@ export default function EmojiRating({
     const value = controlledValue ?? internalValue;
 
     return (
-        <div className="w-full max-w-sm mx-auto flex flex-col items-center
+        <div dir="ltr" className="w-full max-w-sm mx-auto flex flex-row items-center
 gap-2 select-none">
-            <div className="flex justify-between w-full x-2 gap-4">
-                {startValue && renderLable(startValue)}
-                {EMOJIS.map((emoji, index) => {
-                    const isActive = index === value;
-                    const isPopping = index === popIndex;
+            {startValue && renderLable(startValue)}
+            <div className="flex flex-col">
+                <div className="flex justify-between w-full x-2 gap-4">
+                    {EMOJIS.map((emoji, index) => {
+                        const isActive = index === value;
+                        const isPopping = index === popIndex;
 
-                    return (
-                        <div
-                            key={emoji.id}
-                            className={`flex flex-col items-center gap-4 ${clickableEmojis ? "cursor-pointer" : ""
-                                }`}
-                            onClick={() => {
-                                if (!clickableEmojis) return;
-                                setInternalValue(index);
-                                onChange?.(index);
-                                setPopIndex(index);
-                                setTimeout(() => setPopIndex(null), 180);
-                            }}
-                        >
+                        return (
                             <div
-                                className={`relative w-14 h-14 ${isPopping ? "emoji-pop" : ""}`}
+                                key={emoji.id}
+                                className={`flex flex-col items-center gap-4 ${clickableEmojis ? "cursor-pointer" : ""
+                                    }`}
+                                onClick={() => {
+                                    if (!clickableEmojis) return;
+                                    setInternalValue(index);
+                                    onChange?.(index);
+                                    setPopIndex(index);
+                                    setTimeout(() => setPopIndex(null), 180);
+                                }}
                             >
-                                <img
-                                    src={`/images/icons/rating/${emoji.url}`}
-                                    alt={emoji.label}
-                                    className="w-full h-full object-contain transition-all duration-200"
-                                    style={{
-                                        filter: isActive
-                                            ? "drop-shadow(0 0 6px rgba(255, 225, 62, 0.6))"
-                                            : "grayscale(100%) brightness(0.9)",
-                                    }}
-                                />
+                                <div
+                                    className={`relative w-14 h-14 ${isPopping ? "emoji-pop" : ""}`}
+                                >
+                                    <img
+                                        src={`/images/icons/rating/${emoji.url}`}
+                                        alt={emoji.label}
+                                        className="w-full h-full object-contain transition-all duration-200"
+                                        style={{
+                                            filter: isActive
+                                                ? "drop-shadow(0 0 6px rgba(255, 225, 62, 0.6))"
+                                                : "grayscale(100%) brightness(0.9)",
+                                        }}
+                                    />
 
-                                {isActive && (
-                                    <div className="absolute inset-0 emoji-sweep pointer-events-none" />
-                                )}
+                                    {isActive && (
+                                        <div className="absolute inset-0 emoji-sweep pointer-events-none" />
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    );
-                })}
-                {endValue && renderLable(endValue)}
+                        );
+                    })}
+                </div>
+
+
+                <RangeSlider
+                    value={value}
+                    max={EMOJIS.length - 1}
+                    onChange={(v) => {
+                        setInternalValue(v);
+                        onChange?.(v);
+                        setPopIndex(v);
+                        setTimeout(() => setPopIndex(null), 180);
+                    }}
+                />
+
             </div>
-
-            <RangeSlider
-                value={value}
-                max={EMOJIS.length - 1}
-                onChange={(v) => {
-                    setInternalValue(v);
-                    onChange?.(v);
-                    setPopIndex(v);
-                    setTimeout(() => setPopIndex(null), 180);
-                }}
-            />
-
+            {endValue && renderLable(endValue)}
             <style jsx>{`
 @keyframes pop {
 0% {

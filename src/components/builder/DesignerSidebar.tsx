@@ -17,7 +17,7 @@ import SettingsDialog from '../SettingsDialog/SettingsDialog';
 // image
 import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
 
-const ELEMENTS = [FormElements.TEXT_FIELD, FormElements.MULTIPLE_CHOICE, FormElements.MULTIPLE_CHOICE_IMAGE, FormElements.SPECTRAL, FormElements.INFO_FIELD];
+const ELEMENTS = [FormElements.TEXT_FIELD, FormElements.MULTIPLE_CHOICE, FormElements.MULTIPLE_CHOICE_IMAGE, FormElements.SPECTRAL,FormElements.RATING, FormElements.INFO_FIELD];
 
 interface DesignerSidebarProps {
   data: any; // تایپ دقیق‌تر هم می‌تونی بدی

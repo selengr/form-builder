@@ -175,8 +175,6 @@ export const RatingFormElement: FormElement = {
 
 type CustomInstance = FormElementInstance & {
   questionPropertyList: typeof questionPropertyList;
-  // optionList: typeof optionList;
-  // spectralPlaceList: typeof spectralPlaceList;
 };
 
 function FormComponent({ elementInstance, value, onChange, error }: { elementInstance?: FormElementInstance; value?: string; onChange?: (value: string) => void; error?: string }) {
@@ -226,10 +224,11 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
         </>
       ) : (
         <>
-            <StarRating
+         <StarRating
           value={startValue}
           onChange={handleChange}
           precision={0.1}
+          heart={true}
           startValue={start}
           endValue={end}
         />
@@ -250,9 +249,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   const selectedElement = useSelectedElement();
   const { updateElement, addElement } = useActionDesigner();
   const { questionGroups } = useDesigner();
-  // const [disableInput, setDisableInput] = useState<boolean>(() =>
-  //   element.questionPropertyList.some((property) => property.questionPropertyEnum === 'SELECTION_TYPE' && property.value === 'CONTINUOUS'),
-  // );
+
   const [openDescriptionSwitch, setOpenDescriptionSwitch] = useState<boolean>(() =>
     element.questionPropertyList.some((property) => {
       return property.questionPropertyEnum === 'DESCRIPTION' && property.value;
@@ -280,19 +277,6 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       return acc;
     }, {});
     values.title = element.title;
-console.log('values', values)
-    // let optionList
-    // if (element.optionList.length > 0) {
-    //   optionList = element.optionList
-    // } else {
-    //   optionList = element?.spectralPlaceList?.map((item: any) => ({
-    //     id: item.id ?? null,
-    //     title: item.title,
-    //     score: Number(item?.value),
-    //   }));
-    // }
-
-    // values.optionList = optionList
 
     return values;
   }, []);
@@ -305,12 +289,10 @@ console.log('values', values)
 
   const {
     reset,
-    setValue,
     handleSubmit,
-    clearErrors,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting },
   } = methods;
-console.log('methods', methods.watch())
+
   async function onSubmit(values: propertiesFormSchemaType) {
     const { title, DESCRIPTION, REQUIRED, RATING_TYPE, STEP, RATING_START_LABEL, RATING_END_LABEL, EDIT_ANSWER_LOCKED } = values;
 
@@ -438,33 +420,6 @@ console.log('methods', methods.watch())
           <RHFMultiSelect name='RATING_TYPE.value' options={ratingTypeOptions} />
         </Stack>
 
-        {/* <Stack spacing={1} marginTop={2.5}>
-          <Typography variant='subtitle2' fontWeight='700'>
-            مقیاس پاسخ:
-          </Typography>
-          <RHFMultiSelect setValue={setValue} name='SELECTION_TYPE.value' clearErros={clearErrors} options={tapTypeOptions} setProp={setDisableInput} />
-        </Stack> */}
-
-        {/* <Box display='flex' gap={2} justifyContent='space-between' marginTop={2.5}>
-          <Box width='100%'>
-            <Typography variant='subtitle2' fontWeight='700'>
-              شروع:
-            </Typography>
-            <RHFTextField name='SPECTRAL_START.value' type='number' />
-          </Box>
-          <Box width='100%'>
-            <Typography variant='subtitle2' fontWeight='700'>
-              پایان:
-            </Typography>
-            <RHFTextField name='SPECTRAL_END.value' type='number' />
-          </Box>
-          <Box width='100%'>
-            <Typography variant='subtitle2' fontWeight='700'>
-              گام:
-            </Typography>
-            <RHFTextField disabled={disableInput} name='STEP.value' type='number' changeValueToDefault={disableInput} />
-          </Box>
-        </Box> */}
 
         <Stack>
           <Box display='flex' justifyContent='space-between' alignItems='center' marginTop={3} marginBottom={0.5}>
@@ -474,19 +429,7 @@ console.log('methods', methods.watch())
             <Typography sx={{ width: '10%' }} fontWeight='700'>
               مکان:
             </Typography>
-            {/* <Typography sx={{ width: '12.5%' }}></Typography> */}
           </Box>
-          {/* <RHFTextFieldOptionList
-            name='optionList'
-            errorMessage={
-              // @ts-ignore
-              errors?.optionList?.root?.message ??
-              // @ts-ignore
-              errors?.optionList?.optionList?.message ??
-              // @ts-ignore
-              errors?.optionList?.score?.message
-            }
-          /> */}
           <div className='flex'>
 
             <RHFTextField name='RATING_START_LABEL.value' placeholder='برچسب'/>

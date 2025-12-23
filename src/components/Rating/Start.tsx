@@ -106,7 +106,7 @@ export default function StarRating({
 
     const renderLable = (value: string) => {
         return (
-            <p className="text-md font-medium transition-colors">
+            <p className="mx-1 text-md font-medium transition-colors">
                 {value}
             </p>
         )

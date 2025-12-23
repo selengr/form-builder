@@ -7,10 +7,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Stack, Typography } from '@mui/material';
 import FormProvider from '../../components/hook-form/FormProvider';
-import { RHFMultiSelect, RHFSwitch, RHFTextField, RHFTextFieldOptionList } from '@/components/hook-form';
+import { RHFMultiSelect, RHFSwitch, RHFTextField } from '@/components/hook-form';
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
-import { IFormElementConstructor, IFormOptionList, IQPLRating, IRatingQTapAndOptionsType } from '@/types/bulider';
-import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
+import { IFormElementConstructor, IQPLRating, IRatingQTapAndOptionsType } from '@/types/bulider';
 import { AxiosApi } from '@/services/axios/AxiosApi';
 import useElements from '@/hooks/useElements';
 import useDesigner from '@/hooks/useDesigner';
@@ -20,7 +19,6 @@ import useSelectedElement from '@/hooks/useSelectedElement';
 import useActionDesigner from '@/hooks/useActionDesigner';
 import CheckIcon from '@/../public/images/home-page/spectral.svg';
 import { SwitchButton } from '../Switch/SwitchButton';
-import { MyRangeSlider } from '../Slider/RangeSlider';
 import StarRating from '../Rating/Start';
 
 const questionType: ElementsType = 'RATING';
@@ -110,18 +108,7 @@ const propertiesSchema = z
     }),
     // optionList: z.array(optionsSchema).max(10, { message: 'حداکثر میتواند 10 برچسب وجود داشته باشد' }),
   })
- 
-  // .refine(
-  //   (val) => {
-  //     if (val.SELECTION_TYPE.value === 'DISCRETE') {
-  //       return val.STEP.value >= 1 ? true : false;
-  //     } else return true;
-  //   },
-  //   {
-  //     message: 'گام گسسته نمیتواند از 1 کمتر باشد',
-  //     path: ['STEP.value'],
-  //   },
-  // );
+
 
 const DesignerComponent = memo(function DesignerComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
   const element = elementInstance as CustomInstance;
@@ -234,7 +221,15 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
         />
           {!!error && <Typography color='#f44336'>{error}</Typography>}
         </>
-      )}
+      ) : (
+        <EmojiRating
+        clickableEmojis
+        />
+
+      )
+      
+      
+      }
     </Box>
   );
 }

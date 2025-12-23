@@ -9,7 +9,7 @@ import { Box, Stack, Typography } from '@mui/material';
 import FormProvider from '../../components/hook-form/FormProvider';
 import { RHFMultiSelect, RHFSwitch, RHFTextField, RHFTextFieldOptionList } from '@/components/hook-form';
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
-import { IFormElementConstructor, IFormOptionList, IQPLSpectral, IRatingQTapAndOptionsType } from '@/types/bulider';
+import { IFormElementConstructor, IFormOptionList, IQPLRating, IRatingQTapAndOptionsType } from '@/types/bulider';
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 import { AxiosApi } from '@/services/axios/AxiosApi';
 import useElements from '@/hooks/useElements';
@@ -24,10 +24,10 @@ import { MyRangeSlider } from '../Slider/RangeSlider';
 
 const questionType: ElementsType = 'RATING';
 
-const questionPropertyList: IQPLSpectral = [
+const questionPropertyList: IQPLRating = [
   {
-    questionPropertyEnum: 'SPECTRAL_TYPE',
-    value: 'SPECTRAL',
+    questionPropertyEnum: 'RATING_TYPE',
+    value: 'STAR',
     id: 1,
   },
   {
@@ -41,23 +41,18 @@ const questionPropertyList: IQPLSpectral = [
     id: 3,
   },
   {
-    questionPropertyEnum: 'SELECTION_TYPE',
-    value: 'CONTINUOUS',
-    id: 4,
-  },
-  {
     questionPropertyEnum: 'STEP',
     value: 0.1,
     id: 5,
   },
   {
-    questionPropertyEnum: 'SPECTRAL_START',
-    value: 0,
+    questionPropertyEnum: "RATING_START_LABEL",
+    value: "",
     id: 6,
   },
   {
-    questionPropertyEnum: 'SPECTRAL_END',
-    value: 100,
+    questionPropertyEnum: "RATING_END_LABEL",
+    value: "",
     id: 7,
   },
   {
@@ -67,30 +62,30 @@ const questionPropertyList: IQPLSpectral = [
   },
 ];
 
-const optionList: IFormOptionList[] = [
-  {
-    title: 'گزینه 1',
-    score: 0,
-    id: null,
-  },
-  {
-    title: 'گزینه 2',
-    score: 100,
-    id: null,
-  },
-];
-const spectralPlaceList: IFormOptionList[] = [
-  {
-    title: 'گزینه 1',
-    score: 0,
-    id: null,
-  },
-  {
-    title: 'گزینه 2',
-    score: 100,
-    id: null,
-  },
-];
+// const optionList: IFormOptionList[] = [
+//   {
+//     title: 'گزینه 1',
+//     score: 0,
+//     id: null,
+//   },
+//   {
+//     title: 'گزینه 2',
+//     score: 100,
+//     id: null,
+//   },
+// ];
+// const spectralPlaceList: IFormOptionList[] = [
+//   {
+//     title: 'گزینه 1',
+//     score: 0,
+//     id: null,
+//   },
+//   {
+//     title: 'گزینه 2',
+//     score: 100,
+//     id: null,
+//   },
+// ];
 
 // const tapTypeOptions: IRatingQTapAndOptionsType = [
 //   { value: 'CONTINUOUS', label: 'پیوسته' },
@@ -103,24 +98,24 @@ const ratingTypeOptions: IRatingQTapAndOptionsType = [
   { value: 'EMOJI', label: 'ایموجی' },
 ];
 
-const optionsSchema = z.object({
-  title: z
-    .string({ invalid_type_error: 'الزامی است' })
-    .trim()
-    .transform((value) => value.replace(/\s+/g, ' '))
-    .pipe(
-      z
-        .string({ invalid_type_error: 'الزامی است' })
-        .min(1, {
-          message: 'برچسب باید حداقل 1 و حداکثر 20 کاراکتر باشد',
-        })
-        .max(20, {
-          message: 'برچسب باید حداقل 1 و حداکثر 20 کاراکتر باشد',
-        }),
-    ),
-    score: z.number({ invalid_type_error: 'مکان الزامی است' }).min(0, { message: 'نمیتواند منفی باشد' }).nonnegative({ message: 'نمیتواند منفی باشد' }),
-    id: z.number().nullable().default(null),
-});
+// const optionsSchema = z.object({
+//   title: z
+//     .string({ invalid_type_error: 'الزامی است' })
+//     .trim()
+//     .transform((value) => value.replace(/\s+/g, ' '))
+//     .pipe(
+//       z
+//         .string({ invalid_type_error: 'الزامی است' })
+//         .min(1, {
+//           message: 'برچسب باید حداقل 1 و حداکثر 20 کاراکتر باشد',
+//         })
+//         .max(20, {
+//           message: 'برچسب باید حداقل 1 و حداکثر 20 کاراکتر باشد',
+//         }),
+//     ),
+//     score: z.number({ invalid_type_error: 'مکان الزامی است' }).min(0, { message: 'نمیتواند منفی باشد' }).nonnegative({ message: 'نمیتواند منفی باشد' }),
+//     id: z.number().nullable().default(null),
+// });
 
 const propertiesSchema = z
   .object({
@@ -129,8 +124,7 @@ const propertiesSchema = z
       .trim()
       .transform((value) => value.replace(/\s+/g, ' '))
       .pipe(z.string().min(1, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' }).max(3999, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' })),
-    SELECTION_TYPE: z.object({ value: z.string(), id: z.number() }),
-    SPECTRAL_TYPE: z.object({ value: z.string(), id: z.number() }),
+    RATING_TYPE: z.object({ value: z.string(), id: z.number() }),
     STEP: z.object({
       value: z.number({ invalid_type_error: 'اجباری است' }).min(0.1, { message: 'باید از صفر بزرگتر باشد' }),
       id: z.number(),
@@ -144,12 +138,12 @@ const propertiesSchema = z
         .optional(),
       id: z.number(),
     }),
-    SPECTRAL_START: z.object({
-      value: z.number({ invalid_type_error: 'اجباری است' }).min(0, { message: 'نمیتواند منفی باشد' }).nonnegative({ message: 'نمیتواند منفی باشد' }),
+    RATING_START_LABEL: z.object({
+       value: z.union([z.number(), z.string()]).optional(),
       id: z.number(),
     }),
-    SPECTRAL_END: z.object({
-      value: z.number({ invalid_type_error: 'اجباری است' }).min(1, { message: 'حداقل باید 1 باشد' }).positive({ message: 'حداقل باید 1 باشد' }),
+    RATING_END_LABEL: z.object({
+       value: z.union([z.number(), z.string()]).optional(),
       id: z.number(),
     }),
     REQUIRED: z.object({
@@ -160,62 +154,62 @@ const propertiesSchema = z
       value: z.boolean().default(false),
       id: z.number(),
     }),
-    optionList: z.array(optionsSchema).max(10, { message: 'حداکثر میتواند 10 برچسب وجود داشته باشد' }),
+    // optionList: z.array(optionsSchema).max(10, { message: 'حداکثر میتواند 10 برچسب وجود داشته باشد' }),
   })
-  .refine((val) => val.SPECTRAL_END.value >= val.SPECTRAL_START.value, {
-    message: 'پایان باید بزرگتر یا مساوی با شروع باشد',
-    path: ['SPECTRAL_END.value'],
-  })
-  .refine(
-    (val) => {
-      if (val.SPECTRAL_END.value - val.SPECTRAL_START.value < val.STEP.value) return false;
-      else return true;
-    },
-    {
-      message: 'گام نمیتواند از پایان بیشتر باشد',
-      path: ['STEP.value'],
-    },
-  )
-  .refine(
-    (val) => {
-      const distance = val.SPECTRAL_END.value - val.SPECTRAL_START.value;
-      if (val.SELECTION_TYPE.value === 'CONTINUOUS' || val.SELECTION_TYPE.value === 'DISCRETE') {
-        if (Math.ceil(distance / val.STEP.value) + 1 < val.optionList.length) return false;
-        else return true;
-      }
-    },
-    {
-      message: 'برچسب‌ها نمی‌توانند از تعداد گام بین شروع و پایان بیشتر باشند',
-      path: ['optionList.optionList'],
-    },
-  )
-  .refine(
-    (val) => {
-      const scores = val.optionList.map((option) => option.score);
-      const uniqueScores = [...(new Set(scores) as any)];
-      return scores.every((score) => score >= val.SPECTRAL_START.value && score <= val.SPECTRAL_END.value) && scores.length === uniqueScores.length;
-    },
-    {
-      message: 'هر مکان در محدوده شروع و پایان طیف یا دامنه باید منحصر به فرد باشد',
-      path: ['optionList.score'],
-    },
-  )
-  .refine(
-    (val) => {
-      if (val.SELECTION_TYPE.value === 'DISCRETE') {
-        return val.STEP.value >= 1 ? true : false;
-      } else return true;
-    },
-    {
-      message: 'گام گسسته نمیتواند از 1 کمتر باشد',
-      path: ['STEP.value'],
-    },
-  );
+  // .refine((val) => val.SPECTRAL_END.value >= val.SPECTRAL_START.value, {
+  //   message: 'پایان باید بزرگتر یا مساوی با شروع باشد',
+  //   path: ['SPECTRAL_END.value'],
+  // })
+  // .refine(
+  //   (val) => {
+  //     if (val.SPECTRAL_END.value - val.SPECTRAL_START.value < val.STEP.value) return false;
+  //     else return true;
+  //   },
+  //   {
+  //     message: 'گام نمیتواند از پایان بیشتر باشد',
+  //     path: ['STEP.value'],
+  //   },
+  // )
+  // .refine(
+  //   (val) => {
+  //     const distance = val.SPECTRAL_END.value - val.SPECTRAL_START.value;
+  //     if (val.SELECTION_TYPE.value === 'CONTINUOUS' || val.SELECTION_TYPE.value === 'DISCRETE') {
+  //       if (Math.ceil(distance / val.STEP.value) + 1 < val.optionList.length) return false;
+  //       else return true;
+  //     }
+  //   },
+  //   {
+  //     message: 'برچسب‌ها نمی‌توانند از تعداد گام بین شروع و پایان بیشتر باشند',
+  //     path: ['optionList.optionList'],
+  //   },
+  // )
+  // .refine(
+  //   (val) => {
+  //     const scores = val.optionList.map((option) => option.score);
+  //     const uniqueScores = [...(new Set(scores) as any)];
+  //     return scores.every((score) => score >= val.SPECTRAL_START.value && score <= val.SPECTRAL_END.value) && scores.length === uniqueScores.length;
+  //   },
+  //   {
+  //     message: 'هر مکان در محدوده شروع و پایان طیف یا دامنه باید منحصر به فرد باشد',
+  //     path: ['optionList.score'],
+  //   },
+  // )
+  // .refine(
+  //   (val) => {
+  //     if (val.SELECTION_TYPE.value === 'DISCRETE') {
+  //       return val.STEP.value >= 1 ? true : false;
+  //     } else return true;
+  //   },
+  //   {
+  //     message: 'گام گسسته نمیتواند از 1 کمتر باشد',
+  //     path: ['STEP.value'],
+  //   },
+  // );
 
 const DesignerComponent = memo(function DesignerComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
   const element = elementInstance as CustomInstance;
   const labelText = element.title;
-  const designerBtnLabel = SpectralFormElement.designerBtnElement.label;
+  const designerBtnLabel = RatingFormElement.designerBtnElement.label;
 
   return (
     <div
@@ -242,14 +236,15 @@ export const RatingFormElement: FormElement = {
     questionType,
     position,
     questionPropertyList: questionPropertyList,
-    optionList: optionList,
+    // optionList: optionList,
   }),
   designerBtnElement: {
     label: 'امتیازدهی',
     icon: CheckIcon,
   },
   designerComponent: DesignerComponent,
-  formComponent: FormComponent,
+  // formComponent: FormComponent,
+  formComponent: ()=><></>,
   propertiesComponent: PropertiesComponent,
 
   validate: (formElement: FormElementInstance, currentValue: string): boolean => {
@@ -264,91 +259,91 @@ export const RatingFormElement: FormElement = {
 
 type CustomInstance = FormElementInstance & {
   questionPropertyList: typeof questionPropertyList;
-  optionList: typeof optionList;
-  spectralPlaceList: typeof spectralPlaceList;
+  // optionList: typeof optionList;
+  // spectralPlaceList: typeof spectralPlaceList;
 };
 
-function FormComponent({ elementInstance, value, onChange, error }: { elementInstance?: FormElementInstance; value?: string; onChange?: (value: string) => void; error?: string }) {
-  const element = elementInstance as CustomInstance;
-  const start: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SPECTRAL_START')?.value);
-  const end: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SPECTRAL_END')?.value);
-  const step: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'STEP')?.value);
+// function FormComponent({ elementInstance, value, onChange, error }: { elementInstance?: FormElementInstance; value?: string; onChange?: (value: string) => void; error?: string }) {
+//   const element = elementInstance as CustomInstance;
+//   const start: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SPECTRAL_START')?.value);
+//   const end: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SPECTRAL_END')?.value);
+//   const step: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'STEP')?.value);
 
-  const selectionType = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SELECTION_TYPE')?.value;
+//   const selectionType = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SELECTION_TYPE')?.value;
 
-  const spectralType = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SPECTRAL_TYPE')?.value;
+//   const spectralType = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SPECTRAL_TYPE')?.value;
 
-  const marks = element.spectralPlaceList.map((option) => {
-    return { value: option.value!, label: option.title };
-  });
+//   const marks = element.spectralPlaceList.map((option) => {
+//     return { value: option.value!, label: option.title };
+//   });
 
-  const description = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'DESCRIPTION')?.value;
+//   const description = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'DESCRIPTION')?.value;
 
-  const [sliderVal, setSliderVal] = useState(value ? value : spectralType === 'SPECTRAL' ? start : [start, end]);
+//   const [sliderVal, setSliderVal] = useState(value ? value : spectralType === 'SPECTRAL' ? start : [start, end]);
 
-  const CustomValueLabel = ({ value }: { value: number }) => {
-    const isMark = marks.some((mark) => mark.value === value);
-    return <Box>{isMark ? <MdOutlineKeyboardArrowDown size={25} /> : <span>{value}</span>}</Box>;
-  };
+//   const CustomValueLabel = ({ value }: { value: number }) => {
+//     const isMark = marks.some((mark) => mark.value === value);
+//     return <Box>{isMark ? <MdOutlineKeyboardArrowDown size={25} /> : <span>{value}</span>}</Box>;
+//   };
 
-  const handleChange = (event: Event, newValue: number | number[]) => {
-   const cleanValue = Array.isArray(newValue)
-    ? newValue.map(v => parseFloat(v.toFixed(1))) 
-    : parseFloat(newValue.toFixed(1));  
+//   const handleChange = (event: Event, newValue: number | number[]) => {
+//    const cleanValue = Array.isArray(newValue)
+//     ? newValue.map(v => parseFloat(v.toFixed(1))) 
+//     : parseFloat(newValue.toFixed(1));  
 
-    setSliderVal(cleanValue as any);
-    onChange?.(cleanValue as any);
-  };
+//     setSliderVal(cleanValue as any);
+//     onChange?.(cleanValue as any);
+//   };
 
-  return (
-    <Box width='100%' maxWidth='1000px'>
-      <Typography
-        sx={{
-          marginBottom: description ? '0.5rem' : '3rem',
-          fontSize: '1rem',
-          fontWeight: '600',
-        }}>
-        {element.title}
-      </Typography>
-      {description && (
-        <Typography sx={{ fontSize: '12px', fontWeight: '500', marginBottom: '3rem' }} variant='subtitle2'>
-          {description}
-        </Typography>
-      )}
-      {spectralType === 'SPECTRAL' ? (
-        <>
-          <MyRangeSlider
-            valueLabelFormat={(val: any) => <CustomValueLabel value={val} />}
-            valueLabelDisplay='auto'
-            value={sliderVal as any}
-            step={step}
-            onChange={handleChange}
-            min={start}
-            max={end}
-            marks={marks}
-          />
-          {!!error && <Typography color='#f44336'>{error}</Typography>}
-        </>
-      ) : (
-        <>
-          <MyRangeSlider
-            valueLabelFormat={(val: any) => <CustomValueLabel value={val} />}
-            value={sliderVal as any}
-            onChange={handleChange}
-            size='medium'
-            valueLabelDisplay='auto'
-            step={selectionType === 'DISCRETE' ? step : 0.1}
-            min={start}
-            max={end}
-            marks={marks}
-            disableSwap
-          />
-          {!!error && <Typography color='#f44336'>{error}</Typography>}
-        </>
-      )}
-    </Box>
-  );
-}
+//   return (
+//     <Box width='100%' maxWidth='1000px'>
+//       <Typography
+//         sx={{
+//           marginBottom: description ? '0.5rem' : '3rem',
+//           fontSize: '1rem',
+//           fontWeight: '600',
+//         }}>
+//         {element.title}
+//       </Typography>
+//       {description && (
+//         <Typography sx={{ fontSize: '12px', fontWeight: '500', marginBottom: '3rem' }} variant='subtitle2'>
+//           {description}
+//         </Typography>
+//       )}
+//       {spectralType === 'SPECTRAL' ? (
+//         <>
+//           <MyRangeSlider
+//             valueLabelFormat={(val: any) => <CustomValueLabel value={val} />}
+//             valueLabelDisplay='auto'
+//             value={sliderVal as any}
+//             step={step}
+//             onChange={handleChange}
+//             min={start}
+//             max={end}
+//             marks={marks}
+//           />
+//           {!!error && <Typography color='#f44336'>{error}</Typography>}
+//         </>
+//       ) : (
+//         <>
+//           <MyRangeSlider
+//             valueLabelFormat={(val: any) => <CustomValueLabel value={val} />}
+//             value={sliderVal as any}
+//             onChange={handleChange}
+//             size='medium'
+//             valueLabelDisplay='auto'
+//             step={selectionType === 'DISCRETE' ? step : 0.1}
+//             min={start}
+//             max={end}
+//             marks={marks}
+//             disableSwap
+//           />
+//           {!!error && <Typography color='#f44336'>{error}</Typography>}
+//         </>
+//       )}
+//     </Box>
+//   );
+// }
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
@@ -360,9 +355,9 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   const selectedElement = useSelectedElement();
   const { updateElement, addElement } = useActionDesigner();
   const { questionGroups } = useDesigner();
-  const [disableInput, setDisableInput] = useState<boolean>(() =>
-    element.questionPropertyList.some((property) => property.questionPropertyEnum === 'SELECTION_TYPE' && property.value === 'CONTINUOUS'),
-  );
+  // const [disableInput, setDisableInput] = useState<boolean>(() =>
+  //   element.questionPropertyList.some((property) => property.questionPropertyEnum === 'SELECTION_TYPE' && property.value === 'CONTINUOUS'),
+  // );
   const [openDescriptionSwitch, setOpenDescriptionSwitch] = useState<boolean>(() =>
     element.questionPropertyList.some((property) => {
       return property.questionPropertyEnum === 'DESCRIPTION' && property.value;
@@ -377,8 +372,8 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
       if (attribute.questionPropertyEnum === 'REQUIRED' || attribute.questionPropertyEnum === 'EDIT_ANSWER_LOCKED') {
         acc[attribute.questionPropertyEnum].value = attribute.value === 'true';
-      } else if (attribute.questionPropertyEnum === 'SPECTRAL_START' || attribute.questionPropertyEnum === 'SPECTRAL_END' || attribute.questionPropertyEnum === 'STEP') {
-        acc[attribute.questionPropertyEnum].value = attribute.value === '' ? 0 : Number(attribute.value);
+      } else if (attribute.questionPropertyEnum === 'RATING_START_LABEL' || attribute.questionPropertyEnum === 'RATING_END_LABEL' || attribute.questionPropertyEnum === 'STEP') {
+        acc[attribute.questionPropertyEnum].value = attribute.value === '' ? "" : attribute.value;
       } else if (attribute.questionPropertyEnum === 'DESCRIPTION') {
         acc[attribute.questionPropertyEnum].value = attribute.value === null ? '' : attribute.value;
       } else {
@@ -391,18 +386,18 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
     }, {});
     values.title = element.title;
 
-    let optionList
-    if (element.optionList.length > 0) {
-      optionList = element.optionList
-    } else {
-      optionList = element?.spectralPlaceList?.map((item: any) => ({
-        id: item.id ?? null,
-        title: item.title,
-        score: Number(item?.value),
-      }));
-    }
+    // let optionList
+    // if (element.optionList.length > 0) {
+    //   optionList = element.optionList
+    // } else {
+    //   optionList = element?.spectralPlaceList?.map((item: any) => ({
+    //     id: item.id ?? null,
+    //     title: item.title,
+    //     score: Number(item?.value),
+    //   }));
+    // }
 
-    values.optionList = optionList
+    // values.optionList = optionList
 
     return values;
   }, []);
@@ -422,133 +417,126 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   } = methods;
 
   async function onSubmit(values: propertiesFormSchemaType) {
-    const { title, DESCRIPTION, REQUIRED, SPECTRAL_TYPE, SELECTION_TYPE, STEP, SPECTRAL_START, SPECTRAL_END, optionList, EDIT_ANSWER_LOCKED } = values;
+    // const { title, DESCRIPTION, REQUIRED, SPECTRAL_TYPE, SELECTION_TYPE, STEP, SPECTRAL_START, SPECTRAL_END, optionList, EDIT_ANSWER_LOCKED } = values;
 
-    // ? finds whether a field is selected or not
-    const selectedYet = elements?.find((el: any) => el?.questionId === element?.questionId);
+    // // ? finds whether a field is selected or not
+    // const selectedYet = elements?.find((el: any) => el?.questionId === element?.questionId);
 
-    const propertiesData = [
-      {
-        questionPropertyEnum: 'SPECTRAL_TYPE',
-        value: SPECTRAL_TYPE.value,
-        id: selectedYet ? SPECTRAL_TYPE.id : null,
-      },
-      {
-        questionPropertyEnum: 'REQUIRED',
-        value: REQUIRED.value ? 'true' : 'false',
-        id: selectedYet ? REQUIRED.id : null,
-      },
-      {
-        questionPropertyEnum: 'DESCRIPTION',
-        value: openDescriptionSwitch && DESCRIPTION.value ? DESCRIPTION.value : null,
-        id: selectedYet ? DESCRIPTION.id : null,
-      },
-      {
-        questionPropertyEnum: 'EDIT_ANSWER_LOCKED',
-        value: EDIT_ANSWER_LOCKED.value ? 'true' : 'false',
-        id: selectedYet ? EDIT_ANSWER_LOCKED.id : null,
-      },
-      {
-        questionPropertyEnum: 'SELECTION_TYPE',
-        value: SELECTION_TYPE.value,
-        id: selectedYet ? SELECTION_TYPE.id : null,
-      },
-      {
-        questionPropertyEnum: 'STEP',
-        value: SPECTRAL_TYPE.value !== 'CONTINUOUS' ? STEP.value : 0.1,
-        id: selectedYet ? STEP.id : null,
-      },
-      {
-        questionPropertyEnum: 'SPECTRAL_START',
-        value: SPECTRAL_START.value,
-        id: selectedYet ? SPECTRAL_START.id : null,
-      },
-      {
-        questionPropertyEnum: 'SPECTRAL_END',
-        value: SPECTRAL_END.value,
-        id: selectedYet ? SPECTRAL_END.id : null,
-      },
-    ];
+    // const propertiesData = [
+    //   {
+    //     questionPropertyEnum: 'SPECTRAL_TYPE',
+    //     value: SPECTRAL_TYPE.value,
+    //     id: selectedYet ? SPECTRAL_TYPE.id : null,
+    //   },
+    //   {
+    //     questionPropertyEnum: 'REQUIRED',
+    //     value: REQUIRED.value ? 'true' : 'false',
+    //     id: selectedYet ? REQUIRED.id : null,
+    //   },
+    //   {
+    //     questionPropertyEnum: 'DESCRIPTION',
+    //     value: openDescriptionSwitch && DESCRIPTION.value ? DESCRIPTION.value : null,
+    //     id: selectedYet ? DESCRIPTION.id : null,
+    //   },
+    //   {
+    //     questionPropertyEnum: 'EDIT_ANSWER_LOCKED',
+    //     value: EDIT_ANSWER_LOCKED.value ? 'true' : 'false',
+    //     id: selectedYet ? EDIT_ANSWER_LOCKED.id : null,
+    //   },
+    //   {
+    //     questionPropertyEnum: 'SELECTION_TYPE',
+    //     value: SELECTION_TYPE.value,
+    //     id: selectedYet ? SELECTION_TYPE.id : null,
+    //   },
+    //   {
+    //     questionPropertyEnum: 'STEP',
+    //     value: SPECTRAL_TYPE.value !== 'CONTINUOUS' ? STEP.value : 0.1,
+    //     id: selectedYet ? STEP.id : null,
+    //   },
+    //   {
+    //     questionPropertyEnum: 'SPECTRAL_START',
+    //     value: SPECTRAL_START.value,
+    //     id: selectedYet ? SPECTRAL_START.id : null,
+    //   },
+    //   {
+    //     questionPropertyEnum: 'SPECTRAL_END',
+    //     value: SPECTRAL_END.value,
+    //     id: selectedYet ? SPECTRAL_END.id : null,
+    //   },
+    // ];
 
-    const optionListData = [...optionList];
+    // const optionListData = [...optionList];
 
-    const lastIndexOfGroup = elements.findLastIndex((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
+    // const lastIndexOfGroup = elements.findLastIndex((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
 
-    const group = elements.filter((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
+    // const group = elements.filter((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
 
-    let findSelectedGroupPreviousGroup = questionGroups.findIndex((el: any) => el === selectedElement?.fieldElement?.questionGroupId) - 1;
+    // let findSelectedGroupPreviousGroup = questionGroups.findIndex((el: any) => el === selectedElement?.fieldElement?.questionGroupId) - 1;
 
-    // if the selected group was the index 0
-    // because we are subtracting it by 1 we have
-    // to set it back to zero
-    if (findSelectedGroupPreviousGroup === -1) {
-      findSelectedGroupPreviousGroup = 0;
-    }
+    // if (findSelectedGroupPreviousGroup === -1) {
+    //   findSelectedGroupPreviousGroup = 0;
+    // }
 
-    // The application of this is when there is a empty group
-    // so there is no corresponding question related to it
-    // exist in elements array so we find the last index of its
-    // prevoius group and add one item after that
-    const firstIndexAfterThePreviousSelectedGroup = elements.findLastIndex((el: any) => el.questionGroupId === questionGroups[findSelectedGroupPreviousGroup]) + 1;
+    // const firstIndexAfterThePreviousSelectedGroup = elements.findLastIndex((el: any) => el.questionGroupId === questionGroups[findSelectedGroupPreviousGroup]) + 1;
 
-    delete element.temp;
+    // delete element.temp;
 
-    const updatedSpectralPlaceList = optionListData.map(option => {
-      return {
-        id : option.id || null,
-        title: option.title,
-        value: option.score
-      };
-    });
+    // const updatedSpectralPlaceList = optionListData.map(option => {
+    //   return {
+    //     id : option.id || null,
+    //     title: option.title,
+    //     value: option.score
+    //   };
+    // });
 
-    const finalFieldData = {
-      ...element,
-      title,
-      position: selectedElement?.position?.apiPosition ?? group.length,
-      questionPropertyList: propertiesData,
-      optionList: [],
-      spectralPlaceList: updatedSpectralPlaceList,
-    };
+    // const finalFieldData = {
+    //   ...element,
+    //   title,
+    //   position: selectedElement?.position?.apiPosition ?? group.length,
+    //   questionPropertyList: propertiesData,
+    //   optionList: [],
+    //   spectralPlaceList: updatedSpectralPlaceList,
+    // };
 
-    if (!selectedYet) {
-      const removeId: any = { ...finalFieldData };
-      delete removeId.questionId;
+    // if (!selectedYet) {
+    //   const removeId: any = { ...finalFieldData };
+    //   delete removeId.questionId;
 
-      try {
-        const { data }: any = await AxiosApi.post('/question', removeId as any);
-        delete data.questionPropertyList;
-        delete data.optionList;
-        delete data.spectralPlaceList;
-        const newData = {
-          ...data,
-        };
+    //   try {
+    //     const { data }: any = await AxiosApi.post('/question', removeId as any);
+    //     delete data.questionPropertyList;
+    //     delete data.optionList;
+    //     delete data.spectralPlaceList;
+    //     const newData = {
+    //       ...data,
+    //     };
 
-        const positionToUse = lastIndexOfGroup === -1 ? firstIndexAfterThePreviousSelectedGroup : lastIndexOfGroup + 1;
-        addElement(selectedElement?.position?.realPosition ?? positionToUse, newData);
+    //     const positionToUse = lastIndexOfGroup === -1 ? firstIndexAfterThePreviousSelectedGroup : lastIndexOfGroup + 1;
+    //     addElement(selectedElement?.position?.realPosition ?? positionToUse, newData);
 
-        setOpenDialog(false);
-        setSelectedElement(null);
-        reset();
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
-      try {
-        const { data }: any = await AxiosApi.put(`/question/${finalFieldData.questionId}`, finalFieldData);
-        delete data.questionPropertyList;
-        delete data.optionList;
-        delete data.spectralPlaceList;
-        const newData = {
-          ...data,
-        };
-        updateElement(element.questionId, newData);
-        setOpenDialog(false);
-        setSelectedElement(null);
-        reset();
-      } catch (error) {
-        console.error(error);
-      }
-    }
+    //     setOpenDialog(false);
+    //     setSelectedElement(null);
+    //     reset();
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // } else {
+    //   try {
+    //     const { data }: any = await AxiosApi.put(`/question/${finalFieldData.questionId}`, finalFieldData);
+    //     delete data.questionPropertyList;
+    //     delete data.optionList;
+    //     delete data.spectralPlaceList;
+    //     const newData = {
+    //       ...data,
+    //     };
+    //     updateElement(element.questionId, newData);
+    //     setOpenDialog(false);
+    //     setSelectedElement(null);
+    //     reset();
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // }
   }
 
   return (
@@ -606,13 +594,13 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
         <Stack>
           <Box display='flex' justifyContent='space-between' alignItems='center' marginTop={3} marginBottom={0.5}>
-            <Typography sx={{ width: '75%' }} fontWeight='700'>
+            <Typography sx={{ width: '90%' }} fontWeight='700'>
               برچسب:
             </Typography>
-            <Typography sx={{ width: '12.5%' }} fontWeight='700'>
+            <Typography sx={{ width: '10%' }} fontWeight='700'>
               مکان:
             </Typography>
-            <Typography sx={{ width: '12.5%' }}></Typography>
+            {/* <Typography sx={{ width: '12.5%' }}></Typography> */}
           </Box>
           {/* <RHFTextFieldOptionList
             name='optionList'
@@ -625,8 +613,21 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
               errors?.optionList?.score?.message
             }
           /> */}
-            <RHFTextField  name='RATING_START_LABEL.value' placeholder='برچسب'/>
+          <div className='flex'>
+
+            <RHFTextField name='RATING_START_LABEL.value' placeholder='برچسب'/>
+            <div className='flex w-11 h-10 mr-2 justify-center items-center rounded-lg border-2 border-[#DDE1E6]'>
+              <span className='text-[#A8A8A8] text-xs'>ابتدا</span>
+            </div>
+          </div>
+          <div className='flex mt-2'>
+
             <RHFTextField  name='RATING_END_LABEL.value' placeholder='برچسب'/>
+            <div className='flex w-11 h-10 mr-2 justify-center items-center rounded-lg border-2 border-[#DDE1E6]'>
+              <span className='text-[#A8A8A8] text-xs'>انتها</span>
+            </div>
+          </div>
+           
         </Stack>
 
         <Stack flexDirection='row' justifyContent='space-between' alignItems='flex-start' marginTop={3}>

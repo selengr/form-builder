@@ -1,5 +1,5 @@
 "use client";
-
+import Image from "next/image";
 import { useState } from "react";
 
 type EmojiItem = {
@@ -27,23 +27,23 @@ const EMOJIS: EmojiItem[] = [
     {
         id: 1,
         label: "Bad",
-        url: "sad.png",
+        url: "neutral.svg",
     },
     {
         id: 2,
         label: "Okay",
-        url: "happy.png",
+        url: "happy.svg",
     },
     {
         id: 3,
         label: "Good",
-        url: "Neutral.png",
+        url: "sad.svg",
 
     },
     {
         id: 4,
         label: "Great",
-        url: "lough.svg",
+        url: "laugh.svg",
     },
 ]
 
@@ -68,9 +68,11 @@ export default function EmojiRating({
     const value = controlledValue ?? internalValue;
 
     return (
-        <div dir="ltr" className="w-full max-w-sm mx-auto flex flex-row items-center
+        <div dir="ltr" className="w-full flex flex-row items-center justify-center
 gap-2 select-none">
-            {startValue && renderLable(startValue)}
+            <span className="md:flex hidden justify-between mt-2">
+                {startValue && renderLable(startValue)}
+            </span>
             <div className="flex flex-col">
                 <div className="flex justify-between w-full x-2 gap-4">
                     {EMOJIS.map((emoji, index) => {
@@ -93,14 +95,18 @@ gap-2 select-none">
                                 <div
                                     className={`relative w-14 h-14 ${isPopping ? "emoji-pop" : ""}`}
                                 >
-                                    <img
+                                    <Image
                                         src={`/images/icons/rating/${emoji.url}`}
                                         alt={emoji.label}
-                                        className="w-full h-full object-contain transition-all duration-200"
+                                        fill
+                                        quality={100}
+                                        priority={index === 0}
+                                        sizes="56px"
+                                        className="object-contain transition-all duration-200"
                                         style={{
                                             filter: isActive
                                                 ? "drop-shadow(0 0 6px rgba(255, 225, 62, 0.6))"
-                                                : "grayscale(100%) brightness(0.9)",
+                                                : "grayscale(100%) brightness(0.99)",
                                         }}
                                     />
 
@@ -111,6 +117,7 @@ gap-2 select-none">
                             </div>
                         );
                     })}
+
                 </div>
 
 
@@ -124,9 +131,14 @@ gap-2 select-none">
                         setTimeout(() => setPopIndex(null), 180);
                     }}
                 />
-
+                <div className="w-full flex md:hidden justify-between mt-2">
+                    {startValue && renderLable(startValue)}
+                    {endValue && renderLable(endValue)}
+                </div>
             </div>
-            {endValue && renderLable(endValue)}
+            <span className="md:flex hidden justify-between mt-2">
+                {endValue && renderLable(endValue)}
+            </span>
             <style jsx>{`
 @keyframes pop {
 0% {
@@ -183,7 +195,7 @@ export function RangeSlider({ value, max, onChange }: RangeSliderProps) {
     const percent = (value / max) * 100;
 
     return (
-        <div className="w-full relative mt-1">
+        <div className="w-full relative mt-3">
             <div className="h-2 rounded-full bg-[#EBEBEB] relative">
                 <div
                     className="absolute left-0 top-0 h-full rounded-full"

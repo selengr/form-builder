@@ -140,59 +140,68 @@ export default function StarRating({
                         : ""}
             </p> */}
 
-            <div className="flex justify-center items-center relative">
-                 {startValue&&renderLable(startValue)}
-                {Array.from({ length: max }).map((_, i) => {
-                    const fillPercent = Math.min(Math.max(displayValue - i, 0), 1) * 100;
-                    const label = labels[i] ?? "";
-                    const isPopping = i === popIndex;
+            <div className="flex flex-col">
+                <div className="flex justify-center items-center relative">
+                    <span className="md:flex hidden justify-between mt-2">
+                        {startValue && renderLable(startValue)}
+                    </span>
+                    {Array.from({ length: max }).map((_, i) => {
+                        const fillPercent = Math.min(Math.max(displayValue - i, 0), 1) * 100;
+                        const label = labels[i] ?? "";
+                        const isPopping = i === popIndex;
 
-                    return (
-                        <div
-                            key={i}
-                            className={`relative cursor-pointer mx-[2px]  ${readOnly ? "cursor-default" : ""
-                                } group`}
-                            style={{ width: iconSize, height: iconSize }}
-                            onMouseMove={(e) => {
-                                if (readOnly) return;
-                                const rect = e.currentTarget.getBoundingClientRect();
-                                const percent = (e.clientX - rect.left) / rect.width;
-                                setHoverValue(
-                                    Math.round((i + percent) / precision) * precision
-                                );
-                            }}
-                            onMouseLeave={() => !readOnly && setHoverValue(null)}
-                            onClick={(e) => {
-                                if (readOnly) return;
-                                const rect = e.currentTarget.getBoundingClientRect();
-                                const percent = (e.clientX - rect.left) / rect.width;
-                                handleSelect(i, percent);
-                            }}
-                            aria-label={`Rate ${i + 1}`}
-                        >
-                            <div className={isPopping ? "animate-pop" : ""}>
-                                {renderIcon(EMPTY, fillPercent)}
+                        return (
+                            <div
+                                key={i}
+                                className={`relative cursor-pointer mx-[2px]  ${readOnly ? "cursor-default" : ""
+                                    } group`}
+                                style={{ width: iconSize, height: iconSize }}
+                                onMouseMove={(e) => {
+                                    if (readOnly) return;
+                                    const rect = e.currentTarget.getBoundingClientRect();
+                                    const percent = (e.clientX - rect.left) / rect.width;
+                                    setHoverValue(
+                                        Math.round((i + percent) / precision) * precision
+                                    );
+                                }}
+                                onMouseLeave={() => !readOnly && setHoverValue(null)}
+                                onClick={(e) => {
+                                    if (readOnly) return;
+                                    const rect = e.currentTarget.getBoundingClientRect();
+                                    const percent = (e.clientX - rect.left) / rect.width;
+                                    handleSelect(i, percent);
+                                }}
+                                aria-label={`Rate ${i + 1}`}
+                            >
+                                <div className={isPopping ? "animate-pop" : ""}>
+                                    {renderIcon(EMPTY, fillPercent)}
 
-                                <div
-                                    className={`absolute inset-0 overflow-hidden pointer-events-none ${animateFill ? "transition-all duration-100 ease-in-out" : ""
-                                        }`}
-                                    style={{ width: `${fillPercent}%`, height: "100%" }}
-                                >
-                                    {renderIcon(GOLD, fillPercent)}
+                                    <div
+                                        className={`absolute inset-0 overflow-hidden pointer-events-none ${animateFill ? "transition-all duration-100 ease-in-out" : ""
+                                            }`}
+                                        style={{ width: `${fillPercent}%`, height: "100%" }}
+                                    >
+                                        {renderIcon(GOLD, fillPercent)}
+                                    </div>
                                 </div>
+
+                                {label && !readOnly && (
+                                    <span className="absolute -top-6 left-1/2 -translate-x-1/2 rounded bg-gray-700 text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                        {label}
+                                    </span>
+                                )}
                             </div>
-
-                            {label && !readOnly && (
-                                <span className="absolute -top-6 left-1/2 -translate-x-1/2 rounded bg-gray-700 text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                                    {label}
-                                </span>
-                            )}
-                        </div>
-                    );
-                })}
-                 {endValue&&renderLable(endValue)}
+                        );
+                    })}
+                    <span className="md:flex hidden justify-between mt-2">
+                        {endValue && renderLable(endValue)}
+                    </span>
+                </div>
+                <div className="w-full flex md:hidden justify-between mt-2">
+                    {startValue && renderLable(startValue)}
+                    {endValue && renderLable(endValue)}
+                </div>
             </div>
-
             <style jsx>{`
         @keyframes pop {
           0% {

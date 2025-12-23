@@ -181,37 +181,19 @@ type CustomInstance = FormElementInstance & {
 
 function FormComponent({ elementInstance, value, onChange, error }: { elementInstance?: FormElementInstance; value?: string; onChange?: (value: string) => void; error?: string }) {
   const element = elementInstance as CustomInstance;
-  // const start: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SPECTRAL_START')?.value);
-  // const end: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SPECTRAL_END')?.value);
-  // const step: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'STEP')?.value);
+  const start = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'RATING_START_LABEL')?.value
+  const end = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'RATING_END_LABEL')?.value
 
-  // const selectionType = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SELECTION_TYPE')?.value;
-  const [formValue, setFormValue] = useState(1);
+ const [startValue, setStarValue] = useState<number| undefined>(value as any);
   const ratingType = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'RATING_TYPE')?.value;
-
-  // const marks = element.spectralPlaceList.map((option) => {
-  //   return { value: option.value!, label: option.title };
-  // });
 
   const description = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'DESCRIPTION')?.value;
 
-  // const [sliderVal, setSliderVal] = useState(value ? value : spectralType === 'SPECTRAL' ? start : [start, end]);
 
-  const CustomValueLabel = ({ value }: { value: number }) => {
-    const isMark = marks.some((mark) => mark.value === value);
-    return <Box>{isMark ? <MdOutlineKeyboardArrowDown size={25} /> : <span>{value}</span>}</Box>;
-  };
-  
 
-  const handleChange = () => {
-  // const handleChange = (event: Event, newValue: number | number[]) => {
-  //  const cleanValue = Array.isArray(newValue)
-  //   ? newValue.map(v => parseFloat(v.toFixed(1))) 
-  //   : parseFloat(newValue.toFixed(1));  
-
-    // setSliderVal(cleanValue as any);
-    // onChange?.(cleanValue as any);
-    // setFormValue
+  const handleChange = (value: number) => {
+    setStarValue(value as any);
+    onChange?.(value as any);
   };
 
   return (
@@ -231,43 +213,26 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
       )}
       {ratingType === 'STAR' ? (
         <>
+    
         <StarRating
-          value={formValue}
-          onChange={setFormValue}
+          value={startValue}
+          onChange={handleChange}
           precision={0.1}
+          startValue={start}
+          endValue={end}
         />
-       
-          {/* <MyRangeSlider
-            valueLabelFormat={(val: any) => <CustomValueLabel value={val} />}
-            valueLabelDisplay='auto'
-            value={sliderVal as any}
-            step={step}
-            onChange={handleChange}
-            min={start}
-            max={end}
-            marks={marks}
-          /> */}
+
           {!!error && <Typography color='#f44336'>{error}</Typography>}
         </>
       ) : (
         <>
-         <StarRating heart={true} 
-          value={formValue}
-          onChange={setFormValue}
-           precision={0.1}
-         />
-          {/* <MyRangeSlider
-            valueLabelFormat={(val: any) => <CustomValueLabel value={val} />}
-            value={sliderVal as any}
-            onChange={handleChange}
-            size='medium'
-            valueLabelDisplay='auto'
-            step={selectionType === 'DISCRETE' ? step : 0.1}
-            min={start}
-            max={end}
-            marks={marks}
-            disableSwap
-          /> */}
+            <StarRating
+          value={startValue}
+          onChange={handleChange}
+          precision={0.1}
+          startValue={start}
+          endValue={end}
+        />
           {!!error && <Typography color='#f44336'>{error}</Typography>}
         </>
       )}

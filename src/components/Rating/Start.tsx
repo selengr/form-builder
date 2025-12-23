@@ -16,6 +16,8 @@ export type RatingProps = {
     icon?: React.ReactNode;
     heart?: boolean;
     iconSize?: number;
+    startValue?: string
+    endValue?: string
 };
 
 export default function StarRating({
@@ -29,6 +31,8 @@ export default function StarRating({
     icon,
     heart = false,
     iconSize = 56,
+    startValue,
+    endValue
 }: RatingProps) {
     const [internalValue, setInternalValue] = useState(0);
     const [hoverValue, setHoverValue] = useState<number | null>(null);
@@ -100,6 +104,14 @@ export default function StarRating({
         );
     };
 
+    const renderLable = (value: string) => {
+        return (
+            <p className="text-md font-medium transition-colors">
+                {value}
+            </p>
+        )
+    };
+
     return (
         <div
             dir="ltr"
@@ -128,7 +140,8 @@ export default function StarRating({
                         : ""}
             </p> */}
 
-            <div className="flex gap-1 relative">
+            <div className="flex justify-center items-center relative">
+                 {startValue&&renderLable(startValue)}
                 {Array.from({ length: max }).map((_, i) => {
                     const fillPercent = Math.min(Math.max(displayValue - i, 0), 1) * 100;
                     const label = labels[i] ?? "";
@@ -137,7 +150,7 @@ export default function StarRating({
                     return (
                         <div
                             key={i}
-                            className={`relative cursor-pointer mx-1  ${readOnly ? "cursor-default" : ""
+                            className={`relative cursor-pointer mx-[2px]  ${readOnly ? "cursor-default" : ""
                                 } group`}
                             style={{ width: iconSize, height: iconSize }}
                             onMouseMove={(e) => {
@@ -177,6 +190,7 @@ export default function StarRating({
                         </div>
                     );
                 })}
+                 {endValue&&renderLable(endValue)}
             </div>
 
             <style jsx>{`

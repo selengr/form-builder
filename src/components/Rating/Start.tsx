@@ -102,6 +102,7 @@ export default function StarRating({
 
     return (
         <div
+            dir="ltr"
             ref={containerRef}
             tabIndex={readOnly ? -1 : 0}
             onKeyDown={handleKeyDown}
@@ -112,7 +113,7 @@ export default function StarRating({
             aria-label="Rating"
             className="flex flex-col items-center gap-2 focus:outline-none select-none"
         >
-            <p
+            {/* <p
                 className="text-sm font-medium transition-colors"
                 style={{ color: displayValue ? color : EMPTY }}
             >
@@ -125,7 +126,7 @@ export default function StarRating({
                     : value
                         ? `Rating: ${value.toFixed(precision === 1 ? 0 : 1)}`
                         : ""}
-            </p>
+            </p> */}
 
             <div className="flex gap-1 relative">
                 {Array.from({ length: max }).map((_, i) => {

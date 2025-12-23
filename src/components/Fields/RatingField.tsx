@@ -21,6 +21,7 @@ import useActionDesigner from '@/hooks/useActionDesigner';
 import CheckIcon from '@/../public/images/home-page/spectral.svg';
 import { SwitchButton } from '../Switch/SwitchButton';
 import { MyRangeSlider } from '../Slider/RangeSlider';
+import StarRating from '../Rating/Start';
 
 const questionType: ElementsType = 'RATING';
 
@@ -109,44 +110,7 @@ const propertiesSchema = z
     }),
     // optionList: z.array(optionsSchema).max(10, { message: 'حداکثر میتواند 10 برچسب وجود داشته باشد' }),
   })
-  // .refine((val) => val.SPECTRAL_END.value >= val.SPECTRAL_START.value, {
-  //   message: 'پایان باید بزرگتر یا مساوی با شروع باشد',
-  //   path: ['SPECTRAL_END.value'],
-  // })
-  // .refine(
-  //   (val) => {
-  //     if (val.SPECTRAL_END.value - val.SPECTRAL_START.value < val.STEP.value) return false;
-  //     else return true;
-  //   },
-  //   {
-  //     message: 'گام نمیتواند از پایان بیشتر باشد',
-  //     path: ['STEP.value'],
-  //   },
-  // )
-  // .refine(
-  //   (val) => {
-  //     const distance = val.SPECTRAL_END.value - val.SPECTRAL_START.value;
-  //     if (val.SELECTION_TYPE.value === 'CONTINUOUS' || val.SELECTION_TYPE.value === 'DISCRETE') {
-  //       if (Math.ceil(distance / val.STEP.value) + 1 < val.optionList.length) return false;
-  //       else return true;
-  //     }
-  //   },
-  //   {
-  //     message: 'برچسب‌ها نمی‌توانند از تعداد گام بین شروع و پایان بیشتر باشند',
-  //     path: ['optionList.optionList'],
-  //   },
-  // )
-  // .refine(
-  //   (val) => {
-  //     const scores = val.optionList.map((option) => option.score);
-  //     const uniqueScores = [...(new Set(scores) as any)];
-  //     return scores.every((score) => score >= val.SPECTRAL_START.value && score <= val.SPECTRAL_END.value) && scores.length === uniqueScores.length;
-  //   },
-  //   {
-  //     message: 'هر مکان در محدوده شروع و پایان طیف یا دامنه باید منحصر به فرد باشد',
-  //     path: ['optionList.score'],
-  //   },
-  // )
+ 
   // .refine(
   //   (val) => {
   //     if (val.SELECTION_TYPE.value === 'DISCRETE') {
@@ -196,8 +160,7 @@ export const RatingFormElement: FormElement = {
     icon: CheckIcon,
   },
   designerComponent: DesignerComponent,
-  // formComponent: FormComponent,
-  formComponent: ()=><></>,
+  formComponent: FormComponent,
   propertiesComponent: PropertiesComponent,
 
   validate: (formElement: FormElementInstance, currentValue: string): boolean => {
@@ -216,87 +179,101 @@ type CustomInstance = FormElementInstance & {
   // spectralPlaceList: typeof spectralPlaceList;
 };
 
-// function FormComponent({ elementInstance, value, onChange, error }: { elementInstance?: FormElementInstance; value?: string; onChange?: (value: string) => void; error?: string }) {
-//   const element = elementInstance as CustomInstance;
-//   const start: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SPECTRAL_START')?.value);
-//   const end: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SPECTRAL_END')?.value);
-//   const step: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'STEP')?.value);
+function FormComponent({ elementInstance, value, onChange, error }: { elementInstance?: FormElementInstance; value?: string; onChange?: (value: string) => void; error?: string }) {
+  const element = elementInstance as CustomInstance;
+  // const start: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SPECTRAL_START')?.value);
+  // const end: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SPECTRAL_END')?.value);
+  // const step: number = Number(element.questionPropertyList.find((el) => el.questionPropertyEnum === 'STEP')?.value);
 
-//   const selectionType = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SELECTION_TYPE')?.value;
+  // const selectionType = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SELECTION_TYPE')?.value;
+  const [formValue, setFormValue] = useState(1);
+  const ratingType = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'RATING_TYPE')?.value;
 
-//   const spectralType = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'SPECTRAL_TYPE')?.value;
+  // const marks = element.spectralPlaceList.map((option) => {
+  //   return { value: option.value!, label: option.title };
+  // });
 
-//   const marks = element.spectralPlaceList.map((option) => {
-//     return { value: option.value!, label: option.title };
-//   });
+  const description = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'DESCRIPTION')?.value;
 
-//   const description = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'DESCRIPTION')?.value;
+  // const [sliderVal, setSliderVal] = useState(value ? value : spectralType === 'SPECTRAL' ? start : [start, end]);
 
-//   const [sliderVal, setSliderVal] = useState(value ? value : spectralType === 'SPECTRAL' ? start : [start, end]);
+  const CustomValueLabel = ({ value }: { value: number }) => {
+    const isMark = marks.some((mark) => mark.value === value);
+    return <Box>{isMark ? <MdOutlineKeyboardArrowDown size={25} /> : <span>{value}</span>}</Box>;
+  };
+  
 
-//   const CustomValueLabel = ({ value }: { value: number }) => {
-//     const isMark = marks.some((mark) => mark.value === value);
-//     return <Box>{isMark ? <MdOutlineKeyboardArrowDown size={25} /> : <span>{value}</span>}</Box>;
-//   };
+  const handleChange = () => {
+  // const handleChange = (event: Event, newValue: number | number[]) => {
+  //  const cleanValue = Array.isArray(newValue)
+  //   ? newValue.map(v => parseFloat(v.toFixed(1))) 
+  //   : parseFloat(newValue.toFixed(1));  
 
-//   const handleChange = (event: Event, newValue: number | number[]) => {
-//    const cleanValue = Array.isArray(newValue)
-//     ? newValue.map(v => parseFloat(v.toFixed(1))) 
-//     : parseFloat(newValue.toFixed(1));  
+    // setSliderVal(cleanValue as any);
+    // onChange?.(cleanValue as any);
+    // setFormValue
+  };
 
-//     setSliderVal(cleanValue as any);
-//     onChange?.(cleanValue as any);
-//   };
-
-//   return (
-//     <Box width='100%' maxWidth='1000px'>
-//       <Typography
-//         sx={{
-//           marginBottom: description ? '0.5rem' : '3rem',
-//           fontSize: '1rem',
-//           fontWeight: '600',
-//         }}>
-//         {element.title}
-//       </Typography>
-//       {description && (
-//         <Typography sx={{ fontSize: '12px', fontWeight: '500', marginBottom: '3rem' }} variant='subtitle2'>
-//           {description}
-//         </Typography>
-//       )}
-//       {spectralType === 'SPECTRAL' ? (
-//         <>
-//           <MyRangeSlider
-//             valueLabelFormat={(val: any) => <CustomValueLabel value={val} />}
-//             valueLabelDisplay='auto'
-//             value={sliderVal as any}
-//             step={step}
-//             onChange={handleChange}
-//             min={start}
-//             max={end}
-//             marks={marks}
-//           />
-//           {!!error && <Typography color='#f44336'>{error}</Typography>}
-//         </>
-//       ) : (
-//         <>
-//           <MyRangeSlider
-//             valueLabelFormat={(val: any) => <CustomValueLabel value={val} />}
-//             value={sliderVal as any}
-//             onChange={handleChange}
-//             size='medium'
-//             valueLabelDisplay='auto'
-//             step={selectionType === 'DISCRETE' ? step : 0.1}
-//             min={start}
-//             max={end}
-//             marks={marks}
-//             disableSwap
-//           />
-//           {!!error && <Typography color='#f44336'>{error}</Typography>}
-//         </>
-//       )}
-//     </Box>
-//   );
-// }
+  return (
+    <Box width='100%' maxWidth='1000px'>
+      <Typography
+        sx={{
+          marginBottom: description ? '0.5rem' : '3rem',
+          fontSize: '1rem',
+          fontWeight: '600',
+        }}>
+        {element.title}
+      </Typography>
+      {description && (
+        <Typography sx={{ fontSize: '12px', fontWeight: '500', marginBottom: '3rem' }} variant='subtitle2'>
+          {description}
+        </Typography>
+      )}
+      {ratingType === 'STAR' ? (
+        <>
+        <StarRating
+          value={formValue}
+          onChange={setFormValue}
+          precision={0.1}
+        />
+       
+          {/* <MyRangeSlider
+            valueLabelFormat={(val: any) => <CustomValueLabel value={val} />}
+            valueLabelDisplay='auto'
+            value={sliderVal as any}
+            step={step}
+            onChange={handleChange}
+            min={start}
+            max={end}
+            marks={marks}
+          /> */}
+          {!!error && <Typography color='#f44336'>{error}</Typography>}
+        </>
+      ) : (
+        <>
+         <StarRating heart={true} 
+          value={formValue}
+          onChange={setFormValue}
+           precision={0.1}
+         />
+          {/* <MyRangeSlider
+            valueLabelFormat={(val: any) => <CustomValueLabel value={val} />}
+            value={sliderVal as any}
+            onChange={handleChange}
+            size='medium'
+            valueLabelDisplay='auto'
+            step={selectionType === 'DISCRETE' ? step : 0.1}
+            min={start}
+            max={end}
+            marks={marks}
+            disableSwap
+          /> */}
+          {!!error && <Typography color='#f44336'>{error}</Typography>}
+        </>
+      )}
+    </Box>
+  );
+}
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 

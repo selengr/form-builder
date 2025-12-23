@@ -2,6 +2,7 @@
 
 import { IFormElementConstructor, IFormOptionList, tempObj } from './bulider';
 import { SpectralFormElement } from '@/components/Fields/SpectralField';
+import { RatingFormElement } from '@/components/Fields/RatingField';
 import { TextFieldFormElement } from '@/components/Fields/TextField';
 import { TitleFieldFinishFormElement } from '@/components/Fields/TitleFieldFinish';
 import { TitleFieldStartFormElement } from '@/components/Fields/TitleFieldStart';
@@ -9,7 +10,7 @@ import { MultipleChoiceFormElement } from '@/components/Fields/MultipleChoiceFie
 import { MultipleChoiceImageFormElement } from '@/components/Fields/MultipleChoiceImageField';
 import { InfoFieldFormElement } from '@/components/Fields/InfoField';
 
-export type ElementsType = 'TEXT_FIELD' | 'MULTIPLE_CHOICE' | 'TitleFieldStart' | 'TitleFieldFinish' | 'MULTIPLE_CHOICE_IMAGE' | 'SPECTRAL' | 'INFO_FIELD';
+export type ElementsType = 'TEXT_FIELD' | 'MULTIPLE_CHOICE' | 'TitleFieldStart' | 'TitleFieldFinish' | 'MULTIPLE_CHOICE_IMAGE' | 'SPECTRAL' | 'INFO_FIELD' | 'RATING';
 
 export type SubmitFunction = (key: number, value: string) => void;
 
@@ -69,6 +70,7 @@ export const FormElements: FormElementsType = {
   TEXT_FIELD: TextFieldFormElement,
   MULTIPLE_CHOICE: MultipleChoiceFormElement,
   SPECTRAL: SpectralFormElement,
+  RATING: RatingFormElement,
   TitleFieldStart: TitleFieldStartFormElement,
   TitleFieldFinish: TitleFieldFinishFormElement,
   MULTIPLE_CHOICE_IMAGE: MultipleChoiceImageFormElement,

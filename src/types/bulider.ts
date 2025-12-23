@@ -87,6 +87,45 @@ export type IQPLTextField = [
 ];
 
 export type ISpectralQTapAndOptionsType = { value: string; label: string }[];
+export type IRatingQTapAndOptionsType = { value: string; label: string }[];
+
+export type IQPLRating = [
+  {
+    questionPropertyEnum: 'RATING_TYPE';
+    value: "STAR" | "EMOJI" | "HEART";
+    id: number;
+  },
+  {
+    questionPropertyEnum: 'REQUIRED';
+    value: string;
+    id: number;
+  },
+  {
+    questionPropertyEnum: 'DESCRIPTION';
+    value: string | null;
+    id: number;
+  },
+  {
+    questionPropertyEnum: 'STEP';
+    value: number | string;
+    id: number;
+  },
+  {
+    questionPropertyEnum: 'RATING_START_LABEL';
+    value: string;
+    id: number;
+  },
+  {
+    questionPropertyEnum: 'RATING_END_LABEL';
+    value: string;
+    id: number;
+  },
+  {
+    id: number;
+    questionPropertyEnum: 'EDIT_ANSWER_LOCKED';
+    value: string;
+  },
+];
 
 export type IQPLSpectral = [
   {

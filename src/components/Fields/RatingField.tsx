@@ -417,126 +417,105 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   } = methods;
 
   async function onSubmit(values: propertiesFormSchemaType) {
-    // const { title, DESCRIPTION, REQUIRED, SPECTRAL_TYPE, SELECTION_TYPE, STEP, SPECTRAL_START, SPECTRAL_END, optionList, EDIT_ANSWER_LOCKED } = values;
+    const { title, DESCRIPTION, REQUIRED, RATING_TYPE, STEP, RATING_START_LABEL, RATING_END_LABEL, EDIT_ANSWER_LOCKED } = values;
 
-    // // ? finds whether a field is selected or not
-    // const selectedYet = elements?.find((el: any) => el?.questionId === element?.questionId);
+    const selectedYet = elements?.find((el: any) => el?.questionId === element?.questionId);
 
-    // const propertiesData = [
-    //   {
-    //     questionPropertyEnum: 'SPECTRAL_TYPE',
-    //     value: SPECTRAL_TYPE.value,
-    //     id: selectedYet ? SPECTRAL_TYPE.id : null,
-    //   },
-    //   {
-    //     questionPropertyEnum: 'REQUIRED',
-    //     value: REQUIRED.value ? 'true' : 'false',
-    //     id: selectedYet ? REQUIRED.id : null,
-    //   },
-    //   {
-    //     questionPropertyEnum: 'DESCRIPTION',
-    //     value: openDescriptionSwitch && DESCRIPTION.value ? DESCRIPTION.value : null,
-    //     id: selectedYet ? DESCRIPTION.id : null,
-    //   },
-    //   {
-    //     questionPropertyEnum: 'EDIT_ANSWER_LOCKED',
-    //     value: EDIT_ANSWER_LOCKED.value ? 'true' : 'false',
-    //     id: selectedYet ? EDIT_ANSWER_LOCKED.id : null,
-    //   },
-    //   {
-    //     questionPropertyEnum: 'SELECTION_TYPE',
-    //     value: SELECTION_TYPE.value,
-    //     id: selectedYet ? SELECTION_TYPE.id : null,
-    //   },
-    //   {
-    //     questionPropertyEnum: 'STEP',
-    //     value: SPECTRAL_TYPE.value !== 'CONTINUOUS' ? STEP.value : 0.1,
-    //     id: selectedYet ? STEP.id : null,
-    //   },
-    //   {
-    //     questionPropertyEnum: 'SPECTRAL_START',
-    //     value: SPECTRAL_START.value,
-    //     id: selectedYet ? SPECTRAL_START.id : null,
-    //   },
-    //   {
-    //     questionPropertyEnum: 'SPECTRAL_END',
-    //     value: SPECTRAL_END.value,
-    //     id: selectedYet ? SPECTRAL_END.id : null,
-    //   },
-    // ];
+    const propertiesData = [
+      {
+        questionPropertyEnum: 'RATING_TYPE',
+        value: RATING_TYPE.value,
+        id: selectedYet ? RATING_TYPE.id : null,
+      },
+      {
+        questionPropertyEnum: 'REQUIRED',
+        value: REQUIRED.value ? 'true' : 'false',
+        id: selectedYet ? REQUIRED.id : null,
+      },
+      {
+        questionPropertyEnum: 'DESCRIPTION',
+        value: openDescriptionSwitch && DESCRIPTION.value ? DESCRIPTION.value : null,
+        id: selectedYet ? DESCRIPTION.id : null,
+      },
+      {
+        questionPropertyEnum: 'EDIT_ANSWER_LOCKED',
+        value: EDIT_ANSWER_LOCKED.value ? 'true' : 'false',
+        id: selectedYet ? EDIT_ANSWER_LOCKED.id : null,
+      },
+      {
+        questionPropertyEnum: 'STEP',
+        value: RATING_TYPE.value === "EMOJI" ? STEP.value : 0.5,
+        id: selectedYet ? STEP.id : null,
+      },
+      {
+        questionPropertyEnum: 'RATING_START_LABEL',
+        value: RATING_START_LABEL.value,
+        id: selectedYet ? RATING_START_LABEL.id : null,
+      },
+      {
+        questionPropertyEnum: 'RATING_END_LABEL',
+        value: RATING_END_LABEL.value,
+        id: selectedYet ? RATING_END_LABEL.id : null,
+      },
+    ];
 
-    // const optionListData = [...optionList];
+    const lastIndexOfGroup = elements.findLastIndex((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
 
-    // const lastIndexOfGroup = elements.findLastIndex((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
+    const group = elements.filter((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
 
-    // const group = elements.filter((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
+    let findSelectedGroupPreviousGroup = questionGroups.findIndex((el: any) => el === selectedElement?.fieldElement?.questionGroupId) - 1;
 
-    // let findSelectedGroupPreviousGroup = questionGroups.findIndex((el: any) => el === selectedElement?.fieldElement?.questionGroupId) - 1;
+    if (findSelectedGroupPreviousGroup === -1) {
+      findSelectedGroupPreviousGroup = 0;
+    }
 
-    // if (findSelectedGroupPreviousGroup === -1) {
-    //   findSelectedGroupPreviousGroup = 0;
-    // }
+    const firstIndexAfterThePreviousSelectedGroup = elements.findLastIndex((el: any) => el.questionGroupId === questionGroups[findSelectedGroupPreviousGroup]) + 1;
 
-    // const firstIndexAfterThePreviousSelectedGroup = elements.findLastIndex((el: any) => el.questionGroupId === questionGroups[findSelectedGroupPreviousGroup]) + 1;
+    delete element.temp;
 
-    // delete element.temp;
 
-    // const updatedSpectralPlaceList = optionListData.map(option => {
-    //   return {
-    //     id : option.id || null,
-    //     title: option.title,
-    //     value: option.score
-    //   };
-    // });
+    const finalFieldData = {
+      ...element,
+      title,
+      position: selectedElement?.position?.apiPosition ?? group.length,
+      questionPropertyList: propertiesData
+    };
 
-    // const finalFieldData = {
-    //   ...element,
-    //   title,
-    //   position: selectedElement?.position?.apiPosition ?? group.length,
-    //   questionPropertyList: propertiesData,
-    //   optionList: [],
-    //   spectralPlaceList: updatedSpectralPlaceList,
-    // };
+    if (!selectedYet) {
+      const removeId: any = { ...finalFieldData };
+      delete removeId.questionId;
 
-    // if (!selectedYet) {
-    //   const removeId: any = { ...finalFieldData };
-    //   delete removeId.questionId;
+      try {
+        const { data }: any = await AxiosApi.post('/question', removeId as any);
+        delete data.questionPropertyList;
+        const newData = {
+          ...data,
+        };
 
-    //   try {
-    //     const { data }: any = await AxiosApi.post('/question', removeId as any);
-    //     delete data.questionPropertyList;
-    //     delete data.optionList;
-    //     delete data.spectralPlaceList;
-    //     const newData = {
-    //       ...data,
-    //     };
+        const positionToUse = lastIndexOfGroup === -1 ? firstIndexAfterThePreviousSelectedGroup : lastIndexOfGroup + 1;
+        addElement(selectedElement?.position?.realPosition ?? positionToUse, newData);
 
-    //     const positionToUse = lastIndexOfGroup === -1 ? firstIndexAfterThePreviousSelectedGroup : lastIndexOfGroup + 1;
-    //     addElement(selectedElement?.position?.realPosition ?? positionToUse, newData);
-
-    //     setOpenDialog(false);
-    //     setSelectedElement(null);
-    //     reset();
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // } else {
-    //   try {
-    //     const { data }: any = await AxiosApi.put(`/question/${finalFieldData.questionId}`, finalFieldData);
-    //     delete data.questionPropertyList;
-    //     delete data.optionList;
-    //     delete data.spectralPlaceList;
-    //     const newData = {
-    //       ...data,
-    //     };
-    //     updateElement(element.questionId, newData);
-    //     setOpenDialog(false);
-    //     setSelectedElement(null);
-    //     reset();
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // }
+        setOpenDialog(false);
+        setSelectedElement(null);
+        reset();
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      try {
+        const { data }: any = await AxiosApi.put(`/question/${finalFieldData.questionId}`, finalFieldData);
+        delete data.questionPropertyList;
+        const newData = {
+          ...data,
+        };
+        updateElement(element.questionId, newData);
+        setOpenDialog(false);
+        setSelectedElement(null);
+        reset();
+      } catch (error) {
+        console.error(error);
+      }
+    }
   }
 
   return (

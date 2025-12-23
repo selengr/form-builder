@@ -42,7 +42,7 @@ const questionPropertyList: IQPLRating = [
   },
   {
     questionPropertyEnum: 'STEP',
-    value: 0.1,
+    value: 1,
     id: 5,
   },
   {
@@ -62,35 +62,6 @@ const questionPropertyList: IQPLRating = [
   },
 ];
 
-// const optionList: IFormOptionList[] = [
-//   {
-//     title: 'گزینه 1',
-//     score: 0,
-//     id: null,
-//   },
-//   {
-//     title: 'گزینه 2',
-//     score: 100,
-//     id: null,
-//   },
-// ];
-// const spectralPlaceList: IFormOptionList[] = [
-//   {
-//     title: 'گزینه 1',
-//     score: 0,
-//     id: null,
-//   },
-//   {
-//     title: 'گزینه 2',
-//     score: 100,
-//     id: null,
-//   },
-// ];
-
-// const tapTypeOptions: IRatingQTapAndOptionsType = [
-//   { value: 'CONTINUOUS', label: 'پیوسته' },
-//   { value: 'DISCRETE', label: 'گسسته' },
-// ];
 
 const ratingTypeOptions: IRatingQTapAndOptionsType = [
  { value: 'STAR', label: 'ستاره‌ایی' },
@@ -98,24 +69,6 @@ const ratingTypeOptions: IRatingQTapAndOptionsType = [
   { value: 'EMOJI', label: 'ایموجی' },
 ];
 
-// const optionsSchema = z.object({
-//   title: z
-//     .string({ invalid_type_error: 'الزامی است' })
-//     .trim()
-//     .transform((value) => value.replace(/\s+/g, ' '))
-//     .pipe(
-//       z
-//         .string({ invalid_type_error: 'الزامی است' })
-//         .min(1, {
-//           message: 'برچسب باید حداقل 1 و حداکثر 20 کاراکتر باشد',
-//         })
-//         .max(20, {
-//           message: 'برچسب باید حداقل 1 و حداکثر 20 کاراکتر باشد',
-//         }),
-//     ),
-//     score: z.number({ invalid_type_error: 'مکان الزامی است' }).min(0, { message: 'نمیتواند منفی باشد' }).nonnegative({ message: 'نمیتواند منفی باشد' }),
-//     id: z.number().nullable().default(null),
-// });
 
 const propertiesSchema = z
   .object({
@@ -126,7 +79,7 @@ const propertiesSchema = z
       .pipe(z.string().min(1, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' }).max(3999, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' })),
     RATING_TYPE: z.object({ value: z.string(), id: z.number() }),
     STEP: z.object({
-      value: z.number({ invalid_type_error: 'اجباری است' }).min(0.1, { message: 'باید از صفر بزرگتر باشد' }),
+      value: z.union([z.number(), z.string()]),
       id: z.number(),
     }),
     DESCRIPTION: z.object({
@@ -139,11 +92,11 @@ const propertiesSchema = z
       id: z.number(),
     }),
     RATING_START_LABEL: z.object({
-       value: z.union([z.number(), z.string()]).optional(),
+       value: z.union([z.number(), z.string()]).optional().nullable(),
       id: z.number(),
     }),
     RATING_END_LABEL: z.object({
-       value: z.union([z.number(), z.string()]).optional(),
+       value: z.union([z.number(), z.string()]).optional().nullable(),
       id: z.number(),
     }),
     REQUIRED: z.object({
@@ -385,7 +338,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       return acc;
     }, {});
     values.title = element.title;
-
+console.log('values', values)
     // let optionList
     // if (element.optionList.length > 0) {
     //   optionList = element.optionList
@@ -415,7 +368,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
     clearErrors,
     formState: { isSubmitting, errors },
   } = methods;
-
+console.log('methods', methods.watch())
   async function onSubmit(values: propertiesFormSchemaType) {
     const { title, DESCRIPTION, REQUIRED, RATING_TYPE, STEP, RATING_START_LABEL, RATING_END_LABEL, EDIT_ANSWER_LOCKED } = values;
 

@@ -112,12 +112,12 @@ export type IQPLRating = [
   },
   {
     questionPropertyEnum: 'RATING_START_LABEL';
-    value: number | string;
+    value: string;
     id: number;
   },
   {
     questionPropertyEnum: 'RATING_END_LABEL';
-    value: number | string;
+    value: string;
     id: number;
   },
   {

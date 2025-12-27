@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { Fragment, memo, useState } from 'react';
 import { Button, IconButton, useMediaQuery } from '@mui/material';
 //type
@@ -26,7 +26,6 @@ interface DesignerSidebarProps {
 // eslint-disable-next-line react/display-name
 const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarProps) {
   const { id } = useParams();
-  const router = useRouter();
   const isDesktop = useMediaQuery('(min-width:1280px)');
   const { formName, formSetting } = useDesigner();
   const [formTitle, setFormTitle] = useState("");

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Dialog, Button, Box } from "@mui/material";
+import { Dialog, Button, Box, IconButton } from "@mui/material";
+import { CgClose } from "react-icons/cg";
 
 const MODAL_SIZES = {
     small: { width: "400px", height: "400px" },
@@ -128,6 +129,25 @@ export default function BuilderModal() {
                         },
                     }}
                 >
+
+ {/* <Box className='flex items-center justify-end'> */}
+
+          <IconButton onClick={closeModal} aria-label='بستن'
+          sx={{
+      position: "absolute",
+      top: 12,
+      left: 10,
+      zIndex: 10,
+    //   backgroundColor: "rgba(255,255,255,0.8)",
+      '&:hover': {
+        backgroundColor: "rgba(255,255,255,1)",
+      },
+    }}
+          >
+            <CgClose color='#404040' size='1.5rem' />
+          </IconButton>
+        {/* </Box> */}
+
                     <Box sx={{ width: "100%", height: "100%" }}>
                         <iframe
                             src="https://newpl1psya.qhami.com/form/survey-d65d4a14-cc29-407f-843d-32cccb0c3983?survey=PSYA"

@@ -2,24 +2,24 @@
 
 import clsx from "clsx";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import Logo from "../../../public/images/logo/logo2.svg";
 import MobileMenu from "@/components/MiddleSidebar/mobile/MobileMenu";
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
-    const searchParams = useSearchParams();
-    const surveyParam = searchParams.get("survey");
+    const pathname = usePathname();
+    const isSurvey = pathname.includes('survey-');
 
     const containerClasses = clsx(
         "flex grow md:mt-0",
-        surveyParam
+        isSurvey
             ? "h-[100vh]"
             : "h-[calc(50vh-60px)] mt-[60px] md:h-[calc(100vh-0px)]"
     );
 
     return (
         <>
-            {!surveyParam && (
+            {!isSurvey && (
                 <div className="bg-white w-full mb-[60px] mx-auto px-4 py-3 flex justify-between items-center md:hidden fixed top-0 left-0 right-0 z-50">
                     <MobileMenu />
                     <Image

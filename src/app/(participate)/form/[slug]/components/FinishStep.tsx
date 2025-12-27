@@ -27,7 +27,8 @@ interface FinishStepProps {
 }
 
 export function FinishStep({ question, showReportForResponder, takePartId, formName, replace, formId }: FinishStepProps) {
-  const pathname = usePathname();
+    const pathname = usePathname();
+      const isSurvey = pathname.includes('survey');
   const { mutate, isPending } = useShowResultUser();
   const {
     dialogState,
@@ -50,13 +51,12 @@ export function FinishStep({ question, showReportForResponder, takePartId, formN
     }
   }, [question.formId, takePartId])
 
-  const isSurvey = pathname.includes('survey');
   if (isPending) return <BuilderLoading />;
   if (showReportForResponder) return null
 
   return (
     <div className='w-full flex flex-col p-4 overflow-hidden'>
-      <div className='flex flex-col bg-white rounded-xl h-[calc(100vh-120px)] md:h-full max-h-screen'>
+      <div className='flex flex-col bg-white rounded-xl md:h-full max-h-screen'>
         <Header surveyParam={isSurvey} handleOpenReportDialog={handleReportDialog} replace={replace} formName={'پایان'} />
 
         <div className='flex-1 flex items-center justify-center overflow-y-auto px-4'>

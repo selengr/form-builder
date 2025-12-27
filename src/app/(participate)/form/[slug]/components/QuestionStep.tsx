@@ -10,7 +10,7 @@ import ActionButtons from '@/templates/form/ActionButtons';
 import LoginWithPhone from '@/components/common/loginWithPhone';
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
 import Header from '@/app/(participate)/form/[slug]/components/header';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 interface QuestionStepProps {
   formId: any;
@@ -39,8 +39,8 @@ export function QuestionStep({
   replace,
   prevBlock,
 }: QuestionStepProps) {
-    const searchParams = useSearchParams();
-    const surveyParam = searchParams.get("survey");
+  const pathname = usePathname();
+  const isSurvey = pathname.includes('survey');
     
    const {
     dialogState,
@@ -55,10 +55,10 @@ export function QuestionStep({
   } = useReportFlow();
 
   return (
-    <div  className={`w-full flex flex-col overflow-hidden ${surveyParam ? "p-0" : "p-4"}`}>
-      <div className={`flex flex-col bg-white rounded-xl md:h-full max-h-screen ${surveyParam ? "h-[100vh]" : "h-[calc(100vh-120px)]"}`}>
+    <div  className={`w-full flex flex-col overflow-hidden ${isSurvey ? "p-0" : "p-4"}`}>
+      <div className={`flex flex-col bg-white rounded-xl md:h-full max-h-screen ${isSurvey ? "h-[100vh]" : "h-[calc(100vh-120px)]"}`}>
         {/* Header */}
-        <Header surveyParam={surveyParam} formName={formName} handleOpenReportDialog={handleReportDialog} replace={replace} />
+        <Header surveyParam={isSurvey} formName={formName} handleOpenReportDialog={handleReportDialog} replace={replace} />
 
         {/* Main Content */}
         <div className='flex-1 overflow-y-auto px-4'>

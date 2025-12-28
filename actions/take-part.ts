@@ -6,9 +6,10 @@ export async function takePartAction(params: {
   slug: string
   username: string | null
   from?: string
+  refId?: string
 }) {
   try {
-    const { slug, username, from } = params
+    const { slug, username, from, refId } = params
     const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
 
     const res = await serverApi.post("/take-part", {
@@ -16,6 +17,7 @@ export async function takePartAction(params: {
       formId: !isLink ? slug : null,
       username,
       from: from ?? "PUBLIC_PAGE",
+      refId: refId ?? null,
     })
 
     return {

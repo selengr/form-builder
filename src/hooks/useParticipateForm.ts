@@ -31,20 +31,22 @@ interface HasError {
 }
 
 export const useParticipateForm = () => {
+  const { replace } = useRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get('from');
-  const [question, setQuestion] = useState<any>(null);
-  const [formData, setFormData] = useState<any>('');
-  const [isValid, setIsValid] = useState(false);
-  const [firstLoading, setFirstLoading] = useState(true);
-  const [questionLoading, setQuestionLoading] = useState(false);
-  const [takePartId, setTakePartId] = useState<any>(null);
-  const [finishPage, setFinishPage] = useState(false);
-  const [answerId, setAnswerId] = useState<number>();
+  const refId = searchParams.get('refId');
   const [formName, setFormName] = useState('');
+  const [isValid, setIsValid] = useState(false);
+  const [realFormID, setRealFormID] = useState();
+  const [formData, setFormData] = useState<any>('');
+  const [answerId, setAnswerId] = useState<number>();
+  const [finishPage, setFinishPage] = useState(false);
+  const [question, setQuestion] = useState<any>(null);
+  const [firstLoading, setFirstLoading] = useState(true);
+  const [takePartId, setTakePartId] = useState<any>(null);
+  const [questionLoading, setQuestionLoading] = useState(false);
   const [firstQuestionId, setFirstQuestionId] = useState<number | string | null>(null);
   const [showReportForResponder, setShowReportForResponder] = useState<boolean>(false);
-  const [realFormID, setRealFormID] = useState();
   const [hasError, setHasError] = useState<HasError>({ status: false, message: '' });
   const [limitation, setLimitation] = useState<ILimitation>({
     isLimited: false,
@@ -53,7 +55,6 @@ export const useParticipateForm = () => {
 
   const hasFetchedRef = useRef(false);
   const { slug } = useParams<{ slug: string }>();
-  const { replace } = useRouter();
 
   const isCurrentFirstQuestion = useMemo(() => {
     return question?.questionId === firstQuestionId;
@@ -205,7 +206,8 @@ export const useParticipateForm = () => {
         slug,
         username,
         from: from ?? undefined,
-      })
+        refId: refId ?? undefined,
+      })  
 
       if (!res.success) {
         throw new Error(res.error)

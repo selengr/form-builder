@@ -8,7 +8,7 @@ interface HeaderProps {
   handleOpenReportDialog: any;
   replace: any;
   formName: string;
-  surveyParam: string | null;
+  surveyParam: boolean;
 }
 
 export function Header({ handleOpenReportDialog, replace, formName, surveyParam }: HeaderProps) {

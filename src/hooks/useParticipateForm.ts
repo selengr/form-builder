@@ -1,7 +1,7 @@
 'use client';
 
 import { toast } from 'sonner';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 // lib
 import { fetchUserInfo } from '@/lib/auth';
@@ -31,10 +31,12 @@ interface HasError {
 }
 
 export const useParticipateForm = () => {
+  const pathname = usePathname();
   const { replace } = useRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get('from');
   const refId = searchParams.get('refId');
+  const isSurvey = pathname.includes('survey-');
   const [formName, setFormName] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [realFormID, setRealFormID] = useState();
@@ -159,7 +161,7 @@ export const useParticipateForm = () => {
       // });
       const result = await checkResponseLimitationAction({ slug })
 
-        if (!result.success) {
+      if (!result.success) {
         if (result.statusCode === 409) {
           setHasError({ status: true, message: result.error?.[0]?.title || "خطا در دریافت اطلاعات" })
         } else {
@@ -181,20 +183,20 @@ export const useParticipateForm = () => {
       } else {
         await takePart(username);
       }
-     } catch (e: any) {
-    if (e.status === 409) {
-          setHasError({ status: true, message: e.response.data.message?.[0]?.title || "خطا در دریافت اطلاعات" })
-        } else {
-          setHasError({ status: true, message: "متأسفیم! فرم مورد نظر در حال حاضر در دسترس نیست." })
-        }
+    } catch (e: any) {
+      if (e.status === 409) {
+        setHasError({ status: true, message: e.response.data.message?.[0]?.title || "خطا در دریافت اطلاعات" })
+      } else {
+        setHasError({ status: true, message: "متأسفیم! فرم مورد نظر در حال حاضر در دسترس نیست." })
+      }
     } finally {
       setFirstLoading(false);
     }
   }, [slug]);
 
   const takePart = async (username: string | null) => {
-     setFirstLoading(true) 
-      setQuestionLoading(true)
+    setFirstLoading(true)
+    setQuestionLoading(true)
     try {
       // const res = await AxiosApi.post('/take-part', {
       //   link: isLink ? slug : null,
@@ -202,12 +204,12 @@ export const useParticipateForm = () => {
       //   username,
       //   from : from ?? "PUBLIC_PAGE"
       // });
-       const res = await takePartAction({
+      const res = await takePartAction({
         slug,
         username,
         from: from ?? undefined,
         refId: refId ?? undefined,
-      })  
+      })
 
       if (!res.success) {
         throw new Error(res.error)
@@ -226,7 +228,7 @@ export const useParticipateForm = () => {
     } catch (e) {
       toast.error('خطا! بارگذاری انجام نشد');
     } finally {
-      setFirstLoading(false) 
+      setFirstLoading(false)
       setQuestionLoading(false)
     }
   };
@@ -234,7 +236,7 @@ export const useParticipateForm = () => {
   const checkAnswerBefore = async (username: string | null) => {
     try {
       const url = '/take-part/check-answer-to-form-before';
-       const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
+      const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
 
       const res = await AxiosApi.post(url, {
         link: isLink ? slug : null,
@@ -256,7 +258,15 @@ export const useParticipateForm = () => {
   };
 
   const handleNext = async () => {
-    if (!isValid) return toast.error('پاسخ به این سوال الزامی می‌باشد');
+    if (!isValid) return toast.error('پاسخ به این سوال الزامی می‌باشد', {
+      className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
+      duration: 2000,
+      cancel: {
+        label: 'بستن',
+        onClick: () => console.log('Cancel!'),
+      },
+    })
+
     setQuestionLoading(true);
 
     try {
@@ -305,12 +315,12 @@ export const useParticipateForm = () => {
         }
       } else if (INFO_FIELD) {
         answerList = [
-            {
-              optionId: null,
-              id: typeof answerId === 'number' ? answerId : undefined,
-              answer: "#",
-            },
-          ];
+          {
+            optionId: null,
+            id: typeof answerId === 'number' ? answerId : undefined,
+            answer: "#",
+          },
+        ];
       } else {
         answerList = [
           {
@@ -327,14 +337,14 @@ export const useParticipateForm = () => {
       //   questionId: question.questionId,
       //   answerList,
       // });
-        const res = await insertAnswerAction({
+      const res = await insertAnswerAction({
         formId: question.formId,
         takePartId,
         questionId: question.questionId,
         answerList,
       })
 
-        if (!res.success) {
+      if (!res.success) {
         throw new Error(res.error)
       }
 
@@ -346,7 +356,14 @@ export const useParticipateForm = () => {
       }
 
     } catch (e) {
-       toast.error("خطا در ثبت پاسخ")
+      toast.error("خطا در ثبت پاسخ", {
+      className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
+      duration: 2000,
+      cancel: {
+        label: 'بستن',
+        onClick: () => console.log('Cancel!'),
+      },
+    })
     } finally {
       setQuestionLoading(false);
     }
@@ -355,15 +372,17 @@ export const useParticipateForm = () => {
   const handlePrev = async () => {
     try {
       setQuestionLoading(true);
-      const res = await AxiosApi.post('/question/previous-question', { takePartId });
+      const res = await AxiosApi.post('/question/pevious-question', { takePartId });
       const q = res.data.questionModel;
       const a = res.data.oldAnswers?.answersModel ?? [];
 
       initializeQuestion(q, a);
       setIsValid(true);
     } catch (e) {
-      console.error('Error in handlePrev:', e);
-      toast.error('خطا در بازگشت به سوال قبلی');
+       toast.error('خطا در بازگشت به سوال قبلی', {
+          className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
+           duration: 2000,
+      })
     } finally {
       setQuestionLoading(false);
     }

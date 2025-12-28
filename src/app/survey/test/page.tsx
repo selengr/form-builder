@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
 import { useState } from "react";
-import { Dialog, Button, Box, IconButton } from "@mui/material";
+import { Dialog, Button, Box, IconButton, TextField } from "@mui/material";
 import { CgClose } from "react-icons/cg";
 
 const MODAL_SIZES = {
@@ -41,6 +41,7 @@ export default function BuilderModal() {
         ...MODAL_POSITIONS.center,
     });
 
+    const [customUrl, setCustomUrl] = useState<string>("");
 
     const openModal = (size: SizeKey, position: PosKey) => {
         setConfig({
@@ -89,11 +90,27 @@ export default function BuilderModal() {
         },
     ];
 
+    const defaultUrl =
+        "http://mbz2.ir/form/survey-d65d4a14-cc29-407f-843d-32cccb0c3983?survey=PSYA";
+
+    const iframeUrl = customUrl.trim() !== "" ? customUrl : defaultUrl;
+
     return (
         <div className="w-full flex flex-col overflow-hidden p-4">
             <div className="flex flex-col bg-white rounded-xl md:h-full max-h-screen">
-                <div className="flex flex-col p-4 gap-6">
+                <Box className="p-4">
+                    <TextField
+                        fullWidth
+                        label="آدرس سفارشی"
+                        placeholder="https://survey-example.com"
+                        value={customUrl}
+                        onChange={(e) => setCustomUrl(e.target.value)}
+                        variant="outlined"
+                        size="small"
+                    />
+                </Box>
 
+                <div className="flex flex-col p-4 gap-6">
                     {buttonGroups.map((group, idx) => (
                         <div key={idx} className="flex gap-4 flex-wrap">
                             {group.variants.map((v, i) => (
@@ -109,12 +126,15 @@ export default function BuilderModal() {
                             ))}
                         </div>
                     ))}
-
                 </div>
 
                 <Dialog
                     open={config.open}
-                    onClose={closeModal}
+                    onClose={(_, reason) => {
+                        if (reason !== "backdropClick") {
+                            closeModal();
+                        }
+                    }}
                     PaperProps={{
                         sx: {
                             width: config.width,
@@ -129,35 +149,29 @@ export default function BuilderModal() {
                         },
                     }}
                 >
-
- {/* <Box className='flex items-center justify-end'> */}
-
-          <IconButton onClick={closeModal} aria-label='بستن'
-          sx={{
-      position: "absolute",
-      top: 12,
-      left: 10,
-      zIndex: 10,
-    //   backgroundColor: "rgba(255,255,255,0.8)",
-      '&:hover': {
-        backgroundColor: "rgba(255,255,255,1)",
-      },
-    }}
-          >
-            <CgClose color='#404040' size='1.5rem' />
-          </IconButton>
-        {/* </Box> */}
+                    <IconButton
+                        onClick={closeModal}
+                        aria-label="بستن"
+                        sx={{
+                            position: "absolute",
+                            top: 12,
+                            left: 10,
+                            zIndex: 10,
+                            "&:hover": { backgroundColor: "rgba(255,255,255,1)" },
+                        }}
+                    >
+                        <CgClose color="#404040" size="1.5rem" />
+                    </IconButton>
 
                     <Box sx={{ width: "100%", height: "100%" }}>
                         <iframe
-                            src="https://newpl1psya.qhami.com/form/survey-d65d4a14-cc29-407f-843d-32cccb0c3983?survey=PSYA"
+                            src={iframeUrl}
                             style={{ width: "100%", height: "100%", border: "none" }}
                             title="Builder"
                             allowFullScreen
                         />
                     </Box>
                 </Dialog>
-
             </div>
         </div>
     );

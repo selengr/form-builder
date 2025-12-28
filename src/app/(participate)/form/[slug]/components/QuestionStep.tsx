@@ -10,7 +10,7 @@ import ActionButtons from '@/templates/form/ActionButtons';
 import LoginWithPhone from '@/components/common/loginWithPhone';
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
 import Header from '@/app/(participate)/form/[slug]/components/header';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 interface QuestionStepProps {
   formId: any;
@@ -41,8 +41,9 @@ export function QuestionStep({
 }: QuestionStepProps) {
   const pathname = usePathname();
   const isSurvey = pathname.includes('survey-');
-    
-   const {
+  const [direction, setDirection] = React.useState<'forward' | 'backward'>('forward');
+
+  const {
     dialogState,
     formValue,
     error,
@@ -54,8 +55,20 @@ export function QuestionStep({
     setDialogState,
   } = useReportFlow();
 
+
+  const handleNextStep = () => {
+    setDirection('forward');
+    handleNext();
+  };
+
+  const handlePrevStep = () => {
+    setDirection('backward');
+    handlePrev();
+  };
+
+
   return (
-    <div  className={`w-full flex flex-col overflow-hidden ${isSurvey ? "p-0 md:p-4" : "p-4"}`}>
+    <div className={`w-full flex flex-col overflow-hidden ${isSurvey ? "p-0" : "p-4"}`}>
       <div className={`flex flex-col bg-white rounded-xl md:h-full max-h-screen ${isSurvey ? "h-[100vh]" : "h-[100vh]"}`}>
         {/* Header */}
         <Header surveyParam={isSurvey} formName={formName} handleOpenReportDialog={handleReportDialog} replace={replace} />
@@ -64,7 +77,7 @@ export function QuestionStep({
         <div className='flex-1 overflow-y-auto px-4'>
           <div className='w-full max-w-3xl mx-auto pb-6'>
             {question && (
-              <AnimatedBox key={question.questionId}>
+              <AnimatedBox key={question.questionId} direction={direction}>
                 <ValidatedInput key={question.id} formData={formData} elementInstance={question} onValidationUpdate={false ? () => { } : handleValidationUpdate} />
               </AnimatedBox>
             )}
@@ -73,7 +86,7 @@ export function QuestionStep({
 
         {/* Footer */}
         <div className='shrink-0 w-full flex justify-between items-center px-2 py-4 rounded-xl'>
-          <ActionButtons loadingNext={questionLoading} disablePrev={prevBlock || questionLoading} nextAction={handleNext} prevAction={handlePrev} />
+          <ActionButtons loadingNext={questionLoading} disablePrev={prevBlock || questionLoading} nextAction={handleNextStep} prevAction={handlePrevStep} />
         </div>
       </div>
 

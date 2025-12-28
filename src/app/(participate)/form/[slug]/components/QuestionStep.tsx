@@ -10,7 +10,7 @@ import ActionButtons from '@/templates/form/ActionButtons';
 import LoginWithPhone from '@/components/common/loginWithPhone';
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
 import Header from '@/app/(participate)/form/[slug]/components/header';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 interface QuestionStepProps {
   formId: any;

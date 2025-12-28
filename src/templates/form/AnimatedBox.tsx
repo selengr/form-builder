@@ -48,8 +48,8 @@ export default function AnimatedBox({ children, direction = 'forward' }: Animate
         opacity: { duration: 0.15, ease: 'easeInOut' }
       }}
       className={`
-        w-full h-full
-        flex 
+        w-[99%] h-full
+        flex align-middle 
         rounded-xl
         ${marginClass}
         ${paddingClass}

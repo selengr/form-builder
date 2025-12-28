@@ -55,7 +55,7 @@ export function QuestionStep({
   } = useReportFlow();
 
   return (
-    <div  className={`w-full flex flex-col overflow-hidden ${isSurvey ? "p-0 md:p-4" : "p-4"}`}>
+    <div  className={`w-full flex flex-col overflow-hidden ${isSurvey ? "p-0" : "p-4"}`}>
       <div className={`flex flex-col bg-white rounded-xl md:h-full max-h-screen ${isSurvey ? "h-[100vh]" : "h-[100vh]"}`}>
         {/* Header */}
         <Header surveyParam={isSurvey} formName={formName} handleOpenReportDialog={handleReportDialog} replace={replace} />

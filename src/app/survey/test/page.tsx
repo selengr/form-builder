@@ -114,7 +114,11 @@ export default function BuilderModal() {
 
                 <Dialog
                     open={config.open}
-                    onClose={closeModal}
+                      onClose={(_, reason) => {
+                        if (reason !== 'backdropClick') {
+                        closeModal();
+                        }
+                     }}
                     PaperProps={{
                         sx: {
                             width: config.width,
@@ -130,27 +134,27 @@ export default function BuilderModal() {
                     }}
                 >
 
- {/* <Box className='flex items-center justify-end'> */}
+                    {/* <Box className='flex items-center justify-end'> */}
 
-          <IconButton onClick={closeModal} aria-label='بستن'
-          sx={{
-      position: "absolute",
-      top: 12,
-      left: 10,
-      zIndex: 10,
-    //   backgroundColor: "rgba(255,255,255,0.8)",
-      '&:hover': {
-        backgroundColor: "rgba(255,255,255,1)",
-      },
-    }}
-          >
-            <CgClose color='#404040' size='1.5rem' />
-          </IconButton>
-        {/* </Box> */}
+                    <IconButton onClick={closeModal} aria-label='بستن'
+                        sx={{
+                            position: "absolute",
+                            top: 12,
+                            left: 10,
+                            zIndex: 10,
+                            //   backgroundColor: "rgba(255,255,255,0.8)",
+                            '&:hover': {
+                                backgroundColor: "rgba(255,255,255,1)",
+                            },
+                        }}
+                    >
+                        <CgClose color='#404040' size='1.5rem' />
+                    </IconButton>
+                    {/* </Box> */}
 
                     <Box sx={{ width: "100%", height: "100%" }}>
                         <iframe
-                            src="https://newpl1psya.qhami.com/form/survey-d65d4a14-cc29-407f-843d-32cccb0c3983?survey=PSYA"
+                            src="http://mbz2.ir/form/survey-d65d4a14-cc29-407f-843d-32cccb0c3983?survey=PSYA"
                             style={{ width: "100%", height: "100%", border: "none" }}
                             title="Builder"
                             allowFullScreen

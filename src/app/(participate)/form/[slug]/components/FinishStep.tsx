@@ -27,8 +27,9 @@ interface FinishStepProps {
 }
 
 export function FinishStep({ question, showReportForResponder, takePartId, formName, replace, formId }: FinishStepProps) {
-    const pathname = usePathname();
-      const isSurvey = pathname.includes('survey');
+  const pathname = usePathname();
+  const isSurvey = pathname.includes('survey');
+  debugger
   const { mutate, isPending } = useShowResultUser();
   const {
     dialogState,
@@ -55,8 +56,8 @@ export function FinishStep({ question, showReportForResponder, takePartId, formN
   if (showReportForResponder) return null
 
   return (
-    <div className='w-full flex flex-col p-4 overflow-hidden'>
-      <div className='flex flex-col bg-white rounded-xl md:h-full max-h-screen'>
+    <div className={`w-full flex flex-col overflow-hidden ${isSurvey ? "p-0" : "p-4"}`}>
+      <div className='flex flex-col bg-white rounded-xl h-full'>
         <Header surveyParam={isSurvey} handleOpenReportDialog={handleReportDialog} replace={replace} formName={'پایان'} />
 
         <div className='flex-1 flex items-center justify-center overflow-y-auto px-4'>
@@ -71,22 +72,24 @@ export function FinishStep({ question, showReportForResponder, takePartId, formN
                   <Image src={finalStep} alt='نتیجه' width={400} height={400} priority className='w-full h-auto max-h-[400px] object-contain' draggable={false} />
                 </div>
 
-                <Button
-                  sx={{
-                    width: '150px',
-                    height: '52px',
-                    borderRadius: '10px',
-                    backgroundColor: '#1758BA',
-                    boxShadow: 'none',
-                    '&:hover': {
+                {!isSurvey &&
+                  <Button
+                    sx={{
+                      width: '150px',
+                      height: '52px',
+                      borderRadius: '10px',
                       backgroundColor: '#1758BA',
                       boxShadow: 'none',
-                    },
-                  }}
-                  variant='contained'
-                  onClick={() => replace('/')}>
-                  بازگشت
-                </Button>
+                      '&:hover': {
+                        backgroundColor: '#1758BA',
+                        boxShadow: 'none',
+                      },
+                    }}
+                    variant='contained'
+                    onClick={() => replace('/')}>
+                    بازگشت
+                  </Button>
+                }
               </div>
             </AnimatedBox>
           </div>

@@ -42,8 +42,8 @@ export function QuestionStep({
   const pathname = usePathname();
   const isSurvey = pathname.includes('survey-');
   const [direction, setDirection] = React.useState<'forward' | 'backward'>('forward');
-    
-   const {
+
+  const {
     dialogState,
     formValue,
     error,
@@ -56,19 +56,19 @@ export function QuestionStep({
   } = useReportFlow();
 
 
-const handleNextStep = () => {
-  setDirection('forward');
-  handleNext();
-};
+  const handleNextStep = () => {
+    setDirection('forward');
+    handleNext();
+  };
 
-const handlePrevStep = () => {
-  setDirection('backward');
-  handlePrev();
-};
+  const handlePrevStep = () => {
+    setDirection('backward');
+    handlePrev();
+  };
 
 
   return (
-    <div  className={`w-full flex flex-col overflow-hidden ${isSurvey ? "p-0" : "p-4"}`}>
+    <div className={`w-full flex flex-col overflow-hidden ${isSurvey ? "p-0" : "p-4"}`}>
       <div className={`flex flex-col bg-white rounded-xl md:h-full max-h-screen ${isSurvey ? "h-[100vh]" : "h-[100vh]"}`}>
         {/* Header */}
         <Header surveyParam={isSurvey} formName={formName} handleOpenReportDialog={handleReportDialog} replace={replace} />

@@ -33,7 +33,6 @@ export default function ActionButtons({
           loading={loadingPrev}
           onClick={prevAction}
           disabled={disablePrev}
-          // disabled={true}
           sx={{
             width: 120,
             height: buttonHeight,

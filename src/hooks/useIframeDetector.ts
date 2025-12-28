@@ -2,7 +2,12 @@
 
 type ModalSize = 'small' | 'medium' | 'large' | 'full';
 
-export function useIframeDetector() {
+interface IframeDetectorResult {
+  isInIframe: boolean;
+  modalSize: ModalSize;
+}
+
+export function useIframeDetector(): IframeDetectorResult {
   if (typeof window === 'undefined') {
     return { isInIframe: false, modalSize: 'large' };
   }

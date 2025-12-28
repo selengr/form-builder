@@ -16,6 +16,7 @@ import BuilderLoading from '@/app/(builder)/builder/[id]/loading';
 // hooks
 import { useReportFlow } from '@/hooks/useReportFlow';
 import { useShowResultUser } from '../show-result/hooks/useShowResultUser';
+import { useIframeDetector } from '@/hooks/useIframeDetector';
 
 interface FinishStepProps {
   question: any;
@@ -27,8 +28,8 @@ interface FinishStepProps {
 }
 
 export function FinishStep({ question, showReportForResponder, takePartId, formName, replace, formId }: FinishStepProps) {
-    const pathname = usePathname();
-      const isSurvey = pathname.includes('survey');
+  const pathname = usePathname();
+  const { isInIframe, modalSize } = useIframeDetector();
   const { mutate, isPending } = useShowResultUser();
   const {
     dialogState,
@@ -55,38 +56,40 @@ export function FinishStep({ question, showReportForResponder, takePartId, formN
   if (showReportForResponder) return null
 
   return (
-    <div className='w-full flex flex-col p-4 overflow-hidden'>
-      <div className='flex flex-col bg-white rounded-xl md:h-full max-h-screen'>
-        <Header surveyParam={isSurvey} handleOpenReportDialog={handleReportDialog} replace={replace} formName={'پایان'} />
+    <div className={`w-full flex flex-col overflow-hidden ${isInIframe ? "p-0" : "p-4"}`}>
+      <div className='flex flex-col bg-white rounded-xl h-full'>
+        <Header surveyParam={isInIframe} handleOpenReportDialog={handleReportDialog} replace={replace} formName={'پایان'} />
 
         <div className='flex-1 flex items-center justify-center overflow-y-auto px-4'>
           <div className='w-full max-w-3xl'>
             <AnimatedBox>
               <div className='w-full flex flex-col items-center justify-center gap-4 text-center'>
-                <p className='text-lg font-semibold leading-relaxed'>
-                  پاسخ‌های شما به <span className='text-xl font-bold'>«{formName}»</span> با موفقیت ثبت شد.
+                <p className={`font-semibold leading-relaxed ${isInIframe ? modalSize === "small" ? "text-sm" : "text-base" : "text-lg"}`}>
+                  پاسخ‌های شما به <span className={`font-bold ${isInIframe ? modalSize === "small" ? "text-base" : "text-lg" : "text-xl"}`}>«{formName}»</span> با موفقیت ثبت شد.
                 </p>
 
                 <div className='w-full max-w-xs sm:max-w-md'>
                   <Image src={finalStep} alt='نتیجه' width={400} height={400} priority className='w-full h-auto max-h-[400px] object-contain' draggable={false} />
                 </div>
 
-                <Button
-                  sx={{
-                    width: '150px',
-                    height: '52px',
-                    borderRadius: '10px',
-                    backgroundColor: '#1758BA',
-                    boxShadow: 'none',
-                    '&:hover': {
+                {!isInIframe &&
+                  <Button
+                    sx={{
+                      width: '150px',
+                      height: '52px',
+                      borderRadius: '10px',
                       backgroundColor: '#1758BA',
                       boxShadow: 'none',
-                    },
-                  }}
-                  variant='contained'
-                  onClick={() => replace('/')}>
-                  بازگشت
-                </Button>
+                      '&:hover': {
+                        backgroundColor: '#1758BA',
+                        boxShadow: 'none',
+                      },
+                    }}
+                    variant='contained'
+                    onClick={() => replace('/')}>
+                    بازگشت
+                  </Button>
+                }
               </div>
             </AnimatedBox>
           </div>

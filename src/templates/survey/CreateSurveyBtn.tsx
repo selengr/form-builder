@@ -67,6 +67,7 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
         mutate(data, {
           onSuccess: (result) => {    
             toast.success('عملیات با موفقیت انجام شد');
+            handleClose()
             router.push(`/builder/${result.id}?survey=admin`);
           },
           onError: (error: any) => {
@@ -221,7 +222,8 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
                 fullWidth
                 disableElevation
                 variant='contained'
-                loading={isSubmitting || isPending}
+                loading={isSubmitting || isPending || isFetchingTargetPlatform}
+                disabled={isSubmitting || isPending}
                 sx={{
                   bgcolor: '#1758BA',
                   fontWeight: '400',
@@ -255,7 +257,7 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
                   },
                 }}
                 onClick={handleClose}
-              disabled={isSubmitting || isPending}
+                disabled={isSubmitting || isPending}
               >
                 <Typography color='#1758BA' variant='body2' component={'p'} py={0.5} fontWeight='600'>
                   انصراف

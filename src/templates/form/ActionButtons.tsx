@@ -1,5 +1,7 @@
 'use client';
+
 import { Button } from '@mui/material';
+import { useIframeDetector } from '@/hooks/useIframeDetector';
 
 // @ts-ignore
 export default function ActionButtons({
@@ -17,18 +19,23 @@ export default function ActionButtons({
   loadingPrev?: boolean;
   loadingNext?: boolean;
 }) {
+  const {isInIframe} = useIframeDetector();
+  const buttonHeight = isInIframe ? 42 : 52;
   return (
-    <div className='w-full justify-center items-center m-4'>
+   <div
+        className={`w-full justify-center items-center ${
+          isInIframe ? 'm-1 my-0' : 'm-4'
+        }`}
+      >
       <div className='bg-[#F7F7FF] rounded-xl overflow-hidden flex items-center'>
         <Button
           variant='contained'
           loading={loadingPrev}
           onClick={prevAction}
           disabled={disablePrev}
-          // disabled={true}
           sx={{
             width: 120,
-            height: 52,
+            height: buttonHeight,
             borderRadius: 0,
             bgcolor: '#1758BA',
             boxShadow: 'none',
@@ -46,7 +53,7 @@ export default function ActionButtons({
           disabled={disableNext}
           sx={{
             width: 120,
-            height: 52,
+            height: buttonHeight,
             borderRadius: 0,
             bgcolor: '#1758BA',
             boxShadow: 'none',

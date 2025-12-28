@@ -1,13 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+type ModalSize = 'small' | 'medium' | 'large' | 'full';
 
 export function useIframeDetector() {
-  const [isInIframe, setIsInIframe] = useState(false);
+  if (typeof window === 'undefined') {
+    return { isInIframe: false, modalSize: 'large' };
+  }
 
-  useEffect(() => {
-    setIsInIframe(window.self !== window.top);
-  }, []);
+  const isInIframe = window.self !== window.top;
 
-  return isInIframe;
+  const width = window.innerWidth;
+  const modalSize: ModalSize =
+    width < 480 ? 'small' : width < 768 ? 'medium' : width < 1024 ? 'large' : 'full';
+
+  return { isInIframe, modalSize };
 }

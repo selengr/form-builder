@@ -111,7 +111,7 @@ export default function BuilderModal() {
                     <Button
                         variant="contained"
                         color="primary"
-                        sx={{ height: 40 }}
+                        sx={{ height: 40, width : 100 }}
                         onClick={() => openModal("medium", "center")}
                     >
                         باز کردن

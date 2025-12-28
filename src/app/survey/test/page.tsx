@@ -98,7 +98,7 @@ export default function BuilderModal() {
     return (
         <div className="w-full flex flex-col overflow-hidden p-4">
             <div className="flex flex-col bg-white rounded-xl md:h-full max-h-screen">
-                <Box className="p-4">
+                <Box className="p-4 flex gap-2 items-center">
                     <TextField
                         fullWidth
                         label="آدرس سفارشی"
@@ -108,7 +108,16 @@ export default function BuilderModal() {
                         variant="outlined"
                         size="small"
                     />
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{ height: 40 }}
+                        onClick={() => openModal("medium", "center")}
+                    >
+                        باز کردن
+                    </Button>
                 </Box>
+
 
                 <div className="flex flex-col p-4 gap-6">
                     {buttonGroups.map((group, idx) => (

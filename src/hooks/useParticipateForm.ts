@@ -372,7 +372,7 @@ export const useParticipateForm = () => {
   const handlePrev = async () => {
     try {
       setQuestionLoading(true);
-      const res = await AxiosApi.post('/question/pevious-question', { takePartId });
+      const res = await AxiosApi.post('/question/previous-question', { takePartId });
       const q = res.data.questionModel;
       const a = res.data.oldAnswers?.answersModel ?? [];
 

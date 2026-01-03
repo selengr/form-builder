@@ -34,7 +34,7 @@ export default function StarRating({
     startValue,
     endValue
 }: RatingProps) {
-    const [internalValue, setInternalValue] = useState(0);
+    const [internalValue, setInternalValue] = useState(1);
     const [hoverValue, setHoverValue] = useState<number | null>(null);
     const [popIndex, setPopIndex] = useState<number | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);

@@ -115,7 +115,7 @@ export const useParticipateForm = () => {
         }
       } else {
         if (q.questionType === 'SPECTRAL') {
-          const start = Number(extractProperty(props, 'SPECTRAL_START')) || 0;
+          const start = Number(extractProperty(props, 'SPECTRAL_START')) || spectralType === 'DOMAIN' ? 0 : "";
           const end = Number(extractProperty(props, 'SPECTRAL_END')) || 10;
           value = spectralType === 'DOMAIN' ? [start, end] : start;
         } else if (['MULTIPLE_CHOICE', 'MULTIPLE_CHOICE_IMAGE'].includes(q.questionType)) {

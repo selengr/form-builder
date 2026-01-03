@@ -319,6 +319,7 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
           <MyRangeSlider
             valueLabelFormat={(val: any) => <CustomValueLabel value={val} />}
             valueLabelDisplay='auto'
+            // isempty={sliderVal === "" ? true : false}
             value={sliderVal as any}
             step={step}
             onChange={handleChange}

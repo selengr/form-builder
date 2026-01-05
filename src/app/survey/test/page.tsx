@@ -98,17 +98,16 @@ export default function BuilderModal() {
     return (
         <div className="w-full flex flex-col overflow-hidden p-4">
             <div className="flex flex-col bg-white rounded-xl md:h-full max-h-screen">
-                <Box className="p-4">
-                    <TextField
-                        fullWidth
-                        label="آدرس سفارشی"
-                        placeholder="https://survey-example.com"
-                        value={customUrl}
-                        onChange={(e) => setCustomUrl(e.target.value)}
-                        variant="outlined"
-                        size="small"
-                    />
-                </Box>
+                <TextField
+                    fullWidth
+                    label="آدرس سفارشی"
+                    placeholder="https://survey-example.com"
+                    value={customUrl}
+                    onChange={(e) => setCustomUrl(e.target.value)}
+                    variant="outlined"
+                    size="small"
+                />
+
 
                 <div className="flex flex-col p-4 gap-6">
                     {buttonGroups.map((group, idx) => (

@@ -115,9 +115,10 @@ export const useParticipateForm = () => {
         }
       } else {
         if (q.questionType === 'SPECTRAL') {
-          const start = Number(extractProperty(props, 'SPECTRAL_START')) || spectralType === 'DOMAIN' ? 0 : "";
+          const start = Number(extractProperty(props, 'SPECTRAL_START')) || 0;
           const end = Number(extractProperty(props, 'SPECTRAL_END')) || 10;
-          value = spectralType === 'DOMAIN' ? [start, end] : start;
+          // empty condition
+          value = spectralType === 'DOMAIN' ? [start, end] : '';
         } else if (['MULTIPLE_CHOICE', 'MULTIPLE_CHOICE_IMAGE'].includes(q.questionType)) {
           value = isMultiSelect ? [] : '';
         } else {
@@ -297,7 +298,7 @@ export const useParticipateForm = () => {
             },
           ];
         }
-      } else if (question.questionType === 'SPECTRAL') {
+      } else if (question.questionType === 'SPECTRAL') {debugger
         if (spectralType === 'DOMAIN') {
           answerList = formData.map((val: number, index: number) => ({
             optionId: null,
@@ -305,6 +306,16 @@ export const useParticipateForm = () => {
             id: typeof answerId === 'object' ? answerId[index] : undefined,
           }));
         } else {
+          if(String(formData) === ""){
+             toast.warning('پاسخی برای این سوال ثبت نشد', {
+                className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
+                duration: 2000,
+                cancel: {
+                  label: 'بستن',
+                  onClick: () => console.log('Cancel!'),
+                },
+              })
+          }
           answerList = [
             {
               optionId: null,

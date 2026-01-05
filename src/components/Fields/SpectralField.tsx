@@ -282,8 +282,8 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
   });
 
   const description = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'DESCRIPTION')?.value;
-
-  const [sliderVal, setSliderVal] = useState(value ? value : spectralType === 'SPECTRAL' ? start : [start, end]);
+  // empty condition
+  const [sliderVal, setSliderVal] = useState(value ? value : spectralType === 'SPECTRAL' ? ""  : [start, end]);
 
   const CustomValueLabel = ({ value }: { value: number }) => {
     const isMark = marks.some((mark) => mark.value === value);
@@ -319,7 +319,7 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
           <MyRangeSlider
             valueLabelFormat={(val: any) => <CustomValueLabel value={val} />}
             valueLabelDisplay='auto'
-            // isempty={sliderVal === "" ? true : false}
+            isempty={sliderVal === "" ? true : false}
             value={sliderVal as any}
             step={step}
             onChange={handleChange}

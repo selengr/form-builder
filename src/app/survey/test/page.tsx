@@ -98,25 +98,15 @@ export default function BuilderModal() {
     return (
         <div className="w-full flex flex-col overflow-hidden p-4">
             <div className="flex flex-col bg-white rounded-xl md:h-full max-h-screen">
-                <Box className="p-4 flex gap-2 items-center">
-                    <TextField
-                        fullWidth
-                        label="آدرس سفارشی"
-                        placeholder="https://survey-example.com"
-                        value={customUrl}
-                        onChange={(e) => setCustomUrl(e.target.value)}
-                        variant="outlined"
-                        size="small"
-                    />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        sx={{ height: 40, width : 100 }}
-                        onClick={() => openModal("medium", "center")}
-                    >
-                        باز کردن
-                    </Button>
-                </Box>
+                <TextField
+                    fullWidth
+                    label="آدرس سفارشی"
+                    placeholder="https://survey-example.com"
+                    value={customUrl}
+                    onChange={(e) => setCustomUrl(e.target.value)}
+                    variant="outlined"
+                    size="small"
+                />
 
 
                 <div className="flex flex-col p-4 gap-6">

@@ -93,12 +93,12 @@ const propertiesSchema = z
     }),
     RATING_START_LABEL: z.object({
        value: z.union([z.number(), z.string()]).optional().nullable()
-       .pipe(z.string().max(15, { message: 'حداکثر میتواند 15 کاراکتر باشد' })),
+       .pipe(z.string().max(30, { message: 'حداکثر میتواند 30 کاراکتر باشد' })),
       id: z.number(),
     }),
     RATING_END_LABEL: z.object({
        value: z.union([z.number(), z.string()]).optional().nullable()
-       .pipe(z.string().max(15, { message: 'حداکثر میتواند 15 کاراکتر باشد' })),
+       .pipe(z.string().max(30, { message: 'حداکثر میتواند 30 کاراکتر باشد' })),
       id: z.number(),
     }),
     REQUIRED: z.object({

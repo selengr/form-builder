@@ -40,8 +40,10 @@ const withValidation = <Div extends WrappedComponentProps>(WrappedComponent: Com
       }
 
       if (validationRules.required && (!val || val.length === 0)) {
-        isValid = false;
-        errorMessage = 'الزامی است';
+          if (elementInstance.questionType !== 'SPECTRAL') {
+            isValid = false;
+            errorMessage = 'الزامی است';
+          }
       }
 
       if (isValid && validationRules.minLength && val?.length < validationRules.minLength) {

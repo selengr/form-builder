@@ -283,7 +283,15 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
 
   const description = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'DESCRIPTION')?.value;
   // empty condition
-  const [sliderVal, setSliderVal] = useState(value ? value : spectralType === 'SPECTRAL' ? ""  : [start, end]);
+  // const [sliderVal, setSliderVal] = useState(value ? value : spectralType === 'SPECTRAL' ? ""  : [start, end]);
+  type SpectralValue = number | number[] | number[] | null;
+  const isDomain = spectralType === 'DOMAIN';
+
+  const [sliderVal, setSliderVal] = useState<SpectralValue>(() => {
+    if (value !== undefined && value !== '') return value as any;
+    if (isDomain) return null;
+    return null;
+  });
 
   const CustomValueLabel = ({ value }: { value: number }) => {
     const isMark = marks.some((mark) => mark.value === value);
@@ -319,7 +327,7 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
           <MyRangeSlider
             valueLabelFormat={(val: any) => <CustomValueLabel value={val} />}
             valueLabelDisplay='auto'
-            isempty={sliderVal === "" ? true : false}
+            isempty={sliderVal === null}
             value={sliderVal as any}
             step={step}
             onChange={handleChange}
@@ -335,6 +343,7 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
             valueLabelFormat={(val: any) => <CustomValueLabel value={val} />}
             value={sliderVal as any}
             onChange={handleChange}
+            isempty={Array.isArray(sliderVal) && sliderVal[0] === null}
             size='medium'
             valueLabelDisplay='auto'
             step={selectionType === 'DISCRETE' ? step : 0.1}

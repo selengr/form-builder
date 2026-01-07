@@ -34,7 +34,7 @@ export default function StarRating({
     startValue,
     endValue
 }: RatingProps) {
-    const [internalValue, setInternalValue] = useState(1);
+    const [internalValue, setInternalValue] = useState(0);
     const [hoverValue, setHoverValue] = useState<number | null>(null);
     const [popIndex, setPopIndex] = useState<number | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -47,8 +47,9 @@ export default function StarRating({
         if (readOnly) return;
         const rawValue = index + percent;
         const rounded = Math.round(rawValue / precision) * precision;
-        setInternalValue(rounded);
-        onChange?.(rounded);
+        const result = Math.trunc(rounded * 100) / 100;
+        setInternalValue(result);
+        onChange?.(result);
 
         setPopIndex(index);
         setTimeout(() => setPopIndex(null), 180);

@@ -23,6 +23,8 @@ export const MyRangeSlider = styled(Slider, {
   '& .MuiSlider-track': {
     marginLeft: '3px !important',
     borderRadius: '10px',
+    border: isempty ? '2px solid #D1D5DB' : '2px solid #2CDFC9',
+    backgroundColor: isempty ? '#D1D5DB' : '',
   },
   '& .MuiSlider-rail': {
     padding: '3px',

@@ -118,7 +118,7 @@ export const useParticipateForm = () => {
           const start = Number(extractProperty(props, 'SPECTRAL_START')) || 0;
           const end = Number(extractProperty(props, 'SPECTRAL_END')) || 10;
           // empty condition
-          value = spectralType === 'DOMAIN' ? [start, end] : '';
+          value = spectralType === 'DOMAIN' ? [null, end] : null;
         } else if (['MULTIPLE_CHOICE', 'MULTIPLE_CHOICE_IMAGE'].includes(q.questionType)) {
           value = isMultiSelect ? [] : '';
         } else {
@@ -139,7 +139,13 @@ export const useParticipateForm = () => {
           valid = !!value;
         }
       } else if (q.questionType === 'SPECTRAL') {
-        valid = value !== null && value !== undefined;
+        // valid = value !== null && value !== undefined;
+        if(Array.isArray(value)){
+          valid = value[0] !== null;
+        } else {
+          valid = value !== null 
+        }
+         
       } else {
         valid = !!value;
       }
@@ -298,15 +304,15 @@ export const useParticipateForm = () => {
             },
           ];
         }
-      } else if (question.questionType === 'SPECTRAL') {debugger
+      } else if (question.questionType === 'SPECTRAL') {
         if (spectralType === 'DOMAIN') {
           answerList = formData.map((val: number, index: number) => ({
             optionId: null,
-            answer: String(val),
+            answer: formData[0] === null ? "" : String(val),
             id: typeof answerId === 'object' ? answerId[index] : undefined,
           }));
         } else {
-          if(String(formData) === ""){
+          if(formData === null){
              toast.warning('پاسخی برای این سوال ثبت نشد', {
                 className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
                 duration: 2000,
@@ -314,12 +320,12 @@ export const useParticipateForm = () => {
                   label: 'بستن',
                   onClick: () => console.log('Cancel!'),
                 },
-              })
+            })
           }
           answerList = [
             {
               optionId: null,
-              answer: String(formData),
+              answer: formData === null ? "" : String(formData),
               id: typeof answerId === 'number' ? answerId : undefined,
             },
           ];
@@ -356,6 +362,7 @@ export const useParticipateForm = () => {
       })
 
       if (!res.success) {
+        console.error('res.error', res.error)
         throw new Error(res.error)
       }
 
@@ -367,6 +374,7 @@ export const useParticipateForm = () => {
       }
 
     } catch (e) {
+      console.error('e', e)
       toast.error("خطا در ثبت پاسخ", {
       className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
       duration: 2000,

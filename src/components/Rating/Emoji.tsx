@@ -20,28 +20,28 @@ type EmojiRatingProps = {
 
 const EMOJIS: EmojiItem[] = [
     {
-        id: 0,
+        id: 1,
         label: "Very bad",
         url: "angry.svg",
     },
     {
-        id: 1,
+        id: 2,
         label: "Bad",
         url: "neutral.svg",
     },
     {
-        id: 2,
+        id: 3,
         label: "Okay",
         url: "happy.svg",
     },
     {
-        id: 3,
+        id: 4,
         label: "Good",
         url: "sad.svg",
 
     },
     {
-        id: 4,
+        id: 5,
         label: "Great",
         url: "laugh.svg",
     },
@@ -75,9 +75,9 @@ gap-2 select-none">
             </span>
             <div className="flex flex-col">
                 <div className="flex justify-between w-full x-2 gap-4">
-                    {EMOJIS.map((emoji, index) => {
-                        const isActive = index === value;
-                        const isPopping = index === popIndex;
+                    {EMOJIS.map((emoji) => {
+                        const isActive = emoji.id === value;
+                        const isPopping = emoji.id === popIndex;
 
                         return (
                             <div
@@ -86,9 +86,9 @@ gap-2 select-none">
                                     }`}
                                 onClick={() => {
                                     if (!clickableEmojis) return;
-                                    setInternalValue(index);
-                                    onChange?.(index);
-                                    setPopIndex(index);
+                                    setInternalValue(emoji.id);
+                                    onChange?.(emoji.id);
+                                    setPopIndex(emoji.id);
                                     setTimeout(() => setPopIndex(null), 180);
                                 }}
                             >
@@ -100,7 +100,7 @@ gap-2 select-none">
                                         alt={emoji.label}
                                         fill
                                         quality={100}
-                                        priority={index === 0}
+                                        priority={true}
                                         sizes="56px"
                                         className="object-contain transition-all duration-200"
                                         style={{
@@ -123,7 +123,7 @@ gap-2 select-none">
 
                 <RangeSlider
                     value={value}
-                    max={EMOJIS.length - 1}
+                    max={EMOJIS.length}
                     onChange={(v) => {
                         setInternalValue(v);
                         onChange?.(v);
@@ -192,7 +192,25 @@ type RangeSliderProps = {
 };
 
 export function RangeSlider({ value, max, onChange }: RangeSliderProps) {
-    const percent = (value / max) * 100;
+    let percent
+    if (value === 0) {
+        percent = 0;
+    } else if (value === 1) {
+        percent = (0.35 / max) * 100;
+    } else if (value === 2) {   
+        percent = (1.4 / max) * 100;
+    } else if (value === 3) {
+        percent = (2.49 / max) * 100;
+    } else if (value === 4) {
+        percent = (3.55 / max) * 100;
+    } else if (value === 5) {
+        percent = (value / max) * 100;
+    }
+
+
+    const handleChangeRange = (e: any) => {
+        onChange(Number(e.target.value))
+    }
 
     return (
         <div className="w-full relative mt-3">
@@ -228,17 +246,17 @@ export function RangeSlider({ value, max, onChange }: RangeSliderProps) {
                 max={max}
                 step={1}
                 value={value}
-                onChange={(e) => onChange(Number(e.target.value))}
+                onChange={handleChangeRange}
                 className="absolute inset-0 w-full h-2 opacity-0 cursor-pointer"
             />
 
             <div className="flex justify-between mt-3 px-5">
-                {Array.from({ length: max + 1 }).map((_, i) => (
+                {Array.from({ length: max }).map((_, i) => (
                     <div
                         key={i}
                         className="w-2 h-2 rounded-full transition-colors"
                         style={{
-                            backgroundColor: i === value ? "#FFE13E" : "#D1D5DB",
+                            backgroundColor: i + 1 === value ? "#FFE13E" : "#D1D5DB",
                         }}
                     />
                 ))}

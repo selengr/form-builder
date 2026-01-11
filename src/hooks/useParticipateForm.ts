@@ -280,6 +280,7 @@ export const useParticipateForm = () => {
       const props = question.questionPropertyList;
       const isMultiSelect = extractProperty(props, 'MULTI_SELECT') === 'true';
       const spectralType = extractProperty(props, 'SPECTRAL_TYPE');
+      const RATING_TYPE = extractProperty(props, 'RATING_TYPE');
       const isChoiceType = ['MULTIPLE_CHOICE', 'MULTIPLE_CHOICE_IMAGE'].includes(
         question.questionType
       );
@@ -336,6 +337,25 @@ export const useParticipateForm = () => {
             optionId: null,
             id: typeof answerId === 'number' ? answerId : undefined,
             answer: "#",
+          },
+        ];
+      } else if(question.questionType === 'RATING') {
+             if(formData === ""){
+             toast.warning('پاسخی برای این سوال ثبت نشد', {
+                className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
+                duration: 2000,
+                cancel: {
+                  label: 'بستن',
+                  onClick: () => console.log('Cancel!'),
+                },
+            })
+          }
+
+          answerList = [
+          {
+            optionId: null,
+            id: typeof answerId === 'number' ? answerId : undefined,
+            answer: String(formData),
           },
         ];
       } else {

@@ -179,6 +179,7 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
 
 
 
+  console.log('startValue ===', startValue)
   const handleChange = (value: number) => {
     setStarValue(value as any);
     onChange?.(value as any);

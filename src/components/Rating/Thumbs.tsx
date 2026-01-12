@@ -113,7 +113,7 @@ export default function ThumbsRating({
         )
     };
 
-    const renderCustomIcon = (index: number) => {
+    const renderCustomIcon = (index: any) => {
         const fillPercent = Math.min(Math.max(displayValue - index, 0), 1) * 100;
         const isPopping = index === popIndex;
 

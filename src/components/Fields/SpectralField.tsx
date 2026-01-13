@@ -286,10 +286,9 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
   // const [sliderVal, setSliderVal] = useState(value ? value : spectralType === 'SPECTRAL' ? ""  : [start, end]);
   type SpectralValue = number | number[] | number[] | null;
   const isDomain = spectralType === 'DOMAIN';
-
   const [sliderVal, setSliderVal] = useState<SpectralValue>(() => {
     if (value !== undefined && value !== '') return value as any;
-    if (isDomain) return null;
+    if (isDomain) return [null, end];
     return null;
   });
 

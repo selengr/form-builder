@@ -115,7 +115,7 @@ export const useParticipateForm = () => {
         }
       } else {
         if (q.questionType === 'SPECTRAL') {
-          const start = Number(extractProperty(props, 'SPECTRAL_START')) || 0;
+          // const start = Number(extractProperty(props, 'SPECTRAL_START')) || 0;
           const end = Number(extractProperty(props, 'SPECTRAL_END')) || 10;
           // empty condition
           value = spectralType === 'DOMAIN' ? [null, end] : null;
@@ -307,6 +307,16 @@ export const useParticipateForm = () => {
         }
       } else if (question.questionType === 'SPECTRAL') {
         if (spectralType === 'DOMAIN') {
+          if(Array.isArray(formData) && formData[0] === null){
+             toast.warning('پاسخی برای این سوال ثبت نشد', {
+                className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
+                duration: 2000,
+                cancel: {
+                  label: 'بستن',
+                  onClick: () => console.log('Cancel!'),
+                },
+            })
+          }
           answerList = formData.map((val: number, index: number) => ({
             optionId: null,
             answer: formData[0] === null ? "" : String(val),

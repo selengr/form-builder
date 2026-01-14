@@ -85,17 +85,31 @@ export const useParticipateForm = () => {
         const first = previousAnswers[0];
 
         if (q.questionType === 'SPECTRAL'
-
-
         ) {
           if (spectralType === 'DOMAIN') {
-            value = previousAnswers.map(a => Number(a.answer));
+            if (previousAnswers[0].answer == null) {
+              value = [null, 100]
+            } else {
+              value = previousAnswers.map(a => {
+                if (a.answer === null) {
+                  return null
+                } else {
+                  return Number(a.answer)
+                }
+              });
+            }
+
             currentAnswerId = previousAnswers.reduce((acc, a, index) => {
               acc[index] = a.id;
+              console.log('acc', acc)
               return acc;
             }, {} as Record<number, number>);
           } else {
-            value = Number(first.answer);
+            if (first.answer === null) {
+              value = null
+            } else {
+              value = Number(first.answer);
+            }
             currentAnswerId = first?.id;
           }
         } else if (['MULTIPLE_CHOICE', 'MULTIPLE_CHOICE_IMAGE'].includes(q.questionType)) {
@@ -140,12 +154,12 @@ export const useParticipateForm = () => {
         }
       } else if (q.questionType === 'SPECTRAL') {
         // valid = value !== null && value !== undefined;
-        if(Array.isArray(value)){
+        if (Array.isArray(value)) {
           valid = value[0] !== null;
         } else {
-          valid = value !== null 
+          valid = value !== null
         }
-         
+
       } else {
         valid = !!value;
       }
@@ -307,32 +321,35 @@ export const useParticipateForm = () => {
         }
       } else if (question.questionType === 'SPECTRAL') {
         if (spectralType === 'DOMAIN') {
-          if(Array.isArray(formData) && formData[0] === null){
-             toast.warning('پاسخی برای این سوال ثبت نشد', {
-                className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
-                duration: 2000,
-                cancel: {
-                  label: 'بستن',
-                  onClick: () => console.log('Cancel!'),
-                },
+          if (Array.isArray(formData) && formData[0] === null) {
+            toast.warning('پاسخی برای این سوال ثبت نشد', {
+              className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
+              duration: 2000,
+              cancel: {
+                label: 'بستن',
+                onClick: () => console.log('Cancel!'),
+              },
             })
           }
+          console.log('formData', formData)
+          //  console.log(' formData[0] === null ? "" : String(val),',  formData[0] === null ? "" : String(val),)
           answerList = formData.map((val: number, index: number) => ({
             optionId: null,
             answer: formData[0] === null ? "" : String(val),
             id: typeof answerId === 'object' ? answerId[index] : undefined,
           }));
         } else {
-          if(formData === null){
-             toast.warning('پاسخی برای این سوال ثبت نشد', {
-                className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
-                duration: 2000,
-                cancel: {
-                  label: 'بستن',
-                  onClick: () => console.log('Cancel!'),
-                },
+          if (formData === null) {
+            toast.warning('پاسخی برای این سوال ثبت نشد', {
+              className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
+              duration: 2000,
+              cancel: {
+                label: 'بستن',
+                onClick: () => console.log('Cancel!'),
+              },
             })
           }
+          console.log('formData', formData)
           answerList = [
             {
               optionId: null,
@@ -349,19 +366,19 @@ export const useParticipateForm = () => {
             answer: "#",
           },
         ];
-      } else if(question.questionType === 'RATING') {
-             if(formData === ""){
-             toast.warning('پاسخی برای این سوال ثبت نشد', {
-                className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
-                duration: 2000,
-                cancel: {
-                  label: 'بستن',
-                  onClick: () => console.log('Cancel!'),
-                },
-            })
-          }
+      } else if (question.questionType === 'RATING') {
+        if (formData === "") {
+          toast.warning('پاسخی برای این سوال ثبت نشد', {
+            className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
+            duration: 2000,
+            cancel: {
+              label: 'بستن',
+              onClick: () => console.log('Cancel!'),
+            },
+          })
+        }
 
-          answerList = [
+        answerList = [
           {
             optionId: null,
             id: typeof answerId === 'number' ? answerId : undefined,
@@ -406,13 +423,13 @@ export const useParticipateForm = () => {
     } catch (e) {
       console.error('e', e)
       toast.error("خطا در ثبت پاسخ", {
-      className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
-      duration: 2000,
-      cancel: {
-        label: 'بستن',
-        onClick: () => console.log('Cancel!'),
-      },
-    })
+        className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
+        duration: 2000,
+        cancel: {
+          label: 'بستن',
+          onClick: () => console.log('Cancel!'),
+        },
+      })
     } finally {
       setQuestionLoading(false);
     }
@@ -423,14 +440,13 @@ export const useParticipateForm = () => {
       setQuestionLoading(true);
       const res = await AxiosApi.post('/question/previous-question', { takePartId });
       const q = res.data.questionModel;
-      const a = res.data.oldAnswers?.answersModel ?? [];
-
+      const a = res.data.oldAnswers?.answersModel ?? []; 
       initializeQuestion(q, a);
       setIsValid(true);
     } catch (e) {
-       toast.error('خطا در بازگشت به سوال قبلی', {
-          className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
-           duration: 2000,
+      toast.error('خطا در بازگشت به سوال قبلی', {
+        className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
+        duration: 2000,
       })
     } finally {
       setQuestionLoading(false);

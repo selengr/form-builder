@@ -206,7 +206,7 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
         <StarRating
           value={startValue}
           onChange={handleChange}
-          precision={0.1}
+          precision={0.2}
           startValue={start}
           endValue={end}
         />
@@ -218,7 +218,7 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
          <StarRating
           value={startValue}
           onChange={handleChange}
-          precision={0.1}
+          precision={0.2}
           heart={true}
           startValue={start}
           endValue={end}

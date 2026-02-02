@@ -21,6 +21,7 @@ import useActionDesigner from '@/hooks/useActionDesigner';
 import CheckIcon from '@/../public/images/home-page/spectral.svg';
 import { SwitchButton } from '../Switch/SwitchButton';
 import { MyRangeSlider } from '../Slider/RangeSlider';
+import { useSearchParams } from 'next/navigation';
 
 const questionType: ElementsType = 'SPECTRAL';
 
@@ -117,8 +118,8 @@ const optionsSchema = z.object({
           message: 'برچسب باید حداقل 1 و حداکثر 20 کاراکتر باشد',
         }),
     ),
-    score: z.number({ invalid_type_error: 'مکان الزامی است' }).min(0, { message: 'نمیتواند منفی باشد' }).nonnegative({ message: 'نمیتواند منفی باشد' }),
-    id: z.number().nullable().default(null),
+  score: z.number({ invalid_type_error: 'مکان الزامی است' }).min(0, { message: 'نمیتواند منفی باشد' }).nonnegative({ message: 'نمیتواند منفی باشد' }),
+  id: z.number().nullable().default(null),
 });
 
 const propertiesSchema = z
@@ -128,6 +129,12 @@ const propertiesSchema = z
       .trim()
       .transform((value) => value.replace(/\s+/g, ' '))
       .pipe(z.string().min(1, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' }).max(3999, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' })),
+    label: z
+      .string()
+      .trim()
+      .transform((value) => value.replace(/\s+/g, ' '))
+      .pipe(z.string().min(7, { message: 'حداقل باید 7 و حداکثر 20 کاراکتر باشد' }).max(20, { message: 'حداقل باید 7 و حداکثر 20 کاراکتر باشد' }))
+      .nullable(),
     SELECTION_TYPE: z.object({ value: z.string(), id: z.number() }),
     SPECTRAL_TYPE: z.object({ value: z.string(), id: z.number() }),
     STEP: z.object({
@@ -298,9 +305,9 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
   };
 
   const handleChange = (event: Event, newValue: number | number[]) => {
-   const cleanValue = Array.isArray(newValue)
-    ? newValue.map(v => parseFloat(v.toFixed(1))) 
-    : parseFloat(newValue.toFixed(1));  
+    const cleanValue = Array.isArray(newValue)
+      ? newValue.map(v => parseFloat(v.toFixed(1)))
+      : parseFloat(newValue.toFixed(1));
 
     setSliderVal(cleanValue as any);
     onChange?.(cleanValue as any);
@@ -377,6 +384,10 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
     }),
   );
 
+  const searchParams = useSearchParams();
+  const search = searchParams.get('survey');
+  const isSurvey = search === 'admin';
+
   const defaultValues = useMemo(() => {
     const values = element.questionPropertyList.reduce((acc: any, attribute: any) => {
       if (!acc[attribute.questionPropertyEnum]) {
@@ -409,7 +420,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         score: Number(item?.value),
       }));
     }
-
+    values.label = element.label ?? null;
     values.optionList = optionList
 
     return values;
@@ -430,7 +441,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   } = methods;
 
   async function onSubmit(values: propertiesFormSchemaType) {
-    const { title, DESCRIPTION, REQUIRED, SPECTRAL_TYPE, SELECTION_TYPE, STEP, SPECTRAL_START, SPECTRAL_END, optionList, EDIT_ANSWER_LOCKED } = values;
+    const { title, label, DESCRIPTION, REQUIRED, SPECTRAL_TYPE, SELECTION_TYPE, STEP, SPECTRAL_START, SPECTRAL_END, optionList, EDIT_ANSWER_LOCKED } = values;
 
     // ? finds whether a field is selected or not
     const selectedYet = elements?.find((el: any) => el?.questionId === element?.questionId);
@@ -503,7 +514,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
     const updatedSpectralPlaceList = optionListData.map(option => {
       return {
-        id : option.id || null,
+        id: option.id || null,
         title: option.title,
         value: option.score
       };
@@ -516,6 +527,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       questionPropertyList: propertiesData,
       optionList: [],
       spectralPlaceList: updatedSpectralPlaceList,
+      label: label ?? null,
     };
 
     if (!selectedYet) {
@@ -576,6 +588,27 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
           </Typography>
           <RHFTextField multiline rows={3} name='title' />
         </Stack>
+        {isSurvey &&
+          <Stack spacing={1} mt={1}>
+            <Typography variant='subtitle2' fontWeight='700'>
+              شناسه:
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                direction: 'ltr',
+                width: '100%',
+                paddingX: 0.5,
+                '& .MuiFormControl-root, & .MuiInputBase-root': {
+                  borderRadius: '10px',
+                },
+              }}>
+              <RHFTextField name='label' />
+            </Box>
+          </Stack>
+        }
 
         <Stack spacing={1} marginTop={2.5}>
           <Typography variant='subtitle2' fontWeight='700'>

@@ -1,7 +1,7 @@
 'use client';
 import { toast } from 'sonner';
 import Image from 'next/image';
-import { useParams, usePathname, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Box, Container, IconButton, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
@@ -16,6 +16,7 @@ import { replaceNestedParentheses } from './parentheses-replacer';
 import FormulaInput from '@/components/formula-editor/FormulaInput';
 import FormulaKeypad from '@/components/formula-editor/FormulaKeypad';
 import FormulaControls from '@/components/formula-editor/FormulaControls';
+import { RHFTextField } from '../hook-form';
 
 const OPERATOR_TYPES = ['-', '+', '*', '/'];
 const FN_FX_OPTIONS = [{ fnValue: 'avg', fnCaption: 'میانگین()' }];
@@ -34,11 +35,16 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
 
   const editData = editList?.frontCalcData ? JSON.parse(editList.frontCalcData as string) : [];
   const [formName, setFormName] = useState<string>(editList?.name ?? '');
+  const [label, setLabel] = useState<string|null>(editList?.label ?? null);
   const [cursorIndex, setCursorIndex] = useState<number>(0);
   const [elements, setElements] = useState<Element[]>(editData);
   const [isClient, setIsClient] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isMobileKeypadOpen, setIsMobileKeypadOpen] = useState<boolean>(false);
+
+  const searchParams = useSearchParams();
+  const search = searchParams.get('survey');
+  const isSurvey = search === 'admin';
 
   useEffect(() => {
     setIsClient(true);
@@ -582,6 +588,11 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
       toast.error('ابتدا نام محاسبه گر را وارد کنید');
       return;
     }
+    if (label && label.length < 7 || label!.length > 20) {
+      toast.error('شناسه حداقل باید 7 و حداکثر 20 کاراکتر باشد');
+      return;
+    }
+
 
     const newFormula = htmlToFormula(elements, selectFieldRef, selectAvgRef);
 
@@ -618,6 +629,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
         await AxiosApi.post('/calculation', {
           name: formName,
           formBuilderId: id,
+          label: label ?? null,
           theFormula: finalFormula,
           frontCalcData: JSON.stringify(elements),
         });
@@ -625,6 +637,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
         await AxiosApi.put(`/calculation/${editList?.id}`, {
           id: editList?.id,
           name: formName,
+          label: label ?? null,
           formBuilderId: id,
           theFormula: finalFormula,
           frontCalcData: JSON.stringify(elements),
@@ -644,7 +657,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
   if (!isClient) return null;
 
   return (
-    <Container maxWidth='sm' sx={{ padding: '0px', marginTop: { xs: "10px", md: "'-15px'", position: "relative" } }}>
+    <Container maxWidth='sm' sx={{ padding: '0px', marginTop: { xs: "10px", md: "-25px", position: "relative" } }}>
       <Typography
         variant='subtitle1'
         sx={{
@@ -652,7 +665,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
           justifyContent: 'center',
           color: '#404040',
           fontWeight: 700,
-
+          mb:2
         }}>
         محاسبه‌گر
       </Typography>
@@ -666,7 +679,16 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
           width: '100%',
           paddingX: { xs: 3, md: 0 }
         }}>
-        <Stack spacing={1}>
+            <Box
+          sx={{
+            width: '100%',
+            display: "flex",
+            justifyContent : "space-between",
+            alignItems: "center",
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: 2
+          }}>
+        <Stack  width={'100%'}>
           <Typography variant='subtitle2' color='#161616'>
             نام:
           </Typography>
@@ -694,6 +716,39 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
             onChange={(e) => setFormName(e.target.value)}
           />
         </Stack>
+
+          {isSurvey &&
+                  <Stack width={'100%'}>
+          <Typography variant='subtitle2' color='#161616'>
+            شناسه:
+          </Typography>
+                       <TextField
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#DDE1E6',
+                  borderRadius: '8px',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#DDE1E6',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#DDE1E6',
+                },
+              },
+              '& input': {
+                paddingX: 1,
+                paddingY: 0,
+                height: '50px',
+              },
+            }}
+            value={label}
+            onChange={(e) => setLabel(e.target.value)}
+          />
+                  </Stack>
+                }
+                    </Box>
+
 
         <Box
           sx={{

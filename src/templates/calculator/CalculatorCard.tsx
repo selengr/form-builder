@@ -109,7 +109,7 @@ export function CalculatorCard({ calculator, index, disabled = false }: ICalcula
 
   const toggleDependencies = () => {
     setHasDependencies((prev) => !prev);
-  };
+  };  
 
   const isDeleteLoading = checkDependencyLoading || isPending;
 
@@ -120,7 +120,7 @@ export function CalculatorCard({ calculator, index, disabled = false }: ICalcula
           <div className='bg-[#F7F7FF] h-8 min-w-8 w-8 rounded-[10px] flex justify-center items-center'>{index + 1}</div>
           <div className='flex flex-col'>
             <h3 className='text-[#161616] text-sm break-words flex flex-nowrap'>{calculator.name ?? '--'}</h3>
-            <span className='text-[#393939] text-xs'>#محاسبه‌گر</span>
+            <span className='text-[#393939] text-xs'>#محاسبه‌گر - {calculator.label}</span>
           </div>
         </div>
 

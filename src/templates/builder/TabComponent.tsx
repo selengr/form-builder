@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import { Box, Tab, Tabs } from '@mui/material';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export default function DesignerTabs() {
   const [value, setValue] = useState<number>(2);
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+
 
   const segments = pathname ? pathname.split('/').filter(Boolean) : [];
   const builderIndex = segments.indexOf('builder');
@@ -23,10 +25,14 @@ export default function DesignerTabs() {
     const tabRoutes = [`/builder/${builderId}/condition`, `/builder/${builderId}/calculator`, `/builder/${builderId}`];
 
     const targetRoute = tabRoutes[newValue];
-    if (targetRoute) {
-      router.push(targetRoute);
-    }
+    if (!targetRoute) return;
+
+    const query = searchParams.toString();
+    const finalRoute = query ? `${targetRoute}?${query}` : targetRoute;
+
+    router.push(finalRoute);
   };
+
 
   useEffect(() => {
     if (!pathname) return;

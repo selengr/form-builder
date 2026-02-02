@@ -46,6 +46,7 @@ export type FormElementInstance = {
   questionGroupId?: number | null;
   formId?: number;
   title?: string;
+  label?: string;
   questionType?: ElementsType;
   position?: number | null;
   questionPropertyList?: Record<string, any>;

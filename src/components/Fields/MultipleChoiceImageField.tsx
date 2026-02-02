@@ -24,6 +24,7 @@ import { HiOutlineTrash } from 'react-icons/hi2';
 import ImageGalleryIcon from '@/../public/images/home-page/gallery-tick.svg';
 import { SwitchButton } from '../Switch/SwitchButton';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 
 const questionType: ElementsType = 'MULTIPLE_CHOICE_IMAGE';
 
@@ -91,6 +92,12 @@ const propertiesSchema = z.object({
     .trim()
     .transform((value) => value.replace(/\s+/g, ' '))
     .pipe(z.string().min(1, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' }).max(3999, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' })),
+  label: z
+    .string()
+    .trim()
+    .transform((value) => value.replace(/\s+/g, ' '))
+    .pipe(z.string().min(7, { message: 'حداقل باید 7 و حداکثر 20 کاراکتر باشد' }).max(20, { message: 'حداقل باید 7 و حداکثر 20 کاراکتر باشد' }))
+    .nullable(),
   DESCRIPTION: z.object({
     value: z
       .string()
@@ -352,6 +359,9 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       return property.questionPropertyEnum === 'DESCRIPTION' && property.value;
     }),
   );
+  const searchParams = useSearchParams();
+  const search = searchParams.get('survey');
+  const isSurvey = search === 'admin';
   const defaultValues = useMemo(() => {
     const matchingElement = elements?.find((el: any) => el?.questionId === element?.questionId);
     const optionListCopy = matchingElement ? [...element.optionList] : [];
@@ -376,12 +386,13 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       return acc;
     }, {});
     values.title = element?.title;
+    values.label = element.label ?? null;
     values.optionList = matchingElement
       ? optionListCopy.map((optionItem) => {
-          delete optionItem?.position;
-          delete optionItem?.isTarget;
-          return optionItem;
-        })
+        delete optionItem?.position;
+        delete optionItem?.isTarget;
+        return optionItem;
+      })
       : [];
     return values;
   }, [element, elements]);
@@ -434,7 +445,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   }, [append, clearErrors, fields.length]);
 
   async function onSubmit(values: propertiesFormSchemaType) {
-    const { title, DESCRIPTION, REQUIRED, RANDOMIZE_OPTIONS, MULTI_SELECT, optionList, EDIT_ANSWER_LOCKED } = values;
+    const { title, label, DESCRIPTION, REQUIRED, RANDOMIZE_OPTIONS, MULTI_SELECT, optionList, EDIT_ANSWER_LOCKED } = values;
 
     const selectedYet = elements?.find((el: any) => el?.questionId === element?.questionId);
 
@@ -493,6 +504,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       position: selectedElement?.position?.apiPosition ?? group.length,
       questionPropertyList: propertiesData,
       optionList: newOptionList,
+      label: label ?? null,
     };
 
     if (!selectedYet) {
@@ -550,6 +562,27 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
           </Typography>
           <RHFTextField multiline rows={3} name='title' />
         </Stack>
+        {isSurvey &&
+          <Stack spacing={1} mt={1}>
+            <Typography variant='subtitle2' fontWeight='700'>
+              شناسه:
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                direction: 'ltr',
+                width: '100%',
+                paddingX: 0.5,
+                '& .MuiFormControl-root, & .MuiInputBase-root': {
+                  borderRadius: '10px',
+                },
+              }}>
+              <RHFTextField name='label' />
+            </Box>
+          </Stack>
+        }
         <Box>
           <Box marginTop={3}>
             {fields.map((field: any, index: number) => (

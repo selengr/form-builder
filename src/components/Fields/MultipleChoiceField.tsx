@@ -20,6 +20,7 @@ import useActionSelectedElement from '@/hooks/useActionSelectedElement';
 import useSelectedElement from '@/hooks/useSelectedElement';
 import useActionDesigner from '@/hooks/useActionDesigner';
 import shuffleArray from '@/lib/shuffle';
+import { useSearchParams } from 'next/navigation';
 
 const questionType: ElementsType = 'MULTIPLE_CHOICE';
 
@@ -87,7 +88,13 @@ const propertiesSchema = z.object({
     .trim()
     .transform((value) => value.replace(/\s+/g, ' '))
     .pipe(z.string().min(1, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' }).max(3999, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' })),
-  DESCRIPTION: z.object({
+         label: z
+          .string()
+          .trim()
+          .transform((value) => value.replace(/\s+/g, ' '))
+          .pipe(z.string().min(7, { message: 'حداقل باید 7 و حداکثر 20 کاراکتر باشد' }).max(20, { message: 'حداقل باید 7 و حداکثر 20 کاراکتر باشد' }))
+          .nullable(),
+    DESCRIPTION: z.object({
     value: z
       .string()
       .trim()
@@ -297,6 +304,9 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       return property.questionPropertyEnum === 'DESCRIPTION' && property.value;
     }),
   );
+    const searchParams = useSearchParams();
+    const search = searchParams.get('survey');
+    const isSurvey = search === 'admin';
 
   const defaultValues = useMemo(() => {
     const values = element.questionPropertyList.reduce((acc: any, attribute: any) => {
@@ -323,6 +333,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
     }, {});
 
     values.title = element?.title;
+    values.label = element.label ?? null;
     values.optionList = element?.optionList;
 
     return values;
@@ -341,7 +352,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   } = methods;
 
   async function onSubmit(values: propertiesFormSchemaType) {
-    const { title, DESCRIPTION, REQUIRED, RANDOMIZE_OPTIONS, MULTI_SELECT, optionList, EDIT_ANSWER_LOCKED } = values;
+    const { title, label, DESCRIPTION, REQUIRED, RANDOMIZE_OPTIONS, MULTI_SELECT, optionList, EDIT_ANSWER_LOCKED } = values;
 
     // ? finds whether a field is selected or not
     const selectedYet = elements?.find((el: any) => el?.questionId === element?.questionId);
@@ -403,6 +414,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       position: selectedElement?.position?.apiPosition ?? group.length,
       questionPropertyList: propertiesData,
       optionList: optionListData,
+      label: label ?? null,
     };
 
     if (!selectedYet) {
@@ -463,6 +475,27 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
           </Typography>
           <RHFTextField multiline rows={3} name='title' />
         </Stack>
+          {isSurvey &&
+                <Stack spacing={1} mt={1}>
+                  <Typography variant='subtitle2' fontWeight='700'>
+                    شناسه:
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      height: '100%',
+                      direction: 'ltr',
+                      width: '100%',
+                      paddingX: 0.5,
+                      '& .MuiFormControl-root, & .MuiInputBase-root': {
+                        borderRadius: '10px',
+                      },
+                    }}>
+                    <RHFTextField name='label' />
+                  </Box>
+                </Stack>
+                }
 
         <Stack>
           <Box display='flex' justifyContent='space-between' alignItems='center' marginTop={3} marginBottom={0.5}>

@@ -527,7 +527,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       questionPropertyList: propertiesData,
       optionList: [],
       spectralPlaceList: updatedSpectralPlaceList,
-      label: label ?? null,
+        label: label ?? null,
     };
 
     if (!selectedYet) {

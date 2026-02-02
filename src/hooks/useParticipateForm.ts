@@ -12,7 +12,7 @@ import withValidation from '@/components/Fields/FormHOC';
 // actions
 import {
   takePartAction,
-  insertAnswerAction,
+  insertAnswerAction, 
   checkAnswerBeforeAction,
   getPreviousQuestionAction,
   checkResponseLimitationAction,

@@ -1,9 +1,10 @@
 'use client';
 
-import { memo, useMemo, useState } from 'react';
-import { ElementsType, FormElement, FormElementInstance } from '@/types/FormElements';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
+import { memo, useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { ElementsType, FormElement, FormElementInstance } from '@/types/FormElements';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -73,6 +74,12 @@ const propertiesSchema = z
       .trim()
       .transform((value) => value.replace(/\s+/g, ' '))
       .pipe(z.string().min(1, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' }).max(3999, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' })),
+    label: z
+      .string()
+      .trim()
+      .transform((value) => value.replace(/\s+/g, ' '))
+      .pipe(z.string().min(7, { message: 'حداقل باید 7 و حداکثر 20 کاراکتر باشد' }).max(20, { message: 'حداقل باید 7 و حداکثر 20 کاراکتر باشد' }))
+      .nullable(),
     MINIMUM_LEN: z.object({
       value: z.number({ invalid_type_error: 'اجباری است' }).min(0),
       id: z.number(),
@@ -389,6 +396,9 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   const selectedElement = useSelectedElement();
   const { updateElement, addElement } = useActionDesigner();
   const { questionGroups } = useDesigner();
+  const searchParams = useSearchParams();
+  const search = searchParams.get('survey');
+  const isSurvey = search === 'admin';
 
   const defaultValues = useMemo(() => {
     const values = element.questionPropertyList.reduce((acc: any, attribute) => {
@@ -413,6 +423,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       return acc;
     }, {});
     values.title = element.title;
+    values.label = element.label ?? null;
 
     return values;
   }, [element]);
@@ -432,7 +443,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   } = methods;
 
   async function onSubmit(values: propertiesFormSchemaType) {
-    const { title, DESCRIPTION, REQUIRED, TEXT_FIELD_PATTERN, MAXIMUM_LEN, MINIMUM_LEN, EDIT_ANSWER_LOCKED } = values;
+    const { title, label, DESCRIPTION, REQUIRED, TEXT_FIELD_PATTERN, MAXIMUM_LEN, MINIMUM_LEN, EDIT_ANSWER_LOCKED } = values;
 
     const selectedYet = elements?.find((el: any) => el?.questionId === element?.questionId);
 
@@ -488,6 +499,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
     const finalFieldData = {
       ...element,
       title,
+      label: label ?? null,
       position: selectedElement?.position?.apiPosition ?? group.length,
       questionPropertyList: propertiesData,
     };
@@ -563,6 +575,27 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
             <RHFTextField multiline rows={3} name='title' />
           </Box>
         </Stack>
+        {isSurvey &&
+        <Stack spacing={1} mt={1}>
+          <Typography variant='subtitle2' fontWeight='700'>
+            شناسه:
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+              direction: 'ltr',
+              width: '100%',
+              paddingX: 0.5,
+              '& .MuiFormControl-root, & .MuiInputBase-root': {
+                borderRadius: '10px',
+              },
+            }}>
+            <RHFTextField name='label' />
+          </Box>
+        </Stack>
+        }
 
         <TextFieldPair setValue={setValue} clearErrors={clearErrors} initialShow={showMinMaxProps} />
 

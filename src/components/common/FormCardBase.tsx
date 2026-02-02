@@ -116,7 +116,7 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
       {showStatus && (
         <InfoRow
           label="وضعیت"
-          value={data?.isCompleted ? 'انجام شده' : 'انجام نشده'}
+          value={data.takeParts.length > 0 ? 'انجام شده' : 'انجام نشده'}
           bold
         />
       )}

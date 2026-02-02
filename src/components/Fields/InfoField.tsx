@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useMemo } from 'react';
 import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
+import React, { useMemo } from 'react';
+import { useForm } from 'react-hook-form';
+import { useSearchParams } from 'next/navigation';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 
@@ -33,6 +34,12 @@ const questionPropertyList: IQPLInfoField = [
 
 const propertiesSchema = z.object({
   title: z.string().trim().min(1, 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد').max(3999),
+  label: z
+    .string()
+    .trim()
+    .transform((value) => value.replace(/\s+/g, ' '))
+    .pipe(z.string().min(7, { message: 'حداقل باید 7 و حداکثر 20 کاراکتر باشد' }).max(20, { message: 'حداقل باید 7 و حداکثر 20 کاراکتر باشد' }))
+    .nullable(),
   MESSAGE: z.object({
     value: z.string().max(3999, 'حداکثر میتواند 4000 کاراکتر باشد').optional(),
     id: z.number(),
@@ -106,6 +113,10 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   const { updateElement, addElement } = useActionDesigner();
   const { questionGroups } = useDesigner();
 
+  const searchParams = useSearchParams();
+  const search = searchParams.get('survey');
+  const isSurvey = search === 'admin';
+
   const defaultValues = useMemo(() => {
     const values = element.questionPropertyList.reduce((acc: any, attr) => {
       acc[attr.questionPropertyEnum] = {
@@ -115,6 +126,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       return acc;
     }, {});
     values.title = element.title;
+    values.label = element.label ?? null;
     return values;
   }, [element]);
 
@@ -161,6 +173,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       position: selectedElement?.position?.apiPosition ?? groupElements.length,
       title: values.title,
       questionPropertyList: props,
+      label: values.label ?? null,
     };
 
     try {
@@ -199,6 +212,27 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
             <RHFTextField name='title' />
           </Box>
         </Stack>
+        {isSurvey &&
+          <Stack spacing={1} mt={1}>
+            <Typography variant='subtitle2' fontWeight='700'>
+              شناسه:
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                direction: 'ltr',
+                width: '100%',
+                paddingX: 0.5,
+                '& .MuiFormControl-root, & .MuiInputBase-root': {
+                  borderRadius: '10px',
+                },
+              }}>
+              <RHFTextField name='label' />
+            </Box>
+          </Stack>
+        }
 
         <Stack mt={2}>
           <Typography variant='subtitle2' fontWeight={700} mb={1.5}>

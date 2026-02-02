@@ -21,6 +21,7 @@ import CheckIcon from '@/../public/images/home-page/spectral.svg';
 import { SwitchButton } from '../Switch/SwitchButton';
 import StarRating from '../Rating/Start';
 import EmojiRating from '../Rating/Emoji';
+import { useSearchParams } from 'next/navigation';
 
 const questionType: ElementsType = 'RATING';
 
@@ -64,7 +65,7 @@ const questionPropertyList: IQPLRating = [
 
 
 const ratingTypeOptions: IRatingQTapAndOptionsType = [
- { value: 'STAR', label: 'ستاره‌ایی' },
+  { value: 'STAR', label: 'ستاره‌ایی' },
   { value: 'HEART', label: 'قلب' },
   { value: 'EMOJI', label: 'ایموجی' },
 ];
@@ -77,6 +78,12 @@ const propertiesSchema = z
       .trim()
       .transform((value) => value.replace(/\s+/g, ' '))
       .pipe(z.string().min(1, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' }).max(3999, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' })),
+    label: z
+      .string()
+      .trim()
+      .transform((value) => value.replace(/\s+/g, ' '))
+      .pipe(z.string().min(7, { message: 'حداقل باید 7 و حداکثر 20 کاراکتر باشد' }).max(20, { message: 'حداقل باید 7 و حداکثر 20 کاراکتر باشد' }))
+      .nullable(),
     RATING_TYPE: z.object({ value: z.string(), id: z.number() }),
     STEP: z.object({
       value: z.union([z.number(), z.string()]),
@@ -92,13 +99,13 @@ const propertiesSchema = z
       id: z.number(),
     }),
     RATING_START_LABEL: z.object({
-       value: z.union([z.number(), z.string()]).optional().nullable()
-       .pipe(z.string().max(30, { message: 'حداکثر میتواند 30 کاراکتر باشد' })),
+      value: z.union([z.number(), z.string()]).optional().nullable()
+        .pipe(z.string().max(30, { message: 'حداکثر میتواند 30 کاراکتر باشد' })),
       id: z.number(),
     }),
     RATING_END_LABEL: z.object({
-       value: z.union([z.number(), z.string()]).optional().nullable()
-       .pipe(z.string().max(30, { message: 'حداکثر میتواند 30 کاراکتر باشد' })),
+      value: z.union([z.number(), z.string()]).optional().nullable()
+        .pipe(z.string().max(30, { message: 'حداکثر میتواند 30 کاراکتر باشد' })),
       id: z.number(),
     }),
     REQUIRED: z.object({
@@ -172,7 +179,7 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
   const start = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'RATING_START_LABEL')?.value
   const end = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'RATING_END_LABEL')?.value
 
- const [startValue, setStarValue] = useState<number| undefined>(value as any);
+  const [startValue, setStarValue] = useState<number | undefined>(value as any);
   const ratingType = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'RATING_TYPE')?.value;
 
   const description = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'DESCRIPTION')?.value;
@@ -202,41 +209,41 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
       )}
       {ratingType === 'STAR' ? (
         <>
-    
-        <StarRating
-          value={startValue}
-          onChange={handleChange}
-          precision={0.1}
-          startValue={start}
-          endValue={end}
-        />
+
+          <StarRating
+            value={startValue}
+            onChange={handleChange}
+            precision={0.2}
+            startValue={start}
+            endValue={end}
+          />
 
           {!!error && <Typography color='#f44336'>{error}</Typography>}
         </>
       ) : ratingType === 'HEART' ? (
         <>
-         <StarRating
-          value={startValue}
-          onChange={handleChange}
-          precision={0.1}
-          heart={true}
-          startValue={start}
-          endValue={end}
-        />
+          <StarRating
+            value={startValue}
+            onChange={handleChange}
+            precision={0.2}
+            heart={true}
+            startValue={start}
+            endValue={end}
+          />
           {!!error && <Typography color='#f44336'>{error}</Typography>}
         </>
       ) : (
         <EmojiRating
-           value={startValue}
-           onChange={handleChange}
-           clickableEmojis
-           startValue={start}
-           endValue={end}
+          value={startValue}
+          onChange={handleChange}
+          clickableEmojis
+          startValue={start}
+          endValue={end}
         />
 
       )
-      
-      
+
+
       }
     </Box>
   );
@@ -259,6 +266,10 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
     }),
   );
 
+  const searchParams = useSearchParams();
+  const search = searchParams.get('survey');
+  const isSurvey = search === 'admin';
+
   const defaultValues = useMemo(() => {
     const values = element.questionPropertyList.reduce((acc: any, attribute: any) => {
       if (!acc[attribute.questionPropertyEnum]) {
@@ -280,7 +291,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       return acc;
     }, {});
     values.title = element.title;
-
+    values.label = element.label ?? null;
     return values;
   }, []);
 
@@ -297,7 +308,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   } = methods;
 
   async function onSubmit(values: propertiesFormSchemaType) {
-    const { title, DESCRIPTION, REQUIRED, RATING_TYPE, STEP, RATING_START_LABEL, RATING_END_LABEL, EDIT_ANSWER_LOCKED } = values;
+    const { title, label, DESCRIPTION, REQUIRED, RATING_TYPE, STEP, RATING_START_LABEL, RATING_END_LABEL, EDIT_ANSWER_LOCKED } = values;
 
     const selectedYet = elements?.find((el: any) => el?.questionId === element?.questionId);
 
@@ -358,7 +369,8 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       ...element,
       title,
       position: selectedElement?.position?.apiPosition ?? group.length,
-      questionPropertyList: propertiesData
+      questionPropertyList: propertiesData,
+      label: label ?? null,
     };
 
     if (!selectedYet) {
@@ -415,6 +427,27 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
           </Typography>
           <RHFTextField multiline rows={3} name='title' />
         </Stack>
+        {isSurvey &&
+          <Stack spacing={1} mt={1}>
+            <Typography variant='subtitle2' fontWeight='700'>
+              شناسه:
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                direction: 'ltr',
+                width: '100%',
+                paddingX: 0.5,
+                '& .MuiFormControl-root, & .MuiInputBase-root': {
+                  borderRadius: '10px',
+                },
+              }}>
+              <RHFTextField name='label' />
+            </Box>
+          </Stack>
+        }
 
         <Stack spacing={1} marginTop={2.5}>
           <Typography variant='subtitle2' fontWeight='700'>
@@ -435,19 +468,19 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
           </Box>
           <div className='flex'>
 
-            <RHFTextField name='RATING_START_LABEL.value' placeholder='برچسب'/>
+            <RHFTextField name='RATING_START_LABEL.value' placeholder='برچسب' />
             <div className='flex w-11 h-10 mr-2 justify-center items-center rounded-lg border-2 border-[#DDE1E6]'>
               <span className='text-[#A8A8A8] text-xs'>ابتدا</span>
             </div>
           </div>
           <div className='flex mt-2'>
 
-            <RHFTextField  name='RATING_END_LABEL.value' placeholder='برچسب'/>
+            <RHFTextField name='RATING_END_LABEL.value' placeholder='برچسب' />
             <div className='flex w-11 h-10 mr-2 justify-center items-center rounded-lg border-2 border-[#DDE1E6]'>
               <span className='text-[#A8A8A8] text-xs'>انتها</span>
             </div>
           </div>
-           
+
         </Stack>
 
         <Stack flexDirection='row' justifyContent='space-between' alignItems='flex-start' marginTop={3}>

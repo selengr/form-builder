@@ -64,12 +64,13 @@ export default function StarRating({
         if (e.key === "ArrowRight" || e.key === "ArrowUp")
             nextValue = Math.min(nextValue + precision, max);
         else if (e.key === "ArrowLeft" || e.key === "ArrowDown")
-            nextValue = Math.max(nextValue - precision, 0);
+        nextValue = Math.max(nextValue - precision, 0);
         else if (e.key === "Home") nextValue = 0;
         else if (e.key === "End") nextValue = max;
+        const result = Math.trunc(nextValue * 100) / 100;
 
-        setInternalValue(nextValue);
-        onChange?.(nextValue);
+        setInternalValue(result);
+        onChange?.(result);
 
         const index = Math.floor(nextValue) - 1;
         if (index >= 0) {

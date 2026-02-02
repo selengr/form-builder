@@ -6,6 +6,7 @@ export type TRefetchFunction = () => Promise<QueryObserverResult<any, unknown>>;
 export interface ICalculator {
   id: number;
   name: string;
+  label?: string;
   theFormula: string;
   formBuilderId: number;
   frontCalcData: string;
@@ -46,6 +47,7 @@ export interface ICalculatorFindDataResponse {
   name: string;
   formBuilderId: number;
   theFormula: string;
+  label?: string;
   frontCalcData: IFrontCalcData | string;
 }
 

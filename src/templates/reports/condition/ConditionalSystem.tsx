@@ -330,6 +330,3 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
     </Box>
   );
 };
-function validateAndHandleErrors(unselectedDropdowns: IDropdownItem[]) {
-  throw new Error('Function not implemented.');
-}

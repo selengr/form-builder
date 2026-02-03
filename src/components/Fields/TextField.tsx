@@ -77,9 +77,25 @@ const propertiesSchema = z
     label: z
       .string()
       .trim()
-      .transform((value) => value.replace(/\s+/g, ' '))
-      .pipe(z.string().min(7, { message: 'حداقل باید 7 و حداکثر 20 کاراکتر باشد' }).max(20, { message: 'حداقل باید 7 و حداکثر 20 کاراکتر باشد' }))
-      .nullable(),
+      .transform((value) => {
+        const normalized = value.replace(/\s+/g, ' ');
+        return normalized === '' ? null : normalized;
+      })
+      .nullable()
+      .refine(
+        (value) =>
+          value === null ||
+          !/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/.test(value),
+        {
+          message: 'استفاده از حروف فارسی مجاز نیست',
+        }
+      )
+      .refine(
+        (value) => value === null || (value.length >= 8 && value.length <= 30),
+        {
+          message: 'حداقل باید 8 و حداکثر 30 کاراکتر باشد',
+        }
+      ),
     MINIMUM_LEN: z.object({
       value: z.number({ invalid_type_error: 'اجباری است' }).min(0),
       id: z.number(),
@@ -311,9 +327,9 @@ const FormComponent = memo(function FormComponent({
                     isPreview
                       ? undefined
                       : (value: any) => {
-                          const formattedValue = `${value.hour}:${value.minute}`;
-                          onChange?.(formattedValue);
-                        }
+                        const formattedValue = `${value.hour}:${value.minute}`;
+                        onChange?.(formattedValue);
+                      }
                   }
                 />
                 <GoClock size='2rem' className='ml-2' color='#424242' />
@@ -576,25 +592,25 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
           </Box>
         </Stack>
         {isSurvey &&
-        <Stack spacing={1} mt={1}>
-          <Typography variant='subtitle2' fontWeight='700'>
-            شناسه:
-          </Typography>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              height: '100%',
-              direction: 'ltr',
-              width: '100%',
-              paddingX: 0.5,
-              '& .MuiFormControl-root, & .MuiInputBase-root': {
-                borderRadius: '10px',
-              },
-            }}>
-            <RHFTextField name='label' />
-          </Box>
-        </Stack>
+          <Stack spacing={1} mt={1}>
+            <Typography variant='subtitle2' fontWeight='700'>
+              شناسه:
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                direction: 'ltr',
+                width: '100%',
+                paddingX: 0.5,
+                '& .MuiFormControl-root, & .MuiInputBase-root': {
+                  borderRadius: '10px',
+                },
+              }}>
+              <RHFTextField name='label' dir='ltr'/>
+            </Box>
+          </Stack>
         }
 
         <TextFieldPair setValue={setValue} clearErrors={clearErrors} initialShow={showMinMaxProps} />

@@ -37,9 +37,25 @@ const propertiesSchema = z.object({
   label: z
     .string()
     .trim()
-    .transform((value) => value.replace(/\s+/g, ' '))
-    .pipe(z.string().min(7, { message: 'حداقل باید 7 و حداکثر 20 کاراکتر باشد' }).max(20, { message: 'حداقل باید 7 و حداکثر 20 کاراکتر باشد' }))
-    .nullable(),
+    .transform((value) => {
+      const normalized = value.replace(/\s+/g, ' ');
+      return normalized === '' ? null : normalized;
+    })
+    .nullable()
+    .refine(
+      (value) =>
+        value === null ||
+        !/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/.test(value),
+      {
+        message: 'استفاده از حروف فارسی مجاز نیست',
+      }
+    )
+    .refine(
+      (value) => value === null || (value.length >= 8 && value.length <= 30),
+      {
+        message: 'حداقل باید 8 و حداکثر 30 کاراکتر باشد',
+      }
+    ),
   MESSAGE: z.object({
     value: z.string().max(3999, 'حداکثر میتواند 4000 کاراکتر باشد').optional(),
     id: z.number(),
@@ -229,7 +245,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
                   borderRadius: '10px',
                 },
               }}>
-              <RHFTextField name='label' />
+              <RHFTextField name='label' dir='ltr'/>
             </Box>
           </Stack>
         }

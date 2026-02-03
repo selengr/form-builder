@@ -19,6 +19,7 @@ interface ListCardProps {
     type: keyof typeof formTypePersian;
     accessType?: string;
     status?: string;
+    isCreatedSoloReport : boolean
   };
 }
 
@@ -64,7 +65,7 @@ const ListCard: FC<ListCardProps> = ({ data }) => {
 
       <div className='flex flex-col gap-2 sm:flex-row'>
         <ActionButton label='مشاهده نتایج' onClick={handleNavigation} color='#1758BA' hoverColor='#216ee1' />
-        <ActionButton label='ساخت گزارش' onClick={() => router.push(`/reports/create-solo/${id}`)} color='#2CDFC9' />
+        <ActionButton label={data.isCreatedSoloReport ? 'ویرایش گزارش' : 'ساخت گزارش'} onClick={() => router.push(`/reports/create-solo/${id}`)} color='#2CDFC9' />
       </div>
     </div>
   );

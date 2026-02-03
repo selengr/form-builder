@@ -199,12 +199,7 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
   const ratingType = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'RATING_TYPE')?.value;
 
   const description = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'DESCRIPTION')?.value;
-
-
-
-  console.log('startValue ===', startValue)
-  console.log('start', start)
-  console.log('end', end)
+  
   const handleChange = (value: number) => {
     setStarValue(value as any);
     onChange?.(value as any);

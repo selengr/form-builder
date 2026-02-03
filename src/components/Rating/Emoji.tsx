@@ -66,7 +66,7 @@ export default function EmojiRating({
     const [popIndex, setPopIndex] = useState<number | null>(null);
 
     const value = controlledValue ?? internalValue;
-console.log('value emoji', value)
+    
     return (
         <div dir="ltr" className="w-full flex flex-row items-center justify-center
 gap-2 select-none">

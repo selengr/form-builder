@@ -79,7 +79,7 @@ const optionsSchema = z.object({
         }),
     ),
   score: z.number(),
-   id: z.number().nullable().default(null),
+  id: z.number().nullable().default(null),
 });
 
 const propertiesSchema = z.object({
@@ -88,13 +88,29 @@ const propertiesSchema = z.object({
     .trim()
     .transform((value) => value.replace(/\s+/g, ' '))
     .pipe(z.string().min(1, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' }).max(3999, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' })),
-         label: z
-          .string()
-          .trim()
-          .transform((value) => value.replace(/\s+/g, ' '))
-          .pipe(z.string().min(7, { message: 'حداقل باید 7 و حداکثر 20 کاراکتر باشد' }).max(20, { message: 'حداقل باید 7 و حداکثر 20 کاراکتر باشد' }))
-          .nullable(),
-    DESCRIPTION: z.object({
+  label: z
+    .string()
+    .trim()
+    .transform((value) => {
+      const normalized = value.replace(/\s+/g, ' ');
+      return normalized === '' ? null : normalized;
+    })
+    .nullable()
+    .refine(
+      (value) =>
+        value === null ||
+        !/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/.test(value),
+      {
+        message: 'استفاده از حروف فارسی مجاز نیست',
+      }
+    )
+    .refine(
+      (value) => value === null || (value.length >= 8 && value.length <= 30),
+      {
+        message: 'حداقل باید 8 و حداکثر 30 کاراکتر باشد',
+      }
+    ),
+  DESCRIPTION: z.object({
     value: z
       .string()
       .trim()
@@ -304,9 +320,9 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       return property.questionPropertyEnum === 'DESCRIPTION' && property.value;
     }),
   );
-    const searchParams = useSearchParams();
-    const search = searchParams.get('survey');
-    const isSurvey = search === 'admin';
+  const searchParams = useSearchParams();
+  const search = searchParams.get('survey');
+  const isSurvey = search === 'admin';
 
   const defaultValues = useMemo(() => {
     const values = element.questionPropertyList.reduce((acc: any, attribute: any) => {
@@ -475,27 +491,27 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
           </Typography>
           <RHFTextField multiline rows={3} name='title' />
         </Stack>
-          {isSurvey &&
-                <Stack spacing={1} mt={1}>
-                  <Typography variant='subtitle2' fontWeight='700'>
-                    شناسه:
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      height: '100%',
-                      direction: 'ltr',
-                      width: '100%',
-                      paddingX: 0.5,
-                      '& .MuiFormControl-root, & .MuiInputBase-root': {
-                        borderRadius: '10px',
-                      },
-                    }}>
-                    <RHFTextField name='label' />
-                  </Box>
-                </Stack>
-                }
+        {isSurvey &&
+          <Stack spacing={1} mt={1}>
+            <Typography variant='subtitle2' fontWeight='700'>
+              شناسه:
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                direction: 'ltr',
+                width: '100%',
+                paddingX: 0.5,
+                '& .MuiFormControl-root, & .MuiInputBase-root': {
+                  borderRadius: '10px',
+                },
+              }}>
+              <RHFTextField name='label' dir='ltr'/>
+            </Box>
+          </Stack>
+        }
 
         <Stack>
           <Box display='flex' justifyContent='space-between' alignItems='center' marginTop={3} marginBottom={0.5}>

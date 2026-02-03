@@ -156,10 +156,8 @@ export default function ShareLinkSetting({ handleOpen, formData }: ShareLinkSett
             }}
           />
 
-          <IconButtonContainer>
             <CopyToClipboardButton link={FINAL_LINK} icon={<LuCopy size='1.5rem' color='#1758BA' />} />
-          </IconButtonContainer>
-
+  
           <IconButtonContainer>
             <Share
               shareData={{

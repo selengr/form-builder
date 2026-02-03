@@ -331,8 +331,7 @@ export const useParticipateForm = () => {
               },
             })
           }
-          console.log('formData', formData)
-          //  console.log(' formData[0] === null ? "" : String(val),',  formData[0] === null ? "" : String(val),)
+ 
           answerList = formData.map((val: number, index: number) => ({
             optionId: null,
             answer: formData[0] === null ? "" : String(val),
@@ -349,7 +348,6 @@ export const useParticipateForm = () => {
               },
             })
           }
-          console.log('formData', formData)
           answerList = [
             {
               optionId: null,
@@ -382,7 +380,7 @@ export const useParticipateForm = () => {
           {
             optionId: null,
             id: typeof answerId === 'number' ? answerId : undefined,
-            answer: String(formData),
+            answer: formData ? String(formData) : null,
           },
         ];
       } else {

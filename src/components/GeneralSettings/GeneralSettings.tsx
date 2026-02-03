@@ -213,9 +213,7 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
             }}
           />
 
-          <IconButtonContainer>
-            <CopyToClipboardButton link={FINAL_LINK} icon={<LuCopy size='1.5rem' color='#1758BA' />} />
-          </IconButtonContainer>
+          <CopyToClipboardButton link={FINAL_LINK} icon={<LuCopy size='1.5rem' color='#1758BA' />} />
 
           <IconButtonContainer>
             <Share

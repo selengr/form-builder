@@ -66,7 +66,7 @@ export default function EmojiRating({
     const [popIndex, setPopIndex] = useState<number | null>(null);
 
     const value = controlledValue ?? internalValue;
-
+    
     return (
         <div dir="ltr" className="w-full flex flex-row items-center justify-center
 gap-2 select-none">
@@ -76,8 +76,8 @@ gap-2 select-none">
             <div className="flex flex-col">
                 <div className="flex justify-between w-full x-2 gap-4">
                     {EMOJIS.map((emoji) => {
-                        const isActive = emoji.id === value;
-                        const isPopping = emoji.id === popIndex;
+                        const isActive = emoji.id == value;
+                        const isPopping = emoji.id == popIndex;
 
                         return (
                             <div
@@ -195,15 +195,15 @@ export function RangeSlider({ value, max, onChange }: RangeSliderProps) {
     let percent
     if (value === 0) {
         percent = 0;
-    } else if (value === 1) {
+    } else if (value == 1) {
         percent = (0.35 / max) * 100;
-    } else if (value === 2) {   
+    } else if (value == 2) {   
         percent = (1.4 / max) * 100;
-    } else if (value === 3) {
+    } else if (value == 3) {
         percent = (2.49 / max) * 100;
-    } else if (value === 4) {
+    } else if (value == 4) {
         percent = (3.55 / max) * 100;
-    } else if (value === 5) {
+    } else if (value == 5) {
         percent = (value / max) * 100;
     }
 
@@ -256,7 +256,7 @@ export function RangeSlider({ value, max, onChange }: RangeSliderProps) {
                         key={i}
                         className="w-2 h-2 rounded-full transition-colors"
                         style={{
-                            backgroundColor: i + 1 === value ? "#FFE13E" : "#D1D5DB",
+                            backgroundColor: i + 1 == value ? "#FFE13E" : "#D1D5DB",
                         }}
                     />
                 ))}

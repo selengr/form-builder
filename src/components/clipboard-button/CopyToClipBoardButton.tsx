@@ -46,9 +46,29 @@ const CopyToClipboardButton = ({ link, icon, label, labelColor }: CopyToClipboar
     setOpen(false);
   };
 
+  
+const IconButtonContainer = ({ children }: { children: React.ReactNode }) => (
+  <Box
+    onClick={handleClick}
+    sx={{
+      padding: { xs: '8px', sm: '8px 15px' },
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      border: '1px solid #1758BA',
+      borderRadius: '10px',
+      cursor: 'pointer',
+      '&:hover': {
+        backgroundColor: 'rgba(23, 88, 186, 0.08)',
+      },
+    }}>
+    {children}
+  </Box>
+);
+
   return (
-    <>
-      <Box display='flex' justifyContent='center' alignItems='center' onClick={handleClick}>
+    <IconButtonContainer>
+      <Box display='flex' justifyContent='center' alignItems='center'>
         {icon}
         {label && (
           <Typography fontSize='13px' color={labelColor ?? '#6366f1'}>
@@ -74,7 +94,7 @@ const CopyToClipboardButton = ({ link, icon, label, labelColor }: CopyToClipboar
         onClose={handleClose}
         open={open}
       />
-    </>
+    </IconButtonContainer>
   );
 };
 

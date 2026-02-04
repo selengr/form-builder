@@ -44,7 +44,7 @@ const ListCard: React.FC<ListCardProps> = ({
   buttonDisabled = false,
   showStatus = true,
 }) => {
-  console.log('data', data)
+
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState<boolean>(false);

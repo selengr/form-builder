@@ -61,15 +61,17 @@ export async function checkResponseLimitationAction(params: {
 export async function checkAnswerBeforeAction(params: {
   slug: string
   username: string | null
+  refId?: string
 }) {
   try {
-    const { slug, username } = params
+    const { slug, username, refId } = params
     const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
 
     const res = await serverApi.post("/take-part/check-answer-to-form-before", {
       link: isLink ? slug : null,
       formId: !isLink ? slug : null,
       username,
+      refId: refId ?? null,
     })
 
     return {

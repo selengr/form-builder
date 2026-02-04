@@ -263,6 +263,7 @@ export const useParticipateForm = () => {
         link: isLink ? slug : null,
         formId: !isLink ? slug : null,
         username,
+        refId: refId ?? undefined,
       });
       setTakePartId(res.data.takePart);
       setFormName(res.data?.formName);

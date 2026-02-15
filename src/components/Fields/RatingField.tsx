@@ -23,7 +23,7 @@ import StarRating from '../Rating/Start';
 import EmojiRating from '../Rating/Emoji';
 import { useSearchParams } from 'next/navigation';
 // actions
-import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/textFieldQuestion';
+import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/question';
 
 const questionType: ElementsType = 'RATING';
 

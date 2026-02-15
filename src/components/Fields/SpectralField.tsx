@@ -22,7 +22,7 @@ import { SwitchButton } from '../Switch/SwitchButton';
 import { MyRangeSlider } from '../Slider/RangeSlider';
 import { useSearchParams } from 'next/navigation';
 // actions
-import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/textFieldQuestion';
+import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/question';
 
 
 const questionType: ElementsType = 'SPECTRAL';

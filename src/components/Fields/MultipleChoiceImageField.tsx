@@ -13,7 +13,6 @@ import { IFormElementConstructor, IFormOptionList, IQPLMultipleChoice } from '@/
 import { UppyUploader } from '@/components/uploader/UppyUploader';
 import shuffleArray from '@/lib/shuffle';
 import { FiPlusCircle } from 'react-icons/fi';
-import { AxiosApi } from '@/services/axios/AxiosApi';
 import useElements from '@/hooks/useElements';
 import useDesigner from '@/hooks/useDesigner';
 import useActionOpenDialog from '@/hooks/useActionOpenDialog';
@@ -26,7 +25,7 @@ import { SwitchButton } from '../Switch/SwitchButton';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 // actions
-import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/textFieldQuestion';
+import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/question';
 
 const questionType: ElementsType = 'MULTIPLE_CHOICE_IMAGE';
 
@@ -529,7 +528,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       const removeId: any = { ...finalFieldData };
       delete removeId.questionId;
       try {
-        const { data }: any = await AxiosApi.post('/question', removeId as any);
+        const { data }: any = await createQuestionAction(removeId as any);
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;
@@ -546,7 +545,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       }
     } else {
       try {
-        const { data }: any = await AxiosApi.put(`/question/${finalFieldData.questionId}`, finalFieldData);
+        const { data }: any = await updateQuestionAction(String(finalFieldData.questionId), finalFieldData);
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;

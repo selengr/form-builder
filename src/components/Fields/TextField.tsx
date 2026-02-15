@@ -31,7 +31,7 @@ import { GoClock } from 'react-icons/go';
 import { BsCalendarDate } from 'react-icons/bs';
 import { DatePicker as DatePickerCustome } from '../DatePicker/DatePicker';
 // actions
-import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/textFieldQuestion';
+import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/question';
 
 const questionType: ElementsType = 'TEXT_FIELD';
 

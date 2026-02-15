@@ -25,6 +25,8 @@ import ImageGalleryIcon from '@/../public/images/home-page/gallery-tick.svg';
 import { SwitchButton } from '../Switch/SwitchButton';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
+// actions
+import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/textFieldQuestion';
 
 const questionType: ElementsType = 'MULTIPLE_CHOICE_IMAGE';
 

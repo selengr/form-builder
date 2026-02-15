@@ -22,6 +22,8 @@ import { SwitchButton } from '../Switch/SwitchButton';
 import StarRating from '../Rating/Start';
 import EmojiRating from '../Rating/Emoji';
 import { useSearchParams } from 'next/navigation';
+// actions
+import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/textFieldQuestion';
 
 const questionType: ElementsType = 'RATING';
 
@@ -391,7 +393,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       delete removeId.questionId;
 
       try {
-        const { data }: any = await AxiosApi.post('/question', removeId as any);
+        const { data }: any = await createQuestionAction(removeId as any);
         delete data.questionPropertyList;
         const newData = {
           ...data,
@@ -408,7 +410,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       }
     } else {
       try {
-        const { data }: any = await AxiosApi.put(`/question/${finalFieldData.questionId}`, finalFieldData);
+       const { data }: any = await updateQuestionAction(String(finalFieldData.questionId), finalFieldData);
         delete data.questionPropertyList;
         const newData = {
           ...data,

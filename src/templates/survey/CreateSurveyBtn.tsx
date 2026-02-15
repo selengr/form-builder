@@ -15,7 +15,6 @@ import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
 import { useCreateSurvey } from './hooks/useCreateSurvey';
 import { useGetSurveyPurpose } from './hooks/useGetSurveyPurpose';
 import { IGetTargetPlatform, useGetTargetPlatform } from './hooks/useGetTargetPlatform';
-import { QueryClient } from '@tanstack/react-query';
 
 const textFieldCommonSx = {
   '& .MuiInputBase-root': {

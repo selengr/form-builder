@@ -4,6 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { memo } from 'react';
+import { toast } from 'sonner';
 import FormProvider from '../../components/hook-form/FormProvider';
 import RHFTextField from '../../components/hook-form/RHFTextField';
 import { IFormElementConstructor } from '@/types/bulider';
@@ -11,13 +13,13 @@ import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/Fi
 import { ElementsType, FormElement, FormElementInstance } from '@/types/FormElements';
 import { useParams } from 'next/navigation';
 import useDesigner from '@/hooks/useDesigner';
-import { AxiosApi } from '@/services/axios/AxiosApi';
 import useActionOpenDialog from '@/hooks/useActionOpenDialog';
 import useActionSelectedElement from '@/hooks/useActionSelectedElement';
 import useSelectedElement from '@/hooks/useSelectedElement';
 import useActionDesigner from '@/hooks/useActionDesigner';
-import { toast } from 'sonner';
-import { memo } from 'react';
+import { useSearchParams } from 'next/navigation';
+// actions
+import { upsertStartPageAction } from '../../../actions/builder/formStartPage';
 
 const questionType: ElementsType = 'TitleFieldStart';
 
@@ -106,7 +108,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
     if (!startPage) {
       try {
-        const res = await AxiosApi.put('/form/start-page', data as any);
+        const res = await upsertStartPageAction(data as any);
         addStartPage({
           ...selectedElement?.fieldElement,
           startPageMsg: res.data.startPageMsg,
@@ -120,7 +122,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       }
     } else {
       try {
-        const res = await AxiosApi.put('/form/start-page', data as any);
+        const res = await upsertStartPageAction(data as any);
         updateStartPage({
           ...element,
           startPageMsg: res.data.startPageMsg,

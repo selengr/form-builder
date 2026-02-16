@@ -3,7 +3,6 @@
 import { CgClose } from 'react-icons/cg';
 import Dialog from '@mui/material/Dialog';
 import { IconButton, styled } from '@mui/material';
-import { AxiosApi } from '@/services/axios/AxiosApi';
 import DialogContent from '@mui/material/DialogContent';
 
 import { IEditCalculatorDialogProps } from '@/types/calculator';
@@ -11,6 +10,8 @@ import AdvancedFormulaEditor from '@/components/calculator/AdvancedFormulaEditor
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
+// action
+import { fetchCalculatorsAction, fetchEditCalculatorsAction } from '../../../actions/calculator/calculator';
 
 const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   direction: 'ltr',
@@ -33,35 +34,11 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-const fetchCalculators = async (id: string) => {
-  const customComboFilterModel = {
-    type: 'COMBO',
-    entity: 'QUESTIONS',
-    mode: 'QUESTIONS_IN_FORM_BUILDER__ALL',
-    input: '',
-    page: 0,
-    rows: 10000,
-    extMap: {
-      formId: id,
-      typeRequest: 'QAC_BY_FILTER',
-    },
-  };
-  const url = `/question/q-and-c-custom-combo?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`;
-  const response = await AxiosApi.get(url);
-  return response.data;
-};
-
-const fetchEditCalculators = async (calcId: number) => {
-  const url = `/calculation/main-list/find/${calcId}`;
-  const response = await AxiosApi.get(url);
-  return response.data;
-};
-
 export const EditCalculatorDialog: React.FC<IEditCalculatorDialogProps> = ({ open, setOpen, calcId }) => {
   const { id } = useParams();
   const { data, isLoading, error } = useQuery({
     queryKey: ['calculators'],
-    queryFn: () => fetchCalculators(id as string),
+    queryFn: () => fetchCalculatorsAction(id as string),
     staleTime: 0,
     gcTime: 0,
   });
@@ -72,7 +49,7 @@ export const EditCalculatorDialog: React.FC<IEditCalculatorDialogProps> = ({ ope
     error: errorLoading,
   } = useQuery({
     queryKey: ['edit-calculators'],
-    queryFn: () => fetchEditCalculators(calcId as number),
+    queryFn: () => fetchEditCalculatorsAction(calcId as number),
     staleTime: 0,
     gcTime: 0,
   });

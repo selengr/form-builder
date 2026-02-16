@@ -1,17 +1,12 @@
 import { toast } from 'sonner';
-import { AxiosApi } from '@/services/axios/AxiosApi';
 import { useMutation } from '@tanstack/react-query';
-
-const checkDependency = async (id: number) => {
-  const url = `/calculation/check-dependency/${id}`;
-  const response = await AxiosApi.get(url);
-  return response.data;
-};
+// action
+import { checkCalculationDependencyAction } from '../../../../../../../actions/calculator/calculation';
 
 export const useCheckDependency = () => {
   const mutation = useMutation({
     mutationKey: ['delete-check-dependency'],
-    mutationFn: ({ id }: { id: number }) => checkDependency(id),
+    mutationFn: ({ id }: { id: number }) => checkCalculationDependencyAction(id),
 
     onSuccess: () => {},
     onError: () => {

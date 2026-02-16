@@ -27,3 +27,13 @@ export async function updateCalculationAction(
   const res = await AxiosApi.put(`/calculation/${calcId}`, payload as any);
   return res.data;
 }
+
+export async function checkCalculationDependencyAction(id: number) {
+  const res = await AxiosApi.get(`/calculation/check-dependency/${id}`);
+  return res.data;
+}
+
+export async function deleteCalculatorAction(id: number) {
+  const res = await AxiosApi.delete(`/calculation/delete/${id}`);
+  return res.data;
+}

@@ -37,3 +37,19 @@ export async function deleteCalculatorAction(id: number) {
   const res = await AxiosApi.delete(`/calculation/delete/${id}`);
   return res.data;
 }
+
+export async function getCalculationListAction(id: string) {
+  const filterModel = {
+    searchFilterBoxList: [{ restrictionList: [] }],
+    sortList: [{ fieldName: 'id', type: 'DSC' }],
+    page: 0,
+    rows: 1000,
+  };
+
+  const url =
+    `/calculation/main-list/${id}` +
+    `?searchFilterModel=${encodeURIComponent(JSON.stringify(filterModel))}`;
+
+  const res = await AxiosApi.get(url);
+  return res.data.content;
+}

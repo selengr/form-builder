@@ -1,27 +1,13 @@
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { AxiosApi } from '@/services/axios/AxiosApi';
-
-const fetchData = async (id: string | string[]) => {
-  const filterModel = {
-    searchFilterBoxList: [{ restrictionList: [] }],
-    sortList: [{ fieldName: 'id', type: 'DSC' }],
-    page: 0,
-    rows: 1000,
-  };
-
-  const baseUrl = `/calculation/main-list/${id}`;
-  const queryString = `?searchFilterModel=${encodeURIComponent(JSON.stringify(filterModel))}`;
-  const url = baseUrl + queryString;
-  const response = await AxiosApi.get(url);
-  return response.data.content;
-};
+// action
+import { getCalculationListAction } from '../../../../../../../actions/calculator/calculation';
 
 export const useGetList = () => {
   const { id } = useParams();
   return useQuery({
-    queryKey: ['Calculation_List'],
-    queryFn: () => fetchData(id),
+    queryKey: ['Calculation_List', String(id)],
+    queryFn: () => getCalculationListAction(String(id)),
     staleTime: 0,
     gcTime: 600000,
     refetchOnWindowFocus: true,

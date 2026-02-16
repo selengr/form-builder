@@ -7,7 +7,6 @@ import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from
 import { Box, Container, IconButton, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
 
 import { htmlToFormula } from '@/lib/htmlToFormula';
-import { AxiosApi } from '@/services/axios/AxiosApi';
 import { Element, FnFxItem } from '@/types/formulaEditor';
 import { IAdvancedFormulaEditorProps } from '@/types/calculator';
 // components
@@ -16,6 +15,8 @@ import { replaceNestedParentheses } from './parentheses-replacer';
 import FormulaInput from '@/components/formula-editor/FormulaInput';
 import FormulaKeypad from '@/components/formula-editor/FormulaKeypad';
 import FormulaControls from '@/components/formula-editor/FormulaControls';
+// action
+import { createCalculationAction, updateCalculationAction } from '../../../actions/calculator/calculation';
 
 const OPERATOR_TYPES = ['-', '+', '*', '/'];
 const FN_FX_OPTIONS = [{ fnValue: 'avg', fnCaption: 'میانگین()' }];
@@ -656,8 +657,8 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
 
     try {
       setLoading(true);
-      if (!isEdit) {
-        await AxiosApi.post('/calculation', {
+       if (!isEdit) {
+        await createCalculationAction({
           name: formName,
           formBuilderId: id,
           label: label ?? null,
@@ -665,8 +666,8 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
           frontCalcData: JSON.stringify(elements),
         });
       } else {
-        await AxiosApi.put(`/calculation/${editList?.id}`, {
-          id: editList?.id,
+        await updateCalculationAction(editList?.id as number, {
+          id: editList?.id as number,
           name: formName,
           label: label ?? null,
           formBuilderId: id,

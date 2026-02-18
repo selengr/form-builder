@@ -1,6 +1,7 @@
 import { toast } from 'sonner';
-import { AxiosApi } from '@/services/axios/AxiosApi';
 import { useMutation } from '@tanstack/react-query';
+// actions
+import { updateReportPositionAction } from '../../../../../../actions/report/updateReportPositionAction';
 
 interface IUpdatePositionPayload {
   formBuilderId: string | string[];
@@ -8,18 +9,12 @@ interface IUpdatePositionPayload {
   newPosition: string | number;
 }
 
-const postCalculation = async (data: IUpdatePositionPayload) => {
-  const url = 'report/solo/change-position';
-  const response = await AxiosApi.post(url, data);
-  return response.data;
-};
-
 export const useUpdateReportPosition = () => {
   const mutation = useMutation({
     mutationKey: ['change-position'],
-    mutationFn: postCalculation,
+    mutationFn: (data: IUpdatePositionPayload) => updateReportPositionAction(data),
 
-    onSuccess: (data) => {},
+    onSuccess: () => {},
     onError: () => {
       toast.error('انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.');
     },

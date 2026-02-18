@@ -1,19 +1,15 @@
 import { toast } from 'sonner';
-import { AxiosApi } from '@/services/axios/AxiosApi';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+// actions
+import { deleteReportAction } from '../../../../../../actions/report/deleteReportAction';
 
-const deleteCalculation = async (id: number) => {
-  const url = `/report/solo/${id}`;
-  const response = await AxiosApi.delete(url);
-  return response.data;
-};
 
 export const useDeleteReport = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationKey: ['delete-condition'],
-    mutationFn: (id: number) => deleteCalculation(id),
+    mutationFn: (id: number) => deleteReportAction(id),
 
     onSuccess: () => {
       queryClient.invalidateQueries(['Report_List'] as any);

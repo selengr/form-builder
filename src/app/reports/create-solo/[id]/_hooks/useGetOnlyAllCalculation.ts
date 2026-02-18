@@ -1,34 +1,14 @@
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { IConditionQuestionType } from '@/types/condition';
-import { useParams } from 'next/navigation';
-
-const fetchData = async (id: string | string[]) => {
-  const customComboFilterModel = {
-    type: 'COMBO',
-    entity: 'QUESTIONS',
-    mode: 'QUESTIONS_IN_FORM_BUILDER__ALL',
-    input: '',
-    page: 0,
-    rows: 10000,
-    extMap: {
-      formId: id,
-      typeRequest: 'ONLY_ALL_CALC',
-    },
-  };
-
-  const baseUrl = '/question/q-and-c-custom-combo';
-  const queryString = `?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`;
-  const url = baseUrl + queryString;
-  const response = await AxiosApi.get(url);
-  return response.data;
-};
+// actions
+import { getOnlyAllCalcAction } from '../../../../../../actions/report/getOnlyAllCalcAction';
 
 export const useGetOnlyAllCalculation = () => {
   const { id } = useParams();
   const { data, isFetching } = useQuery({
     queryKey: ['ONLY_ALL_CALC'],
-    queryFn: () => fetchData(id),
+    queryFn: () => getOnlyAllCalcAction({ formId: String(id) }),
     staleTime: 0,
     gcTime: 600000,
     refetchOnWindowFocus: false,

@@ -1,14 +1,16 @@
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { IConditionQuestionType } from '@/types/condition';
-// actions
+// action
 import { getOnlyAllCalcAction } from '../../../../../../../actions/condition/getOnlyAllCalcAction';
+
+
 
 export const useGetOnlyAllCalculation = () => {
   const { id } = useParams();
   const { data, isFetching } = useQuery({
     queryKey: ['ONLY_ALL_CALC'],
-    queryFn: () => getOnlyAllCalcAction(id),
+    queryFn: () => getOnlyAllCalcAction(String(id)),
     staleTime: 0,
     gcTime: 600000,
     refetchOnWindowFocus: true,

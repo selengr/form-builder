@@ -1,12 +1,8 @@
 'use server';
 
-import { getAuthToken } from '@/utils/getAuthToken';
+import { AxiosApi } from '@/services/axios/AxiosApi';
 
-const API_BASE = '/api/builder';
-
-export async function getOnlyAllCalcAction(formId: string | string[]) {
-  const token = await getAuthToken();
-
+export async function getOnlyAllCalcAction(formId: string) {
   const customComboFilterModel = {
     type: 'COMBO',
     entity: 'QUESTIONS',
@@ -20,21 +16,10 @@ export async function getOnlyAllCalcAction(formId: string | string[]) {
     },
   };
 
-  const queryString = `?customComboFilterModel=${encodeURIComponent(
-    JSON.stringify(customComboFilterModel),
-  )}`;
+  const url =
+    `/question/q-and-c-custom-combo` +
+    `?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`;
 
-  const res = await fetch(`${API_BASE}/question/q-and-c-custom-combo${queryString}`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: 'no-store',
-  });
-
-  if (!res.ok) {
-    throw new Error(`Failed to fetch ONLY_ALL_CALC (${res.status})`);
-  }
-
-  return res.json();
+  const res = await AxiosApi.get(url);
+  return res.data;
 }

@@ -1,4 +1,5 @@
-import { clientFetch } from './clientFetch'; // Assuming clientFetch is in the same directory or adjust path
+// import { clientFetch } from './clientFetch'; 
+import { serverFetch } from "../../../actions/serverFetchAction";
 
 interface SearchBoxItem {
   fieldName: string;
@@ -51,7 +52,7 @@ export async function fetchData(
   });
 
   const searchFilterBoxListPayload = [{ restrictionList: validCombinedRestrictionList }];
-
+  
   const params = {
     searchFilterBoxList: searchFilterBoxListPayload,
     sortList: [{ fieldName: 'id', type: 'DSC' }],
@@ -60,7 +61,7 @@ export async function fetchData(
   };
 
   const endpoint = `${url}?searchFilterModel=`;
-  const response = await clientFetch(endpoint, params);
+  const response = await serverFetch(endpoint, params);
 
   if (!response) {
     // Handle error or throw a specific error if needed

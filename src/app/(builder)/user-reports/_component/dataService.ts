@@ -67,9 +67,13 @@ export async function fetchData(
     throw new Error('Failed to fetch data');
   }
   // debugger
+  // return {
+  //   data: response.data,
+  //   publicationApprovalByAdmin: response.data.publicationApprovalByAdmin,
+  //   // total: response.data.totalElements,
+  // };
   return {
-    data: response.data,
-    publicationApprovalByAdmin: response.data.publicationApprovalByAdmin,
-    // total: response.data.totalElements,
-  };
+  data: response?.data ?? null,
+  publicationApprovalByAdmin: response?.data?.publicationApprovalByAdmin ?? null,
+};
 }

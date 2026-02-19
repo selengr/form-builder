@@ -1,9 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
-// actions
-import { getSurveyPurposeAction, SURVEY_PURPOSE_QUERY_KEY } from '../../../../actions/survey/getSurveyPurposeAction';
+'use client';
 
-export const useGetSurveyPurpose = () => {
-    const { data, isFetching } = useQuery({
+import { useQuery } from '@tanstack/react-query';
+import { getSurveyPurposeAction } from '../../../../actions/survey/getSurveyPurposeAction';
+
+export const SURVEY_PURPOSE_QUERY_KEY = ['survey-purpose'] as const;
+
+export function useGetSurveyPurpose() {
+  const { data, isFetching, isLoading, isError, error } = useQuery({
     queryKey: SURVEY_PURPOSE_QUERY_KEY,
     queryFn: () => getSurveyPurposeAction(),
     staleTime: 5 * 60 * 1000,
@@ -11,6 +14,9 @@ export const useGetSurveyPurpose = () => {
 
   return {
     isFetchingSurvey: isFetching,
-    Survey : data?.dataList,
+    isLoadingSurvey: isLoading,
+    isErrorSurvey: isError,
+    errorSurvey: error,
+    Survey: data?.dataList,
   };
-};
+}

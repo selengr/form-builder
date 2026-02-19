@@ -14,7 +14,12 @@ import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
 // hooks
 import { useCreateSurvey } from './hooks/useCreateSurvey';
 import { useGetSurveyPurpose } from './hooks/useGetSurveyPurpose';
-import { IGetTargetPlatform, useGetTargetPlatform } from './hooks/useGetTargetPlatform';
+import { useGetTargetPlatform } from './hooks/useGetTargetPlatform';
+
+interface IGetTargetPlatform {
+  value: string;
+  caption: string;
+}
 
 const textFieldCommonSx = {
   '& .MuiInputBase-root': {

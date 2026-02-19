@@ -7,9 +7,11 @@ export interface IGetTargetPlatform {
   caption: string;
 }
 
-export const TARGET_PLATFORM_QUERY_KEY = ['TargetPlatform'] as const;
+type TargetPlatformResponse = {
+  dataList: IGetTargetPlatform[];
+};
 
-export async function fetchTargetPlatformDataAction() {
+export async function getTargetPlatformAction(): Promise<TargetPlatformResponse> {
   const customComboFilterModel = {
     type: 'COMBO',
     entity: 'PROJECTS',
@@ -19,10 +21,8 @@ export async function fetchTargetPlatformDataAction() {
   };
 
   const baseUrl = `/admin/form/survey/target-platform/custom-combo`;
-  const queryString = `?customComboFilterModel=${encodeURIComponent(
-    JSON.stringify(customComboFilterModel),
-  )}`;
+  const queryString = `?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`;
 
-  const res = await AxiosApi.get(`${baseUrl}${queryString}`);
-  return res.data;
+  const { data } = await AxiosApi.get<TargetPlatformResponse>(baseUrl + queryString);
+  return data;
 }

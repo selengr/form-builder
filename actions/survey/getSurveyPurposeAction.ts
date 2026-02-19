@@ -7,9 +7,11 @@ export interface IGetSurvey {
   caption: string;
 }
 
-export const SURVEY_PURPOSE_QUERY_KEY = ['survey-purpose'] as const;
+type SurveyPurposeResponse = {
+  dataList: IGetSurvey[];
+};
 
-export async function getSurveyPurposeAction() {
+export async function getSurveyPurposeAction(): Promise<SurveyPurposeResponse> {
   const customComboFilterModel = {
     type: 'COMBO',
     entity: 'PROJECTS',
@@ -18,11 +20,10 @@ export async function getSurveyPurposeAction() {
     rows: 1000,
   };
 
-  const baseUrl = '/admin/form/survey/survey-purpose/custom-combo';
-  const queryString = `?customComboFilterModel=${encodeURIComponent(
-    JSON.stringify(customComboFilterModel),
-  )}`;
+  const baseUrl = `/admin/form/survey/survey-purpose/custom-combo`;
+  const queryString = `?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`;
+  const url = baseUrl + queryString;
 
-  const res = await AxiosApi.get(`${baseUrl}${queryString}`);
-  return res.data;
+  const { data } = await AxiosApi.get<SurveyPurposeResponse>(url);
+  return data;
 }

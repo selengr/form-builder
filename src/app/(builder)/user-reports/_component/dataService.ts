@@ -1,4 +1,5 @@
-import { clientFetch } from '@/components/ListGrid/clientFetch';
+// import { clientFetch } from '@/components/ListGrid/clientFetch';
+import { serverFetch } from "../../../../../actions/serverFetchAction";
 
 interface SearchBoxItem {
   fieldName: 'typeOfReport' | 'responseForDestroyerReport';
@@ -60,7 +61,7 @@ export async function fetchData(
   };
 
   const endpoint = `${url}?searchFilterModel=`;
-  const response = await clientFetch(endpoint, params);
+  const response = await serverFetch(endpoint, params);
 
   if (!response) {
     // Handle error or throw a specific error if needed

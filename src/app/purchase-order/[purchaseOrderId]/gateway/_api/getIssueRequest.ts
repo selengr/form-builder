@@ -4,6 +4,7 @@ import { ConfirmPaymentRequestBody } from '../types';
 import { serviceCostAction } from '../../../../../../actions/cart/serviceCost';
 import { issueRequestAction } from '../../../../../../actions/cart/issueRequest';
 import { userCreditListAction } from '../../../../../../actions/cart/userCreditList';
+import { twoFARequestHandlerAction } from '../../../../../../actions/cart/twofa';
 
 export async function serviceCost() {
   return serviceCostAction();
@@ -57,10 +58,5 @@ export async function connectToGateway(redirectUrl: string, amount: number) {
 }
 
 export async function twoFARequestHandler(nationalCode: string) {
-  try {
-    const response = await AxiosApi.post(`/check-nationalCode-send-code`, { nationalCode });
-    return response.data;
-  } catch (error: any) {
-    return Promise.resolve(JSON.parse(error.message));
-  }
+  return twoFARequestHandlerAction(nationalCode);
 }

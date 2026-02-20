@@ -1,11 +1,10 @@
 'use client';
 
+import { toast } from 'react-hot-toast';
 import { notFound, useParams, useSearchParams } from 'next/navigation';
 import { createContext, Dispatch, ReactNode, useEffect, useReducer } from 'react';
-import { FormElementInstance } from '@/types/FormElements';
-import { toast } from 'react-hot-toast';
-import { IEndPageList } from '@/types/bulider';
-import { AxiosApi } from '@/services/axios/AxiosApi';
+// actions
+import { getPreviewFormData } from '../../actions/preview/getPreviewFormAction';
 
 type IInitialState = {
   questions: any[] | never[];
@@ -15,19 +14,6 @@ type IInitialState = {
   answer: string | null;
   numQuestions: number | null;
   dispatch: Dispatch<any>;
-};
-
-type formResDataTypes = {
-  name: string;
-  description: string;
-  typeValue: string;
-  startPageMsg: string | null;
-  endPageList: IEndPageList[];
-  questionGroups: {
-    formId: number;
-    questionGroupId: number;
-    questions: FormElementInstance[];
-  }[];
 };
 
 const PreviewContext = createContext<IInitialState | null>(null);
@@ -41,7 +27,7 @@ const initialState: IInitialState = {
   index: 0,
   answer: null,
   numQuestions: null,
-  dispatch: () => {},
+  dispatch: () => { },
 };
 
 function reducer(state: IInitialState, action: any) {
@@ -79,25 +65,24 @@ export function PreviewProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        const {
-          data,
-        }: {
-          data: formResDataTypes;
-        } = await AxiosApi.get(admin ? `/admin/form/${id}` : `/user/form/${id}`);
+        const result = await getPreviewFormData(id, admin);
 
-        const allQuestions = data?.questionGroups?.map((group: any) => group?.questions).flat();
-
-        if (!allQuestions.length) {
-          dispatch({
-            type: 'noQuestionExist',
-          });
+        if (!result.success) {
+          if (result.type === 'noQuestionExist') {
+            dispatch({
+              type: 'noQuestionExist',
+            });
+          } else {
+            dispatch({ type: 'dataFailed' });
+            toast.error(result.error || 'خطا در دریافت اطلاعات');
+          }
         } else {
           dispatch({
             type: 'dataReceived',
             payload: {
-              questions: allQuestions as FormElementInstance[],
+              questions: result?.data?.questions,
               index: currentIndex,
-              title: data.name,
+              title: result.data?.title,
             },
           });
         }
@@ -109,6 +94,39 @@ export function PreviewProvider({ children }: { children: ReactNode }) {
 
     fetchData();
   }, []);
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     try {
+  //       const {
+  //         data,
+  //       }: {
+  //         data: formResDataTypes;
+  //       } = await AxiosApi.get(admin ? `/admin/form/${id}` : `/user/form/${id}`);
+
+  //       const allQuestions = data?.questionGroups?.map((group: any) => group?.questions).flat();
+
+  //       if (!allQuestions.length) {
+  //         dispatch({
+  //           type: 'noQuestionExist',
+  //         });
+  //       } else {
+  //         dispatch({
+  //           type: 'dataReceived',
+  //           payload: {
+  //             questions: allQuestions as FormElementInstance[],
+  //             index: currentIndex,
+  //             title: data.name,
+  //           },
+  //         });
+  //       }
+  //     } catch (error) {
+  //       dispatch({ type: 'dataFailed' });
+  //       toast.error('خطا در دریافت اطلاعات');
+  //     }
+  //   }
+
+  //   fetchData();
+  // }, []);
 
   return (
     <PreviewContext.Provider

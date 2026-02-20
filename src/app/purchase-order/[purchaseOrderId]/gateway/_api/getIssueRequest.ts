@@ -3,6 +3,7 @@ import { ConfirmPaymentRequestBody } from '../types';
 // actions
 import { serviceCostAction } from '../../../../../../actions/cart/serviceCost';
 import { issueRequestAction } from '../../../../../../actions/cart/issueRequest';
+import { userCreditListAction } from '../../../../../../actions/cart/userCreditList';
 
 export async function serviceCost() {
   return serviceCostAction();
@@ -13,17 +14,7 @@ export const issueRequest = async () => {
 };
 
 export const userCreditList = async (issueRequestId: number) => {
-  try {
-    const body = {
-      issueRequestId,
-    };
-    const response = await AxiosApi.post('/mhesam/profile/credit/user-credit-list', body, {
-      baseURL: process.env.NEXT_PUBLIC_BASE_URL_PSYA,
-    });
-    return response.data;
-  } catch (error) {
-    return Promise.resolve('');
-  }
+  return userCreditListAction(issueRequestId);
 };
 
 export async function confirmPayment(body: ConfirmPaymentRequestBody) {

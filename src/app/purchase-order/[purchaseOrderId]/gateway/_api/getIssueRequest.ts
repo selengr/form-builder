@@ -1,18 +1,15 @@
 import { AxiosApi } from '@/services/axios/AxiosApi';
 import { ConfirmPaymentRequestBody } from '../types';
+// actions
 import { serviceCostAction } from '../../../../../../actions/cart/serviceCost';
+import { issueRequestAction } from '../../../../../../actions/cart/issueRequest';
 
 export async function serviceCost() {
   return serviceCostAction();
 }
 
 export const issueRequest = async () => {
-  try {
-    const { data } = await AxiosApi.post('/purchase-order/createIssueRequest');
-    return data;
-  } catch (error) {
-    return Promise.resolve('');
-  }
+  return issueRequestAction();
 };
 
 export const userCreditList = async (issueRequestId: number) => {

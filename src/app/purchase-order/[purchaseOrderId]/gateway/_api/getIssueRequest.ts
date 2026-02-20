@@ -5,6 +5,7 @@ import { serviceCostAction } from '../../../../../../actions/cart/serviceCost';
 import { issueRequestAction } from '../../../../../../actions/cart/issueRequest';
 import { userCreditListAction } from '../../../../../../actions/cart/userCreditList';
 import { twoFARequestHandlerAction } from '../../../../../../actions/cart/twofa';
+import { confirmPaymentAction } from '../../../../../../actions/cart/confirmPayment';
 
 export async function serviceCost() {
   return serviceCostAction();
@@ -17,6 +18,9 @@ export const issueRequest = async () => {
 export const userCreditList = async (issueRequestId: number) => {
   return userCreditListAction(issueRequestId);
 };
+// export async function confirmPayment(body: ConfirmPaymentRequestBody) {
+//   return confirmPaymentAction(body);
+// }
 
 export async function confirmPayment(body: ConfirmPaymentRequestBody) {
   try {

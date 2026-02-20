@@ -8,6 +8,7 @@ export const useGetTicketList = (id: string | string[]) => {
   return useQuery({
     queryKey: [...TICKET_LIST_QUERY_KEY, id],
     queryFn: () => getTicketListAction(id),
+    initialData: [],  
     staleTime: 0,
     gcTime: 600000,
     refetchOnWindowFocus: true,

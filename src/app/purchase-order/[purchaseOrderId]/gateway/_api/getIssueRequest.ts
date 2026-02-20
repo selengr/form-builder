@@ -1,15 +1,9 @@
 import { AxiosApi } from '@/services/axios/AxiosApi';
 import { ConfirmPaymentRequestBody } from '../types';
-import { IPurchaseOrder } from '@/types/shoppingCart';
+import { serviceCostAction } from '../../../../../../actions/cart/serviceCost';
 
 export async function serviceCost() {
-  try {
-    const baseUrl = '/purchase-order/invoice';
-    const response = await AxiosApi.get<IPurchaseOrder>(baseUrl);
-    return response.data;
-  } catch (error: any) {
-    return Promise.resolve(JSON.parse(error.message));
-  }
+  return serviceCostAction();
 }
 
 export const issueRequest = async () => {

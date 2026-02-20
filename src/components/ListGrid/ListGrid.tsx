@@ -14,8 +14,10 @@ import CreateFormBtn from '../CreateFormBtn/CreateFormBtn';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import { toast } from 'sonner';
 import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
-import { fetchData } from './dataService';
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
+// import { fetchData } from './dataService';
+// action
+import { fetchListGridData } from '../../../actions/listGridActions';
 
 export interface SearchBoxItem {
   fieldName: string;
@@ -108,7 +110,7 @@ const ListGrid: React.FC<Props> = ({
     refetch,
   } = useInfiniteQuery({
     queryKey: ['datas_builder_query', query, searchQueryFilter, filterBoxList],
-    queryFn: ({ pageParam }) => fetchData({ pageParam }, updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
+    queryFn: ({ pageParam }) => fetchListGridData( pageParam , updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       const PAGE_SIZE = 10;

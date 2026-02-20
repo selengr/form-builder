@@ -1,4 +1,5 @@
 'use client';
+import { toast } from 'sonner';
 import { Fragment, memo, startTransition, useCallback, useMemo, useState } from 'react';
 import QuestionGroup from './QuestionGroup';
 import { DragEndEvent, DragOverEvent, DragStartEvent, useDndMonitor } from '@dnd-kit/core';
@@ -12,14 +13,14 @@ import useElements from '@/hooks/useElements';
 import useActionOpenDialog from '@/hooks/useActionOpenDialog';
 import useActionElements from '@/hooks/useActionElements';
 import useActionSelectedElement from '@/hooks/useActionSelectedElement';
-import { AxiosApi } from '@/services/axios/AxiosApi';
-import { toast } from 'sonner';
+// action
+import { changeOrMoveQuestionPositionAction } from '../../../../actions/builder/questionPosition';
 
 const KanbanBoard = memo(function KanbanBoard() {
   const elements = useElements();
   const setOpenDialog = useActionOpenDialog();
   const setElements = useActionElements();
-  const setSelectedElement = useActionSelectedElement();
+  const setSelectedElement = useActionSelectedElement();  
   const { questionGroups, formSetting } = useDesigner();
   const [snapshot, setSnapshot] = useState<[] | FormElementInstance[]>([]);
   const itemsByGroup = useMemo(() => {
@@ -35,7 +36,7 @@ const KanbanBoard = memo(function KanbanBoard() {
 
   const changeOrMovePositionApiReducer = useCallback(async (payload: IChangeOrMovePositionApi, activeElement: FormElementInstance, snapshot: FormElementInstance[]) => {
     try {
-      await AxiosApi.post('/question/change-position-or-move', payload);
+      await changeOrMoveQuestionPositionAction(payload);
       setElements((allQuestions) => {
         const targetQuestion = allQuestions.find((que) => que.questionId === activeElement?.questionId);
         delete targetQuestion?.draft;

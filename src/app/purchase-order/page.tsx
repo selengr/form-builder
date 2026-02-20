@@ -1,13 +1,14 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@mui/material';
 import { toast } from 'sonner';
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { Button } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 import { CartItem, EmptyCart } from '@/templates/purchase-order';
 import { useGetPurchaseOrder } from './_hook/useGetPurchaseOrder';
 import LoadingCart from '@/templates/purchase-order/loading-cart';
+// actions
+import { deletePurchaseOrderDetailAction } from '../../../actions/cart/purchaseOrderDetail';
 
 const formatCurrency = (amount: number) => new Intl.NumberFormat('fa-IR').format(amount) + ' تومان';
 const formatCurrencyNumber = (amount: number) => new Intl.NumberFormat('fa-IR').format(amount);
@@ -108,8 +109,8 @@ export default function ShoppingCartPage() {
   const handleRemoveDetail = async (id: number) => {
     try {
       setLoading(true);
-      const res = await AxiosApi.delete(`/purchase-order/purchase-order-detail/${id}`);
-      if (res.data) {
+      const data = await deletePurchaseOrderDetailAction(id);
+      if (data) {
         toast.success('با موفقیت حذف شد');
         await refetch();
       } else {

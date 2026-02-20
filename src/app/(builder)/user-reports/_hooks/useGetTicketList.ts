@@ -1,30 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
-import { AxiosApi } from '@/services/axios/AxiosApi';
+// actions
+import { getTicketListAction } from '../../../../../actions/userReports/getTicketListAction';
 
-const fetchData = async (id: string | string[]) => {
-  const filterModel = {
-    searchFilterBoxList: [{ restrictionList: [] }],
-    sortList: [{ fieldName: 'id', type: 'DSC' }],
-    page: 0,
-    rows: 10,
-  };
-
-  const baseUrl = `/admin/destroy-form/list-ticket/${id}`;
-  const queryString = `?searchFilterModel=${encodeURIComponent(JSON.stringify(filterModel))}`;
-  const url = baseUrl + queryString;
-  const response = await AxiosApi.get(url);
-  return response.data.content;
-};
+export const TICKET_LIST_QUERY_KEY = ['Ticket_List'] as const;
 
 export const useGetTicketList = (id: string | string[]) => {
   return useQuery({
-    queryKey: ['Ticket_List'],
-    queryFn: () => fetchData(id),
+    queryKey: [...TICKET_LIST_QUERY_KEY, id],
+    queryFn: () => getTicketListAction(id),
     staleTime: 0,
     gcTime: 600000,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
     retry: 3,
-    enabled: !!id,
+    enabled: Boolean(id),
   });
 };

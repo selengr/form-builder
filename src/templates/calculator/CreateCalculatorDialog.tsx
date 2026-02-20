@@ -5,13 +5,14 @@ import Dialog from '@mui/material/Dialog';
 import { useParams } from 'next/navigation';
 import { styled } from '@mui/material/styles';
 import { useQuery } from '@tanstack/react-query';
-import { AxiosApi } from '@/services/axios/AxiosApi';
 import { Container, IconButton } from '@mui/material';
 import DialogContent from '@mui/material/DialogContent';
 
 import BuilderLoading from '@/app/(builder)/builder/[id]/loading';
 import { ICreateCalculatorDialogProps } from '@/types/calculator';
 import AdvancedFormulaEditor from '@/components/calculator/AdvancedFormulaEditor';
+// action
+import { fetchCalculatorsAction } from '../../../actions/calculator/calculator';
 
 const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   direction: 'ltr',
@@ -34,29 +35,11 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-const fetchCalculators = async (id: string) => {
-  const customComboFilterModel = {
-    type: 'COMBO',
-    entity: 'QUESTIONS',
-    mode: 'QUESTIONS_IN_FORM_BUILDER__ALL',
-    input: '',
-    page: 0,
-    rows: 10000,
-    extMap: {
-      formId: id,
-      typeRequest: 'QAC_BY_FILTER',
-    },
-  };
-  const url = `/question/q-and-c-custom-combo?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`;
-  const response = await AxiosApi.get(url);
-  return response.data;
-};
-
 export const CreateCalculatorDialog: React.FC<ICreateCalculatorDialogProps> = ({ open, setOpen }) => {
   const { id } = useParams();
   const { data, isLoading, error } = useQuery({
     queryKey: ['calculators'],
-    queryFn: () => fetchCalculators(id as string),
+    queryFn: () => fetchCalculatorsAction(id as string),
     staleTime: 0,
     gcTime: 600000,
     refetchOnWindowFocus: true,

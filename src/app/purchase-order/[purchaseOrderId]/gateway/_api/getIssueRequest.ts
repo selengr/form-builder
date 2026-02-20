@@ -1,39 +1,26 @@
 import { AxiosApi } from '@/services/axios/AxiosApi';
 import { ConfirmPaymentRequestBody } from '../types';
-import { IPurchaseOrder } from '@/types/shoppingCart';
+// actions
+import { serviceCostAction } from '../../../../../../actions/cart/serviceCost';
+import { issueRequestAction } from '../../../../../../actions/cart/issueRequest';
+import { userCreditListAction } from '../../../../../../actions/cart/userCreditList';
+import { twoFARequestHandlerAction } from '../../../../../../actions/cart/twofa';
+import { confirmPaymentAction } from '../../../../../../actions/cart/confirmPayment';
 
 export async function serviceCost() {
-  try {
-    const baseUrl = '/purchase-order/invoice';
-    const response = await AxiosApi.get<IPurchaseOrder>(baseUrl);
-    return response.data;
-  } catch (error: any) {
-    return Promise.resolve(JSON.parse(error.message));
-  }
+  return serviceCostAction();
 }
 
 export const issueRequest = async () => {
-  try {
-    const { data } = await AxiosApi.post('/purchase-order/createIssueRequest');
-    return data;
-  } catch (error) {
-    return Promise.resolve('');
-  }
+  return issueRequestAction();
 };
 
 export const userCreditList = async (issueRequestId: number) => {
-  try {
-    const body = {
-      issueRequestId,
-    };
-    const response = await AxiosApi.post('/mhesam/profile/credit/user-credit-list', body, {
-      baseURL: process.env.NEXT_PUBLIC_BASE_URL_PSYA,
-    });
-    return response.data;
-  } catch (error) {
-    return Promise.resolve('');
-  }
+  return userCreditListAction(issueRequestId);
 };
+// export async function confirmPayment(body: ConfirmPaymentRequestBody) {
+//   return confirmPaymentAction(body);
+// }
 
 export async function confirmPayment(body: ConfirmPaymentRequestBody) {
   try {
@@ -75,10 +62,5 @@ export async function connectToGateway(redirectUrl: string, amount: number) {
 }
 
 export async function twoFARequestHandler(nationalCode: string) {
-  try {
-    const response = await AxiosApi.post(`/check-nationalCode-send-code`, { nationalCode });
-    return response.data;
-  } catch (error: any) {
-    return Promise.resolve(JSON.parse(error.message));
-  }
+  return twoFARequestHandlerAction(nationalCode);
 }

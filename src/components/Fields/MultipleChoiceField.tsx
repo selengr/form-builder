@@ -11,7 +11,6 @@ import { RHFSwitch, RHFTextField, RHFTextFieldOptionList } from '../../component
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
 import { SwitchButton } from '../Switch/SwitchButton';
 import { IFormElementConstructor, IFormOptionList, IQPLMultipleChoice } from '@/types/bulider';
-import { AxiosApi } from '@/services/axios/AxiosApi';
 import TickIcon from '@/../public/images/home-page/tick-square.svg';
 import useDesigner from '@/hooks/useDesigner';
 import useElements from '@/hooks/useElements';
@@ -21,6 +20,8 @@ import useSelectedElement from '@/hooks/useSelectedElement';
 import useActionDesigner from '@/hooks/useActionDesigner';
 import shuffleArray from '@/lib/shuffle';
 import { useSearchParams } from 'next/navigation';
+// actions
+import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/question';
 
 const questionType: ElementsType = 'MULTIPLE_CHOICE';
 
@@ -438,7 +439,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       delete removeId.questionId;
 
       try {
-        const { data }: any = await AxiosApi.post('/question', removeId as any);
+          const { data }: any = await createQuestionAction(removeId as any);
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;
@@ -457,7 +458,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       }
     } else {
       try {
-        const { data }: any = await AxiosApi.put(`/question/${finalFieldData?.questionId}`, finalFieldData);
+        const { data }: any = await updateQuestionAction(String(finalFieldData?.questionId), finalFieldData);
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;

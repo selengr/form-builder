@@ -13,7 +13,6 @@ import FormProvider from '@/components/hook-form/FormProvider';
 import { RHFSwitch, RHFTextField } from '@/components/hook-form';
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
 import useDesigner from '@/hooks/useDesigner';
 import useElements from '@/hooks/useElements';
 import useActionOpenDialog from '@/hooks/useActionOpenDialog';
@@ -24,6 +23,8 @@ import useActionDesigner from '@/hooks/useActionDesigner';
 import InformationIcon from '@/../public/images/home-page/information.svg';
 import { ElementsType, FormElement, FormElementInstance } from '@/types/FormElements';
 import { IFormElementConstructor, IQPLInfoField } from '@/types/bulider';
+// actions
+import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/question';
 
 const questionType: ElementsType = 'INFO_FIELD';
 
@@ -194,11 +195,11 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
     try {
       if (!selected) {
-        const { data } = await AxiosApi.post('/question', newField);
+        const { data } = await createQuestionAction(newField);
         addElement(selectedElement?.position?.realPosition ?? insertIdx, data);
       } else {
-        const { data } = await AxiosApi.put(`/question/${element.questionId}`, newField);
-        updateElement(element.questionId, data);
+          const { data } = await updateQuestionAction(String(element.questionId), newField);
+          updateElement(element.questionId, data);
       }
 
       setOpenDialog(false);

@@ -1,9 +1,23 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { fetchUserInfo } from '@/lib/auth';
-import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import {
+   Button,
+    CircularProgress,
+     Dialog,
+      DialogActions,
+       DialogContent,
+        DialogTitle,
+         FormControl,
+          FormControlLabel,
+           FormLabel, 
+           Radio,
+            RadioGroup,
+             TextField
+             } from '@mui/material';
+// actions
+import { fetchUserInfoServer } from '../../../actions/auth';
 
 interface ReportDialogProps {
   open: boolean;
@@ -69,7 +83,7 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport, user
       return;
     }
 
-    const { userInfo } = await fetchUserInfo();
+    const { userInfo } = await fetchUserInfoServer();
     const username = userInfo?.user?.username || userPhone || '';
 
     const body: any = {

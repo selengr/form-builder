@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { fetchUserInfo } from '@/lib/auth';
+// actions
+import { fetchUserInfoServer } from '../../actions/auth';
 
 export function useUserInfo() {
   const [userInfo, setUserInfo] = useState<any>(null);
@@ -12,7 +13,7 @@ export function useUserInfo() {
     const loadUser = async () => {
       setLoading(true);
       setError(null);
-      const { userInfo, isAuthenticated, error } = await fetchUserInfo();
+      const { userInfo, isAuthenticated, error } = await fetchUserInfoServer();
       if (isMounted) {
         if (isAuthenticated) {
           setUserInfo(userInfo);

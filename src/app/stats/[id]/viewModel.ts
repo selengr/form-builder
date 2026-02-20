@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import statsService from '@/services/statsService';
+// actions
+import { getStatsDataAction } from '../../../../actions/report/stats';
 
 export const useStatsViewModel = () => {
   const { id } = useParams();
@@ -30,7 +31,7 @@ export const useStatsViewModel = () => {
     try {
       setIsLoading(true);
       // @ts-ignore
-      const data = await statsService.getStatsData(id.toString(), page, pageSize);
+      const data = await getStatsDataAction(id.toString(), page, pageSize);
       setHeadData(data.headData);
       setAllData(data.allData);
       setTotalItems(data.totalItems);

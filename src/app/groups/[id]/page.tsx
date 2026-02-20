@@ -2,19 +2,15 @@
 
 import { toast } from 'sonner'
 import Image from 'next/image'
-import Checkbox from '@mui/material/Checkbox'
 import { Box, CircularProgress } from '@mui/material'
 import { useQueryClient } from '@tanstack/react-query'
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md'
-import FormControlLabel from '@mui/material/FormControlLabel'
 import React, { Suspense, useState, useCallback, useEffect } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 // images
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 // type
 import type { IUserGroupMemmerInfo } from '@/types/setting'
-// services
-import { AxiosApi } from '@/services/axios/AxiosApi'
 // components
 import { InfoRow } from '@/components/common/infoRow'
 import { MemberListItem } from '../components/MemberListItem'
@@ -23,6 +19,8 @@ import { InvalidConfirmDialog } from '../components/invalidConfirmDialog'
 import { CancelGroupAllocationModal } from '../components/createMemberDialog'
 import { useFetchMembersSetting } from '@/components/GroupSettings/hook/useFetchMembersSetting'
 import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput'
+// actions
+import { changeMemberStatusAction } from '../../../../actions/groups/member'
 
 export default function GroupDetailsPage() {
   const router = useRouter()
@@ -104,20 +102,20 @@ export default function GroupDetailsPage() {
     }
 
     try {
-      const res = await AxiosApi.post('/user-group/introducer/change-status-member', {
+      const res = await changeMemberStatusAction({
         groupId,
         introducedUserJTGroupId,
         invalid: !isActive,
         rememberAllocation: rememberAllocation ?? false,
       });
 
-      if (res.status === 200) {
-        toast.success("عملیات با موفقیت انجام شد")
-        setOnenConfirmationDialog(false)
+      if (res.ok) {
+        toast.success('عملیات با موفقیت انجام شد');
+        setOnenConfirmationDialog(false);
         await queryClient.invalidateQueries({
-          queryKey: ["members-setting", groupId],
+          queryKey: ['members-setting', groupId],
           exact: false,
-        })
+        });
       }
 
     } catch (error) {

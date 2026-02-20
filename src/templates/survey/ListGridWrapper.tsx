@@ -10,7 +10,7 @@ import CreateSurveyBtn from './CreateSurveyBtn';
 // images
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
-
+// test branch
 export default function ListGridWrapper() {
   const [refreshGrid, setRefreshGrid] = useState(false);
   const [openMyCreateModal, setOpenMyCreateModal] = useState(false);
@@ -78,10 +78,12 @@ export default function ListGridWrapper() {
             <div className='flex items-center w-full justify-center gap-2'>
               <Image src={FilterIcon} width={30} height={30} alt='filter' />
               <p className='text-[16px] text-center font-bold text-[#161616]'>فیلتر</p>
-            </div>
+            </div> 
           </div>
-          {/* <div className='flex flex-col gap-4 w-full'>
-            <div className='flex flex-col gap-4'>
+
+          {/* //================= */}
+           <div className='flex flex-col gap-4 w-full h-full'>
+            <div className='flex flex-col gap-4 h-full'>
               <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
                 <FormControl
                   sx={{
@@ -102,14 +104,12 @@ export default function ListGridWrapper() {
                       },
                     }}
                     id='demo-controlled-radio-buttons-group'>
-                    بر اساس نوع
+                    بر اساس گزارش
                   </FormLabel>
                   <RadioGroup aria-labelledby='demo-controlled-radio-buttons-group' name='controlled-radio-buttons-group' value={formType.type} onChange={handleTypeChange}>
                     <FormControlLabel value='ALL' control={<Radio />} label='همه' />
-                    <FormControlLabel value='COMPETITION' control={<Radio />} label='مسابقه' />
-                    <FormControlLabel value='QUESTION' control={<Radio />} label='پرسشنامه' />
-                    <FormControlLabel value='SURVEY' control={<Radio />} label='نظرسنجی' />
-                    <FormControlLabel value='TEST' control={<Radio />} label='آزمون' />
+                    <FormControlLabel value='SHOW' control={<Radio />} label='دارای گزارش' />
+                    <FormControlLabel value='NOT_SHOW' control={<Radio />} label='بدون گزارش' />
                   </RadioGroup>
                 </FormControl>
               </div>
@@ -133,17 +133,19 @@ export default function ListGridWrapper() {
                       },
                     }}
                     id='demo-controlled-radio-buttons-group'>
-                    بر اساس دسترسی
+                    بر اساس وضعیت
                   </FormLabel>
                   <RadioGroup aria-labelledby='demo-controlled-radio-buttons-group' name='controlled-radio-buttons-group' value={formType.status} onChange={handleStatusChange}>
                     <FormControlLabel value='ALL' control={<Radio />} label='همه' />
-                    <FormControlLabel value='PUBLIC' control={<Radio />} label='عمومی' />
-                    <FormControlLabel value='PRIVATE' control={<Radio />} label='خصوصی' />
+                    <FormControlLabel value='ONLY_ANSWERED' control={<Radio />} label='انجام شده' />
+                    <FormControlLabel value='NOT_ANSWERED' control={<Radio />} label='انجام نشده' />
                   </RadioGroup>
                 </FormControl>
               </div>
             </div>
-          </div> */}
+          </div> 
+          
+          {/* //================= */}
           <div className='flex gap-4 items-center justify-between w-full mt-8'>
             <Button
               sx={{

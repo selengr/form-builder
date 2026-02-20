@@ -9,8 +9,6 @@ import React, { Suspense, useState, useRef, useEffect, useCallback } from 'react
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 // utils
 import { getAuthToken } from '@/utils/getAuthToken';
-// services
-import { AxiosApi } from '@/services/axios/AxiosApi';
 // images
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 import TotalGrid from '@/../public/images/home-page/total-grid.svg';
@@ -20,6 +18,8 @@ import { GroupDialogTrigger } from './components/GroupDialogTrigger';
 import { InvalidConfirmDialog } from './components/invalidConfirmDialog';
 import { CreateGroupDialog } from '@/app/groups/components/createGroupDialog';
 import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
+// action
+import { changeGroupStatusAction } from '../../../actions/groups/group';
 
 export interface GroupItemAPI {
   groupName: string;
@@ -177,18 +177,16 @@ const GroupsPage: React.FC = () => {
     }
 
     try {
-      const res = await AxiosApi.post('/user-group/introducer/change-status-group', {
+      const res = await changeGroupStatusAction({
         groupId,
         invalid: !isActive,
         rememberAllocation: rememberAllocation ?? false,
       });
 
-      if (res.status === 200) {
-        toast.success("عملیات با موفقیت انجام شد")
-        await queryClient.invalidateQueries({
-          queryKey: ["groups"]
-        })
-        setOnenConfirmationDialog(false)
+      if (res.ok) {
+        toast.success('عملیات با موفقیت انجام شد');
+        await queryClient.invalidateQueries({ queryKey: ['groups'] });
+        setOnenConfirmationDialog(false);
       }
 
     } catch (error) {

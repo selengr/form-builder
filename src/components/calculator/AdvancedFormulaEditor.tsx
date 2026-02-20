@@ -7,7 +7,6 @@ import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from
 import { Box, Container, IconButton, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
 
 import { htmlToFormula } from '@/lib/htmlToFormula';
-import { AxiosApi } from '@/services/axios/AxiosApi';
 import { Element, FnFxItem } from '@/types/formulaEditor';
 import { IAdvancedFormulaEditorProps } from '@/types/calculator';
 // components
@@ -16,10 +15,12 @@ import { replaceNestedParentheses } from './parentheses-replacer';
 import FormulaInput from '@/components/formula-editor/FormulaInput';
 import FormulaKeypad from '@/components/formula-editor/FormulaKeypad';
 import FormulaControls from '@/components/formula-editor/FormulaControls';
-import { RHFTextField } from '../hook-form';
+// action
+import { createCalculationAction, updateCalculationAction } from '../../../actions/calculator/calculation';
 
 const OPERATOR_TYPES = ['-', '+', '*', '/'];
 const FN_FX_OPTIONS = [{ fnValue: 'avg', fnCaption: 'میانگین()' }];
+const PERSIAN_CHARS_REGEX = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/;
 
 const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ questionList, handleClose, editList, isEdit }) => {
   const { id } = useParams();
@@ -35,7 +36,9 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
 
   const editData = editList?.frontCalcData ? JSON.parse(editList.frontCalcData as string) : [];
   const [formName, setFormName] = useState<string>(editList?.name ?? '');
-  const [label, setLabel] = useState<string|null>(editList?.label ?? null);
+  const [label, setLabel] = useState<string | null>(editList?.label ?? null);
+  const [labelError, setLabelError] = useState<string | null>(null);
+  const [formNameError, setFormNameError] = useState<string | null>(null);
   const [cursorIndex, setCursorIndex] = useState<number>(0);
   const [elements, setElements] = useState<Element[]>(editData);
   const [isClient, setIsClient] = useState<boolean>(false);
@@ -583,13 +586,42 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
     }
   }
 
+  const validateFormName = (value: string): boolean => {
+    if (!value || value.trim() === '') {
+      setFormNameError('نام محاسبه‌گر الزامی است');
+      return false;
+    }
+
+    setFormNameError(null);
+    return true;
+  };
+
+  const validateLabel = (value: string | null): boolean => {
+    if (!value || value.trim() === '') {
+      setLabelError(null);
+      return true;
+    }
+
+    if (PERSIAN_CHARS_REGEX.test(value)) {
+      setLabelError('استفاده از حروف فارسی مجاز نیست');
+      return false;
+    }
+
+    if (value.length < 8 || value.length > 30) {
+      setLabelError('شناسه حداقل باید 8 و حداکثر 30 کاراکتر باشد');
+      return false;
+    }
+
+    setLabelError(null);
+    return true;
+  };
+
+
   const callApi = async () => {
-    if (!formName) {
-      toast.error('ابتدا نام محاسبه گر را وارد کنید');
+    if (!validateLabel(label)) {
       return;
     }
-    if (label && label.length < 7 || label!.length > 20) {
-      toast.error('شناسه حداقل باید 7 و حداکثر 20 کاراکتر باشد');
+    if (!validateFormName(formName)) {
       return;
     }
 
@@ -625,8 +657,8 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
 
     try {
       setLoading(true);
-      if (!isEdit) {
-        await AxiosApi.post('/calculation', {
+       if (!isEdit) {
+        await createCalculationAction({
           name: formName,
           formBuilderId: id,
           label: label ?? null,
@@ -634,8 +666,8 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
           frontCalcData: JSON.stringify(elements),
         });
       } else {
-        await AxiosApi.put(`/calculation/${editList?.id}`, {
-          id: editList?.id,
+        await updateCalculationAction(editList?.id as number, {
+          id: editList?.id as number,
           name: formName,
           label: label ?? null,
           formBuilderId: id,
@@ -665,7 +697,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
           justifyContent: 'center',
           color: '#404040',
           fontWeight: 700,
-          mb:2
+          mb: 2
         }}>
         محاسبه‌گر
       </Typography>
@@ -679,75 +711,92 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
           width: '100%',
           paddingX: { xs: 3, md: 0 }
         }}>
-            <Box
+        <Box
           sx={{
             width: '100%',
             display: "flex",
-            justifyContent : "space-between",
-            alignItems: "center",
+            justifyContent: "space-between",
+            alignItems: "start",
             flexDirection: { xs: 'column', sm: 'row' },
             gap: 2
           }}>
-        <Stack  width={'100%'}>
-          <Typography variant='subtitle2' color='#161616'>
-            نام:
-          </Typography>
-          <TextField
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': {
-                  borderColor: '#DDE1E6',
-                  borderRadius: '8px',
+          <Stack width={'100%'}>
+            <Typography variant='subtitle2' color='#161616'>
+              نام:
+            </Typography>
+            <TextField
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#DDE1E6',
+                    borderRadius: '8px',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#DDE1E6',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#DDE1E6',
+                  },
                 },
-                '&:hover fieldset': {
-                  borderColor: '#DDE1E6',
+                '& input': {
+                  paddingX: 1,
+                  paddingY: 0,
+                  height: '50px',
                 },
-                '&.Mui-focused fieldset': {
-                  borderColor: '#DDE1E6',
-                },
-              },
-              '& input': {
-                paddingX: 1,
-                paddingY: 0,
-                height: '50px',
-              },
-            }}
-            value={formName}
-            onChange={(e) => setFormName(e.target.value)}
-          />
-        </Stack>
+              }}
+              value={formName}
+              onChange={(e) => {
+                const val = e.target.value;
+                setFormName(val);
+
+                if (formNameError) {
+                  validateFormName(val);
+                }
+              }}
+              onBlur={() => validateFormName(formName)}
+              error={Boolean(formNameError)}
+              helperText={formNameError}
+            />
+          </Stack>
 
           {isSurvey &&
-                  <Stack width={'100%'}>
-          <Typography variant='subtitle2' color='#161616'>
-            شناسه:
-          </Typography>
-                       <TextField
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': {
-                  borderColor: '#DDE1E6',
-                  borderRadius: '8px',
-                },
-                '&:hover fieldset': {
-                  borderColor: '#DDE1E6',
-                },
-                '&.Mui-focused fieldset': {
-                  borderColor: '#DDE1E6',
-                },
-              },
-              '& input': {
-                paddingX: 1,
-                paddingY: 0,
-                height: '50px',
-              },
-            }}
-            value={label}
-            onChange={(e) => setLabel(e.target.value)}
-          />
-                  </Stack>
-                }
-                    </Box>
+            <Stack width={'100%'}>
+              <Typography variant='subtitle2' color='#161616'>
+                شناسه:
+              </Typography>
+              <TextField
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: '#DDE1E6',
+                      borderRadius: '8px',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: '#DDE1E6',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#DDE1E6',
+                    },
+                  },
+                  '& input': {
+                    paddingX: 1,
+                    paddingY: 0,
+                    height: '50px',
+                  },
+                }}
+                value={label ?? ''}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setLabel(val === '' ? null : val);
+                }}
+                onBlur={() => validateLabel(label)}
+                error={Boolean(labelError)}
+                helperText={labelError}
+              />
+
+            </Stack>
+          }
+        </Box>
 
 
         <Box

@@ -11,7 +11,6 @@ import { RHFMultiSelect, RHFSwitch, RHFTextField, RHFTextFieldOptionList } from 
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
 import { IFormElementConstructor, IFormOptionList, IQPLSpectral, ISpectralQTapAndOptionsType } from '@/types/bulider';
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
-import { AxiosApi } from '@/services/axios/AxiosApi';
 import useElements from '@/hooks/useElements';
 import useDesigner from '@/hooks/useDesigner';
 import useActionOpenDialog from '@/hooks/useActionOpenDialog';
@@ -22,6 +21,9 @@ import CheckIcon from '@/../public/images/home-page/spectral.svg';
 import { SwitchButton } from '../Switch/SwitchButton';
 import { MyRangeSlider } from '../Slider/RangeSlider';
 import { useSearchParams } from 'next/navigation';
+// actions
+import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/question';
+
 
 const questionType: ElementsType = 'SPECTRAL';
 
@@ -551,7 +553,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       delete removeId.questionId;
 
       try {
-        const { data }: any = await AxiosApi.post('/question', removeId as any);
+        const { data }: any = await createQuestionAction(removeId as any);
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;
@@ -570,7 +572,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       }
     } else {
       try {
-        const { data }: any = await AxiosApi.put(`/question/${finalFieldData.questionId}`, finalFieldData);
+        const { data }: any = await updateQuestionAction(String(finalFieldData.questionId), finalFieldData);
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;

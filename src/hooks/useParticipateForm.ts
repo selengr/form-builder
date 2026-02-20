@@ -1,10 +1,8 @@
 'use client';
 
 import { toast } from 'sonner';
-import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-// lib
-import { fetchUserInfo } from '@/lib/auth';
+import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 // services
 import { AxiosApi } from '@/services/axios/AxiosApi';
 // components
@@ -19,6 +17,8 @@ import {
 } from "../../actions/take-part"
 // types
 import { ElementsType, FormElements } from '@/types/FormElements';
+// actions
+import { fetchUserInfoServer } from '../../actions/auth';
 
 export interface ILimitation {
   isLimited: boolean;
@@ -191,7 +191,7 @@ export const useParticipateForm = () => {
         return
       }
 
-      const { userInfo } = await fetchUserInfo();
+      const { userInfo } = await fetchUserInfoServer();
       const username = userInfo?.user?.username || null;
 
       if (result?.data?.loggedInStatus === false && result?.data?.responseLimitation) {
@@ -263,6 +263,7 @@ export const useParticipateForm = () => {
         link: isLink ? slug : null,
         formId: !isLink ? slug : null,
         username,
+        refId: refId ?? undefined,
       });
       setTakePartId(res.data.takePart);
       setFormName(res.data?.formName);

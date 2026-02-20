@@ -11,7 +11,6 @@ import RHFTextField from '../../components/hook-form/RHFTextField';
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
 import { IFormElementConstructor } from '@/types/bulider';
 import { useParams } from 'next/navigation';
-import { AxiosApi } from '@/services/axios/AxiosApi';
 import useActionOpenDialog from '@/hooks/useActionOpenDialog';
 import useActionSelectedElement from '@/hooks/useActionSelectedElement';
 import useSelectedElement from '@/hooks/useSelectedElement';
@@ -20,6 +19,8 @@ import { toast } from 'sonner';
 import { memo } from 'react';
 import Image from 'next/image';
 import finishIcon from '@/../public/images/home-page/finish.svg';
+// action
+import { createEndPageAction, updateEndPageAction } from '../../../actions/builder/formEndPage';
 
 const questionType: ElementsType = 'TitleFieldFinish';
 
@@ -117,7 +118,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
     if (!finishPage) {
       try {
-        const res: any = await AxiosApi.post('/form/end-page', data as any);
+        const res: any = await createEndPageAction(data as any);
         addFinishPage({
           ...selectedElement?.fieldElement,
           questionId: res?.data?.endPageId,
@@ -132,7 +133,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       }
     } else {
       try {
-        const res = await AxiosApi.put('/form/end-page', data as any);
+        const res = await updateEndPageAction(data as any);
         updateFinishPage({
           ...element,
           description: res?.data?.description,

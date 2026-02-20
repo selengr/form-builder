@@ -55,21 +55,23 @@ export async function checkResponseLimitationAction(params: {
       error: e?.response?.data?.message || "An error occurred",
       statusCode: e?.response?.status,
     }
-  }
+  } 
 }
 
 export async function checkAnswerBeforeAction(params: {
   slug: string
   username: string | null
+  refId?: string
 }) {
   try {
-    const { slug, username } = params
+    const { slug, username, refId } = params
     const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
 
     const res = await serverApi.post("/take-part/check-answer-to-form-before", {
       link: isLink ? slug : null,
       formId: !isLink ? slug : null,
       username,
+      refId: refId ?? null,
     })
 
     return {

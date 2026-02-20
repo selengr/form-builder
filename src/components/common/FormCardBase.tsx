@@ -9,9 +9,10 @@ import { formTypePersian } from '@/constants/formDictionaries';
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
 import BugIcon from '@/../public/images/home-page/menu/bugIcon.svg';
 import { useShowResultUser } from '@/app/my-assessments/[id]/show-result/hooks/useShowResultUser';
-import { fetchUserInfo } from '@/lib/auth';
 import LoginWithPhone from './loginWithPhone';
 import { useLoginWithPhone } from '../../hooks/useLoginWithPhone';
+// actions
+import { fetchUserInfoServer } from '../../../actions/auth';
 
 interface FormCardBaseProps {
   data: any;
@@ -79,7 +80,7 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
   };
 
   const handleReport = async () => {
-    const { userInfo } = await fetchUserInfo();
+    const { userInfo } = await fetchUserInfoServer();
     const username = userInfo?.user?.username || null;
     setDialogState(username ? 'report' : 'login');
   };

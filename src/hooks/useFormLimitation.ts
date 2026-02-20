@@ -1,6 +1,6 @@
   import { useState } from 'react';
 import { AxiosApi } from '@/services/axios/AxiosApi';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { ILimitation } from '@/hooks/useParticipateForm';
 
 export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimitation: (limitation: ILimitation) => void, setQuestion: (data: any) => void, addQuestion: (data: any) => void) => {
@@ -8,6 +8,8 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
   const [error, setError] = useState(false);
   const [helperText, setHelperText] = useState('');
   const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const refId = searchParams.get('refId');
 
   const { slug } = useParams<{ slug: string }>();
 
@@ -59,6 +61,7 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
         link: isLink ? slug : null,
         formId: !isLink ? slug : null,  
         username: formValue,
+        refId: refId ?? undefined,
       });
         
       addQuestion(response.data);

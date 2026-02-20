@@ -1,38 +1,22 @@
-import { AxiosApi } from '@/services/axios/AxiosApi';
+'use client';
+
 import { useQuery } from '@tanstack/react-query';
+import { getSurveyPurposeAction } from '../../../../actions/survey/getSurveyPurposeAction';
 
-export interface IGetSurvey {
-  value: string;
-  caption: string;
-}
+export const SURVEY_PURPOSE_QUERY_KEY = ['survey-purpose'] as const;
 
-export const SURVEY_PURPOSE_QUERY_KEY = ['survey-purpose'];
-
-export const fetchSurveyData = async () => {
-  const customComboFilterModel = {
-    type: 'COMBO',
-    entity: 'PROJECTS',
-    input: '',
-    page: 0,
-    rows: 1000,
-  };
-
-  const baseUrl = `/admin/form/survey/survey-purpose/custom-combo`;
-  const queryString = `?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`;
-  const url = baseUrl + queryString;
-  const response = await AxiosApi.get(url);
-  return response.data;
-};
-
-export const useGetSurveyPurpose = () => {
-    const { data, isFetching } = useQuery({
+export function useGetSurveyPurpose() {
+  const { data, isFetching, isLoading, isError, error } = useQuery({
     queryKey: SURVEY_PURPOSE_QUERY_KEY,
-    queryFn: () => fetchSurveyData(),
+    queryFn: () => getSurveyPurposeAction(),
     staleTime: 5 * 60 * 1000,
   });
 
   return {
     isFetchingSurvey: isFetching,
-    Survey : data?.dataList,
+    isLoadingSurvey: isLoading,
+    isErrorSurvey: isError,
+    errorSurvey: error,
+    Survey: data?.dataList,
   };
-};
+}

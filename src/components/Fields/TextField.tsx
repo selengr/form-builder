@@ -14,7 +14,6 @@ import FormProvider from '../../components/hook-form/FormProvider';
 import { RHFSwitch, RHFTextField } from '../../components/hook-form';
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
 import { IFormElementConstructor, IQPLTextField } from '@/types/bulider';
-import { AxiosApi } from '@/services/axios/AxiosApi';
 import useDesigner from '@/hooks/useDesigner';
 import useElements from '@/hooks/useElements';
 import useActionOpenDialog from '@/hooks/useActionOpenDialog';
@@ -31,6 +30,8 @@ import TimePicker from 'react-multi-date-picker/plugins/analog_time_picker';
 import { GoClock } from 'react-icons/go';
 import { BsCalendarDate } from 'react-icons/bs';
 import { DatePicker as DatePickerCustome } from '../DatePicker/DatePicker';
+// actions
+import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/question';
 
 const questionType: ElementsType = 'TEXT_FIELD';
 
@@ -525,7 +526,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       delete removeId.questionId;
 
       try {
-        const { data }: any = await AxiosApi.post('/question', removeId as any);
+        const { data }: any = await createQuestionAction(removeId as any);
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;
@@ -544,7 +545,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       }
     } else {
       try {
-        const { data }: any = await AxiosApi.put(`/question/${finalFieldData.questionId}`, finalFieldData);
+        const { data }: any = await updateQuestionAction(String(finalFieldData.questionId), finalFieldData);
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;

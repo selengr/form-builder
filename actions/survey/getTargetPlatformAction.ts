@@ -1,6 +1,6 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 export interface IGetTargetPlatform {
   value: string;
@@ -23,6 +23,6 @@ export async function getTargetPlatformAction(): Promise<TargetPlatformResponse>
   const baseUrl = `/admin/form/survey/target-platform/custom-combo`;
   const queryString = `?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`;
 
-  const { data } = await AxiosApi.get<TargetPlatformResponse>(baseUrl + queryString);
+  const { data } = await serverApi.get<TargetPlatformResponse>(baseUrl + queryString);
   return data;
 }

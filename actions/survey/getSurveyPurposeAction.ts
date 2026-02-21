@@ -1,6 +1,6 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 export interface IGetSurvey {
   value: string;
@@ -24,6 +24,6 @@ export async function getSurveyPurposeAction(): Promise<SurveyPurposeResponse> {
   const queryString = `?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`;
   const url = baseUrl + queryString;
 
-  const { data } = await AxiosApi.get<SurveyPurposeResponse>(url);
+  const { data } = await serverApi.get<SurveyPurposeResponse>(url);
   return data;
 }

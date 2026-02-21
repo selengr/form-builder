@@ -1,6 +1,6 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 import { getAuthToken } from '@/utils/getAuthToken';
 
 interface IFetchUserInfoResult {
@@ -25,7 +25,7 @@ export async function fetchUserInfoServer(): Promise<IFetchUserInfoResult> {
       };
     }
 
-    const res = await AxiosApi.get<any>('/authorization/front-panel/non-org-user-role/find-user-loggedin-info', {
+    const res = await serverApi.get<any>('/authorization/front-panel/non-org-user-role/find-user-loggedin-info', {
       baseURL: process.env.NEXT_PUBLIC_BASE_URL,
       headers: {
         Authorization: `Bearer ${token}`,

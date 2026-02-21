@@ -1,6 +1,6 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 import { IPostCondition } from '@/types/condition';
 
 type PostConditionArgs = {
@@ -12,8 +12,8 @@ export async function postConditionAction({ data, isEdit }: PostConditionArgs) {
   const url = isEdit ? `/condition/${data?.[0]?.id}` : `/condition`;
 
   const response = isEdit
-    ? await AxiosApi.put(url, data)
-    : await AxiosApi.post(url, data);
+    ? await serverApi.put(url, data)
+    : await serverApi.post(url, data);
 
   return response.data;
 }

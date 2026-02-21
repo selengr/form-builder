@@ -1,6 +1,6 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 import type { IPostCondition } from '@/types/conditionReportSolo';
 
 type PostReportSoloParams = {
@@ -10,10 +10,10 @@ type PostReportSoloParams = {
 
 export async function postReportSoloAction({ data, isEdit }: PostReportSoloParams) {
   const url = isEdit ? `/report/solo/${data?.[0]?.id}` : `/report/solo`;
-  
+
   const res = isEdit
-    ? await AxiosApi.put(url, data)
-    : await AxiosApi.post(url, data);
+    ? await serverApi.put(url, data)
+    : await serverApi.post(url, data);
 
   return res.data;
 }

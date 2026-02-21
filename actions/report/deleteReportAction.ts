@@ -1,9 +1,9 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 export async function deleteReportAction(id: number) {
   const url = `/report/solo/${id}`;
-  const res = await AxiosApi.delete(url);
+  const res = await serverApi.delete(url);
   return res.data;
 }

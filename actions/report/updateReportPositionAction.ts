@@ -1,6 +1,6 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 export interface IUpdatePositionPayload {
   formBuilderId: string | string[];
@@ -11,6 +11,6 @@ export interface IUpdatePositionPayload {
 export async function updateReportPositionAction(data: IUpdatePositionPayload) {
   const url = '/report/solo/change-position';
 
-  const res = await AxiosApi.post(url, data);
+  const res = await serverApi.post(url, data);
   return res.data;
 }

@@ -1,6 +1,6 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 export interface TTicketFormData {
   formId: string | string[];
@@ -10,6 +10,6 @@ export interface TTicketFormData {
 
 export async function postChangeStatusAction(data: TTicketFormData) {
   const url = `/admin/form/change-status`;
-  const res = await AxiosApi.put(url, data);
+  const res = await serverApi.put(url, data);
   return res.data;
 }

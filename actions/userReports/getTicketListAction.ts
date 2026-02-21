@@ -1,6 +1,6 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 type TicketListResponse = {
   content: any[];
@@ -18,6 +18,6 @@ export async function getTicketListAction(id: string | string[]): Promise<any[]>
   const queryString = `?searchFilterModel=${encodeURIComponent(JSON.stringify(filterModel))}`;
   const url = baseUrl + queryString;
 
-  const { data } = await AxiosApi.get<TicketListResponse>(url);
+  const { data } = await serverApi.get<TicketListResponse>(url);
   return data.content;
 }

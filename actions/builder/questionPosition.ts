@@ -1,8 +1,8 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 export async function changeOrMoveQuestionPositionAction(payload: any) {
-  const res: any = await AxiosApi.post('/question/change-position-or-move', payload);
+  const res: any = await serverApi.post('/question/change-position-or-move', payload);
   return { data: res.data };
 }

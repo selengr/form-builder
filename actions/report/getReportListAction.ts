@@ -1,6 +1,6 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 export type GetReportListParams = {
   formId: string | number;
@@ -23,6 +23,6 @@ export async function getReportListAction({ formId, admin }: GetReportListParams
     `${baseUrl}?searchFilterModel=` +
     encodeURIComponent(JSON.stringify(filterModel));
 
-  const res = await AxiosApi.get(url);
+  const res = await serverApi.get(url);
   return res.data.content;
 }

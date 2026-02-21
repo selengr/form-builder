@@ -1,8 +1,8 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 export async function upsertStartPageAction(payload: any) {
-  const res: any = await AxiosApi.put('/form/start-page', payload);
+  const res: any = await serverApi.put('/form/start-page', payload);
   return { data: res.data };
 }

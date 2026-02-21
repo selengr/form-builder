@@ -17,8 +17,8 @@ import {
   TextField
 } from '@mui/material';
 // actions
-// import { fetchUserInfoServer } from '../../../actions/auth';
-import { fetchUserInfo } from '@/lib/auth';
+import { fetchUserInfoServer } from '../../../actions/auth';
+// import { fetchUserInfo } from '@/lib/auth';
 
 interface ReportDialogProps {
   open: boolean;
@@ -84,7 +84,7 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport, user
       return;
     }
 
-    const { userInfo } = await fetchUserInfo();
+    const { userInfo } = await fetchUserInfoServer();
     const username = userInfo?.user?.username || userPhone || '';
 
     const body: any = {

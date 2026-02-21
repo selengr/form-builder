@@ -3,29 +3,30 @@
 import { toast } from 'sonner';
 import React, { useEffect, useState } from 'react';
 import {
-   Button,
-    CircularProgress,
-     Dialog,
-      DialogActions,
-       DialogContent,
-        DialogTitle,
-         FormControl,
-          FormControlLabel,
-           FormLabel, 
-           Radio,
-            RadioGroup,
-             TextField
-             } from '@mui/material';
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  TextField
+} from '@mui/material';
 // actions
-import { fetchUserInfoServer } from '../../../actions/auth';
+// import { fetchUserInfoServer } from '../../../actions/auth';
+import { fetchUserInfo } from '@/lib/auth';
 
 interface ReportDialogProps {
   open: boolean;
   onClose: () => void;
   formId: any;
   userPhone?: any;
-  questionId? : number
-  resultReportText? : string
+  questionId?: number
+  resultReportText?: string
   typeOfReport: 'REPORT' | 'FORM' | 'RESULT_REPORT';
 }
 
@@ -83,7 +84,7 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport, user
       return;
     }
 
-    const { userInfo } = await fetchUserInfoServer();
+    const { userInfo } = await fetchUserInfo();
     const username = userInfo?.user?.username || userPhone || '';
 
     const body: any = {
@@ -97,11 +98,11 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport, user
     if (questionId) {
       body.questionId = questionId;
     }
-    
+
     if (resultReportText) {
       body.resultReportText = resultReportText;
     }
-    
+
     try {
       const res = await fetch('/api/report', {
         method: 'POST',

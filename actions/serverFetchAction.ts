@@ -1,6 +1,6 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 export async function serverFetch(url: string, params: Record<string, any> = {}) {
   try {
@@ -8,7 +8,7 @@ export async function serverFetch(url: string, params: Record<string, any> = {})
     const encodedParams = encodeURIComponent(queryString);
     const fullURL = `${url}${encodedParams === encodeURIComponent('{}') ? '' : encodedParams}`;
 
-    const response = await AxiosApi.get(fullURL);
+    const response = await serverApi.get(fullURL);
 
     return {
       ok: true as const,

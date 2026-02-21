@@ -12,8 +12,8 @@ import { useShowResultUser } from '@/app/my-assessments/[id]/show-result/hooks/u
 import LoginWithPhone from './loginWithPhone';
 import { useLoginWithPhone } from '../../hooks/useLoginWithPhone';
 // actions
-// import { fetchUserInfoServer } from '../../../actions/auth';
-import { fetchUserInfo } from '@/lib/auth';
+import { fetchUserInfoServer } from '../../../actions/auth';
+// import { fetchUserInfo } from '@/lib/auth';
 
 interface FormCardBaseProps {
   data: any;
@@ -81,7 +81,7 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
   };
 
   const handleReport = async () => {
-    const { userInfo } = await fetchUserInfo();
+    const { userInfo } = await fetchUserInfoServer();
     const username = userInfo?.user?.username || null;
     setDialogState(username ? 'report' : 'login');
   };

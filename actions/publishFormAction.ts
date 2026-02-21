@@ -1,6 +1,6 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 interface PublishFormParams {
   formId: string | string[];
@@ -12,9 +12,9 @@ export async function publishFormServer({ formId, survey }: PublishFormParams) {
 
   try { 
     if (survey) {
-      return await AxiosApi.put(`/admin/form/survey/finalization/${formId}`);
+      return await serverApi.put(`/admin/form/survey/finalization/${formId}`);
     } else {
-      return await AxiosApi.put(`/form/ready-to-publish/${formId}`);
+      return await serverApi.put(`/form/ready-to-publish/${formId}`);
     }
   } catch (error) {
     throw new Error('Error publishing form');

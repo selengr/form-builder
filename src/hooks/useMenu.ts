@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 // actions
-// import { fetchMenuServer } from '../../actions/menu';
+import { fetchMenuServer } from '../../actions/menu';
 import { IMenuResponseData } from '@/components/MiddleSidebar/type';
 import { AxiosApi } from '@/services/axios/AxiosApi';
 
@@ -15,8 +15,8 @@ const useMenu = (userInfo: any): { menu: IMenuResponseData | null; loading: bool
       if (userInfo && !cachedMenu) {
         setLoading(true);
         try {
-            const { data } = await AxiosApi.get('/authorization-psya/front-panel/non-org-user-role/find-user-loggedin-info', { baseURL: process.env.NEXT_PUBLIC_BASE_URL_PSYA });
-          // const data = await fetchMenuServer();
+            // const { data } = await AxiosApi.get('/authorization-psya/front-panel/non-org-user-role/find-user-loggedin-info', { baseURL: process.env.NEXT_PUBLIC_BASE_URL_PSYA });
+          const data = await fetchMenuServer();
           cachedMenu = data;
           setMenu(data);
         } catch (err) {

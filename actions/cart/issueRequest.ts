@@ -1,10 +1,10 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 export async function issueRequestAction() {
   try {
-    const { data } = await AxiosApi.post('/purchase-order/createIssueRequest');
+    const { data } = await serverApi.post('/purchase-order/createIssueRequest');
     return data;
   } catch (error) {
     return Promise.resolve('');

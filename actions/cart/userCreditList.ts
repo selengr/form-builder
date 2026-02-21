@@ -1,12 +1,12 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 export async function userCreditListAction(issueRequestId: number) {
   try {
     const body = { issueRequestId };
 
-    const response = await AxiosApi.post(
+    const response = await serverApi.post(
       '/mhesam/profile/credit/user-credit-list',
       body,
       {

@@ -1,10 +1,10 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 export async function twoFARequestHandlerAction(nationalCode: string) {
   try {
-    const response = await AxiosApi.post(`/check-nationalCode-send-code`, {
+    const response = await serverApi.post(`/check-nationalCode-send-code`, {
       nationalCode,
     });
     return response.data;

@@ -1,6 +1,6 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 export async function changeGroupStatusAction(input: {
   groupId: number;
@@ -8,7 +8,7 @@ export async function changeGroupStatusAction(input: {
   rememberAllocation: boolean;
 }) {
   try {
-    const res = await AxiosApi.post(
+    const res = await serverApi.post(
       '/user-group/introducer/change-status-group',
       input
     );

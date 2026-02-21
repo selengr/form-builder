@@ -1,6 +1,6 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 import { ConfirmPaymentRequestBody } from '@/app/purchase-order/[purchaseOrderId]/gateway/types';
 
 export async function confirmPaymentAction(body: ConfirmPaymentRequestBody) {
@@ -21,7 +21,7 @@ export async function confirmPaymentAction(body: ConfirmPaymentRequestBody) {
       userCreditModelList,
     };
 
-    const response = await AxiosApi.post(
+    const response = await serverApi.post(
       '/purchase-order/updateAndDeliveryIssueRequest',
       temp
     );

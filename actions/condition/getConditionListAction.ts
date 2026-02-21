@@ -1,6 +1,6 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 export async function getConditionListAction(formId: string) {
   const filterModel = {
@@ -14,6 +14,6 @@ export async function getConditionListAction(formId: string) {
   const queryString = `?searchFilterModel=${encodeURIComponent(JSON.stringify(filterModel))}`;
   const url = baseUrl + queryString;
 
-  const res = await AxiosApi.get(url);
+  const res = await serverApi.get(url);
   return res.data.content;
 }

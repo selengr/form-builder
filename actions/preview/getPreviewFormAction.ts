@@ -1,6 +1,6 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 import { FormElementInstance } from '@/types/FormElements';
 import { IEndPageList } from '@/types/bulider';
 
@@ -23,7 +23,7 @@ export async function getPreviewFormData(id: string | string[], admin: boolean) 
       data,
     }: {
       data: formResDataTypes;
-    } = await AxiosApi.get(admin ? `/admin/form/${id}` : `/user/form/${id}`);
+    } = await serverApi.get(admin ? `/admin/form/${id}` : `/user/form/${id}`);
 
     const allQuestions = data?.questionGroups?.map((group: any) => group?.questions).flat();
 

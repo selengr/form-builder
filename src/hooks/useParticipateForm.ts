@@ -18,7 +18,7 @@ import {
 // types
 import { ElementsType, FormElements } from '@/types/FormElements';
 // actions
-// import { fetchUserInfo } from '@/lib/auth';
+import { fetchUserInfo } from '@/lib/auth';
 import { fetchUserInfoServer } from '../../actions/auth';
 
 export interface ILimitation {
@@ -192,7 +192,7 @@ export const useParticipateForm = () => {
         return
       }
 
-      const { userInfo } = await fetchUserInfoServer();
+      const { userInfo } = await fetchUserInfo();
       const username = userInfo?.user?.username || null;
 
       if (result?.data?.loggedInStatus === false && result?.data?.responseLimitation) {

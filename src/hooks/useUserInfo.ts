@@ -14,7 +14,7 @@ export function useUserInfo() {
     const loadUser = async () => {
       setLoading(true);
       setError(null);
-      const { userInfo, isAuthenticated, error } = await fetchUserInfo();
+      const { userInfo, isAuthenticated, error } = await fetchUserInfoServer();
       if (isMounted) {
         if (isAuthenticated) {
           setUserInfo(userInfo);

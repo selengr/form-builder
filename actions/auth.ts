@@ -11,8 +11,8 @@ interface IFetchUserInfoResult {
 
 export async function fetchUserInfoServer(): Promise<IFetchUserInfoResult> {
   try {
-    if (!process.env.NEXT_PUBLIC_BASE_URL) {
-      throw new Error('NEXT_PUBLIC_BASE_URL is not defined');
+    if (!process.env.BASE_URL) {
+      throw new Error('BASE_URL is not defined');
     }
 
     const token = await getAuthToken();
@@ -26,7 +26,7 @@ export async function fetchUserInfoServer(): Promise<IFetchUserInfoResult> {
     }
 
     const res = await serverApi.get<any>('/authorization/front-panel/non-org-user-role/find-user-loggedin-info', {
-      baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+      baseURL: process.env.BASE_URL,
       headers: {
         Authorization: `Bearer ${token}`,
       },

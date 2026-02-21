@@ -1,6 +1,6 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 export type OnlyAllQuestionsParams = { formId: string | number };
 
@@ -22,6 +22,6 @@ export async function getOnlyAllQuestionsAction({ formId }: OnlyAllQuestionsPara
     `/question/q-and-c-custom-combo?customComboFilterModel=` +
     encodeURIComponent(JSON.stringify(customComboFilterModel));
 
-  const res = await AxiosApi.get(url);
+  const res = await serverApi.get(url);
   return res.data;
 }

@@ -1,6 +1,6 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 export async function fetchParentCategory() {
   try {
@@ -19,7 +19,7 @@ export async function fetchParentCategory() {
 
     const url = baseUrl + queryString;
 
-    const response = await AxiosApi.get(url);
+    const response = await serverApi.get(url);
 
     if (!response?.data) {
       throw new Error('خطا در دریافت اطلاعات');

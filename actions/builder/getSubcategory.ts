@@ -1,6 +1,6 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 interface SubcategoryModel {
   parentId: string[];
@@ -24,6 +24,6 @@ export async function getSubcategoryAction(parentId: string[]) {
 
   const url = baseUrl + queryString;
 
-  const response = await AxiosApi.get(url);
+  const response = await serverApi.get(url);
   return response.data;
 }

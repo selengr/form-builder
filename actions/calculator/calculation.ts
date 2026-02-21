@@ -1,6 +1,6 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 export async function createCalculationAction(payload: {
   name: string;
@@ -9,7 +9,7 @@ export async function createCalculationAction(payload: {
   theFormula: string;
   frontCalcData: string;
 }) {
-  const res = await AxiosApi.post('/calculation', payload as any);
+  const res = await serverApi.post('/calculation', payload as any);
   return res.data;
 }
 
@@ -24,17 +24,17 @@ export async function updateCalculationAction(
     frontCalcData: string;
   },
 ) {
-  const res = await AxiosApi.put(`/calculation/${calcId}`, payload as any);
+  const res = await serverApi.put(`/calculation/${calcId}`, payload as any);
   return res.data;
 }
 
 export async function checkCalculationDependencyAction(id: number) {
-  const res = await AxiosApi.get(`/calculation/check-dependency/${id}`);
+  const res = await serverApi.get(`/calculation/check-dependency/${id}`);
   return res.data;
 }
 
 export async function deleteCalculatorAction(id: number) {
-  const res = await AxiosApi.delete(`/calculation/delete/${id}`);
+  const res = await serverApi.delete(`/calculation/delete/${id}`);
   return res.data;
 }
 
@@ -50,6 +50,6 @@ export async function getCalculationListAction(id: string) {
     `/calculation/main-list/${id}` +
     `?searchFilterModel=${encodeURIComponent(JSON.stringify(filterModel))}`;
 
-  const res = await AxiosApi.get(url);
+  const res = await serverApi.get(url);
   return res.data.content;
 }

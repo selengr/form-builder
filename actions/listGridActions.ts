@@ -1,6 +1,6 @@
 'use server';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
+import { serverApi } from '@/services/axios/serverApi';
 
 interface SearchBoxItem {
   fieldName: string;
@@ -68,7 +68,7 @@ export async function fetchListGridData(
       `${url}?searchFilterModel=` +
       (encodedParams === encodeURIComponent('{}') ? '' : encodedParams);
 
-    const response = await AxiosApi.get(fullURL);
+    const response = await serverApi.get(fullURL);
 
     if (!response?.data) {
       throw new Error('خطا در دریافت اطلاعات');

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 // actions
 import { fetchMenuServer } from '../../actions/menu';
 import { IMenuResponseData } from '@/components/MiddleSidebar/type';
-import { AxiosApi } from '@/services/axios/AxiosApi';
+// import { AxiosApi } from '@/services/axios/AxiosApi';
 
 let cachedMenu: IMenuResponseData | null = null;
 

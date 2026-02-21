@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useLoginWithPhone } from '@/hooks/useLoginWithPhone';
 // actions
-import { fetchUserInfo } from '@/lib/auth';
 import { fetchUserInfoServer } from '../../actions/auth';
 
 type DialogState = 'none' | 'login' | 'report';
@@ -12,7 +11,7 @@ export function useReportFlow() {
     useLoginWithPhone('');
 
   const handleReportDialog = useCallback(async () => {
-    const { userInfo } = await fetchUserInfo();
+    const { userInfo } = await fetchUserInfoServer();
     const username = userInfo?.user?.username || null;
     setDialogState(username ? 'report' : 'login');
   }, []);

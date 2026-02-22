@@ -25,6 +25,7 @@ import {
 } from "react-icons/lu";
 
 import { Variable } from "./Variable";
+import { FontSize } from "./fontSize";
 import { IConditionQuestionType } from "@/types/condition";
 
 type Item = { caption: string; unique_name: string };
@@ -90,7 +91,7 @@ export default function AdvancedEditor({
       Color,
       Underline,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
-      // FontSize,
+      FontSize,
     ],
     content: initialHTML,
     editorProps: {

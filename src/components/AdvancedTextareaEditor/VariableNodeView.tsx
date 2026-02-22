@@ -42,7 +42,44 @@ export default function VariableNodeView({ node, updateAttributes,
 
     return (
         <NodeViewWrapper as="span" data-variable="true" contentEditable={false}>
-           
+            <span
+                ref={rootRef}
+                className="inline-flex justify-center items-center gap-1 bg-white
+rounded-md p-1"
+                onMouseDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }}
+            >
+                <div
+                    className={[styles.dynamicbtn, styles.NEW_FIELD, selected ? "ring-1 ring - [#1758BA]" : ""].join(" ")}
+                    contentEditable={false}
+                >
+                    <div
+                        className={styles.customDropdown}
+                        data-type={open ? "up" : "down"}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setOpen((v) => !v);
+                        }}
+                        title={hasValue ? unique_name : "انتخاب کنید"}
+                    >
+                        {hasValue ? label : "انتخاب کنید"}
+                    </div>
+
+                    <div
+                        className={styles.optionsContainer}
+                        style={{ display: open ? "flex" : "none" }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {items.map((it) => (
+                            <div key={it.unique_name} className={styles.option} onClick={() => pick(it)}>
+                                {it.caption}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </span>
         </NodeViewWrapper >
     );
 }

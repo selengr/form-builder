@@ -19,7 +19,27 @@ export const Variable = Node.create({
         };
     },
 
-  
+    addAttributes() {
+        return {
+            unique_name: { default: "" },
+            label: { default: "" },
+        };
+    },
+
+    parseHTML() {
+        return [
+            {
+                tag: 'span[data-variable="true"]',
+                getAttrs: (el) => {
+                    if (!(el instanceof HTMLElement)) return false;
+                    return {
+                        unique_name: el.getAttribute("data-unique-name") || "",
+                        label: el.getAttribute("data-label") || el.textContent || "",
+                    };
+                },
+            },
+        ];
+    },
 
     renderHTML({ node, HTMLAttributes }) {
         return [

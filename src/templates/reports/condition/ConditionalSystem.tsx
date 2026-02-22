@@ -250,7 +250,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
                 />
 
                 <AdvancedEditor
-                    label="متن گزارش"
+                    label="نمایش بده"
                     qacWithOutFilter={qacWithOutFilter}
                     initialHTML={""}
                     onChange={(data:any) => {

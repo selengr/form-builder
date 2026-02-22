@@ -99,7 +99,7 @@ export default function AdvancedEditor({
         dir,
         class:
           "min-h-[110px] w-full rounded-[10px] border border-[#DDE1E6] px-4 py-2 " +
-          "leading-[2.2] focus:outline-none focus:ring-2 focus:ring-[#1758BA]/20",
+          "leading-[2.2] focus:outline-none focus:ring-1 focus:ring-[#1758BA]/20",
         style: "font-family: IranSans, Roboto, Arial, sans-serif;",
       },
     },
@@ -146,10 +146,28 @@ export default function AdvancedEditor({
   const currentColor = editor.getAttributes("textStyle")?.color || "#111827";
 
   return (
-    <div dir="ltr" className="w-full max-w-[988px] text-gray-950">
+    <div className="w-full max-w-[988px] text-gray-950">
       {label ? <div className="text-sm mb-2">{label}</div> : null}
 
-      <div className="flex flex-wrap gap-2 items-center mb-2">
+
+           <div className='flex flex-row w-full'>
+        <div className='flex flex-col justify-start items-center -mr-3 mt-9'>
+
+   <button
+          type="button"
+          onMouseDown={preventFocusSteal}
+          onClick={() => editor.chain().focus().insertVariable().run()}
+          disabled={disabled}
+          className="h-8 w-20 m-2 rounded-md border text-xs border-[#DDE1E6]
+hover:bg-gray-50 transition disabled:opacity-40
+disabled:cursor-not-allowed"
+        >
+          افزودن متغیر
+        </button>
+        </div>
+
+      <div className="flex flex-col w-full">
+<div dir="ltr" className="flex flex-wrap gap-2 items-center flerse mb-2">
         {/* Undo/Redo */}
         <div className={GROUP}>
           <button
@@ -177,7 +195,7 @@ export default function AdvancedEditor({
         </div>
 
         {/* Variable */}
-        <button
+        {/* <button
           type="button"
           onMouseDown={preventFocusSteal}
           onClick={() => editor.chain().focus().insertVariable().run()}
@@ -187,7 +205,7 @@ hover:bg-gray-50 transition disabled:opacity-40
 disabled:cursor-not-allowed"
         >
           افزودن متغیر
-        </button>
+        </button> */}
 
         <div className="relative inline-flex items-center">
           <select
@@ -307,6 +325,11 @@ text-gray-500" />
       </div>
 
       <EditorContent editor={editor} />
+        
+      </div>
+
+
+      </div>
     </div>
   );
 }

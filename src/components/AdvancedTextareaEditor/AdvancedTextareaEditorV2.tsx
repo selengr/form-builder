@@ -10,21 +10,6 @@ import { TextStyle } from "@tiptap/extension-text-style";
 import Color from "@tiptap/extension-color";
 import TextAlign from "@tiptap/extension-text-align";
 
-// import {
-// Undo2,
-// Redo2,
-// ChevronDown,
-// Bold,
-// Italic,
-// Underline as UnderlineIcon,
-// Code2,
-// AlignLeft,
-// AlignCenter,
-// AlignRight,
-// AlignJustify,
-// Palette,
-// } from "lucide-react";
-
 import {
   LuUndo2,
   LuRedo2,
@@ -32,7 +17,7 @@ import {
   LuBold,
   LuItalic,
   LuUnderline,
-  LuCode2,
+  LuCode,
   LuAlignLeft,
   LuAlignCenter,
   LuAlignRight,
@@ -40,6 +25,7 @@ import {
   LuPalette,
 } from "react-icons/lu";
 
+import { Variable } from "@/components/RichTextEditor/Variable";
 
 type Item = { caption: string; unique_name: string };
 
@@ -176,7 +162,7 @@ className={GROUP_BTN}
 title="Undo"
 aria-label="Undo"
 >
-<Undo2 size={16} />
+<LuUndo2 size={16} />
 </button>
 <button
 type="button"
@@ -187,7 +173,7 @@ className={GROUP_BTN}
 title="Redo"
 aria-label="Redo"
 >
-<Redo2 size={16} />
+<LuRedo2 size={16} />
 </button>
 </div>
 
@@ -228,7 +214,7 @@ title="Font size"
 </option>
 ))}
 </select>
-<ChevronDown size={16} className="pointer-events-none absolute right-2
+<LuChevronDown size={16} className="pointer-events-none absolute right-2
 text-gray-500" />
 </div>
 
@@ -243,7 +229,7 @@ className={`${TOOL_BTN} ${TOOL_BTN_INACTIVE}`}
 title="Text color"
 aria-label="Text color"
 >
-<Palette size={20} />
+<LuPalette size={20} />
 </button>
 <input
 ref={colorRef}
@@ -263,14 +249,14 @@ data-active={editor.isActive({ textAlign: "right" })}
 onMouseDown={preventFocusSteal} onClick={() =>
 editor.chain().focus().setTextAlign("right").run()}
 disabled={disabled} title="Align right" aria-label="Align right">
-<AlignRight size={16} />
+<LuAlignRight size={16} />
 </button>
 <button type="button" className={GROUP_BTN}
 data-active={editor.isActive({ textAlign: "center" })}
 onMouseDown={preventFocusSteal} onClick={() =>
 editor.chain().focus().setTextAlign("center").run()}
 disabled={disabled} title="Align center" aria-label="Align center">
-<AlignCenter size={16} />
+<LuAlignCenter size={16} />
 </button>
 <button type="button" className={GROUP_BTN}
 data-active={editor.isActive({ textAlign: "left" })}
@@ -284,7 +270,7 @@ data-active={editor.isActive({ textAlign: "justify" })}
 onMouseDown={preventFocusSteal} onClick={() =>
 editor.chain().focus().setTextAlign("justify").run()}
 disabled={disabled} title="Justify" aria-label="Justify">
-<AlignJustify size={16} />
+<LuAlignJustify size={16} />
 </button>
 </div>
 
@@ -294,14 +280,14 @@ disabled={disabled} title="Justify" aria-label="Justify">
 editor.chain().focus().toggleBold().run()} disabled={disabled}
 className={`${TOOL_BTN} ${editor.isActive("bold") ? TOOL_BTN_ACTIVE :
 TOOL_BTN_INACTIVE}`} title="Bold" aria-label="Bold">
-<Bold size={16} />
+<LuBold size={16} />
 </button>
 
 <button type="button" onMouseDown={preventFocusSteal} onClick={() =>
 editor.chain().focus().toggleItalic().run()} disabled={disabled}
 className={`${TOOL_BTN} ${editor.isActive("italic") ? TOOL_BTN_ACTIVE
 : TOOL_BTN_INACTIVE}`} title="Italic" aria-label="Italic">
-<Italic size={16} />
+<LuItalic size={16} />
 </button>
 
 <button type="button" onMouseDown={preventFocusSteal} onClick={() =>
@@ -309,14 +295,14 @@ editor.chain().focus().toggleUnderline().run()} disabled={disabled}
 className={`${TOOL_BTN} ${editor.isActive("underline") ?
 TOOL_BTN_ACTIVE : TOOL_BTN_INACTIVE}`} title="Underline"
 aria-label="Underline">
-<UnderlineIcon size={16} />
+<LuUnderline size={16} />
 </button>
 
 <button type="button" onMouseDown={preventFocusSteal} onClick={() =>
 editor.chain().focus().toggleCode().run()} disabled={disabled}
 className={`${TOOL_BTN} ${editor.isActive("code") ? TOOL_BTN_ACTIVE :
 TOOL_BTN_INACTIVE}`} title="Inline code" aria-label="Inline code">
-<Code2 size={16} />
+<LuCode size={16} />
 </button>
 </div>
 </div>

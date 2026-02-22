@@ -48,6 +48,8 @@
     "@tiptap/extension-text-align": "^3.20.0",
     "@tiptap/extension-text-style": "^3.20.0",
     "@tiptap/extension-underline": "^3.20.0",
+    "@tiptap/react": "^3.20.0",
+    "@tiptap/starter-kit": "^3.20.0",
     "@uppy/core": "^4.5.3",
     "@uppy/dashboard": "^4.4.3",
     "@uppy/drag-drop": "^4.2.2",

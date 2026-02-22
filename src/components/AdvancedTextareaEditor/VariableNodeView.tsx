@@ -34,6 +34,11 @@ export default function VariableNodeView({ node, updateAttributes,
         return () => document.removeEventListener("mousedown", onDocDown);
     }, []);
 
+    const pick = (it: Item) => {
+        updateAttributes({ unique_name: it.unique_name, label: it.caption });
+        setOpen(false);
+        editor?.commands?.focus();
+    };
 
     return (
         <NodeViewWrapper as="span" data-variable="true" contentEditable={false}>

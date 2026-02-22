@@ -19,6 +19,20 @@ export const Variable = Node.create({
         };
     },
 
+  
+
+    renderHTML({ node, HTMLAttributes }) {
+        return [
+            "span",
+            mergeAttributes(HTMLAttributes, {
+                "data-variable": "true",
+                "data-unique-name": node.attrs.unique_name || "",
+                "data-label": node.attrs.label || "",
+                contenteditable: "false",
+            }),
+            node.attrs.label || "انتخاب کنید",
+        ];
+    },
 
     addNodeView() {
         return ReactNodeViewRenderer(VariableNodeView);

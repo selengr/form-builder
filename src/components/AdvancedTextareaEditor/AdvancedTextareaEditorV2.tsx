@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useRef, useState, useEffect, useCallback }from "react";
+import React, { useMemo, useRef, useState, useEffect, useCallback } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 
 import Color from "@tiptap/extension-color";
@@ -244,11 +244,11 @@ text-gray-500" />
         {/* Align */}
         <div className={GROUP}>
           <button type="button" className={GROUP_BTN}
-            data-active={editor.isActive({ textAlign: "right" })}
+            data-active={editor.isActive({ textAlign: "left" })}
             onMouseDown={preventFocusSteal} onClick={() =>
-              editor.chain().focus().setTextAlign("right").run()}
-            disabled={disabled} title="Align right" aria-label="Align right">
-            <LuAlignRight size={16} />
+              editor.chain().focus().setTextAlign("left").run()} disabled={disabled}
+            title="Align left" aria-label="Align left">
+            <LuAlignLeft size={16} />
           </button>
           <button type="button" className={GROUP_BTN}
             data-active={editor.isActive({ textAlign: "center" })}
@@ -258,11 +258,11 @@ text-gray-500" />
             <LuAlignCenter size={16} />
           </button>
           <button type="button" className={GROUP_BTN}
-            data-active={editor.isActive({ textAlign: "left" })}
+            data-active={editor.isActive({ textAlign: "right" })}
             onMouseDown={preventFocusSteal} onClick={() =>
-              editor.chain().focus().setTextAlign("left").run()} disabled={disabled}
-            title="Align left" aria-label="Align left">
-            <LuAlignLeft size={16} />
+              editor.chain().focus().setTextAlign("right").run()}
+            disabled={disabled} title="Align right" aria-label="Align right">
+            <LuAlignRight size={16} />
           </button>
           <button type="button" className={GROUP_BTN}
             data-active={editor.isActive({ textAlign: "justify" })}

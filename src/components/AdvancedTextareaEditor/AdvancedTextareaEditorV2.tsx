@@ -10,23 +10,36 @@ import { TextStyle } from "@tiptap/extension-text-style";
 import Color from "@tiptap/extension-color";
 import TextAlign from "@tiptap/extension-text-align";
 
-import {
-Undo2,
-Redo2,
-ChevronDown,
-Bold,
-Italic,
-Underline as UnderlineIcon,
-Code2,
-AlignLeft,
-AlignCenter,
-AlignRight,
-AlignJustify,
-Palette,
-} from "lucide-react";
+// import {
+// Undo2,
+// Redo2,
+// ChevronDown,
+// Bold,
+// Italic,
+// Underline as UnderlineIcon,
+// Code2,
+// AlignLeft,
+// AlignCenter,
+// AlignRight,
+// AlignJustify,
+// Palette,
+// } from "lucide-react";
 
-import { Variable } from "@/components/RichTextEditor/Variable";
-import { FontSize } from "@/components/RichTextEditor/FontSize";
+import {
+  LuUndo2,
+  LuRedo2,
+  LuChevronDown,
+  LuBold,
+  LuItalic,
+  LuUnderline,
+  LuCode2,
+  LuAlignLeft,
+  LuAlignCenter,
+  LuAlignRight,
+  LuAlignJustify,
+  LuPalette,
+} from "react-icons/lu";
+
 
 type Item = { caption: string; unique_name: string };
 

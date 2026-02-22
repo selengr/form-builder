@@ -128,6 +128,19 @@ onChange({ html, text, variables });
 },
 });
 
+useEffect(() => {
+if (!editor) return;
+
+const update = () => forceUpdate();
+
+editor.on("selectionUpdate", update);
+editor.on("transaction", update);
+
+return () => {
+editor.off("selectionUpdate", update);
+editor.off("transaction", update);
+};
+}, [editor, forceUpdate]);
 
 if (!editor) return null;
 

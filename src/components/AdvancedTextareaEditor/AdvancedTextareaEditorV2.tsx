@@ -25,7 +25,7 @@ import {
   LuPalette,
 } from "react-icons/lu";
 
-import { Variable } from "@/components/RichTextEditor/Variable";
+import { Variable } from "./Variable";
 
 type Item = { caption: string; unique_name: string };
 
@@ -43,10 +43,8 @@ disabled?: boolean;
 };
 
 const TOOL_BTN =
-"inline-flex items-center justify-center h-8 w-8 rounded-md border
-border-[#DDE1E6] " +
-"hover:bg-gray-50 active:scale-[0.98] transition disabled:opacity-40
-disabled:cursor-not-allowed";
+"inline-flex items-center justify-center h-8 w-8 rounded-md border border-[#DDE1E6] " +
+"hover:bg-gray-50 active:scale-[0.98] transition disabled:opacity-40 disabled:cursor-not-allowed";
 
 const TOOL_BTN_ACTIVE = "bg-[#E8EEF8] border-[#1758BA] text-[#1758BA]";
 const TOOL_BTN_INACTIVE = "text-gray-700";
@@ -92,7 +90,7 @@ TextStyle,
 Color,
 Underline,
 TextAlign.configure({ types: ["heading", "paragraph"] }),
-FontSize,
+// FontSize,
 ],
 content: initialHTML,
 editorProps: {

@@ -50,7 +50,6 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
 
   const returnText = safeJsonParse<{ content: string }>(parseCondition?.returnText);
   // const elseReturnText = safeJsonParse<{ content: string }>(parseCondition?.elseReturnText);
-
   return (
     <div className='flex flex-col items-start justify-start'>
       {Array.isArray(parseCondition?.subConditions) &&
@@ -70,10 +69,12 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
           );
         })}
 
-      {returnText?.content && (
+      {parseCondition?.returnText && (
         <span className='text-[#161616] text-sm'>
           <span>نمایش بده: </span>
-          <span className='text-[#1758BA]'>{returnText.content}</span>
+          <div className='text-[#1758BA]'
+            dangerouslySetInnerHTML={{ __html: parseCondition?.returnText! }}
+          />
         </span>
       )}
       {/*

@@ -36,6 +36,7 @@ type Props = {
   initialHTML?: string;
   onChange?: (data: {
     html: string;
+    json: any;
     text: string;
     variables: { unique_name: string; label: string }[];
   }) => void;
@@ -123,7 +124,7 @@ export default function AdvancedEditor({
       };
       walk(json);
 
-      onChange({ html, text, variables });
+      onChange({ html, json, text, variables });
     },
   });
 

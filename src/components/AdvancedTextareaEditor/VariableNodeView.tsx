@@ -44,8 +44,7 @@ export default function VariableNodeView({ node, updateAttributes,
         <NodeViewWrapper as="span" data-variable="true" contentEditable={false}>
             <span
                 ref={rootRef}
-                className="inline-flex justify-center items-center gap-1 bg-white
-rounded-md p-1"
+                className="inline-flex justify-center items-center gap-1 bg-white rounded-md p-1"
                 onMouseDown={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -69,7 +68,7 @@ rounded-md p-1"
 
                     <div
                         className={styles.optionsContainer}
-                        style={{ display: open ? "flex" : "none" }}
+                        style={{ display: open ? "flex" : "none", flexDirection : "column" }}
                         onClick={(e) => e.stopPropagation()}
                     >
                         {items.map((it) => (

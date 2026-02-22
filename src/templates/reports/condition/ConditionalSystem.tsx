@@ -25,6 +25,7 @@ import { createNewSubCondition, useConditionalForm } from '@/app/reports/create-
 import { useGetOnlyAllQuestions } from '@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllQuestions';
 import { useGetOnlyAllCalculation } from '@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllCalculation';
 import { useGetQacWithOutFilter } from '@/app/reports/create-solo/[id]/_hooks/useGetQacWithOutFilter';
+import AdvancedEditor from '@/components/AdvancedTextareaEditor/AdvancedTextareaEditorV2';
 
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClose, condition, isEdit = false }) => {
   const { id } = useParams();
@@ -247,6 +248,17 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
                   validationErrors={validationErrors}
                   // hasError={!!methods.formState.errors.conditions?.[0]?.returnText}
                 />
+
+                <AdvancedEditor
+                    label="متن گزارش"
+                    qacWithOutFilter={qacWithOutFilter}
+                    initialHTML={""}
+                    onChange={(data:any) => {
+                    console.log("HTML:", data.html);
+                    console.log("TEXT:", data.text);
+                    console.log("VARIABLES:", data.variables);
+                    }}
+                  />
 
                 <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                   <RHFSwitch

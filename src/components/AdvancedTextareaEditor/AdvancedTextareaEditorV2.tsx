@@ -25,12 +25,13 @@ import {
 } from "react-icons/lu";
 
 import { Variable } from "./Variable";
+import { IConditionQuestionType } from "@/types/condition";
 
 type Item = { caption: string; unique_name: string };
 
 type Props = {
   label?: string;
-  items: Item[];
+  qacWithOutFilter: IConditionQuestionType[];
   initialHTML?: string;
   onChange?: (data: {
     html: string;
@@ -61,7 +62,7 @@ function preventFocusSteal(e: React.MouseEvent) {
 
 export default function AdvancedEditor({
   label,
-  items,
+  qacWithOutFilter,
   initialHTML = "",
   onChange,
   dir = "rtl",
@@ -72,8 +73,8 @@ export default function AdvancedEditor({
   const colorRef = useRef<HTMLInputElement>(null);
 
   const variableItems = useMemo(
-    () => items.map((x) => ({ unique_name: x.unique_name, caption: x.caption })),
-    [items],
+    () => qacWithOutFilter?.map((x) => ({ unique_name: x.extMap.UNIC_NAME, caption: x.caption })),
+    [qacWithOutFilter],
   );
 
   const [, force] = useState(0);
@@ -144,7 +145,7 @@ export default function AdvancedEditor({
   const currentColor = editor.getAttributes("textStyle")?.color || "#111827";
 
   return (
-    <div className="w-full max-w-[988px] text-gray-950">
+    <div dir="ltr" className="w-full max-w-[988px] text-gray-950">
       {label ? <div className="text-sm mb-2">{label}</div> : null}
 
       <div className="flex flex-wrap gap-2 items-center mb-2">

@@ -243,7 +243,37 @@ aria-label="Pick text color"
 />
 </div>
 
-
+{/* Align */}
+<div className={GROUP}>
+<button type="button" className={GROUP_BTN}
+data-active={editor.isActive({ textAlign: "right" })}
+onMouseDown={preventFocusSteal} onClick={() =>
+editor.chain().focus().setTextAlign("right").run()}
+disabled={disabled} title="Align right" aria-label="Align right">
+<AlignRight size={16} />
+</button>
+<button type="button" className={GROUP_BTN}
+data-active={editor.isActive({ textAlign: "center" })}
+onMouseDown={preventFocusSteal} onClick={() =>
+editor.chain().focus().setTextAlign("center").run()}
+disabled={disabled} title="Align center" aria-label="Align center">
+<AlignCenter size={16} />
+</button>
+<button type="button" className={GROUP_BTN}
+data-active={editor.isActive({ textAlign: "left" })}
+onMouseDown={preventFocusSteal} onClick={() =>
+editor.chain().focus().setTextAlign("left").run()} disabled={disabled}
+title="Align left" aria-label="Align left">
+<AlignLeft size={16} />
+</button>
+<button type="button" className={GROUP_BTN}
+data-active={editor.isActive({ textAlign: "justify" })}
+onMouseDown={preventFocusSteal} onClick={() =>
+editor.chain().focus().setTextAlign("justify").run()}
+disabled={disabled} title="Justify" aria-label="Justify">
+<AlignJustify size={16} />
+</button>
+</div>
 
 {/* Marks */}
 <div className="flex items-center gap-2">

@@ -88,7 +88,7 @@ const ResultsPage = () => {
 
           <div className='p-8 pt-0 max-w-[600px]'>
             <div className='mb-4 last:mb-0'>
-              <p className='text-justify font-medium text-[#161616] mb-2'>
+              {/* <p className='text-justify font-medium text-[#161616] mb-2'>
                 <p className='text-justify font-medium text-[#161616] mb-2'>
                   {fullText.split("\n").map((part, i) => (
                     <React.Fragment key={i}>
@@ -98,7 +98,9 @@ const ResultsPage = () => {
                   ))}
                 </p>
 
-              </p>
+              </p> */}
+              <div className='mb-4 last:mb-0' dangerouslySetInnerHTML={{ __html : fullText}} />
+
             </div>
           </div>
         </div>

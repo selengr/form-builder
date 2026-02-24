@@ -72,10 +72,11 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
       {parseCondition?.returnText && (
         <span className='text-[#161616] text-sm'>
           <span>نمایش بده: </span>
-          <div className='text-[#1758BA]'
-           // @typescript-eslint/no-non-null-asserted-optional-chain
-            dangerouslySetInnerHTML={{ __html: parseCondition?.returnText! }}
-          />
+          {parseCondition?.returnText && (
+            <div className="text-[#1758BA]"
+              dangerouslySetInnerHTML={{ __html: parseCondition.returnText ?? '' }}
+            />
+          )}
         </span>
       )}
       {/*

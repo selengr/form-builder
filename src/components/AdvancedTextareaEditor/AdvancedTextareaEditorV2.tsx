@@ -25,7 +25,7 @@ import {
 } from "react-icons/lu";
 
 import { Variable } from "./Variable";
-import { FontSize } from "./fontSize";
+import { FontSize } from "./FontSize";
 import { IConditionQuestionType } from "@/types/condition";
 
 type Item = { caption: string; unique_name: string };
@@ -86,7 +86,7 @@ export default function AdvancedEditor({
     immediatelyRender: false,
     editable: !disabled,
     extensions: [
-      Variable.configure({ items: variableItems }),
+      Variable.configure({ items: variableItems} as any),
       StarterKit,
       TextStyle,
       Color,

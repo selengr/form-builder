@@ -5,19 +5,22 @@ import Image from 'next/image';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useRouter, useSearchParams } from 'next/navigation';
-import SearchInput from './SearchInput';
+// import SearchInput from './SearchInput';
 import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from '@mui/material';
 import TotalGrid from '@/../public/images/home-page/total-grid.svg';
 import Filter from '@/../public/images/home-page/FilterAA.svg';
-import BottomSheet from '../BottomSheet/BottomSheet';
-import CreateFormBtn from '../CreateFormBtn/CreateFormBtn';
+// import BottomSheet from '@/c/BottomSheet/BottomSheet';
+// import CreateFormBtn from '../CreateFormBtn/CreateFormBtn';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import { toast } from 'sonner';
 import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 // import { fetchData } from './dataService';
 // action
-import { fetchListGridData } from '../../../actions/listGridActions';
+import { surveyFilter } from '../../../actions/survey/surveyFilter';
+import BottomSheet from '@/components/BottomSheet/BottomSheet';
+import SearchInput from '@/components/ListGrid/SearchInput';
+import CreateFormBtn from '@/components/CreateFormBtn/CreateFormBtn';
 
 export interface SearchBoxItem {
   fieldName: string;
@@ -110,7 +113,7 @@ const ListGrid: React.FC<Props> = ({
     refetch,
   } = useInfiniteQuery({
     queryKey: ['datas_builder_query', query, searchQueryFilter, filterBoxList],
-    queryFn: ({ pageParam }) => fetchListGridData( {pageParam} , updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
+    queryFn: ({ pageParam }) => surveyFilter( {pageParam} , updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       const PAGE_SIZE = 10;

@@ -10,9 +10,9 @@ interface SearchBoxItem {
 }
 
 const PAGE_SIZE = 10;
-const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'PUBLIC' };
+const DEFAULT_SEARCH_FILTER = { surveyTargetPlatformEnum: 'ALL', isCreatedSoloReport: 'All' };
 
-export async function fetchListGridData(
+export async function surveyFilter(
  {
     pageParam = 0,
   }: {
@@ -26,20 +26,20 @@ export async function fetchListGridData(
   try {
     const filterRestrictions: SearchBoxItem[] = [];
 
-    if (searchQueryFilter.type && searchQueryFilter.type !== 'ALL') {
+    if (searchQueryFilter.isCreatedSoloReport && searchQueryFilter.isCreatedSoloReport !== 'ALL') {
       filterRestrictions.push({
-        fieldName: 'typeEnum',
+        fieldName: 'isCreatedSoloReport.filter',
         fieldOperation: 'EQUAL',
-        fieldValue: searchQueryFilter.type,
+        fieldValue: searchQueryFilter.isCreatedSoloReport,
         nextConditionOperator: 'AND',
       });
     }
 
-    if (searchQueryFilter.status && searchQueryFilter.status !== 'ALL') {
+    if (searchQueryFilter.surveyTargetPlatformEnum && searchQueryFilter.surveyTargetPlatformEnum !== 'ALL') {
       filterRestrictions.push({
-        fieldName: 'status',
+        fieldName: 'formSetting.surveyTargetPlatformEnum',
         fieldOperation: 'EQUAL',
-        fieldValue: searchQueryFilter.status,
+        fieldValue: searchQueryFilter.surveyTargetPlatformEnum,
         nextConditionOperator: 'AND',
       });
     }

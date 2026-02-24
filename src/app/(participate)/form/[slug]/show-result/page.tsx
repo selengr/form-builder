@@ -12,6 +12,7 @@ import { useReportFlow } from '@/hooks/useReportFlow';
 // components
 import LoginWithPhone from '@/components/common/loginWithPhone';
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
+import HtmlPreview from '@/components/HtmlPreview/HtmlPreview';
 
 interface ResultRow {
   row: string;
@@ -48,18 +49,27 @@ const ResultsPage = () => {
         console.error('Failed to parse stored results:', err);
       }
     }
-    // else {
-    //   router.back();
-    // }
     return () => {
       localStorage.removeItem('Show_Solo_Result');
     };
   }, []);
 
-  const fullText = useMemo(
-    () => results?.resultRows?.map((row) => row.row).join(' ') ?? '',
-    [results]
-  );
+  const html = useMemo(() => {
+    if (!results?.resultRows?.length) return "";
+
+    return results.resultRows
+      .map(({ row }) => {
+        try {
+          const parsed = JSON.parse(row);
+          if (typeof parsed === "string") return parsed;
+          if (parsed && typeof parsed === "object" && typeof parsed.html === "string") return parsed.html;
+          return String(parsed ?? "");
+        } catch {
+          return row;
+        }
+      })
+      .join(" ");
+  }, [results]);
 
   return (
     <div className='w-full min-h-screen h-full px-4 py-4 bg-[#f7f7f7]'>
@@ -76,31 +86,15 @@ const ResultsPage = () => {
           <span className='text-[#161616]'>گزارش فرم {search ?? '---'}</span>
           <Button
             onClick={handleReportDialog}
-            size='medium' className='rounded-full absolute left-4'
+            size='medium' className='rounded-full'
             sx={{ position: 'absolute', right: '8px' }} endIcon={<Image alt='report'
               src={BugIcon} height={24} width={24} />}>
             <span className='text-xs'>گزارش</span>
           </Button>
         </div>
 
-        <div className='overflow-y-auto w-full flex justif flex-col items-center'>
-          <Image src='/images/calc/ic_empty_report.svg' alt='سایا لوگو' width={416} height={250} priority draggable={false} className='w-full sm:w-[50%] lg:w-[450px]' />
-
-          <div className='p-8 pt-0 max-w-[600px]'>
-            <div className='mb-4 last:mb-0'>
-              <p className='text-justify font-medium text-[#161616] mb-2'>
-                <p className='text-justify font-medium text-[#161616] mb-2'>
-                  {fullText.split("\n").map((part, i) => (
-                    <React.Fragment key={i}>
-                      {part}
-                      {i < fullText.split("\n").length - 1 && <br />}
-                    </React.Fragment>
-                  ))}
-                </p>
-
-              </p>
-            </div>
-          </div>
+        <div className="overflow-y-auto w-full flex flex-col items-center p-8">
+          <HtmlPreview html={html} />
         </div>
       </div>
 
@@ -126,7 +120,7 @@ const ResultsPage = () => {
           onClose={handleCloseReport}
           formId={results?.formId}
           typeOfReport={'RESULT_REPORT'}
-          resultReportText={fullText}
+          resultReportText={html}
         />
       )}
 

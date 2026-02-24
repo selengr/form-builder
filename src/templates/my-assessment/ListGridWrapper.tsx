@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-import ListGrid from '@/components/ListGrid/ListGrid';
-import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
-import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
+import { useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 import ListCard from './ListCard';
+import ListGrid from './ListGrid';
+import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
 
 export default function ListGridWrapper() {
   const [refreshGrid, setRefreshGrid] = useState(false);
@@ -226,7 +226,7 @@ export default function ListGridWrapper() {
                   params.delete('query');
                 }
                 push(`${pathname}?${params.toString()}`);
-                setFormType({ type: 'ALL', status: 'ALL' });
+                setFormType({type: 'ALL', status: 'ALL', takeParts: 'ALL', showReport: 'ALL'});
                 setRefreshGrid((prev) => !prev);
               }}>
               حذف فیلتر

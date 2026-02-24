@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { IconButton } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { IoIosArrowForward } from 'react-icons/io';
 import { useParams, useSearchParams } from 'next/navigation';
 import HtmlPreview from '@/components/HtmlPreview/HtmlPreview';
@@ -28,6 +28,27 @@ const ResultsPage = () => {
     }
   }, []);
 
+
+  const html = useMemo(() => {
+    return results?.map((result, index) => {
+      if (!result.resultRows?.length) return "";
+
+      return result.resultRows
+        .map(({ row }) => {
+          try {
+            const parsed = JSON.parse(row);
+            if (typeof parsed === "string") return parsed;
+            if (parsed && typeof parsed === "object" && typeof parsed.html === "string") return parsed.html;
+            return String(parsed ?? "");
+          } catch {
+            return row;
+          }
+        })
+        .join(" ");
+    })
+  }, [results]);
+
+
   return (
     <div className='w-full min-h-screen h-full px-4 py-4 bg-[#f7f7f7]'>
       <div className='md:container mx-auto flex p-3 flex-col justify-start items-center min-w-screen h-full bg-white rounded-xl w-full '>
@@ -43,9 +64,9 @@ const ResultsPage = () => {
           <span className='text-[#161616]'>گزارش فرم {search ?? '---'}</span>
         </div>
 
-          <div className="overflow-y-auto w-full flex flex-col items-center p-8">
-               <HtmlPreview html={results} />
-             </div>
+        <div className="overflow-y-auto w-full flex flex-col items-center p-8">
+          <HtmlPreview html={html as any} />
+        </div>
       </div>
     </div>
   );

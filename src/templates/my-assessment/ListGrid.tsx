@@ -1,23 +1,24 @@
 'use client';
 
-import React, { ReactNode, useCallback, useEffect, useState } from 'react';
-import Image from 'next/image';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { useInView } from 'react-intersection-observer';
-import { useRouter, useSearchParams } from 'next/navigation';
-import SearchInput from './SearchInput';
-import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from '@mui/material';
-import TotalGrid from '@/../public/images/home-page/total-grid.svg';
-import Filter from '@/../public/images/home-page/FilterAA.svg';
-import BottomSheet from '../BottomSheet/BottomSheet';
-import CreateFormBtn from '../CreateFormBtn/CreateFormBtn';
-import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import { toast } from 'sonner';
-import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
+import Image from 'next/image';
+import { useInView } from 'react-intersection-observer';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
+import React, { ReactNode, useCallback, useEffect, useState } from 'react';
+import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from '@mui/material';
+// images
+import Filter from '@/../public/images/home-page/FilterAA.svg';
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
-// import { fetchData } from './dataService';
+import TotalGrid from '@/../public/images/home-page/total-grid.svg';
+import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
+// components
+import BottomSheet from '@/components/BottomSheet/BottomSheet';
+import SearchInput from '@/components/ListGrid/SearchInput';
+import CreateFormBtn from '@/components/CreateFormBtn/CreateFormBtn';
 // action
-import { fetchListGridData } from '../../../actions/listGridActions';
+import { assessmentlist } from '../../../actions/myAssessments/assessmentlist';
 
 export interface SearchBoxItem {
   fieldName: string;
@@ -42,13 +43,13 @@ interface Props {
   refreshGrid?: boolean;
   disableFilter?: boolean;
   textTotal?: [string, string];
-  searchQueryFilter?: { type: string; status: string };
+  searchQueryFilter?: { type: string; status: string; takeParts: string, showReport:string};
   showCreateButton?: boolean;
   title: string;
-  CreateButton? : any
+  CreateButton?: any
 }
 
-const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'PUBLIC' };
+const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'PUBLIC', takeParts: 'ALL', showReport: 'ALL'};
 
 const ListGrid: React.FC<Props> = ({
   filterComponent,
@@ -110,7 +111,7 @@ const ListGrid: React.FC<Props> = ({
     refetch,
   } = useInfiniteQuery({
     queryKey: ['datas_builder_query', query, searchQueryFilter, filterBoxList],
-    queryFn: ({ pageParam }) => fetchListGridData( {pageParam} , updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
+    queryFn: ({ pageParam }) => assessmentlist({ pageParam }, updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       const PAGE_SIZE = 10;

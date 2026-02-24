@@ -39,6 +39,7 @@ export default function VariableNodeView({ node, updateAttributes,
         setOpen(false);
         editor?.commands?.focus();
     };
+     const isInvalid = !unique_name;
 
     return (
         <NodeViewWrapper as="span" data-variable="true" contentEditable={false}>
@@ -53,6 +54,10 @@ export default function VariableNodeView({ node, updateAttributes,
                 <div
                     className={[styles.dynamicbtn, styles.NEW_FIELD, selected ? "ring-1 ring - [#1758BA]" : ""].join(" ")}
                     contentEditable={false}
+                    style={{
+                        // border: isInvalid ? "1px solid #FA4D56" : selected ? "1px solid #1758BA" : "1px solid transparent",
+                        background: isInvalid ? "#FA4D56" : ""
+                    }}
                 >
                     <div
                         className={styles.customDropdown}

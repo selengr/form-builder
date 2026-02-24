@@ -1,4 +1,4 @@
-'use client';
+  'use client';
 
 import { CgClose } from 'react-icons/cg';
 import Dialog from '@mui/material/Dialog';

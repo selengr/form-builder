@@ -10,9 +10,9 @@ interface SearchBoxItem {
 }
 
 const PAGE_SIZE = 10;
-const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'PUBLIC' };
+const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'PUBLIC', takeParts: 'ALL', showReport: 'ALL'};
 
-export async function fetchListGridData(
+export async function assessmentlist(
  {
     pageParam = 0,
   }: {
@@ -40,6 +40,24 @@ export async function fetchListGridData(
         fieldName: 'status',
         fieldOperation: 'EQUAL',
         fieldValue: searchQueryFilter.status,
+        nextConditionOperator: 'AND',
+      });
+    }
+
+    if (searchQueryFilter.takeParts && searchQueryFilter.takeParts !== 'ALL') {
+      filterRestrictions.push({
+        fieldName: 'takeParts.filter',
+        fieldOperation: 'EQUAL',
+        fieldValue: searchQueryFilter.takeParts,
+        nextConditionOperator: 'AND',
+      });
+    }
+
+    if (searchQueryFilter.showReport && searchQueryFilter.showReport !== 'ALL') {
+      filterRestrictions.push({
+        fieldName: 'showReport.filter',
+        fieldOperation: 'EQUAL',
+        fieldValue: searchQueryFilter.showReport,
         nextConditionOperator: 'AND',
       });
     }

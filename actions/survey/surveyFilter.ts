@@ -13,11 +13,7 @@ const PAGE_SIZE = 10;
 const DEFAULT_SEARCH_FILTER = { surveyTargetPlatformEnum: 'ALL', isCreatedSoloReport: 'All', fieldOperation : "DSC"  };
 
 export async function surveyFilter(
- {
-    pageParam = 0,
-  }: {
-    pageParam: number;
-  },
+  pageParam: number,
   searchBoxList: SearchBoxItem[],
   filterBoxList: SearchBoxItem[],
   url: string,

@@ -14,11 +14,11 @@ import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 import TotalGrid from '@/../public/images/home-page/total-grid.svg';
 import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
 // components
-import SearchInput from '@/components/ListGrid/SearchInput';
 import BottomSheet from '@/components/BottomSheet/BottomSheet';
+import SearchInput from '@/components/ListGrid/SearchInput';
 import CreateFormBtn from '@/components/CreateFormBtn/CreateFormBtn';
 // action
-import { surveyFilter } from '../../../actions/survey/surveyFilter';
+import { fetchListGridData } from '../../../actions/listGridActions';
 
 export interface SearchBoxItem {
   fieldName: string;
@@ -43,13 +43,13 @@ interface Props {
   refreshGrid?: boolean;
   disableFilter?: boolean;
   textTotal?: [string, string];
-  searchQueryFilter?: { surveyTargetPlatformEnum: string; isCreatedSoloReport: string; fieldOperation :string };
+  searchQueryFilter?: { type: string; status: string };
   showCreateButton?: boolean;
   title: string;
-  CreateButton? : any
+  CreateButton?: any
 }
 
-const DEFAULT_SEARCH_FILTER = { surveyTargetPlatformEnum: 'ALL', isCreatedSoloReport: 'All', fieldOperation : "DSC"  };
+const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'PUBLIC' };
 
 const ListGrid: React.FC<Props> = ({
   filterComponent,
@@ -111,7 +111,7 @@ const ListGrid: React.FC<Props> = ({
     refetch,
   } = useInfiniteQuery({
     queryKey: ['datas_builder_query', query, searchQueryFilter, filterBoxList],
-    queryFn: ({ pageParam }) => surveyFilter( pageParam , updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
+    queryFn: ({ pageParam }) => fetchListGridData({ pageParam }, updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       const PAGE_SIZE = 10;

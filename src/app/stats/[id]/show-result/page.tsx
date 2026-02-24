@@ -5,6 +5,7 @@ import { IconButton } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { IoIosArrowForward } from 'react-icons/io';
 import { useParams, useSearchParams } from 'next/navigation';
+import HtmlPreview from '@/components/HtmlPreview/HtmlPreview';
 
 interface ResultRow {
   row: string;
@@ -42,28 +43,9 @@ const ResultsPage = () => {
           <span className='text-[#161616]'>گزارش فرم {search ?? '---'}</span>
         </div>
 
-        <div className='overflow-y-auto w-full flex justif flex-col items-center'>
-          <Image src='/images/calc/ic_empty_report.svg' alt='سایا لوگو' width={416} height={250} priority draggable={false} className='w-full sm:w-[50%] lg:w-[450px]' />
-
-          <div className='p-8 pt-0 max-w-[600px]'>
-            {results?.map((result, index) => (
-              <div key={index} className='mb-4 last:mb-0'>
-                {/* <h2 className="text-right text-[15px] font-bold text-[#161616] mb-1"></h2> */}
-                {result.resultRows.map((row, rowIndex) => (
-
-                  <p key={rowIndex} className='text-justify font-medium text-[#161616] mb-2'>
-                    {row.row.split("\n").map((part, i) => (
-                      <React.Fragment key={i}>
-                        {part}
-                        {i < row.row.split("\n").length - 1 && <br />}
-                      </React.Fragment>
-                    ))}
-                  </p>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
+          <div className="overflow-y-auto w-full flex flex-col items-center p-8">
+               <HtmlPreview html={results} />
+             </div>
       </div>
     </div>
   );

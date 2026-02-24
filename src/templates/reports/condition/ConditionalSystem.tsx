@@ -1,7 +1,7 @@
 'use client';
 import { toast } from 'sonner';
 import { idGenerator } from '@/lib';
-import { useCallback, useState } from 'react';
+import { useRef, useState } from 'react';
 import { FormProvider, useWatch } from 'react-hook-form';
 import { useParams, useRouter } from 'next/navigation';
 import { Box, Button, Stack, Typography } from '@mui/material';
@@ -11,85 +11,63 @@ import { SubCondition } from './SubCondition';
 import { RHFSwitch } from '@/components/hook-form';
 import { CircleDivider } from '@/components/condition/CircleDivider';
 import { SubmitButtons } from '@/components/condition/form/SubmitButtons';
-import AdvancedTextareaEditor from '@/components/AdvancedTextareaEditor/AdvancedTextareaEditor';
+import AdvancedEditor from '@/components/AdvancedTextareaEditor/AdvancedTextareaEditorV2';
 // types
-import { IDropdownItem } from '@/components/AdvancedTextareaEditor/types';
 import { IConditionalSystemProps, IPostCondition } from '@/types/conditionReportSolo';
 // lib
 import { formatContainText } from '@/lib/formatContainText';
 import { TConditionData, type TConditionFormData, TSubConditionData } from '@/lib/CreateSoloReportSchema';
 // hooks
 import { usePostCondition } from '@/app/reports/create-solo/[id]/_hooks/usePostCondition';
-import { useFormValidation } from '@/app/reports/create-solo/[id]/_hooks/useFormValidation';
-import { createNewSubCondition, useConditionalForm } from '@/app/reports/create-solo/[id]/_hooks/useConditionalForm';
+import { useGetQacWithOutFilter } from '@/app/reports/create-solo/[id]/_hooks/useGetQacWithOutFilter';
 import { useGetOnlyAllQuestions } from '@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllQuestions';
 import { useGetOnlyAllCalculation } from '@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllCalculation';
-import { useGetQacWithOutFilter } from '@/app/reports/create-solo/[id]/_hooks/useGetQacWithOutFilter';
-import AdvancedEditor from '@/components/AdvancedTextareaEditor/AdvancedTextareaEditorV2';
+import { createNewSubCondition, useConditionalForm } from '@/app/reports/create-solo/[id]/_hooks/useConditionalForm';
 
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClose, condition, isEdit = false }) => {
   const { id } = useParams();
   const { refresh } = useRouter();
-
-  const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const returnTextEdit = isEdit ? JSON.parse(condition?.returnText) : undefined;
+  const editorMetaRef = useRef<Record<number, { text: string; variables: any[] }>>({});
 
   const { methods, conditions, handleAddCondition, handleRemoveCondition, handleAddSubCondition, handleRemoveSubCondition } = useConditionalForm(condition);
 
+  const { onlyAllCalculationOptions, isFetchingOnlyAllCalculation } = useGetOnlyAllCalculation();
   const { qacWithOutFilterOptions, isFetchingQacWithOutFilter, qacWithOutFilter } = useGetQacWithOutFilter();
   const { onlyAllQuestions, onlyAllDateOptions, onlySomeQuestionsOptions, isFetchingOnlyAllQuestions } = useGetOnlyAllQuestions();
-  const { onlyAllCalculationOptions, isFetchingOnlyAllCalculation } = useGetOnlyAllCalculation();
 
   const postCondition = usePostCondition(isEdit);
 
-  const { validateAndHandleErrors } = useFormValidation({
-    setValidationErrors,
-  });
+  const handleReturnTextChange = (data: any, index: number) => {
+    methods.setValue(`conditions.${index}.returnText`, data.html);
 
-  // const handleReturnTextChange = useCallback(
-  //   (data: any, index: number) => {
-  //     methods.setValue(`conditions.${index}.returnText`, JSON.stringify(data));
-  //     if (validationErrors.length > 0) {
-  //       setValidationErrors([]);
-  //     }
-  //   },
-  //   [validationErrors.length],
-  // );
-  const handleReturnTextChange = (html: any,index: number) => {
-      methods.setValue(`conditions.${index}.returnText`,JSON.stringify(html));
-  }
+    editorMetaRef.current[index] = {
+      text: data.text ?? "",
+      variables: data.variables ?? [],
+    };
 
+    methods.clearErrors(`conditions.${index}.returnText` as any);
+  };
 
   const onSubmit = (input: TConditionFormData, e: any) => {
     e?.preventDefault();
-    const flag: boolean = true;
 
-    // let hasValidationErrors = false;
-    // const validationResults: boolean[] = [];
+    input.conditions.forEach((_, index) => {
+      const meta = editorMetaRef.current[index] ?? { text: "", variables: [] };
+      const text = (meta.text ?? "").trim();
+      const variables = Array.isArray(meta.variables) ? meta.variables : [];
+      const selectedCount = variables.filter((v: any) => (v?.unique_name ?? "").trim()).length;
+      const hasUnselected = variables.some((v: any) => !(v?.unique_name ?? "").trim());
 
-    // for (let index = 0; index < input.conditions.length; index++) {
-    //   const condition = input.conditions[index];
-    //   try {
-    //     const returnTextList = JSON.parse(condition.returnText);
-    //     const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === '');
-
-    //     const isValid: any = validateAndHandleErrors(unselectedDropdowns);
-    //     validationResults[index] = isValid;
-
-    //     if (!isValid) {
-    //       hasValidationErrors = true;
-    //     }
-    //   } catch (error) {
-    //     console.error('Error parsing returnText:', error);
-    //     hasValidationErrors = true;
-    //     validationResults[index] = false;
-    //   }
-    // }
-
-    // if (hasValidationErrors) {
-    //   toast.error('لطفا تمامي فيلدهاي خالي را انتخاب كنيد');
-    //   return;
-    // }
+      const isEmpty = text.length === 0 && selectedCount === 0;
+      if (isEmpty) {
+        toast.error("نوشتن متن الزامی است (یا حداقل یک متغیر انتخاب کنید).");
+        return;
+      } else if (hasUnselected) {
+        toast.error("شما یک یا چند متغیر را انتخاب نکرده‌اید.");
+        return;
+      }
+    });
 
     const transformInputToOutput = (input: TConditionFormData): any => {
       return input.conditions.map((condition: TConditionData, index) => {
@@ -99,60 +77,49 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
 
         const conditionFormula = displayIf
           ? Array.isArray(subConditions) &&
-            subConditions
-              .map((subCondition: TSubConditionData) => {
-                const conditionType = subCondition.conditionType?.split('@')[0];
-                const questionType = subCondition.questionType?.split('@')[0];
-                const operatorType = subCondition.operatorType?.split('@')[0];
-                const value = typeof subCondition.value !== 'object' ? subCondition.value?.split('@')[0] : subCondition.value;
-                const logicalOperator = subCondition.logicalOperator?.split('@')[0];
+          subConditions
+            .map((subCondition: TSubConditionData) => {
+              const conditionType = subCondition.conditionType?.split('@')[0];
+              const questionType = subCondition.questionType?.split('@')[0];
+              const operatorType = subCondition.operatorType?.split('@')[0];
+              const value = typeof subCondition.value !== 'object' ? subCondition.value?.split('@')[0] : subCondition.value;
+              const logicalOperator = subCondition.logicalOperator?.split('@')[0];
 
-                let formattedValue: string;
+              let formattedValue: string;
 
-                if (operatorType === 'OPTION') {
-                  if (typeof subCondition.value === 'object') {
-                    formattedValue = `{${Array.isArray(value) && value?.map((item: string) => item?.split('@')[0])}}`;
-                  } else formattedValue = `{${value}}`;
-                } else if (operatorType === 'VALUE') {
-                  formattedValue = `{#v_${value}}`;
-                } else if (operatorType === 'TEXT') {
-                  if (conditionType === '#startWithText' || conditionType === '#endWithText') {
-                       const InfoField = questionType.split('*')[0]
-                        if(InfoField === "INFO_FIELD"){
-                          formattedValue = `{"#"}`;
-                        } else {
-                          formattedValue = `{"${value}"}`;
-                        }
-                  } else if (conditionType === '!#containAnyText' || conditionType === '#containAnyText') {
-                    formattedValue = `{${formatContainText(value as string)}}`;
-                  } else if (conditionType === '#lenEqualText' || conditionType === '#lenGraterThanText' || conditionType === '!#lenGraterThanText') {
-                    formattedValue = `{#v_${value}}`;
+              if (operatorType === 'OPTION') {
+                if (typeof subCondition.value === 'object') {
+                  formattedValue = `{${Array.isArray(value) && value?.map((item: string) => item?.split('@')[0])}}`;
+                } else formattedValue = `{${value}}`;
+              } else if (operatorType === 'VALUE') {
+                formattedValue = `{#v_${value}}`;
+              } else if (operatorType === 'TEXT') {
+                if (conditionType === '#startWithText' || conditionType === '#endWithText') {
+                  const InfoField = questionType.split('*')[0]
+                  if (InfoField === "INFO_FIELD") {
+                    formattedValue = `{"#"}`;
                   } else {
-                    formattedValue = value as string;
+                    formattedValue = `{"${value}"}`;
                   }
-                } else if (operatorType === 'DATE') {
-                  formattedValue = `{#v_"${value}"}`;
+                } else if (conditionType === '!#containAnyText' || conditionType === '#containAnyText') {
+                  formattedValue = `{${formatContainText(value as string)}}`;
+                } else if (conditionType === '#lenEqualText' || conditionType === '#lenGraterThanText' || conditionType === '!#lenGraterThanText') {
+                  formattedValue = `{#v_${value}}`;
                 } else {
                   formattedValue = value as string;
                 }
+              } else if (operatorType === 'DATE') {
+                formattedValue = `{#v_"${value}"}`;
+              } else {
+                formattedValue = value as string;
+              }
 
-                const baseCondition = `${conditionType}(${questionType.split('*')[1]},${formattedValue})`;
+              const baseCondition = `${conditionType}(${questionType.split('*')[1]},${formattedValue})`;
 
-                return logicalOperator ? ` ${logicalOperator} ${baseCondition}` : baseCondition;
-              })
-              .join('')
+              return logicalOperator ? ` ${logicalOperator} ${baseCondition}` : baseCondition;
+            })
+            .join('')
           : 'true';
-
-        // const returnTextList = JSON.parse(returnText);
-        // const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === '');
-        // const isValid: any = validateAndHandleErrors(unselectedDropdowns);
-
-        // if (!isValid) {
-        //   flag = false;
-        //   return toast.error('لطفا تمامي فيلدهاي خالي را انتخاب كنيد');
-        // } else {
-        //   flag = true;
-        // }
 
         return {
           formBuilderId: Number(id),
@@ -176,7 +143,9 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
           refresh();
           handleClose();
         },
-        onError: (error: any) => {},
+        onError: (error: any) => {
+          toast.error(error);
+        },
       },
     );
   };
@@ -226,6 +195,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
     ) : null;
   };
 
+
   return (
     <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', direction: 'ltr' }}>
       <Typography variant='subtitle1' sx={{ display: 'flex', justifyContent: 'center', color: '#404040', fontWeight: 700 }}>
@@ -244,41 +214,19 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
                   position: 'relative',
                   flexDirection: { xs: 'column' },
                 }}>
-                {/* <AdvancedTextareaEditor
-                  label='نمایش بده'
-                  onDataChange={(data) => handleReturnTextChange(data, index)}
-                  initialData={returnTextEdit}
-                  qacWithOutFilter={qacWithOutFilter}
-                  validationErrors={validationErrors}
-                  // hasError={!!methods.formState.errors.conditions?.[0]?.returnText}
-                /> */}
 
                 <AdvancedEditor
-                    label="نمایش بده"
-                    qacWithOutFilter={qacWithOutFilter}
-                    initialHTML={returnTextEdit? returnTextEdit :"<p>سلام</p>"}
-                    onChange={({ html, json, text, variables }) =>{
-           console.log("HTML:", html);
-           console.log("json:", json);
-                    console.log("TEXT:", text);
-                    console.log("VARIABLES:", variables);
-                      handleReturnTextChange(html, index)}
-                    } 
-                    //   {
-                    // console.log("HTML:", data.html);
-                    // console.log("TEXT:", data.text);
-                    // console.log("VARIABLES:", data.variables);
-                    // }}
+                  label="نمایش بده"
+                  qacWithOutFilter={qacWithOutFilter}
+                  initialHTML={returnTextEdit ? returnTextEdit : null}
+                  onChange={(data) => handleReturnTextChange(data, index)}
+                />
+                {/* {errors ? (
+              <Typography sx={{ color: "#FA4D56", fontSize: "12px", mt: 1 }}>
+                {String(errors)}
+              </Typography>
+            ) : null} */}
 
-                       
-        // onChange={({ html, json, text, variables }) => {
-        //   setHtml(html);
-        //   setJson(json);
-        //   setText(text);
-        //   setVariables(variables);
-        // }}
-
-                  />
 
                 <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                   <RHFSwitch

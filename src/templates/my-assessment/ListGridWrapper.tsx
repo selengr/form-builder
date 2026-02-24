@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-import ListGrid from '@/components/ListGrid/ListGrid';
-import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
-import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
+import { useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 import ListCard from './ListCard';
+import ListGrid from './ListGrid';
+import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
 
 export default function ListGridWrapper() {
   const [refreshGrid, setRefreshGrid] = useState(false);
@@ -16,6 +16,8 @@ export default function ListGridWrapper() {
   const [formType, setFormType] = useState<any>({
     type: 'ALL',
     status: 'ALL',
+    takeParts: 'ALL',
+    showReport: 'ALL',
   });
   const filterBoxList: any = [];
   const searchBoxList: any = [
@@ -61,7 +63,7 @@ export default function ListGridWrapper() {
               <p className='text-[16px] text-center font-bold text-[#161616]'>فیلتر</p>
             </div>
           </div>
-          <div className='flex flex-col gap-4 w-full overflow-y-scroll h-full'>
+          <div className='flex flex-col gap-4 w-full overflow-y-auto h-full'>
             <div className='flex flex-col gap-4'>
               <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
                 <FormControl
@@ -141,7 +143,7 @@ export default function ListGridWrapper() {
                     بر اساس گزارش
                   </FormLabel>
 
-                  <RadioGroup value={formType.report} onChange={handleReportChange}>
+                  <RadioGroup value={formType.showReport} onChange={handleReportChange}>
                     <FormControlLabel value='ALL' control={<Radio />} label='همه' />
                     <FormControlLabel value='show' control={<Radio />} label='دارای گزارش' />
                     <FormControlLabel value='not_show' control={<Radio />} label='بدون گزارش' />
@@ -165,7 +167,7 @@ export default function ListGridWrapper() {
                     بر اساس وضعیت
                   </FormLabel>
 
-                  <RadioGroup value={formType.doneStatus} onChange={handleDoneStatusChange}>
+                  <RadioGroup value={formType.takeParts} onChange={handleDoneStatusChange}>
                     <FormControlLabel value='ALL' control={<Radio />} label='همه' />
                     <FormControlLabel value='only_answered' control={<Radio />} label='انجام شده' />
                     <FormControlLabel value='not_answered' control={<Radio />} label='انجام نشده' />
@@ -224,7 +226,7 @@ export default function ListGridWrapper() {
                   params.delete('query');
                 }
                 push(`${pathname}?${params.toString()}`);
-                setFormType({ type: 'ALL', status: 'ALL' });
+                setFormType({type: 'ALL', status: 'ALL', takeParts: 'ALL', showReport: 'ALL'});
                 setRefreshGrid((prev) => !prev);
               }}>
               حذف فیلتر

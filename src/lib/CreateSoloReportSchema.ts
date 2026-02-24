@@ -14,7 +14,8 @@ const ConditionalSubConditionSchema = z.union([z.array(SubConditionSchema), z.li
 const ConditionSchema = z
   .object({
     subConditions: ConditionalSubConditionSchema,
-    returnText: z.string().min(1, { message: 'اين فيلد الزامي است' }),
+    // returnText: z.string().min(1, { message: 'اين فيلد الزامي است' }),
+    returnText: z.string(),
     displayIf: z.boolean().default(false),
     id: z.number().optional(),
   })

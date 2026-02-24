@@ -10,14 +10,10 @@ interface SearchBoxItem {
 }
 
 const PAGE_SIZE = 10;
-const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'PUBLIC' };
+const DEFAULT_SEARCH_FILTER = { surveyTargetPlatformEnum: 'ALL', isCreatedSoloReport: 'All', fieldOperation : "DSC"  };
 
-export async function fetchListGridData(
- {
-    pageParam = 0,
-  }: {
-    pageParam: number;
-  },
+export async function surveyFilter(
+  pageParam: number,
   searchBoxList: SearchBoxItem[],
   filterBoxList: SearchBoxItem[],
   url: string,
@@ -26,20 +22,20 @@ export async function fetchListGridData(
   try {
     const filterRestrictions: SearchBoxItem[] = [];
 
-    if (searchQueryFilter.type && searchQueryFilter.type !== 'ALL') {
+    if (searchQueryFilter.isCreatedSoloReport && searchQueryFilter.isCreatedSoloReport !== 'ALL') {
       filterRestrictions.push({
-        fieldName: 'typeEnum',
+        fieldName: 'isCreatedSoloReport.filter',
         fieldOperation: 'EQUAL',
-        fieldValue: searchQueryFilter.type,
+        fieldValue: searchQueryFilter.isCreatedSoloReport,
         nextConditionOperator: 'AND',
       });
     }
 
-    if (searchQueryFilter.status && searchQueryFilter.status !== 'ALL') {
+    if (searchQueryFilter.surveyTargetPlatformEnum && searchQueryFilter.surveyTargetPlatformEnum !== 'ALL') {
       filterRestrictions.push({
-        fieldName: 'status',
+        fieldName: 'formSetting.surveyTargetPlatformEnum',
         fieldOperation: 'EQUAL',
-        fieldValue: searchQueryFilter.status,
+        fieldValue: searchQueryFilter.surveyTargetPlatformEnum,
         nextConditionOperator: 'AND',
       });
     }
@@ -61,13 +57,12 @@ export async function fetchListGridData(
 
     const params = {
       searchFilterBoxList: searchFilterBoxListPayload,
-      sortList: [{ fieldName: 'id', type: 'DSC' }],
+      sortList: [{ fieldName: 'id', type: searchQueryFilter.fieldOperation }],
       page: pageParam,
       rows: PAGE_SIZE,
     };
 
     const queryString = JSON.stringify(params);
-    console.log('params======', params)
     const encodedParams = encodeURIComponent(queryString);
     const fullURL =
       `${url}?searchFilterModel=` +

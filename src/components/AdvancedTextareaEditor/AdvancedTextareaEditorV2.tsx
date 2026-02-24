@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useMemo, useRef, useState, useEffect, useCallback } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
+import React, { useMemo, useRef, useState, useEffect, useCallback } from "react";
 
 import Color from "@tiptap/extension-color";
 import StarterKit from "@tiptap/starter-kit";
@@ -26,9 +26,7 @@ import {
 
 import { Variable } from "./Variable";
 import { FontSize } from "./FontSize";
-import { IConditionQuestionType } from "@/types/condition";
-
-type Item = { caption: string; unique_name: string };
+import { IConditionQuestionType } from "@/types/condition"
 
 type Props = {
   label?: string;
@@ -322,4 +320,3 @@ disabled:cursor-not-allowed text-[#1758BA] bg-[#E8EEF8] font-medium"
     </div>
   );
 }
-

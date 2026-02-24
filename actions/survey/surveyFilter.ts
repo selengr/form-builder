@@ -10,7 +10,7 @@ interface SearchBoxItem {
 }
 
 const PAGE_SIZE = 10;
-const DEFAULT_SEARCH_FILTER = { surveyTargetPlatformEnum: 'ALL', isCreatedSoloReport: 'All' };
+const DEFAULT_SEARCH_FILTER = { surveyTargetPlatformEnum: 'ALL', isCreatedSoloReport: 'All', fieldOperation : "DSC"  };
 
 export async function surveyFilter(
  {
@@ -61,13 +61,12 @@ export async function surveyFilter(
 
     const params = {
       searchFilterBoxList: searchFilterBoxListPayload,
-      sortList: [{ fieldName: 'id', type: 'DSC' }],
+      sortList: [{ fieldName: 'id', type: searchQueryFilter.fieldOperation }],
       page: pageParam,
       rows: PAGE_SIZE,
     };
 
     const queryString = JSON.stringify(params);
-    console.log('params======', params)
     const encodedParams = encodeURIComponent(queryString);
     const fullURL =
       `${url}?searchFilterModel=` +

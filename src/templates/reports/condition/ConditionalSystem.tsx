@@ -25,6 +25,7 @@ import { createNewSubCondition, useConditionalForm } from '@/app/reports/create-
 import { useGetOnlyAllQuestions } from '@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllQuestions';
 import { useGetOnlyAllCalculation } from '@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllCalculation';
 import { useGetQacWithOutFilter } from '@/app/reports/create-solo/[id]/_hooks/useGetQacWithOutFilter';
+import AdvancedEditor from '@/components/AdvancedTextareaEditor/AdvancedTextareaEditorV2';
 
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClose, condition, isEdit = false }) => {
   const { id } = useParams();
@@ -45,46 +46,50 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
     setValidationErrors,
   });
 
-  const handleReturnTextChange = useCallback(
-    (data: any, index: number) => {
-      methods.setValue(`conditions.${index}.returnText`, JSON.stringify(data));
-      if (validationErrors.length > 0) {
-        setValidationErrors([]);
-      }
-    },
-    [validationErrors.length],
-  );
+  // const handleReturnTextChange = useCallback(
+  //   (data: any, index: number) => {
+  //     methods.setValue(`conditions.${index}.returnText`, JSON.stringify(data));
+  //     if (validationErrors.length > 0) {
+  //       setValidationErrors([]);
+  //     }
+  //   },
+  //   [validationErrors.length],
+  // );
+  const handleReturnTextChange = (html: any,index: number) => {
+      methods.setValue(`conditions.${index}.returnText`,JSON.stringify(html));
+  }
+
 
   const onSubmit = (input: TConditionFormData, e: any) => {
     e?.preventDefault();
-    let flag: boolean = true;
+    const flag: boolean = true;
 
-    let hasValidationErrors = false;
-    const validationResults: boolean[] = [];
+    // let hasValidationErrors = false;
+    // const validationResults: boolean[] = [];
 
-    for (let index = 0; index < input.conditions.length; index++) {
-      const condition = input.conditions[index];
-      try {
-        const returnTextList = JSON.parse(condition.returnText);
-        const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === '');
+    // for (let index = 0; index < input.conditions.length; index++) {
+    //   const condition = input.conditions[index];
+    //   try {
+    //     const returnTextList = JSON.parse(condition.returnText);
+    //     const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === '');
 
-        const isValid: any = validateAndHandleErrors(unselectedDropdowns);
-        validationResults[index] = isValid;
+    //     const isValid: any = validateAndHandleErrors(unselectedDropdowns);
+    //     validationResults[index] = isValid;
 
-        if (!isValid) {
-          hasValidationErrors = true;
-        }
-      } catch (error) {
-        console.error('Error parsing returnText:', error);
-        hasValidationErrors = true;
-        validationResults[index] = false;
-      }
-    }
+    //     if (!isValid) {
+    //       hasValidationErrors = true;
+    //     }
+    //   } catch (error) {
+    //     console.error('Error parsing returnText:', error);
+    //     hasValidationErrors = true;
+    //     validationResults[index] = false;
+    //   }
+    // }
 
-    if (hasValidationErrors) {
-      toast.error('لطفا تمامي فيلدهاي خالي را انتخاب كنيد');
-      return;
-    }
+    // if (hasValidationErrors) {
+    //   toast.error('لطفا تمامي فيلدهاي خالي را انتخاب كنيد');
+    //   return;
+    // }
 
     const transformInputToOutput = (input: TConditionFormData): any => {
       return input.conditions.map((condition: TConditionData, index) => {
@@ -138,16 +143,16 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
               .join('')
           : 'true';
 
-        const returnTextList = JSON.parse(returnText);
-        const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === '');
-        const isValid: any = validateAndHandleErrors(unselectedDropdowns);
+        // const returnTextList = JSON.parse(returnText);
+        // const unselectedDropdowns: IDropdownItem[] = returnTextList.dropdowns.filter((dropdown: IDropdownItem) => !dropdown.value || dropdown.value.trim() === '');
+        // const isValid: any = validateAndHandleErrors(unselectedDropdowns);
 
-        if (!isValid) {
-          flag = false;
-          return toast.error('لطفا تمامي فيلدهاي خالي را انتخاب كنيد');
-        } else {
-          flag = true;
-        }
+        // if (!isValid) {
+        //   flag = false;
+        //   return toast.error('لطفا تمامي فيلدهاي خالي را انتخاب كنيد');
+        // } else {
+        //   flag = true;
+        // }
 
         return {
           formBuilderId: Number(id),
@@ -239,14 +244,41 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
                   position: 'relative',
                   flexDirection: { xs: 'column' },
                 }}>
-                <AdvancedTextareaEditor
+                {/* <AdvancedTextareaEditor
                   label='نمایش بده'
                   onDataChange={(data) => handleReturnTextChange(data, index)}
                   initialData={returnTextEdit}
                   qacWithOutFilter={qacWithOutFilter}
                   validationErrors={validationErrors}
                   // hasError={!!methods.formState.errors.conditions?.[0]?.returnText}
-                />
+                /> */}
+
+                <AdvancedEditor
+                    label="نمایش بده"
+                    qacWithOutFilter={qacWithOutFilter}
+                    initialHTML={returnTextEdit? returnTextEdit :"<p>سلام</p>"}
+                    onChange={({ html, json, text, variables }) =>{
+           console.log("HTML:", html);
+           console.log("json:", json);
+                    console.log("TEXT:", text);
+                    console.log("VARIABLES:", variables);
+                      handleReturnTextChange(html, index)}
+                    } 
+                    //   {
+                    // console.log("HTML:", data.html);
+                    // console.log("TEXT:", data.text);
+                    // console.log("VARIABLES:", data.variables);
+                    // }}
+
+                       
+        // onChange={({ html, json, text, variables }) => {
+        //   setHtml(html);
+        //   setJson(json);
+        //   setText(text);
+        //   setVariables(variables);
+        // }}
+
+                  />
 
                 <Stack sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                   <RHFSwitch

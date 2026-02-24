@@ -48,16 +48,13 @@ const ResultsPage = () => {
         console.error('Failed to parse stored results:', err);
       }
     }
-    // else {
-    //   router.back();
-    // }
     return () => {
       localStorage.removeItem('Show_Solo_Result');
     };
   }, []);
 
   const fullText = useMemo(
-    () => results?.resultRows?.map((row) => row.row).join(' ') ?? '',
+    () => results?.resultRows?.map((row) => JSON.parse(row.row)).join(' ') ?? '',
     [results]
   );
 
@@ -83,26 +80,8 @@ const ResultsPage = () => {
           </Button>
         </div>
 
-        <div className='overflow-y-auto w-full flex justif flex-col items-center'>
-          <Image src='/images/calc/ic_empty_report.svg' alt='سایا لوگو' width={416} height={250} priority draggable={false} className='w-full sm:w-[50%] lg:w-[450px]' />
-
-          <div className='p-8 pt-0 max-w-[600px]'>
-            <div className='mb-4 last:mb-0'>
-              {/* <p className='text-justify font-medium text-[#161616] mb-2'>
-                <p className='text-justify font-medium text-[#161616] mb-2'>
-                  {fullText.split("\n").map((part, i) => (
-                    <React.Fragment key={i}>
-                      {part}
-                      {i < fullText.split("\n").length - 1 && <br />}
-                    </React.Fragment>
-                  ))}
-                </p>
-
-              </p> */}
-              <div className='mb-4 last:mb-0' dangerouslySetInnerHTML={{ __html : fullText}} />
-
-            </div>
-          </div>
+        <div className='overflow-y-auto w-full flex justif flex-col items-center p-8'>
+          <div className='mb-4 last:mb-0' dangerouslySetInnerHTML={{ __html: fullText }} />
         </div>
       </div>
 

@@ -1,6 +1,5 @@
 'use client';
 import Link from 'next/link';
-import Image from 'next/image';
 import { IconButton } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import { IoIosArrowForward } from 'react-icons/io';
@@ -21,33 +20,43 @@ const ResultsPage = () => {
   const searchParams = useSearchParams();
   const search = searchParams.get('name');
 
+
   useEffect(() => {
-    const storedResults = localStorage.getItem('testResult');
-    if (storedResults) {
+    const storedResults = localStorage.getItem("testResult");
+    if (!storedResults) return;
+
+    try {
       setResults(JSON.parse(storedResults));
+    } catch (e) {
+      console.error("Invalid testResult:", e);
+      setResults([]);
     }
+    return () => {
+      localStorage.removeItem("testResult");
+    };
   }, []);
 
 
   const html = useMemo(() => {
-    return results?.map((result, index) => {
-      if (!result.resultRows?.length) return "";
+    return results
+      .map((result) => {
+        if (!result.resultRows?.length) return "";
 
-      return result.resultRows
-        .map(({ row }) => {
-          try {
-            const parsed = JSON.parse(row);
-            if (typeof parsed === "string") return parsed;
-            if (parsed && typeof parsed === "object" && typeof parsed.html === "string") return parsed.html;
-            return String(parsed ?? "");
-          } catch {
-            return row;
-          }
-        })
-        .join(" ");
-    })
+        return result.resultRows
+          .map(({ row }) => {
+            try {
+              const parsed = JSON.parse(row);
+              if (typeof parsed === "string") return parsed;
+              if (parsed && typeof parsed === "object" && typeof parsed.html === "string") return parsed.html;
+              return String(parsed ?? "");
+            } catch {
+              return row;
+            }
+          })
+          .join(" ");
+      })
+      .join(" ");
   }, [results]);
-
 
   return (
     <div className='w-full min-h-screen h-full px-4 py-4 bg-[#f7f7f7]'>

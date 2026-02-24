@@ -62,7 +62,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
 
   const onSubmit = (input: TConditionFormData, e: any) => {
     e?.preventDefault();
-    let flag: boolean = true;
+    const flag: boolean = true;
 
     // let hasValidationErrors = false;
     // const validationResults: boolean[] = [];

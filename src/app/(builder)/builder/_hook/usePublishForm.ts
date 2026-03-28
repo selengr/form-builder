@@ -7,11 +7,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 interface UsePublishFormParams {
   formId?: string | string[];
   IsSurvey: boolean;
+  IsDataCollection: boolean;
 }
 
 const API_BASE = '/api/builder';
 
-const publishFormAction = async ({formId, IsSurvey }: UsePublishFormParams) => {
+const publishFormAction = async ({formId, IsSurvey, IsDataCollection }: UsePublishFormParams) => {
     const token = await getAuthToken();
      const url =  `${API_BASE}/${formId}/publish`
     try {
@@ -21,7 +22,8 @@ const publishFormAction = async ({formId, IsSurvey }: UsePublishFormParams) => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          IsSurvey 
+          IsSurvey,
+          IsDataCollection 
         }),
       });
 
@@ -31,11 +33,11 @@ const publishFormAction = async ({formId, IsSurvey }: UsePublishFormParams) => {
 };  
 
 
-export function usePublishForm({ formId, IsSurvey }: UsePublishFormParams) {
+export function usePublishForm({ formId, IsSurvey, IsDataCollection }: UsePublishFormParams) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn:() =>  publishFormAction({formId, IsSurvey}),
+    mutationFn:() =>  publishFormAction({formId, IsSurvey, IsDataCollection}),
     onSuccess: () => {
       toast.success('عملیات با موفقیت انجام شد');
       queryClient.invalidateQueries({

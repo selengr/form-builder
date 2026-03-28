@@ -76,11 +76,11 @@ export default function ListGridWrapper() {
   return (
     <>
       <ListGrid
-        title='نظرسنجی‌های من'
-        textTotal={['تعداد کل نظرسنجی‌ها', 'عدد']}
+        title='جمع آوری داده'
+        textTotal={['تعداد کل دادها', 'عدد']}
         searchBoxList={searchBoxList}
         filterBoxList={filterBoxList}
-        url='/admin/form/survey/main-list'
+        url='/admin/form/data-collection/main-list'
         filterComponent={
           <div className='flex h-[calc(100vh-60px)] w-full flex-col items-center justify-between'>
             <div className='w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4'>

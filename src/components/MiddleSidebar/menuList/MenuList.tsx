@@ -36,7 +36,6 @@ const MenuList: React.FC<IMenuListProps> = ({ menuLinks, onItemClick }) => {
 
     const linksWithHierarchy = allLinks
         .map((item) => {
-            debugger
             if (managementMaster && item.id === managementMaster.id) {
                 const children = [assessmentsItem, surveyItem, userreportsItem, dataCollection].filter(Boolean) as IMenuItemData[]
 

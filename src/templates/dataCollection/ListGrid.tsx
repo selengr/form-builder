@@ -43,13 +43,13 @@ interface Props {
   refreshGrid?: boolean;
   disableFilter?: boolean;
   textTotal?: [string, string];
-  searchQueryFilter?: { surveyTargetPlatformEnum: string; isCreatedSoloReport: string; fieldOperation :string };
+  searchQueryFilter?: { surveyTargetPlatformEnum: string; fieldOperation :string };
   showCreateButton?: boolean;
   title: string;
   CreateButton? : any
 }
 
-const DEFAULT_SEARCH_FILTER = { surveyTargetPlatformEnum: 'ALL', isCreatedSoloReport: 'All', fieldOperation : "DSC"  };
+const DEFAULT_SEARCH_FILTER = { surveyTargetPlatformEnum: 'ALL', fieldOperation : "DSC"  };
 
 const ListGrid: React.FC<Props> = ({
   filterComponent,

@@ -20,7 +20,6 @@ export default function ListGridWrapper() {
   const pathname = usePathname();
   const { push } = useRouter();
   const [formType, setFormType] = useState<any>({
-    isCreatedSoloReport: 'ALL',
     surveyTargetPlatformEnum: 'ALL',
     fieldOperation: "DSC"
   });
@@ -35,11 +34,6 @@ export default function ListGridWrapper() {
     },
   ];
 
-  const handleIsCreatedSoloReportChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormType((prev: any) => {
-      return { ...prev, isCreatedSoloReport: (event.target as HTMLInputElement).value };
-    });
-  };
   const handleTargetPlatFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormType((prev: any) => {
       return { ...prev, surveyTargetPlatformEnum: (event.target as HTMLInputElement).value };
@@ -93,35 +87,6 @@ export default function ListGridWrapper() {
             {/* //================= */}
             <div className='flex flex-col gap-4 w-full overflow-y-auto h-full'>
               <div className='flex flex-col gap-4 h-full'>
-                <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
-                  <FormControl
-                    sx={{
-                      '& .MuiTypography-root': {
-                        fontSize: '14px',
-                        color: '#393939',
-                        fontWeight: 400,
-                      },
-                    }}>
-                    <FormLabel
-                      sx={{
-                        fontSize: '15px',
-                        color: '#161616',
-                        fontWeight: 700,
-                        mb: '8px',
-                        '&.Mui-focused': {
-                          color: '#161616',
-                        },
-                      }}
-                      id='demo-controlled-radio-buttons-group33'>
-                      بر اساس گزارش
-                    </FormLabel>
-                    <RadioGroup aria-labelledby='demo-controlled-radio-buttons-group33' name='controlled-radio-buttons-group33' value={formType.isCreatedSoloReport} onChange={handleIsCreatedSoloReportChange}>
-                      <FormControlLabel value='ALL' control={<Radio />} label='همه' />
-                      <FormControlLabel value='true' control={<Radio />} label='دارای گزارش' />
-                      <FormControlLabel value='false' control={<Radio />} label='بدون گزارش' />
-                    </RadioGroup>
-                  </FormControl>
-                </div>
                 <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
                   <FormControl
                     sx={{
@@ -236,7 +201,7 @@ export default function ListGridWrapper() {
                     params.delete('query');
                   }
                   push(`${pathname}?${params.toString()}`);
-                  setFormType({ isCreatedSoloReport: 'ALL', surveyTargetPlatformEnum: "ALL", fieldOperation: "DSC" });
+                  setFormType({ surveyTargetPlatformEnum: "ALL", fieldOperation: "DSC" });
                   setRefreshGrid((prev) => !prev);
                 }}>
                 حذف فیلتر

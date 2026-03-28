@@ -13,7 +13,6 @@ import { RHFSelect, RHFTextField } from '@/components/hook-form';
 import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
 // hooks
 import { useCreateSurvey } from './hooks/useCreateSurvey';
-import { useGetSurveyPurpose } from './hooks/useGetSurveyPurpose';
 import { useGetTargetPlatform } from './hooks/useGetTargetPlatform';
 
 interface IGetTargetPlatform {
@@ -196,7 +195,7 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
 
                 <RHFSelect fullWidth name='targetPlatformEnum' sx={textFieldCommonSx} >
                   <MenuItem value=''>انتخاب کنید</MenuItem>
-                  {isFetchingSurvey && <MenuItem value=''><PreviewLoading /></MenuItem>}
+                  {isFetchingTargetPlatform && <MenuItem value=''><PreviewLoading /></MenuItem>}
                   {TargetPlatform?.map((item: IGetTargetPlatform) => (
                     <MenuItem key={item.value} value={item.value}>
                       {item.caption}

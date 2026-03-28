@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { getTargetPlatformAction } from '../../../../actions/survey/getTargetPlatformAction';
+import { getTargetPlatformAction } from '../../../../actions/dataCollection/getTargetPlatformAction';
 
 export const TARGET_PLATFORM_QUERY_KEY = ['TargetPlatform'] as const;
 

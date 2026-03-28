@@ -35,8 +35,29 @@ const propertiesSchema = z.object({
     .trim()
     .transform((value) => value.replace(/\s+/g, ' '))
     .pipe(z.string().min(2, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' }).max(50, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' })),
-  surveyTargetPlatformEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
-  surveyPurposeEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
+  targetPlatformEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
+  label: z
+    .string()
+    .trim()
+    .transform((value) => {
+      const normalized = value.replace(/\s+/g, ' ');
+      return normalized === '' ? null : normalized;
+    })
+    .nullable()
+    .refine(
+      (value) =>
+        value === null ||
+        !/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/.test(value),
+      {
+        message: 'استفاده از حروف فارسی مجاز نیست',
+      }
+    )
+    .refine(
+      (value) => value === null || (value.length >= 8 && value.length <= 30),
+      {
+        message: 'حداقل باید 8 و حداکثر 30 کاراکتر باشد',
+      }
+    ),
 });
 
 export type SurveyFormSchemaType = z.infer<typeof propertiesSchema>;
@@ -49,15 +70,14 @@ interface CreateSurveyBtnProps {
 export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps) {
   const router = useRouter();
   const { mutate, isPending } = useCreateSurvey();
-  const { Survey, isFetchingSurvey } = useGetSurveyPurpose();
   const { TargetPlatform, isFetchingTargetPlatform } = useGetTargetPlatform();
 
   const methods = useForm<SurveyFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     defaultValues: {
       name: '',
-      surveyTargetPlatformEnum: '',
-      surveyPurposeEnum: '',
+      targetPlatformEnum: '',
+      label: '',
     },
   });
 
@@ -68,17 +88,17 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
 
 
   const onSubmit = async (data: SurveyFormSchemaType) => {
-        mutate(data, {
-          onSuccess: (result) => {    
-            toast.success('عملیات با موفقیت انجام شد');
-            handleClose()
-            router.push(`/builder/${result.id}?survey=admin`);
-          },
-          onError: (error: any) => {
-            toast.error(error?.message || 'خطا در ایجاد فرم');
-          },
-        });
-     };
+    mutate(data, {
+      onSuccess: (result) => {
+        toast.success('عملیات با موفقیت انجام شد');
+        handleClose()
+        router.push(`/builder/${result.id}?survey=admin`);
+      },
+      onError: (error: any) => {
+        toast.error(error?.message || 'خطا در ایجاد فرم');
+      },
+    });
+  };
 
   const handleClose = () => {
     if (isSubmitting || isPending) return;
@@ -141,7 +161,7 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
             }}>
             <Stack spacing={1} mb='10px'>
               <Typography variant='subtitle2' fontWeight='600' fontSize='15px'>
-                نام نظرسنجی:
+                نام فرم جمع آوری داده:
               </Typography>
               <RHFTextField
                 name='name'
@@ -174,7 +194,7 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
                   },
                 }}>
 
-                <RHFSelect fullWidth name='surveyTargetPlatformEnum' sx={textFieldCommonSx} >
+                <RHFSelect fullWidth name='targetPlatformEnum' sx={textFieldCommonSx} >
                   <MenuItem value=''>انتخاب کنید</MenuItem>
                   {isFetchingSurvey && <MenuItem value=''><PreviewLoading /></MenuItem>}
                   {TargetPlatform?.map((item: IGetTargetPlatform) => (
@@ -188,10 +208,9 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
             </Box>
 
 
-
-            <Box display='flex' flexDirection='column' gap='6px' width='100%' mt='16px'>
+           <Stack spacing={1} mt={1} mb={2}>
               <Typography variant='subtitle2' fontWeight='700'>
-                جامعه هدف:
+                شناسه:
               </Typography>
               <Box
                 sx={{
@@ -205,19 +224,10 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
                     borderRadius: '10px',
                   },
                 }}>
-
-                <RHFSelect fullWidth name='surveyPurposeEnum' sx={textFieldCommonSx}>
-                  <MenuItem value=''>انتخاب کنید</MenuItem>
-                  {isFetchingTargetPlatform && <MenuItem value=''><PreviewLoading /></MenuItem>}
-                  {Survey?.map((item: IGetTargetPlatform) => (
-                    <MenuItem key={item.value} value={item.value}>
-                      {item.caption}
-                    </MenuItem>
-                  ))}
-                </RHFSelect>
-
+                <RHFTextField name='label' dir='ltr' sx={{ height: 50}}/>
               </Box>
-            </Box>
+            </Stack>
+       
 
 
             <Box display='flex' gap={3} width='100%' marginTop={2} marginBottom={2} paddingX='40px'>

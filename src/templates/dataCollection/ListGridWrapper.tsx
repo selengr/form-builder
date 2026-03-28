@@ -20,7 +20,7 @@ export default function ListGridWrapper() {
   const pathname = usePathname();
   const { push } = useRouter();
   const [formType, setFormType] = useState<any>({
-    surveyTargetPlatformEnum: 'ALL',
+    targetPlatformEnum: 'ALL',
     fieldOperation: "DSC"
   });
   const { TargetPlatform, isFetchingTargetPlatform } = useGetTargetPlatform();
@@ -36,7 +36,7 @@ export default function ListGridWrapper() {
 
   const handleTargetPlatFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormType((prev: any) => {
-      return { ...prev, surveyTargetPlatformEnum: (event.target as HTMLInputElement).value };
+      return { ...prev, targetPlatformEnum: (event.target as HTMLInputElement).value };
     });
   };
 
@@ -110,7 +110,7 @@ export default function ListGridWrapper() {
                       بر اساس سرویس‌گیرنده
                     </FormLabel>
                     <RadioGroup aria-labelledby='demo-controlled-radio-buttons-group22' name='controlled-radio-buttons-group22'
-                      value={formType.surveyTargetPlatformEnum} onChange={handleTargetPlatFormChange}>
+                      value={formType.targetPlatformEnum} onChange={handleTargetPlatFormChange}>
                       <FormControlLabel value='ALL' control={<Radio />} label='همه' />
                       {isFetchingTargetPlatform && <FormControlLabel value='ALL' control={<Radio />} label='loading...' />}
                       {TargetPlatform?.map((item: IGetTargetPlatform) => (
@@ -201,7 +201,7 @@ export default function ListGridWrapper() {
                     params.delete('query');
                   }
                   push(`${pathname}?${params.toString()}`);
-                  setFormType({ surveyTargetPlatformEnum: "ALL", fieldOperation: "DSC" });
+                  setFormType({ targetPlatformEnum: "ALL", fieldOperation: "DSC" });
                   setRefreshGrid((prev) => !prev);
                 }}>
                 حذف فیلتر

@@ -10,10 +10,10 @@ interface SearchBoxItem {
 }
 
 const PAGE_SIZE = 10;
-const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'PUBLIC' };
+const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'PUBLIC', isCreatedSoloReport: 'ALL', fieldOperation: "DSC" };
 
 export async function fetchListGridData(
- {
+  {
     pageParam = 0,
   }: {
     pageParam: number;
@@ -43,6 +43,14 @@ export async function fetchListGridData(
         nextConditionOperator: 'AND',
       });
     }
+    if (searchQueryFilter.isCreatedSoloReport && searchQueryFilter.isCreatedSoloReport !== 'ALL') {
+      filterRestrictions.push({
+        fieldName: 'isCreatedSoloReport.filter',
+        fieldOperation: 'EQUAL',
+        fieldValue: searchQueryFilter.isCreatedSoloReport,
+        nextConditionOperator: 'AND',
+      });
+    }
 
     const validCombinedRestrictionList = [
       ...searchBoxList,
@@ -61,13 +69,12 @@ export async function fetchListGridData(
 
     const params = {
       searchFilterBoxList: searchFilterBoxListPayload,
-      sortList: [{ fieldName: 'id', type: 'DSC' }],
+      sortList: [{ fieldName: 'id', type: searchQueryFilter.fieldOperation }],
       page: pageParam,
       rows: PAGE_SIZE,
     };
 
     const queryString = JSON.stringify(params);
-    console.log('params======', params)
     const encodedParams = encodeURIComponent(queryString);
     const fullURL =
       `${url}?searchFilterModel=` +

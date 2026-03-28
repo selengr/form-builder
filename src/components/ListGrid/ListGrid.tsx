@@ -42,13 +42,13 @@ interface Props {
   refreshGrid?: boolean;
   disableFilter?: boolean;
   textTotal?: [string, string];
-  searchQueryFilter?: { type: string; status: string };
+  searchQueryFilter?: { type: string; status: string, isCreatedSoloReport: string, fieldOperation: "DSC" | "ASC" };
   showCreateButton?: boolean;
   title: string;
   CreateButton? : any
 }
 
-const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'PUBLIC' };
+const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'PUBLIC', isCreatedSoloReport: 'ALL', fieldOperation: "DSC" };
 
 const ListGrid: React.FC<Props> = ({
   filterComponent,

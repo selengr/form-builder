@@ -16,6 +16,8 @@ export default function ListGridWrapper() {
   const [formType, setFormType] = useState<any>({
     type: 'ALL',
     status: 'ALL',
+    isCreatedSoloReport: 'ALL',
+    fieldOperation: "DSC"
   });
   const filterBoxList: any = [];
   const searchBoxList: any = [
@@ -26,6 +28,29 @@ export default function ListGridWrapper() {
       nextConditionOperator: 'OR',
     },
   ];
+
+  const handleIsCreatedSoloReportChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormType((prev: any) => {
+      return { ...prev, isCreatedSoloReport: (event.target as HTMLInputElement).value };
+    });
+  };
+
+  const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormType((prev: any) => {
+      return { ...prev, type: (event.target as HTMLInputElement).value };
+    });
+  };
+
+  const handleStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormType((prev: any) => {
+      return { ...prev, status: (event.target as HTMLInputElement).value };
+    });
+  };
+  const handleTypeChangeDate = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormType((prev: any) => {
+      return { ...prev, fieldOperation: (event.target as HTMLInputElement).value };
+    });
+  };
 
   const FilterSidebar = () => {
     return (
@@ -105,6 +130,64 @@ export default function ListGridWrapper() {
                   </RadioGroup>
                 </FormControl>
               </div>
+              <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
+                <FormControl
+                  sx={{
+                    '& .MuiTypography-root': {
+                      fontSize: '14px',
+                      color: '#393939',
+                      fontWeight: 400,
+                    },
+                  }}>
+                  <FormLabel
+                    sx={{
+                      fontSize: '15px',
+                      color: '#161616',
+                      fontWeight: 700,
+                      mb: '8px',
+                      '&.Mui-focused': {
+                        color: '#161616',
+                      },
+                    }}
+                    id='demo-controlled-radio-buttons-group33'>
+                    بر اساس گزارش
+                  </FormLabel>
+                  <RadioGroup aria-labelledby='demo-controlled-radio-buttons-group33' name='controlled-radio-buttons-group33' value={formType.isCreatedSoloReport} onChange={handleIsCreatedSoloReportChange}>
+                    <FormControlLabel value='ALL' control={<Radio />} label='همه' />
+                    <FormControlLabel value='true' control={<Radio />} label='دارای گزارش' />
+                    <FormControlLabel value='false' control={<Radio />} label='بدون گزارش' />
+                  </RadioGroup>
+                </FormControl>
+              </div>
+
+              <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
+                <FormControl
+                  sx={{
+                    '& .MuiTypography-root': {
+                      fontSize: '14px',
+                      color: '#393939',
+                      fontWeight: 400,
+                    },
+                  }}>
+                  <FormLabel
+                    sx={{
+                      fontSize: '15px',
+                      color: '#161616',
+                      fontWeight: 700,
+                      mb: '8px',
+                      '&.Mui-focused': {
+                        color: '#161616',
+                      },
+                    }}
+                    id='demo-controlled-radio-buttons-group'>
+                    بر اساس زمان
+                  </FormLabel>
+                  <RadioGroup aria-labelledby='demo-controlled-radio-buttons-group' name='controlled-radio-buttons-group' value={formType.fieldOperation} onChange={handleTypeChangeDate}>
+                    <FormControlLabel value='DSC' control={<Radio />} label='جدیدترین' />
+                    <FormControlLabel value='ASC' control={<Radio />} label='قدیمیترین' />
+                  </RadioGroup>
+                </FormControl>
+              </div>
             </div>
           </div>
         </div>
@@ -161,7 +244,7 @@ export default function ListGridWrapper() {
                   params.delete('query');
                 }
                 push(`${pathname}?${params.toString()}`);
-                setFormType({ type: 'ALL', status: 'ALL' });
+                setFormType({ type: 'ALL', status: 'ALL', isCreatedSoloReport: 'ALL', fieldOperation: "DSC" });
                 setRefreshGrid((prev) => !prev);
               }}>
               حذف فیلتر
@@ -170,17 +253,6 @@ export default function ListGridWrapper() {
         </div>
       </div>
     );
-  };
-  const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormType((prev: any) => {
-      return { ...prev, type: (event.target as HTMLInputElement).value };
-    });
-  };
-
-  const handleStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormType((prev: any) => {
-      return { ...prev, status: (event.target as HTMLInputElement).value };
-    });
   };
 
   return (

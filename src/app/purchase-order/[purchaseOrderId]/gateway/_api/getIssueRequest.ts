@@ -18,7 +18,8 @@ export const issueRequest = async () => {
 export const userCreditList = async (issueRequestId: number) => {
   return userCreditListAction(issueRequestId);
 };
-// export async function confirmPayment(body: ConfirmPaymentRequestBody) {
+
+// export const confirmPayment = async (body: ConfirmPaymentRequestBody) => {
 //   return confirmPaymentAction(body);
 // }
 

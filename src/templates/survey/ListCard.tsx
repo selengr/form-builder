@@ -97,7 +97,7 @@ const ListCard: React.FC<ListCardProps> = ({
           </IconButton>
 
           {data.status === 'CREATE' && (
-            <Link href={`/builder/${data.id}?survey=admin`}>
+            <Link href={`/builder/${data.id}?admin=survey`}>
               <IconButton disabled={loading} color='primary'>
                 <Image src={EditIcon} alt='edit' width={24} height={24} />
               </IconButton>

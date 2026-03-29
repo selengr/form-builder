@@ -91,7 +91,7 @@ export default function CreateDataCollectionBtn({ open, onClose }: IProps) {
       onSuccess: (result) => {
         toast.success('عملیات با موفقیت انجام شد');
         handleClose()
-        router.push(`/builder/${result.id}?survey=admin`);
+        router.push(`/builder/${result.id}?admin=data-collection`);
       },
       onError: (error: any) => {
         toast.error(error?.message || 'خطا در ایجاد فرم');

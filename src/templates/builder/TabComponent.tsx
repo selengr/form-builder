@@ -9,6 +9,8 @@ export default function DesignerTabs() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const search = searchParams.get('admin');
+  const IsDataCollection = search === 'data-collection';
 
 
   const segments = pathname ? pathname.split('/').filter(Boolean) : [];
@@ -16,6 +18,7 @@ export default function DesignerTabs() {
   const builderId = builderIndex !== -1 ? segments[builderIndex + 1] : null;
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
+    if(IsDataCollection) { return }
     if (newValue < 0 || newValue > 2) return;
 
     setValue(newValue);
@@ -80,12 +83,12 @@ export default function DesignerTabs() {
             },
             '& .MuiTabs-flexContainer': {
               display: 'flex',
-              justifyContent: 'space-between',
+              justifyContent: IsDataCollection ? 'end' : 'space-between',
               width: '100%',
             },
           }}>
-          <Tab disableRipple label='شرط' />
-          <Tab disableRipple label='محاسبه‌گر' />
+          {!IsDataCollection && <Tab disableRipple label='شرط' />}
+          {!IsDataCollection && <Tab disableRipple label='محاسبه‌گر' />}
           <Tab disableRipple label='پرسشنامه' />
         </Tabs>
       </Box>

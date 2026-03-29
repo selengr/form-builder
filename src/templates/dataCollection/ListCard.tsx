@@ -59,7 +59,6 @@ const ListCard: React.FC<ListCardProps> = ({
       setOpenConfirmDialog((prev) => !prev)
   }, []);
 
-
   return (
     <div className="border p-4 rounded-2xl border-[#DDE1E6] flex flex-col gap-3 w-full max-w-full relative">
 
@@ -71,7 +70,7 @@ const ListCard: React.FC<ListCardProps> = ({
                 checked={!data.showReportForResponder}
                 onChange={() => console.log("object")}
               />
-      <InfoRow label="سرویس‌گیرنده" value={data?.targetPlatformEnum} bold />
+      <InfoRow label="سرویس‌گیرنده" value={data?.surveyTargetPlatformEnum} bold />
       {showStatus && (
         <InfoRow
           label="وضعیت"

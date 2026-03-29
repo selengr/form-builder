@@ -12,9 +12,9 @@ interface Input {
 
 export function convertObject(input: Input, fieldsConfig: any): { [key: string]: any } {
   const result: { [key: string]: any } = {};
-
+  delete input.label
   for (const [key, { value, checked }] of Object.entries(input)) {
-    const fieldConfig = fieldsConfig.find((field: any) => field.name === key);
+    const fieldConfig = fieldsConfig.find((field: any) => field.name === key || field.label === key);
 
     if (fieldConfig && fieldConfig.disabled) {
       continue;

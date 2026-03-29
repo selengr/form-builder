@@ -71,7 +71,7 @@ const ListCard: React.FC<ListCardProps> = ({
                 checked={!data.showReportForResponder}
                 onChange={() => console.log("object")}
               />
-      <InfoRow label="سرویس‌گیرنده" value={data.surveyTargetPlatformEnum} bold />
+      <InfoRow label="سرویس‌گیرنده" value={data?.targetPlatformEnum} bold />
       {showStatus && (
         <InfoRow
           label="وضعیت"

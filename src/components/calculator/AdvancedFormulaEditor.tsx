@@ -47,7 +47,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
 
   const searchParams = useSearchParams();
   const search = searchParams.get('admin');
-  const isSurvey = search === 'survey';
+  const isSurvey = search === 'survey' || 'data-collection';
 
   useEffect(() => {
     setIsClient(true);

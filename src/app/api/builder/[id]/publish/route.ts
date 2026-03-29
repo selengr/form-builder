@@ -20,7 +20,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   if(IsSurvey){
     url = `/admin/form/survey/finalization/${formId}`
   }else if(IsDataCollection){
-    url = `/admin/form/data-colleection/finalization/${formId}`
+    url = `/admin/form/data-collection/finalization/${formId}`
   } else {
      url = `/form/ready-to-publish/${formId}`
   }

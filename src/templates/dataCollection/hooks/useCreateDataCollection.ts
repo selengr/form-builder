@@ -1,12 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 import { getAuthToken } from '@/utils/getAuthToken';
-import { SurveyFormSchemaType } from '../CreateSurveyBtn';
+import { FormSchemaType } from '../CreateDataCollectionBtn';
 
-export async function createSurvey(
-    data: SurveyFormSchemaType
+export async function createDataCollection(
+    data: FormSchemaType
 ) {
     const token = await getAuthToken();
-    const res = await fetch('/api/survey', {
+    const res = await fetch('/api/data-collection', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -32,8 +32,8 @@ export async function createSurvey(
     return result;
 }
 
-export function useCreateSurvey() {
+export function useCreateDataCollection() {
     return useMutation({
-        mutationFn: createSurvey,
+        mutationFn: createDataCollection,
     });
 }

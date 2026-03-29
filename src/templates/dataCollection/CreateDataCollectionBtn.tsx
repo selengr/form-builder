@@ -12,7 +12,7 @@ import FormProvider from '@/components/hook-form/FormProvider';
 import { RHFSelect, RHFTextField } from '@/components/hook-form';
 import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
 // hooks
-import { useCreateSurvey } from './hooks/useCreateSurvey';
+import { useCreateDataCollection } from './hooks/useCreateDataCollection';
 import { useGetTargetPlatform } from './hooks/useGetTargetPlatform';
 
 interface IGetTargetPlatform {
@@ -59,19 +59,19 @@ const propertiesSchema = z.object({
     ),
 });
 
-export type SurveyFormSchemaType = z.infer<typeof propertiesSchema>;
+export type FormSchemaType = z.infer<typeof propertiesSchema>;
 
-interface CreateSurveyBtnProps {
+interface IProps {
   open: boolean;
   onClose: () => void;
 }
 
-export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps) {
+export default function CreateDataCollectionBtn({ open, onClose }: IProps) {
   const router = useRouter();
-  const { mutate, isPending } = useCreateSurvey();
+  const { mutate, isPending } = useCreateDataCollection();
   const { TargetPlatform, isFetchingTargetPlatform } = useGetTargetPlatform();
 
-  const methods = useForm<SurveyFormSchemaType>({
+  const methods = useForm<FormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     defaultValues: {
       name: '',
@@ -86,7 +86,7 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
   } = methods;
 
 
-  const onSubmit = async (data: SurveyFormSchemaType) => {
+  const onSubmit = async (data: FormSchemaType) => {
     mutate(data, {
       onSuccess: (result) => {
         toast.success('عملیات با موفقیت انجام شد');

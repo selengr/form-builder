@@ -10,7 +10,7 @@ interface SearchBoxItem {
 }
 
 const PAGE_SIZE = 10;
-const DEFAULT_SEARCH_FILTER = { surveyTargetPlatformEnum: 'ALL', fieldOperation : "DSC"  };
+const DEFAULT_SEARCH_FILTER = { targetPlatformEnum: 'ALL', fieldOperation : "DSC"  };
 
 export async function dataCollectionFilter(
   pageParam: number,
@@ -22,11 +22,11 @@ export async function dataCollectionFilter(
   try {
     const filterRestrictions: SearchBoxItem[] = [];
 
-    if (searchQueryFilter.surveyTargetPlatformEnum && searchQueryFilter.surveyTargetPlatformEnum !== 'ALL') {
+    if (searchQueryFilter.targetPlatformEnum && searchQueryFilter.targetPlatformEnum !== 'ALL') {
       filterRestrictions.push({
-        fieldName: 'formSetting.surveyTargetPlatformEnum',
+        fieldName: 'formSetting.targetPlatformEnum',
         fieldOperation: 'EQUAL',
-        fieldValue: searchQueryFilter.surveyTargetPlatformEnum,
+        fieldValue: searchQueryFilter.targetPlatformEnum,
         nextConditionOperator: 'AND',
       });
     }

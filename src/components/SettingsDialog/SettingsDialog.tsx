@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import FieldSwitchPair from './FieldSwitchPair';
 import { IoSettingsOutline } from 'react-icons/io5';
 import { AxiosApi } from '@/services/axios/AxiosApi';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { convertObject } from '@/lib/settingsUtils';
 
 interface Props {
@@ -76,6 +76,28 @@ const propertiesSchema = z.object({
     .trim()
     .transform((value) => value.replace(/\s+/g, ' '))
     .pipe(z.string().min(2, { message: 'حداقل باید 2 و حداکثر 100 کاراکتر باشد' }).max(100, { message: 'حداقل باید 2 و حداکثر 100 کاراکتر باشد' })),
+    label: z
+      .string()
+      .trim()
+      .transform((value) => {
+        const normalized = value.replace(/\s+/g, ' ');
+        return normalized === '' ? null : normalized;
+      })
+      .nullable()
+      .refine(
+        (value) =>
+          value === null ||
+          !/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/.test(value),
+        {
+          message: 'استفاده از حروف فارسی مجاز نیست',
+        }
+      )
+    .refine(
+        (value) => value === null || (value.length >= 8 && value.length <= 30),
+        {
+          message: 'حداقل باید 8 و حداکثر 30 کاراکتر باشد',
+        }
+      ),
   responseLimitation: z.object({
     value: z.string(),
     checked: z.boolean(),
@@ -103,9 +125,12 @@ type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 export default function SettingsDialog({ formName, onChangeName,data }: Props) {
   const [openDialog, setOpenDialog] = useState(false);
   const [formFieldName, setFormFieldName] = useState<string>(formName);
+  // const [formFieldId, setFormFieldId] = useState<string>(data.formSettingModel.label??"");
   const { id: formId } = useParams();
-  // const { name: name} = useParams();
-console.log("data", data.formSettingModel)
+  const searchParams = useSearchParams();
+  const search = searchParams.get('admin');
+  const IsDataCollection = search ==='data-collection';
+
   const handleOpen = useCallback(() => {
     setOpenDialog((prev) => !prev);
     reset();
@@ -116,6 +141,7 @@ console.log("data", data.formSettingModel)
     mode: 'all',
     defaultValues: {
       name: formFieldName,
+      label: data.formSettingModel.label,
       expireDate: { checked: false, value: '' },
       timeToComplete: { checked: false, value: '' },
       responseLimitation: { checked: false, value: '' },
@@ -131,10 +157,15 @@ console.log("data", data.formSettingModel)
   } = methods;
 
   async function onSubmit(values: propertiesFormSchemaType) {
-    const body = {
+    const lab = values.label
+    let body : any = {
       ...convertObject(values as any, fieldsConfig),
       name: formFieldName,
     };
+    
+    if(lab && IsDataCollection){
+      body["label"] = lab
+    }
 
     try {
       const res = await AxiosApi.post(`/form-setting/${formId}`, body as any);
@@ -247,6 +278,23 @@ console.log("data", data.formSettingModel)
                         }}
                       />
                     </Box>
+                   {IsDataCollection && <Box display='flex' flexDirection='column' gap={1}>
+                      <Typography variant='subtitle2' fontWeight='600' fontSize='15px'>
+                        شناسه:
+                      </Typography>
+                      <RHFTextField
+                        name='label'
+                        // value={formFieldId}
+                        // onChange={(event) => setFormFieldId(event.target.value)}
+                        sx={{
+                          '& .MuiInputBase-root': {
+                            borderRadius: '10px',
+                            fontWeight: '600',
+                          },
+                        }}
+                      />
+                    </Box>
+                    }
                     {fieldsConfig.map((field) => (
                       <FieldSwitchPair key={field.name} fieldName={field.name} label={field.label} type={field.type} options={field.options} disabled={field?.disabled} />
                     ))}

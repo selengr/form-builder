@@ -29,26 +29,27 @@ const MenuList: React.FC<IMenuListProps> = ({ menuLinks, onItemClick }) => {
     const allLinks: IMenuItemData[] = [...serverLinks, ...staticLinks];
 
     const managementMaster = serverLinks.find((item) => item.langId === "acl.psya.management.master")
-  const assessmentsItem = serverLinks.find((item) => item.langId === "acl.psya.packaging.master")
-  const surveyItem = serverLinks.find((item) => item.langId === "acl.psya.survey.master")
-  const userreportsItem = serverLinks.find((item) => item.langId === "acl.psya.userreports.master")
- 
-  const linksWithHierarchy = allLinks
-    .map((item) => {
-      if (managementMaster && item.id === managementMaster.id) {
-        const children = [assessmentsItem, surveyItem, userreportsItem].filter(Boolean) as IMenuItemData[]
+    const assessmentsItem = serverLinks.find((item) => item.langId === "acl.psya.packaging.master")
+    const surveyItem = serverLinks.find((item) => item.langId === "acl.psya.survey.master")
+    const dataCollection = serverLinks.find((item) => item.langId === "acl.psya.admin.data-collection.master")
+    const userreportsItem = serverLinks.find((item) => item.langId === "acl.psya.userreports.master")
 
-        return { ...item, children }
-      }
-      return item
-    })
-    .filter((item) => {
-      if (managementMaster) {
-        return !(item.id === assessmentsItem?.id || item.id === surveyItem?.id || item.id === userreportsItem?.id)
-      }
-      return true
-    })
-    
+    const linksWithHierarchy = allLinks
+        .map((item) => {
+            if (managementMaster && item.id === managementMaster.id) {
+                const children = [assessmentsItem, surveyItem, userreportsItem, dataCollection].filter(Boolean) as IMenuItemData[]
+
+                return { ...item, children }
+            }
+            return item
+        })
+        .filter((item) => {
+            if (managementMaster) {
+                return !(item.id === assessmentsItem?.id || item.id === surveyItem?.id || item.id === userreportsItem?.id || item.id === dataCollection?.id)
+            }
+            return true
+        })
+
     const sortedLinks = linksWithHierarchy.sort((a, b) => a.order - b.order);
 
     const handleToggle = (id: string | number) => {

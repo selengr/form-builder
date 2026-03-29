@@ -16,6 +16,8 @@ export interface ISurveyItem {
   isCreatedSoloReport: boolean | null;
   accessibility: any[];
   surveyTargetPlatformEnum: string;
+  targetPlatformEnum?: string;
+  label?: string;
   surveyPurposeEnum: string;
 }
 

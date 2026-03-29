@@ -14,7 +14,7 @@ import { ISurveyItem } from '@/types/survey';
 import CopyIcon from '@/../public/images/home-page/copy.svg';
 import EditIcon from '@/../public/images/home-page/edit-2.svg';
 import TrashIcon from '@/../public/images/home-page/trash.svg';
-import ShareLinkModal from './ShareLinkModal';
+// import ShareLinkModal from './ShareLinkModal';
 
 interface ListCardProps {
   data: ISurveyItem;
@@ -59,7 +59,6 @@ const ListCard: React.FC<ListCardProps> = ({
       setOpenConfirmDialog((prev) => !prev)
   }, []);
 
-
   return (
     <div className="border p-4 rounded-2xl border-[#DDE1E6] flex flex-col gap-3 w-full max-w-full relative">
 
@@ -71,7 +70,7 @@ const ListCard: React.FC<ListCardProps> = ({
                 checked={!data.showReportForResponder}
                 onChange={() => console.log("object")}
               />
-      <InfoRow label="سرویس‌گیرنده" value={data.surveyTargetPlatformEnum} bold />
+      <InfoRow label="سرویس‌گیرنده" value={data?.surveyTargetPlatformEnum} bold />
       {showStatus && (
         <InfoRow
           label="وضعیت"
@@ -97,15 +96,15 @@ const ListCard: React.FC<ListCardProps> = ({
           </IconButton>
 
           {data.status === 'CREATE' && (
-            <Link href={`/builder/${data.id}?admin=survey`}>
+            <Link href={`/builder/${data.id}?admin=data-collection`}>
               <IconButton disabled={loading} color='primary'>
                 <Image src={EditIcon} alt='edit' width={24} height={24} />
               </IconButton>
             </Link>
           )}
-          {data.status === 'PUBLISH' && (
+          {/* {data.status === 'PUBLISH' && (
               <ShareLinkModal formData={data} />
-          )}
+          )} */}
 
         </div>
       </div>

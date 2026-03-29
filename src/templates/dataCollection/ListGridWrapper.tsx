@@ -6,7 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Button, FormControl, FormControlLabel, FormLabel, IconButton, Radio, RadioGroup } from '@mui/material';
 import ListCard from './ListCard';
 import ListGrid from './ListGrid';
-import CreateSurveyBtn from './CreateSurveyBtn';
+import CreateDataCollectionBtn from './CreateDataCollectionBtn';
 // images
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
@@ -216,7 +216,7 @@ export default function ListGridWrapper() {
         refreshGrid={refreshGrid}
         searchQueryFilter={formType}
       />
-      <CreateSurveyBtn open={openMyCreateModal} onClose={handleCloseDialog} />
+      <CreateDataCollectionBtn open={openMyCreateModal} onClose={handleCloseDialog} />
     </>
   );
 }

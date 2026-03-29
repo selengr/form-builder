@@ -46,8 +46,8 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
   const [isMobileKeypadOpen, setIsMobileKeypadOpen] = useState<boolean>(false);
 
   const searchParams = useSearchParams();
-  const search = searchParams.get('survey');
-  const isSurvey = search === 'admin';
+  const search = searchParams.get('admin');
+  const isSurvey = search === 'survey' || 'data-collection';
 
   useEffect(() => {
     setIsClient(true);

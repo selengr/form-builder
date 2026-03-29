@@ -37,9 +37,11 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
   }, [formName]);
 
   const IsSurvey = data?.typeEnum === "SURVEY"
+  const IsDataCollection = data?.typeEnum === "DATA_COLLECTION"
   const publishMutation = usePublishForm({
     formId: id,
     IsSurvey: Boolean(IsSurvey),
+    IsDataCollection: Boolean(IsDataCollection),
   });
 
   const handlePublish = () => {

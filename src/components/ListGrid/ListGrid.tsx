@@ -42,7 +42,7 @@ interface Props {
   refreshGrid?: boolean;
   disableFilter?: boolean;
   textTotal?: [string, string];
-  searchQueryFilter?: { type: string; status: string, isCreatedSoloReport: string, fieldOperation: "DSC" | "ASC" };
+  searchQueryFilter?: { type: string; status: string, isCreatedSoloReport: string, fieldOperation: string };
   showCreateButton?: boolean;
   title: string;
   CreateButton? : any

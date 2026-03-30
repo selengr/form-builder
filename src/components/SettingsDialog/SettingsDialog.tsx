@@ -158,7 +158,7 @@ export default function SettingsDialog({ formName, onChangeName,data }: Props) {
 
   async function onSubmit(values: propertiesFormSchemaType) {
     const lab = values.label
-    let body : any = {
+    const body : any = {
       ...convertObject(values as any, fieldsConfig),
       name: formFieldName,
     };

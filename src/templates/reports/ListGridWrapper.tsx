@@ -6,7 +6,7 @@ import ListGrid from '@/components/ListGrid/ListGrid';
 
 export default function ListGridWrapper() {
   const [refreshGrid, setRefreshGrid] = useState(false);
-  const formType = { type: 'ALL', status: 'ALL' };
+  const formType = { type: 'ALL', status: 'PUBLIC', isCreatedSoloReport: 'ALL', fieldOperation: "DSC" };
   const filterBoxList: any = [];
   const searchBoxList: any = [
     {

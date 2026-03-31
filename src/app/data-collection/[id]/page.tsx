@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { ReportHeader, ReportPagination, ReportTable } from '../../stats/[id]/component';
-import { useStatsViewModel } from '../../stats/[id]/viewModel';
+import { useStatsViewModel } from './viewModel';
 import { useEffect, useState } from 'react';
 
 export interface UserType {

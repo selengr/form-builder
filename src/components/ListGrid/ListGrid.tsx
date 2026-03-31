@@ -48,7 +48,7 @@ interface Props {
   CreateButton? : any
 }
 
-const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'PUBLIC', isCreatedSoloReport: 'ALL', fieldOperation: "DSC" };
+const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'ALL', isCreatedSoloReport: 'ALL', fieldOperation: "DSC" };
 
 const ListGrid: React.FC<Props> = ({
   filterComponent,

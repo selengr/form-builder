@@ -14,6 +14,7 @@ import { ISurveyItem } from '@/types/survey';
 import CopyIcon from '@/../public/images/home-page/copy.svg';
 import EditIcon from '@/../public/images/home-page/edit-2.svg';
 import TrashIcon from '@/../public/images/home-page/trash.svg';
+import CheckIcon from '@/../public/images/home-page/check.svg';
 // import ShareLinkModal from './ShareLinkModal';
 
 interface ListCardProps {
@@ -102,9 +103,14 @@ const ListCard: React.FC<ListCardProps> = ({
               </IconButton>
             </Link>
           )}
-          {/* {data.status === 'PUBLISH' && (
-              <ShareLinkModal formData={data} />
-          )} */}
+          {data.status === 'PUBLISH' && (
+              // <ShareLinkModal formData={data} />
+                          <Link href={`/data-collection/${data.id}`}>
+              <IconButton disabled={loading} color='primary'>
+                <Image src={CheckIcon} alt='edit' width={24} height={24} />
+              </IconButton>
+            </Link>
+          )}
 
         </div>
       </div>

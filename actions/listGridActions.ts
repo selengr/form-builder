@@ -69,7 +69,7 @@ export async function fetchListGridData(
 
     const params = {
       searchFilterBoxList: searchFilterBoxListPayload,
-      sortList: [{ fieldName: 'id', type: searchQueryFilter.fieldOperation }],
+      sortList: [{ fieldName: 'id', type: searchQueryFilter?.fieldOperation ?? 'DSC' }],
       page: pageParam,
       rows: PAGE_SIZE,
     };

@@ -1,7 +1,7 @@
 export default function HtmlPreview({ html }: { html: string }) {
   return (
     <div
-      className="prose max-w-none"
+      className="prose w-full"
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

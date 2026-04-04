@@ -14,7 +14,8 @@ import { ISurveyItem } from '@/types/survey';
 import CopyIcon from '@/../public/images/home-page/copy.svg';
 import EditIcon from '@/../public/images/home-page/edit-2.svg';
 import TrashIcon from '@/../public/images/home-page/trash.svg';
-import CheckIcon from '@/../public/images/home-page/check.svg';
+import { CodiconEye } from '../../../public/images/home-page/EyeIcon';
+// import CodiconEye from '@/../public/images/home-page/CodiconEye';
 // import ShareLinkModal from './ShareLinkModal';
 
 interface ListCardProps {
@@ -112,7 +113,8 @@ const ListCard: React.FC<ListCardProps> = ({
           {data.status === 'PUBLISH' && (
             <div onClick={handleNavigation}>
               <IconButton disabled={loading} color='primary'>
-                <Image src={CheckIcon} alt='edit' width={24} height={24} />
+                {/* <Image src={CheckIcon} alt='edit' width={24} height={24} /> */}
+                <CodiconEye />
               </IconButton>
             </div>
           )}

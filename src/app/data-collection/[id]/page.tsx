@@ -38,7 +38,7 @@ export default function StatsPage() {
         <ReportHeader title={formData.name || 'گزارش'} onBack={handleNavigation} />
 
         <div className='flex-grow overflow-hidden min-w-0'>
-          <ReportTable headData={headData} allData={allData} isLoading={isLoading} selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers} formId={Number(formId)} />
+          <ReportTable showResult={false} headData={headData} allData={allData} isLoading={isLoading} selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers} formId={Number(formId)} />
         </div>
 
         <ReportPagination

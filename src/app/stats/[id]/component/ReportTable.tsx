@@ -15,9 +15,10 @@ interface StatsTableProps {
   selectedUsers: UserType[];
   setSelectedUsers: (users: UserType[]) => void;
   formId: number;
+  showResult?: boolean
 }
 
-export function ReportTable({ headData, allData, isLoading, selectedUsers, setSelectedUsers, formId }: StatsTableProps) {
+export function ReportTable({ headData, allData, isLoading, selectedUsers, setSelectedUsers, formId, showResult = true }: StatsTableProps) {
   const { mutate } = usePostCondition();
 
   const isUserSelected = (takePartId: number) => {
@@ -115,9 +116,8 @@ export function ReportTable({ headData, allData, isLoading, selectedUsers, setSe
                       </td>
                     ))}
                     <td
-                      className={`sticky left-0 px-4 py-2 text-center border-b border-r border-gray-200 align-middle ${
-                        rowIndex % 2 !== 0 ? 'bg-neutral-50 group-hover:bg-blue-50 duration-300' : 'bg-white group-hover:bg-blue-50 duration-300'
-                      }`}
+                      className={`sticky left-0 px-4 py-2 text-center border-b border-r border-gray-200 align-middle ${rowIndex % 2 !== 0 ? 'bg-neutral-50 group-hover:bg-blue-50 duration-300' : 'bg-white group-hover:bg-blue-50 duration-300'
+                        }`}
                       style={{ minWidth: '120px' }}>
                       <div className='flex items-center justify-center gap-2'>
                         <button
@@ -125,11 +125,13 @@ export function ReportTable({ headData, allData, isLoading, selectedUsers, setSe
                           className={`rounded-xl p-2 text-white transition-colors duration-200 shadow-sm ${isSelected ? 'bg-red-500 hover:bg-red-600' : 'bg-teal-500 hover:bg-teal-600'}`}>
                           {isSelected ? <LuUserMinus className='w-5 h-5' /> : <LuUserPlus className='w-5 h-5' />}
                         </button>
-                        <button
-                          onClick={() => handleShowResult(takePartId, row?.row[1]?.answer[0])}
-                          className='rounded-xl p-2 bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 shadow-sm'>
-                          <LuFileChartPie className='w-5 h-5' />
-                        </button>
+                        {showResult &&
+                          <button
+                            onClick={() => handleShowResult(takePartId, row?.row[1]?.answer[0])}
+                            className='rounded-xl p-2 bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 shadow-sm'>
+                            <LuFileChartPie className='w-5 h-5' />
+                          </button>
+                        }
                       </div>
                     </td>
                   </tr>

@@ -72,7 +72,7 @@
 }
 
 .NEW_FIELD .option {
-  min-height: 30px;
+  /* min-height: 30px; */
   width: 100%;
   border-color: none;
   color: #fff;
@@ -92,7 +92,7 @@
 .NEW_FIELD,
 .NEW_FnFx {
   height: 30px;
-  width: 145px;
+  width: 155px;
   border-color: none;
   position: relative;
   border-radius: 10px;
@@ -114,7 +114,7 @@
   height: 100%;
   max-width: 90%;
 
-  max-width: 120px;
+  max-width: 135px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -128,11 +128,12 @@
   padding-right: 24px;
   white-space: nowrap;
   justify-content: start;
+  font-size: 13px;
 }
 
 .NEW_FnFx .optionsContainer,
 .NEW_FIELD .optionsContainer {
-  width: 145px;
+  width: 155px;
   padding: 8px;
   display: flex;
   z-index: 1000;
@@ -145,6 +146,7 @@
   background-color: #fff;
   justify-content: center;
   box-shadow: 0px 0px 50px 0px #00000033;
+      justify-content: flex-start;
   /* transition-property: all; */
   /* transition-duration: .8s; */
   /* transition-timing-function: ease-in-out; */
@@ -163,12 +165,19 @@
   color: #fff;
   margin: 4px 0;
   display: flex;
-  min-height: 30px;
+  /* min-height: 30px; */
   padding: 1px 5px;
   border-color: none;
   border-radius: 10px;
   align-items: center;
   justify-content: start;
+
+    /* height: auto !important; */
+  /* flex-wrap: nowrap; */
+      /* overflow: hidden; */
+  /* text-overflow: ellipsis; */
+  /* white-space: nowrap; */
+    font-size: 12px;
 }
 .NEW_FIELD .option {
   background-color: #1753af;

@@ -42,9 +42,9 @@ const ResultsPage = () => {
         console.error('Failed to parse stored results:', err);
       }
     }
-    return () => {
-      localStorage.removeItem("Show_User_Solo_Result");
-    };
+    // return () => {
+    //   localStorage.removeItem("Show_User_Solo_Result");
+    // };
   }, []);
 
   const html = useMemo(() => {
@@ -63,6 +63,7 @@ const ResultsPage = () => {
       })
       .join(" ");
   }, [results]);
+
 
   return (
     <div className='w-full min-h-screen h-full px-4 py-4 bg-[#f7f7f7]'>

@@ -52,7 +52,7 @@ export default function VariableNodeView({ node, updateAttributes,
                 }}
             >
                 <div
-                    className={[styles.dynamicbtn, styles.NEW_FIELD, selected ? "ring-1 ring - [#1758BA]" : ""].join(" ")}
+                    className={[styles.dynamicbtn, styles.NEW_FIELD, selected ? "ring-1 ring-[#1758BA]" : ""].join(" ")}
                     contentEditable={false}
                     style={{
                         // border: isInvalid ? "1px solid #FA4D56" : selected ? "1px solid #1758BA" : "1px solid transparent",

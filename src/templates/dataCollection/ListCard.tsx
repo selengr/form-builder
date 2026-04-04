@@ -60,6 +60,12 @@ const ListCard: React.FC<ListCardProps> = ({
       setOpenConfirmDialog((prev) => !prev)
   }, []);
 
+  
+  const handleNavigation = () => {
+    localStorage.setItem("stats", "/data-collection")
+    router.push(`/data-collection/${data.id}`)
+  }
+
   return (
     <div className="border p-4 rounded-2xl border-[#DDE1E6] flex flex-col gap-3 w-full max-w-full relative">
 
@@ -104,12 +110,11 @@ const ListCard: React.FC<ListCardProps> = ({
             </Link>
           )}
           {data.status === 'PUBLISH' && (
-              // <ShareLinkModal formData={data} />
-                          <Link href={`/data-collection/${data.id}`}>
+            <div onClick={handleNavigation}>
               <IconButton disabled={loading} color='primary'>
                 <Image src={CheckIcon} alt='edit' width={24} height={24} />
               </IconButton>
-            </Link>
+            </div>
           )}
 
         </div>

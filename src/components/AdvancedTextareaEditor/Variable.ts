@@ -50,7 +50,7 @@ export const Variable = Node.create({
                 "data-label": node.attrs.label || "",
                 contenteditable: "false",
             }),
-            node.attrs.label || "انتخاب کنید",
+            node.attrs.unique_name || "انتخاب کنید",
         ];
     },
 

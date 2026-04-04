@@ -147,8 +147,6 @@ export default function AdvancedEditor({
   return (
     <div className="w-full max-w-[988px] text-gray-950">
 
-
-
       <div className="flex flex-col w-full">
         <div className="flex flex-row w-full justify-between">
           {label ? <span className="text-[#393939] text-sm mb-1 flex items-end justify-end md:mr-20 pr-2">{label}</span> : null}

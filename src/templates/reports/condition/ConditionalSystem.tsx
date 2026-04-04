@@ -27,7 +27,7 @@ import { createNewSubCondition, useConditionalForm } from '@/app/reports/create-
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClose, condition, isEdit = false }) => {
   const { id } = useParams();
   const { refresh } = useRouter();
-  const returnTextEdit = isEdit ? JSON.parse(condition?.returnText) : undefined;
+  const returnTextEdit = isEdit ? condition?.returnText : undefined;
   const editorMetaRef = useRef<Record<number, { text: string; variables: any[] }>>({});
 
   const { methods, conditions, handleAddCondition, handleRemoveCondition, handleAddSubCondition, handleRemoveSubCondition } = useConditionalForm(condition);

@@ -220,7 +220,7 @@ export function ConditionCard({ condition, index, admin }: IConditionCardProps) 
         className={`rounded-lg p-[10px] flex justify-between w-full border-[1px] border-[#1758BA] bg-[#fff] cursor-grab transition-colors active:cursor-grabbing touch-none ${
           isDragging ? 'border-[#CCC]' : 'border-[#1758BA]'
         } ${invalid ? 'opacity-80 border-[#CCC]' : ''}`}>
-        <div className='flex justify-center items-center gap-[10px]'>
+        <div className='flex justify-center items-center gap-[10px] w-full'>
           <ConditionCardOperator condition={condition} />
         </div>
       </div>

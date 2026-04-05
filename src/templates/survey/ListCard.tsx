@@ -11,10 +11,11 @@ import { SwitchButton } from '@/components/Switch/SwitchButton';
 // types
 import { ISurveyItem } from '@/types/survey';
 // images
+import ShareLinkModal from './ShareLinkModal';
 import CopyIcon from '@/../public/images/home-page/copy.svg';
 import EditIcon from '@/../public/images/home-page/edit-2.svg';
 import TrashIcon from '@/../public/images/home-page/trash.svg';
-import ShareLinkModal from './ShareLinkModal';
+import { CodiconEye } from '../../../public/images/home-page/EyeIcon';
 
 interface ListCardProps {
   data: ISurveyItem;
@@ -56,9 +57,13 @@ const ListCard: React.FC<ListCardProps> = ({
   };
 
   const handleCopy = useCallback(async () => {
-      setOpenConfirmDialog((prev) => !prev)
+    setOpenConfirmDialog((prev) => !prev)
   }, []);
 
+  const handleNavigation = () => {
+    localStorage.setItem("stats", "/survey")
+    router.push(`/stats/${data.id}`)
+  }
 
   return (
     <div className="border p-4 rounded-2xl border-[#DDE1E6] flex flex-col gap-3 w-full max-w-full relative">
@@ -66,11 +71,11 @@ const ListCard: React.FC<ListCardProps> = ({
 
       {/* اطلاعات فرم */}
       <InfoRow label="نام" value={data.name} bold />
-        <SwitchButton
-                sx={{ position: "absolute", top: 15, right: 15 }}
-                checked={!data.showReportForResponder}
-                onChange={() => console.log("object")}
-              />
+      <SwitchButton
+        sx={{ position: "absolute", top: 15, right: 15 }}
+        checked={!data.showReportForResponder}
+        onChange={() => console.log("object")}
+      />
       <InfoRow label="سرویس‌گیرنده" value={data.surveyTargetPlatformEnum} bold />
       {showStatus && (
         <InfoRow
@@ -104,7 +109,14 @@ const ListCard: React.FC<ListCardProps> = ({
             </Link>
           )}
           {data.status === 'PUBLISH' && (
-              <ShareLinkModal formData={data} />
+            <ShareLinkModal formData={data} />
+          )}
+          {data.status === 'PUBLISH' && (
+            <div onClick={handleNavigation}>
+              <IconButton disabled={loading} color='primary'>
+                <CodiconEye />
+              </IconButton>
+            </div>
           )}
 
         </div>

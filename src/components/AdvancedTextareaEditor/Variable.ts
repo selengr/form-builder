@@ -49,7 +49,7 @@ export const Variable = Node.create({
                 "data-unique-name": node.attrs.unique_name || "",
                 "data-label": node.attrs.label || "",
                 contenteditable: "false",
-                "class" : "m-2 font-bold"
+                "class" : "m-1 font-bold"
             }),
             node.attrs.unique_name || "انتخاب کنید",
         ];

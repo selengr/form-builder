@@ -126,7 +126,7 @@ export function ReportTable({ headData, allData, isLoading, selectedUsers, setSe
                           className={`rounded-xl p-2 text-white transition-colors duration-200 shadow-sm ${isSelected ? 'bg-red-500 hover:bg-red-600' : 'bg-teal-500 hover:bg-teal-600'}`}>
                           {isSelected ? <LuUserMinus className='w-5 h-5' /> : <LuUserPlus className='w-5 h-5' />}
                         </button>
-                        {pathname.includes('data-collection') &&
+                        {pathname.includes('stats') &&
                           <button
                             onClick={() => handleShowResult(takePartId, row?.row[1]?.answer[0])}
                             className='rounded-xl p-2 bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 shadow-sm'>

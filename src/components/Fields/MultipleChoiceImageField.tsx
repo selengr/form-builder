@@ -378,7 +378,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   );
   const searchParams = useSearchParams();
   const search = searchParams.get('admin');
-  const isSurvey = search === 'survey' || 'data-collection';
+   const isSurvey = search === 'survey' || search === 'data-collection';
   const defaultValues = useMemo(() => {
     const matchingElement = elements?.find((el: any) => el?.questionId === element?.questionId);
     const optionListCopy = matchingElement ? [...element.optionList] : [];

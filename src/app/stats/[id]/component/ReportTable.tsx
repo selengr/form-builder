@@ -7,6 +7,7 @@ import { LuFileChartPie, LuUserMinus, LuUserPlus } from 'react-icons/lu';
 import { toast } from 'sonner';
 import { usePostCondition } from '../show-result/hooks/usePostCondition';
 import { UserType } from '../page';
+import { usePathname } from 'next/navigation';
 
 interface StatsTableProps {
   headData: any[];
@@ -15,11 +16,11 @@ interface StatsTableProps {
   selectedUsers: UserType[];
   setSelectedUsers: (users: UserType[]) => void;
   formId: number;
-  showResult?: boolean
 }
 
-export function ReportTable({ headData, allData, isLoading, selectedUsers, setSelectedUsers, formId, showResult = true }: StatsTableProps) {
+export function ReportTable({ headData, allData, isLoading, selectedUsers, setSelectedUsers, formId }: StatsTableProps) {
   const { mutate } = usePostCondition();
+  const pathname = usePathname()
 
   const isUserSelected = (takePartId: number) => {
     return selectedUsers.some((u) => u.takePartId === takePartId);
@@ -125,7 +126,7 @@ export function ReportTable({ headData, allData, isLoading, selectedUsers, setSe
                           className={`rounded-xl p-2 text-white transition-colors duration-200 shadow-sm ${isSelected ? 'bg-red-500 hover:bg-red-600' : 'bg-teal-500 hover:bg-teal-600'}`}>
                           {isSelected ? <LuUserMinus className='w-5 h-5' /> : <LuUserPlus className='w-5 h-5' />}
                         </button>
-                        {showResult &&
+                        {pathname.includes('data-collection') &&
                           <button
                             onClick={() => handleShowResult(takePartId, row?.row[1]?.answer[0])}
                             className='rounded-xl p-2 bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 shadow-sm'>

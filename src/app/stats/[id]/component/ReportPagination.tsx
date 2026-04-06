@@ -6,6 +6,7 @@ import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
 import { ExcelDialog, UserCount } from '@/app/stats/[id]/component';
 import { toast } from 'sonner';
 import { getAuthToken } from '@/utils/getAuthToken';
+import { usePathname } from 'next/navigation';
 
 interface StatsPaginationProps {
   totalItems: number;
@@ -25,6 +26,7 @@ export interface UserType {
 
 export function ReportPagination({ totalItems, onPageChange, onRowsPerPageChange, currentPage, rowsPerPage, selectedUsers, setSelectedUsers, formId }: StatsPaginationProps) {
   const totalPages = rowsPerPage === -1 ? 1 : Math.ceil(totalItems / rowsPerPage);
+  const pathname = usePathname()
 
   const [isExcelDialogOpen, setIsExcelDialogOpen] = useState(false);
 
@@ -72,8 +74,11 @@ export function ReportPagination({ totalItems, onPageChange, onRowsPerPageChange
 
   const checkAndDownloadExcel = async () => {
     const token = await getAuthToken();
+     const url = pathname.includes('data-collection')
+        ? '/api/report/data-collection/'
+        : '/api/report/check/'
     try {
-      const checkRes = await fetch(`/api/report/check/${formId.toString()}`, {
+      const checkRes = await fetch(`${url}${formId.toString()}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -103,7 +108,11 @@ export function ReportPagination({ totalItems, onPageChange, onRowsPerPageChange
         window.open(downloadUrl, '_blank');
         toast.success('فایل آماده بود و دانلود شد.');
       } else {
-        const exportRes = await fetch('/api/report/exportexcel', {
+        const url = pathname.includes('data-collection')
+        ? '/api/report/data-collection/export'
+        : '/api/report/exportexcel';
+
+        const exportRes = await fetch(url, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -111,6 +120,7 @@ export function ReportPagination({ totalItems, onPageChange, onRowsPerPageChange
           },
           body: JSON.stringify({
             takePartIdList: currentUserIds,
+            IsCollection: pathname.includes('data-collection') ? true : false
           }),
         });
 

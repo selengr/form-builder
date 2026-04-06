@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import { ReportHeader, ReportPagination, ReportTable } from '../../stats/[id]/component';
 import { useStatsViewModel } from './viewModel';
 import { useEffect, useState } from 'react';
@@ -38,7 +38,7 @@ export default function StatsPage() {
         <ReportHeader title={formData.name || 'گزارش'} onBack={handleNavigation} />
 
         <div className='flex-grow overflow-hidden min-w-0'>
-          <ReportTable showResult={false} headData={headData} allData={allData} isLoading={isLoading} selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers} formId={Number(formId)} />
+          <ReportTable headData={headData} allData={allData} isLoading={isLoading} selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers} formId={Number(formId)} />
         </div>
 
         <ReportPagination

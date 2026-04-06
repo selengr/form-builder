@@ -125,7 +125,7 @@ type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 export default function SettingsDialog({ formName, onChangeName,data }: Props) {
   const [openDialog, setOpenDialog] = useState(false);
   const [formFieldName, setFormFieldName] = useState<string>(formName);
-  // const [formFieldId, setFormFieldId] = useState<string>(data.formSettingModel.label??"");
+  const [formFieldId, setFormFieldId] = useState<string>(data.formSettingModel.label??"");
   const { id: formId } = useParams();
   const searchParams = useSearchParams();
   const search = searchParams.get('admin');
@@ -141,7 +141,7 @@ export default function SettingsDialog({ formName, onChangeName,data }: Props) {
     mode: 'all',
     defaultValues: {
       name: formFieldName,
-      label: data.formSettingModel.label,
+      label: formFieldId,
       expireDate: { checked: false, value: '' },
       timeToComplete: { checked: false, value: '' },
       responseLimitation: { checked: false, value: '' },
@@ -157,7 +157,7 @@ export default function SettingsDialog({ formName, onChangeName,data }: Props) {
   } = methods;
 
   async function onSubmit(values: propertiesFormSchemaType) {
-    const lab = values.label
+    const lab = formFieldId
     const body : any = {
       ...convertObject(values as any, fieldsConfig),
       name: formFieldName,
@@ -192,9 +192,13 @@ export default function SettingsDialog({ formName, onChangeName,data }: Props) {
           checked: !!data.formSettingModel.responseLimitation,
           value: data.formSettingModel.responseLimitation || '',
         },
+        // name: formName || '',
+        // label: data.formSettingModel.label || '',
       };
 
       reset((prev) => ({ ...prev, ...serverValues }));
+      // setFormFieldName(formName || '')
+      // setFormFieldId(data.formSettingModel.label || '')
     }
   }, [data, reset]);
 
@@ -284,8 +288,8 @@ export default function SettingsDialog({ formName, onChangeName,data }: Props) {
                       </Typography>
                       <RHFTextField
                         name='label'
-                        // value={formFieldId}
-                        // onChange={(event) => setFormFieldId(event.target.value)}
+                        value={formFieldId}
+                        onChange={(event) => setFormFieldId(event.target.value)}
                         sx={{
                           '& .MuiInputBase-root': {
                             borderRadius: '10px',

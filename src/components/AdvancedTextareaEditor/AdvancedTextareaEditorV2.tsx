@@ -108,9 +108,6 @@ export default function AdvancedEditor({
       const html = editor.getHTML();
       const text = editor.getText();
       const json = editor.getJSON();
-      console.log('html', html)
-      console.log('text', text)
-      console.log('json', json)
 
       const variables: { unique_name: string; label: string }[] = [];
       const walk = (n: any) => {

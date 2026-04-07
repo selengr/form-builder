@@ -1,5 +1,6 @@
 'use client';
 
+import { toast } from 'sonner';
 import { memo, useMemo, useState } from 'react';
 import { ElementsType, FormElement, FormElementInstance } from '../../types/FormElements';
 import { z } from 'zod';
@@ -567,8 +568,8 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
-      } catch (error) {
-        console.error(error);
+      } catch (error:any) {
+         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     } else {
       try {
@@ -583,8 +584,8 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
-      } catch (error) {
-        console.error(error);
+      } catch (error:any) {
+         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     }
   }

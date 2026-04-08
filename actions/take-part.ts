@@ -45,16 +45,16 @@ export async function checkResponseLimitationAction(params: {
       id: !isLink ? slug : null,
     })
 
-    return {
-      success: true,
-      data: res.data,
-    }
-  } catch (e: any) {
-    return {
-      success: false,
-      error: e?.response?.data?.message || "An error occurred",
-      statusCode: e?.response?.status,
-    }
+   return { data: res.data }
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
+    throw new Error(message);
   }
 }
 

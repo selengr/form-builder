@@ -183,15 +183,6 @@ export const useParticipateForm = () => {
       // });
       const result = await checkResponseLimitationAction({ slug })
 
-      if (!result.success) {
-        if (result.statusCode === 409) {
-          setHasError({ status: true, message: result.error?.[0]?.title || "خطا در دریافت اطلاعات" })
-        } else {
-          setHasError({ status: true, message: "متأسفیم! فرم مورد نظر در حال حاضر در دسترس نیست." })
-        }
-        return
-      }
-
       const { userInfo } = await fetchUserInfoServer();
       const username = userInfo?.user?.username || null;
 
@@ -205,12 +196,9 @@ export const useParticipateForm = () => {
       } else {
         await takePart(username);
       }
-    } catch (e: any) {
-      if (e.status === 409) {
-        setHasError({ status: true, message: e.response.data.message?.[0]?.title || "خطا در دریافت اطلاعات" })
-      } else {
-        setHasError({ status: true, message: "متأسفیم! فرم مورد نظر در حال حاضر در دسترس نیست." })
-      }
+    } catch (error:any) {
+       toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+       setHasError({ status: true, message: error?.message || 'انجام عملیات با خطا مواجه شد' })
     } finally {
       setFirstLoading(false);
     }

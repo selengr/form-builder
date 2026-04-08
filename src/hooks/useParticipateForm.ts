@@ -433,16 +433,17 @@ export const useParticipateForm = () => {
   const handlePrev = async () => {
     try {
       setQuestionLoading(true);
-      const res = await AxiosApi.post('/question/previous-question', { takePartId });
+      const res = await getPreviousQuestionAction({ takePartId })
+      // const res = await AxiosApi.post('/question/previous-question', { takePartId });
       const q = res.data.questionModel;
       const a = res.data.oldAnswers?.answersModel ?? [];
       initializeQuestion(q, a);
       setIsValid(true);
-    } catch (e) {
-      toast.error('خطا در بازگشت به سوال قبلی', {
-        className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
-        duration: 2000,
-      })
+      } catch (error: any) {
+        toast.error(error?.message || 'خطا در بازگشت به سوال قبلی', {
+          className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
+          duration: 2000,
+        })
     } finally {
       setQuestionLoading(false);
     }

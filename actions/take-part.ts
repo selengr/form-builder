@@ -135,18 +135,15 @@ export async function getPreviousQuestionAction(params: {
       takePartId,
     })
 
-    return {
-      success: true,
-      data: {
-        questionModel: res.data.questionModel,
-        oldAnswers: res.data.oldAnswers,
-      },
-    }
-  } catch (e: any) {
-    console.error("Error in getPreviousQuestionAction:", e)
-    return {
-      success: false,
-      error: e?.response?.data?.message || "An error occurred",
-    }
+    return { data: res.data }
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطا در بازگشت به سوال قبلی';
+
+    throw new Error(message);
   }
 }

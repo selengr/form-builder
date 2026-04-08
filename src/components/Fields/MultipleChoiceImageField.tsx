@@ -1,8 +1,9 @@
 'use client';
 
+import { z } from 'zod';
+import { toast } from 'sonner';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { ElementsType, FormElement, FormElementInstance } from '../../types/FormElements';
-import { z } from 'zod';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, IconButton, Radio, RadioGroup, Stack, Typography } from '@mui/material';
@@ -540,8 +541,8 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
-      } catch (error) {
-        console.error(error);
+      } catch (error:any) {
+         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     } else {
       try {
@@ -556,8 +557,8 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
-      } catch (error) {
-        console.error(error);
+      } catch (error:any) {
+         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     }
   }

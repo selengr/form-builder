@@ -1,6 +1,7 @@
 'use client';
 
 import { z } from 'zod';
+import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { memo, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -540,8 +541,8 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
-      } catch (error) {
-        console.error(error);
+      } catch (error:any) {
+         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     } else {
       try {
@@ -556,8 +557,8 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
-      } catch (error) {
-        console.error(error);
+      } catch (error:any) {
+         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     }
   }

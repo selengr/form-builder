@@ -1,7 +1,9 @@
+import { toast } from 'sonner';
   import { useState } from 'react';
-import { AxiosApi } from '@/services/axios/AxiosApi';
 import { useParams, useSearchParams } from 'next/navigation';
 import { ILimitation } from '@/hooks/useParticipateForm';
+// action
+import { checkAnswerBeforeAction } from '../../actions/take-part';
 
 export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimitation: (limitation: ILimitation) => void, setQuestion: (data: any) => void, addQuestion: (data: any) => void) => {
   const [formValue, setFormValue] = useState('');
@@ -10,6 +12,7 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
   const refId = searchParams.get('refId');
+  const from = searchParams.get('from');
 
   const { slug } = useParams<{ slug: string }>();
 
@@ -56,19 +59,25 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
   const takePartApi = async () => {
     try {
       setLoading(true);
-      const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
-      const response = await AxiosApi.post('/take-part/check-answer-to-form-before', {
-        link: isLink ? slug : null,
-        formId: !isLink ? slug : null,  
-        username: formValue,
-        refId: refId ?? undefined,
-      });
+      // const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
+      // const response = await AxiosApi.post('/take-part/check-answer-to-form-before', {
+      //   link: isLink ? slug : null,
+      //   formId: !isLink ? slug : null,  
+      //   username: formValue,
+      //   refId: refId ?? undefined,
+      // });
+      const response = await checkAnswerBeforeAction({
+          slug,
+          username: formValue,
+          refId: refId ?? undefined,
+          from: from ?? undefined,
+      })
 
       addQuestion(response.data);
       setQuestion(response.data.questionModel);
       setLimitation({ isLimited: false, limitationType: '' });
-    } catch (e) {
-      console.error('Error in takePartApi:', e);
+      } catch (error:any) {
+         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
       setError(true);
       setHelperText('خطا در ارتباط با سرور');
     } finally {

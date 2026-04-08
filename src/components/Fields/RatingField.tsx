@@ -1,8 +1,9 @@
 'use client';
 
+import { z } from 'zod';
+import { toast } from 'sonner';
 import { memo, useMemo, useState } from 'react';
 import { ElementsType, FormElement, FormElementInstance } from '../../types/FormElements';
-import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Stack, Typography } from '@mui/material';
@@ -10,7 +11,6 @@ import FormProvider from '../../components/hook-form/FormProvider';
 import { RHFMultiSelect, RHFSwitch, RHFTextField } from '@/components/hook-form';
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
 import { IFormElementConstructor, IQPLRating, IRatingQTapAndOptionsType } from '@/types/bulider';
-import { AxiosApi } from '@/services/axios/AxiosApi';
 import useElements from '@/hooks/useElements';
 import useDesigner from '@/hooks/useDesigner';
 import useActionOpenDialog from '@/hooks/useActionOpenDialog';
@@ -405,8 +405,8 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
-      } catch (error) {
-        console.error(error);
+      } catch (error:any) {
+         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     } else {
       try {
@@ -419,8 +419,8 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
-      } catch (error) {
-        console.error(error);
+      } catch (error:any) {
+         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     }
   }

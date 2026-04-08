@@ -11,7 +11,7 @@ export async function takePartAction(params: {
   try {
     const { slug, username, from, refId } = params
     const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
-    
+
     const res = await serverApi.post("/take-part", {
       link: isLink ? slug : null,
       formId: !isLink ? slug : null,
@@ -20,16 +20,16 @@ export async function takePartAction(params: {
       refId: refId ?? null,
     })
 
-    return {
-      success: true,
-      data: res.data,
-    }
-  } catch (e: any) {
-    console.error("Error in takePartAction:", e)
-    return {
-      success: false,
-      error: e?.response?.data?.message || "An error occurred",
-    }
+    return { data: res.data }
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
+    throw new Error(message);
   }
 }
 
@@ -45,49 +45,47 @@ export async function checkResponseLimitationAction(params: {
       id: !isLink ? slug : null,
     })
 
-    return {
-      success: true,    
-      data: res.data,
-    }
-  } catch (e: any) {
-    return {
-      success: false,
-      error: e?.response?.data?.message || "An error occurred",
-      statusCode: e?.response?.status,
-    }
-  } 
+   return { data: res.data }
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
+    throw new Error(message);
+  }
 }
 
 export async function checkAnswerBeforeAction(params: {
   slug: string
   username: string | null
   refId?: string
+  from?: string
 }) {
   try {
-    const { slug, username, refId } = params
+    const { slug, username, refId, from } = params
     const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
 
     const res = await serverApi.post("/take-part/check-answer-to-form-before", {
-      link: isLink ? slug : null,
-      formId: !isLink ? slug : null,
-      username,
-      refId: refId ?? null,
+        link: isLink ? slug : null,
+        formId: !isLink ? slug : null,
+        username,
+        refId: refId ?? undefined,
+        from: from ?? undefined,
     })
 
-    return {
-      success: true,
-      data: {
-        takePart: res.data.takePart,
-        questionModel: res.data.questionModel,
-        userAnswerModel: res.data.userAnswerModel,
-      },
-    }
-  } catch (e: any) {
-    console.error("Error in checkAnswerBeforeAction:", e)
-    return {
-      success: false,
-      error: e?.response?.data?.message || "An error occurred",
-    }
+    return { data: res.data }
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
+    throw new Error(message);
   }
 }
 
@@ -111,17 +109,19 @@ export async function insertAnswerAction(params: {
       answerList,
     })
 
-    return {
-      success: true,
-      data: res.data,
-    }
-  } catch (e: any) {
-    return {
-      success: false,
-      error: e?.response?.data?.message || "An error occurred",
-    }
+    return res.data
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
+    throw new Error(message);
   }
 }
+
 
 export async function getPreviousQuestionAction(params: {
   takePartId: any
@@ -133,18 +133,15 @@ export async function getPreviousQuestionAction(params: {
       takePartId,
     })
 
-    return {
-      success: true,
-      data: {
-        questionModel: res.data.questionModel,
-        oldAnswers: res.data.oldAnswers,
-      },
-    }
-  } catch (e: any) {
-    console.error("Error in getPreviousQuestionAction:", e)
-    return {
-      success: false,
-      error: e?.response?.data?.message || "An error occurred",
-    }
+    return { data: res.data }
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطا در بازگشت به سوال قبلی';
+
+    throw new Error(message);
   }
 }

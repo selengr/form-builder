@@ -11,7 +11,7 @@ export async function takePartAction(params: {
   try {
     const { slug, username, from, refId } = params
     const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
-    
+
     const res = await serverApi.post("/take-part", {
       link: isLink ? slug : null,
       formId: !isLink ? slug : null,
@@ -46,7 +46,7 @@ export async function checkResponseLimitationAction(params: {
     })
 
     return {
-      success: true,    
+      success: true,
       data: res.data,
     }
   } catch (e: any) {
@@ -55,7 +55,7 @@ export async function checkResponseLimitationAction(params: {
       error: e?.response?.data?.message || "An error occurred",
       statusCode: e?.response?.status,
     }
-  } 
+  }
 }
 
 export async function checkAnswerBeforeAction(params: {
@@ -111,17 +111,19 @@ export async function insertAnswerAction(params: {
       answerList,
     })
 
-    return {
-      success: true,
-      data: res.data,
-    }
-  } catch (e: any) {
-    return {
-      success: false,
-      error: e?.response?.data?.message || "An error occurred",
-    }
+    return res.data
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
+    throw new Error(message);
   }
 }
+
 
 export async function getPreviousQuestionAction(params: {
   takePartId: any

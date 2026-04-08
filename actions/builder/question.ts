@@ -9,6 +9,7 @@ export async function createQuestionAction(payload: any) {
   } catch (error: any) {
     const message =
       error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
       error?.response?.data ||
       error?.message ||
       'خطای نامشخص';

@@ -10,7 +10,7 @@ import withValidation from '@/components/Fields/FormHOC';
 // actions
 import {
   takePartAction,
-  insertAnswerAction, 
+  insertAnswerAction,
   checkAnswerBeforeAction,
   getPreviousQuestionAction,
   checkResponseLimitationAction,
@@ -309,14 +309,15 @@ export const useParticipateForm = () => {
         if (isMultiSelect) {
           const ids = Array.isArray(formData) ? formData : [];
           answerList = ids.map((item: any) => ({
-            optionId: Number(item),
+            optionId: Number(item) || null,
             answer: String(item),
             id: typeof answerId === 'object' ? answerId[item] : undefined,
           }));
         } else {
+          const optionId = Number(formData) || null;
           answerList = [
             {
-              optionId: Number(formData),
+              optionId,
               answer: String(formData),
               id: typeof answerId === 'number' ? answerId : undefined,
             },
@@ -334,7 +335,7 @@ export const useParticipateForm = () => {
               },
             })
           }
- 
+
           answerList = formData.map((val: number, index: number) => ({
             optionId: null,
             answer: formData[0] === null ? "" : String(val),
@@ -409,28 +410,21 @@ export const useParticipateForm = () => {
         answerList,
       })
 
-      if (!res.success) {
-        console.error('res.error', res.error)
-        throw new Error(res.error)
-      }
-
-      if (res.data.questionId) {
-        initializeQuestion(res.data, res.data.oldAnswers ?? []);
+      if (res.questionId) {
+        initializeQuestion(res, res.oldAnswers ?? []);
       } else {
         setFinishPage(true);
-        setShowReportForResponder(res.data?.showReportForResponder);
+        setShowReportForResponder(res?.showReportForResponder);
       }
-
-    } catch (e) {
-      console.error('e', e)
-      toast.error("خطا در ثبت پاسخ", {
+    } catch (error: any) {
+      toast.error(error?.message || 'انجام عملیات با خطا مواجه شد', {
         className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
         duration: 2000,
         cancel: {
           label: 'بستن',
           onClick: () => console.log('Cancel!'),
         },
-      })
+      });
     } finally {
       setQuestionLoading(false);
     }
@@ -441,7 +435,7 @@ export const useParticipateForm = () => {
       setQuestionLoading(true);
       const res = await AxiosApi.post('/question/previous-question', { takePartId });
       const q = res.data.questionModel;
-      const a = res.data.oldAnswers?.answersModel ?? []; 
+      const a = res.data.oldAnswers?.answersModel ?? [];
       initializeQuestion(q, a);
       setIsValid(true);
     } catch (e) {

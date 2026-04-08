@@ -257,23 +257,28 @@ export const useParticipateForm = () => {
 
   const checkAnswerBefore = async (username: string | null) => {
     try {
-      const url = '/take-part/check-answer-to-form-before';
-      const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
+      // const res = await AxiosApi.post(url, {
+      //   link: isLink ? slug : null,
+      //   formId: !isLink ? slug : null,
+      //   username,
+      //   refId: refId ?? undefined,
+      //   from: from ?? undefined,
+      // });
 
-      const res = await AxiosApi.post(url, {
-        link: isLink ? slug : null,
-        formId: !isLink ? slug : null,
+      const res = await checkAnswerBeforeAction({
+        slug,
         username,
         refId: refId ?? undefined,
         from: from ?? undefined,
-      });
+      })
+
       setTakePartId(res.data.takePart);
       setFormName(res.data?.formName);
       initializeQuestion(res.data.questionModel, res.data.userAnswerModel?.answersModel ?? []);
-    } catch (e) {
-      console.error('Error in checkAnswerBefore:', e);
-      throw e;
-    }
+      } catch (error:any) {
+         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+         throw new Error(error?.message)
+      }
   };
 
   const handleValidationUpdate = (valid: boolean, value: any) => {

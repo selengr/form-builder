@@ -62,32 +62,30 @@ export async function checkAnswerBeforeAction(params: {
   slug: string
   username: string | null
   refId?: string
+  from?: string
 }) {
   try {
-    const { slug, username, refId } = params
+    const { slug, username, refId, from } = params
     const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
 
     const res = await serverApi.post("/take-part/check-answer-to-form-before", {
-      link: isLink ? slug : null,
-      formId: !isLink ? slug : null,
-      username,
-      refId: refId ?? null,
+        link: isLink ? slug : null,
+        formId: !isLink ? slug : null,
+        username,
+        refId: refId ?? undefined,
+        from: from ?? undefined,
     })
 
-    return {
-      success: true,
-      data: {
-        takePart: res.data.takePart,
-        questionModel: res.data.questionModel,
-        userAnswerModel: res.data.userAnswerModel,
-      },
-    }
-  } catch (e: any) {
-    console.error("Error in checkAnswerBeforeAction:", e)
-    return {
-      success: false,
-      error: e?.response?.data?.message || "An error occurred",
-    }
+    return { data: res.data }
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
+    throw new Error(message);
   }
 }
 

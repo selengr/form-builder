@@ -20,16 +20,16 @@ export async function takePartAction(params: {
       refId: refId ?? null,
     })
 
-    return {
-      success: true,
-      data: res.data,
-    }
-  } catch (e: any) {
-    console.error("Error in takePartAction:", e)
-    return {
-      success: false,
-      error: e?.response?.data?.message || "An error occurred",
-    }
+    return { data: res.data }
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
+    throw new Error(message);
   }
 }
 

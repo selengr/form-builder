@@ -233,10 +233,6 @@ export const useParticipateForm = () => {
         refId: refId ?? undefined,
       })
 
-      if (!res.success) {
-        throw new Error(res.error)
-      }
-
       const q = res.data?.questionModel;
 
       if (q?.isFirstQuestion) {
@@ -247,8 +243,8 @@ export const useParticipateForm = () => {
       setFormName(res.data?.formName);
       setTakePartId(res.data?.takePart);
       initializeQuestion(q);
-    } catch (e) {
-      toast.error('خطا! بارگذاری انجام نشد');
+    } catch (error:any) {
+       toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
     } finally {
       setFirstLoading(false)
       setQuestionLoading(false)

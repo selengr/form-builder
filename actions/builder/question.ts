@@ -23,7 +23,13 @@ export async function updateQuestionAction(questionId: string, payload: any) {
     const res: any = await serverApi.put(`/question/${questionId}`, payload);
     return { data: res.data };
   } catch (error: any) {
-    const err = error instanceof Error ? error : new Error(error?.message || 'خطای نامشخص');
-    throw err;
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
+    throw new Error(message);
   }
 }

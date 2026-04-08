@@ -38,11 +38,14 @@ export async function fetchUserInfoServer(): Promise<IFetchUserInfoResult> {
       error: null,
     };
   } catch (error: any) {
-    const err = error instanceof Error ? error : new Error(error?.message || 'خطای نامشخص');
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      'خطای نامشخص';
+    
     return {
       userInfo: null,
       isAuthenticated: false,
-      error: err,
+      error: message,
     };
   }
 }

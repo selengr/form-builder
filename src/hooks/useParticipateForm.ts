@@ -3,8 +3,6 @@
 import { toast } from 'sonner';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
-// services
-import { AxiosApi } from '@/services/axios/AxiosApi';
 // components
 import withValidation from '@/components/Fields/FormHOC';
 // actions
@@ -261,7 +259,6 @@ export const useParticipateForm = () => {
       initializeQuestion(res.data.questionModel, res.data.userAnswerModel?.answersModel ?? []);
       } catch (error:any) {
          toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
-         throw new Error(error?.message)
       }
   };
 

@@ -11,6 +11,8 @@ import { IoSettingsOutline } from 'react-icons/io5';
 import { AxiosApi } from '@/services/axios/AxiosApi';
 import { useParams, useSearchParams } from 'next/navigation';
 import { convertObject } from '@/lib/settingsUtils';
+import { formSetting } from '../../../actions/builder/form-setting';
+import { toast } from 'sonner';
 
 interface Props {
   formName: string;
@@ -168,12 +170,13 @@ export default function SettingsDialog({ formName, onChangeName,data }: Props) {
     }
 
     try {
-      const res = await AxiosApi.post(`/form-setting/${formId}`, body as any);
+      // const res = await AxiosApi.post(`/form-setting/${formId}`, body as any);
+      await formSetting(formId as string, body as any);
       handleOpen();
       onChangeName(formFieldName);
-    } catch (error) {
-      console.log(error);
-    }
+      } catch (error:any) {
+         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+      }
   }
 
   useEffect(() => {

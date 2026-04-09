@@ -13,6 +13,7 @@ import { RHFMultiSelectV0, RHFTextField } from '../hook-form';
 import { AxiosApi } from '@/services/axios/AxiosApi';
 import { useGetSubCategory } from './hooks/useGetSubCategory';
 import { useGetParentCategory } from './hooks/useGetParentCategory';
+import { creatFormAction } from '../../../actions/builder/createForm';
 
 const propertiesSchema = z.object({
   name: z
@@ -78,13 +79,13 @@ export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
     };
 
     try {
-      const response = await AxiosApi.post('/form', body);
+      // const response = await AxiosApi.post('/form', body);
+      const response = await creatFormAction(body)
       toast.success('عملیات با موفقیت انجام شد');
       onClose()
       router.push(`/builder/${response?.data?.id}`);
-    } catch (error) {
-      console.error(error);
-      toast.error('خطا در ایجاد فرم');
+      } catch (error:any) {
+         toast.error( error?.message || 'خطا در ایجاد فرم');
     }
   };
 

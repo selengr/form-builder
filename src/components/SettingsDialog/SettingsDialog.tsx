@@ -1,18 +1,20 @@
 'use client';
-import { useCallback, useEffect, useState } from 'react';
-import { Box, Button, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
-import { CgClose } from 'react-icons/cg';
 import { z } from 'zod';
-import FormProvider, { RHFTextField } from '../hook-form';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import FieldSwitchPair from './FieldSwitchPair';
-import { IoSettingsOutline } from 'react-icons/io5';
-import { AxiosApi } from '@/services/axios/AxiosApi';
-import { useParams, useSearchParams } from 'next/navigation';
-import { convertObject } from '@/lib/settingsUtils';
-import { formSetting } from '../../../actions/builder/form-setting';
 import { toast } from 'sonner';
+import { CgClose } from 'react-icons/cg';
+import { useForm } from 'react-hook-form';
+import { IoSettingsOutline } from 'react-icons/io5';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useCallback, useEffect, useState } from 'react';
+import { useParams, useSearchParams } from 'next/navigation';
+import { Box, Button, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
+// lib
+import { convertObject } from '@/lib/settingsUtils';
+// hook
+import FieldSwitchPair from './FieldSwitchPair';
+import FormProvider, { RHFTextField } from '../hook-form';
+// actions
+import { formSetting } from '../../../actions/builder/form-setting';
 
 interface Props {
   formName: string;
@@ -170,7 +172,6 @@ export default function SettingsDialog({ formName, onChangeName,data }: Props) {
     }
 
     try {
-      // const res = await AxiosApi.post(`/form-setting/${formId}`, body as any);
       await formSetting(formId as string, body as any);
       handleOpen();
       onChangeName(formFieldName);

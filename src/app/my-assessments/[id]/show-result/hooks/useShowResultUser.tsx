@@ -1,13 +1,9 @@
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
-import { AxiosApi } from '@/services/axios/AxiosApi';
+// actions
+import { showResultUser } from '../../../../../../actions/myAssessments/showResultUser';
 
-const showResultUser = async (data: { formId: number; takePartId: number }) => {
-  const url = '/report/user/solo/show-solo-report-for-responder';
-  const response = await AxiosApi.post(url, data);
-  return response.data;
-};
 
 export const useShowResultUser = () => {
   const { push } = useRouter();
@@ -20,8 +16,8 @@ export const useShowResultUser = () => {
       localStorage.setItem('Show_User_Solo_Result', JSON.stringify(result));
       push(`/my-assessments/${result?.formId}/show-result?name=${name}`);
     },
-    onError: () => {
-      toast.error('عملیات ناموفق بود مجددا تلاش کنید');
+    onError: (error) => {
+      toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
     },
   });
 

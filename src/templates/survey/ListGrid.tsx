@@ -154,7 +154,7 @@ const ListGrid: React.FC<Props> = ({
   }, [pages]);
 
   if (error) {
-    toast.error(error.message);
+    toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
   }
 
   const renderHeader = useCallback(

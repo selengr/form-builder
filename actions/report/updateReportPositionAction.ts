@@ -9,8 +9,19 @@ export interface IUpdatePositionPayload {
 }
 
 export async function updateReportPositionAction(data: IUpdatePositionPayload) {
-  const url = '/report/solo/change-position';
+  try {
+    const url = '/report/solo/change-position';
 
-  const res = await serverApi.post(url, data);
-  return res.data;
+    const res = await serverApi.post(url, data);
+    return res.data;
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
+    throw new Error(message);
+  }
 }

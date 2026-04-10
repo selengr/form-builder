@@ -8,21 +8,32 @@ export type GetReportListParams = {
 };
 
 export async function getReportListAction({ formId, admin }: GetReportListParams) {
-  const filterModel = {
-    searchFilterBoxList: [{ restrictionList: [] }],
-    sortList: [{ fieldName: 'id', type: 'DSC' }],
-    page: 0,
-    rows: 1000,
-  };
+  try {
+    const filterModel = {
+      searchFilterBoxList: [{ restrictionList: [] }],
+      sortList: [{ fieldName: 'id', type: 'DSC' }],
+      page: 0,
+      rows: 1000,
+    };
 
-  const baseUrl = admin
-    ? `/admin/report/solo/main-list/${String(formId)}`
-    : `/report/solo/main-list/${String(formId)}`;
+    const baseUrl = admin
+      ? `/admin/report/solo/main-list/${String(formId)}`
+      : `/report/solo/main-list/${String(formId)}`;
 
-  const url =
-    `${baseUrl}?searchFilterModel=` +
-    encodeURIComponent(JSON.stringify(filterModel));
+    const url =
+      `${baseUrl}?searchFilterModel=` +
+      encodeURIComponent(JSON.stringify(filterModel));
 
-  const res = await serverApi.get(url);
-  return res.data.content;
+    const res = await serverApi.get(url);
+    return res.data.content;
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
+    throw new Error(message);
+  }
 }

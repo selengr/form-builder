@@ -27,8 +27,14 @@ export async function getUserReportsDataAction(page: number = 1, pageSize: numbe
       allData: rawData.content,
       totalItems: rawData.totalElements || rawData.content.length,
     };
-  } catch (error) {
-    console.error('Error in getUserReportsDataAction:', error);
-    throw error;
+ } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
+    throw new Error(message);
   }
 }

@@ -12,17 +12,28 @@ type TargetPlatformResponse = {
 };
 
 export async function getTargetPlatformAction(): Promise<TargetPlatformResponse> {
-  const customComboFilterModel = {
-    type: 'COMBO',
-    entity: 'PROJECTS',
-    input: '',
-    page: 0,
-    rows: 1000,
-  };
+  try {
+    const customComboFilterModel = {
+      type: 'COMBO',
+      entity: 'PROJECTS',
+      input: '',
+      page: 0,
+      rows: 1000,
+    };
 
-  const baseUrl = `/admin/form/survey/target-platform/custom-combo`;
-  const queryString = `?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`;
+    const baseUrl = `/admin/form/survey/target-platform/custom-combo`;
+    const queryString = `?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`;
 
-  const { data } = await serverApi.get<TargetPlatformResponse>(baseUrl + queryString);
-  return data;
+    const { data } = await serverApi.get<TargetPlatformResponse>(baseUrl + queryString);
+    return data;
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
+    throw new Error(message);
+  }
 }

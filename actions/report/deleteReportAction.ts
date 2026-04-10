@@ -3,7 +3,18 @@
 import { serverApi } from '@/services/axios/serverApi';
 
 export async function deleteReportAction(id: number) {
-  const url = `/report/solo/${id}`;
-  const res = await serverApi.delete(url);
-  return res.data;
+  try {
+    const url = `/report/solo/${id}`;
+    const res = await serverApi.delete(url);
+    return res.data;
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
+    throw new Error(message);
+  }
 }

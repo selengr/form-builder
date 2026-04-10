@@ -15,8 +15,8 @@ export const useDeleteReport = () => {
       queryClient.invalidateQueries(['Report_List'] as any);
       toast.success(`خرده‌گزارش با موفقیت حذف شد`);
     },
-    onError: () => {
-      toast.error('انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.');
+    onError: (error) => {
+      toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
     },
   });
 

@@ -86,9 +86,9 @@ export function PreviewProvider({ children }: { children: ReactNode }) {
             },
           });
         }
-      } catch (error) {
+      } catch (error:any) {
         dispatch({ type: 'dataFailed' });
-        toast.error('خطا در دریافت اطلاعات');
+        toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     }
 

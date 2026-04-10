@@ -12,6 +12,7 @@ type TargetPlatformResponse = {
 };
 
 export async function getTargetPlatformAction(): Promise<TargetPlatformResponse> {
+try{
   const customComboFilterModel = {
     type: 'COMBO',
     entity: 'PROJECTS',
@@ -25,4 +26,14 @@ export async function getTargetPlatformAction(): Promise<TargetPlatformResponse>
 
   const { data } = await serverApi.get<TargetPlatformResponse>(baseUrl + queryString);
   return data;
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
+    throw new Error(message);
+  }
 }

@@ -14,9 +14,9 @@ export const useUpdateReportPosition = () => {
     mutationKey: ['change-position'],
     mutationFn: (data: IUpdatePositionPayload) => updateReportPositionAction(data),
 
-    onSuccess: () => {},
-    onError: () => {
-      toast.error('انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.');
+    onSuccess: () => { },
+    onError: (error) => {
+      toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
     },
   });
 

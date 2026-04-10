@@ -1,3 +1,4 @@
+import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 // actions
 import { fetchMenuServer } from '../../actions/menu';
@@ -15,12 +16,12 @@ const useMenu = (userInfo: any): { menu: IMenuResponseData | null; loading: bool
       if (userInfo && !cachedMenu) {
         setLoading(true);
         try {
-            // const { data } = await AxiosApi.get('/authorization-psya/front-panel/non-org-user-role/find-user-loggedin-info', { baseURL: process.env.NEXT_PUBLIC_BASE_URL_PSYA });
+          // const { data } = await AxiosApi.get('/authorization-psya/front-panel/non-org-user-role/find-user-loggedin-info', { baseURL: process.env.NEXT_PUBLIC_BASE_URL_PSYA });
           const data = await fetchMenuServer();
           cachedMenu = data;
           setMenu(data);
-        } catch (err) {
-          console.error('Fetch error:', err);
+        } catch (error: any) {
+          toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
         } finally {
           setLoading(false);
         }

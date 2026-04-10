@@ -12,6 +12,7 @@ type SurveyPurposeResponse = {
 };
 
 export async function getSurveyPurposeAction(): Promise<SurveyPurposeResponse> {
+try{  
   const customComboFilterModel = {
     type: 'COMBO',
     entity: 'PROJECTS',
@@ -26,4 +27,14 @@ export async function getSurveyPurposeAction(): Promise<SurveyPurposeResponse> {
 
   const { data } = await serverApi.get<SurveyPurposeResponse>(url);
   return data;
+} catch (error: any) {
+  const message =
+    error?.response?.data?.message?.[0]?.title ||
+    error?.response?.data?.message ||
+    error?.response?.data ||
+    error?.message ||
+    'خطای نامشخص';
+
+  throw new Error(message);
+}
 }

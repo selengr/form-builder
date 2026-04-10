@@ -2,20 +2,17 @@
 
 import { serverApi } from '@/services/axios/serverApi';
 
-export async function showSoloReport(
-  data: { formId: number; takePartId: number }[]
-) {
+export async function creatFormAction(body: any) {
   try {
-    const url = '/report/solo/show-solo-report';
-    const response = await serverApi.post(url, data);
-    return response.data;
+    const res = await serverApi.post('/form', body);
+    return { data: res.data };
   } catch (error: any) {
     const message =
       error?.response?.data?.message?.[0]?.title ||
       error?.response?.data?.message ||
       error?.response?.data ||
       error?.message ||
-      'خطای نامشخص';
+      'خطا در ایجاد فرم';
 
     throw new Error(message);
   }

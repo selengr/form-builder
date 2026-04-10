@@ -78,8 +78,15 @@ export async function surveyFilter(
       data: response.data.content,
       total: response.data.totalElements,
     };
-  } catch (error) {
-    console.error('Server Action Error:', error);
-    throw new Error('خطا در دریافت اطلاعات');
+    
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
+    throw new Error(message);
   }
 }

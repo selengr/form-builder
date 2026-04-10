@@ -38,9 +38,15 @@ export async function getStatsDataAction(
       allData: dataWithIndex,
       totalItems: rawData.totalElements || rawData.content.length,
     };
-  } catch (error) {
-    console.error('Error in getStatsData:', error);
-    throw error;
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
+    throw new Error(message);
   }
 }
 
@@ -48,7 +54,14 @@ export async function getFormDataAction(id: string) {
   try {
     const response = await serverApi.get(`/form/${id}`);
     return response.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
+    throw new Error(message);
   }
 }

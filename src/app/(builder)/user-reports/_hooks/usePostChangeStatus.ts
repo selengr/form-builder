@@ -14,8 +14,8 @@ export const usePostChangeStatus = () => {
     onSuccess: () => {
       toast.success(`با موفقیت انجام شد`);
     },
-    onError: () => {
-      toast.error('انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.');
+    onError: (error) => {
+      toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
     },
   });
 

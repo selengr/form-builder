@@ -19,8 +19,8 @@ export const usePostCondition = () => {
       localStorage.setItem('testResult', JSON.stringify(result));
       push(`/stats/${result[0].formId}/show-result?name=${name}`);
     },
-    onError: () => {
-      toast.error('عملیات ناموفق بود مجددا تلاش کنید');
+    onError: (error) => {
+      toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
     },
   });
 

@@ -42,11 +42,18 @@ export async function getPreviewFormData(id: string | string[], admin: boolean) 
         title: data.name,
       },
     };
-  } catch (error) {
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
     return {
       success: false,
       type: 'dataFailed',
-      error: 'خطا در دریافت اطلاعات',
+      error: message
     };
   }
 }

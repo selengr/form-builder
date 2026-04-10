@@ -10,10 +10,10 @@ interface SearchBoxItem {
 }
 
 const PAGE_SIZE = 10;
-const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'PUBLIC', takeParts: 'ALL', showReport: 'ALL'};
+const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'PUBLIC', takeParts: 'ALL', showReport: 'ALL' };
 
 export async function assessmentlist(
- {
+  {
     pageParam = 0,
   }: {
     pageParam: number;
@@ -101,8 +101,14 @@ export async function assessmentlist(
       data: response.data.content,
       total: response.data.totalElements,
     };
-  } catch (error) {
-    console.error('Server Action Error:', error);
-    throw new Error('خطا در دریافت اطلاعات');
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
+    throw new Error(message);
   }
 }

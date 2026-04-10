@@ -118,8 +118,8 @@ export default function GroupDetailsPage() {
         });
       }
 
-    } catch (error) {
-      toast.error('عملیات ناموفق بود. مجدداً تلاش کنید.');
+    } catch (error :any) {
+       toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
     } finally {
       setLoading(false)
       setDisabledSwitches((prev) =>

@@ -20,7 +20,11 @@ export async function serverFetch(url: string, params: Record<string, any> = {})
       ok: false as const,
       data: null,
       status: error?.response?.status ?? 500,
-      message: error?.message ?? 'Error fetching data',
+      message: error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص'
     };
   }
 }

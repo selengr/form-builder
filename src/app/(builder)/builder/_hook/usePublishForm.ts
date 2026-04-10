@@ -27,8 +27,8 @@ const publishFormAction = async ({formId, IsSurvey, IsDataCollection }: UsePubli
         }),
       });
 
-    } catch (error) {
-      toast.error('خطا در برقراری ارتباط با سرور.');
+    } catch (error:any) {
+      toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
     }
 };  
 

@@ -9,7 +9,18 @@ export interface TTicketFormData {
 }
 
 export async function postChangeStatusAction(data: TTicketFormData) {
-  const url = `/admin/form/change-status`;
-  const res = await serverApi.put(url, data);
-  return res.data;
+  try {
+    const url = `/admin/form/change-status`;
+    const res = await serverApi.put(url, data);
+    return res.data;
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      error?.response?.data ||
+      error?.message ||
+      'خطای نامشخص';
+
+    throw new Error(message);
+  }
 }

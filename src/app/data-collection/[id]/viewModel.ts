@@ -1,3 +1,4 @@
+import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 // actions
@@ -22,8 +23,8 @@ export const useStatsViewModel = () => {
       // const data = await statsService.getFormData(id.toString());
        const data = await getFormDataAction(id.toString());
       setFormData(data);
-    } catch (error) {
-      console.error('Error fetching form data:', error);
+    } catch (error:any) {
+        toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
     } finally {
       setIsLoading(false);
     }
@@ -38,8 +39,8 @@ export const useStatsViewModel = () => {
       setHeadData(data.headData);
       setAllData(data.allData);
       setTotalItems(data.totalItems);
-    } catch (error) {
-      console.error('Error fetching stats data:', error);
+    } catch (error:any) {
+        toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
     } finally {
       setIsLoading(false);
     }

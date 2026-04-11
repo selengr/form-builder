@@ -2,7 +2,7 @@ import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 // actions
-// import statsService from '@/services/statsService';
+import statsService from '@/services/statsService';
 import { getStatsDataAction, getFormDataAction } from '../../../../actions/dataCollection/stats';
 
 export const useStatsViewModel = () => {
@@ -20,13 +20,11 @@ export const useStatsViewModel = () => {
     try {
       setIsLoading(true);
       // @ts-ignore
-      // const data = await statsService.getFormData(id.toString());
-       const data = await getFormDataAction(id);
-       debugger
+      const data = await statsService.getFormData(id.toString());
+      //  const data = await getFormDataAction(id);
       setFormData(data);
     } catch (error:any) {
-      console.log('error', error)
-      toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+      toast.error(error?.response?.data?.message?.[0]?.title || 'انجام عملیات با خطا مواجه شد');
     } finally {
       setIsLoading(false);
     }

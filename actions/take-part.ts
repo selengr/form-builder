@@ -84,7 +84,9 @@ export async function checkAnswerBeforeAction(params: {
       error?.response?.data ||
       error?.message ||
       'خطای نامشخص';
-
+console.log("-----------------------------------------------------------1",error?.response?.data?.message)
+console.log("-----------------------------------------------------------2",error?.response?.data?.message)
+console.log("-----------------------------------------------------------2", error?.message)
     throw new Error(message);
   }
 }

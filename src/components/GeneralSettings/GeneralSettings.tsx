@@ -151,10 +151,20 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
         queryClient.invalidateQueries({ queryKey: ['datas_builder_query'] });
         handleOpen();
         reset();
-        toast.success('با موفقیت به سبد خرید افزوده شد.');
-      } catch (error: any) {
-        toast.error('خطای ارتباط با سرور. لطفاً دوباره تلاش کنید.');
-      }
+        toast.success('با موفقیت به سبد خرید افزوده شد.', {
+          className: `max-w-[300px]`,
+          duration: 6000,
+          action: { 
+            label: 'مشاهده سبد خرید',
+            onClick: () => {
+              push('/purchase-order');
+            },
+          },
+        });
+
+     } catch (error:any) {
+        toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+    }
     },
     [formId, handleOpen, reset, setError],
   );

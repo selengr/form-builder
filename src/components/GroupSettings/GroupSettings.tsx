@@ -6,6 +6,7 @@ import { z } from "zod"
 import Image from "next/image"
 import { toast } from "sonner"
 import { useForm } from "react-hook-form"
+import { useRouter } from 'next/navigation';
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
 import { useInView } from "react-intersection-observer"
@@ -58,6 +59,7 @@ interface GroupSettingsProps {
 }
 
 const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formData }) => {
+  const { push } = useRouter()
   const [inputValue, setInputValue] = useState("")
   const [searchBoxList, setSearchBoxList] = useState<SearchBoxItem[]>([
     {
@@ -76,7 +78,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
   const [openCancelGroupAllocationDialog, setOpenCancelGroupAllocationDialog] = useState(false)
   // const [openShowReportForResponderDialog, setOpenShowReportForResponderDialog] = useState<boolean>(false)
   const [explicitlyUncheckedIncompleteIds, setExplicitlyUncheckedIncompleteIds] = useState<number[]>([])
-  
+
   const isFetchingRef = useRef(false)
 
   const queryClient = useQueryClient()
@@ -86,7 +88,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
     threshold: 0.1,
   })
 
-  const { data,refetch, error, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } = useFetchGroupsSetting({
+  const { data, refetch, error, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } = useFetchGroupsSetting({
     formId,
     searchBoxList,
   })
@@ -162,7 +164,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
         )
         .map((g) => g.id)
       if (newDefaults.length > 0) {
-   
+
         setValue("groupsId", [...currentSelected, ...newDefaults], {
           shouldValidate: true,
         })
@@ -222,9 +224,9 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
     const addedGroups = currentSelected.filter((id) => !initialSelectedGroupIds.includes(id))
 
     const removedGroups = [
-        ...initialSelectedGroupIds.filter((id) => !currentSelected.includes(id)),
-        ...explicitlyUncheckedIncompleteIds,
-      ]
+      ...initialSelectedGroupIds.filter((id) => !currentSelected.includes(id)),
+      ...explicitlyUncheckedIncompleteIds,
+    ]
 
     try {
       if (addedGroups.length > 0) {
@@ -263,7 +265,16 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
           return
         }
 
-        toast.success("با موفقیت به سبد خرید افزوده شد.")
+        toast.success('با موفقیت به سبد خرید افزوده شد.', {
+          className: `max-w-[300px]`,
+          duration: 6000,
+          action: {
+            label: 'مشاهده سبد خرید',
+            onClick: () => {
+              push('/purchase-order')
+            },
+          },
+        });
       }
       if (removedGroups.length > 0) {
         const cancelResponse = await fetch("/api/group/cancel", {
@@ -301,9 +312,9 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
   const onSubmit = async () => {
     const currentSelected = getValues("groupsId")
     const removedGroups = [
-        ...initialSelectedGroupIds.filter((id) => !currentSelected.includes(id)),
-        ...explicitlyUncheckedIncompleteIds,
-      ]
+      ...initialSelectedGroupIds.filter((id) => !currentSelected.includes(id)),
+      ...explicitlyUncheckedIncompleteIds,
+    ]
     if (removedGroups.length > 0) {
       const removed = groups.filter((g) => removedGroups.includes(g.id));
 
@@ -333,22 +344,22 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
   //   push("/reports")
   // }
 
-  
+
   const handleClose = useCallback(async () => {
-  const { data: newData } = await refetch();
+    const { data: newData } = await refetch();
 
-  const newGroups = newData?.pages.flatMap((page) => page.data) ?? [];
-  const newInitialSelectedIds = newGroups
-    .filter(g => g.fullyPublished)
-    .map(g => g.id);
+    const newGroups = newData?.pages.flatMap((page) => page.data) ?? [];
+    const newInitialSelectedIds = newGroups
+      .filter(g => g.fullyPublished)
+      .map(g => g.id);
 
-  reset({
-    groupsId: newInitialSelectedIds,
-  });
-  
-  setInitialSelectedGroupIds(newInitialSelectedIds);
-  setOpenCancelGroupAllocationDialog(false);
-}, [refetch, reset]);
+    reset({
+      groupsId: newInitialSelectedIds,
+    });
+
+    setInitialSelectedGroupIds(newInitialSelectedIds);
+    setOpenCancelGroupAllocationDialog(false);
+  }, [refetch, reset]);
 
   const handleOpenCancelGroupAllocation = useCallback((groupId: number) => {
     setSelectedGroupId(groupId)
@@ -415,59 +426,59 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
                 {error.message}
               </Typography>
             ) : (
-                groups.map((group) => {
-                    const isSelected = selectedGroupIds.includes(group.id)
-                    const isExplicitlyUnchecked = explicitlyUncheckedIncompleteIds.includes(group.id)
-                    const isIndeterminate = group.incompletelyPublished && !isSelected && !isExplicitlyUnchecked
-                    const values = getValues();
-                    const currentSelected = values.groupsId
-                    const removedGroups = [
-                      ...initialSelectedGroupIds.filter((id) => !currentSelected.includes(id)),
-                      ...explicitlyUncheckedIncompleteIds,
-                    ]
-                    const shouldShowRedBackground = removedGroups.includes(group.id)
+              groups.map((group) => {
+                const isSelected = selectedGroupIds.includes(group.id)
+                const isExplicitlyUnchecked = explicitlyUncheckedIncompleteIds.includes(group.id)
+                const isIndeterminate = group.incompletelyPublished && !isSelected && !isExplicitlyUnchecked
+                const values = getValues();
+                const currentSelected = values.groupsId
+                const removedGroups = [
+                  ...initialSelectedGroupIds.filter((id) => !currentSelected.includes(id)),
+                  ...explicitlyUncheckedIncompleteIds,
+                ]
+                const shouldShowRedBackground = removedGroups.includes(group.id)
 
-                    return !group.invalid && (
-                      <Box
-                        key={group.id}
-                        display="flex"
-                        gap={1}
-                        position={"relative"}
-                        alignItems="center"
-                        justifyContent="space-between"
-                        px={2}
-                        py="1px"
-                        borderRadius="12px"
-                        bgcolor={shouldShowRedBackground ? "#ffebee" : "white"}
+                return !group.invalid && (
+                  <Box
+                    key={group.id}
+                    display="flex"
+                    gap={1}
+                    position={"relative"}
+                    alignItems="center"
+                    justifyContent="space-between"
+                    px={2}
+                    py="1px"
+                    borderRadius="12px"
+                    bgcolor={shouldShowRedBackground ? "#ffebee" : "white"}
                     border={shouldShowRedBackground ? "1px solid #ef5350" : "1px solid white"}
-                      >
-                        <Checkbox
-                          checked={isSelected}
-                          onChange={() => handleToggleGroup(group.id)}
-                          indeterminate={isIndeterminate}
-                          disabled={group.userCount < 1}
-                        />
-                        <Typography flex={1}>{group.name}</Typography>
-    
-                        <IconButton
-                          onClick={() => handleOpenCancelGroupAllocation(group.id)}
-                          sx={{
-                            height: "45px",
-                            width: "45px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            position: "absolute",
-                            right: 90,
-                          }}
-                          aria-label="تنظیمات انتشار"
-                        >
-                          <UserWithSearchIcon stroke="#000" width={26} height={26} />
-                        </IconButton>
-                        <Typography fontSize="14px">عضو: {group.userCount} نفر</Typography>
-                      </Box>
-                    )
-                  })
+                  >
+                    <Checkbox
+                      checked={isSelected}
+                      onChange={() => handleToggleGroup(group.id)}
+                      indeterminate={isIndeterminate}
+                      disabled={group.userCount < 1}
+                    />
+                    <Typography flex={1}>{group.name}</Typography>
+
+                    <IconButton
+                      onClick={() => handleOpenCancelGroupAllocation(group.id)}
+                      sx={{
+                        height: "45px",
+                        width: "45px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "absolute",
+                        right: 90,
+                      }}
+                      aria-label="تنظیمات انتشار"
+                    >
+                      <UserWithSearchIcon stroke="#000" width={26} height={26} />
+                    </IconButton>
+                    <Typography fontSize="14px">عضو: {group.userCount} نفر</Typography>
+                  </Box>
+                )
+              })
             )}
           </Box>
           {!isLoading && hasNextPage && (

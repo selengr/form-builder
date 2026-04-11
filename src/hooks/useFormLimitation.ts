@@ -77,7 +77,6 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
       setQuestion(response.data.questionModel);
       setLimitation({ isLimited: false, limitationType: '' });
       } catch (error:any) {
-        debugger
         console.log('error', error)
         console.log('refId', refId, from,slug)
          toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');

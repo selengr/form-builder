@@ -68,13 +68,19 @@ export async function checkAnswerBeforeAction(params: {
     const { slug, username, refId, from } = params
     const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
 
-    const res = await serverApi.post("/take-part/check-answer-to-form-before", {
-        link: isLink ? slug : null,
-        formId: !isLink ? slug : null,
-        username,
-        refId: refId ?? undefined,
-        from: from ?? undefined,
-    })
+    const payload: any = {
+      link: isLink ? slug : null,
+      formId: !isLink ? slug : null,
+      username,
+    };
+
+    if (refId) payload.refId = refId;
+    if (from) payload.from = from;
+
+    const res = await serverApi.post(
+      "/take-part/check-answer-to-form-before",
+      payload
+    );
 
     return { data: res.data }
   } catch (error: any) {
@@ -84,9 +90,6 @@ export async function checkAnswerBeforeAction(params: {
       error?.response?.data ||
       error?.message ||
       'خطای نامشخص';
-console.log("-----------------------------------------------------------1",error?.response?.data?.message)
-console.log("-----------------------------------------------------------2",error?.response?.data?.message)
-console.log("-----------------------------------------------------------2", error?.message)
     throw new Error(message);
   }
 }

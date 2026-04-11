@@ -76,12 +76,10 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
       addQuestion(response.data);
       setQuestion(response.data.questionModel);
       setLimitation({ isLimited: false, limitationType: '' });
-      } catch (error:any) {
-        console.log('error', error)
-        console.log('refId', refId, from,slug)
-         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+      } catch (error:any) {debugger
+      toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
       setError(true);
-      setHelperText('خطا در ارتباط با سرور');
+      setHelperText(error?.message || 'انجام عملیات با خطا مواجه شد' );
     } finally {
       setLoading(false);
     }

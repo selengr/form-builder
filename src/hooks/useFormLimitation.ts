@@ -4,6 +4,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { ILimitation } from '@/hooks/useParticipateForm';
 // action
 import { checkAnswerBeforeAction } from '../../actions/take-part';
+import { AxiosApi } from '@/services/axios/AxiosApi';
 
 export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimitation: (limitation: ILimitation) => void, setQuestion: (data: any) => void, addQuestion: (data: any) => void) => {
   const [formValue, setFormValue] = useState('');
@@ -59,32 +60,31 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
   const takePartApi = async () => {
     try {
       setLoading(true);
-      // const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
-      // const response = await AxiosApi.post('/take-part/check-answer-to-form-before', {
-      //   link: isLink ? slug : null,
-      //   formId: !isLink ? slug : null,  
-      //   username: formValue,
-      //   refId: refId ?? undefined,
-      // });
-
-      const params: any = {
-        slug,
+      const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
+      const response = await AxiosApi.post('/take-part/check-answer-to-form-before', {
+        link: isLink ? slug : null,
+        formId: !isLink ? slug : null,  
         username: formValue,
-      };
+        refId: refId ?? undefined,
+      });
 
-      if (refId) params.refId = refId;
-      if (from) params.from = from;
+      // const params: any = {
+      //   slug,
+      //   username: formValue,
+      // };
 
-      const response = await checkAnswerBeforeAction(params);
+      // if (refId) params.refId = refId;
+      // if (from) params.from = from;
+
+      // const response = await checkAnswerBeforeAction(params);
 
       addQuestion(response.data);
       setQuestion(response.data.questionModel);
       setLimitation({ isLimited: false, limitationType: '' });
     } catch (error: any) {
-      debugger
-      toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
+      toast.error(error?.response?.data?.message?.[0]?.title || 'انجام عملیات با خطا مواجه شد');
       setError(true);
-      setHelperText(error?.message || 'انجام عملیات با خطا مواجه شد');
+      setHelperText(error?.response?.data?.message?.[0]?.title || 'انجام عملیات با خطا مواجه شد');
     } finally {
       setLoading(false);
     }

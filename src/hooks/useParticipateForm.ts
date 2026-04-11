@@ -231,6 +231,7 @@ export const useParticipateForm = () => {
       initializeQuestion(q);
     } catch (error:any) {debugger
        toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+        setHasError({ status: true, message: error?.message || 'انجام عملیات با خطا مواجه شد' })
     } finally {     
       setFirstLoading(false)
       setQuestionLoading(false)
@@ -258,9 +259,8 @@ export const useParticipateForm = () => {
       setFormName(res.data?.formName);
       initializeQuestion(res.data.questionModel, res.data.userAnswerModel?.answersModel ?? []);
       } catch (error:any) {debugger
-        console.log('error', error)
-        console.log('refId', refId, from,slug)
-         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+        toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+        setHasError({ status: true, message: error?.message || 'انجام عملیات با خطا مواجه شد' })
       }
   };
 

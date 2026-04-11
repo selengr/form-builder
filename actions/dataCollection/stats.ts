@@ -50,14 +50,12 @@ export async function getStatsDataAction(
   }
 }
 
-export async function getFormDataAction(id: string) {
+export async function getFormDataAction(id: string | string[]) {
   try {
     const response = await serverApi.get(`/form/${id}`);
     return response.data;
   } catch (error: any) {
     console.log("-----------------------------------------------------------1",error?.response?.data?.message)
-console.log("-----------------------------------------------------------2",error?.response?.data?.message)
-console.log("-----------------------------------------------------------2", error?.message)
     const message =
       error?.response?.data?.message?.[0]?.title ||
       error?.response?.data?.message ||

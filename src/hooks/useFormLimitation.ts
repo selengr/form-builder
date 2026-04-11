@@ -1,5 +1,5 @@
 import { toast } from 'sonner';
-  import { useState } from 'react';
+import { useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { ILimitation } from '@/hooks/useParticipateForm';
 // action
@@ -66,20 +66,25 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
       //   username: formValue,
       //   refId: refId ?? undefined,
       // });
-      const response = await checkAnswerBeforeAction({
-          slug,
-          username: formValue,
-          refId: refId ?? undefined,
-          from: from ?? undefined,
-      })
+
+      const params: any = {
+        slug,
+        username: formValue,
+      };
+
+      if (refId) params.refId = refId;
+      if (from) params.from = from;
+
+      const response = await checkAnswerBeforeAction(params);
 
       addQuestion(response.data);
       setQuestion(response.data.questionModel);
       setLimitation({ isLimited: false, limitationType: '' });
-      } catch (error:any) {debugger
-      toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+    } catch (error: any) {
+      debugger
+      toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
       setError(true);
-      setHelperText(error?.message || 'انجام عملیات با خطا مواجه شد' );
+      setHelperText(error?.message || 'انجام عملیات با خطا مواجه شد');
     } finally {
       setLoading(false);
     }

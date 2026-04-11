@@ -248,12 +248,16 @@ export const useParticipateForm = () => {
       //   from: from ?? undefined,
       // });
 
-      const res = await checkAnswerBeforeAction({
-        slug,
-        username,
-        refId: refId ?? undefined,
-        from: from ?? undefined,
-      })
+        const params: any = {
+          slug,
+          username,
+        };
+
+        if (refId) params.refId = refId;
+        if (from) params.from = from;
+
+        const res = await checkAnswerBeforeAction(params);
+
 
       setTakePartId(res.data.takePart);
       setFormName(res.data?.formName);

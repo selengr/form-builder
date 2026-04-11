@@ -16,17 +16,17 @@ export const useStatsViewModel = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
 
-  const fetchFormData = async () => {
+  const fetchFormData = async (id:string | string[]) => {
     try {
       setIsLoading(true);
       // @ts-ignore
       // const data = await statsService.getFormData(id.toString());
-       const data = await getFormDataAction(id.toString());
+       const data = await getFormDataAction(id);
+       debugger
       setFormData(data);
     } catch (error:any) {
-              debugger
-        console.log('error', error)
-        toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+      console.log('error', error)
+      toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
     } finally {
       setIsLoading(false);
     }
@@ -49,7 +49,7 @@ export const useStatsViewModel = () => {
   };
 
   useEffect(() => {
-    fetchFormData();
+    fetchFormData(id);
     fetchStatsData(page, pageSize);
   }, [id]);
 

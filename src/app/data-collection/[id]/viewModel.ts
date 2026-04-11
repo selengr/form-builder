@@ -24,6 +24,8 @@ export const useStatsViewModel = () => {
        const data = await getFormDataAction(id.toString());
       setFormData(data);
     } catch (error:any) {
+              debugger
+        console.log('error', error)
         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
     } finally {
       setIsLoading(false);

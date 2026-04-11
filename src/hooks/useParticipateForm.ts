@@ -229,9 +229,9 @@ export const useParticipateForm = () => {
       setFormName(res.data?.formName);
       setTakePartId(res.data?.takePart);
       initializeQuestion(q);
-    } catch (error:any) {
+    } catch (error:any) {debugger
        toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
-    } finally {
+    } finally {     
       setFirstLoading(false)
       setQuestionLoading(false)
     }
@@ -257,7 +257,9 @@ export const useParticipateForm = () => {
       setTakePartId(res.data.takePart);
       setFormName(res.data?.formName);
       initializeQuestion(res.data.questionModel, res.data.userAnswerModel?.answersModel ?? []);
-      } catch (error:any) {
+      } catch (error:any) {debugger
+        console.log('error', error)
+        console.log('refId', refId, from,slug)
          toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
       }
   };

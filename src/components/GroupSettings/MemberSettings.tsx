@@ -306,7 +306,16 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
         await Promise.all(promises);
 
         if (introducedUserJTGroupIdList.length > 0) {
-          toast.success("با موفقیت به سبد خرید افزوده شد.");
+           toast.success('با موفقیت به سبد خرید افزوده شد.', {
+            className: `max-w-[300px]`,
+            duration: 6000, 
+            action: {
+              label: 'مشاهده سبد خرید',
+              onClick: () => {
+                push('/purchase-order')
+              },
+            },
+          });
         }
         if (introducedUserPublishIdList.length > 0) {
           toast.success("اعضای لغوشده با موفقیت حذف شد.");
@@ -324,9 +333,8 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
       queryClient.invalidateQueries({ queryKey: ["SHOW_REPORT"] })
       handleClose()
       reset()
-    } catch (err) {
-      toast.error("خطا در برقراری ارتباط با سرور.")
-      console.error("Group publish error:", err)
+     } catch (error:any) {
+        toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
     }
   }, [formId, handleClose, reset, methods, introducedUserJTGroupIdList, introducedUserPublishIdList])
 

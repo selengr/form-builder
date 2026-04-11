@@ -161,10 +161,10 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
   } = methods;
 
   useEffect(() => {
-  if (inView && hasNextPage && !isFetchingNextPage) {
-    fetchNextPage();
-  }
-}, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
 
   useEffect(() => {
@@ -179,8 +179,8 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
 
   }, [members])
 
-  const preSubmit = async (e:any) => {
-     e.preventDefault();
+  const preSubmit = async (e: any) => {
+    e.preventDefault();
     if (removedMember.length > 0) {
       const removed: any = members.filter((g) => removedMember.includes(g.introducedUserPublishId!));
       setMembersToRemove(removed);
@@ -242,15 +242,24 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
               }
             });
           } else if (data.error) {
-            if(Array.isArray(data.error)){
-                toast.error(data.error[0].title);
+            if (Array.isArray(data.error)) {
+              toast.error(data.error[0].title);
             }
           } else {
             toast.error('خطای ناشناخته از سمت سرور');
           }
           return;
         }
-        toast.success('با موفقیت به سبد خرید افزوده شد.');
+        toast.success('با موفقیت به سبد خرید افزوده شد.', {
+          className: `max-w-[300px]`,
+          duration: 6000,
+          action: {
+            label: 'مشاهده سبد خرید',
+            onClick: () => {
+              push('/purchase-order')
+            },
+          },
+        });
       }
       if (removedMember.length > 0) {
         await AxiosApi.post("/form-publish-setting/cancel-member-allocation", {
@@ -263,9 +272,9 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
       queryClient.invalidateQueries({ queryKey: ['datas_builder_query'] });
       handleOpen();
       reset();
-    } catch (error) {
-      toast.error('خطا در برقراری ارتباط با سرور.');
-    }
+      } catch (error:any) {
+              toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+     }
   }
 
   const handleShowReportForResponder = () => {
@@ -331,254 +340,254 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
 
 
   return (
-     <Box sx={{ position: "relative" }}>
-    <FormProvider methods={methods} onSubmit={() => preSubmit(event)}>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: '100%',
-          bgcolor: '#F7F7FF',
-          borderRadius: '8px',
-          padding: 2,
-          marginY: 2,
-          gap: 1,
-          direction: 'ltr',
-        }}>
-        <Box display='flex' gap={1} width='100%'>
-          <Box sx={inputFieldContainerSx}>
-            <Typography variant='subtitle2' fontWeight='700'>
-              نام:
-            </Typography>
-            <RHFTextField disabled={!!introducedUserJTGroupId} sx={textFieldCommonSx} name='name' fullWidth />
+    <Box sx={{ position: "relative" }}>
+      <FormProvider methods={methods} onSubmit={() => preSubmit(event)}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            bgcolor: '#F7F7FF',
+            borderRadius: '8px',
+            padding: 2,
+            marginY: 2,
+            gap: 1,
+            direction: 'ltr',
+          }}>
+          <Box display='flex' gap={1} width='100%'>
+            <Box sx={inputFieldContainerSx}>
+              <Typography variant='subtitle2' fontWeight='700'>
+                نام:
+              </Typography>
+              <RHFTextField disabled={!!introducedUserJTGroupId} sx={textFieldCommonSx} name='name' fullWidth />
+            </Box>
+            <Box sx={inputFieldContainerSx}>
+              <Typography variant='subtitle2' fontWeight='700'>
+                نام خانوادگی:
+              </Typography>
+              <RHFTextField disabled={!!introducedUserJTGroupId} sx={textFieldCommonSx} name='family' fullWidth />
+            </Box>
           </Box>
-          <Box sx={inputFieldContainerSx}>
-            <Typography variant='subtitle2' fontWeight='700'>
-              نام خانوادگی:
-            </Typography>
-            <RHFTextField disabled={!!introducedUserJTGroupId} sx={textFieldCommonSx} name='family' fullWidth />
-          </Box>
-        </Box>
 
-        <Box display='flex' gap={1} width='100%'>
-          <Box sx={inputFieldContainerSx}>
-            <Typography variant='subtitle2' fontWeight='700'>
-              تلفن همراه:
+          <Box display='flex' gap={1} width='100%'>
+            <Box sx={inputFieldContainerSx}>
+              <Typography variant='subtitle2' fontWeight='700'>
+                تلفن همراه:
+              </Typography>
+              <RHFTextField
+                disabled={!!introducedUserJTGroupId}
+                sx={textFieldCommonSx}
+                name='phone'
+                type='tel'
+                slotProps={{
+                  htmlInput: {
+                    maxLength: 11,
+                  },
+                }}
+                fullWidth
+
+              />
+            </Box>
+            <Box sx={inputFieldContainerSx}>
+              <Typography variant='subtitle2' fontWeight='700'>
+                جنسیت:
+              </Typography>
+              <RHFSelect disabled={!!introducedUserJTGroupId} fullWidth name='gender' sx={textFieldCommonSx} >
+                <MenuItem value=''>انتخاب کنید</MenuItem>
+                {[
+                  { value: 'MALE', label: 'آقا' },
+                  { value: 'FEMALE', label: 'خانم' },
+                ].map((item) => (
+                  <MenuItem key={item.value} value={item.value}>
+                    {item.label}
+                  </MenuItem>
+                ))}
+              </RHFSelect>
+            </Box>
+          </Box>
+          <Box display='flex' justifyContent='space-between' alignItems='center' mx={2} mt={2}>
+            <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>
+              نمایش نتیجه به پاسخ دهنده
             </Typography>
-            <RHFTextField
-              disabled={!!introducedUserJTGroupId}
-              sx={textFieldCommonSx}
-              name='phone'
-              type='tel'
-              slotProps={{
-                htmlInput: {
-                  maxLength: 11,
+            <SwitchButton
+              onChange={handleShowReportForResponder}
+              checked={isShowReportForResponder}
+              sx={{
+                '& .MuiInputBase-root': {
+                  borderRadius: '10px',
+                  fontWeight: 600,
+                  height: 42,
                 },
               }}
-              fullWidth
-
             />
           </Box>
-          <Box sx={inputFieldContainerSx}>
-            <Typography variant='subtitle2' fontWeight='700'>
-              جنسیت:
-            </Typography>
-            <RHFSelect disabled={!!introducedUserJTGroupId} fullWidth name='gender' sx={textFieldCommonSx} >
-              <MenuItem value=''>انتخاب کنید</MenuItem>
-              {[
-                { value: 'MALE', label: 'آقا' },
-                { value: 'FEMALE', label: 'خانم' },
-              ].map((item) => (
-                <MenuItem key={item.value} value={item.value}>
-                  {item.label}
-                </MenuItem>
-              ))}
-            </RHFSelect>
+
+          <Box display="flex" flexDirection="column" gap="7px" mt={5} mb={2} width={"100%"}>
+            {loading ? (
+              <Box display="flex" justifyContent="center" my={4}>
+                <CircularProgress />
+              </Box>
+            ) : error ? (
+              <Typography color="error" textAlign="center">
+                {error.message}
+              </Typography>
+            ) : (
+              members.map((member) => (
+                !member.invalid && <Box
+                  key={member.introducedUserJTGroupId}
+                  display="flex"
+                  alignItems="center"
+                  // justifyContent="space-between"
+                  position={"relative"}
+                  px={1}
+                  py="1px"
+                  borderRadius="12px"
+                  bgcolor={removedMember.includes(member.introducedUserPublishId!) ? "#ffebee" : "white"}
+                  border={removedMember.includes(member.introducedUserPublishId!) ? "1px solid #ef5350" : "1px solid white"}
+                >
+                  <Checkbox
+                    checked={introducedUserJTGroupId === member.introducedUserJTGroupId || introducedUserPublishIdList.includes(member.introducedUserPublishId!)}
+                    onChange={() => handleToggleGroup(member)}
+                  />
+                  <Typography flex={1}>
+                    {member.userName} {member.userFamily}
+                  </Typography>
+                  <Typography position="absolute" right={120} fontSize="14px">
+                    نام کاربری: {member.userUsername}
+                  </Typography>
+
+                  {member.showReportForResponder && (
+                    <Box sx={{ position: "absolute", right: 35 }}>
+                      <Tooltip key={member.userUsername} title="نمایش نتیجه به پاسخ دهنده" followCursor arrow placement='top'>
+                        <div className='truncate' dir='rtl'>
+                          <FaEye color='#1758BA' />
+                        </div>
+                      </Tooltip>
+                    </Box>
+                  )}
+                  <Typography position="absolute" right={1} fontSize="14px" className="pl-2">
+                    {member.userGender}
+                  </Typography>
+
+                </Box>)
+              )
+            )}
           </Box>
         </Box>
-        <Box display='flex' justifyContent='space-between' alignItems='center' mx={2} mt={2}>
-          <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>
-            نمایش نتیجه به پاسخ دهنده
-          </Typography>
-          <SwitchButton
-            onChange={handleShowReportForResponder}
-            checked={isShowReportForResponder}
-            sx={{
-              '& .MuiInputBase-root': {
-                borderRadius: '10px',
-                fontWeight: 600,
-                height: 42,
-              },
-            }}
-          />
-        </Box>
 
-        <Box display="flex" flexDirection="column" gap="7px" mt={5} mb={2} width={"100%"}>
-          {loading ? (
-            <Box display="flex" justifyContent="center" my={4}>
-              <CircularProgress />
-            </Box>
-          ) : error ? (
-            <Typography color="error" textAlign="center">
-              {error.message}
-            </Typography>
-          ) : (
-            members.map((member) => (
-              !member.invalid && <Box
-                key={member.introducedUserJTGroupId}
-                display="flex"
-                alignItems="center"
-                // justifyContent="space-between"
-                position={"relative"}
-                px={1}
-                py="1px"
-                borderRadius="12px"
-                bgcolor={removedMember.includes(member.introducedUserPublishId!) ? "#ffebee" : "white"}
-                border={removedMember.includes(member.introducedUserPublishId!) ? "1px solid #ef5350" : "1px solid white"}
-              >
-                <Checkbox
-                  checked={introducedUserJTGroupId === member.introducedUserJTGroupId || introducedUserPublishIdList.includes(member.introducedUserPublishId!)}
-                  onChange={() => handleToggleGroup(member)}
-                />
-                <Typography flex={1}>
-                  {member.userName} {member.userFamily}
-                </Typography>
-                <Typography position="absolute" right={120} fontSize="14px">
-                  نام کاربری: {member.userUsername}
-                </Typography>
+        {!loading && hasNextPage && (
+          <Box ref={ref} display="flex" justifyContent="center" my={2}>
+            {isFetchingNextPage && <CircularProgress size={24} />}
+          </Box>
+        )}
 
-                {member.showReportForResponder && (
-                  <Box sx={{ position: "absolute", right: 35 }}>
-                    <Tooltip key={member.userUsername} title="نمایش نتیجه به پاسخ دهنده" followCursor arrow placement='top'>
-                      <div className='truncate' dir='rtl'>
-                        <FaEye color='#1758BA' />
-                      </div>
-                    </Tooltip>
-                  </Box>
-                )}
-                <Typography position="absolute" right={1} fontSize="14px" className="pl-2">
-                  {member.userGender}
-                </Typography>
-
-              </Box>)
-            )
-          )}
-        </Box>
-      </Box>
-
-      {!loading && hasNextPage && (
-        <Box ref={ref} display="flex" justifyContent="center" my={2}>
-          {isFetchingNextPage && <CircularProgress size={24} />}
-        </Box>
-      )}
-
- <Box sx={{
+        <Box sx={{
           position: "sticky",
           bottom: '0px',
           background: "#FFF",
-          paddingY : "10px"
+          paddingY: "10px"
         }}
           pr={1} pl={2}
         >
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: '16px',
-          paddingX: '16px',
-          width: '100%',
-          marginTop: '24px',
-          marginBottom: '16px',
-        }}>
-        <Button
-          type='submit'
-          fullWidth
-          variant='contained'
-          disabled={isSubmitting || !isValid && removedMember.length === 0}
-          sx={{
-            bgcolor: '#1758BA',
-            height: '54px',
-            color: 'white',
-            fontSize: {
-              xs: '13px',
-              sm: '16px',
-            },
-            fontWeight: '700',
-            borderRadius: '10px',
-            boxShadow: 'none',
-            '&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active': {
-              bgcolor: '#1758BA',
-              boxShadow: 'none',
-            },
-          }}>
-          {buttonLabel()}
-        </Button>
-        <Button
-          disabled={isSubmitting}
-          type='button'
-          fullWidth
-          sx={{
-            height: '54px',
-            fontWeight: '700',
-            borderRadius: '10px',
-            fontSize: '16px',
-            color: '#1758BA',
-            borderColor: '#1758BA',
-            bgcolor: 'white',
-            '&.MuiButtonBase-root:hover': {
-              bgcolor: 'transparent',
-              boxShadow: 'none',
-              color: '#1758BA',
-            },
-            '&.Mui-disabled': {
-              borderColor: '#d9d9d9',
-              color: '#b0b0b0',
-            },
-          }}
-          variant='outlined'
-          onClick={() => {
-            handleOpen();
-            reset();
-          }}>
-          بستن
-        </Button>
-      </Box>
-      </Box>
-      {openShowReportForResponderDialog && <ConfirmDialog
-        content='تا زمانی که قالب گزارش انفرادی نساخته باشید نمیتواند این تیک را بزند '
-        open={openShowReportForResponderDialog}
-        title='اخطار'
-        onClose={toggleConfirm}
-        cancelText='انصراف'
-        action={
-          <Button type='submit' fullWidth disableRipple variant='contained'
-            sx={{ ...buttonStylesAlert }}
-            onClick={handleRedirection}
-          >
-            برو به قالب گزارش
-          </Button>
-        }
-      />
-      }
-      {openRemoveConfirmDialog && <RemoveGroupConfirmModal
-        open={openRemoveConfirmDialog}
-        onClose={() => setOpenRemoveConfirmDialog(false)}
-        groupsToRemove={membersToRemove}
-        loading={isRemoving}
-        title={"اعضا"}
-        onConfirm={async () => {
-          setIsRemoving(true);
-          try {
-            await handleFormSubmit();
-          } finally {
-            setIsRemoving(false);
-            setOpenRemoveConfirmDialog(false);
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: '16px',
+              paddingX: '16px',
+              width: '100%',
+              marginTop: '24px',
+              marginBottom: '16px',
+            }}>
+            <Button
+              type='submit'
+              fullWidth
+              variant='contained'
+              disabled={isSubmitting || !isValid && removedMember.length === 0}
+              sx={{
+                bgcolor: '#1758BA',
+                height: '54px',
+                color: 'white',
+                fontSize: {
+                  xs: '13px',
+                  sm: '16px',
+                },
+                fontWeight: '700',
+                borderRadius: '10px',
+                boxShadow: 'none',
+                '&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active': {
+                  bgcolor: '#1758BA',
+                  boxShadow: 'none',
+                },
+              }}>
+              {buttonLabel()}
+            </Button>
+            <Button
+              disabled={isSubmitting}
+              type='button'
+              fullWidth
+              sx={{
+                height: '54px',
+                fontWeight: '700',
+                borderRadius: '10px',
+                fontSize: '16px',
+                color: '#1758BA',
+                borderColor: '#1758BA',
+                bgcolor: 'white',
+                '&.MuiButtonBase-root:hover': {
+                  bgcolor: 'transparent',
+                  boxShadow: 'none',
+                  color: '#1758BA',
+                },
+                '&.Mui-disabled': {
+                  borderColor: '#d9d9d9',
+                  color: '#b0b0b0',
+                },
+              }}
+              variant='outlined'
+              onClick={() => {
+                handleOpen();
+                reset();
+              }}>
+              بستن
+            </Button>
+          </Box>
+        </Box>
+        {openShowReportForResponderDialog && <ConfirmDialog
+          content='تا زمانی که قالب گزارش انفرادی نساخته باشید نمیتواند این تیک را بزند '
+          open={openShowReportForResponderDialog}
+          title='اخطار'
+          onClose={toggleConfirm}
+          cancelText='انصراف'
+          action={
+            <Button type='submit' fullWidth disableRipple variant='contained'
+              sx={{ ...buttonStylesAlert }}
+              onClick={handleRedirection}
+            >
+              برو به قالب گزارش
+            </Button>
           }
-        }}
-      />
-      }
-    </FormProvider>
+        />
+        }
+        {openRemoveConfirmDialog && <RemoveGroupConfirmModal
+          open={openRemoveConfirmDialog}
+          onClose={() => setOpenRemoveConfirmDialog(false)}
+          groupsToRemove={membersToRemove}
+          loading={isRemoving}
+          title={"اعضا"}
+          onConfirm={async () => {
+            setIsRemoving(true);
+            try {
+              await handleFormSubmit();
+            } finally {
+              setIsRemoving(false);
+              setOpenRemoveConfirmDialog(false);
+            }
+          }}
+        />
+        }
+      </FormProvider>
     </Box>
   );
 }

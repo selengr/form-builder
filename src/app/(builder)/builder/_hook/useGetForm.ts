@@ -35,7 +35,8 @@ export function useGetForm(id: string | any) {
     queryKey: ["form-builder", id],
     queryFn: () => fetchFormData(id as string),
     enabled: !!id,
-    staleTime: 5 * 60 * 1000, 
+    staleTime: 0,
+    gcTime: 0,   
     refetchOnWindowFocus: false,
   })
 }

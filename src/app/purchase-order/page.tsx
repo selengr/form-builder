@@ -1,11 +1,18 @@
 'use client';
 
+import Image from 'next/image';
 import { toast } from 'sonner';
 import { Button } from '@mui/material';
 import { useRouter } from 'next/navigation';
+// image
+import TrashIcon from '@/../public/images/home-page/trash.svg';
 import React, { useEffect, useState } from 'react';
-import { CartItem, EmptyCart } from '@/templates/purchase-order';
+// components
+import ConfirmDialog from '@/components/confirm-dialog';
+// hook
 import { useGetPurchaseOrder } from './_hook/useGetPurchaseOrder';
+// templates
+import { CartItem, EmptyCart } from '@/templates/purchase-order';
 import LoadingCart from '@/templates/purchase-order/loading-cart';
 // actions
 import { deletePurchaseOrderDetailAction } from '../../../actions/cart/purchaseOrderDetail';
@@ -96,6 +103,8 @@ export default function ShoppingCartPage() {
   const [loading, setLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [open, setOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [deleteDescription, setDescription] = useState<string>("");
 
   const { data: purchaseOrder, isFetching, error, refetch } = useGetPurchaseOrder();
   const purchaseOrderDetailModels = purchaseOrder?.purchaseOrderDetailModels;
@@ -106,10 +115,10 @@ export default function ShoppingCartPage() {
     }
   }, [purchaseOrderDetailModels]);
 
-  const handleRemoveDetail = async (id: number) => {
+  const handleRemoveDetail = async () => {
     try {
       setLoading(true);
-      const data = await deletePurchaseOrderDetailAction(id);
+      const data = await deletePurchaseOrderDetailAction(deleteId as number);
       if (data) {
         toast.success('با موفقیت حذف شد');
         await refetch();
@@ -144,35 +153,78 @@ export default function ShoppingCartPage() {
   }
 
   return (
-    <div dir='rtl' className='w-full px-2 py-4 lg:p-4 flex flex-col lg:flex-row gap-4 h-[calc(100vh-60px)] lg:h-screen'>
-      <div className='w-full flex-grow bg-white rounded-2xl p-4 shadow-sm lg:max-h-screen flex flex-col mobile:mb-[10px] lg:mb-0 h-2/3 lg:h-full'>
-        <div className='bg-[#F7F7FF] rounded-lg h-12 flex justify-center items-center mb-6 shrink-0'>
-          <h3 className='text-[#161616] font-bold text-base'>سبد خرید</h3>
+    <>
+      <div dir='rtl' className='w-full px-2 py-4 lg:p-4 flex flex-col lg:flex-row gap-4 h-[calc(100vh-60px)] lg:h-screen'>
+        <div className='w-full flex-grow bg-white rounded-2xl p-4 shadow-sm lg:max-h-screen flex flex-col mobile:mb-[10px] lg:mb-0 h-2/3 lg:h-full'>
+          <div className='bg-[#F7F7FF] rounded-lg h-12 flex justify-center items-center mb-6 shrink-0'>
+            <h3 className='text-[#161616] font-bold text-base'>سبد خرید</h3>
+          </div>
+          <div className='flex-1 overflow-y-auto space-y-4 px-2 lg:px-6'>
+            {purchaseOrderDetailModels?.map((detail, index) => (
+              <CartItem
+                key={detail.purchaseOrderDetailId}
+                open={open}
+                index={index}
+                detail={detail}
+                loading={loading}
+                toggleConfirm={toggleConfirm}
+                isSelected={index === selectedIndex}
+                onSelect={() => handleSelectItem(index)}
+                // onRemove={handleRemoveDetail}
+                setDeleteId={setDeleteId}
+                setDescription={setDescription}
+              />
+            ))}
+          </div>
         </div>
-        <div className='flex-1 overflow-y-auto space-y-4 px-2 lg:px-6'>
-          {purchaseOrderDetailModels?.map((detail, index) => (
-            <CartItem
-              key={detail.purchaseOrderDetailId}
-              open={open}
-              index={index}
-              detail={detail}
-              loading={loading}
-              toggleConfirm={toggleConfirm}
-              isSelected={index === selectedIndex}
-              onSelect={() => handleSelectItem(index)}
-              onRemove={handleRemoveDetail}
-            />
-          ))}
+
+        <div className='w-full lg:w-[450px] hidden lg:flex'>
+          <InvoiceSection purchaseOrder={purchaseOrder} handlePayment={handlePayment} />
+        </div>
+
+        <div className='z-20 lg:hidden'>
+          <InvoiceSection purchaseOrder={purchaseOrder} handlePayment={handlePayment} />
         </div>
       </div>
 
-      <div className='w-full lg:w-[450px] hidden lg:flex'>
-        <InvoiceSection purchaseOrder={purchaseOrder} handlePayment={handlePayment} />
-      </div>
 
-      <div className='z-20 lg:hidden'>
-        <InvoiceSection purchaseOrder={purchaseOrder} handlePayment={handlePayment} />
-      </div>
-    </div>
+      <ConfirmDialog
+        content={
+          <>
+            <div className='flex flex-row items-center'>
+              <Image src={TrashIcon} alt='delete' width={20} height={20} />
+              <span className='text-xs'>{deleteDescription}</span>
+            </div>
+            <br />
+            <p>آیا از انجام عملیات حذف این مورد اطمینان دارید؟</p>
+          </>
+        }
+        open={open}
+        title='حذف آیتم'
+        loading={loading}
+        onClose={toggleConfirm}
+        cancelText='انصراف'
+        action={
+          <Button
+            type='submit'
+            fullWidth
+            disableRipple
+            disableElevation
+            variant='contained'
+            disabled={loading}
+            sx={{
+              height: '52px',
+              fontWeight: 500,
+              fontSize: '16px',
+              borderRadius: '12px',
+              boxShadow: 'none',
+              textTransform: 'none',
+            }}
+            onClick={handleRemoveDetail}>
+            حذف کن
+          </Button>
+        }
+      />
+    </>
   );
 }

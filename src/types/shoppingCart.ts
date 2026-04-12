@@ -12,7 +12,7 @@ export interface IPurchaseOrderProduct {
 }
 
 export interface IPurchaseOrderDetail {
-  description: string | null;
+  description: string;
   purchaseOrderDetailId: number;
   purchaseOrderProductModels: IPurchaseOrderProduct[];
 }
@@ -26,6 +26,8 @@ export interface ICartItemProps {
   loading: boolean;
   isSelected: boolean;
   onSelect: () => void;
-  onRemove: (id: number) => void;
+  setDeleteId: (id:number) => void;
+  setDescription: (description:string) => void;
+  onRemove?: (id: number) => void;
   toggleConfirm: () => void;
 }

@@ -9,14 +9,8 @@ export async function fetchMenuServer(): Promise<IMenuResponseData> {
       baseURL: process.env.BASE_URL,
     });
     return data;
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      error?.response?.data ||
-      error?.message ||
-      'خطای نامشخص';
-
-    throw new Error(message);
+  } catch (err) {
+    console.error('Fetch error:', err);
+    throw err;
   }
 }

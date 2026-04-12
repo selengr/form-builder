@@ -174,13 +174,13 @@ export const useParticipateForm = () => {
 
   const fetchInitialData = useCallback(async () => {
     try {
-      //  const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
+      const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
 
-      // const res = await AxiosApi.post('/take-part/check-response-limitation-form', {
-      //   link: isLink ? slug : null,
-      //   id: !isLink ? slug : null,
-      // });
-      const result = await checkResponseLimitationAction({ slug })
+      const result = await AxiosApi.post('/take-part/check-response-limitation-form', {
+        link: isLink ? slug : null,
+        id: !isLink ? slug : null,
+      });
+      // const result = await checkResponseLimitationAction({ slug })
 
       const { userInfo } = await fetchUserInfoServer();
       const username = userInfo?.user?.username || null;
@@ -195,9 +195,9 @@ export const useParticipateForm = () => {
       } else {
         await takePart(username);
       }
-    } catch (error:any) {
-       toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
-       setHasError({ status: true, message: error?.message || 'انجام عملیات با خطا مواجه شد' })
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message?.[0]?.title || 'انجام عملیات با خطا مواجه شد');
+      setHasError({ status: true, message: error?.response?.data?.message?.[0]?.title || 'انجام عملیات با خطا مواجه شد' })
     } finally {
       setFirstLoading(false);
     }
@@ -230,10 +230,10 @@ export const useParticipateForm = () => {
       setFormName(res.data?.formName);
       setTakePartId(res.data?.takePart);
       initializeQuestion(q);
-    } catch (error:any) {debugger
-       toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
-        setHasError({ status: true, message: error?.message || 'انجام عملیات با خطا مواجه شد' })
-    } finally {     
+    } catch (error: any) {
+      toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
+      setHasError({ status: true, message: error?.message || 'انجام عملیات با خطا مواجه شد' })
+    } finally {
       setFirstLoading(false)
       setQuestionLoading(false)
     }
@@ -241,8 +241,8 @@ export const useParticipateForm = () => {
 
   const checkAnswerBefore = async (username: string | null) => {
     try {
-    const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
-    const url = "/take-part/check-answer-to-form-before"
+      const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
+      const url = "/take-part/check-answer-to-form-before"
       const res = await AxiosApi.post(url, {
         link: isLink ? slug : null,
         formId: !isLink ? slug : null,
@@ -251,24 +251,24 @@ export const useParticipateForm = () => {
         from: from ?? undefined,
       });
 
-        // const params: any = {
-        //   slug,
-        //   username,
-        // };
+      // const params: any = {
+      //   slug,
+      //   username,
+      // };
 
-        // if (refId) params.refId = refId;
-        // if (from) params.from = from;
+      // if (refId) params.refId = refId;
+      // if (from) params.from = from;
 
-        // const res = await checkAnswerBeforeAction(params);
+      // const res = await checkAnswerBeforeAction(params);
 
 
       setTakePartId(res.data.takePart);
       setFormName(res.data?.formName);
       initializeQuestion(res.data.questionModel, res.data.userAnswerModel?.answersModel ?? []);
-      } catch (error:any) {
-        toast.error(error?.response?.data?.message?.[0]?.title || 'انجام عملیات با خطا مواجه شد');
-        setHasError({ status: true, message: error?.response?.data?.message?.[0]?.title || 'انجام عملیات با خطا مواجه شد' })
-      }
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message?.[0]?.title || 'انجام عملیات با خطا مواجه شد');
+      setHasError({ status: true, message: error?.response?.data?.message?.[0]?.title || 'انجام عملیات با خطا مواجه شد' })
+    }
   };
 
   const handleValidationUpdate = (valid: boolean, value: any) => {
@@ -434,11 +434,11 @@ export const useParticipateForm = () => {
       const a = res.data.oldAnswers?.answersModel ?? [];
       initializeQuestion(q, a);
       setIsValid(true);
-      } catch (error: any) {
-        toast.error(error?.message || 'خطا در بازگشت به سوال قبلی', {
-          className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
-          duration: 2000,
-        })
+    } catch (error: any) {
+      toast.error(error?.message || 'خطا در بازگشت به سوال قبلی', {
+        className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
+        duration: 2000,
+      })
     } finally {
       setQuestionLoading(false);
     }

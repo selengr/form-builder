@@ -1,5 +1,6 @@
 'use client';
 
+import { toast } from 'sonner';
 import { useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import useActionDesigner from '@/hooks/useActionDesigner';
@@ -26,6 +27,7 @@ export default function BuilderPage() {
     data,
     isLoading,
     isError,
+    error
   } = useGetForm(id);
 
   useEffect(() => {
@@ -78,7 +80,13 @@ export default function BuilderPage() {
   ]);
 
   if (isLoading) return <BuilderLoading />;
-  if (isError) throw new Error('Form not found');
+  if (isError) {
+    if (error.message) {
+      toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
+    } else {
+      toast.error(error as any || 'انجام عملیات با خطا مواجه شد');
+    }
+  }
 
   return <FormBuilder data={data} />;
 }

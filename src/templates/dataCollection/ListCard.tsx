@@ -58,11 +58,10 @@ const ListCard: React.FC<ListCardProps> = ({
   const handleCopy = useCallback(async () => {
       setOpenConfirmDialog((prev) => !prev)
   }, []);
-
   
   const handleNavigation = () => {
     localStorage.setItem("stats", "/data-collection")
-    router.push(`/data-collection/${data.id}`)
+    router.push(`/data-collection/${data.id}?name=${data.name}`)
   }
 
   return (

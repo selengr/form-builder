@@ -49,20 +49,3 @@ export async function getStatsDataAction(
     throw new Error(message);
   }
 }
-
-export async function getFormDataAction(id: string | string[]) {
-  try {
-    const response = await serverApi.get(`/form/${id}`);
-    return response.data;
-  } catch (error: any) {
-    console.log("-----------------------------------------------------------1",error?.response?.data?.message)
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      error?.response?.data ||
-      error?.message ||
-      'خطای نامشخص';
-
-    throw new Error(message);
-  }
-}

@@ -80,7 +80,7 @@ const ListCard: React.FC<ListCardProps> = ({
       {showStatus && (
         <InfoRow
           label="وضعیت"
-          value={data?.status === "CREATE" ? 'ایجاد شده' : 'نهایی'}
+          value={data?.status === "CREATE" ? 'فعال' : 'نهایی'}
           bold
         />
       )}
@@ -101,13 +101,13 @@ const ListCard: React.FC<ListCardProps> = ({
             <Image src={CopyIcon} alt='copy' width={24} height={24} />
           </IconButton>
 
-          {data.status === 'CREATE' && (
+          {/* {data.status === 'CREATE' && ( */}
             <Link href={`/builder/${data.id}?admin=data-collection`}>
               <IconButton disabled={loading} color='primary'>
                 <Image src={EditIcon} alt='edit' width={24} height={24} />
               </IconButton>
             </Link>
-          )}
+          {/* )} */}
           {data.status === 'PUBLISH' && (
             <div onClick={handleNavigation}>
               <IconButton disabled={loading} color='primary'>

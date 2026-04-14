@@ -126,7 +126,7 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
     <Fragment>
       <div dir="rtl" className="right-0 w-full flex flex-col rounded-[10px] gap-2 p-4 bg-white border-[1.5px] border-[#DDE1E6] ">
         {TopBar}
-        {PublishButton}
+        {!IsDataCollection && <>{PublishButton}</> }
       </div>
       <DesignerBottomSheet>
         <div className="flex flex-col w-full gap-3">{renderElements}</div>

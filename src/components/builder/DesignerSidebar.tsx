@@ -117,7 +117,7 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
         <div className="p-1 rounded-lg h-full flex flex-col justify-between gap-4">
           <div className="flex flex-col gap-2">{renderElements}</div>
         </div>
-        {PublishButton}
+        {!IsDataCollection && <>{PublishButton}</> }
       </div>
     );
   }

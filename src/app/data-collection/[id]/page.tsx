@@ -15,7 +15,7 @@ export default function StatsPage() {
   const params = useParams();
   const formId = params?.id?.toString(); // اطمینان از string بودن id
 
-  const { formData, headData, allData, isLoading, page: currentPage, setPage: setCurrentPage, pageSize: rowsPerPage, setPageSize: setRowsPerPage, totalItems } = useStatsViewModel();
+  const { name, headData, allData, isLoading, page: currentPage, setPage: setCurrentPage, pageSize: rowsPerPage, setPageSize: setRowsPerPage, totalItems } = useStatsViewModel();
 
   const [selectedUsers, setSelectedUsers] = useState<UserType[]>([]);
 
@@ -35,7 +35,7 @@ export default function StatsPage() {
   return (
     <div className='w-0 grow flex flex-col md:p-4 p-2 overflow-x-hidden'>
       <div className='flex-grow bg-white rounded-xl p-4 overflow-hidden flex flex-col min-w-0'>
-        <ReportHeader title={formData.name || 'گزارش'} onBack={handleNavigation} />
+        <ReportHeader title={name || 'گزارش'} onBack={handleNavigation} />
 
         <div className='flex-grow overflow-hidden min-w-0'>
           <ReportTable headData={headData} allData={allData} isLoading={isLoading} selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers} formId={Number(formId)} />

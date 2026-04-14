@@ -58,11 +58,10 @@ const ListCard: React.FC<ListCardProps> = ({
   const handleCopy = useCallback(async () => {
       setOpenConfirmDialog((prev) => !prev)
   }, []);
-
   
   const handleNavigation = () => {
     localStorage.setItem("stats", "/data-collection")
-    router.push(`/data-collection/${data.id}`)
+    router.push(`/data-collection/${data.id}?name=${data.name}`)
   }
 
   return (
@@ -80,7 +79,7 @@ const ListCard: React.FC<ListCardProps> = ({
       {showStatus && (
         <InfoRow
           label="وضعیت"
-          value={data?.status === "CREATE" ? 'ایجاد شده' : 'نهایی'}
+          value={data?.status === "CREATE" ? 'فعال' : 'نهایی'}
           bold
         />
       )}
@@ -88,7 +87,7 @@ const ListCard: React.FC<ListCardProps> = ({
       <div className='flex flex-wrap gap-2 w-full'>
         <button
           className='bg-[#1758BA] hover:bg-[#216ee1] transition-all duration-200 px-3 h-[42px] text-sm rounded-lg text-white grow sm:grow md:flex-1'
-          onClick={() => router.push(`/preview/${data.id}`)}>
+          onClick={() => router.push(`/preview/${data.id}?rep=list`)}>
           مشاهده
         </button>
 
@@ -101,13 +100,13 @@ const ListCard: React.FC<ListCardProps> = ({
             <Image src={CopyIcon} alt='copy' width={24} height={24} />
           </IconButton>
 
-          {data.status === 'CREATE' && (
+          {/* {data.status === 'CREATE' && ( */}
             <Link href={`/builder/${data.id}?admin=data-collection`}>
               <IconButton disabled={loading} color='primary'>
                 <Image src={EditIcon} alt='edit' width={24} height={24} />
               </IconButton>
             </Link>
-          )}
+          {/* )} */}
           {data.status === 'PUBLISH' && (
             <div onClick={handleNavigation}>
               <IconButton disabled={loading} color='primary'>

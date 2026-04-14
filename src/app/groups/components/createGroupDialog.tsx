@@ -106,6 +106,26 @@ export function CreateGroupDialog({ onClose, onSubmit }: CreateGroupDialogProps)
           <UploaderPage onFileUploadSuccess={handleReceivedFileId} />
         </div>
 
+          <button
+            onClick={handleDownload}
+            className="px-4 py-2 bg-[#1758BA] text-white rounded-lg flex items-center gap-2 hover:bg-[#216ee1] transition shadow-sm hover:shadow-md"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"
+              />
+            </svg>
+            دانلود فایل نمونه
+          </button>
         {error && <p className='text-red-600 text-sm text-center mt-2'>{error}</p>}
 
         <div className='flex justify-center gap-3 mt-1 w-2/3 mx-auto'>

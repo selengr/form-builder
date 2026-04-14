@@ -75,6 +75,14 @@ export function CreateGroupDialog({ onClose, onSubmit }: CreateGroupDialogProps)
     }
   };
 
+
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    link.href = "/sample.xlsx";
+    link.download = "نمونه-فایل.xlsx";
+    link.click();
+  };
+
   return (
     <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50'>
       <div className='bg-white rounded-xl p-6 w-full max-w-md flex flex-col gap-4'>
@@ -94,7 +102,7 @@ export function CreateGroupDialog({ onClose, onSubmit }: CreateGroupDialogProps)
           />
         </div>
 
-        <div className='bg-gray-100 p-4 rounded-lg min-h-[150px] flex items-center justify-center text-gray-500 border border-dashed border-gray-300'>
+        <div className='bg-gray-100 rounded-lg max-h-[150px] flex items-center justify-center text-gray-500 border border-dashed border-gray-300'>
           <UploaderPage onFileUploadSuccess={handleReceivedFileId} />
         </div>
 

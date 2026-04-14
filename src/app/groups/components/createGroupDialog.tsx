@@ -106,6 +106,12 @@ export function CreateGroupDialog({ onClose, onSubmit }: CreateGroupDialogProps)
           <UploaderPage onFileUploadSuccess={handleReceivedFileId} />
         </div>
 
+         <div className='bg rounded-lg max-h-[150px] flex flex-col items-center justify-center text-gray-600 border border-dashed border-gray-300 p-4'>
+
+          <p className="text-sm text-gray-500 mb-2">
+            این یک فایل نمونه ایجاد گروه است. لطفاً آن را دانلود کرده و مطابق فرمت آن فایل خود را تکمیل و بارگذاری کنید.
+          </p>
+
           <button
             onClick={handleDownload}
             className="px-4 py-2 bg-[#1758BA] text-white rounded-lg flex items-center gap-2 hover:bg-[#216ee1] transition shadow-sm hover:shadow-md"
@@ -126,6 +132,8 @@ export function CreateGroupDialog({ onClose, onSubmit }: CreateGroupDialogProps)
             </svg>
             دانلود فایل نمونه
           </button>
+        </div>
+
         {error && <p className='text-red-600 text-sm text-center mt-2'>{error}</p>}
 
         <div className='flex justify-center gap-3 mt-1 w-2/3 mx-auto'>

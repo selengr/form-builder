@@ -87,7 +87,7 @@ const ListCard: React.FC<ListCardProps> = ({
       <div className='flex flex-wrap gap-2 w-full'>
         <button
           className='bg-[#1758BA] hover:bg-[#216ee1] transition-all duration-200 px-3 h-[42px] text-sm rounded-lg text-white grow sm:grow md:flex-1'
-          onClick={() => router.push(`/preview/${data.id}`)}>
+          onClick={() => router.push(`/preview/${data.id}?rep=list`)}>
           مشاهده
         </button>
 

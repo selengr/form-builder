@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import UploaderPage from './uploader';
-import { getAuthToken } from '@/utils/getAuthToken';
 import { z } from 'zod';
 import { toast } from 'sonner';
+import React, { useState } from 'react';
+// uploader
+import UploaderPage from './uploader';
+// utils
+import { getAuthToken } from '@/utils/getAuthToken';
 
 interface CreateGroupDialogProps {
   onClose: () => void;
@@ -15,9 +17,9 @@ const groupSchema = z.object({
 
 export function CreateGroupDialog({ onClose, onSubmit }: CreateGroupDialogProps) {
   const [groupName, setGroupName] = useState<string>('');
-  const [receivedFileId, setReceivedFileId] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [receivedFileId, setReceivedFileId] = useState<string | null>(null);
 
   const handleReceivedFileId = (fileId: string) => {
     setReceivedFileId(fileId);
@@ -75,7 +77,6 @@ export function CreateGroupDialog({ onClose, onSubmit }: CreateGroupDialogProps)
     }
   };
 
-
   return (
     <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50'>
       <div className='bg-white rounded-xl p-6 w-full max-w-md flex flex-col gap-4'>
@@ -99,10 +100,7 @@ export function CreateGroupDialog({ onClose, onSubmit }: CreateGroupDialogProps)
           <UploaderPage onFileUploadSuccess={handleReceivedFileId} />
         </div>
 
-
-
         <DownloadSampleButton />
-
 
         {error && <p className='text-red-600 text-sm text-center mt-2'>{error}</p>}
 

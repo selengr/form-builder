@@ -107,13 +107,13 @@ const ListCard: React.FC<ListCardProps> = ({
               </IconButton>
             </Link>
           {/* )} */}
-          {data.status === 'PUBLISH' && (
+          {/* {data.status === 'PUBLISH' && ( */}
             <div onClick={handleNavigation}>
               <IconButton disabled={loading} color='primary'>
                 <CodiconEye />
               </IconButton>
             </div>
-          )}
+           {/* )} */}
 
         </div>
       </div>

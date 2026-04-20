@@ -35,8 +35,8 @@ interface Props {
   onCheck?: (id: any, checked: any) => void;
   onDelete?: () => void;
   CartComponent?: React.ComponentType<{
-    data: any;
-    onCheck?: (id: any, checked: any) => void;
+    data: unknown;
+    onCheck?: (id: string | number, checked: boolean) => void;
     refreshGrid?: () => void;
   }>;
   refreshData?: () => void;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 // actions
-import { fetchUserInfoServer } from '../../actions/auth';
+// import { fetchUserInfoServer } from '../../actions/auth';
 import { fetchUserInfo } from '@/lib/auth';
 
 export function useUserInfo() {

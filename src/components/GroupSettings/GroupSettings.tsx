@@ -21,7 +21,7 @@ import type { SearchBoxItem } from "../ListGrid/ListGrid"
 // components
 import { RemoveGroupConfirmModal } from "./RemoveConfirmDialog"
 import { useFetchGroupsSetting } from "./hook/useFetchGroupsSetting"
-import { CancelGroupAllocationModal } from "./CancelGroupAllocationModal"
+import CancelGroupAllocationModal from "./CancelGroupAllocationModal"
 // images
 import { UserWithSearchIcon } from "../../../public/images/icons/UserWithSearchIcon "
 
@@ -596,7 +596,6 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
           openCancelGroupAllocationDialog={openCancelGroupAllocationDialog}
           handleClose={handleClose}
           groupId={selectedGroupId}
-          handleOpen={handleOpen}
           formId={formId}
           formData={formData}
         />

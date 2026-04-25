@@ -22,55 +22,57 @@ import { dataCollectionFilter } from '../../../actions/dataCollection/list';
 
 export interface SearchBoxItem {
   fieldName: string;
-  fieldOperation: 'MATCH' | 'EQUAL' | 'DSC' | 'ASC' | 'IN';
   fieldValue: string | string[];
   nextConditionOperator: 'OR' | 'AND';
+  fieldOperation: 'MATCH' | 'EQUAL' | 'DSC' | 'ASC' | 'IN';
 }
 
 interface Props {
+  url: string;
+  onDelete?: () => void;
+  filterComponent: ReactNode;
   searchBoxList: SearchBoxItem[];
   filterBoxList: SearchBoxItem[];
-  filterComponent: ReactNode;
-  url: string;
   onCheck?: (id: any, checked: any) => void;
-  onDelete?: () => void;
   CartComponent?: React.ComponentType<{
     data: any;
-    onCheck?: (id: any, checked: any) => void;
     refreshGrid?: () => void;
+    onCheck?: (id: any, checked: any) => void;
   }>;
-  refreshData?: () => void;
-  refreshGrid?: boolean;
-  disableFilter?: boolean;
-  textTotal?: [string, string];
-  searchQueryFilter?: { surveyTargetPlatformEnum: string; fieldOperation :string };
-  showCreateButton?: boolean;
   title: string;
   CreateButton? : any
+  refreshGrid?: boolean;
+  disableFilter?: boolean;
+  refreshData?: () => void;
+  showCreateButton?: boolean;
+  textTotal?: [string, string];
+  searchQueryFilter?: { surveyTargetPlatformEnum: string; fieldOperation :string };
 }
 
-const DEFAULT_SEARCH_FILTER = { surveyTargetPlatformEnum: 'ALL', fieldOperation : "DSC"  };
+const DEFAULT_SEARCH_FILTER = { surveyTargetPlatformEnum: 'ALL', fieldOperation : "DSC" };
 
 const ListGrid: React.FC<Props> = ({
-  filterComponent,
+  url,
+  title,
+  onCheck,
+  refreshGrid,
+  CreateButton,
   searchBoxList,
   filterBoxList,
   CartComponent,
-  url,
-  onCheck,
-  refreshGrid,
   disableFilter,
-  searchQueryFilter = DEFAULT_SEARCH_FILTER,
+  filterComponent,
   showCreateButton = false,
-  title,
   textTotal = ['تعداد کل فرم‌ها', 'عدد'],
-  CreateButton
+  searchQueryFilter = DEFAULT_SEARCH_FILTER,
 }) => {
-  const [totalData, setTotalData] = useState<number | null>(null);
+  const router = useRouter();
   const { ref, inView } = useInView();
   const searchParams = useSearchParams();
   const query = searchParams.get('query')?.toString() || '';
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [totalData, setTotalData] = useState<number | null>(null);
+  const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (searchParams.get('new') !== null) {
@@ -91,9 +93,6 @@ const ListGrid: React.FC<Props> = ({
     router.push('?new');
   };
 
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const router = useRouter();
-
   const updatedSearchBoxList = searchBoxList.map((item) => {
     if (item.fieldName === 'formSetting.name' && query) {
       return { ...item, fieldValue: query };
@@ -102,21 +101,21 @@ const ListGrid: React.FC<Props> = ({
   });
 
   const {
-    data: pages,
     error,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-    isFetchingNextPage,
     refetch,
+    isFetching,
+    data: pages,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: ['datas_builder_query', query, searchQueryFilter, filterBoxList],
     queryFn: ({ pageParam }) => dataCollectionFilter( pageParam , updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
-    initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       const PAGE_SIZE = 10;
       return lastPage.data && lastPage.data.length === PAGE_SIZE ? allPages.length : undefined;
     },
+    initialPageParam: 0,
     refetchOnWindowFocus: false,
   });
 
@@ -140,9 +139,7 @@ const ListGrid: React.FC<Props> = ({
   }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   useEffect(() => {
-    // if (refreshGrid) {
     handleRefreshGrid();
-    // }
   }, [refreshGrid, handleRefreshGrid]);
 
   useEffect(() => {

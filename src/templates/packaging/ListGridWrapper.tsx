@@ -21,11 +21,12 @@ interface IFormTypeState {
 }
 // --------------------------------------------------------
 export default function ListGridWrapper() {
-  const [refreshGrid, setRefreshGrid] = useState(false);
-  const [openMyCreateModal, setOpenMyCreateModal] = useState(false);
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
   const { push } = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [refreshGrid, setRefreshGrid] = useState<boolean>(false);
+  const [openMyCreateModal, setOpenMyCreateModal] = useState<boolean>(false);
   const [formType, setFormType] = useState<IFormTypeState>({
     isCreatedSoloReport: 'ALL',
     surveyTargetPlatformEnum: 'ALL',

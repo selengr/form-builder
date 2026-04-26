@@ -23,11 +23,11 @@ interface Props {
 
 export default function PackagingFilter({
   formType,
+  clearFilter,
   setFormType,
+  applyFilter,
   TargetPlatform,
   isFetchingTargetPlatform,
-  applyFilter,
-  clearFilter
 }: Props) {
 
   const handleIsCreatedSoloReportChange = (event: any) => {

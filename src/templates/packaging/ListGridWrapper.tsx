@@ -19,6 +19,8 @@ interface IFormTypeState {
   surveyTargetPlatformEnum: string;
   fieldOperation: 'DSC' | 'ASC';
 }
+
+const apiAddress = '/admin/packaging/main-list'
 // --------------------------------------------------------
 export default function ListGridWrapper() {
   const { push } = useRouter();
@@ -83,11 +85,11 @@ export default function ListGridWrapper() {
   return (
     <>
       <ListGrid
+        url={apiAddress}
         title='نظرسنجی‌های من'
         textTotal={['تعداد کل نظرسنجی‌ها', 'عدد']}
         searchBoxList={searchBoxList}
         filterBoxList={filterBoxList}
-        url='/admin/form/survey/main-list'
          filterComponent={
           <PackagingFilter
             formType={formType}

@@ -1,12 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 import { getAuthToken } from '@/utils/getAuthToken';
-import { SurveyFormSchemaType } from '../CreateSurveyBtn';
+import { PackaginigFormSchemaType } from '../CreatePackagingModal';
 
-export async function createSurvey(
-    data: SurveyFormSchemaType
+export async function createPackaging(
+    data: PackaginigFormSchemaType
 ) {
     const token = await getAuthToken();
-    const res = await fetch('/api/survey', {
+    const res = await fetch('/api/packaging', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -32,8 +32,8 @@ export async function createSurvey(
     return result;
 }
 
-export function useCreateSurvey() {
+export function useCreatePackaging() {
     return useMutation({
-        mutationFn: createSurvey,
+        mutationFn: createPackaging,
     });
 }

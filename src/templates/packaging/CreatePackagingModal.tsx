@@ -12,7 +12,7 @@ import FormProvider from '@/components/hook-form/FormProvider';
 import { RHFSelect, RHFTextField } from '@/components/hook-form';
 import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
 // hooks
-import { useCreateSurvey } from './hooks/useCreateSurvey';
+import { useCreatePackaging } from './hooks/useCreatePackaging';
 import { useGetSurveyPurpose as useGetPackagingPurpose } from '../survey/hooks/useGetSurveyPurpose';
 
 interface IGetTargetPlatform {
@@ -34,7 +34,7 @@ const propertiesSchema = z.object({
     .trim()
     .transform((value) => value.replace(/\s+/g, ' '))
     .pipe(z.string().min(2, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' }).max(50, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' })),
-  surveyPurposeEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
+  targetLabelEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
 });
 
 export type PackaginigFormSchemaType = z.infer<typeof propertiesSchema>;
@@ -46,14 +46,14 @@ interface ICreatePackagingModalProps {
 
 export default function CreatePackagingModal({ open, onClose }: ICreatePackagingModalProps) {
   const router = useRouter();
-  const { mutate, isPending } = useCreateSurvey();
+  const { mutate, isPending } = useCreatePackaging();
   const { Survey : Packaging, isFetchingSurvey : isFetchingPackaging } = useGetPackagingPurpose();
 
   const methods = useForm<PackaginigFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     defaultValues: {
       name: '',
-      surveyPurposeEnum: '',
+      targetLabelEnum: '',
     },
   });
 
@@ -67,7 +67,7 @@ export default function CreatePackagingModal({ open, onClose }: ICreatePackaging
           onSuccess: (result) => {    
             toast.success('عملیات با موفقیت انجام شد');
             handleClose()
-            router.push(`/builder/${result.id}?admin=survey`);
+            router.push(`/builder/${result.id}?admin=packaging`);
           },
           onError: (error: any) => {
             toast.error(error?.message || 'خطا در ایجاد فرم');
@@ -167,7 +167,7 @@ export default function CreatePackagingModal({ open, onClose }: ICreatePackaging
                   },
                 }}>
 
-                <RHFSelect fullWidth name='surveyPurposeEnum' sx={textFieldCommonSx}>
+                <RHFSelect fullWidth name='targetLabelEnum' sx={textFieldCommonSx}>
                   <MenuItem value=''>انتخاب کنید</MenuItem>
                   {isFetchingPackaging && <MenuItem value=''><PreviewLoading /></MenuItem>}
                   {Packaging?.map((item: IGetTargetPlatform) => (

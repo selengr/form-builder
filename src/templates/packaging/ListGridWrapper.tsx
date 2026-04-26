@@ -86,8 +86,8 @@ export default function ListGridWrapper() {
     <>
       <ListGrid
         url={apiAddress}
-        title='نظرسنجی‌های من'
-        textTotal={['تعداد کل نظرسنجی‌ها', 'عدد']}
+        title='بسته های ارزیابی'
+        textTotal={['تعداد کل بسته ها', 'عدد']}
         searchBoxList={searchBoxList}
         filterBoxList={filterBoxList}
          filterComponent={

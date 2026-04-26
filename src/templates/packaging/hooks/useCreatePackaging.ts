@@ -2,8 +2,18 @@ import { useMutation } from '@tanstack/react-query';
 import { getAuthToken } from '@/utils/getAuthToken';
 import { PackaginigFormSchemaType } from '../CreatePackagingModal';
 
+interface FormCategoryModel {
+  categoryId: string[]; 
+}
+
+export interface IPayload {
+  name: string;
+  targetLabelEnum: string; 
+  formCategorysModel: FormCategoryModel;
+}
+// ---------------------------------------------------------------------------
 export async function createPackaging(
-    data: PackaginigFormSchemaType
+    data: IPayload
 ) {
     const token = await getAuthToken();
     const res = await fetch('/api/packaging', {

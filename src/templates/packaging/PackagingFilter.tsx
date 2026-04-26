@@ -34,10 +34,6 @@ export default function PackagingFilter({
     setFormType((prev: any) => ({ ...prev, isCreatedSoloReport: event.target.value }));
   };
 
-  const handleTargetPlatFormChange = (event: any) => {
-    setFormType((prev: any) => ({ ...prev, surveyTargetPlatformEnum: event.target.value }));
-  };
-
   const handleTypeChange = (event: any) => {
     setFormType((prev: any) => ({ ...prev, fieldOperation: event.target.value }));
   };

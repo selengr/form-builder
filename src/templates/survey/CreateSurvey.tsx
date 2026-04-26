@@ -41,12 +41,12 @@ const propertiesSchema = z.object({
 
 export type SurveyFormSchemaType = z.infer<typeof propertiesSchema>;
 
-interface CreateSurveyBtnProps {
+interface TCreateSurveyProps {
   open: boolean;
   onClose: () => void;
 }
 
-export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps) {
+export default function CreateSurvey({ open, onClose }: TCreateSurveyProps) {
   const router = useRouter();
   const { mutate, isPending } = useCreateSurvey();
   const { Survey, isFetchingSurvey } = useGetSurveyPurpose();

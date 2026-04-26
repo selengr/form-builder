@@ -3,18 +3,17 @@
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
+import { IoClose } from 'react-icons/io5';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Button, Dialog, DialogContent, IconButton, MenuItem, Stack, Typography } from '@mui/material';
-import { IoClose } from 'react-icons/io5';
 // components
 import FormProvider from '@/components/hook-form/FormProvider';
 import { RHFSelect, RHFTextField } from '@/components/hook-form';
 import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
 // hooks
 import { useCreateSurvey } from './hooks/useCreateSurvey';
-import { useGetSurveyPurpose } from './hooks/useGetSurveyPurpose';
-import { useGetTargetPlatform } from './hooks/useGetTargetPlatform';
+import { useGetSurveyPurpose as useGetPackagingPurpose } from '../survey/hooks/useGetSurveyPurpose';
 
 interface IGetTargetPlatform {
   value: string;
@@ -35,11 +34,10 @@ const propertiesSchema = z.object({
     .trim()
     .transform((value) => value.replace(/\s+/g, ' '))
     .pipe(z.string().min(2, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' }).max(50, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' })),
-  surveyTargetPlatformEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
   surveyPurposeEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
 });
 
-export type SurveyFormSchemaType = z.infer<typeof propertiesSchema>;
+export type PackaginigFormSchemaType = z.infer<typeof propertiesSchema>;
 
 interface ICreatePackagingModalProps {
   open: boolean;
@@ -49,14 +47,12 @@ interface ICreatePackagingModalProps {
 export default function CreatePackagingModal({ open, onClose }: ICreatePackagingModalProps) {
   const router = useRouter();
   const { mutate, isPending } = useCreateSurvey();
-  const { Survey, isFetchingSurvey } = useGetSurveyPurpose();
-  const { TargetPlatform, isFetchingTargetPlatform } = useGetTargetPlatform();
+  const { Survey : Packaging, isFetchingSurvey : isFetchingPackaging } = useGetPackagingPurpose();
 
-  const methods = useForm<SurveyFormSchemaType>({
+  const methods = useForm<PackaginigFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     defaultValues: {
       name: '',
-      surveyTargetPlatformEnum: '',
       surveyPurposeEnum: '',
     },
   });
@@ -66,8 +62,7 @@ export default function CreatePackagingModal({ open, onClose }: ICreatePackaging
     formState: { isSubmitting },
   } = methods;
 
-
-  const onSubmit = async (data: SurveyFormSchemaType) => {
+  const onSubmit = async (data: PackaginigFormSchemaType) => {
         mutate(data, {
           onSuccess: (result) => {    
             toast.success('عملیات با موفقیت انجام شد');
@@ -87,7 +82,7 @@ export default function CreatePackagingModal({ open, onClose }: ICreatePackaging
 
   return (
     <Dialog
-      open={open}
+      open={true}
       dir='ltr'
       onClose={handleClose}
       sx={{
@@ -155,40 +150,6 @@ export default function CreatePackagingModal({ open, onClose }: ICreatePackaging
               />
             </Stack>
 
-
-
-            <Box display='flex' flexDirection='column' gap='6px' width='100%' mt='20px'>
-              <Typography variant='subtitle2' fontWeight='700'>
-                سرویس‌گیرنده:
-              </Typography>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  height: '100%',
-                  direction: 'ltr',
-                  width: '100%',
-                  paddingX: 0.5,
-                  '& .MuiFormControl-root, & .MuiInputBase-root': {
-                    borderRadius: '10px',
-                  },
-                }}>
-
-                <RHFSelect fullWidth name='surveyTargetPlatformEnum' sx={textFieldCommonSx} >
-                  <MenuItem value=''>انتخاب کنید</MenuItem>
-                  {isFetchingSurvey && <MenuItem value=''><PreviewLoading /></MenuItem>}
-                  {TargetPlatform?.map((item: IGetTargetPlatform) => (
-                    <MenuItem key={item.value} value={item.value}>
-                      {item.caption}
-                    </MenuItem>
-                  ))}
-                </RHFSelect>
-
-              </Box>
-            </Box>
-
-
-
             <Box display='flex' flexDirection='column' gap='6px' width='100%' mt='16px'>
               <Typography variant='subtitle2' fontWeight='700'>
                 جامعه هدف:
@@ -208,8 +169,8 @@ export default function CreatePackagingModal({ open, onClose }: ICreatePackaging
 
                 <RHFSelect fullWidth name='surveyPurposeEnum' sx={textFieldCommonSx}>
                   <MenuItem value=''>انتخاب کنید</MenuItem>
-                  {isFetchingTargetPlatform && <MenuItem value=''><PreviewLoading /></MenuItem>}
-                  {Survey?.map((item: IGetTargetPlatform) => (
+                  {isFetchingPackaging && <MenuItem value=''><PreviewLoading /></MenuItem>}
+                  {Packaging?.map((item: IGetTargetPlatform) => (
                     <MenuItem key={item.value} value={item.value}>
                       {item.caption}
                     </MenuItem>
@@ -226,7 +187,7 @@ export default function CreatePackagingModal({ open, onClose }: ICreatePackaging
                 fullWidth
                 disableElevation
                 variant='contained'
-                loading={isSubmitting || isPending || isFetchingTargetPlatform}
+                loading={isSubmitting || isPending}
                 disabled={isSubmitting || isPending}
                 sx={{
                   bgcolor: '#1758BA',

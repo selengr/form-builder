@@ -66,7 +66,6 @@ export default function CreateSurveyModal({ open, onClose }: TCreateSurveyModalP
     formState: { isSubmitting },
   } = methods;
 
-
   const onSubmit = async (data: SurveyFormSchemaType) => {
         mutate(data, {
           onSuccess: (result) => {    

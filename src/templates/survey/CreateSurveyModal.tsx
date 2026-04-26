@@ -41,12 +41,12 @@ const propertiesSchema = z.object({
 
 export type SurveyFormSchemaType = z.infer<typeof propertiesSchema>;
 
-interface ICreatePackagingProps {
+interface TCreateSurveyModalProps {
   open: boolean;
   onClose: () => void;
 }
 
-export default function CreatePackaging({ open, onClose }: ICreatePackagingProps) {
+export default function CreateSurveyModal({ open, onClose }: TCreateSurveyModalProps) {
   const router = useRouter();
   const { mutate, isPending } = useCreateSurvey();
   const { Survey, isFetchingSurvey } = useGetSurveyPurpose();

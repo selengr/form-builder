@@ -8,7 +8,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import ListCard from './ListCard';
 import ListGrid from './ListGrid';
 import PackagingFilter from './PackagingFilter';
-import CreatePackaging from './CreatePackaging';
+import CreatePackagingModal from './CreatePackagingModal';
 // images
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 // hooks
@@ -107,7 +107,10 @@ export default function ListGridWrapper() {
         refreshGrid={refreshGrid}
         searchQueryFilter={formType}
       />
-      <CreatePackaging open={openMyCreateModal} onClose={handleCloseDialog} />
+      <CreatePackagingModal
+         open={openMyCreateModal}
+         onClose={handleCloseDialog}
+       />
     </>
   );
 }

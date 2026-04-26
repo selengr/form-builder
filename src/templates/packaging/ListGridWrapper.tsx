@@ -2,25 +2,31 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import { IconButton } from '@mui/material';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { Button, FormControl, FormControlLabel, FormLabel, IconButton, Radio, RadioGroup } from '@mui/material';
+// componenst
 import ListCard from './ListCard';
 import ListGrid from './ListGrid';
+import PackagingFilter from './PackagingFilter';
 import CreateSurveyBtn from './CreateSurveyBtn';
 // images
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
-import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
+// hooks
 import { useGetTargetPlatform } from './hooks/useGetTargetPlatform';
-import { IGetTargetPlatform } from '../../../actions/survey/getTargetPlatformAction';
-import PackagingFilter from './PackagingFilter';
-// test branch
+
+interface IFormTypeState {
+  isCreatedSoloReport: 'ALL' | 'true' | 'false';
+  surveyTargetPlatformEnum: string;
+  fieldOperation: 'DSC' | 'ASC';
+}
+// --------------------------------------------------------
 export default function ListGridWrapper() {
   const [refreshGrid, setRefreshGrid] = useState(false);
   const [openMyCreateModal, setOpenMyCreateModal] = useState(false);
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { push } = useRouter();
-  const [formType, setFormType] = useState<any>({
+  const [formType, setFormType] = useState<IFormTypeState>({
     isCreatedSoloReport: 'ALL',
     surveyTargetPlatformEnum: 'ALL',
     fieldOperation: "DSC"

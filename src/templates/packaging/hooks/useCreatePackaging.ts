@@ -16,7 +16,6 @@ export function useCreatePackaging({ push, onClose }: { push: any; onClose: () =
 
     return useMutation({
         mutationFn: ({ data }: { data: IPayloadPackage }) => createPackageAction(data),
-
         onSuccess: (result) => {
             toast.success('عملیات با موفقیت انجام شد');
             onClose()

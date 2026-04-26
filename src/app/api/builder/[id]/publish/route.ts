@@ -8,19 +8,19 @@ export const revalidate = 0;
 
 const publishSchema = z.object({
   IsSurvey: z.boolean(),
-  IsDataCollection: z.boolean(),
+  IsPackaging: z.boolean(),
 });
 
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
   const formId = params.id
 
   const body = await req.json()
-  const { IsSurvey, IsDataCollection } = publishSchema.parse(body)
+  const { IsSurvey, IsPackaging } = publishSchema.parse(body)
   let url = ''
   if(IsSurvey){
     url = `/admin/form/survey/finalization/${formId}`
-  }else if(IsDataCollection){
-    url = `/admin/form/data-collection/finalization/${formId}`
+  }else if(IsPackaging){
+    url = `/admin/packaging/finalization/${formId}`
   } else {
      url = `/form/ready-to-publish/${formId}`
   }

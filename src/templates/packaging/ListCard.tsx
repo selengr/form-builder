@@ -101,23 +101,11 @@ const ListCard: React.FC<ListCardProps> = ({
             <Image src={CopyIcon} alt='copy' width={24} height={24} />
           </IconButton>
 
-          {data.status === 'CREATE' && (
             <Link href={`/builder/${data.id}?admin=survey`}>
               <IconButton disabled={loading} color='primary'>
                 <Image src={EditIcon} alt='edit' width={24} height={24} />
               </IconButton>
             </Link>
-          )}
-          {data.status === 'PUBLISH' && (
-            <ShareLinkModal formData={data} />
-          )}
-          {data.status === 'PUBLISH' && (
-            <div onClick={handleNavigation}>
-              <IconButton disabled={loading} color='primary'>
-                <CodiconEye />
-              </IconButton>
-            </div>
-          )}
 
         </div>
       </div>

@@ -5,10 +5,6 @@ import { IPayloadPackage } from '@/templates/packaging/hooks/useCreatePackaging'
 
 
 export async function createPackageAction(data : IPayloadPackage) {
-  console.log('data------------------', data)
-  console.log('data------------------2', data.name)
-  console.log('data------------------3', data.targetLabelEnum)
-  console.log('data------------------4', data.formCategorysModel)
   try {
     const url = `/admin/packaging`;
     const res = await serverApi.post(url, data);

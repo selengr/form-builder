@@ -49,12 +49,12 @@ interface ICreatePackagingModalProps {
 }
 // --------------------------------------------------------------------------
 export default function CreatePackagingModal({ open, onClose }: ICreatePackagingModalProps) {
-  const router = useRouter();
-  const { mutate, isPending } = useCreatePackaging();
+  const { push } = useRouter();
+  const { mutate, isPending } = useCreatePackaging({ push, onClose });
 
   const { mutation, SubCategoryData } = useGetSubCategory();
   const { Category, isFetchingCategory } = useGetParentCategory();
-  const { Survey : Packaging, isFetchingSurvey : isFetchingPackaging } = useGetPackagingPurpose();
+  const { Survey: Packaging, isFetchingSurvey: isFetchingPackaging } = useGetPackagingPurpose();
 
   const methods = useForm<PackaginigFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
@@ -73,7 +73,7 @@ export default function CreatePackagingModal({ open, onClose }: ICreatePackaging
     formState: { isSubmitting },
   } = methods;
 
-    const handleFetchSubcategories = () => {
+  const handleFetchSubcategories = () => {
     const selectedCategoryIds = getValues('categoryIds');
     if (selectedCategoryIds.length > 0) {
       mutation.mutate(selectedCategoryIds);
@@ -86,35 +86,26 @@ export default function CreatePackagingModal({ open, onClose }: ICreatePackaging
     const { name, targetLabelEnum, categoryIds, subCategoryIds } = data;
     const allCategoryIds = [...categoryIds, ...subCategoryIds];
 
-      const body = {
-        name,
-        targetLabelEnum,
-        formCategorysModel: {
-          categoryId: allCategoryIds,
-        },
-      };
-        mutate(body, {
-          onSuccess: (result) => {    
-            toast.success('عملیات با موفقیت انجام شد');
-            handleClose()
-            router.push(`/builder/${result.id}?admin=packaging`);
-          },
-          onError: (error: any) => {
-            toast.error(error?.message || 'خطا در ایجاد فرم');
-          },
-        });
-     };
+    const body = {
+      name,
+      targetLabelEnum: targetLabelEnum === "GENERAL" ? "DEFAULT" : targetLabelEnum,
+      formCategorysModel: {
+        categoryId: allCategoryIds,
+      },
+    };
+    mutate({ data: body })
+  };
+
+  const watchCategoryIds = watch('categoryIds');
 
   const handleClose = () => {
     if (isSubmitting || isPending) return;
     onClose();
   };
 
-    const watchCategoryIds = watch('categoryIds');
-
   return (
     <Dialog
-      open={true}
+      open={open}
       dir='ltr'
       onClose={handleClose}
       sx={{
@@ -168,7 +159,7 @@ export default function CreatePackagingModal({ open, onClose }: ICreatePackaging
             }}>
             <Stack spacing={1} mb='10px'>
               <Typography variant='subtitle2' fontWeight='600' fontSize='15px'>
-                نام نظرسنجی:
+                نام بسته ارزیابی:
               </Typography>
               <RHFTextField
                 name='name'
@@ -212,70 +203,70 @@ export default function CreatePackagingModal({ open, onClose }: ICreatePackaging
               </Box>
             </Box>
 
-                    <Box display='flex' flexDirection='column' gap='6px' width='100%' mt='10px'>
-                           <Typography variant='subtitle2' fontWeight='700'>
-                             دسته بند‌ی‌ها:
-                           </Typography>
-                           <Box
-                             sx={{
-                               width: '100%',
-                               paddingX: 0.5,
-                               height: '100%',
-                               display: 'flex',
-                               direction: 'ltr',
-                               flexDirection: 'column',
-                               '& .MuiFormControl-root, & .MuiInputBase-root': {
-                                 borderRadius: '10px',
-                               },
-                             }}>
-                             <RHFMultiSelectV0
-                               sx={{
-                                 '& .MuiInputBase-root': {
-                                   bgcolor: '#fff',
-                                   paddingY: '8px',
-                                 },
-                               }}
-                               chip
-                               checkbox
-                               fullWidth
-                               name='categoryIds'
-                               options={Category ?? []}
-                               isLoading={isFetchingCategory}
-                               disabled={isFetchingCategory}
-                               onClose={handleFetchSubcategories}
-                             />
-                           </Box>
-             
-                           <Box
-                             sx={{
-                               display: 'flex',
-                               flexDirection: 'column',
-                               height: '100%',
-                               direction: 'ltr',
-                               width: '100%',
-                               paddingX: 0.5,
-                               marginTop: '8px',
-                               '& .MuiFormControl-root, & .MuiInputBase-root': {
-                                 borderRadius: '10px',
-                               },
-                             }}>
-                             <RHFMultiSelectV0
-                               sx={{
-                                 '& .MuiInputBase-root': {
-                                   bgcolor: '#fff',
-                                   paddingY: '8px',
-                                 },
-                               }}
-                               chip
-                               checkbox
-                               fullWidth
-                               name='subCategoryIds'
-                               options={subcategories ?? []}
-                               isLoading={mutation.isPending}
-                               disabled={watchCategoryIds.length === 0 || mutation.isPending}
-                             />
-                           </Box>
-                         </Box>
+            <Box display='flex' flexDirection='column' gap='6px' width='100%' mt='25px'>
+              <Typography variant='subtitle2' fontWeight='700'>
+                دسته بند‌ی‌ها:
+              </Typography>
+              <Box
+                sx={{
+                  width: '100%',
+                  paddingX: 0.5,
+                  height: '100%',
+                  display: 'flex',
+                  direction: 'ltr',
+                  flexDirection: 'column',
+                  '& .MuiFormControl-root, & .MuiInputBase-root': {
+                    borderRadius: '10px',
+                  },
+                }}>
+                <RHFMultiSelectV0
+                  sx={{
+                    '& .MuiInputBase-root': {
+                      bgcolor: '#fff',
+                      paddingY: '8px',
+                    },
+                  }}
+                  chip
+                  checkbox
+                  fullWidth
+                  name='categoryIds'
+                  options={Category ?? []}
+                  isLoading={isFetchingCategory}
+                  disabled={isFetchingCategory}
+                  onClose={handleFetchSubcategories}
+                />
+              </Box>
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: '100%',
+                  direction: 'ltr',
+                  width: '100%',
+                  paddingX: 0.5,
+                  marginTop: '8px',
+                  '& .MuiFormControl-root, & .MuiInputBase-root': {
+                    borderRadius: '10px',
+                  },
+                }}>
+                <RHFMultiSelectV0
+                  sx={{
+                    '& .MuiInputBase-root': {
+                      bgcolor: '#fff',
+                      paddingY: '8px',
+                    },
+                  }}
+                  chip
+                  checkbox
+                  fullWidth
+                  name='subCategoryIds'
+                  options={subcategories ?? []}
+                  isLoading={mutation.isPending}
+                  disabled={watchCategoryIds.length === 0 || mutation.isPending}
+                />
+              </Box>
+            </Box>
 
             <Box display='flex' gap={3} width='100%' marginTop={2} marginBottom={2} paddingX='40px'>
               <Button

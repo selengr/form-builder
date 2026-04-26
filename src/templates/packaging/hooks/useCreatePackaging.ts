@@ -1,49 +1,29 @@
+import { toast } from 'sonner';
 import { useMutation } from '@tanstack/react-query';
-import { getAuthToken } from '@/utils/getAuthToken';
-import { PackaginigFormSchemaType } from '../CreatePackagingModal';
+import { createPackageAction } from '../../../../actions/packaging/create';
 
 interface FormCategoryModel {
-  categoryId: string[]; 
+    categoryId: string[];
 }
-
-export interface IPayload {
-  name: string;
-  targetLabelEnum: string; 
-  formCategorysModel: FormCategoryModel;
+export interface IPayloadPackage {
+    name: string;
+    targetLabelEnum: string;
+    formCategorysModel: FormCategoryModel;
 }
 // ---------------------------------------------------------------------------
-export async function createPackaging(
-    data: IPayload
-) {
-    const token = await getAuthToken();
-    const res = await fetch('/api/packaging', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(data),
-    });
 
-    const result = await res.json();
+export function useCreatePackaging({ push, onClose }: { push: any; onClose: () => void }) {
 
-    if (!res.ok) {
-        let errorMessage = 'خطا در ثبت گروه.';
-
-        if (Array.isArray(result?.error) && result.error[0]?.title) {
-            errorMessage = result.error[0].title;
-        } else if (typeof result?.error === 'string') {
-            errorMessage = result.error;
-        }
-
-        throw new Error(errorMessage);
-    }
-
-    return result;
-}
-
-export function useCreatePackaging() {
     return useMutation({
-        mutationFn: createPackaging,
+        mutationFn: ({ data }: { data: IPayloadPackage }) => createPackageAction(data),
+
+        onSuccess: (result) => {
+            toast.success('عملیات با موفقیت انجام شد');
+            onClose()
+            push(`/builder/${result.formId}?admin=packaging`);
+        },
+        onError: (error: any) => {
+            toast.error(error?.message || 'خطا در ایجاد فرم');
+        },
     });
 }

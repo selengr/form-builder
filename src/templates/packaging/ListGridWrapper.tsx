@@ -11,12 +11,8 @@ import PackagingFilter from './PackagingFilter';
 import CreatePackagingModal from './CreatePackagingModal';
 // images
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
-// hooks
-import { useGetTargetPlatform } from './hooks/useGetTargetPlatform';
-
 interface IFormTypeState {
   isCreatedSoloReport: 'ALL' | 'true' | 'false';
-  surveyTargetPlatformEnum: string;
   fieldOperation: 'DSC' | 'ASC';
 }
 
@@ -31,10 +27,8 @@ export default function ListGridWrapper() {
   const [openMyCreateModal, setOpenMyCreateModal] = useState<boolean>(false);
   const [formType, setFormType] = useState<IFormTypeState>({
     isCreatedSoloReport: 'ALL',
-    surveyTargetPlatformEnum: 'ALL',
     fieldOperation: "DSC"
   });
-  const { TargetPlatform, isFetchingTargetPlatform } = useGetTargetPlatform();
   const filterBoxList: any = [];
   const searchBoxList: any = [
     {
@@ -57,7 +51,7 @@ export default function ListGridWrapper() {
     if (params.size) params.delete('query');
 
     push(`${pathname}?${params.toString()}`);
-    setFormType({ isCreatedSoloReport: 'ALL', surveyTargetPlatformEnum: "ALL", fieldOperation: "DSC" });
+    setFormType({ isCreatedSoloReport: 'ALL', fieldOperation: "DSC" });
     setRefreshGrid((prev) => !prev);
   };
 
@@ -94,8 +88,6 @@ export default function ListGridWrapper() {
           <PackagingFilter
             formType={formType}
             setFormType={setFormType}
-            TargetPlatform={TargetPlatform!}
-            isFetchingTargetPlatform={isFetchingTargetPlatform}
             applyFilter={applyFilter}
             clearFilter={clearFilter}
           />

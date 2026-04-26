@@ -10,13 +10,9 @@ import {
   RadioGroup
 } from '@mui/material';
 import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
-import { IGetTargetPlatform } from '../../../actions/survey/getTargetPlatformAction';
-
 interface Props {
   formType: any;
   setFormType: (fn: any) => void;
-  TargetPlatform: IGetTargetPlatform[];
-  isFetchingTargetPlatform: boolean;
   applyFilter: () => void;
   clearFilter: () => void;
 }
@@ -25,9 +21,7 @@ export default function PackagingFilter({
   formType,
   clearFilter,
   setFormType,
-  applyFilter,
-  TargetPlatform,
-  isFetchingTargetPlatform,
+  applyFilter
 }: Props) {
 
   const handleIsCreatedSoloReportChange = (event: any) => {

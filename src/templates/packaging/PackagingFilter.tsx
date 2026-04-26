@@ -66,20 +66,6 @@ export default function PackagingFilter({
           </FormControl>
         </div>
 
-        {/* Target Filter */}
-        <div className='w-full bg-[#F7F7FF] rounded-[20px] px-4 pt-4 pb-3'>
-          <FormControl>
-            <FormLabel sx={{ fontSize: 15, fontWeight: 700 }}>بر اساس سرویس‌گیرنده</FormLabel>
-            <RadioGroup value={formType.surveyTargetPlatformEnum} onChange={handleTargetPlatFormChange}>
-              <FormControlLabel value='ALL' control={<Radio />} label='همه' />
-              {isFetchingTargetPlatform && <FormControlLabel value='ALL' control={<Radio />} label='loading...' />}
-              {TargetPlatform?.map((t) => (
-                <FormControlLabel key={t.value} value={t.value} control={<Radio />} label={t.caption} />
-              ))}
-            </RadioGroup>
-          </FormControl>
-        </div>
-
         {/* Time Filter */}
         <div className='w-full bg-[#F7F7FF] rounded-[20px] px-4 pt-4 pb-3'>
           <FormControl>

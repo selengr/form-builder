@@ -3,18 +3,19 @@
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
+import { IoClose } from 'react-icons/io5';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Button, Dialog, DialogContent, IconButton, MenuItem, Stack, Typography } from '@mui/material';
-import { IoClose } from 'react-icons/io5';
 // components
 import FormProvider from '@/components/hook-form/FormProvider';
-import { RHFSelect, RHFTextField } from '@/components/hook-form';
 import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
+import { RHFMultiSelectV0, RHFSelect, RHFTextField } from '@/components/hook-form';
 // hooks
-import { useCreateSurvey } from './hooks/useCreateSurvey';
-import { useGetSurveyPurpose } from './hooks/useGetSurveyPurpose';
-import { useGetTargetPlatform } from './hooks/useGetTargetPlatform';
+import { useCreatePackaging } from './hooks/useCreatePackaging';
+import { useGetSubCategory } from '@/components/CreateFormBtn/hooks/useGetSubCategory';
+import { useGetParentCategory } from '@/components/CreateFormBtn/hooks/useGetParentCategory';
+import { useGetSurveyPurpose as useGetPackagingPurpose } from '../survey/hooks/useGetSurveyPurpose';
 
 interface IGetTargetPlatform {
   value: string;
@@ -35,50 +36,67 @@ const propertiesSchema = z.object({
     .trim()
     .transform((value) => value.replace(/\s+/g, ' '))
     .pipe(z.string().min(2, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' }).max(50, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' })),
-  surveyTargetPlatformEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
-  surveyPurposeEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
+  targetLabelEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
+  categoryIds: z.array(z.string()).min(1, { message: 'لطفا حداقل یک دسته بندی را انتخاب کنید' }),
+  subCategoryIds: z.array(z.string()).min(1, { message: 'لطفا حداقل یک دسته بندی را انتخاب کنید' }),
 });
 
-export type SurveyFormSchemaType = z.infer<typeof propertiesSchema>;
+export type PackaginigFormSchemaType = z.infer<typeof propertiesSchema>;
 
-interface CreateSurveyBtnProps {
+interface ICreatePackagingModalProps {
   open: boolean;
   onClose: () => void;
 }
+// --------------------------------------------------------------------------
+export default function CreatePackagingModal({ open, onClose }: ICreatePackagingModalProps) {
+  const { push } = useRouter();
+  const { mutate, isPending } = useCreatePackaging({ push, onClose });
 
-export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps) {
-  const router = useRouter();
-  const { mutate, isPending } = useCreateSurvey();
-  const { Survey, isFetchingSurvey } = useGetSurveyPurpose();
-  const { TargetPlatform, isFetchingTargetPlatform } = useGetTargetPlatform();
+  const { mutation, SubCategoryData } = useGetSubCategory();
+  const { Category, isFetchingCategory } = useGetParentCategory();
+  const { Survey: Packaging, isFetchingSurvey: isFetchingPackaging } = useGetPackagingPurpose();
 
-  const methods = useForm<SurveyFormSchemaType>({
+  const methods = useForm<PackaginigFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     defaultValues: {
       name: '',
-      surveyTargetPlatformEnum: '',
-      surveyPurposeEnum: '',
+      targetLabelEnum: '',
+      categoryIds: [],
+      subCategoryIds: [],
     },
   });
 
   const {
+    watch,
+    getValues,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
+  const handleFetchSubcategories = () => {
+    const selectedCategoryIds = getValues('categoryIds');
+    if (selectedCategoryIds.length > 0) {
+      mutation.mutate(selectedCategoryIds);
+    }
+  };
 
-  const onSubmit = async (data: SurveyFormSchemaType) => {
-        mutate(data, {
-          onSuccess: (result) => {    
-            toast.success('عملیات با موفقیت انجام شد');
-            handleClose()
-            router.push(`/builder/${result.id}?admin=survey`);
-          },
-          onError: (error: any) => {
-            toast.error(error?.message || 'خطا در ایجاد فرم');
-          },
-        });
-     };
+  const subcategories = SubCategoryData(mutation.data);
+
+  const onSubmit = async (data: PackaginigFormSchemaType) => {
+    const { name, targetLabelEnum, categoryIds, subCategoryIds } = data;
+    const allCategoryIds = [...categoryIds, ...subCategoryIds];
+
+    const body = {
+      name,
+      targetLabelEnum: targetLabelEnum === "GENERAL" ? "DEFAULT" : targetLabelEnum,
+      formCategorysModel: {
+        categoryId: allCategoryIds,
+      },
+    };
+    mutate({ data: body })
+  };
+
+  const watchCategoryIds = watch('categoryIds');
 
   const handleClose = () => {
     if (isSubmitting || isPending) return;
@@ -141,7 +159,7 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
             }}>
             <Stack spacing={1} mb='10px'>
               <Typography variant='subtitle2' fontWeight='600' fontSize='15px'>
-                نام نظرسنجی:
+                نام بسته ارزیابی:
               </Typography>
               <RHFTextField
                 name='name'
@@ -154,40 +172,6 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
                 }}
               />
             </Stack>
-
-
-
-            <Box display='flex' flexDirection='column' gap='6px' width='100%' mt='20px'>
-              <Typography variant='subtitle2' fontWeight='700'>
-                سرویس‌گیرنده:
-              </Typography>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  height: '100%',
-                  direction: 'ltr',
-                  width: '100%',
-                  paddingX: 0.5,
-                  '& .MuiFormControl-root, & .MuiInputBase-root': {
-                    borderRadius: '10px',
-                  },
-                }}>
-
-                <RHFSelect fullWidth name='surveyTargetPlatformEnum' sx={textFieldCommonSx} >
-                  <MenuItem value=''>انتخاب کنید</MenuItem>
-                  {isFetchingSurvey && <MenuItem value=''><PreviewLoading /></MenuItem>}
-                  {TargetPlatform?.map((item: IGetTargetPlatform) => (
-                    <MenuItem key={item.value} value={item.value}>
-                      {item.caption}
-                    </MenuItem>
-                  ))}
-                </RHFSelect>
-
-              </Box>
-            </Box>
-
-
 
             <Box display='flex' flexDirection='column' gap='6px' width='100%' mt='16px'>
               <Typography variant='subtitle2' fontWeight='700'>
@@ -206,10 +190,10 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
                   },
                 }}>
 
-                <RHFSelect fullWidth name='surveyPurposeEnum' sx={textFieldCommonSx}>
+                <RHFSelect fullWidth name='targetLabelEnum' sx={textFieldCommonSx}>
                   <MenuItem value=''>انتخاب کنید</MenuItem>
-                  {isFetchingTargetPlatform && <MenuItem value=''><PreviewLoading /></MenuItem>}
-                  {Survey?.map((item: IGetTargetPlatform) => (
+                  {isFetchingPackaging && <MenuItem value=''><PreviewLoading /></MenuItem>}
+                  {Packaging?.map((item: IGetTargetPlatform) => (
                     <MenuItem key={item.value} value={item.value}>
                       {item.caption}
                     </MenuItem>
@@ -219,6 +203,70 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
               </Box>
             </Box>
 
+            <Box display='flex' flexDirection='column' gap='6px' width='100%' mt='25px'>
+              <Typography variant='subtitle2' fontWeight='700'>
+                دسته بند‌ی‌ها:
+              </Typography>
+              <Box
+                sx={{
+                  width: '100%',
+                  paddingX: 0.5,
+                  height: '100%',
+                  display: 'flex',
+                  direction: 'ltr',
+                  flexDirection: 'column',
+                  '& .MuiFormControl-root, & .MuiInputBase-root': {
+                    borderRadius: '10px',
+                  },
+                }}>
+                <RHFMultiSelectV0
+                  sx={{
+                    '& .MuiInputBase-root': {
+                      bgcolor: '#fff',
+                      paddingY: '8px',
+                    },
+                  }}
+                  chip
+                  checkbox
+                  fullWidth
+                  name='categoryIds'
+                  options={Category ?? []}
+                  isLoading={isFetchingCategory}
+                  disabled={isFetchingCategory}
+                  onClose={handleFetchSubcategories}
+                />
+              </Box>
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: '100%',
+                  direction: 'ltr',
+                  width: '100%',
+                  paddingX: 0.5,
+                  marginTop: '8px',
+                  '& .MuiFormControl-root, & .MuiInputBase-root': {
+                    borderRadius: '10px',
+                  },
+                }}>
+                <RHFMultiSelectV0
+                  sx={{
+                    '& .MuiInputBase-root': {
+                      bgcolor: '#fff',
+                      paddingY: '8px',
+                    },
+                  }}
+                  chip
+                  checkbox
+                  fullWidth
+                  name='subCategoryIds'
+                  options={subcategories ?? []}
+                  isLoading={mutation.isPending}
+                  disabled={watchCategoryIds.length === 0 || mutation.isPending}
+                />
+              </Box>
+            </Box>
 
             <Box display='flex' gap={3} width='100%' marginTop={2} marginBottom={2} paddingX='40px'>
               <Button
@@ -226,7 +274,7 @@ export default function CreateSurveyBtn({ open, onClose }: CreateSurveyBtnProps)
                 fullWidth
                 disableElevation
                 variant='contained'
-                loading={isSubmitting || isPending || isFetchingTargetPlatform}
+                loading={isSubmitting || isPending}
                 disabled={isSubmitting || isPending}
                 sx={{
                   bgcolor: '#1758BA',

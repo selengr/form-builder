@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { getAuthToken } from '@/utils/getAuthToken';
-import { SurveyFormSchemaType } from '../CreateSurveyBtn';
+import { SurveyFormSchemaType } from '../CreateSurveyModal';
 
 export async function createSurvey(
     data: SurveyFormSchemaType

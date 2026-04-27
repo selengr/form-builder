@@ -35,8 +35,8 @@ interface CreateFormBtnProps {
 
 export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
   const router = useRouter();
-  const { Category, isFetchingCategory } = useGetParentCategory();
   const { mutation, SubCategoryData } = useGetSubCategory();
+  const { Category, isFetchingCategory } = useGetParentCategory();
 
   const methods = useForm<PropertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),

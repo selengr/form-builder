@@ -7,45 +7,54 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 interface UsePublishFormParams {
   formId?: string | string[];
   IsSurvey: boolean;
-  IsDataCollection: boolean;
+  IsPackaging: boolean;
 }
 
 const API_BASE = '/api/builder';
 
-const publishFormAction = async ({formId, IsSurvey, IsDataCollection }: UsePublishFormParams) => {
-    const token = await getAuthToken();
-     const url =  `${API_BASE}/${formId}/publish`
-    try {
-       await fetch(url, {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          IsSurvey,
-          IsDataCollection 
-        }),
-      });
+const publishFormAction = async ({ formId, IsSurvey, IsPackaging }: UsePublishFormParams) => {
+  const token = await getAuthToken();
+  const url = `${API_BASE}/${formId}/publish`
 
-    } catch (error:any) {
-      toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+  const res = await fetch(url, {
+    method: IsPackaging ? 'POST' : 'PUT',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      IsSurvey,
+      IsPackaging
+    }),
+  });
+
+  const result = await res.json();
+
+  if (!res.ok) {
+    let errorMessage = ''
+
+    if (Array.isArray(result?.error) && result.error[0]?.title) {
+      errorMessage = result.error[0].title;
     }
-};  
 
+    throw new Error(errorMessage);
+  }
 
-export function usePublishForm({ formId, IsSurvey, IsDataCollection }: UsePublishFormParams) {
+  return result;
+};
+
+export function usePublishForm({ formId, IsSurvey, IsPackaging }: UsePublishFormParams) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn:() =>  publishFormAction({formId, IsSurvey, IsDataCollection}),
+    mutationFn: () => publishFormAction({ formId, IsSurvey, IsPackaging }),
     onSuccess: () => {
       toast.success('عملیات با موفقیت انجام شد');
       queryClient.invalidateQueries({
         queryKey: ['form-builder', formId],
       });
     },
-    onError: () => {
-      toast.error('انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.');
+    onError: (err) => {
+      toast.error(err.message || 'انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.');
     },
   });
 }

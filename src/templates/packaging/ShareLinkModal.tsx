@@ -1,0 +1,81 @@
+'use client';
+import Image from 'next/image';
+import { CgClose } from 'react-icons/cg';
+import { useCallback, useState } from 'react';
+import PublishIcon from '@/../public/images/home-page/publish-link.svg';
+import { Box, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
+import ShareLinkSetting from './ShareLinkSetting';
+
+interface ShareLinkModalProps {
+  formData: {
+    formId: string | number;
+    publicLink: string;
+    formPublishSetting: {
+      publicationMainPageMethod: boolean
+      privateLink : string
+    },
+    isCreatedSoloReport: boolean | null
+    showReportForResponder: boolean | null
+  };
+}
+
+export default function ShareLinkModal({formData} : {formData : any}) {
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleOpen = useCallback(() => {
+    setOpenDialog((prev) => !prev);
+  }, []);
+
+  return (
+    <>
+      <IconButton onClick={handleOpen} color='primary'>
+                <Image src={PublishIcon} alt='edit' width={24} height={24} />
+              </IconButton>
+
+      <Dialog
+        open={openDialog}
+        onClose={handleOpen}
+        dir='ltr'
+        sx={{
+          overflow: 'hidden',
+          scrollbarWidth: 'none',
+          '& .MuiPaper-root': {
+            borderRadius: '24px',
+            margin: '10px',
+            width: '100%',
+            maxWidth: '600px',
+          },
+          '& .MuiDialog-container': {
+            backdropFilter: 'blur(4px)',
+            backgroundColor: 'hsl(0deg 0% 100% / 50%)',
+          },
+        }}>
+        <Box className='flex items-center justify-start' sx={{ p: 2, pb : 0 }}>
+          <IconButton onClick={handleOpen} aria-label='بستن'>
+            <CgClose color='#404040' size='1.5rem' />
+          </IconButton>
+        </Box>
+        <DialogContent
+          dir='rtl'
+          sx={{
+            maxHeight: '75vh',
+            scrollbarWidth: 'thin',
+            paddingX: 1,
+            paddingTop: 0,
+               paddingBottom: 0,
+            display: 'flex',
+            flexDirection: 'column',
+          }}>
+          <Box className='flex justify-center items-baseline' sx={{ mb: 2 }}>
+            <Typography variant='h6' component='p' fontWeight='bold' textAlign='center'>
+              تنظیمات انتشار
+            </Typography>
+          </Box>
+      
+             <ShareLinkSetting handleOpen={handleOpen} formData={formData}/>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
+

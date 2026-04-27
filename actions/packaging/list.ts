@@ -10,9 +10,9 @@ interface SearchBoxItem {
 }
 
 const PAGE_SIZE = 10;
-const DEFAULT_SEARCH_FILTER = { surveyTargetPlatformEnum: 'ALL', isCreatedSoloReport: 'All', fieldOperation : "DSC"  };
+const DEFAULT_SEARCH_FILTER = { isCreatedSoloReport: 'All', fieldOperation : "DSC"  };
 
-export async function surveyFilter(
+export async function PackagingList(
   pageParam: number,
   searchBoxList: SearchBoxItem[],
   filterBoxList: SearchBoxItem[],
@@ -31,15 +31,6 @@ export async function surveyFilter(
       });
     }
 
-    if (searchQueryFilter.surveyTargetPlatformEnum && searchQueryFilter.surveyTargetPlatformEnum !== 'ALL') {
-      filterRestrictions.push({
-        fieldName: 'formSetting.surveyTargetPlatformEnum',
-        fieldOperation: 'EQUAL',
-        fieldValue: searchQueryFilter.surveyTargetPlatformEnum,
-        nextConditionOperator: 'AND',
-      });
-    }
-
     const validCombinedRestrictionList = [
       ...searchBoxList,
       ...filterBoxList,
@@ -50,7 +41,7 @@ export async function surveyFilter(
       if (Array.isArray(item.fieldValue)) return item.fieldValue.length > 0;
       return true;
     });
-console.log('validCombinedRestrictionList--------------------------------------', validCombinedRestrictionList)
+
     const searchFilterBoxListPayload = [
       { restrictionList: validCombinedRestrictionList },
     ];
@@ -72,7 +63,7 @@ console.log('validCombinedRestrictionList--------------------------------------'
 
     if (!response?.data) {
       throw new Error('خطا در دریافت اطلاعات');
-    }
+    } 
 
     return {
       data: response.data.content,
@@ -84,7 +75,6 @@ console.log('validCombinedRestrictionList--------------------------------------'
       error?.response?.data?.message?.[0]?.title ||
       error?.response?.data?.message ||
       error?.response?.data ||
-      error?.message ||
       'خطای نامشخص';
 
     throw new Error(message);

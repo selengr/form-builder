@@ -7,19 +7,16 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 // componenst
 import ListCard from './ListCard';
 import ListGrid from './ListGrid';
-import SurveyFilter from './SurveyFilter';
-import CreateSurveyModal from './CreateSurveyModal';
+import PackagingFilter from './PackagingFilter';
+import CreatePackagingModal from './CreatePackagingModal';
 // images
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
-// hooks
-import { useGetTargetPlatform } from './hooks/useGetTargetPlatform';
-
 interface IFormTypeState {
   isCreatedSoloReport: 'ALL' | 'true' | 'false';
-  surveyTargetPlatformEnum: string;
   fieldOperation: 'DSC' | 'ASC';
 }
-const apiAddress = '/admin/form/survey/main-list'
+
+const apiAddress = '/admin/packaging/main-list'
 // --------------------------------------------------------
 export default function ListGridWrapper() {
   const { push } = useRouter();
@@ -30,10 +27,8 @@ export default function ListGridWrapper() {
   const [openMyCreateModal, setOpenMyCreateModal] = useState<boolean>(false);
   const [formType, setFormType] = useState<IFormTypeState>({
     isCreatedSoloReport: 'ALL',
-    surveyTargetPlatformEnum: 'ALL',
     fieldOperation: "DSC"
   });
-  const { TargetPlatform, isFetchingTargetPlatform } = useGetTargetPlatform();
   const filterBoxList: any = [];
   const searchBoxList: any = [
     {
@@ -43,6 +38,22 @@ export default function ListGridWrapper() {
       nextConditionOperator: 'OR',
     },
   ];
+
+   const applyFilter = () => {
+    const params = new URLSearchParams(searchParams);
+    if (params.size) params.delete('query');
+    push(`${pathname}?${params.toString()}`);
+    setRefreshGrid((prev) => !prev);
+  };
+
+  const clearFilter = () => {
+    const params = new URLSearchParams(searchParams);
+    if (params.size) params.delete('query');
+
+    push(`${pathname}?${params.toString()}`);
+    setFormType({ isCreatedSoloReport: 'ALL', fieldOperation: "DSC" });
+    setRefreshGrid((prev) => !prev);
+  };
 
   const CreateButton = () => {
     return (
@@ -61,22 +72,6 @@ export default function ListGridWrapper() {
     )
   }
 
-   const applyFilter = () => {
-    const params = new URLSearchParams(searchParams);
-    if (params.size) params.delete('query');
-    push(`${pathname}?${params.toString()}`);
-    setRefreshGrid((prev) => !prev);
-  };
-
-  const clearFilter = () => {
-    const params = new URLSearchParams(searchParams);
-    if (params.size) params.delete('query');
-
-    push(`${pathname}?${params.toString()}`);
-    setFormType({ isCreatedSoloReport: 'ALL', surveyTargetPlatformEnum: "ALL", fieldOperation: "DSC" });
-    setRefreshGrid((prev) => !prev);
-  };
-
   const handleCloseDialog = () => {
     setOpenMyCreateModal((prev) => !prev)
   }
@@ -85,16 +80,14 @@ export default function ListGridWrapper() {
     <>
       <ListGrid
         url={apiAddress}
-        title='نظرسنجی‌های من'
-        textTotal={['تعداد کل نظرسنجی‌ها', 'عدد']}
+        title='بسته های ارزیابی'
+        textTotal={['تعداد کل بسته ها', 'عدد']}
         searchBoxList={searchBoxList}
         filterBoxList={filterBoxList}
          filterComponent={
-          <SurveyFilter
+          <PackagingFilter
             formType={formType}
             setFormType={setFormType}
-            TargetPlatform={TargetPlatform!}
-            isFetchingTargetPlatform={isFetchingTargetPlatform}
             applyFilter={applyFilter}
             clearFilter={clearFilter}
           />
@@ -106,9 +99,9 @@ export default function ListGridWrapper() {
         refreshGrid={refreshGrid}
         searchQueryFilter={formType}
       />
-      <CreateSurveyModal
+      <CreatePackagingModal
          open={openMyCreateModal}
-         onClose={handleCloseDialog} 
+         onClose={handleCloseDialog}
        />
     </>
   );

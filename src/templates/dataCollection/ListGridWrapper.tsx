@@ -14,7 +14,7 @@ import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 // hooks
 import { useGetTargetPlatform } from './hooks/useGetTargetPlatform';
 
-let address ='/admin/form/data-collection/main-list'
+const apiAddress ='/admin/form/data-collection/main-list'
 // --------------------------------------------------------
 export default function ListGridWrapper() {
   const { push } = useRouter();
@@ -63,7 +63,7 @@ export default function ListGridWrapper() {
   return (
     <>
       <ListGrid
-        url={address}
+        url={apiAddress}
         title='جمع آوری داده'
         textTotal={['تعداد کل دادها', 'عدد']}
         searchBoxList={searchBoxList}

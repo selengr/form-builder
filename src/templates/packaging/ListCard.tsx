@@ -38,7 +38,7 @@ const ListCard: React.FC<ListCardProps> = ({
   showStatus = true,
 }) => {
   const router = useRouter();
-console.log('data', data)
+
   return (
     <div className="border p-4 rounded-2xl border-[#DDE1E6] flex flex-col gap-3 w-full max-w-full relative">
       {/* اطلاعات فرم */}
@@ -59,7 +59,7 @@ console.log('data', data)
       <div className='flex flex-wrap gap-2 w-full justify-between'>
         <button
           className='bg-[#1758BA] max-w-36 hover:bg-[#216ee1] transition-all duration-200 px-3 h-[42px] text-sm rounded-lg text-white grow sm:grow md:flex-1'
-          onClick={() => router.push(`/preview/${data.id}`)}>
+          onClick={() => router.push(`/preview/${data.formId}`)}>
           مشاهده
         </button>
 
@@ -73,7 +73,7 @@ console.log('data', data)
           </IconButton>
 
           {data.packagingStausEnum === "CREATE" &&
-            <Link href={`/builder/${data.id}?admin=survey`}>
+            <Link href={`/builder/${data.id}?admin=packaging`}>
               <IconButton color='primary'>
                 <Image src={EditIcon} alt='edit' width={24} height={24} />
               </IconButton>

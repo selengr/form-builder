@@ -18,7 +18,7 @@ import SearchInput from '@/components/ListGrid/SearchInput';
 import BottomSheet from '@/components/BottomSheet/BottomSheet';
 import CreateFormBtn from '@/components/CreateFormBtn/CreateFormBtn';
 // action
-import { surveyFilter } from '../../../actions/survey/surveyFilter';
+import { PackagingList } from '../../../actions/packaging/list';
 
 export interface SearchBoxItem {
   fieldName: string;
@@ -111,7 +111,7 @@ const ListGrid: React.FC<Props> = ({
     refetch,
   } = useInfiniteQuery({
     queryKey: ['datas_builder_query', query, searchQueryFilter, filterBoxList],
-    queryFn: ({ pageParam }) => surveyFilter( pageParam , updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
+    queryFn: ({ pageParam }) => PackagingList( pageParam , updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       const PAGE_SIZE = 10;

@@ -14,7 +14,7 @@ import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 // hooks
 import { useGetTargetPlatform } from './hooks/useGetTargetPlatform';
 
-const address ='/admin/form/data-collection/main-list'
+let address ='/admin/form/data-collection/main-list'
 // --------------------------------------------------------
 export default function ListGridWrapper() {
   const { push } = useRouter();

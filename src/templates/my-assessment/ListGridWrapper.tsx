@@ -1,24 +1,33 @@
 'use client';
 
-import Image from 'next/image';
 import { useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
+// views
 import ListCard from './ListCard';
 import ListGrid from './ListGrid';
-import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
+// images
+import MyAssessmentsFilter from './MyAssessmentsFilter';
+
+type TFormTypeFilter = {
+  type: 'ALL' | 'COMPETITION' | 'QUESTION' | 'SURVEY' | 'TEST';
+  status: 'ALL' | 'PUBLIC' | 'PRIVATE';
+  takeParts: 'ALL' | 'only_answered' | 'not_answered';
+  showReport: 'ALL' | 'show' | 'not_show';
+};
+const DEFAULT_FILTER: TFormTypeFilter = {
+  type: 'ALL',
+  status: 'ALL',
+  takeParts: 'ALL',
+  showReport: 'ALL',
+};
+
 
 export default function ListGridWrapper() {
   const [refreshGrid, setRefreshGrid] = useState(false);
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { push } = useRouter();
-  const [formType, setFormType] = useState<any>({
-    type: 'ALL',
-    status: 'ALL',
-    takeParts: 'ALL',
-    showReport: 'ALL',
-  });
+  const [formType, setFormType] = useState<TFormTypeFilter>(DEFAULT_FILTER);
   const filterBoxList: any = [];
   const searchBoxList: any = [
     {
@@ -29,24 +38,21 @@ export default function ListGridWrapper() {
     },
   ];
 
-  const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormType((prev: any) => {
-      return { ...prev, type: (event.target as HTMLInputElement).value };
-    });
+  const resetQuery = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("query");
+    push(`${pathname}?${params.toString()}`);
   };
 
-  const handleStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormType((prev: any) => {
-      return { ...prev, status: (event.target as HTMLInputElement).value };
-    });
+  const handleApply = () => {
+    resetQuery();
+    setRefreshGrid((prev) => !prev);
   };
 
-    const handleReportChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormType((prev: any) => ({ ...prev, showReport: (event.target as HTMLInputElement).value}));
-  };
-
-  const handleDoneStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormType((prev: any) => ({ ...prev, takeParts: (event.target as HTMLInputElement).value}));
+  const handleReset = () => {
+    resetQuery();
+    setFormType(DEFAULT_FILTER);
+    setRefreshGrid((prev) => !prev);
   };
 
   return (
@@ -56,183 +62,12 @@ export default function ListGridWrapper() {
       filterBoxList={filterBoxList}
       url='/user/form/main-list'
       filterComponent={
-        <div className='flex h-[calc(100vh-60px)] w-full flex-col items-center justify-between'>
-          <div className='w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4'>
-            <div className='flex items-center w-full justify-center gap-2'>
-              <Image src={FilterIcon} width={30} height={30} alt='filter' />
-              <p className='text-[16px] text-center font-bold text-[#161616]'>فیلتر</p>
-            </div>
-          </div>
-          <div className='flex flex-col gap-4 w-full overflow-y-auto h-full'>
-            <div className='flex flex-col gap-4'>
-              <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
-                <FormControl
-                  sx={{
-                    '& .MuiTypography-root': {
-                      fontSize: '14px',
-                      color: '#393939',
-                      fontWeight: 400,
-                    },
-                  }}>
-                  <FormLabel
-                    sx={{
-                      fontSize: '15px',
-                      color: '#161616',
-                      fontWeight: 700,
-                      mb: '8px',
-                      '&.Mui-focused': {
-                        color: '#161616',
-                      },
-                    }}
-                    id='demo-controlled-radio-buttons-group'>
-                    بر اساس نوع
-                  </FormLabel>
-                  <RadioGroup aria-labelledby='demo-controlled-radio-buttons-group' name='controlled-radio-buttons-group' value={formType.type} onChange={handleTypeChange}>
-                    <FormControlLabel value='ALL' control={<Radio />} label='همه' />
-                    <FormControlLabel value='COMPETITION' control={<Radio />} label='مسابقه' />
-                    <FormControlLabel value='QUESTION' control={<Radio />} label='پرسشنامه' />
-                    <FormControlLabel value='SURVEY' control={<Radio />} label='نظرسنجی' />
-                    <FormControlLabel value='TEST' control={<Radio />} label='آزمون' />
-                  </RadioGroup>
-                </FormControl>
-              </div>
-              <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
-                <FormControl
-                  sx={{
-                    '& .MuiTypography-root': {
-                      fontSize: '14px',
-                      color: '#393939',
-                      fontWeight: 400,
-                    },
-                  }}>
-                  <FormLabel
-                    sx={{
-                      fontSize: '15px',
-                      color: '#161616',
-                      fontWeight: 700,
-                      mb: '8px',
-                      '&.Mui-focused': {
-                        color: '#161616',
-                      },
-                    }}
-                    id='demo-controlled-radio-buttons-group'>
-                    بر اساس دسترسی
-                  </FormLabel>
-                  <RadioGroup aria-labelledby='demo-controlled-radio-buttons-group' name='controlled-radio-buttons-group' value={formType.status} onChange={handleStatusChange}>
-                    <FormControlLabel value='ALL' control={<Radio />} label='همه' />
-                    <FormControlLabel value='PUBLIC' control={<Radio />} label='عمومی' />
-                    <FormControlLabel value='PRIVATE' control={<Radio />} label='خصوصی' />
-                  </RadioGroup>
-                </FormControl>
-              </div>
-
-
-              <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
-                <FormControl
-                  sx={{
-                    '& .MuiTypography-root': { fontSize: '14px', color: '#393939', fontWeight: 400 },
-                  }}>
-                  <FormLabel
-                    sx={{
-                      fontSize: '15px',
-                      color: '#161616',
-                      fontWeight: 700,
-                      mb: '8px',
-                      '&.Mui-focused': { color: '#161616' },
-                    }}>
-                    بر اساس گزارش
-                  </FormLabel>
-
-                  <RadioGroup value={formType.showReport} onChange={handleReportChange}>
-                    <FormControlLabel value='ALL' control={<Radio />} label='همه' />
-                    <FormControlLabel value='show' control={<Radio />} label='دارای گزارش' />
-                    <FormControlLabel value='not_show' control={<Radio />} label='بدون گزارش' />
-                  </RadioGroup>
-                </FormControl>
-              </div>
-
-              <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
-                <FormControl
-                  sx={{
-                    '& .MuiTypography-root': { fontSize: '14px', color: '#393939', fontWeight: 400 },
-                  }}>
-                  <FormLabel
-                    sx={{
-                      fontSize: '15px',
-                      color: '#161616',
-                      fontWeight: 700,
-                      mb: '8px',
-                      '&.Mui-focused': { color: '#161616' },
-                    }}>
-                    بر اساس وضعیت
-                  </FormLabel>
-
-                  <RadioGroup value={formType.takeParts} onChange={handleDoneStatusChange}>
-                    <FormControlLabel value='ALL' control={<Radio />} label='همه' />
-                    <FormControlLabel value='only_answered' control={<Radio />} label='انجام شده' />
-                    <FormControlLabel value='not_answered' control={<Radio />} label='انجام نشده' />
-                  </RadioGroup>
-                </FormControl>
-              </div>
-            </div>
-          </div>
-          <div className='flex gap-4 items-center justify-between w-full mt-8'>
-            <Button
-              sx={{
-                height: '52px',
-                bgcolor: '#1758BA',
-                boxShadow: 'none',
-                borderRadius: '8px',
-                color: 'white',
-                fontSize: '14px',
-                fontWeight: 700,
-                '&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active': {
-                  bgcolor: '#1758BA',
-                  boxShadow: 'none',
-                },
-              }}
-              fullWidth
-              variant='contained'
-              onClick={() => {
-                const params = new URLSearchParams(searchParams);
-                if (params.size) {
-                  params.delete('query');
-                }
-                push(`${pathname}?${params.toString()}`);
-                setRefreshGrid((prev) => !prev);
-              }}>
-              اعمال فیلتر
-            </Button>
-            <Button
-              sx={{
-                height: '52px',
-                bgcolor: 'white',
-                border: '1px solid #1758BA',
-                boxShadow: 'none',
-                borderRadius: '8px',
-                color: '#1758BA',
-                fontSize: '14px',
-                fontWeight: 700,
-                '&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active': {
-                  bgcolor: 'transparent',
-                  boxShadow: 'none',
-                },
-              }}
-              fullWidth
-              variant='outlined'
-              onClick={() => {
-                const params = new URLSearchParams(searchParams);
-                if (params.size) {
-                  params.delete('query');
-                }
-                push(`${pathname}?${params.toString()}`);
-                setFormType({type: 'ALL', status: 'ALL', takeParts: 'ALL', showReport: 'ALL'});
-                setRefreshGrid((prev) => !prev);
-              }}>
-              حذف فیلتر
-            </Button>
-          </div>
-        </div>
+        <MyAssessmentsFilter
+          formType={formType}
+          setFormType={setFormType}
+          onApply={handleApply}
+          onReset={handleReset}
+        />
       }
       CartComponent={(item: any) => <ListCard {...item} />}
       disableFilter={false}

@@ -12,8 +12,8 @@ import FormProvider from '@/components/hook-form/FormProvider';
 import { RHFSelect, RHFTextField } from '@/components/hook-form';
 import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
 // hooks
-import { useCreateDataCollection } from './hooks/useCreateDataCollection';
 import { useGetTargetPlatform } from './hooks/useGetTargetPlatform';
+import { useCreateDataCollection } from './hooks/useCreateDataCollection';
 
 interface IGetTargetPlatform {
   value: string;
@@ -60,7 +60,6 @@ const propertiesSchema = z.object({
 });
 
 export type FormSchemaType = z.infer<typeof propertiesSchema>;
-
 interface IProps {
   open: boolean;
   onClose: () => void;
@@ -84,7 +83,6 @@ export default function CreateDataCollectionBtn({ open, onClose }: IProps) {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
 
   const onSubmit = async (data: FormSchemaType) => {
     mutate(data, {
@@ -174,8 +172,6 @@ export default function CreateDataCollectionBtn({ open, onClose }: IProps) {
               />
             </Stack>
 
-
-
             <Box display='flex' flexDirection='column' gap='6px' width='100%' mt='20px'>
               <Typography variant='subtitle2' fontWeight='700'>
                 سرویس‌گیرنده:
@@ -206,8 +202,7 @@ export default function CreateDataCollectionBtn({ open, onClose }: IProps) {
               </Box>
             </Box>
 
-
-           <Stack spacing={1} mt={1} mb={2}>
+            <Stack spacing={1} mt={1} mb={2}>
               <Typography variant='subtitle2' fontWeight='700'>
                 شناسه:
               </Typography>
@@ -223,11 +218,9 @@ export default function CreateDataCollectionBtn({ open, onClose }: IProps) {
                     borderRadius: '10px',
                   },
                 }}>
-                <RHFTextField name='label' dir='ltr' sx={{ height: 50}}/>
+                <RHFTextField name='label' dir='ltr' sx={{ height: 50 }} />
               </Box>
             </Stack>
-       
-
 
             <Box display='flex' gap={3} width='100%' marginTop={2} marginBottom={2} paddingX='40px'>
               <Button

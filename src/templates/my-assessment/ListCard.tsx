@@ -1,7 +1,19 @@
 'use client';
 import FormCardBase from '@/components/common/FormCardBase';
 
-export default function ListCard(props: any) {
-  // return <FormCardBase data={props.data} buttonText='مشاهده پیش‌نمایش' buttonLink={`/preview/${props.data.id}`} buttonDisabled/>;
-  return <FormCardBase data={props.data} buttonText='شرکت در آزمون' buttonLink={`/form/${props.data.id}`} />;
+interface ListCardProps {
+  data: {
+    id: string | number;
+    [key: string]: any;
+  };
+}
+
+export default function ListCard({ data }: ListCardProps) {
+  return (
+    <FormCardBase
+      data={data}
+      buttonText="شرکت در آزمون"
+      buttonLink={`/form/${data.id}`}
+    />
+  );
 }

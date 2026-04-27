@@ -5,12 +5,13 @@ import dynamic from 'next/dynamic';
 import { CalculatorSkeleton } from '@/templates/calculator';
 import DesignerTabs from '@/templates/builder/TabComponent';
 import ErrorDisplay from '@/templates/condition/ErrorDisplay';
+import { ICalculator } from '@/types/calculator';
 
 const CalculatorList = dynamic(() => import('@/templates/calculator/CalculatorList'));
 
 interface IProps<T> {
-  calculators: T[];
-  isPending: boolean;
+  calculators: ICalculator[];
+  isPending: boolean; 
   error: Error | null;
 }
 export default function ClientView<T>({ calculators, isPending, error }: IProps<T>) {

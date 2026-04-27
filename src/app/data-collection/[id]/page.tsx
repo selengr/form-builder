@@ -1,36 +1,40 @@
 'use client';
-
-import { useParams, usePathname, useRouter } from 'next/navigation';
-import { ReportHeader, ReportPagination, ReportTable } from '../../stats/[id]/component';
-import { useStatsViewModel } from './viewModel';
 import { useEffect, useState } from 'react';
+import { useStatsViewModel } from './viewModel';
+import { useParams, useRouter } from 'next/navigation';
+import { ReportHeader, ReportPagination, ReportTable } from '../../stats/[id]/component';
 
 export interface UserType {
-  takePartId: number;
   name: string;
+  takePartId: number;
 }
 
+// --------------------------------------------------------
 export default function StatsPage() {
   const router = useRouter();
   const params = useParams();
-  const formId = params?.id?.toString(); // اطمینان از string بودن id
+  const formId = params?.id?.toString();
+  const [selectedUsers, setSelectedUsers] = useState<UserType[]>([]);
 
   const { name, headData, allData, isLoading, page: currentPage, setPage: setCurrentPage, pageSize: rowsPerPage, setPageSize: setRowsPerPage, totalItems } = useStatsViewModel();
 
-  const [selectedUsers, setSelectedUsers] = useState<UserType[]>([]);
-
   useEffect(() => {
-    if (formId) {
+    if (!formId) return
+    try {
       const raw = localStorage.getItem('selectedUsersByForm');
       const data = raw ? JSON.parse(raw) : {};
       setSelectedUsers(data[formId] || []);
+    } catch {
+      setSelectedUsers([]);
     }
   }, [formId]);
-  
-    const handleNavigation = () => {
-    const address = localStorage.getItem("stats") ?? "/reports"
-    router.push(address)
+
+  const handleNavigation = () => {
+    const address = localStorage.getItem("stats")
+    router.push(address || "/reports");
   }
+
+  const numericFormId = Number(formId);
 
   return (
     <div className='w-0 grow flex flex-col md:p-4 p-2 overflow-x-hidden'>
@@ -38,7 +42,13 @@ export default function StatsPage() {
         <ReportHeader title={name || 'گزارش'} onBack={handleNavigation} />
 
         <div className='flex-grow overflow-hidden min-w-0'>
-          <ReportTable headData={headData} allData={allData} isLoading={isLoading} selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers} formId={Number(formId)} />
+          <ReportTable
+            headData={headData}
+            allData={allData}
+            isLoading={isLoading}
+            selectedUsers={selectedUsers}
+            setSelectedUsers={setSelectedUsers}
+            formId={numericFormId} />
         </div>
 
         <ReportPagination
@@ -49,7 +59,7 @@ export default function StatsPage() {
           onRowsPerPageChange={setRowsPerPage}
           selectedUsers={selectedUsers}
           setSelectedUsers={setSelectedUsers}
-          formId={Number(formId)}
+          formId={numericFormId}
         />
       </div>
     </div>

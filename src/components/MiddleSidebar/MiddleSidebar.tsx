@@ -1,4 +1,5 @@
 'use client';
+
 import Image from 'next/image';
 import { useMemo } from 'react';
 // hooks
@@ -11,7 +12,7 @@ import MenuItemSkeleton from './menuItemSkeleton';
 
 export default function MiddleSidebar() {
   const { userInfo } = useUserInfo();
-  const { menu, loading } = useMenu(userInfo);
+  const { menu, loading } = useMenu(userInfo)
 
   const menuLinks : IServerMenuItem[] | any = useMemo(() => {
     return menu?.aclList?.filter((i) => i?.type === 'menu') || [];

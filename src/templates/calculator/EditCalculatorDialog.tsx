@@ -62,8 +62,8 @@ export const EditCalculatorDialog: React.FC<IEditCalculatorDialogProps> = ({ ope
     <StyledDialog open={open} maxWidth='md'>
       <StyledDialogContent>
         <div className='flex items-center justify-end h-6'>
-          <IconButton edge='end'>
-            <CgClose color='#404040' width={25} height={20} size='1.5rem' onClick={() => handleClose()} />
+          <IconButton edge='end' sx={{zIndex:2}} onClick={() => handleClose()}>
+            <CgClose color='#404040' width={25} height={20} size='1.5rem'/>
           </IconButton>
         </div>
         {isLoading ||

@@ -11,11 +11,15 @@ const publishSchema = z.object({
   IsPackaging: z.boolean(),
 });
 
+const addByExcelSchema = z.object({
+  id: z.string()
+});
+
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
   const formId = params.id
-
   const body = await req.json()
   const { IsSurvey, IsPackaging } = publishSchema.parse(body)
+  console.log('IsPackaging-----------------------------', IsPackaging)
   let url = ''
   if(IsSurvey){
     url = `/admin/form/survey/finalization/${formId}`
@@ -35,6 +39,14 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     endpoint: `/psya${endpoint}`,
     method: "PUT",
   })
+}
+
+export async function POST(req: Request) {
+  console.log('addByExcelSchema-----------------------------------', addByExcelSchema)
+  return handleApiProxy(req, {
+    schema: addByExcelSchema,
+    endpoint: `/psya/admin/form/packaging/finalization`
+  });
 }
 
 

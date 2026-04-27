@@ -68,11 +68,11 @@ const ListCard: React.FC<IListCardProps> = ({
 
       {/* اطلاعات فرم */}
       <InfoRow label="نام" value={data.name} bold />
-      <SwitchButton
+      {/* <SwitchButton
         sx={{ position: "absolute", top: 15, right: 15 }}
         checked={!data.showReportForResponder}
         onChange={() => console.log("object")}
-      />
+      /> */}
       <InfoRow
         label="سرویس‌گیرنده"
         value={data?.surveyTargetPlatformEnum}
@@ -117,13 +117,13 @@ const ActionButtons: React.FC<TActionButtonsProps> = ({
   return (
     <div className="flex gap-2 flex-wrap items-center justify-end">
 
-      <IconButton color="error">
+      {/* <IconButton color="error">
         <Image src={TrashIcon} alt="delete" width={24} height={24} />
-      </IconButton>
+      </IconButton> */}
 
-      <IconButton>
+      {/* <IconButton>
         <Image src={CopyIcon} alt="copy" width={24} height={24} />
-      </IconButton>
+      </IconButton> */}
 
       <Link href={`/builder/${id}?admin=data-collection`}>
         <IconButton color="primary">

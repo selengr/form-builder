@@ -1,14 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
-import { IoIosArrowBack, IoIosArrowDown } from 'react-icons/io';
 import { MenuIcon } from './MenuIcon';
+import { IoIosArrowBack, IoIosArrowDown } from 'react-icons/io';
 // type
 import { IMenuItemProps } from '@/types/menus';
-
-const SubMenuItem = dynamic(() => import('./subMenu/SubMenuItem'), {
-  loading: () => <div className="px-4 py-2 text-sm">Loading...</div>,
-});
+import SubMenuItem from './subMenu/SubMenuItem'
 
 export const MenuItem = React.memo(
   ({

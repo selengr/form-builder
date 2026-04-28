@@ -48,6 +48,12 @@ export const getQuestion = (type: string, values: any) => {
         { value: 'QUESTION', label: 'سوال ' },
         { value: 'CALCULATION', label: 'محاسبه‌گر' },
       ];
+    case 'RATING':
+      return [
+        { value: 'VALUE', label: 'ارزش' },
+        { value: 'QUESTION', label: 'سوال ' },
+        { value: 'CALCULATION', label: 'محاسبه‌گر' },
+      ];
 
     case 'CALCULATION':
       return [
@@ -131,6 +137,17 @@ export const getCondition = (type: string, operator: string, values: any) => {
     case 'TEXT_FIELD_NUMBER_VALUE':
     case 'TEXT_FIELD_NUMBER_QUESTION':
     case 'TEXT_FIELD_NUMBER_CALCULATION':
+      return [
+        { value: '#greaterThanNumber', label: 'بزرگتر از' },
+        { value: '!#greaterThanNumber', label: 'کوچکتر  از' },
+        // { value: "#equalThanNumber", label: "برابر  با" },
+        { value: '#greaterEqualThanNumber', label: 'بزرگتر مساوی' },
+        { value: '!#greaterEqualThanNumber', label: ' کوچکتر مساوی' },
+      ];
+
+    case 'RATING_VALUE':
+    case 'RATING_QUESTION':
+    case 'RATING_CALCULATION':
       return [
         { value: '#greaterThanNumber', label: 'بزرگتر از' },
         { value: '!#greaterThanNumber', label: 'کوچکتر  از' },
@@ -327,6 +344,24 @@ export const getInput = (
     case 'TEXT_FIELD_NUMBER_CALCULATION_!#greaterThanNumber':
     case 'TEXT_FIELD_NUMBER_CALCULATION_#greaterEqualThanNumber':
     case 'TEXT_FIELD_NUMBER_CALCULATION_!#greaterEqualThanNumber':
+      return <SelectController name={field.name} options={onlyAllCalculationOptions} isLoading={isFetchingOnlyAllCalculation} sx={{ minWidth: 215 }} />;
+
+    case 'RATING_VALUE_#greaterThanNumber':
+    case 'RATING_VALUE_!#greaterThanNumber':
+    case 'RATING_VALUE_#greaterEqualThanNumber':
+    case 'RATING_VALUE_!#greaterEqualThanNumber':
+      return <TextFieldController name={field.name} type='number' />;
+
+    case 'RATING_QUESTION_#greaterThanNumber':
+    case 'RATING_QUESTION_!#greaterThanNumber':
+    case 'RATING_QUESTION_#greaterEqualThanNumber':
+    case 'RATING_QUESTION_!#greaterEqualThanNumber':
+      return <SelectController name={field.name} options={onlySomeQuestionsOptions} isLoading={isFetchingOnlyAllQuestions} sx={{ minWidth: 215 }} />;
+
+    case 'RATING_CALCULATION_#greaterThanNumber':
+    case 'RATING_CALCULATION_!#greaterThanNumber':
+    case 'RATING_CALCULATION_#greaterEqualThanNumber':
+    case 'RATING_CALCULATION_!#greaterEqualThanNumber':
       return <SelectController name={field.name} options={onlyAllCalculationOptions} isLoading={isFetchingOnlyAllCalculation} sx={{ minWidth: 215 }} />;
 
     case 'CALCULATION_VALUE_#equalThanNumber':

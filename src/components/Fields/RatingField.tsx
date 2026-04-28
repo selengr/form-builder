@@ -201,7 +201,7 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
   const ratingType = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'RATING_TYPE')?.value;
 
   const description = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'DESCRIPTION')?.value;
-  
+
   const handleChange = (value: number) => {
     setStarValue(value as any);
     onChange?.(value as any);
@@ -293,8 +293,19 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
       if (attribute.questionPropertyEnum === 'REQUIRED' || attribute.questionPropertyEnum === 'EDIT_ANSWER_LOCKED') {
         acc[attribute.questionPropertyEnum].value = attribute.value === 'true';
-      } else if (attribute.questionPropertyEnum === 'RATING_START_LABEL' || attribute.questionPropertyEnum === 'RATING_END_LABEL' || attribute.questionPropertyEnum === 'STEP') {
-        acc[attribute.questionPropertyEnum].value = attribute.value === '' ? "" : attribute.value;
+      }
+      else if (
+        attribute.questionPropertyEnum === 'RATING_START_LABEL' ||
+        attribute.questionPropertyEnum === 'RATING_END_LABEL'
+      ) {
+        acc[attribute.questionPropertyEnum].value =
+          attribute.value === null ? '' : attribute.value;
+      } else if (attribute.questionPropertyEnum === 'STEP') {
+        acc[attribute.questionPropertyEnum].value = attribute.value === '' ? '' : attribute.value;
+
+
+
+
       } else if (attribute.questionPropertyEnum === 'DESCRIPTION') {
         acc[attribute.questionPropertyEnum].value = attribute.value === null ? '' : attribute.value;
       } else {
@@ -405,12 +416,12 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
-      } catch (error:any) {
-         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+      } catch (error: any) {
+        toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     } else {
       try {
-       const { data }: any = await updateQuestionAction(String(finalFieldData.questionId), finalFieldData);
+        const { data }: any = await updateQuestionAction(String(finalFieldData.questionId), finalFieldData);
         delete data.questionPropertyList;
         const newData = {
           ...data,
@@ -419,8 +430,8 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
-      } catch (error:any) {
-         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+      } catch (error: any) {
+        toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     }
   }
@@ -459,7 +470,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
                   borderRadius: '10px',
                 },
               }}>
-              <RHFTextField name='label' dir='ltr'/>
+              <RHFTextField name='label' dir='ltr' />
             </Box>
           </Stack>
         }

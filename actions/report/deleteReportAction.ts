@@ -11,9 +11,7 @@ export async function deleteReportAction(id: number) {
     const message =
       error?.response?.data?.message?.[0]?.title ||
       error?.response?.data?.message ||
-      error?.response?.data ||
-      error?.message ||
-      'خطای نامشخص';
+      'انجام عملیات با خطا مواجه شد';
 
     throw new Error(message);
   }

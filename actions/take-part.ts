@@ -25,9 +25,7 @@ export async function takePartAction(params: {
     const message =
       error?.response?.data?.message?.[0]?.title ||
       error?.response?.data?.message ||
-      error?.response?.data ||
-      error?.message ||
-      'خطای نامشخص';
+      'انجام عملیات با خطا مواجه شد';
 
     throw new Error(message);
   }
@@ -50,9 +48,7 @@ export async function checkResponseLimitationAction(params: {
     const message =
       error?.response?.data?.message?.[0]?.title ||
       error?.response?.data?.message ||
-      error?.response?.data ||
-      error?.message ||
-      'خطای نامشخص';
+      'انجام عملیات با خطا مواجه شد';
 
     throw new Error(message);
   }
@@ -87,9 +83,7 @@ export async function checkAnswerBeforeAction(params: {
     const message =
       error?.response?.data?.message?.[0]?.title ||
       error?.response?.data?.message ||
-      error?.response?.data ||
-      error?.message ||
-      'خطای نامشخص';
+      'انجام عملیات با خطا مواجه شد';
     throw new Error(message);
   }
 }
@@ -119,9 +113,7 @@ export async function insertAnswerAction(params: {
     const message =
       error?.response?.data?.message?.[0]?.title ||
       error?.response?.data?.message ||
-      error?.response?.data ||
-      error?.message ||
-      'خطای نامشخص';
+      'انجام عملیات با خطا مواجه شد';
 
     throw new Error(message);
   }

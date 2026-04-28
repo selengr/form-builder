@@ -51,6 +51,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
 
   const onSubmit = (input: TConditionFormData, e: any) => {
     e?.preventDefault();
+    let errorMessage: string | null = null
 
     input.conditions.forEach((_, index) => {
       const meta = editorMetaRef.current[index] ?? { text: "", variables: [] };
@@ -60,13 +61,15 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
       const hasUnselected = variables.some((v: any) => !(v?.unique_name ?? "").trim());
 
       const isEmpty = text.length === 0 && selectedCount === 0;
-      if (isEmpty) {
-        toast.error("نوشتن متن الزامی است (یا حداقل یک متغیر انتخاب کنید).");
-        return;
-      } else if (hasUnselected) {
-        toast.error("شما یک یا چند متغیر را انتخاب نکرده‌اید.");
+      if (hasUnselected) {
+        errorMessage = "شما یک یا چند متغیر را انتخاب نکرده‌اید."
         return;
       }
+      if (isEmpty) {
+        errorMessage = "نوشتن متن الزامی است (یا حداقل یک متغیر انتخاب کنید)."
+        return;
+      }
+
     });
 
     const transformInputToOutput = (input: TConditionFormData): any => {
@@ -74,6 +77,10 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
         const { subConditions, returnText, displayIf } = condition;
 
         const conditionSubConditions = displayIf ? subConditions : 'false';
+
+        if (!returnText) {
+          errorMessage = "نوشتن متن الزامی است (یا حداقل یک متغیر انتخاب کنید)."
+        }
 
         const conditionFormula = displayIf
           ? Array.isArray(subConditions) &&
@@ -136,6 +143,12 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
     };
 
     const output: IPostCondition[] = transformInputToOutput(input);
+
+    if (errorMessage) {
+      toast.error(errorMessage)
+      return
+    }
+
     postCondition.mutate(
       { data: output },
       {

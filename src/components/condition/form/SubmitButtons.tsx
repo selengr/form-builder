@@ -3,10 +3,11 @@ import { Box, Button, CircularProgress, Typography } from '@mui/material';
 
 interface ISubmitButtonsProps {
   isLoading: boolean;
+  isDisabled?: boolean;
   handleClose: () => void;
 }
 
-export const SubmitButtons: React.FC<ISubmitButtonsProps> = ({ isLoading, handleClose }) => {
+export const SubmitButtons: React.FC<ISubmitButtonsProps> = ({ isLoading,isDisabled, handleClose }) => {
   return (
     <Box
       display='flex'
@@ -19,7 +20,7 @@ export const SubmitButtons: React.FC<ISubmitButtonsProps> = ({ isLoading, handle
         justifyContent: 'center',
       }}>
       <Button
-        disabled={isLoading}
+        disabled={isLoading || isDisabled}
         type='submit'
         variant='contained'
         sx={{

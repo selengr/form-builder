@@ -24,17 +24,18 @@ import { useGetOnlyAllQuestions } from '@/app/reports/create-solo/[id]/_hooks/us
 import { useGetOnlyAllCalculation } from '@/app/reports/create-solo/[id]/_hooks/useGetOnlyAllCalculation';
 import { createNewSubCondition, useConditionalForm } from '@/app/reports/create-solo/[id]/_hooks/useConditionalForm';
 
+// ---------------------------------------------------------------------------------
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClose, condition, isEdit = false }) => {
   const { id } = useParams();
   const { refresh } = useRouter();
   const returnTextEdit = isEdit ? condition?.returnText : undefined;
   const editorMetaRef = useRef<Record<number, { text: string; variables: any[] }>>({});
 
-  const { methods, conditions, handleAddCondition, handleRemoveCondition, handleAddSubCondition, handleRemoveSubCondition } = useConditionalForm(condition);
-
   const { onlyAllCalculationOptions, isFetchingOnlyAllCalculation } = useGetOnlyAllCalculation();
   const { qacWithOutFilterOptions, isFetchingQacWithOutFilter, qacWithOutFilter } = useGetQacWithOutFilter();
   const { onlyAllQuestions, onlyAllDateOptions, onlySomeQuestionsOptions, isFetchingOnlyAllQuestions } = useGetOnlyAllQuestions();
+
+  const { methods, conditions, handleAddCondition, handleRemoveCondition, handleAddSubCondition, handleRemoveSubCondition } = useConditionalForm(condition);
 
   const postCondition = usePostCondition(isEdit);
 
@@ -60,13 +61,8 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
       const selectedCount = variables.filter((v: any) => (v?.unique_name ?? "").trim()).length;
       const hasUnselected = variables.some((v: any) => !(v?.unique_name ?? "").trim());
 
-      const isEmpty = text.length === 0 && selectedCount === 0;
       if (hasUnselected) {
         errorMessage = "شما یک یا چند متغیر را انتخاب نکرده‌اید."
-        return;
-      }
-      if (isEmpty) {
-        errorMessage = "نوشتن متن الزامی است (یا حداقل یک متغیر انتخاب کنید)."
         return;
       }
 
@@ -317,7 +313,11 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
               افزودن شرط جدید
             </Button>
           )}
-          <SubmitButtons isLoading={postCondition.isPending} handleClose={handleClose} />
+          <SubmitButtons
+              isDisabled={isFetchingQacWithOutFilter || isFetchingOnlyAllQuestions || isFetchingOnlyAllCalculation}
+              isLoading={postCondition.isPending}
+              handleClose={handleClose} 
+           />
         </form>
       </FormProvider>
     </Box>

@@ -19,13 +19,15 @@ import { useGetQacWithOutFilter } from '@/app/(builder)/builder/[id]/condition/_
 import { useGetOnlyAllQuestions } from '@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllQuestions';
 import { useGetOnlyAllCalculation } from '@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation';
 
+// ---------------------------------------------------------------------------------
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClose, condition, isEdit = false }) => {
   const { id } = useParams();
-  const { methods, conditions, handleAddCondition, handleRemoveCondition, handleAddSubCondition, handleRemoveSubCondition } = useConditionalForm(condition);
 
   const { qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter();
-  const { onlyAllQuestions, onlyAllDateOptions, onlyAllQuestionsOptions, onlySomeQuestionsOptions, isFetchingOnlyAllQuestions } = useGetOnlyAllQuestions();
   const { onlyAllCalculationOptions, isFetchingOnlyAllCalculation } = useGetOnlyAllCalculation();
+  const { onlyAllQuestions, onlyAllDateOptions, onlyAllQuestionsOptions, onlySomeQuestionsOptions, isFetchingOnlyAllQuestions } = useGetOnlyAllQuestions();
+
+  const { methods, conditions, handleAddCondition, handleRemoveCondition, handleAddSubCondition, handleRemoveSubCondition } = useConditionalForm(condition);
 
   const postCondition = usePostCondition(isEdit);
 
@@ -180,7 +182,11 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
               افزودن شرط جدید
             </Button>
           )}
-          <SubmitButtons isLoading={postCondition.isPending} handleClose={handleClose} />
+          <SubmitButtons 
+               isDisabled={isFetchingQacWithOutFilter || isFetchingOnlyAllQuestions || isFetchingOnlyAllCalculation}
+               isLoading={postCondition.isPending} 
+               handleClose={handleClose} 
+               />
         </form>
       </FormProvider>
     </Box>

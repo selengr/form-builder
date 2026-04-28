@@ -43,9 +43,9 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
     }
 
     const operatorMapping: Record<string, string[]> = {
-      OPTION: ['MULTIPLE_CHOICE', 'TEXT_FIELD_NUMBER'],
-      QUESTION: ['MULTIPLE_CHOICE', 'TEXT_FIELD_NUMBER', 'TEXT_FIELD_DATE', 'CALCULATION', 'SPECTRAL'],
-      CALCULATION: ['MULTIPLE_CHOICE', 'TEXT_FIELD_NUMBER', 'SPECTRAL', 'CALCULATION'],
+      OPTION: ['MULTIPLE_CHOICE', 'TEXT_FIELD_NUMBER', 'RATING'],
+      QUESTION: ['MULTIPLE_CHOICE', 'TEXT_FIELD_NUMBER', 'RATING', 'TEXT_FIELD_DATE', 'CALCULATION', 'SPECTRAL'],
+      CALCULATION: ['MULTIPLE_CHOICE', 'TEXT_FIELD_NUMBER', 'RATING', 'SPECTRAL', 'CALCULATION'],
     };
 
     if (operatorMapping[operatorType]?.includes(questionType)) {

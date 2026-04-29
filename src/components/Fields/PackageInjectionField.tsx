@@ -365,7 +365,7 @@ const FormComponent = memo(function FormComponent({
   );
 });
 
-export const TextFieldFormElement: FormElement = {
+export const PackageInjectionFormElement: FormElement = {
   questionType,
   construct: ({ questionId, questionGroupId, formId, title, position }: IFormElementConstructor) => ({
     questionId,

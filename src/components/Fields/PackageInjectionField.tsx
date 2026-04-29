@@ -2,45 +2,35 @@
 
 import { z } from 'zod';
 import { toast } from 'sonner';
-import { useForm } from 'react-hook-form';
-import { memo, useMemo, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { ElementsType, FormElement, FormElementInstance } from '@/types/FormElements';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
-import FormProvider from '../../components/hook-form/FormProvider';
-import { RHFSwitch, RHFTextField } from '../../components/hook-form';
+import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Radio, RadioGroup, Stack, Typography } from '@mui/material';
+import FormProvider from '@/components/hook-form/FormProvider';
+import { RHFSwitch, RHFTextField, RHFTextFieldOptionList } from '../../components/hook-form';
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
-import { IFormElementConstructor, IQPLTextField } from '@/types/bulider';
+import { SwitchButton } from '../Switch/SwitchButton';
+import { IFormElementConstructor, IFormOptionList, IQPLMultipleChoice } from '@/types/bulider';
+import TickIcon from '@/../public/images/home-page/tick-square.svg';
 import useDesigner from '@/hooks/useDesigner';
 import useElements from '@/hooks/useElements';
 import useActionOpenDialog from '@/hooks/useActionOpenDialog';
 import useActionSelectedElement from '@/hooks/useActionSelectedElement';
 import useSelectedElement from '@/hooks/useSelectedElement';
 import useActionDesigner from '@/hooks/useActionDesigner';
-import TextBlockIcon from '@/../public/images/home-page/text-block.svg';
-import DatePicker from 'react-multi-date-picker';
-import 'react-multi-date-picker/styles/layouts/mobile.css';
-import { SwitchButton } from '../Switch/SwitchButton';
-import TextFieldPair from '../TextFieldPair/TextFieldPair';
-import TimePickerStyled from '../SettingsDialog/TimePicker.styled';
-import TimePicker from 'react-multi-date-picker/plugins/analog_time_picker';
-import { GoClock } from 'react-icons/go';
-import { BsCalendarDate } from 'react-icons/bs';
-import { DatePicker as DatePickerCustome } from '../DatePicker/DatePicker';
+import shuffleArray from '@/lib/shuffle';
+import { useSearchParams } from 'next/navigation';
 // actions
 import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/question';
 
-const questionType: ElementsType = 'TEXT_FIELD';
+const questionType: ElementsType = 'MULTIPLE_CHOICE';
 
-const questionPropertyList: IQPLTextField = [
+const questionPropertyList: IQPLMultipleChoice = [
   {
     id: 1,
-    questionPropertyEnum: 'TEXT_FIELD_PATTERN',
-    value: 'SHORT_TEXT',
+    questionPropertyEnum: 'MULTI_SELECT',
+    value: 'false',
   },
   {
     id: 2,
@@ -49,122 +39,111 @@ const questionPropertyList: IQPLTextField = [
   },
   {
     id: 3,
+    questionPropertyEnum: 'RANDOMIZE_OPTIONS',
+    value: 'false',
+  },
+  {
+    id: 4,
     questionPropertyEnum: 'DESCRIPTION',
     value: '',
   },
   {
-    id: 4,
-    questionPropertyEnum: 'MINIMUM_LEN',
-    value: 0,
-  },
-  {
     id: 5,
-    questionPropertyEnum: 'MAXIMUM_LEN',
-    value: 250,
-  },
-  {
-    id: 6,
     questionPropertyEnum: 'EDIT_ANSWER_LOCKED',
     value: 'false',
   },
 ];
 
-const propertiesSchema = z
-  .object({
-    title: z
+const optionList: IFormOptionList[] = [
+  {
+    title: 'گزینه 1',
+    score: 1,
+  },
+  {
+    title: 'گزینه 2',
+    score: 2,
+  },
+];
+
+const optionsSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .transform((value) => value.replace(/\s+/g, ' '))
+    .pipe(
+      z
+        .string()
+        .min(1, {
+          message: 'هر گزینه حداقل باید 1 و حداکثر 50 کاراکتر داشته باشد',
+        })
+        .max(500, {
+          message: 'هر گزینه حداقل باید 1 و حداکثر 500 کاراکتر داشته باشد',
+        }),
+    ),
+  score: z.number(),
+  id: z.number().nullable().default(null),
+});
+
+const propertiesSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .transform((value) => value.replace(/\s+/g, ' '))
+    .pipe(z.string().min(1, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' }).max(3999, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' })),
+  label: z
+    .string()
+    .trim()
+    .transform((value) => {
+      const normalized = value.replace(/\s+/g, ' ');
+      return normalized === '' ? null : normalized;
+    })
+    .nullable()
+    .refine(
+      (value) =>
+        value === null ||
+        !/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/.test(value),
+      {
+        message: 'استفاده از حروف فارسی مجاز نیست',
+      }
+    )
+    .refine(
+      (value) => value === null || (value.length >= 8 && value.length <= 30),
+      {
+        message: 'حداقل باید 8 و حداکثر 30 کاراکتر باشد',
+      }
+    ),
+  DESCRIPTION: z.object({
+    value: z
       .string()
       .trim()
       .transform((value) => value.replace(/\s+/g, ' '))
-      .pipe(z.string().min(1, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' }).max(3999, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' })),
-    label: z
-      .string()
-      .trim()
-      .transform((value) => {
-        const normalized = value.replace(/\s+/g, ' ');
-        return normalized === '' ? null : normalized;
-      })
-      .nullable()
-      .refine(
-        (value) =>
-          value === null ||
-          !/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/.test(value),
-        {
-          message: 'استفاده از حروف فارسی مجاز نیست',
-        }
-      )
-      .refine(
-        (value) => value === null || (value.length >= 8 && value.length <= 30),
-        {
-          message: 'حداقل باید 8 و حداکثر 30 کاراکتر باشد',
-        }
-      ),
-    MINIMUM_LEN: z.object({
-      value: z.number({ invalid_type_error: 'اجباری است' }).min(0),
-      id: z.number(),
-    }),
-    MAXIMUM_LEN: z.object({
-      value: z.number({ invalid_type_error: 'اجباری است' }).min(1, { message: 'حداقل باید 1 کاراکتر باشد' }),
-      id: z.number(),
-    }),
-    DESCRIPTION: z.object({
-      value: z
-        .string()
-        .trim()
-        .transform((value) => value.replace(/\s+/g, ' '))
-        .pipe(z.string().max(3999, { message: 'حداکثر میتواند 4000 کاراکتر باشد' }))
-        .optional(),
-      id: z.number(),
-    }),
-    REQUIRED: z.object({
-      value: z.boolean().default(false),
-      id: z.number(),
-    }),
-    EDIT_ANSWER_LOCKED: z.object({
-      value: z.boolean().default(false),
-      id: z.number(),
-    }),
-    TEXT_FIELD_PATTERN: z.object({
-      value: z.string().min(1, { message: 'الزامی است' }),
-      id: z.number(),
-    }),
-  })
-  .refine((val) => val.MAXIMUM_LEN.value >= val.MINIMUM_LEN.value, {
-    message: 'حداکثر باید از حداقل بیشتر باشد',
-    path: ['MAXIMUM_LEN.value'],
-  })
-  .refine(
-    (val) => {
-      if (val.TEXT_FIELD_PATTERN.value === 'LONG_TEXT') {
-        return val.MAXIMUM_LEN.value <= 3999;
-      }
-      return true;
-    },
-    {
-      message: 'حداکثر طول برای متنی بلند باید 4000 کاراکتر باشد',
-      path: ['MAXIMUM_LEN.value'],
-    },
-  )
-  .refine(
-    (val) => {
-      if (val.TEXT_FIELD_PATTERN.value === 'SHORT_TEXT') {
-        return val.MAXIMUM_LEN.value <= 3999;
-      }
-      return true;
-    },
-    {
-      message: 'حداکثر طول برای متنی ساده باید 4000 کاراکتر باشد',
-      path: ['MAXIMUM_LEN.value'],
-    },
-  );
-
-type CustomInstance = FormElementInstance & {
-  questionPropertyList: typeof questionPropertyList;
-};
+      .pipe(z.string().max(3999, { message: 'حداکثر میتواند 4000 کاراکتر باشد' }))
+      .optional(),
+    id: z.number(),
+  }),
+  REQUIRED: z.object({
+    value: z.boolean().default(false),
+    id: z.number(),
+  }),
+  EDIT_ANSWER_LOCKED: z.object({
+    value: z.boolean().default(false),
+    id: z.number(),
+  }),
+  RANDOMIZE_OPTIONS: z.object({
+    value: z.boolean().default(false),
+    id: z.number(),
+  }),
+  MULTI_SELECT: z.object({
+    value: z.boolean().default(false),
+    id: z.number(),
+  }),
+  optionList: z.array(optionsSchema).min(2, { message: 'حداقل باید 2 و حداکثر 10 گزینه وجود داشته باشد' }).max(10, { message: 'حداقل باید 2 و حداکثر 10 گزینه وجود داشته باشد' }),
+});
 
 const DesignerComponent = memo(function DesignerComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
   const element = elementInstance as CustomInstance;
   const labelText = element.title;
-  const designerBtnLabel = TextFieldFormElement.designerBtnElement.label;
+  const designerBtnLabel = MultipleChoiceFormElement.designerBtnElement.label;
 
   return (
     <div
@@ -173,6 +152,21 @@ const DesignerComponent = memo(function DesignerComponent({ elementInstance }: {
       style={{
         width: 'calc(100% - 96px)',
       }}>
+      {/* <Tooltip
+        disableTouchListener
+        enterDelay={1000}
+        leaveDelay={100}
+        title={labelText}
+        arrow
+      >
+        <p
+          dir="rtl"
+          className="text-base overflow-hidden text-ellipsis w-full"
+          style={{ textWrap: "nowrap", fontWeight: "700" }}
+        >
+          {labelText}
+        </p>
+      </Tooltip> */}
       <p dir='rtl' className='text-base overflow-hidden text-ellipsis w-full' style={{ textWrap: 'nowrap', fontWeight: '700' }}>
         {labelText}
       </p>
@@ -181,191 +175,7 @@ const DesignerComponent = memo(function DesignerComponent({ elementInstance }: {
   );
 });
 
-const FormComponent = memo(function FormComponent({
-  elementInstance,
-  value,
-  onChange,
-  error,
-  isPreview = false,
-}: {
-  elementInstance?: FormElementInstance;
-  value?: string;
-  onChange?: (value: string) => void;
-  error?: string;
-  isPreview?: boolean;
-}) {
-  const element = elementInstance as CustomInstance;
-
-  const fieldPattern = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'TEXT_FIELD_PATTERN')?.value;
-  const description = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'DESCRIPTION')?.value;
-  const min = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'MINIMUM_LEN')?.value;
-  const max = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'MAXIMUM_LEN')?.value;
-
-  const handleLocalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (fieldPattern === 'DATE') {
-      onChange?.(e as any);
-    } else {
-      const newValue = e?.target?.value;
-      onChange?.(newValue);
-    }
-  };
-
-  const commonTextFieldProps = {
-    value: isPreview ? undefined : value,
-    onChange: isPreview ? undefined : handleLocalChange,
-    error: !!error,
-    helperText: error,
-    sx: {
-      '& .MuiInputBase-root': {
-        padding: 1.5,
-      },
-      '& input': {
-        padding: 0,
-      },
-    },
-    fullWidth: true,
-  };
-
-  const renderContent = () => {
-    switch (fieldPattern) {
-      case 'LONG_TEXT':
-        return <TextField rows={4} multiline type='text' {...commonTextFieldProps} />;
-      case 'SHORT_TEXT':
-        return <TextField type='text' {...commonTextFieldProps} />;
-      case 'NUMBER':
-        return (
-          <TextField
-            type='text'
-            slotProps={{
-              htmlInput: {
-                maxLength: 15,
-                pattern: '^-?\\d*\\.?\\d*$',
-                onInput: (e: any) => {
-                  let newValue = e.target.value
-                    .replace(/[^0-9.-]/g, '')
-                    .replace(/(?!^)-/g, '')
-                    .replace(/(\..*)\..*/g, '$1');
-
-                  if (newValue.startsWith('.')) {
-                    newValue = newValue.substring(1);
-                  }
-
-                  if (newValue.startsWith('-') && newValue.length > 1 && !/^\d/.test(newValue[1])) {
-                    newValue = '-';
-                  }
-
-                  e.target.value = newValue;
-                },
-              },
-            }}
-            {...commonTextFieldProps}
-          />
-        );
-      case 'NATIONAL_CODE':
-        return (
-          <TextField
-            placeholder='##########'
-            type='text'
-            slotProps={{
-              htmlInput: {
-                maxLength: 10,
-                pattern: '[0-9]*',
-                onInput: (e: any) => {
-                  e.target.value = e.target.value.replace(/[^0-9]/g, '');
-                },
-              },
-            }}
-            {...commonTextFieldProps}
-          />
-        );
-      case 'PHONE':
-        return (
-          <TextField
-            type='text'
-            placeholder='09########'
-            slotProps={{
-              htmlInput: {
-                maxLength: 11,
-                pattern: '[0-9]*',
-                onInput: (e: any) => {
-                  e.target.value = e.target.value.replace(/[^0-9]/g, '');
-                },
-              },
-            }}
-            {...commonTextFieldProps}
-          />
-        );
-      case 'DATE':
-        return (
-          <Box
-            display='flex'
-            justifyContent='flex-start'
-            alignItems='center'
-            sx={{
-              '& .rmdp-wrapper.rmdp-border': {
-                borderRadius: '20px',
-              },
-            }}>
-            <Box display='flex' alignItems='center' height='56px' borderRadius='10px' border={!error ? '1px solid #d4d4d4' : '1px solid #f44336'} textAlign='center'>
-              <DatePickerCustome inputClass='h-[50px] px-4 border-none outline-none w-full rounded-xl text-center p-1' value={value} onChange={handleLocalChange as any} />
-              <BsCalendarDate size='1.6rem' className='ml-2' color='#424242' />
-            </Box>
-            {!!error && <Typography color='#f44336'>{error}</Typography>}
-          </Box>
-        );
-      case 'TIME':
-        return (
-          <Box display='flex' justifyContent='flex-start' alignItems='center'>
-            <TimePickerStyled>
-              <Box display='flex' alignItems='center' height='56px' borderRadius='10px' border={!error ? '1px solid #d4d4d4' : '1px solid #f44336'} textAlign='center'>
-                <DatePicker
-                  disableDayPicker
-                  format='HH:mm'
-                  inputClass='w-full text-center font-bold'
-                  containerClassName='w-full'
-                  plugins={[<TimePicker key='1' hideSeconds />]}
-                  value={isPreview ? undefined : value}
-                  onChange={
-                    isPreview
-                      ? undefined
-                      : (value: any) => {
-                        const formattedValue = `${value.hour}:${value.minute}`;
-                        onChange?.(formattedValue);
-                      }
-                  }
-                />
-                <GoClock size='2rem' className='ml-2' color='#424242' />
-              </Box>
-            </TimePickerStyled>
-            {!!error && <Typography color='#f44336'>{error}</Typography>}
-          </Box>
-        );
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <Box display='flex' gap={1} flexDirection='column' width='100%' maxWidth='600px'>
-      <Box display='flex' justifyContent='space-between' width='100%'>
-        <Typography sx={{ marginRight: '25px', fontWeight: '600' }}>{element.title}</Typography>
-        {min && max ? (
-          <Typography sx={{ direction: 'rtl', textWrap: 'nowrap', fontWeight: '600' }} variant='subtitle2'>
-            {min + ' / ' + max}
-          </Typography>
-        ) : null}
-      </Box>
-      {renderContent()}
-      {description && (
-        <Typography sx={{ fontSize: '12px', fontWeight: '500' }} variant='subtitle2'>
-          {description}
-        </Typography>
-      )}
-    </Box>
-  );
-});
-
-export const PackageInjectionFormElement: FormElement = {
+export const MultipleChoiceFormElement: FormElement = {
   questionType,
   construct: ({ questionId, questionGroupId, formId, title, position }: IFormElementConstructor) => ({
     questionId,
@@ -375,10 +185,11 @@ export const PackageInjectionFormElement: FormElement = {
     questionType,
     position,
     questionPropertyList: questionPropertyList,
+    optionList: optionList,
   }),
   designerBtnElement: {
-    label: 'متنی',
-    icon: TextBlockIcon,
+    label: 'چند گزینه‌ای',
+    icon: TickIcon,
   },
   designerComponent: DesignerComponent,
   formComponent: FormComponent,
@@ -394,42 +205,140 @@ export const PackageInjectionFormElement: FormElement = {
   },
 };
 
+type CustomInstance = FormElementInstance & {
+  questionPropertyList: typeof questionPropertyList;
+  optionList: typeof optionList;
+};
+
+function FormComponent({ elementInstance, onChange, error, value }: { elementInstance?: FormElementInstance; onChange?: (value: string) => void; error?: string; value?: any }) {
+  const element = elementInstance as CustomInstance;
+  const isMultipleChoiceSelectionAllowed = element?.questionPropertyList?.find((el: any) => el?.questionPropertyEnum === 'MULTI_SELECT')?.value === 'true';
+  const description = element?.questionPropertyList?.find((el) => el?.questionPropertyEnum === 'DESCRIPTION')?.value;
+  const randomOptions = element?.questionPropertyList?.find((el) => el?.questionPropertyEnum === 'RANDOMIZE_OPTIONS')?.value === 'true';
+
+  const [newOptionList] = useState(randomOptions ? shuffleArray(element?.optionList).slice() : element?.optionList.slice());
+
+  const getInitialValue = () => {
+    if (!value) return isMultipleChoiceSelectionAllowed ? [] : '';
+
+    if (Array.isArray(value)) {
+      if (value[0] && typeof value[0] === 'object' && 'optionId' in value[0]) {
+        return value.map((v) => String(v.optionId));
+      }
+      return value.map((v) => String(v));
+    }
+
+    if (typeof value === 'object' && value.optionId) {
+      return String(value.optionId);
+    }
+
+    return String(value);
+  };
+
+  const [selectedValue, setSelectedValue] = useState<any>(getInitialValue());
+
+  // فقط وقتی value تغییر کرد و با selectedValue فرق داشت، مقدار رو آپدیت کن
+  useEffect(() => {
+    const newValue = getInitialValue();
+    if ((Array.isArray(newValue) && JSON.stringify(newValue) !== JSON.stringify(selectedValue)) || (!Array.isArray(newValue) && newValue !== selectedValue)) {
+      setSelectedValue(newValue);
+    }
+  }, [value]);
+
+  const handleChange = (event: any) => {
+    const { value } = event.target;
+
+    if (isMultipleChoiceSelectionAllowed) {
+      setSelectedValue((prevSelected: any) => {
+        if (prevSelected.includes(value)) {
+          return prevSelected.filter((id: any) => id !== value);
+        } else {
+          return [...prevSelected, value];
+        }
+      });
+    } else {
+      setSelectedValue(value);
+    }
+  };
+
+  useEffect(() => {
+    onChange?.(selectedValue);
+  }, [selectedValue, onChange]);
+
+  return (
+    <FormControl sx={{ maxWidth: '750px' }}>
+      <FormLabel
+        sx={{
+          marginBottom: description ? '0.5rem' : '2rem',
+          fontWeight: '600',
+          color: '#353535',
+          '&.MuiFormLabel-root.MuiFormLabel-colorPrimary.Mui-focused': {
+            color: '#353535',
+          },
+        }}
+        id={String(element?.questionId)}>
+        {element.title}
+      </FormLabel>
+      {description && (
+        <Typography sx={{ fontSize: '12px', fontWeight: '500', marginBottom: '2rem' }} variant='subtitle2'>
+          {description}
+        </Typography>
+      )}
+      {isMultipleChoiceSelectionAllowed ? (
+        <>
+          <FormGroup>
+            {newOptionList?.map((option: any) => (
+              <FormControlLabel key={option?.id} value={String(option?.id)} onChange={handleChange} control={<Checkbox checked={selectedValue?.includes(String(option.id))} />} label={option?.title} />
+            ))}
+          </FormGroup>
+          {!!error && <Typography color='#f44336'>{error}</Typography>}
+        </>
+      ) : (
+        <>
+          <RadioGroup name={String(element?.questionId)}>
+            {newOptionList?.map((option: any) => (
+              <FormControlLabel key={option?.id} value={String(option?.id)} onChange={handleChange} control={<Radio checked={selectedValue == String(option.id)} />} label={option?.title} />
+            ))}
+          </RadioGroup>
+          {!!error && <Typography color='#f44336'>{error}</Typography>}
+        </>
+      )}
+    </FormControl>
+  );
+}
+
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
 function PropertiesComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
   const element = elementInstance as CustomInstance;
-  const [showMinMaxProps] = useState<boolean>(() => {
-    const textFieldPatternVal = element.questionPropertyList.find((prop) => prop.questionPropertyEnum === 'TEXT_FIELD_PATTERN')?.value;
-
-    return textFieldPatternVal === 'SHORT_TEXT' || textFieldPatternVal === 'LONG_TEXT';
-  });
-  const [openDescriptionSwitch, setOpenDescriptionSwitch] = useState<boolean>(() =>
-    element.questionPropertyList.some((property) => {
-      return property.questionPropertyEnum === 'DESCRIPTION' && property.value;
-    }),
-  );
   const elements = useElements();
   const setOpenDialog = useActionOpenDialog();
   const setSelectedElement = useActionSelectedElement();
   const selectedElement = useSelectedElement();
   const { updateElement, addElement } = useActionDesigner();
   const { questionGroups } = useDesigner();
+  const [openDescriptionSwitch, setOpenDescriptionSwitch] = useState<boolean>(() =>
+    element.questionPropertyList.some((property) => {
+      return property.questionPropertyEnum === 'DESCRIPTION' && property.value;
+    }),
+  );
   const searchParams = useSearchParams();
   const search = searchParams.get('admin');
   const isSurvey = search === 'survey' || search === 'data-collection';
 
   const defaultValues = useMemo(() => {
-    const values = element.questionPropertyList.reduce((acc: any, attribute) => {
+    const values = element.questionPropertyList.reduce((acc: any, attribute: any) => {
       if (!acc[attribute.questionPropertyEnum]) {
         acc[attribute.questionPropertyEnum] = {};
       }
 
-      if (attribute.questionPropertyEnum === 'REQUIRED' || attribute.questionPropertyEnum === 'EDIT_ANSWER_LOCKED') {
+      if (
+        attribute.questionPropertyEnum === 'REQUIRED' ||
+        attribute.questionPropertyEnum === 'RANDOMIZE_OPTIONS' ||
+        attribute.questionPropertyEnum === 'MULTI_SELECT' ||
+        attribute.questionPropertyEnum === 'EDIT_ANSWER_LOCKED'
+      ) {
         acc[attribute.questionPropertyEnum].value = attribute.value === 'true';
-      } else if (attribute.questionPropertyEnum === 'MINIMUM_LEN') {
-        acc[attribute.questionPropertyEnum].value = attribute.value === '' || attribute.value === null ? 1 : Number(attribute.value);
-      } else if (attribute.questionPropertyEnum === 'MAXIMUM_LEN') {
-        acc[attribute.questionPropertyEnum].value = attribute.value === '' || attribute.value === null ? 250 : Number(attribute.value);
       } else if (attribute.questionPropertyEnum === 'DESCRIPTION') {
         acc[attribute.questionPropertyEnum].value = attribute.value === null ? '' : attribute.value;
       } else {
@@ -440,38 +349,42 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
       return acc;
     }, {});
-    values.title = element.title;
+
+    values.title = element?.title;
     values.label = element.label ?? null;
+    values.optionList = element?.optionList;
 
     return values;
-  }, [element]);
+  }, []);
 
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
-    mode: 'onChange',
+    mode: 'onSubmit',
     defaultValues,
   });
 
   const {
-    handleSubmit,
-    setValue,
-    clearErrors,
     reset,
-    formState: { isSubmitting },
+    handleSubmit,
+    formState: { isSubmitting, errors },
   } = methods;
 
   async function onSubmit(values: propertiesFormSchemaType) {
-    const { title, label, DESCRIPTION, REQUIRED, TEXT_FIELD_PATTERN, MAXIMUM_LEN, MINIMUM_LEN, EDIT_ANSWER_LOCKED } = values;
+    const { title, label, DESCRIPTION, REQUIRED, RANDOMIZE_OPTIONS, MULTI_SELECT, optionList, EDIT_ANSWER_LOCKED } = values;
 
+    // ? finds whether a field is selected or not
     const selectedYet = elements?.find((el: any) => el?.questionId === element?.questionId);
-
-    const isTextInputsSelected = TEXT_FIELD_PATTERN.value === 'SHORT_TEXT' || TEXT_FIELD_PATTERN.value === 'LONG_TEXT';
 
     const propertiesData = [
       {
-        questionPropertyEnum: 'TEXT_FIELD_PATTERN',
-        value: TEXT_FIELD_PATTERN.value,
-        id: selectedYet ? TEXT_FIELD_PATTERN.id : null,
+        questionPropertyEnum: 'MULTI_SELECT',
+        value: MULTI_SELECT.value ? 'true' : 'false',
+        id: selectedYet ? MULTI_SELECT.id : null,
+      },
+      {
+        questionPropertyEnum: 'RANDOMIZE_OPTIONS',
+        value: RANDOMIZE_OPTIONS.value ? 'true' : 'false',
+        id: selectedYet ? RANDOMIZE_OPTIONS.id : null,
       },
       {
         questionPropertyEnum: 'REQUIRED',
@@ -488,17 +401,9 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         value: openDescriptionSwitch && DESCRIPTION.value ? DESCRIPTION.value : null,
         id: selectedYet ? DESCRIPTION.id : null,
       },
-      {
-        questionPropertyEnum: 'MAXIMUM_LEN',
-        value: isTextInputsSelected ? MAXIMUM_LEN.value : null,
-        id: selectedYet ? MAXIMUM_LEN.id : null,
-      },
-      {
-        questionPropertyEnum: 'MINIMUM_LEN',
-        value: isTextInputsSelected ? MINIMUM_LEN.value : null,
-        id: selectedYet ? MINIMUM_LEN.id : null,
-      },
     ];
+
+    const optionListData = [...optionList];
 
     const lastIndexOfGroup = elements.findLastIndex((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
 
@@ -506,10 +411,17 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
     let findSelectedGroupPreviousGroup = questionGroups.findIndex((el: any) => el === selectedElement?.fieldElement?.questionGroupId) - 1;
 
+    // if the selected group was the index 0
+    // because we are subtracting it by 1 we have
+    // to set it back to zero
     if (findSelectedGroupPreviousGroup === -1) {
       findSelectedGroupPreviousGroup = 0;
     }
 
+    // The application of this is when there is a empty group
+    // so there is no corresponding question related to it
+    // exist in elements array so we find the last index of its
+    // prevoius group and add one item after that
     const firstIndexAfterThePreviousSelectedGroup = elements.findLastIndex((el: any) => el.questionGroupId === questionGroups[findSelectedGroupPreviousGroup]) + 1;
 
     delete element.temp;
@@ -517,9 +429,10 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
     const finalFieldData = {
       ...element,
       title,
-      label: label ?? null,
       position: selectedElement?.position?.apiPosition ?? group.length,
       questionPropertyList: propertiesData,
+      optionList: optionListData,
+      label: label ?? null,
     };
 
     if (!selectedYet) {
@@ -527,7 +440,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       delete removeId.questionId;
 
       try {
-        const { data }: any = await createQuestionAction(removeId as any);
+          const { data }: any = await createQuestionAction(removeId as any);
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;
@@ -546,14 +459,14 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       }
     } else {
       try {
-        const { data }: any = await updateQuestionAction(String(finalFieldData.questionId), finalFieldData);
+        const { data }: any = await updateQuestionAction(String(finalFieldData?.questionId), finalFieldData);
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;
         const newData = {
           ...data,
         };
-        updateElement(element.questionId, newData);
+        updateElement(element?.questionId, newData);
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
@@ -578,20 +491,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
           <Typography variant='subtitle2' fontWeight='700'>
             متن سوال:
           </Typography>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              height: '100%',
-              direction: 'ltr',
-              width: '100%',
-              paddingX: 0.5,
-              '& .MuiFormControl-root, & .MuiInputBase-root': {
-                borderRadius: '10px',
-              },
-            }}>
-            <RHFTextField multiline rows={3} name='title' />
-          </Box>
+          <RHFTextField multiline rows={3} name='title' />
         </Stack>
         {isSurvey &&
           <Stack spacing={1} mt={1}>
@@ -615,13 +515,38 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
           </Stack>
         }
 
-        <TextFieldPair setValue={setValue} clearErrors={clearErrors} initialShow={showMinMaxProps} />
+        <Stack>
+          <Box display='flex' justifyContent='space-between' alignItems='center' marginTop={3} marginBottom={0.5}>
+            <Typography sx={{ width: '75%' }} fontWeight='700'>
+              گزینه‌ها:
+            </Typography>
+            <Typography sx={{ width: '12.5%' }} fontWeight='700'>
+              ارزش:
+            </Typography>
+            <Typography sx={{ width: '12.5%' }}></Typography>
+          </Box>
+          <RHFTextFieldOptionList name='optionList' errorMessage={errors?.optionList?.root?.message} />
+        </Stack>
 
         <Stack flexDirection='row' justifyContent='space-between' alignItems='flex-start' marginTop={3}>
+          <Typography variant='subtitle2' fontWeight='700'>
+            چند انتخابی
+          </Typography>
+          <RHFSwitch label='' name='MULTI_SELECT.value' labelPlacement='start' sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }} />
+        </Stack>
+
+        <Stack flexDirection='row' justifyContent='space-between' alignItems='flex-start' marginTop={1.5}>
           <Typography variant='subtitle2' fontWeight='700'>
             پاسخ به سوال اجباری باشد
           </Typography>
           <RHFSwitch label='' name='REQUIRED.value' labelPlacement='start' sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }} />
+        </Stack>
+
+        <Stack flexDirection='row' justifyContent='space-between' alignItems='flex-start' marginTop={1.5}>
+          <Typography variant='subtitle2' fontWeight='700'>
+            توزیع تصادفی گزینه‌ها
+          </Typography>
+          <RHFSwitch label='' name='RANDOMIZE_OPTIONS.value' labelPlacement='start' sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }} />
         </Stack>
 
         <Stack flexDirection='row' justifyContent='space-between' alignItems='flex-start' marginTop={1.5}>
@@ -631,16 +556,16 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
           <RHFSwitch label='' name='EDIT_ANSWER_LOCKED.value' labelPlacement='start' sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }} />
         </Stack>
 
-        <Stack spacing={1} marginTop={0.5} flexDirection='row' justifyContent='space-between' alignItems='flex-end'>
+        <Stack marginTop={1.5} flexDirection='row' justifyContent='space-between' alignItems='flex-start'>
           <Typography variant='subtitle2' fontWeight='700'>
             توضیحات
           </Typography>
-          <SwitchButton disableRipple onChange={() => setOpenDescriptionSwitch((prev) => !prev)} checked={openDescriptionSwitch} />
+          <SwitchButton onChange={() => setOpenDescriptionSwitch((prev) => !prev)} checked={openDescriptionSwitch} />
         </Stack>
 
         {openDescriptionSwitch && (
           <Stack marginTop={2}>
-            <Typography variant='subtitle2' fontWeight='700' marginBottom={1.5}>
+            <Typography fontWeight='700' variant='subtitle2' marginBottom={1.5}>
               متن توضیح:
             </Typography>
             <RHFTextField name='DESCRIPTION.value' placeholder='پیامی برای توضیح بیشتر در مورد این سوال' />

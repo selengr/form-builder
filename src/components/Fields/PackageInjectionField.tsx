@@ -24,7 +24,7 @@ import { useSearchParams } from 'next/navigation';
 // actions
 import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/question';
 
-const questionType: ElementsType = 'MULTIPLE_CHOICE';
+const questionType: ElementsType = 'TEXT_FIELD';
 
 const questionPropertyList: IQPLMultipleChoice = [
   {
@@ -143,7 +143,7 @@ const propertiesSchema = z.object({
 const DesignerComponent = memo(function DesignerComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
   const element = elementInstance as CustomInstance;
   const labelText = element.title;
-  const designerBtnLabel = MultipleChoiceFormElement.designerBtnElement.label;
+  const designerBtnLabel = PackageInjectionFormElement.designerBtnElement.label;
 
   return (
     <div
@@ -175,7 +175,7 @@ const DesignerComponent = memo(function DesignerComponent({ elementInstance }: {
   );
 });
 
-export const MultipleChoiceFormElement: FormElement = {
+export const PackageInjectionFormElement: FormElement = {
   questionType,
   construct: ({ questionId, questionGroupId, formId, title, position }: IFormElementConstructor) => ({
     questionId,
@@ -188,7 +188,7 @@ export const MultipleChoiceFormElement: FormElement = {
     optionList: optionList,
   }),
   designerBtnElement: {
-    label: 'چند گزینه‌ای',
+    label: 'تزریق فرم',
     icon: TickIcon,
   },
   designerComponent: DesignerComponent,

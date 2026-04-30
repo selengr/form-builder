@@ -54,90 +54,14 @@ const questionPropertyList: IQPLMultipleChoice = [
   },
 ];
 
-const optionList: IFormOptionList[] = [
-  {
-    title: 'گزینه 1',
-    score: 1,
-  },
-  {
-    title: 'گزینه 2',
-    score: 2,
-  },
-];
 
-const optionsSchema = z.object({
-  title: z
-    .string()
-    .trim()
-    .transform((value) => value.replace(/\s+/g, ' '))
-    .pipe(
-      z
-        .string()
-        .min(1, {
-          message: 'هر گزینه حداقل باید 1 و حداکثر 50 کاراکتر داشته باشد',
-        })
-        .max(500, {
-          message: 'هر گزینه حداقل باید 1 و حداکثر 500 کاراکتر داشته باشد',
-        }),
-    ),
-  score: z.number(),
-  id: z.number().nullable().default(null),
-});
 
 const propertiesSchema = z.object({
-  title: z
+  selectedFormId: z
     .string()
     .trim()
     .transform((value) => value.replace(/\s+/g, ' '))
     .pipe(z.string().min(1, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' }).max(3999, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' })),
-  label: z
-    .string()
-    .trim()
-    .transform((value) => {
-      const normalized = value.replace(/\s+/g, ' ');
-      return normalized === '' ? null : normalized;
-    })
-    .nullable()
-    .refine(
-      (value) =>
-        value === null ||
-        !/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/.test(value),
-      {
-        message: 'استفاده از حروف فارسی مجاز نیست',
-      }
-    )
-    .refine(
-      (value) => value === null || (value.length >= 8 && value.length <= 30),
-      {
-        message: 'حداقل باید 8 و حداکثر 30 کاراکتر باشد',
-      }
-    ),
-  DESCRIPTION: z.object({
-    value: z
-      .string()
-      .trim()
-      .transform((value) => value.replace(/\s+/g, ' '))
-      .pipe(z.string().max(3999, { message: 'حداکثر میتواند 4000 کاراکتر باشد' }))
-      .optional(),
-    id: z.number(),
-  }),
-  REQUIRED: z.object({
-    value: z.boolean().default(false),
-    id: z.number(),
-  }),
-  EDIT_ANSWER_LOCKED: z.object({
-    value: z.boolean().default(false),
-    id: z.number(),
-  }),
-  RANDOMIZE_OPTIONS: z.object({
-    value: z.boolean().default(false),
-    id: z.number(),
-  }),
-  MULTI_SELECT: z.object({
-    value: z.boolean().default(false),
-    id: z.number(),
-  }),
-  optionList: z.array(optionsSchema).min(2, { message: 'حداقل باید 2 و حداکثر 10 گزینه وجود داشته باشد' }).max(10, { message: 'حداقل باید 2 و حداکثر 10 گزینه وجود داشته باشد' }),
 });
 
 const DesignerComponent = memo(function DesignerComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
@@ -487,33 +411,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
           direction: 'ltr',
           width: '100%',
         }}>
-        <Stack spacing={1}>
-          <Typography variant='subtitle2' fontWeight='700'>
-            متن سوال:
-          </Typography>
-          <RHFTextField multiline rows={3} name='title' />
-        </Stack>
-        {isSurvey &&
-          <Stack spacing={1} mt={1}>
-            <Typography variant='subtitle2' fontWeight='700'>
-              شناسه:
-            </Typography>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100%',
-                direction: 'ltr',
-                width: '100%',
-                paddingX: 0.5,
-                '& .MuiFormControl-root, & .MuiInputBase-root': {
-                  borderRadius: '10px',
-                },
-              }}>
-              <RHFTextField name='label' dir='ltr'/>
-            </Box>
-          </Stack>
-        }
+ 
 
         <Stack>
           <Box display='flex' justifyContent='space-between' alignItems='center' marginTop={3} marginBottom={0.5}>
@@ -527,50 +425,6 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
           </Box>
           <RHFTextFieldOptionList name='optionList' errorMessage={errors?.optionList?.root?.message} />
         </Stack>
-
-        <Stack flexDirection='row' justifyContent='space-between' alignItems='flex-start' marginTop={3}>
-          <Typography variant='subtitle2' fontWeight='700'>
-            چند انتخابی
-          </Typography>
-          <RHFSwitch label='' name='MULTI_SELECT.value' labelPlacement='start' sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }} />
-        </Stack>
-
-        <Stack flexDirection='row' justifyContent='space-between' alignItems='flex-start' marginTop={1.5}>
-          <Typography variant='subtitle2' fontWeight='700'>
-            پاسخ به سوال اجباری باشد
-          </Typography>
-          <RHFSwitch label='' name='REQUIRED.value' labelPlacement='start' sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }} />
-        </Stack>
-
-        <Stack flexDirection='row' justifyContent='space-between' alignItems='flex-start' marginTop={1.5}>
-          <Typography variant='subtitle2' fontWeight='700'>
-            توزیع تصادفی گزینه‌ها
-          </Typography>
-          <RHFSwitch label='' name='RANDOMIZE_OPTIONS.value' labelPlacement='start' sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }} />
-        </Stack>
-
-        <Stack flexDirection='row' justifyContent='space-between' alignItems='flex-start' marginTop={1.5}>
-          <Typography variant='subtitle2' fontWeight='700'>
-            پاسخ غیر قابل ویرایش
-          </Typography>
-          <RHFSwitch label='' name='EDIT_ANSWER_LOCKED.value' labelPlacement='start' sx={{ mb: 1, mx: 0, width: 1, justifyContent: 'space-between' }} />
-        </Stack>
-
-        <Stack marginTop={1.5} flexDirection='row' justifyContent='space-between' alignItems='flex-start'>
-          <Typography variant='subtitle2' fontWeight='700'>
-            توضیحات
-          </Typography>
-          <SwitchButton onChange={() => setOpenDescriptionSwitch((prev) => !prev)} checked={openDescriptionSwitch} />
-        </Stack>
-
-        {openDescriptionSwitch && (
-          <Stack marginTop={2}>
-            <Typography fontWeight='700' variant='subtitle2' marginBottom={1.5}>
-              متن توضیح:
-            </Typography>
-            <RHFTextField name='DESCRIPTION.value' placeholder='پیامی برای توضیح بیشتر در مورد این سوال' />
-          </Stack>
-        )}
 
         <FieldDialogActionBottomButtons status={isSubmitting} />
       </Box>

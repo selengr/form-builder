@@ -76,21 +76,6 @@ const DesignerComponent = memo(function DesignerComponent({ elementInstance }: {
       style={{
         width: 'calc(100% - 96px)',
       }}>
-      {/* <Tooltip
-        disableTouchListener
-        enterDelay={1000}
-        leaveDelay={100}
-        title={labelText}
-        arrow
-      >
-        <p
-          dir="rtl"
-          className="text-base overflow-hidden text-ellipsis w-full"
-          style={{ textWrap: "nowrap", fontWeight: "700" }}
-        >
-          {labelText}
-        </p>
-      </Tooltip> */}
       <p dir='rtl' className='text-base overflow-hidden text-ellipsis w-full' style={{ textWrap: 'nowrap', fontWeight: '700' }}>
         {labelText}
       </p>
@@ -108,8 +93,7 @@ export const PackageInjectionFormElement: FormElement = {
     title,
     questionType,
     position,
-    questionPropertyList: questionPropertyList,
-    optionList: optionList,
+    questionPropertyList: questionPropertyList
   }),
   designerBtnElement: {
     label: 'تزریق فرم',
@@ -131,104 +115,10 @@ export const PackageInjectionFormElement: FormElement = {
 
 type CustomInstance = FormElementInstance & {
   questionPropertyList: typeof questionPropertyList;
-  optionList: typeof optionList;
 };
 
-function FormComponent({ elementInstance, onChange, error, value }: { elementInstance?: FormElementInstance; onChange?: (value: string) => void; error?: string; value?: any }) {
-  const element = elementInstance as CustomInstance;
-  const isMultipleChoiceSelectionAllowed = element?.questionPropertyList?.find((el: any) => el?.questionPropertyEnum === 'MULTI_SELECT')?.value === 'true';
-  const description = element?.questionPropertyList?.find((el) => el?.questionPropertyEnum === 'DESCRIPTION')?.value;
-  const randomOptions = element?.questionPropertyList?.find((el) => el?.questionPropertyEnum === 'RANDOMIZE_OPTIONS')?.value === 'true';
-
-  const [newOptionList] = useState(randomOptions ? shuffleArray(element?.optionList).slice() : element?.optionList.slice());
-
-  const getInitialValue = () => {
-    if (!value) return isMultipleChoiceSelectionAllowed ? [] : '';
-
-    if (Array.isArray(value)) {
-      if (value[0] && typeof value[0] === 'object' && 'optionId' in value[0]) {
-        return value.map((v) => String(v.optionId));
-      }
-      return value.map((v) => String(v));
-    }
-
-    if (typeof value === 'object' && value.optionId) {
-      return String(value.optionId);
-    }
-
-    return String(value);
-  };
-
-  const [selectedValue, setSelectedValue] = useState<any>(getInitialValue());
-
-  // فقط وقتی value تغییر کرد و با selectedValue فرق داشت، مقدار رو آپدیت کن
-  useEffect(() => {
-    const newValue = getInitialValue();
-    if ((Array.isArray(newValue) && JSON.stringify(newValue) !== JSON.stringify(selectedValue)) || (!Array.isArray(newValue) && newValue !== selectedValue)) {
-      setSelectedValue(newValue);
-    }
-  }, [value]);
-
-  const handleChange = (event: any) => {
-    const { value } = event.target;
-
-    if (isMultipleChoiceSelectionAllowed) {
-      setSelectedValue((prevSelected: any) => {
-        if (prevSelected.includes(value)) {
-          return prevSelected.filter((id: any) => id !== value);
-        } else {
-          return [...prevSelected, value];
-        }
-      });
-    } else {
-      setSelectedValue(value);
-    }
-  };
-
-  useEffect(() => {
-    onChange?.(selectedValue);
-  }, [selectedValue, onChange]);
-
-  return (
-    <FormControl sx={{ maxWidth: '750px' }}>
-      <FormLabel
-        sx={{
-          marginBottom: description ? '0.5rem' : '2rem',
-          fontWeight: '600',
-          color: '#353535',
-          '&.MuiFormLabel-root.MuiFormLabel-colorPrimary.Mui-focused': {
-            color: '#353535',
-          },
-        }}
-        id={String(element?.questionId)}>
-        {element.title}
-      </FormLabel>
-      {description && (
-        <Typography sx={{ fontSize: '12px', fontWeight: '500', marginBottom: '2rem' }} variant='subtitle2'>
-          {description}
-        </Typography>
-      )}
-      {isMultipleChoiceSelectionAllowed ? (
-        <>
-          <FormGroup>
-            {newOptionList?.map((option: any) => (
-              <FormControlLabel key={option?.id} value={String(option?.id)} onChange={handleChange} control={<Checkbox checked={selectedValue?.includes(String(option.id))} />} label={option?.title} />
-            ))}
-          </FormGroup>
-          {!!error && <Typography color='#f44336'>{error}</Typography>}
-        </>
-      ) : (
-        <>
-          <RadioGroup name={String(element?.questionId)}>
-            {newOptionList?.map((option: any) => (
-              <FormControlLabel key={option?.id} value={String(option?.id)} onChange={handleChange} control={<Radio checked={selectedValue == String(option.id)} />} label={option?.title} />
-            ))}
-          </RadioGroup>
-          {!!error && <Typography color='#f44336'>{error}</Typography>}
-        </>
-      )}
-    </FormControl>
-  );
+function FormComponent() {
+  return <></>
 }
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
@@ -294,40 +184,11 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   } = methods;
 
   async function onSubmit(values: propertiesFormSchemaType) {
-    const { title, label, DESCRIPTION, REQUIRED, RANDOMIZE_OPTIONS, MULTI_SELECT, optionList, EDIT_ANSWER_LOCKED } = values;
+    const { selectedFormId } = values;
 
     // ? finds whether a field is selected or not
     const selectedYet = elements?.find((el: any) => el?.questionId === element?.questionId);
 
-    const propertiesData = [
-      {
-        questionPropertyEnum: 'MULTI_SELECT',
-        value: MULTI_SELECT.value ? 'true' : 'false',
-        id: selectedYet ? MULTI_SELECT.id : null,
-      },
-      {
-        questionPropertyEnum: 'RANDOMIZE_OPTIONS',
-        value: RANDOMIZE_OPTIONS.value ? 'true' : 'false',
-        id: selectedYet ? RANDOMIZE_OPTIONS.id : null,
-      },
-      {
-        questionPropertyEnum: 'REQUIRED',
-        value: REQUIRED.value ? 'true' : 'false',
-        id: selectedYet ? REQUIRED.id : null,
-      },
-      {
-        questionPropertyEnum: 'EDIT_ANSWER_LOCKED',
-        value: EDIT_ANSWER_LOCKED.value ? 'true' : 'false',
-        id: selectedYet ? EDIT_ANSWER_LOCKED.id : null,
-      },
-      {
-        questionPropertyEnum: 'DESCRIPTION',
-        value: openDescriptionSwitch && DESCRIPTION.value ? DESCRIPTION.value : null,
-        id: selectedYet ? DESCRIPTION.id : null,
-      },
-    ];
-
-    const optionListData = [...optionList];
 
     const lastIndexOfGroup = elements.findLastIndex((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
 
@@ -352,11 +213,8 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
     const finalFieldData = {
       ...element,
-      title,
       position: selectedElement?.position?.apiPosition ?? group.length,
-      questionPropertyList: propertiesData,
-      optionList: optionListData,
-      label: label ?? null,
+  
     };
 
     if (!selectedYet) {
@@ -423,7 +281,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
             </Typography>
             <Typography sx={{ width: '12.5%' }}></Typography>
           </Box>
-          <RHFTextFieldOptionList name='optionList' errorMessage={errors?.optionList?.root?.message} />
+          <RHFTextFieldOptionList name='optionList' errorMessage={""} />
         </Stack>
 
         <FieldDialogActionBottomButtons status={isSubmitting} />

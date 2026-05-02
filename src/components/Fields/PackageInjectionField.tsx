@@ -2,59 +2,41 @@
 
 import { z } from 'zod';
 import { toast } from 'sonner';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { ElementsType, FormElement, FormElementInstance } from '@/types/FormElements';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Radio, RadioGroup, Stack, Typography } from '@mui/material';
+import { Box, MenuItem, Typography } from '@mui/material';
 import FormProvider from '@/components/hook-form/FormProvider';
-import { RHFSwitch, RHFTextField, RHFTextFieldOptionList } from '../../components/hook-form';
-import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
-import { SwitchButton } from '../Switch/SwitchButton';
-import { IFormElementConstructor, IFormOptionList, IQPLMultipleChoice } from '@/types/bulider';
-import TickIcon from '@/../public/images/home-page/tick-square.svg';
+import { RHFSelect } from '../../components/hook-form';
 import useDesigner from '@/hooks/useDesigner';
 import useElements from '@/hooks/useElements';
-import useActionOpenDialog from '@/hooks/useActionOpenDialog';
-import useActionSelectedElement from '@/hooks/useActionSelectedElement';
-import useSelectedElement from '@/hooks/useSelectedElement';
-import useActionDesigner from '@/hooks/useActionDesigner';
-import shuffleArray from '@/lib/shuffle';
 import { useSearchParams } from 'next/navigation';
+import useActionDesigner from '@/hooks/useActionDesigner';
+import useSelectedElement from '@/hooks/useSelectedElement';
+import useActionOpenDialog from '@/hooks/useActionOpenDialog';
+import TickIcon from '@/../public/images/home-page/tick-square.svg';
+import useActionSelectedElement from '@/hooks/useActionSelectedElement';
+import { IFormElementConstructor, IQPLPackagingForm } from '@/types/bulider';
+import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
 // actions
+import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
 import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/question';
+import { useGetPackagingFormsCombo } from '@/templates/packaging/hooks/useGetPackagingFormsCombo';
 
+interface IGetPAckagingForm {
+  value: string;
+  caption: string;
+}
 const questionType: ElementsType = 'PACKAGE_INJECTION_FIELD';
 
-const questionPropertyList: IQPLMultipleChoice = [
+const questionPropertyList: IQPLPackagingForm = [
   {
     id: 1,
-    questionPropertyEnum: 'MULTI_SELECT',
+    questionPropertyEnum: 'PACKAGING_FORM',
     value: 'false',
-  },
-  {
-    id: 2,
-    questionPropertyEnum: 'REQUIRED',
-    value: 'false',
-  },
-  {
-    id: 3,
-    questionPropertyEnum: 'RANDOMIZE_OPTIONS',
-    value: 'false',
-  },
-  {
-    id: 4,
-    questionPropertyEnum: 'DESCRIPTION',
-    value: '',
-  },
-  {
-    id: 5,
-    questionPropertyEnum: 'EDIT_ANSWER_LOCKED',
-    value: 'false',
-  },
+  }
 ];
-
-
 
 const propertiesSchema = z.object({
   selectedFormId: z
@@ -96,7 +78,7 @@ export const PackageInjectionFormElement: FormElement = {
     questionPropertyList: questionPropertyList
   }),
   designerBtnElement: {
-    label: 'تزریق فرم',
+    label: 'فرم ها',
     icon: TickIcon,
   },
   designerComponent: DesignerComponent,
@@ -126,55 +108,19 @@ type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 function PropertiesComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
   const element = elementInstance as CustomInstance;
   const elements = useElements();
+  const { questionGroups } = useDesigner(); 
   const setOpenDialog = useActionOpenDialog();
   const setSelectedElement = useActionSelectedElement();
+  const { FormsList, isFetchingForms } = useGetPackagingFormsCombo();
+
   const selectedElement = useSelectedElement();
   const { updateElement, addElement } = useActionDesigner();
-  const { questionGroups } = useDesigner();
-  const [openDescriptionSwitch, setOpenDescriptionSwitch] = useState<boolean>(() =>
-    element.questionPropertyList.some((property) => {
-      return property.questionPropertyEnum === 'DESCRIPTION' && property.value;
-    }),
-  );
-  const searchParams = useSearchParams();
-  const search = searchParams.get('admin');
-  const isSurvey = search === 'survey' || search === 'data-collection';
 
-  const defaultValues = useMemo(() => {
-    const values = element.questionPropertyList.reduce((acc: any, attribute: any) => {
-      if (!acc[attribute.questionPropertyEnum]) {
-        acc[attribute.questionPropertyEnum] = {};
-      }
 
-      if (
-        attribute.questionPropertyEnum === 'REQUIRED' ||
-        attribute.questionPropertyEnum === 'RANDOMIZE_OPTIONS' ||
-        attribute.questionPropertyEnum === 'MULTI_SELECT' ||
-        attribute.questionPropertyEnum === 'EDIT_ANSWER_LOCKED'
-      ) {
-        acc[attribute.questionPropertyEnum].value = attribute.value === 'true';
-      } else if (attribute.questionPropertyEnum === 'DESCRIPTION') {
-        acc[attribute.questionPropertyEnum].value = attribute.value === null ? '' : attribute.value;
-      } else {
-        acc[attribute.questionPropertyEnum].value = attribute.value;
-      }
-
-      acc[attribute.questionPropertyEnum].id = attribute.id;
-
-      return acc;
-    }, {});
-
-    values.title = element?.title;
-    values.label = element.label ?? null;
-    values.optionList = element?.optionList;
-
-    return values;
-  }, []);
 
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
-    mode: 'onSubmit',
-    defaultValues,
+    mode: 'onSubmit'
   });
 
   const {
@@ -186,19 +132,12 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   async function onSubmit(values: propertiesFormSchemaType) {
     const { selectedFormId } = values;
 
-    // ? finds whether a field is selected or not
-    const selectedYet = elements?.find((el: any) => el?.questionId === element?.questionId);
-
-
     const lastIndexOfGroup = elements.findLastIndex((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
 
     const group = elements.filter((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
 
     let findSelectedGroupPreviousGroup = questionGroups.findIndex((el: any) => el === selectedElement?.fieldElement?.questionGroupId) - 1;
 
-    // if the selected group was the index 0
-    // because we are subtracting it by 1 we have
-    // to set it back to zero
     if (findSelectedGroupPreviousGroup === -1) {
       findSelectedGroupPreviousGroup = 0;
     }
@@ -209,20 +148,14 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
     // prevoius group and add one item after that
     const firstIndexAfterThePreviousSelectedGroup = elements.findLastIndex((el: any) => el.questionGroupId === questionGroups[findSelectedGroupPreviousGroup]) + 1;
 
-    delete element.temp;
-
-    const finalFieldData = {
-      ...element,
+    const body = {
+      targetFormId : element.formId,
       position: selectedElement?.position?.apiPosition ?? group.length,
-  
-    };
-
-    if (!selectedYet) {
-      const removeId: any = { ...finalFieldData };
-      delete removeId.questionId;
+      selectedFormId : values.selectedFormId
+    }; 
 
       try {
-          const { data }: any = await createQuestionAction(removeId as any);
+        const { data }: any = await createQuestionAction(body);
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;
@@ -236,26 +169,9 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
-      } catch (error:any) {
-         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+      } catch (error: any) {
+        toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
       }
-    } else {
-      try {
-        const { data }: any = await updateQuestionAction(String(finalFieldData?.questionId), finalFieldData);
-        delete data.questionPropertyList;
-        delete data.optionList;
-        delete data.spectralPlaceList;
-        const newData = {
-          ...data,
-        };
-        updateElement(element?.questionId, newData);
-        setOpenDialog(false);
-        setSelectedElement(null);
-        reset();
-      } catch (error:any) {
-         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
-      }
-    }
   }
 
   return (
@@ -265,14 +181,45 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
           display: 'flex',
           flexDirection: 'column',
           height: '100%',
-          paddingX: 1.5,
+          paddingX: 0,
           direction: 'ltr',
           width: '100%',
         }}>
- 
 
-     
-
+        <Box display='flex' flexDirection='column' gap='8px' width='100%' paddingX={2.5}>
+          <Typography variant='subtitle2' fontWeight='700'>
+            انتخاب فرم:
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+              direction: 'ltr',
+              width: '100%',
+              '& .MuiFormControl-root, & .MuiInputBase-root': {
+                borderRadius: '10px',
+              },
+            }}>
+            <RHFSelect
+              fullWidth
+              name='selectedFormId'
+              sx={{
+                '& .MuiInputBase-root': {
+                  bgcolor: '#fff',
+                  width: "100%"
+                },
+              }}>
+              <MenuItem value=''>انتخاب کنید</MenuItem>
+              {isFetchingForms && <MenuItem value=''><PreviewLoading /></MenuItem>}
+              {FormsList?.map((item: IGetPAckagingForm) => (
+                <MenuItem key={item.value} value={item.value}>
+                  {item.caption}
+                </MenuItem>
+              ))}
+            </RHFSelect>
+          </Box>
+        </Box>
         <FieldDialogActionBottomButtons status={isSubmitting} />
       </Box>
     </FormProvider>

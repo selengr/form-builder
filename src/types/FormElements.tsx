@@ -1,16 +1,17 @@
 'use client';
 
 import { IFormElementConstructor, IFormOptionList, tempObj } from './bulider';
-import { SpectralFormElement } from '@/components/Fields/SpectralField';
 import { RatingFormElement } from '@/components/Fields/RatingField';
 import { TextFieldFormElement } from '@/components/Fields/TextField';
-import { TitleFieldFinishFormElement } from '@/components/Fields/TitleFieldFinish';
-import { TitleFieldStartFormElement } from '@/components/Fields/TitleFieldStart';
-import { MultipleChoiceFormElement } from '@/components/Fields/MultipleChoiceField';
-import { MultipleChoiceImageFormElement } from '@/components/Fields/MultipleChoiceImageField';
 import { InfoFieldFormElement } from '@/components/Fields/InfoField';
+import { SpectralFormElement } from '@/components/Fields/SpectralField';
+import { TitleFieldStartFormElement } from '@/components/Fields/TitleFieldStart';
+import { TitleFieldFinishFormElement } from '@/components/Fields/TitleFieldFinish';
+import { MultipleChoiceFormElement } from '@/components/Fields/MultipleChoiceField';
+import { PackageInjectionFormElement } from '@/components/Fields/PackageInjectionField';
+import { MultipleChoiceImageFormElement } from '@/components/Fields/MultipleChoiceImageField';
 
-export type ElementsType = 'TEXT_FIELD' | 'MULTIPLE_CHOICE' | 'TitleFieldStart' | 'TitleFieldFinish' | 'MULTIPLE_CHOICE_IMAGE' | 'SPECTRAL' | 'INFO_FIELD' | 'RATING';
+export type ElementsType = 'TEXT_FIELD' | 'MULTIPLE_CHOICE' | 'TitleFieldStart' | 'TitleFieldFinish' | 'MULTIPLE_CHOICE_IMAGE' | 'SPECTRAL' | 'INFO_FIELD' | 'RATING' | 'PACKAGE_INJECTION_FIELD';
 
 export type SubmitFunction = (key: number, value: string) => void;
 
@@ -20,6 +21,7 @@ export type FormElement = {
   construct: ({ questionId, questionGroupId, formId, title, position }: IFormElementConstructor) => FormElementInstance;
 
   designerBtnElement: {
+    
     label: string;
     icon?: any;
   };
@@ -42,25 +44,25 @@ export type FormElement = {
 };
 
 export type FormElementInstance = {
-  questionId: number;
-  questionGroupId?: number | null;
-  formId?: number;
   title?: string;
   label?: string;
-  questionType?: ElementsType;
+  formId?: number;
+  draft?: draftObj;
+  questionId: number;
+  description?: string;
+  startPageMsg?: string;
   position?: number | null;
+  temp?: boolean | tempObj;
+  questionType?: ElementsType;
+  questionGroupId?: number | null;
   questionPropertyList?: Record<string, any>;
   optionList?: IFormOptionList[] | [] | null | undefined;
-  temp?: boolean | tempObj;
-  draft?: draftObj;
-  startPageMsg?: string;
-  description?: string;
   spectralPlaceList?: IFormOptionList[] | [] | null | undefined;
 };
 
 type draftObj = {
-  prevGroup: number;
   position: number;
+  prevGroup: number;
 };
 
 type FormElementsType = {
@@ -68,12 +70,13 @@ type FormElementsType = {
 };
 
 export const FormElements: FormElementsType = {
-  TEXT_FIELD: TextFieldFormElement,
-  MULTIPLE_CHOICE: MultipleChoiceFormElement,
-  SPECTRAL: SpectralFormElement,
   RATING: RatingFormElement,
+  SPECTRAL: SpectralFormElement,
+  TEXT_FIELD: TextFieldFormElement,
+  INFO_FIELD: InfoFieldFormElement,
+  MULTIPLE_CHOICE: MultipleChoiceFormElement,
   TitleFieldStart: TitleFieldStartFormElement,
   TitleFieldFinish: TitleFieldFinishFormElement,
   MULTIPLE_CHOICE_IMAGE: MultipleChoiceImageFormElement,
-  INFO_FIELD: InfoFieldFormElement,
+  PACKAGE_INJECTION_FIELD: PackageInjectionFormElement,
 };

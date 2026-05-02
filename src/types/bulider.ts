@@ -198,6 +198,14 @@ export type IQPLMultipleChoice = [
   },
 ];
 
+export type IQPLPackagingForm = [
+  {
+    id: number;
+    questionPropertyEnum: 'PACKAGING_FORM';
+    value: string;
+  }
+];
+
 export type ITest = {
   name: string;
 };

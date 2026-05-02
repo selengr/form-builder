@@ -120,6 +120,6 @@ serverApi.interceptors.response.use(
       message: error.message,
     });
 
-    throw error;
+    // throw error;
   },
 );

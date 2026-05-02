@@ -109,13 +109,9 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   const element = elementInstance as CustomInstance;
   const elements = useElements();
   const { questionGroups } = useDesigner(); 
-  const setOpenDialog = useActionOpenDialog();
-  const setSelectedElement = useActionSelectedElement();
   const { FormsList, isFetchingForms } = useGetPackagingFormsCombo();
 
   const selectedElement = useSelectedElement();
-  const { updateElement, addElement } = useActionDesigner();
-
 
 
   const methods = useForm<propertiesFormSchemaType>({
@@ -130,10 +126,6 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   } = methods;
 
   async function onSubmit(values: propertiesFormSchemaType) {
-    const { selectedFormId } = values;
-
-    const lastIndexOfGroup = elements.findLastIndex((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
-
     const group = elements.filter((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
 
     let findSelectedGroupPreviousGroup = questionGroups.findIndex((el: any) => el === selectedElement?.fieldElement?.questionGroupId) - 1;
@@ -141,7 +133,6 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
     if (findSelectedGroupPreviousGroup === -1) {
       findSelectedGroupPreviousGroup = 0;
     }
-
 
     const body : IPostPackageFormInjectionBody = {
       targetFormId : Number(element.formId),
@@ -193,7 +184,6 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
                   width: "100%"
                 },
               }}>
-              <MenuItem value=''>انتخاب کنید</MenuItem>
               {isFetchingForms && <MenuItem value=''><PreviewLoading /></MenuItem>}
               {FormsList?.map((item: IGetPAckagingForm) => (
                 <MenuItem key={item.value} value={item.value}>

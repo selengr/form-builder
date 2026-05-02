@@ -11,7 +11,7 @@ import FormProvider from '@/components/hook-form/FormProvider';
 import { RHFSelect } from '../../components/hook-form';
 import useDesigner from '@/hooks/useDesigner';
 import useElements from '@/hooks/useElements';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import useActionDesigner from '@/hooks/useActionDesigner';
 import useSelectedElement from '@/hooks/useSelectedElement';
@@ -24,6 +24,8 @@ import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/Fi
 import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
 import { createPackagingFormInjection, IPostPackageFormInjectionBody, updateQuestionAction } from '../../../actions/builder/question';
 import { useGetPackagingFormsCombo } from '@/templates/packaging/hooks/useGetPackagingFormsCombo';
+import { useGetForm } from '@/app/(builder)/builder/_hook/useGetForm';
+import useActionElements from '@/hooks/useActionElements';
 
 interface IGetPAckagingForm {
   value: string;
@@ -75,7 +77,7 @@ export const PackageInjectionFormElement: FormElement = {
     questionPropertyList: questionPropertyList
   }),
   designerBtnElement: {
-    label: 'فرم ها',
+    label: 'افزودن فرم',
     icon: TickIcon,
   },
   designerComponent: DesignerComponent,
@@ -105,6 +107,11 @@ type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 function PropertiesComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
   const element = elementInstance as CustomInstance;
   const elements = useElements();
+    const setElements = useActionElements();
+
+    const { updateElement, setQuestionGroups, addElement } = useActionDesigner();
+  const {refresh} = useRouter()
+  const {data, refetch} = useGetForm(element.formId);
   const queryClient = useQueryClient()
     const setOpenDialog = useActionOpenDialog();
   const { questionGroups } = useDesigner(); 
@@ -123,10 +130,11 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   const {
     reset,
     handleSubmit,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting },
   } = methods;
 
   async function onSubmit(values: propertiesFormSchemaType) {
+    const lastIndexOfGroup = elements.findLastIndex((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
     const group = elements.filter((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
 
     let findSelectedGroupPreviousGroup = questionGroups.findIndex((el: any) => el === selectedElement?.fieldElement?.questionGroupId) - 1;
@@ -135,6 +143,9 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       findSelectedGroupPreviousGroup = 0;
     }
 
+    const firstIndexAfterThePreviousSelectedGroup = elements.findLastIndex((el: any) => el.questionGroupId === questionGroups[findSelectedGroupPreviousGroup]) + 1;
+
+
     const body : IPostPackageFormInjectionBody = {
       targetFormId : Number(element.formId),
       selectedFormId : Number(values.selectedFormId),
@@ -142,9 +153,25 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
     }; 
 
       try {
-        const data = await createPackagingFormInjection(body);
-        queryClient.invalidateQueries({ queryKey: ["form-builder", element.formId]})
-             setOpenDialog(false);
+        await createPackagingFormInjection(body);
+        await queryClient.invalidateQueries({ queryKey: ["form-builder", element.formId]})
+        const newComeingData = await refetch()
+
+        const questionGroupIds =
+        newComeingData.data?.questionGroups?.map((g: any) => g.questionGroupId) || [];
+        setQuestionGroups(questionGroupIds);
+        
+        const allQuestions =
+        newComeingData.data?.questionGroups?.flatMap((g: any) => g.questions) || [];
+        
+        const cleanedQuestions = allQuestions.map((q: FormElementInstance) => {
+          const { questionPropertyList, optionList, spectralPlaceList, ...rest } = q;
+          return rest;
+        });
+        
+        setElements(cleanedQuestions);
+              
+        setOpenDialog(false);
         reset();
       } catch (error: any) {
         toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');

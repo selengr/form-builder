@@ -447,7 +447,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         const newData = {
           ...data,
         };
-
+debugger
         const positionToUse = lastIndexOfGroup === -1 ? firstIndexAfterThePreviousSelectedGroup : lastIndexOfGroup + 1;
         addElement(selectedElement?.position?.realPosition ?? positionToUse, newData);
 

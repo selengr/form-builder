@@ -3,20 +3,20 @@
 import { useQuery } from '@tanstack/react-query';
 import { getPackagingFormsComboAction } from '../../../../actions/packaging/getFormsCombo';
 
-export const SURVEY_PURPOSE_QUERY_KEY = ['survey-purpose'] as const;
+export const FORM_COMBO_QUERY_KEY = ['form-for-custom-combo'] as const;
 
 export function useGetPackagingFormsCombo() {
   const { data, isFetching, isLoading, isError, error } = useQuery({
-    queryKey: SURVEY_PURPOSE_QUERY_KEY,
+    queryKey: FORM_COMBO_QUERY_KEY,
     queryFn: () => getPackagingFormsComboAction(),
     staleTime: 5 * 60 * 1000,
   });
 
   return {
-    isFetchingSurvey: isFetching,
-    isLoadingSurvey: isLoading,
-    isErrorSurvey: isError,
-    errorSurvey: error,
-    Survey: data?.dataList,
+    isFetchingForms: isFetching,
+    isLoadingForms: isLoading,
+    isErrorForms: isError,
+    errorForms: error,
+    FormsList: data?.dataList,
   };
 }

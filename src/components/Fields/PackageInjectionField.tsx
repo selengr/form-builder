@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { toast } from 'sonner';
-import { memo, useMemo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { ElementsType, FormElement, FormElementInstance } from '@/types/FormElements';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -39,11 +39,7 @@ const questionPropertyList: IQPLPackagingForm = [
 ];
 
 const propertiesSchema = z.object({
-  selectedFormId: z
-    .string()
-    .trim()
-    .transform((value) => value.replace(/\s+/g, ' '))
-    .pipe(z.string().min(1, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' }).max(3999, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' })),
+  selectedFormId: z.string().min(1, { message: 'لطفا یک فرم را انتخاب کنید' }),
 });
 
 const DesignerComponent = memo(function DesignerComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
@@ -113,14 +109,17 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
   const selectedElement = useSelectedElement();
 
-
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
-    mode: 'onSubmit'
+    mode: 'onSubmit',
+    defaultValues : {
+      selectedFormId : ''
+    }
   });
 
   const {
     reset,
+    watch,
     handleSubmit,
     formState: { isSubmitting, errors },
   } = methods;
@@ -141,10 +140,12 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
     }; 
 
       try {
-        await createPackagingFormInjection(body);
+        const data = await createPackagingFormInjection(body);
+        console.log('body', body)
         reset();
       } catch (error: any) {
         toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
+        console.log('body', body)
       }
   }
 
@@ -183,7 +184,8 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
                   bgcolor: '#fff',
                   width: "100%"
                 },
-              }}>
+              }}
+              >
               {isFetchingForms && <MenuItem value=''><PreviewLoading /></MenuItem>}
               {FormsList?.map((item: IGetPAckagingForm) => (
                 <MenuItem key={item.value} value={item.value}>

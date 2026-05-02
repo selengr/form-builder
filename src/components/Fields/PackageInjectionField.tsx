@@ -12,6 +12,7 @@ import { RHFSelect } from '../../components/hook-form';
 import useDesigner from '@/hooks/useDesigner';
 import useElements from '@/hooks/useElements';
 import { useSearchParams } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import useActionDesigner from '@/hooks/useActionDesigner';
 import useSelectedElement from '@/hooks/useSelectedElement';
 import useActionOpenDialog from '@/hooks/useActionOpenDialog';
@@ -104,6 +105,8 @@ type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 function PropertiesComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
   const element = elementInstance as CustomInstance;
   const elements = useElements();
+  const queryClient = useQueryClient()
+    const setOpenDialog = useActionOpenDialog();
   const { questionGroups } = useDesigner(); 
   const { FormsList, isFetchingForms } = useGetPackagingFormsCombo();
 
@@ -119,7 +122,6 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
   const {
     reset,
-    watch,
     handleSubmit,
     formState: { isSubmitting, errors },
   } = methods;
@@ -141,11 +143,11 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
       try {
         const data = await createPackagingFormInjection(body);
-        console.log('body', body)
+        queryClient.invalidateQueries({ queryKey: ["form-builder", element.formId]})
+             setOpenDialog(false);
         reset();
       } catch (error: any) {
         toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
-        console.log('body', body)
       }
   }
 

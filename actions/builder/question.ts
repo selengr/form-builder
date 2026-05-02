@@ -35,7 +35,7 @@ export async function updateQuestionAction(questionId: string, payload: any) {
   }
 }
 
-export async function createPackagingFormInjection(payload: any) {
+export async function createPackagingFormInjection(payload: IPostPackageFormInjectionBody) {
   try {
     const res: any = await serverApi.put(`/admin/packaging/form-injection`, payload);
     return { data: res.data };

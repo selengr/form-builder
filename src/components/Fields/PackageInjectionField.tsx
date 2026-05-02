@@ -21,7 +21,7 @@ import { IFormElementConstructor, IQPLPackagingForm } from '@/types/bulider';
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
 // actions
 import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
-import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/question';
+import { createPackagingFormInjection, IPostPackageFormInjectionBody, updateQuestionAction } from '../../../actions/builder/question';
 import { useGetPackagingFormsCombo } from '@/templates/packaging/hooks/useGetPackagingFormsCombo';
 
 interface IGetPAckagingForm {
@@ -142,32 +142,15 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       findSelectedGroupPreviousGroup = 0;
     }
 
-    // The application of this is when there is a empty group
-    // so there is no corresponding question related to it
-    // exist in elements array so we find the last index of its
-    // prevoius group and add one item after that
-    const firstIndexAfterThePreviousSelectedGroup = elements.findLastIndex((el: any) => el.questionGroupId === questionGroups[findSelectedGroupPreviousGroup]) + 1;
 
-    const body = {
-      targetFormId : element.formId,
+    const body : IPostPackageFormInjectionBody = {
+      targetFormId : Number(element.formId),
+      selectedFormId : Number(values.selectedFormId),
       position: selectedElement?.position?.apiPosition ?? group.length,
-      selectedFormId : values.selectedFormId
     }; 
 
       try {
-        const { data }: any = await createQuestionAction(body);
-        delete data.questionPropertyList;
-        delete data.optionList;
-        delete data.spectralPlaceList;
-        const newData = {
-          ...data,
-        };
-
-        const positionToUse = lastIndexOfGroup === -1 ? firstIndexAfterThePreviousSelectedGroup : lastIndexOfGroup + 1;
-        addElement(selectedElement?.position?.realPosition ?? positionToUse, newData);
-
-        setOpenDialog(false);
-        setSelectedElement(null);
+        await createPackagingFormInjection(body);
         reset();
       } catch (error: any) {
         toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');

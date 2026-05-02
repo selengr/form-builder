@@ -107,17 +107,14 @@ type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 function PropertiesComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
   const element = elementInstance as CustomInstance;
   const elements = useElements();
-    const setElements = useActionElements();
-
-    const { updateElement, setQuestionGroups, addElement } = useActionDesigner();
-  const {refresh} = useRouter()
-  const {data, refetch} = useGetForm(element.formId);
   const queryClient = useQueryClient()
-    const setOpenDialog = useActionOpenDialog();
+  const setElements = useActionElements();
   const { questionGroups } = useDesigner(); 
-  const { FormsList, isFetchingForms } = useGetPackagingFormsCombo();
-
+  const setOpenDialog = useActionOpenDialog();
   const selectedElement = useSelectedElement();
+  const {refetch} = useGetForm(element.formId);
+  const { setQuestionGroups } = useActionDesigner();
+  const { FormsList, isFetchingForms } = useGetPackagingFormsCombo();
 
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
@@ -134,17 +131,12 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   } = methods;
 
   async function onSubmit(values: propertiesFormSchemaType) {
-    const lastIndexOfGroup = elements.findLastIndex((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
     const group = elements.filter((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
-
     let findSelectedGroupPreviousGroup = questionGroups.findIndex((el: any) => el === selectedElement?.fieldElement?.questionGroupId) - 1;
 
     if (findSelectedGroupPreviousGroup === -1) {
       findSelectedGroupPreviousGroup = 0;
     }
-
-    const firstIndexAfterThePreviousSelectedGroup = elements.findLastIndex((el: any) => el.questionGroupId === questionGroups[findSelectedGroupPreviousGroup]) + 1;
-
 
     const body : IPostPackageFormInjectionBody = {
       targetFormId : Number(element.formId),

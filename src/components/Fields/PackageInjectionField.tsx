@@ -23,8 +23,8 @@ import shuffleArray from '@/lib/shuffle';
 import { useSearchParams } from 'next/navigation';
 // actions
 import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/question';
-// test
-const questionType: ElementsType = 'TEXT_FIELD';
+
+const questionType: ElementsType = 'PACKAGE_INJECTION_FIELD';
 
 const questionPropertyList: IQPLMultipleChoice = [
   {
@@ -271,18 +271,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         }}>
  
 
-        <Stack>
-          <Box display='flex' justifyContent='space-between' alignItems='center' marginTop={3} marginBottom={0.5}>
-            <Typography sx={{ width: '75%' }} fontWeight='700'>
-              گزینه‌ها:
-            </Typography>
-            <Typography sx={{ width: '12.5%' }} fontWeight='700'>
-              ارزش:
-            </Typography>
-            <Typography sx={{ width: '12.5%' }}></Typography>
-          </Box>
-          <RHFTextFieldOptionList name='optionList' errorMessage={""} />
-        </Stack>
+     
 
         <FieldDialogActionBottomButtons status={isSubmitting} />
       </Box>

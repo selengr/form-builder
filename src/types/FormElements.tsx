@@ -21,6 +21,7 @@ export type FormElement = {
   construct: ({ questionId, questionGroupId, formId, title, position }: IFormElementConstructor) => FormElementInstance;
 
   designerBtnElement: {
+    
     label: string;
     icon?: any;
   };

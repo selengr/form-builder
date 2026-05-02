@@ -1,31 +1,32 @@
 'use client';
 
 import { z } from 'zod';
+import { memo } from 'react';
 import { toast } from 'sonner';
-import { memo, useEffect, useState } from 'react';
-import { ElementsType, FormElement, FormElementInstance } from '@/types/FormElements';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { Box, MenuItem, Typography } from '@mui/material';
-import FormProvider from '@/components/hook-form/FormProvider';
+// components
 import { RHFSelect } from '../../components/hook-form';
+import FormProvider from '@/components/hook-form/FormProvider';
+import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
+// hooks
 import useDesigner from '@/hooks/useDesigner';
 import useElements from '@/hooks/useElements';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useQueryClient } from '@tanstack/react-query';
 import useActionDesigner from '@/hooks/useActionDesigner';
+import useActionElements from '@/hooks/useActionElements';
 import useSelectedElement from '@/hooks/useSelectedElement';
 import useActionOpenDialog from '@/hooks/useActionOpenDialog';
+import { useGetPackagingFormsCombo } from '@/templates/packaging/hooks/useGetPackagingFormsCombo';
+// images
 import TickIcon from '@/../public/images/home-page/tick-square.svg';
-import useActionSelectedElement from '@/hooks/useActionSelectedElement';
+import { useGetForm } from '@/app/(builder)/builder/_hook/useGetForm';
 import { IFormElementConstructor, IQPLPackagingForm } from '@/types/bulider';
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
+import { ElementsType, FormElement, FormElementInstance } from '@/types/FormElements';
 // actions
-import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
-import { createPackagingFormInjection, IPostPackageFormInjectionBody, updateQuestionAction } from '../../../actions/builder/question';
-import { useGetPackagingFormsCombo } from '@/templates/packaging/hooks/useGetPackagingFormsCombo';
-import { useGetForm } from '@/app/(builder)/builder/_hook/useGetForm';
-import useActionElements from '@/hooks/useActionElements';
+import { createPackagingFormInjection, IPostPackageFormInjectionBody } from '../../../actions/builder/question';
 
 interface IGetPAckagingForm {
   value: string;
@@ -45,26 +46,10 @@ const propertiesSchema = z.object({
   selectedFormId: z.string().min(1, { message: 'لطفا یک فرم را انتخاب کنید' }),
 });
 
-const DesignerComponent = memo(function DesignerComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
-  const element = elementInstance as CustomInstance;
-  const labelText = element.title;
-  const designerBtnLabel = PackageInjectionFormElement.designerBtnElement.label;
-
-  return (
-    <div
-      className='flex items-start flex-col overflow-hidden absolute'
-      dir='rtl'
-      style={{
-        width: 'calc(100% - 96px)',
-      }}>
-      <p dir='rtl' className='text-base overflow-hidden text-ellipsis w-full' style={{ textWrap: 'nowrap', fontWeight: '700' }}>
-        {labelText}
-      </p>
-      <p className='text-xs text-[#424242]'>#{designerBtnLabel}</p>
-    </div>
-  );
+const DesignerComponent = memo(function DesignerComponent() {
+  return <></>
 });
-
+// ------------------------------------------------------------------------
 export const PackageInjectionFormElement: FormElement = {
   questionType,
   construct: ({ questionId, questionGroupId, formId, title, position }: IFormElementConstructor) => ({
@@ -103,7 +88,7 @@ function FormComponent() {
 }
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
-
+// ------------------------------------------------------------------------
 function PropertiesComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
   const element = elementInstance as CustomInstance;
   const elements = useElements();

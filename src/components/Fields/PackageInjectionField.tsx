@@ -20,11 +20,11 @@ import useSelectedElement from '@/hooks/useSelectedElement';
 import useActionOpenDialog from '@/hooks/useActionOpenDialog';
 import { useGetPackagingFormsCombo } from '@/templates/packaging/hooks/useGetPackagingFormsCombo';
 // images
-import TickIcon from '@/../public/images/home-page/tick-square.svg';
+import Packaging from '@/../public/images/home-page/packaging.svg';
 import { useGetForm } from '@/app/(builder)/builder/_hook/useGetForm';
 import { IFormElementConstructor, IQPLPackagingForm } from '@/types/bulider';
-import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
 import { ElementsType, FormElement, FormElementInstance } from '@/types/FormElements';
+import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
 // actions
 import { createPackagingFormInjection, IPostPackageFormInjectionBody } from '../../../actions/builder/question';
 
@@ -63,7 +63,7 @@ export const PackageInjectionFormElement: FormElement = {
   }),
   designerBtnElement: {
     label: 'افزودن فرم',
-    icon: TickIcon,
+    icon: Packaging,
   },
   designerComponent: DesignerComponent,
   formComponent: FormComponent,

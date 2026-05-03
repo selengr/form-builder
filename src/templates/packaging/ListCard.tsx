@@ -8,9 +8,7 @@ import { useRouter } from 'next/navigation';
 import { InfoRow } from '@/components/common/infoRow';
 import { SwitchButton } from '@/components/Switch/SwitchButton';
 // images
-import CopyIcon from '@/../public/images/home-page/copy.svg';
 import EditIcon from '@/../public/images/home-page/edit-2.svg';
-import TrashIcon from '@/../public/images/home-page/trash.svg';
 
 export interface IPackagingItem {
   formCategorysModel: null;
@@ -20,21 +18,13 @@ export interface IPackagingItem {
   packagingStausEnum: "CREATE" | string; 
   targetLabelEnum: "DEFAULT"| string; 
 }
-
 interface ListCardProps {
   data: IPackagingItem;
-  buttonText: string;
-  buttonLink?: string | ((id: string) => string);
-  buttonDisabled?: boolean;
   showStatus?: boolean;
 }
-
 // ---------------------------------------------------------------------
 const ListCard: React.FC<ListCardProps> = ({
   data,
-  buttonText,
-  buttonLink,
-  buttonDisabled = false,
   showStatus = true,
 }) => {
   const router = useRouter();
@@ -64,16 +54,8 @@ const ListCard: React.FC<ListCardProps> = ({
         </button>
 
         <div className='flex gap-2 flex-wrap items-center justify-end'>
-          <IconButton onClick={() => console.log("object")} color='error'>
-            <Image src={TrashIcon} alt='delete' width={24} height={24} />
-          </IconButton>
-
-          <IconButton>
-            <Image src={CopyIcon} alt='copy' width={24} height={24} />
-          </IconButton>
-
           {data.packagingStausEnum === "CREATE" &&
-            <Link href={`/builder/${data.id}?admin=packaging`}>
+            <Link href={`/builder/${data.formId}?admin=packaging`}>
               <IconButton color='primary'>
                 <Image src={EditIcon} alt='edit' width={24} height={24} />
               </IconButton>

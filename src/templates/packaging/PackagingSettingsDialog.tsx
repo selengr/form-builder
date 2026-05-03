@@ -75,6 +75,7 @@ export default function PackagingSettingsDialog({packageId} :{packageId:number})
   async function loadData() {
     try {
       const data = await getPackageSettingAction(packageId);
+      debugger
       reset({
         name: data.name || "",
         ratio: data.ratio || 1

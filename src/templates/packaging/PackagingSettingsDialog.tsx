@@ -127,122 +127,101 @@ export default function PackagingSettingsDialog() {
           </Box>
         
 
-
-
-
-  <Box sx={{ position: "relative" }}>
-      <FormProvider methods={methods} onSubmit={() => preSubmit(event)}>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            width: '100%',
-            bgcolor: '#F7F7FF',
-            borderRadius: '8px',
-            padding: 2,
-            marginY: 2,
-            gap: 1,
-            direction: 'ltr',
-          }}>
-          <Box display='flex' gap={1} width='100%'>
-            <Box sx={inputFieldContainerSx}>
-              <Typography variant='subtitle2' fontWeight='700'>
-                نام بسته:
-              </Typography>
-              <RHFTextField sx={textFieldCommonSx} name='name' fullWidth />
-            </Box>
-            <Box sx={inputFieldContainerSx}>
-              <Typography variant='subtitle2' fontWeight='700'>
-                  ضریب قیمت:
-              </Typography>
-              <RHFTextField sx={textFieldCommonSx} name='family' fullWidth />
-            </Box>
-          </Box>
-
-          
-          </Box>
-          </Box>
-        
-   
-
-        <Box sx={{
-          position: "sticky",
-          bottom: '0px',
-          background: "#FFF",
-          paddingY: "10px"
-        }}
-          pr={1} pl={2}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              gap: '16px',
-              paddingX: '16px',
-              width: '100%',
-              marginTop: '24px',
-              marginBottom: '16px',
-            }}>
-            <Button
-              type='submit'
-              fullWidth
-              variant='contained'
-              disabled={isSubmitting || !isValid && removedMember.length === 0}
+  <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            <Box
               sx={{
-                bgcolor: '#1758BA',
-                height: '54px',
-                color: 'white',
-                fontSize: {
-                  xs: '13px',
-                  sm: '16px',
-                },
-                fontWeight: '700',
-                borderRadius: '10px',
-                boxShadow: 'none',
-                '&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active': {
-                  bgcolor: '#1758BA',
-                  boxShadow: 'none',
-                },
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
+                bgcolor: '#F7F7FF',
+                borderRadius: '8px',
+                padding: 2,
+                marginY: 2,
+                gap: 1,
+                direction: 'ltr',
               }}>
-              {buttonLabel()}
-            </Button>
-            <Button
-              disabled={isSubmitting}
-              type='button'
-              fullWidth
+              <Box display='flex' gap={1} width='100%'>
+                <Box sx={inputFieldContainerSx}>
+                  <Typography variant='subtitle2' fontWeight='700'>
+                    نام بسته:
+                  </Typography>
+                  <RHFTextField sx={textFieldCommonSx} name='name' fullWidth />
+                </Box>
+
+                <Box sx={inputFieldContainerSx}>
+                  <Typography variant='subtitle2' fontWeight='700'>
+                    ضریب قیمت:
+                  </Typography>
+                  <RHFTextField
+                    sx={textFieldCommonSx}
+                    name='ratio'
+                    fullWidth
+                    type='number'
+                    inputProps={{ step: '0.1', min: '1' }}
+                  />
+                </Box>
+              </Box>
+            </Box>
+
+            <Box
               sx={{
-                height: '54px',
-                fontWeight: '700',
-                borderRadius: '10px',
-                fontSize: '16px',
-                color: '#1758BA',
-                borderColor: '#1758BA',
-                bgcolor: 'white',
-                '&.MuiButtonBase-root:hover': {
-                  bgcolor: 'transparent',
-                  boxShadow: 'none',
-                  color: '#1758BA',
-                },
-                '&.Mui-disabled': {
-                  borderColor: '#d9d9d9',
-                  color: '#b0b0b0',
-                },
-              }}
-              variant='outlined'
-              onClick={() => {
-                handleOpen();
-                reset();
+                position: 'sticky',
+                bottom: 0,
+                background: '#FFF',
+                py: '10px',
+                px: 2,
+                my : 3
               }}>
-              بستن
-            </Button>
-          </Box>
-        </Box>
-     
-      </FormProvider>
-    </Box>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  gap: 2,
+                }}>
+                <Button
+                  type='submit'
+                  fullWidth
+                  variant='contained'
+                  disabled={isSubmitting}
+                  sx={{
+                    bgcolor: '#1758BA',
+                    height: '54px',
+                    color: 'white',
+                    fontSize: { xs: '13px', sm: '16px' },
+                    fontWeight: '700',
+                    borderRadius: '10px',
+                    boxShadow: 'none',
+                    '&:hover': { bgcolor: '#1758BA' },
+                  }}>
+                  ثبت
+                </Button>
+                <Button
+                  disabled={isSubmitting}
+                  fullWidth
+                  type='button'
+                  variant='outlined'
+                  onClick={() => {
+                    handleOpen();
+                    reset();
+                  }}
+                  sx={{
+                    height: '54px',
+                    fontWeight: '700',
+                    borderRadius: '10px',
+                    fontSize: '16px',
+                    color: '#1758BA',
+                    borderColor: '#1758BA',
+                    bgcolor: 'white',
+                    '&:hover': { bgcolor: 'transparent' },
+                  }}>
+                  بستن
+                </Button>
 
-
+                
+              </Box>
+            </Box>
+          </FormProvider>
 
 
         </DialogContent>

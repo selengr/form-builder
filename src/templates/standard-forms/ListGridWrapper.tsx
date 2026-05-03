@@ -8,7 +8,6 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import ListCard from './ListCard';
 import ListGrid from './ListGrid';
 import PackagingFilter from './PackagingFilter';
-import CreatePackagingModal from './CreatePackagingModal';
 // images
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 interface IFormTypeState {
@@ -99,10 +98,7 @@ export default function ListGridWrapper() {
         refreshGrid={refreshGrid}
         searchQueryFilter={formType}
       />
-      <CreatePackagingModal
-         open={openMyCreateModal}
-         onClose={handleCloseDialog}
-       />
+
     </>
   );
 }

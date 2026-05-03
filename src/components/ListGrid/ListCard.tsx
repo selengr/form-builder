@@ -19,14 +19,14 @@ import EditIcon from '@/../public/images/home-page/edit-2.svg';
 import CopyIcon from '@/../public/images/home-page/copy.svg';
 import TrashIcon from '@/../public/images/home-page/trash.svg';
 // constants
-import { formStatusPersian, formTypePersian } from '@/constants/formDictionaries';
+import { formStatusPersian, formTypePersian, TFormType } from '@/constants/formDictionaries';
 
 interface ListCardProps {
   data: {
     id: string;
     name: string;
-    type: string;
     status: string;
+    type:  TFormType;
     accessType?: string;
     participants: number;
     accessibility: string[];
@@ -149,7 +149,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
               <Image src={CopyIcon} alt='copy' width={24} height={24} />
             </IconButton>
 
-            {data.status === 'CREATE' && (
+            {data.status === 'CREATE' || data.type !== "PACKAGING" && (
               <Link href={`/builder/${data.id}`}>
                 <IconButton disabled={loading} color='primary'>
                   <Image src={EditIcon} alt='edit' width={24} height={24} />

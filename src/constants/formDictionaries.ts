@@ -12,3 +12,10 @@ export const formStatusPersian: Record<string, string> = {
   UN_PUBLISH: 'عدم انتشار',
   READY_TO_PUBLISH: 'آماده برای انتشار',
 };
+
+export type TFormType =
+  | 'TEST'
+  | 'QUESTION'
+  | 'SURVEY'
+  | 'COMPETITION'
+  | 'PACKAGING';

@@ -48,12 +48,13 @@ const inputFieldContainerSx = {
 };
 
 // ------------------- Component -------------------
-export default function PackagingSettingsDialog({packageId} :{packageId:number}) {
+export default function PackagingSettingsDialog({ packageId }: { packageId: number }) {
+  const [loading, setLoading] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  
-    const handleOpen = () => {
-      setOpenDialog((prev) => !prev);
-    }
+
+  const handleOpen = () => {
+    setOpenDialog((prev) => !prev);
+  }
 
   const methods = useForm<packageSettingSchemaType>({
     resolver: zodResolver(propertiesSchema),
@@ -64,43 +65,46 @@ export default function PackagingSettingsDialog({packageId} :{packageId:number})
     },
   });
 
-   const {
+  const {
     handleSubmit,
     reset,
     formState: { isSubmitting, isValid },
   } = methods;
 
   useEffect(() => {
-  if (!openDialog) return;
+    if (!openDialog) return;
 
-  async function loadData() {
-    try {
-      const data = await getPackageSettingAction(packageId);
-      reset({
-        name: data.name || "",
-        ratio: data.ratio || 1
-      });
-    } catch (error:any) {
-       toast.error(error?.message);
+    async function loadData() {
+      setLoading(true);
+      try {
+        const data = await getPackageSettingAction(packageId);
+        reset({
+          name: data.name || "",
+          ratio: data.ratio || 1
+        });
+      } catch (error: any) {
+        toast.error(error?.message);
+      } finally {
+        setLoading(false);
+      }
     }
-  }
 
-  loadData();
-}, [openDialog, reset]);
+    loadData();
+  }, [openDialog, reset]);
 
 
-const onSubmit = async (formData: packageSettingSchemaType) => {
-  try {
-     await putPackageSettingAction(packageId, {
-      name: formData.name,
-      ratio: formData.ratio,
-    });
-    handleOpen(); 
-    toast.success('عملیات با موفقیت انجام شد');
-    } catch (error:any) {
-     toast.error(error?.message);
-  }
-};
+  const onSubmit = async (formData: packageSettingSchemaType) => {
+    try {
+      await putPackageSettingAction(packageId, {
+        name: formData.name,
+        ratio: formData.ratio,
+      });
+      handleOpen();
+      toast.success('عملیات با موفقیت انجام شد');
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
+  };
 
   return (
     <>
@@ -134,7 +138,7 @@ const onSubmit = async (formData: packageSettingSchemaType) => {
             backgroundColor: 'hsl(0deg 0% 100% / 50%)',
           },
         }}>
-        <Box className='flex items-center justify-start' sx={{ p: 2, pb : 0 }}>
+        <Box className='flex items-center justify-start' sx={{ p: 2, pb: 0 }}>
           <IconButton onClick={handleOpen} aria-label='بستن'>
             <CgClose color='#404040' size='1.5rem' />
           </IconButton>
@@ -146,18 +150,18 @@ const onSubmit = async (formData: packageSettingSchemaType) => {
             scrollbarWidth: 'thin',
             paddingX: 1,
             paddingTop: 0,
-               paddingBottom: 0,
+            paddingBottom: 0,
             display: 'flex',
             flexDirection: 'column',
           }}>
           <Box className='flex justify-center items-baseline' sx={{ mb: 2 }}>
             <Typography variant='h6' component='p' fontWeight='bold' textAlign='center'>
-                 تنظیمات بسته
+              تنظیمات بسته
             </Typography>
           </Box>
-        
 
-  <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+
+          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Box
               sx={{
                 display: 'flex',
@@ -166,6 +170,7 @@ const onSubmit = async (formData: packageSettingSchemaType) => {
                 bgcolor: '#F7F7FF',
                 borderRadius: '8px',
                 padding: 2,
+                paddingBottom: 4,
                 marginY: 2,
                 gap: 1,
                 direction: 'ltr',
@@ -175,7 +180,7 @@ const onSubmit = async (formData: packageSettingSchemaType) => {
                   <Typography variant='subtitle2' fontWeight='700'>
                     نام بسته:
                   </Typography>
-                  <RHFTextField sx={textFieldCommonSx} name='name' fullWidth />
+                  <RHFTextField disabled={loading} sx={textFieldCommonSx} name='name' fullWidth />
                 </Box>
 
                 <Box sx={inputFieldContainerSx}>
@@ -184,6 +189,7 @@ const onSubmit = async (formData: packageSettingSchemaType) => {
                   </Typography>
                   <RHFTextField
                     sx={textFieldCommonSx}
+                    disabled={loading}
                     name='ratio'
                     fullWidth
                     type='number'
@@ -191,6 +197,11 @@ const onSubmit = async (formData: packageSettingSchemaType) => {
                   />
                 </Box>
               </Box>
+              {loading && (
+                <Typography variant="caption" color="text.secondary" sx={{ textAlign: 'center' }}>
+                  در حال بارگذاری اطلاعات...
+                </Typography>
+              )}
             </Box>
 
             <Box
@@ -200,7 +211,7 @@ const onSubmit = async (formData: packageSettingSchemaType) => {
                 background: '#FFF',
                 py: '10px',
                 px: 2,
-                my : 3
+                my: 3
               }}>
               <Box
                 sx={{
@@ -213,7 +224,7 @@ const onSubmit = async (formData: packageSettingSchemaType) => {
                   type='submit'
                   fullWidth
                   variant='contained'
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || loading}
                   sx={{
                     bgcolor: '#1758BA',
                     height: '54px',
@@ -224,10 +235,10 @@ const onSubmit = async (formData: packageSettingSchemaType) => {
                     boxShadow: 'none',
                     '&:hover': { bgcolor: '#1758BA' },
                   }}>
-                  ثبت
+                  {loading ? "در حال ثبت..." : "ثبت"}
                 </Button>
                 <Button
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || loading}
                   fullWidth
                   type='button'
                   variant='outlined'
@@ -248,7 +259,7 @@ const onSubmit = async (formData: packageSettingSchemaType) => {
                   بستن
                 </Button>
 
-                
+
               </Box>
             </Box>
           </FormProvider>

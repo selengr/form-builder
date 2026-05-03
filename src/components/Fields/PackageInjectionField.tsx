@@ -94,18 +94,18 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   const elements = useElements();
   const queryClient = useQueryClient()
   const setElements = useActionElements();
-  const { questionGroups } = useDesigner(); 
+  const { questionGroups } = useDesigner();
   const setOpenDialog = useActionOpenDialog();
   const selectedElement = useSelectedElement();
-  const {refetch} = useGetForm(element.formId);
+  const { refetch } = useGetForm(element.formId);
   const { setQuestionGroups } = useActionDesigner();
   const { FormsList, isFetchingForms } = useGetPackagingFormsCombo();
 
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     mode: 'onSubmit',
-    defaultValues : {
-      selectedFormId : ''
+    defaultValues: {
+      selectedFormId: ''
     }
   });
 
@@ -123,36 +123,36 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       findSelectedGroupPreviousGroup = 0;
     }
 
-    const body : IPostPackageFormInjectionBody = {
-      targetFormId : Number(element.formId),
-      selectedFormId : Number(values.selectedFormId),
+    const body: IPostPackageFormInjectionBody = {
+      targetFormId: Number(element.formId),
+      selectedFormId: Number(values.selectedFormId),
       position: selectedElement?.position?.apiPosition ?? group.length,
-    }; 
+    };
 
-      try {
-        await createPackagingFormInjection(body);
-        await queryClient.invalidateQueries({ queryKey: ["form-builder", element.formId]})
-        const newComeingData = await refetch()
+    try {
+      await createPackagingFormInjection(body);
+      await queryClient.invalidateQueries({ queryKey: ["form-builder", element.formId] })
+      const newComeingData = await refetch()
 
-        const questionGroupIds =
+      const questionGroupIds =
         newComeingData.data?.questionGroups?.map((g: any) => g.questionGroupId) || [];
-        setQuestionGroups(questionGroupIds);
-        
-        const allQuestions =
+      setQuestionGroups(questionGroupIds);
+
+      const allQuestions =
         newComeingData.data?.questionGroups?.flatMap((g: any) => g.questions) || [];
-        
-        const cleanedQuestions = allQuestions.map((q: FormElementInstance) => {
-          const { questionPropertyList, optionList, spectralPlaceList, ...rest } = q;
-          return rest;
-        });
-        
-        setElements(cleanedQuestions);
-              
-        setOpenDialog(false);
-        reset();
-      } catch (error: any) {
-        toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
-      }
+
+      const cleanedQuestions = allQuestions.map((q: FormElementInstance) => {
+        const { questionPropertyList, optionList, spectralPlaceList, ...rest } = q;
+        return rest;
+      });
+
+      setElements(cleanedQuestions);
+
+      setOpenDialog(false);
+      reset();
+    } catch (error: any) {
+      toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
+    }
   }
 
   return (
@@ -191,12 +191,35 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
                   width: "100%"
                 },
               }}
-              >
+            >
               {isFetchingForms && <MenuItem value=''><PreviewLoading /></MenuItem>}
               {FormsList?.map((item: IGetPAckagingForm) => (
-                <MenuItem key={item.value} value={item.value}>
-                  {item.caption}
+                <MenuItem
+                  key={item.value}
+                  value={item.value}
+                  sx={{
+                    borderRadius: '15px',
+                    mx: 1,
+                    my: 0.5,
+                    px: 2,
+                    py: 1.1,
+                    transition: 'all 0.2s',
+                    '&:hover': {
+                      bgcolor: '#F3F6FD',
+                    },
+                    '&.Mui-selected': {
+                      bgcolor: '#E8F0FF',
+                      fontWeight: 600,
+                    },
+                  }}
+                >
+                  <Box display="flex" flexDirection="column">
+                    <Typography fontSize={14} fontWeight={500}>
+                      {item.caption}
+                    </Typography>
+                  </Box>
                 </MenuItem>
+
               ))}
             </RHFSelect>
           </Box>

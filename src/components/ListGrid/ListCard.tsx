@@ -176,6 +176,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
         action={
           <Button
             fullWidth
+            disabled={loading}
             variant='contained'
             onClick={handleDelete}
             sx={{

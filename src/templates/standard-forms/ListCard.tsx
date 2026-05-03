@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 import { InfoRow } from '@/components/common/infoRow';
 // actions
 import { clonePackageAction } from '../../../actions/standard-forms/clone';
-import { AxiosApi } from '@/services/axios/AxiosApi';
 
 export interface IPackagingItem {
   id: number;
@@ -19,7 +18,7 @@ interface ListCardProps {
 }
 // ---------------------------------------------------------------------
 const ListCard: React.FC<ListCardProps> = ({
-  data : {formId , name, id}
+  data : {name, id}
 }) => {
   const { push } = useRouter()
   const [loading, setLoading] = useState<boolean>(false);
@@ -27,18 +26,17 @@ const ListCard: React.FC<ListCardProps> = ({
   const handleClone = async () => {
     setLoading(true);
     try {
-      await clonePackageAction(formId);
+      await clonePackageAction(id);
 
-          toast.success('فرم با موفقیت کپی شد.', {
-          className: `max-w-[300px]`,
-          duration: 7000,
-          action: { 
-            label: 'برو به فرم های  من',
-            onClick: () => {
-              push(`/builder`);
-            },
-          },
-        });
+      toast.success('یک نسخه از این فرم با موفقیت به فرم‌های من اضافه شد', {
+        className: 'max-w-[300px]',
+        duration: 7000,
+        action: { 
+          label: 'مشاهده فرم‌های من',
+          onClick: () => push('/builder'),
+        },
+      });
+
     } catch (error: any) {
       toast.error(error?.message || 'خطا در انجام عملیات');
     } finally {

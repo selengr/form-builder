@@ -81,7 +81,7 @@ export default function PackagingSettingsDialog({packageId} :{packageId:number})
         ratio: data.ratio || 1
       });
     } catch (error:any) {
-       toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
+       toast.error(error?.message);
     }
   }
 
@@ -91,14 +91,14 @@ export default function PackagingSettingsDialog({packageId} :{packageId:number})
 
 const onSubmit = async (formData: packageSettingSchemaType) => {
   try {
-    await putPackageSettingAction(packageId, {
+     await putPackageSettingAction(packageId, {
       name: formData.name,
       ratio: formData.ratio,
     });
-
     handleOpen(); 
+    toast.success('عملیات با موفقیت انجام شد');
     } catch (error:any) {
-     toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
+     toast.error(error?.message);
   }
 };
 

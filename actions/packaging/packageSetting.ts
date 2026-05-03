@@ -12,7 +12,7 @@ export async function getPackageSettingAction(id: number) {
     const message =
       error?.response?.data?.message?.[0]?.title ||
       error?.response?.data?.message ||
-      'خطای نامشخص';
+      'انجام عملیات با خطا مواجه شد'
   
     throw new Error(message);
   }
@@ -26,12 +26,13 @@ export async function putPackageSettingAction(
   try {
     const url = `/admin/packaging/${id}`;
     const response = await serverApi.put(url, payload);
-    return response.data;
+  
+    return response?.data;
   } catch (error: any) {
     const message =
       error?.response?.data?.message?.[0]?.title ||
       error?.response?.data?.message ||
-      'خطای نامشخص';
+      'انجام عملیات با خطا مواجه شد'
   
     throw new Error(message);
   }

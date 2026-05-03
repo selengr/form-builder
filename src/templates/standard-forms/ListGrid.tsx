@@ -360,11 +360,11 @@ const ListGrid: React.FC<Props> = ({
                 sx={{
                   width: 1,
                   mx: 'auto',
-                  mt: 1,
+                  mt: 2.5,
                   mb: 5,
                   pb: 4,
                   flexDirection: 'column',
-                  gap: 2,
+                  gap: 1,
                   overflowY: 'auto',
                   height: {
                     xs: 'calc(100vh - 290px)',

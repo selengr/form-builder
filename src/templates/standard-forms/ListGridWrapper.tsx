@@ -79,8 +79,8 @@ export default function ListGridWrapper() {
     <>
       <ListGrid
         url={apiAddress}
-        title='بسته های ارزیابی'
-        textTotal={['تعداد کل بسته ها', 'عدد']}
+        title='فرم های پرکاربرد'
+        textTotal={['تعداد کل فرم ها', 'عدد']}
         searchBoxList={searchBoxList}
         filterBoxList={filterBoxList}
          filterComponent={
@@ -94,7 +94,7 @@ export default function ListGridWrapper() {
         CartComponent={(item: any) => <ListCard {...item} />}
         disableFilter={false}
         showCreateButton={false}
-        CreateButton={CreateButton}
+        CreateButton={false}
         refreshGrid={refreshGrid}
         searchQueryFilter={formType}
       />

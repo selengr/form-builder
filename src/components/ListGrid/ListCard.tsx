@@ -119,18 +119,21 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
       <div
         className={`
     border p-4 rounded-[20px] flex flex-col gap-4 w-full max-w-full relative
+    transition-all duration-200
+    hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]
     ${data.type === 'PACKAGING'
             ? 'border-[#9BB8F2] bg-[#f5f8ff] shadow-[0_0_12px_rgba(23,88,186,0.07)]'
-            : 'border-[#DDE1E6]'
+            : 'border-[#DDE1E6] hover:border-[#cfd6df]'
           }
   `}
       >
 
         {data.type === 'PACKAGING' && (
-          <div className="absolute top-2 left-2 bg-[#1758BA] text-white text-xs px-2 py-1 rounded-md shadow">
-            ضریب قیمت : {data.ratio ?? 11}
+          <div className="absolute top-2 left-2 bg-[#E8F0FF] text-[#1758BA] text-[12px] px-3 py-[4px] rounded-[8px] shadow-sm border border-[#bfd4ff] leading-none">
+            ضریب قیمت {data.ratio ?? 1}
           </div>
         )}
+
 
         {/* <div className='border p-4 rounded-[20px] border-[#DDE1E6] flex flex-col gap-4 w-full max-w-full relative'> */}
         <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-3'>

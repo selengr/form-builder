@@ -1,14 +1,15 @@
 'use client';
 import { z } from 'zod';
-import { CgClose } from 'react-icons/cg';
-import { useCallback, useEffect, useState } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { IoSettingsOutline } from 'react-icons/io5';
-import { Box, Button, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
-import FormProvider, { RHFTextField } from '@/components/hook-form';
-import { useForm } from 'react-hook-form';
-import { getPackageSettingAction } from '../../../actions/packaging/getPackageSetting';
 import { toast } from 'sonner';
+import { CgClose } from 'react-icons/cg';
+import { useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { IoSettingsOutline } from 'react-icons/io5';
+import { zodResolver } from '@hookform/resolvers/zod';
+import FormProvider, { RHFTextField } from '@/components/hook-form';
+import { Box, Button, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
+// action
+import { getPackageSettingAction, putPackageSettingAction } from '../../../actions/packaging/packageSetting';
 
 const nameSchema = z
   .string()
@@ -75,7 +76,6 @@ export default function PackagingSettingsDialog({packageId} :{packageId:number})
   async function loadData() {
     try {
       const data = await getPackageSettingAction(packageId);
-      debugger
       reset({
         name: data.name || "",
         ratio: data.ratio || 1
@@ -89,10 +89,18 @@ export default function PackagingSettingsDialog({packageId} :{packageId:number})
 }, [openDialog, reset]);
 
 
-  const onSubmit = (data: packageSettingSchemaType) => {
-    console.log('Form submitted:', data);
-    handleOpen();
-  };
+const onSubmit = async (formData: packageSettingSchemaType) => {
+  try {
+    await putPackageSettingAction(packageId, {
+      name: formData.name,
+      ratio: formData.ratio,
+    });
+
+    handleOpen(); 
+    } catch (error:any) {
+     toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
+  }
+};
 
   return (
     <>

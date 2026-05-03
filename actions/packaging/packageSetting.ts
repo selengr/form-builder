@@ -17,3 +17,22 @@ export async function getPackageSettingAction(id: number) {
     throw new Error(message);
   }
 }
+
+
+export async function putPackageSettingAction(
+  id: number,
+  payload: { name: string; ratio: number }
+) {
+  try {
+    const url = `/admin/packaging/${id}`;
+    const response = await serverApi.put(url, payload);
+    return response.data;
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      'خطای نامشخص';
+  
+    throw new Error(message);
+  }
+}

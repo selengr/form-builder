@@ -1,12 +1,14 @@
 'use client';
 import { z } from 'zod';
 import { CgClose } from 'react-icons/cg';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IoSettingsOutline } from 'react-icons/io5';
 import { Box, Button, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
 import FormProvider, { RHFTextField } from '@/components/hook-form';
 import { useForm } from 'react-hook-form';
+import { getPackageSettingAction } from '../../../actions/packaging/getPackageSetting';
+import { toast } from 'sonner';
 
 const nameSchema = z
   .string()
@@ -45,7 +47,7 @@ const inputFieldContainerSx = {
 };
 
 // ------------------- Component -------------------
-export default function PackagingSettingsDialog() {
+export default function PackagingSettingsDialog({packageId} :{packageId:number}) {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   
     const handleOpen = () => {
@@ -66,6 +68,25 @@ export default function PackagingSettingsDialog() {
     reset,
     formState: { isSubmitting, isValid },
   } = methods;
+
+  useEffect(() => {
+  if (!openDialog) return;
+
+  async function loadData() {
+    try {
+      const data = await getPackageSettingAction(packageId);
+      reset({
+        name: data.name || "",
+        ratio: data.ratio || 1
+      });
+    } catch (error:any) {
+       toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
+    }
+  }
+
+  loadData();
+}, [openDialog, reset]);
+
 
   const onSubmit = (data: packageSettingSchemaType) => {
     console.log('Form submitted:', data);

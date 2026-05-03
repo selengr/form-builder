@@ -57,7 +57,7 @@ const ListCard: React.FC<ListCardProps> = ({
         </button>
 
         <div className='flex gap-2 flex-wrap items-center justify-end'>
-        <PackagingSettingsDialog />
+        <PackagingSettingsDialog packageId={data.id}/>
           {data.packagingStausEnum === "CREATE" &&
             <Link href={`/builder/${data.formId}?admin=packaging`}>
               <IconButton color='primary'>

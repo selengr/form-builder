@@ -1,10 +1,33 @@
 'use client';
+import { z } from 'zod';
 import { CgClose } from 'react-icons/cg';
 import { useCallback, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { IoSettingsOutline } from 'react-icons/io5';
 import { Box, Button, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
 import FormProvider, { RHFTextField } from '@/components/hook-form';
+import { useForm } from 'react-hook-form';
 
+const nameSchema = z
+  .string()
+  .trim()
+  .transform((value) => value.replace(/\s+/g, ' '))
+  .pipe(z.string().min(2, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' }).max(50, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' }));
+
+const propertiesSchema = z.object({
+  name: nameSchema,
+  ratio: z
+    .preprocess(
+      (val) => (val === '' ? undefined : Number(val)),
+      z
+        .number({ invalid_type_error: 'عدد معتبر وارد کنید' })
+        .min(1, { message: 'ضریب باید حداقل ۱ باشد' })
+    ),
+});
+
+type packageSettingSchemaType = z.infer<typeof propertiesSchema>;
+
+// ------------------- Styles -------------------
 const textFieldCommonSx = {
   '& .MuiInputBase-root': {
     bgcolor: '#fff',
@@ -21,6 +44,7 @@ const inputFieldContainerSx = {
   paddingX: 0.5,
 };
 
+// ------------------- Component -------------------
 export default function PackagingSettingsDialog() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   
@@ -28,6 +52,25 @@ export default function PackagingSettingsDialog() {
       setOpenDialog((prev) => !prev);
     }
 
+  const methods = useForm<packageSettingSchemaType>({
+    resolver: zodResolver(propertiesSchema),
+    mode: 'onChange',
+    defaultValues: {
+      name: '',
+      ratio: 1,
+    },
+  });
+
+   const {
+    handleSubmit,
+    reset,
+    formState: { isSubmitting, isValid },
+  } = methods;
+
+  const onSubmit = (data: packageSettingSchemaType) => {
+    console.log('Form submitted:', data);
+    handleOpen();
+  };
 
   return (
     <>

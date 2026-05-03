@@ -34,7 +34,7 @@ export default function PackagingFilter({
 
   return (
     <div className='flex h-[calc(100vh-60px)] w-full flex-col items-center justify-between'>
-      
+
       {/* Header */}
       <div className='w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4'>
         <Image src={FilterIcon} width={30} height={30} alt='filter' />
@@ -43,7 +43,7 @@ export default function PackagingFilter({
 
       {/* Content */}
       <div className='flex flex-col gap-4 w-full overflow-y-auto h-full'>
-        
+
         {/* Report Filter */}
         <div className='w-full bg-[#F7F7FF] rounded-[20px] px-4 pt-4 pb-3'>
           <FormControl>
@@ -71,10 +71,30 @@ export default function PackagingFilter({
 
       {/* Footer */}
       <div className='flex gap-4 w-full mt-8'>
-        <Button fullWidth variant='contained' sx={{ height: 52 }} onClick={applyFilter}>
+        <Button fullWidth variant='contained'
+          sx={{
+            height: '52px',
+            bgcolor: '#1758BA',
+            boxShadow: 'none',
+            borderRadius: '8px',
+            color: 'white',
+            fontSize: '14px',
+            fontWeight: 700
+          }}
+          onClick={applyFilter}>
           اعمال فیلتر
         </Button>
-        <Button fullWidth variant='outlined' sx={{ height: 52 }} onClick={clearFilter}>
+        <Button fullWidth variant='outlined'
+          sx={{
+            height: '52px',
+            bgcolor: 'white',
+            border: '1px solid #1758BA',
+            boxShadow: 'none',
+            borderRadius: '8px',
+            color: '#1758BA',
+            fontSize: '14px'
+          }}
+          onClick={clearFilter}>
           حذف فیلتر
         </Button>
       </div>

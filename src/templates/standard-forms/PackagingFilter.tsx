@@ -10,32 +10,22 @@ import {
   RadioGroup
 } from '@mui/material';
 import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
-import { IGetTargetPlatform } from '../../../actions/survey/getTargetPlatformAction';
-
 interface Props {
   formType: any;
   setFormType: (fn: any) => void;
-  TargetPlatform: IGetTargetPlatform[];
-  isFetchingTargetPlatform: boolean;
   applyFilter: () => void;
   clearFilter: () => void;
 }
 
-export default function SurveyFilter({
+export default function PackagingFilter({
   formType,
+  clearFilter,
   setFormType,
-  TargetPlatform,
-  isFetchingTargetPlatform,
-  applyFilter,
-  clearFilter
+  applyFilter
 }: Props) {
 
   const handleIsCreatedSoloReportChange = (event: any) => {
     setFormType((prev: any) => ({ ...prev, isCreatedSoloReport: event.target.value }));
-  };
-
-  const handleTargetPlatFormChange = (event: any) => {
-    setFormType((prev: any) => ({ ...prev, surveyTargetPlatformEnum: event.target.value }));
   };
 
   const handleTypeChange = (event: any) => {
@@ -66,20 +56,6 @@ export default function SurveyFilter({
           </FormControl>
         </div>
 
-        {/* Target Filter */}
-        <div className='w-full bg-[#F7F7FF] rounded-[20px] px-4 pt-4 pb-3'>
-          <FormControl>
-            <FormLabel sx={{ fontSize: 15, fontWeight: 700 }}>بر اساس سرویس‌گیرنده</FormLabel>
-            <RadioGroup value={formType.surveyTargetPlatformEnum} onChange={handleTargetPlatFormChange}>
-              <FormControlLabel value='ALL' control={<Radio />} label='همه' />
-              {isFetchingTargetPlatform && <FormControlLabel value='ALL' control={<Radio />} label='loading...' />}
-              {TargetPlatform?.map((t) => (
-                <FormControlLabel key={t.value} value={t.value} control={<Radio />} label={t.caption} />
-              ))}
-            </RadioGroup>
-          </FormControl>
-        </div>
-
         {/* Time Filter */}
         <div className='w-full bg-[#F7F7FF] rounded-[20px] px-4 pt-4 pb-3'>
           <FormControl>
@@ -103,7 +79,7 @@ export default function SurveyFilter({
             borderRadius: '8px',
             color: 'white',
             fontSize: '14px',
-            fontWeight: 700,
+            fontWeight: 700
           }}
           onClick={applyFilter}>
           اعمال فیلتر
@@ -116,10 +92,9 @@ export default function SurveyFilter({
             boxShadow: 'none',
             borderRadius: '8px',
             color: '#1758BA',
-            fontSize: '14px',
-            fontWeight: 700,
-          
+            fontSize: '14px'
           }}
+
           onClick={clearFilter}>
           حذف فیلتر
         </Button>

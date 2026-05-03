@@ -85,14 +85,14 @@ const ListCard: React.FC<ListCardProps> = ({
         />
       )}
 
-      <div className='flex flex-wrap gap-2 w-full'>
+      <div className='flex flex-wrap gap-2 w-full justify-between'>
         <button
-          className='bg-[#1758BA] hover:bg-[#216ee1] transition-all duration-200 px-3 h-[42px] text-sm rounded-lg text-white grow sm:grow md:flex-1'
+          className='bg-[#1758BA] max-w-40 hover:bg-[#216ee1] transition-all duration-200 px-3 h-[42px] text-sm rounded-lg text-white grow sm:grow md:flex-1'
           onClick={() => router.push(`/preview/${data.id}`)}>
           مشاهده
         </button>
 
-        <div className='flex gap-2 flex-wrap items-center justify-end'>
+        <div className='flex gap-2 flex-wrap items-center justify-start'>
           <IconButton onClick={() => setOpenConfirmDialog(true)} disabled={loading} color='error'>
             <Image src={TrashIcon} alt='delete' width={24} height={24} />
           </IconButton>

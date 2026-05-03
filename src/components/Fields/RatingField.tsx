@@ -2,26 +2,31 @@
 
 import { z } from 'zod';
 import { toast } from 'sonner';
-import { memo, useMemo, useState } from 'react';
-import { ElementsType, FormElement, FormElementInstance } from '../../types/FormElements';
 import { useForm } from 'react-hook-form';
+import { memo, useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Stack, Typography } from '@mui/material';
+// components
+import StarRating from '../Rating/Start';
+import EmojiRating from '../Rating/Emoji';
+import { SwitchButton } from '../Switch/SwitchButton';
 import FormProvider from '../../components/hook-form/FormProvider';
 import { RHFMultiSelect, RHFSwitch, RHFTextField } from '@/components/hook-form';
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
-import { IFormElementConstructor, IQPLRating, IRatingQTapAndOptionsType } from '@/types/bulider';
-import useElements from '@/hooks/useElements';
+// hook
 import useDesigner from '@/hooks/useDesigner';
+import useElements from '@/hooks/useElements';
+import useActionDesigner from '@/hooks/useActionDesigner';
+import useSelectedElement from '@/hooks/useSelectedElement';
 import useActionOpenDialog from '@/hooks/useActionOpenDialog';
 import useActionSelectedElement from '@/hooks/useActionSelectedElement';
-import useSelectedElement from '@/hooks/useSelectedElement';
-import useActionDesigner from '@/hooks/useActionDesigner';
+// images
+import RatingIcon from '@/../public/images/home-page/rating.svg';
 import CheckIcon from '@/../public/images/home-page/spectral.svg';
-import { SwitchButton } from '../Switch/SwitchButton';
-import StarRating from '../Rating/Start';
-import EmojiRating from '../Rating/Emoji';
-import { useSearchParams } from 'next/navigation';
+// type
+import { IFormElementConstructor, IQPLRating, IRatingQTapAndOptionsType } from '@/types/bulider';
+import { ElementsType, FormElement, FormElementInstance } from '../../types/FormElements';
 // actions
 import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/question';
 
@@ -172,7 +177,7 @@ export const RatingFormElement: FormElement = {
   }),
   designerBtnElement: {
     label: 'امتیازدهی',
-    icon: CheckIcon,
+    icon: RatingIcon,
   },
   designerComponent: DesignerComponent,
   formComponent: FormComponent,

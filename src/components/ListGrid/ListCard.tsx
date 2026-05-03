@@ -1,33 +1,38 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
-import { AxiosApi } from '@/services/axios/AxiosApi';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button, IconButton } from '@mui/material';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { Button, IconButton } from '@mui/material';
 import { AiOutlinePieChart } from 'react-icons/ai';
-import { SwitchButton } from '@/components/Switch/SwitchButton';
+import React, { useCallback, useState } from 'react';
+// services
+import { AxiosApi } from '@/services/axios/AxiosApi';
+// components
 import ConfirmDialog from '../confirm-dialog';
-import PublishSettingsDialog from '../PublishSettingsDialog/PublishSettingsDialog';
-import EditIcon from '@/../public/images/home-page/edit-2.svg';
-import TrashIcon from '@/../public/images/home-page/trash.svg';
-import CopyIcon from '@/../public/images/home-page/copy.svg';
-import { formStatusPersian, formTypePersian } from '@/constants/formDictionaries';
 import { InfoRow } from '@/components/common/infoRow';
+import { SwitchButton } from '@/components/Switch/SwitchButton';
+import PublishSettingsDialog from '../PublishSettingsDialog/PublishSettingsDialog';
+// image
+import EditIcon from '@/../public/images/home-page/edit-2.svg';
+import CopyIcon from '@/../public/images/home-page/copy.svg';
+import TrashIcon from '@/../public/images/home-page/trash.svg';
+// constants
+import { formStatusPersian, formTypePersian, TFormType } from '@/constants/formDictionaries';
 
 interface ListCardProps {
   data: {
     id: string;
     name: string;
-    type: string;
+    ratio: number;
     status: string;
+    type: TFormType;
     accessType?: string;
     participants: number;
     accessibility: string[];
-    formPublishSetting : {
-      capacityPublicLink : number | null;
+    formPublishSetting: {
+      capacityPublicLink: number | null;
     };
     questionListSize: number;
   };
@@ -94,25 +99,43 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
     router.push(`stats/${data.id}`)
   }
 
-    const getAccessLabel = (accessType?: string[]) => {
-      if (!accessType || accessType.length === 0) return 'نامشخص';
+  const getAccessLabel = (accessType?: string[]) => {
+    if (!accessType || accessType.length === 0) return 'نامشخص';
 
-      const hasPublic = accessType.includes('PUBLIC');
-      const hasAssign = accessType.includes('ASSIGN');
-      const hasNoAccess = accessType.includes('NO_ACCESS');
+    const hasPublic = accessType.includes('PUBLIC');
+    const hasAssign = accessType.includes('ASSIGN');
+    const hasNoAccess = accessType.includes('NO_ACCESS');
 
-      if (hasPublic && hasAssign) return 'عمومی - اختصاصی';
-      if (hasPublic) return 'عمومی';
-      if (hasAssign) return 'اختصاصی';
-      if (hasNoAccess) return 'بدون دسترسی';
+    if (hasPublic && hasAssign) return 'عمومی - اختصاصی';
+    if (hasPublic) return 'عمومی';
+    if (hasAssign) return 'اختصاصی';
+    if (hasNoAccess) return 'بدون دسترسی';
 
-      return 'نامشخص';
-    };
-
+    return 'نامشخص';
+  };
 
   return (
     <>
-      <div className='border p-4 rounded-[20px] border-[#DDE1E6] flex flex-col gap-4 w-full max-w-full relative'>
+      <div
+        className={`
+    border p-4 rounded-[20px] flex flex-col gap-4 w-full max-w-full relative
+    transition-all duration-200
+    hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]
+    ${data.type === 'PACKAGING'
+            ? 'border-[#9BB8F2] bg-[#f5f8ff] shadow-[0_0_12px_rgba(23,88,186,0.07)]'
+            : 'border-[#DDE1E6] hover:border-[#cfd6df]'
+          }
+  `}
+      >
+
+        {data.type === 'PACKAGING' && (
+          <div className="absolute top-2 left-2 bg-[#E8F0FF] text-[#1758BA] text-[12px] px-3 py-[4px] rounded-[8px] shadow-sm border border-[#bfd4ff] leading-none">
+            ضریب قیمت {data.ratio ?? 1}
+          </div>
+        )}
+
+
+        {/* <div className='border p-4 rounded-[20px] border-[#DDE1E6] flex flex-col gap-4 w-full max-w-full relative'> */}
         <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-3'>
           <InfoRow label='نام' value={data.name} bold />
           {(data.status === 'PUBLISH' || data.status === 'UN_PUBLISH') && <SwitchButton disabled={loading} checked={data.status === 'PUBLISH'} onChange={handlePublishStatus} />}
@@ -123,13 +146,13 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
           <InfoRow label='دسترسی' value={getAccessLabel(data.accessibility)} bold />
           <InfoRow label='تعداد شرکت‌کننده' value={data.participants} bold />
           <InfoRow label='تعداد گویه' value={data.questionListSize} bold />
-          <InfoRow label='ظرفیت عمومی'  value={data.formPublishSetting.capacityPublicLink ?? 0} bold />
+          <InfoRow label='ظرفیت عمومی' value={data.formPublishSetting.capacityPublicLink ?? 0} bold />
           <InfoRow label='وضعیت' value={formStatusPersian[data.status]} bold />
         </div>
 
-        <div className='flex flex-wrap gap-2 w-full'>
+        <div className='flex flex-wrap gap-2 w-full justify-between'>
           <button
-            className='bg-[#1758BA] hover:bg-[#216ee1] transition-all duration-200 px-3 h-[42px] text-sm rounded-lg text-white grow sm:grow md:flex-1'
+            className='bg-[#1758BA] max-w-[120px] hover:bg-[#216ee1] transition-all duration-200 px-3 h-[42px] text-sm rounded-lg text-white grow sm:grow md:flex-1'
             onClick={() => router.push(`/preview/${data.id}`)}>
             مشاهده
           </button>
@@ -145,7 +168,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
               <Image src={CopyIcon} alt='copy' width={24} height={24} />
             </IconButton>
 
-            {data.status === 'CREATE' && (
+            {data.status === 'CREATE' && data.type !== "PACKAGING" && (
               <Link href={`/builder/${data.id}`}>
                 <IconButton disabled={loading} color='primary'>
                   <Image src={EditIcon} alt='edit' width={24} height={24} />
@@ -172,6 +195,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
         action={
           <Button
             fullWidth
+            disabled={loading}
             variant='contained'
             onClick={handleDelete}
             sx={{

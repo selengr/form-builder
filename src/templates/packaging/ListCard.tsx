@@ -2,42 +2,68 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { toast } from 'sonner';
 import { IconButton } from '@mui/material';
 import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
 // components
 import { InfoRow } from '@/components/common/infoRow';
 import { SwitchButton } from '@/components/Switch/SwitchButton';
 // images
-import CopyIcon from '@/../public/images/home-page/copy.svg';
 import EditIcon from '@/../public/images/home-page/edit-2.svg';
-import TrashIcon from '@/../public/images/home-page/trash.svg';
+import PackagingSettingsDialog from './PackagingSettingsDialog';
+// actions
+import { updatePackagingValidity } from '../../../actions/packaging/packageSetting';
 
 export interface IPackagingItem {
-  formCategorysModel: null;
-  formId: number;
   id: number;
   name: string;
-  packagingStausEnum: "CREATE" | string; 
-  targetLabelEnum: "DEFAULT"| string; 
+  formId: number;
+  invalid: boolean;
+  formCategorysModel: null;
+  packagingStausEnum: "CREATE" | string;
+  targetLabelEnum: "DEFAULT" | string;
 }
-
 interface ListCardProps {
   data: IPackagingItem;
-  buttonText: string;
-  buttonLink?: string | ((id: string) => string);
-  buttonDisabled?: boolean;
   showStatus?: boolean;
 }
-
 // ---------------------------------------------------------------------
 const ListCard: React.FC<ListCardProps> = ({
   data,
-  buttonText,
-  buttonLink,
-  buttonDisabled = false,
   showStatus = true,
 }) => {
   const router = useRouter();
+  const [checked, setChecked] = useState<boolean>(!data.invalid);
+  const [isPending, startTransition] = useTransition();
+  
+  const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.checked;
+    setChecked(newValue);
+
+    startTransition(() => {
+       const newValue = event.target.checked;
+
+          setChecked(newValue);
+
+          startTransition(async () => {
+            try {
+              const result = await updatePackagingValidity(
+                data.id,
+                !newValue
+              );
+
+              if (!result.response) {
+                setChecked(!newValue);
+              }
+              toast.success(newValue ? 'بسته فعال شد' : 'بسته غیرفعال شد');
+            } catch (error: any) {
+              setChecked(!newValue);
+              toast.error(error?.message);
+            }
+          });
+    });
+  };
 
   return (
     <div className="border p-4 rounded-2xl border-[#DDE1E6] flex flex-col gap-3 w-full max-w-full relative">
@@ -45,8 +71,9 @@ const ListCard: React.FC<ListCardProps> = ({
       <InfoRow label="نام بسته" value={data.name} bold />
       <SwitchButton
         sx={{ position: "absolute", top: 15, right: 15 }}
-        checked={true}
-        onChange={() => console.log("object")}
+        checked={checked}
+        disabled={isPending}
+        onChange={handleSwitchChange}
       />
       {showStatus && (
         <InfoRow
@@ -64,16 +91,9 @@ const ListCard: React.FC<ListCardProps> = ({
         </button>
 
         <div className='flex gap-2 flex-wrap items-center justify-end'>
-          <IconButton onClick={() => console.log("object")} color='error'>
-            <Image src={TrashIcon} alt='delete' width={24} height={24} />
-          </IconButton>
-
-          <IconButton>
-            <Image src={CopyIcon} alt='copy' width={24} height={24} />
-          </IconButton>
-
+          <PackagingSettingsDialog packageId={data.id} />
           {data.packagingStausEnum === "CREATE" &&
-            <Link href={`/builder/${data.id}?admin=packaging`}>
+            <Link href={`/builder/${data.formId}?admin=packaging`}>
               <IconButton color='primary'>
                 <Image src={EditIcon} alt='edit' width={24} height={24} />
               </IconButton>

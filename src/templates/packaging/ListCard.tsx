@@ -5,10 +5,12 @@ import Image from 'next/image';
 import { IconButton } from '@mui/material';
 import { useRouter } from 'next/navigation';
 // components
+import { IoSettingsOutline } from 'react-icons/io5';
 import { InfoRow } from '@/components/common/infoRow';
 import { SwitchButton } from '@/components/Switch/SwitchButton';
 // images
 import EditIcon from '@/../public/images/home-page/edit-2.svg';
+import { useState } from 'react';
 
 export interface IPackagingItem {
   formCategorysModel: null;
@@ -28,6 +30,11 @@ const ListCard: React.FC<ListCardProps> = ({
   showStatus = true,
 }) => {
   const router = useRouter();
+   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  
+    const handleOpen = () => {
+      setOpenDialog((prev) => !prev);
+    }
 
   return (
     <div className="border p-4 rounded-2xl border-[#DDE1E6] flex flex-col gap-3 w-full max-w-full relative">

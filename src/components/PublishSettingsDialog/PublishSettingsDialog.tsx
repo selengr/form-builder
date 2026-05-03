@@ -11,7 +11,7 @@ interface PublishSettingsDialogProps {
 }
 
 export default function PublishSettingsDialog({ formId , formData }: PublishSettingsDialogProps) {
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
 
   const handleOpen = useCallback(() => {
     setOpenDialog((prev) => !prev);

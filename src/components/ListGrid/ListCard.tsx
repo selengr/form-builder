@@ -1,21 +1,25 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
-import { AxiosApi } from '@/services/axios/AxiosApi';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button, IconButton } from '@mui/material';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { Button, IconButton } from '@mui/material';
 import { AiOutlinePieChart } from 'react-icons/ai';
-import { SwitchButton } from '@/components/Switch/SwitchButton';
+import React, { useCallback, useState } from 'react';
+// services
+import { AxiosApi } from '@/services/axios/AxiosApi';
+// components
 import ConfirmDialog from '../confirm-dialog';
-import PublishSettingsDialog from '../PublishSettingsDialog/PublishSettingsDialog';
-import EditIcon from '@/../public/images/home-page/edit-2.svg';
-import TrashIcon from '@/../public/images/home-page/trash.svg';
-import CopyIcon from '@/../public/images/home-page/copy.svg';
-import { formStatusPersian, formTypePersian } from '@/constants/formDictionaries';
 import { InfoRow } from '@/components/common/infoRow';
+import { SwitchButton } from '@/components/Switch/SwitchButton';
+import PublishSettingsDialog from '../PublishSettingsDialog/PublishSettingsDialog';
+// image
+import EditIcon from '@/../public/images/home-page/edit-2.svg';
+import CopyIcon from '@/../public/images/home-page/copy.svg';
+import TrashIcon from '@/../public/images/home-page/trash.svg';
+// constants
+import { formStatusPersian, formTypePersian } from '@/constants/formDictionaries';
 
 interface ListCardProps {
   data: {

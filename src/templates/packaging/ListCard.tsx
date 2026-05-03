@@ -45,6 +45,18 @@ const ListCard: React.FC<ListCardProps> = ({
           bold
         />
       )}
+            <IconButton
+              onClick={handleOpen}
+              sx={{
+                height: '40px',
+                width: '40px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              aria-label='تنظیمات انتشار'>
+              <IoSettingsOutline color='#2A2A2A' />
+            </IconButton>
 
       <div className='flex flex-wrap gap-2 w-full justify-between'>
         <button

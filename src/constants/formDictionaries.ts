@@ -3,6 +3,7 @@ export const formTypePersian: Record<string, string> = {
   QUESTION: 'پرسشنامه',
   SURVEY: 'نظرسنجی',
   COMPETITION: 'مسابقه',
+  PACKAGING: 'فرم پرکاربرد',
 };
 
 export const formStatusPersian: Record<string, string> = {

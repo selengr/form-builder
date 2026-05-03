@@ -3,17 +3,14 @@ import { CgClose } from 'react-icons/cg';
 import { useCallback, useState } from 'react';
 import { IoSettingsOutline } from 'react-icons/io5';
 import { Box, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
-// components
-import PublishSettingsTabValue from './PublishSettingsTabValue';
 
-interface PublishSettingsDialogProps {
-  formId: string;
+interface IProps {
   formData: any;
+  formId: string;
 }
 
-export default function PublishSettingsDialog({ formId , formData }: PublishSettingsDialogProps) {
+export default function PackagingSettingsDialog({ formId , formData }: IProps) {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-
   const handleOpen = useCallback(() => {
     setOpenDialog((prev) => !prev);
   }, []);
@@ -71,7 +68,10 @@ export default function PublishSettingsDialog({ formId , formData }: PublishSett
               تنظیمات انتشار
             </Typography>
           </Box>
-          <PublishSettingsTabValue handleOpen={handleOpen} formId={formId} formData={formData} />
+        
+
+                {/* i will add my code here */}
+
         </DialogContent>
       </Dialog>
     </>

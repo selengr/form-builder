@@ -1,0 +1,19 @@
+'use server';
+
+import { serverApi } from '@/services/axios/serverApi';
+
+export async function getPackageSettingAction(id: number) {
+  try{  
+    const url = `/admin/packaging/${id}`
+  
+    const { data } = await serverApi.get(url);
+    return data;
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      'خطای نامشخص';
+  
+    throw new Error(message);
+  }
+}

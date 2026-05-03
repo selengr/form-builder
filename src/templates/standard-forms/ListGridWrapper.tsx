@@ -15,7 +15,7 @@ interface IFormTypeState {
   fieldOperation: 'DSC' | 'ASC';
 }
 
-const apiAddress = '/admin/packaging/main-list'
+const apiAddress = '/user/packaging/standard-forms-list'
 // --------------------------------------------------------
 export default function ListGridWrapper() {
   const { push } = useRouter();

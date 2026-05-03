@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
-import ListGridWrapper from '@/templates/packaging/ListGridWrapper';
+import ListGridWrapper from '@/templates/standard-forms/ListGridWrapper';
 
-export default function PackagingPage() {
+export default function StandardFormsPage() {
   return (
     <Suspense>
       <ListGridWrapper />

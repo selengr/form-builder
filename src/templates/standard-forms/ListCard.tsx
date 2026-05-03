@@ -1,21 +1,50 @@
 'use client';
 
+import { toast } from 'sonner';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 // components
 import { InfoRow } from '@/components/common/infoRow';
+// actions
+import { clonePackageAction } from '../../../actions/standard-forms/clone';
+import { AxiosApi } from '@/services/axios/AxiosApi';
 
 export interface IPackagingItem {
   id: number;
   name: string;
+  formId: number;
 }
 interface ListCardProps {
   data: IPackagingItem;
 }
 // ---------------------------------------------------------------------
 const ListCard: React.FC<ListCardProps> = ({
-  data
+  data : {formId , name, id}
 }) => {
-  const router = useRouter();
+  const { push } = useRouter()
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleClone = async () => {
+    setLoading(true);
+    try {
+      await clonePackageAction(formId);
+
+          toast.success('فرم با موفقیت کپی شد.', {
+          className: `max-w-[300px]`,
+          duration: 7000,
+          action: { 
+            label: 'برو به فرم های  من',
+            onClick: () => {
+              push(`/builder`);
+            },
+          },
+        });
+    } catch (error: any) {
+      toast.error(error?.message || 'خطا در انجام عملیات');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div
@@ -30,7 +59,7 @@ const ListCard: React.FC<ListCardProps> = ({
       "
     >
       <div className="flex flex-wrap gap-2 w-full items-center justify-between">
-        <InfoRow label="نام بسته" value={data.name} bold />
+        <InfoRow label="نام بسته" value={name} bold />
 
         <button
           className="
@@ -41,9 +70,10 @@ const ListCard: React.FC<ListCardProps> = ({
             active:scale-[0.97]
             whitespace-nowrap
           "
-          onClick={() => router.push(`/preview`)}
+           onClick={handleClone}
+           disabled={loading}
         >
-          رو نوشت
+          {loading ? 'درحال کپی...' : 'رونوشت'}
         </button>
       </div>
     </div>

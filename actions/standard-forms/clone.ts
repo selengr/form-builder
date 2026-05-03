@@ -2,10 +2,10 @@
 
 import { serverApi } from "@/services/axios/serverApi";
 
-export async function createPackageAction(id: number) {
+export async function clonePackageAction(id: number) {
   try {
-    const url = `/psya/user/packaging/clone`;
-    const res = await serverApi.post(url, id);
+    const url = `/user/packaging/clone`;
+    const res = await serverApi.post(url, {id});
     return res.data;
 
   } catch (error: any) {

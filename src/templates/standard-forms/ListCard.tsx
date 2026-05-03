@@ -18,7 +18,7 @@ interface ListCardProps {
 }
 // ---------------------------------------------------------------------
 const ListCard: React.FC<ListCardProps> = ({
-  data : {name, id}
+  data: { name, id }
 }) => {
   const { push } = useRouter()
   const [loading, setLoading] = useState<boolean>(false);
@@ -28,14 +28,26 @@ const ListCard: React.FC<ListCardProps> = ({
     try {
       await clonePackageAction(id);
 
-      toast.success('یک نسخه از این فرم با موفقیت به فرم‌های من اضافه شد', {
-        className: 'max-w-[300px]',
-        duration: 7000,
-        action: { 
-          label: 'مشاهده فرم‌های من',
-          onClick: () => push('/builder'),
-        },
-      });
+      toast.success(
+        <div className="flex flex-col">
+          <span>یک نسخه از این فرم با موفقیت به فرم‌های من اضافه شد</span>
+
+          <div className='flex justify-end'>
+            <button
+              onClick={() => push('/builder')}
+              className="px-3 max-w-[150px] py-1 rounded bg-zinc-950 text-white transition"
+            >
+              مشاهده فرم‌های من
+            </button>
+          </div>
+
+        </div>,
+        {
+          className: 'max-w-[300px]',
+          duration: 70000,
+        }
+      );
+
 
     } catch (error: any) {
       toast.error(error?.message || 'خطا در انجام عملیات');
@@ -68,8 +80,8 @@ const ListCard: React.FC<ListCardProps> = ({
             active:scale-[0.97]
             whitespace-nowrap
           "
-           onClick={handleClone}
-           disabled={loading}
+          onClick={handleClone}
+          disabled={loading}
         >
           {loading ? 'درحال کپی...' : 'رونوشت'}
         </button>

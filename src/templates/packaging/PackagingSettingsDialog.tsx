@@ -10,6 +10,7 @@ import FormProvider, { RHFTextField } from '@/components/hook-form';
 import { Box, Button, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
 // action
 import { getPackageSettingAction, putPackageSettingAction } from '../../../actions/packaging/packageSetting';
+import { useQueryClient } from '@tanstack/react-query';
 
 const nameSchema = z
   .string()
@@ -51,6 +52,8 @@ const inputFieldContainerSx = {
 export default function PackagingSettingsDialog({ packageId }: { packageId: number }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+
+  const queryClient = useQueryClient();
 
   const handleOpen = () => {
     setOpenDialog((prev) => !prev);
@@ -99,8 +102,11 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
         name: formData.name,
         ratio: formData.ratio,
       });
-      handleOpen();
       toast.success('عملیات با موفقیت انجام شد');
+      queryClient.invalidateQueries({
+        queryKey: ['datas_builder_query'],
+      });
+      handleOpen();
     } catch (error: any) {
       toast.error(error?.message);
     }

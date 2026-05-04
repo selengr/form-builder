@@ -76,7 +76,7 @@ const ListCard: React.FC<ListCardProps> = ({
   };
 
   const handleNavigateToReport = () => {
-  localStorage.setItem(REPORT_BACK_KEY, "/packaging");
+    localStorage.setItem(REPORT_BACK_KEY, "/packaging");
     router.push(`/reports/create-solo/${data.id}`)
   }
 

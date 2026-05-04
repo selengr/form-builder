@@ -1,17 +1,30 @@
 import { IconButton } from '@mui/material';
 import { IoIosArrowForward } from 'react-icons/io';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { REPORT_BACK_KEY } from '../packaging/ListCard';
 
 const Header = () => {
-  const { back } = useRouter();
+  const { back, push } = useRouter();
   const searchParams = useSearchParams();
   const search = searchParams.get('rep');
   const admin = search === 'list';
   const name = searchParams.get('name');
 
+  const handleNavigation = () => {
+    const returnPath = localStorage.getItem(REPORT_BACK_KEY);
+
+    if (returnPath) {
+      localStorage.removeItem(REPORT_BACK_KEY);
+      push(returnPath);
+    } else {
+      back();
+    }
+  };
+
+
   return (
     <div className={`relative flex w-full justify-center items-center h-[52px] min-h-[52px] rounded-lg bg-[#F7F7FF] ${admin ? 'mb-8' : ''}`}>
-      <div onClick={back} className='absolute right-4'>
+      <div onClick={handleNavigation} className='absolute right-4'>
         <IconButton
           sx={{
             borderRadius: '9999px',

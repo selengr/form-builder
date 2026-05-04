@@ -29,6 +29,7 @@ interface ListCardProps {
   data: IPackagingItem;
   showStatus?: boolean;
 }
+export const REPORT_BACK_KEY = 'report_return_path';
 // ---------------------------------------------------------------------
 const ListCard: React.FC<ListCardProps> = ({
   data,
@@ -75,7 +76,7 @@ const ListCard: React.FC<ListCardProps> = ({
   };
 
   const handleNavigateToReport = () => {
-    localStorage.setItem("packaging-back", "/packaging")
+  localStorage.setItem(REPORT_BACK_KEY, "/packaging");
     router.push(`/reports/create-solo/${data.id}`)
   }
 

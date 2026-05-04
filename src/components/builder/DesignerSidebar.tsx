@@ -65,6 +65,10 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
         setPackagingId(storedId);
       }
     }
+
+    return () => {
+      localStorage.removeItem('selectedPackageId');
+    };
   }, [data?.typeEnum]);
 
   const handlePublish = () => {

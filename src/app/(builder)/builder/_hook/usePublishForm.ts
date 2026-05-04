@@ -17,7 +17,7 @@ const publishFormAction = async ({ formId, IsSurvey, IsPackaging }: UsePublishFo
   const url = `${API_BASE}/${formId}/publish`
 
   const res = await fetch(url, {
-    method: IsPackaging ? 'POST' : 'PUT',
+    method: 'PUT',
     headers: {
       Authorization: `Bearer ${token}`,
     },

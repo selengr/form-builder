@@ -109,7 +109,7 @@ const ListCard: React.FC<ListCardProps> = ({
               hoverColor="#216ee1"
             />
           </div>
-          <div className="max-w-[110px]">
+          <div className="min-w-[114px] max-w-[110px]">
             <ActionButton
               label={data.isCreatedSoloReport ? "ویرایش گزارش" : "ساخت گزارش"}
               onClick={handleNavigateToReport}

@@ -117,6 +117,7 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
       <IconButton
         onClick={handleOpen}
         sx={{
+          padding : 0,
           height: '40px',
           width: '40px',
           display: 'flex',

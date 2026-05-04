@@ -1,12 +1,12 @@
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { IconButton } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 // components
+import { ActionButton } from '../reports/ListCard';
 import { InfoRow } from '@/components/common/infoRow';
 import { SwitchButton } from '@/components/Switch/SwitchButton';
 // images
@@ -21,6 +21,7 @@ export interface IPackagingItem {
   formId: number;
   invalid: boolean;
   formCategorysModel: null;
+  isCreatedSoloReport: boolean;
   packagingStausEnum: "CREATE" | string;
   targetLabelEnum: "DEFAULT" | string;
 }
@@ -73,6 +74,11 @@ const ListCard: React.FC<ListCardProps> = ({
     router.push(`/builder/${data.formId}?admin=packaging`);
   };
 
+  const handleNavigateToReport = () => {
+    localStorage.setItem("packaging-back", "/packaging")
+    router.push(`/reports/create-solo/${data.id}`)
+  }
+
   return (
     <div className="border p-4 rounded-2xl border-[#DDE1E6] flex flex-col gap-3 w-full max-w-full relative">
       {/* اطلاعات فرم */}
@@ -91,18 +97,32 @@ const ListCard: React.FC<ListCardProps> = ({
         />
       )}
 
-      <div className='flex flex-wrap gap-2 w-full justify-between'>
-        <button
-          className='bg-[#1758BA] max-w-36 hover:bg-[#216ee1] transition-all duration-200 px-3 h-[42px] text-sm rounded-lg text-white grow sm:grow md:flex-1'
-          onClick={() => router.push(`/preview/${data.formId}`)}>
-          مشاهده
-        </button>
+      <div className='flex flex-wrap gap-1 w-full justify-between'>
+
+        <div className="flex items-center gap-1 flex-wrap">
+          <div className="max-w-[100px] md:min-w-[105px]">
+            <ActionButton
+              label="مشاهده"
+              onClick={handleEditClick}
+              color="#1758BA"
+              hoverColor="#216ee1"
+            />
+          </div>
+          <div className="max-w-[110px]">
+            <ActionButton
+              label={data.isCreatedSoloReport ? "ویرایش گزارش" : "ساخت گزارش"}
+              onClick={handleNavigateToReport}
+              color="#2CDFC9"
+              hoverColor="#22E2CF"
+            />
+          </div>
+        </div>
 
         <div className='flex gap-2 flex-wrap items-center justify-end'>
           <PackagingSettingsDialog packageId={data.id} />
           {data.packagingStausEnum === "CREATE" &&
             <div onClick={handleEditClick}>
-              <IconButton color='primary'>
+              <IconButton color='primary' sx={{padding:0}}>
                 <Image src={EditIcon} alt='edit' width={24} height={24} />
               </IconButton>
             </div>

@@ -23,7 +23,7 @@ interface ListCardProps {
   };
 }
 
-const ActionButton: FC<{
+export const ActionButton: FC<{
   label: string;
   onClick: () => void;
   color: string;
@@ -31,7 +31,7 @@ const ActionButton: FC<{
 }> = ({ label, onClick, color, hoverColor }) => (
   <Button
     variant='contained'
-    size='large'
+    // size='large'
     disableElevation
     fullWidth
     onClick={onClick}

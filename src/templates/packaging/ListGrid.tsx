@@ -195,7 +195,7 @@ const ListGrid: React.FC<Props> = ({
           mt: 1,
           gap: 2,
         }}>
-        <Grid size={{ xs: 12, sm: 10 }} sx={{ display: 'flex', alignItems: 'center', gap: '12px', mx: 'auto' }}>
+        <Grid size={{ xs: 12, sm: 11 }} sx={{ display: 'flex', alignItems: 'center', gap: '12px', mx: 'auto' }}>
           <SearchInput />
           {!disableFilter && (
             <IconButton
@@ -253,7 +253,7 @@ const ListGrid: React.FC<Props> = ({
         const isLastItem = pageIndex === pages.pages.length - 1 && index === page.data.length - 1;
 
         return (
-          <Grid sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} key={key} size={{ xs: 12, md: 10, xl: 9 }}>
+          <Grid sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} key={key} size={{ xs: 13, md: 11, xl: 10 }}>
             {CartComponent && <CartComponent onCheck={onCheck} data={data} refreshGrid={handleRefreshGrid} />}
             {isLastItem && (
               <>
@@ -360,11 +360,11 @@ const ListGrid: React.FC<Props> = ({
                 sx={{
                   width: 1,
                   mx: 'auto',
-                  mt: 1,
+                  mt: 2,
                   mb: 5,
                   pb: 4,
                   flexDirection: 'column',
-                  gap: 2,
+                  gap: 1.5,
                   overflowY: 'auto',
                   height: {
                     xs: 'calc(100vh - 290px)',

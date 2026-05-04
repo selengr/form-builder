@@ -31,8 +31,8 @@ export default function BuilderPage() {
   } = useGetForm(id);
 
   useEffect(() => {
+    debugger
     if (!data) return;
-
     const questionGroupIds =
       data?.questionGroups?.map((g: any) => g.questionGroupId) || [];
     setQuestionGroups(questionGroupIds);

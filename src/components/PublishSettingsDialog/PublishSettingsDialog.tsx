@@ -1,9 +1,8 @@
 'use client';
-import { CgClose } from 'react-icons/cg';
-import { useCallback, useState } from 'react';
-import { IoSettingsOutline } from 'react-icons/io5';
 import { Box, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
-// components
+import { useCallback, useState } from 'react';
+import { CgClose } from 'react-icons/cg';
+import { IoSettingsOutline } from 'react-icons/io5';
 import PublishSettingsTabValue from './PublishSettingsTabValue';
 
 interface PublishSettingsDialogProps {
@@ -12,7 +11,7 @@ interface PublishSettingsDialogProps {
 }
 
 export default function PublishSettingsDialog({ formId , formData }: PublishSettingsDialogProps) {
-  const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const handleOpen = useCallback(() => {
     setOpenDialog((prev) => !prev);

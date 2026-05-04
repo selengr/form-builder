@@ -36,33 +36,41 @@ const ListCard: React.FC<ListCardProps> = ({
   const router = useRouter();
   const [checked, setChecked] = useState<boolean>(!data.invalid);
   const [isPending, startTransition] = useTransition();
-  
+
   const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.checked;
     setChecked(newValue);
 
     startTransition(() => {
-       const newValue = event.target.checked;
+      const newValue = event.target.checked;
 
-          setChecked(newValue);
+      setChecked(newValue);
 
-          startTransition(async () => {
-            try {
-              const result = await updatePackagingValidity(
-                data.id,
-                !newValue
-              );
+      startTransition(async () => {
+        try {
+          const result = await updatePackagingValidity(
+            data.id,
+            !newValue
+          );
 
-              if (!result.response) {
-                setChecked(!newValue);
-              }
-              toast.success(newValue ? 'بسته فعال شد' : 'بسته غیرفعال شد');
-            } catch (error: any) {
-              setChecked(!newValue);
-              toast.error(error?.message);
-            }
-          });
+          if (!result.response) {
+            setChecked(!newValue);
+          }
+          toast.success(newValue ? 'بسته فعال شد' : 'بسته غیرفعال شد');
+        } catch (error: any) {
+          setChecked(!newValue);
+          toast.error(error?.message);
+        }
+      });
     });
+  };
+
+  const handleEditClick = () => {
+    try {
+      localStorage.setItem('selectedPackageId', String(data.id));
+    } catch { }
+
+    router.push(`/builder/${data.formId}?admin=packaging`);
   };
 
   return (
@@ -93,11 +101,11 @@ const ListCard: React.FC<ListCardProps> = ({
         <div className='flex gap-2 flex-wrap items-center justify-end'>
           <PackagingSettingsDialog packageId={data.id} />
           {data.packagingStausEnum === "CREATE" &&
-            <Link href={`/builder/${data.formId}?admin=packaging`}>
+            <div onClick={handleEditClick}>
               <IconButton color='primary'>
                 <Image src={EditIcon} alt='edit' width={24} height={24} />
               </IconButton>
-            </Link>
+            </div>
           }
         </div>
       </div>

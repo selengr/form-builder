@@ -113,27 +113,36 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
 
     return 'نامشخص';
   };
-
+  const isPackaging = data?.type === "PACKAGING";
   return (
-    <>  
+    <>
       <div
         className={`
     border p-4 rounded-[20px] flex flex-col gap-4 w-full max-w-full relative
     transition-all duration-200
     hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]
-    ${data.type === 'PACKAGING'
-            ? 'border-[#9BB8F2] bg-[#f5f8ff] shadow-[0_0_12px_rgba(23,88,186,0.07)]'
-            : 'border-[#DDE1E6] hover:border-[#cfd6df]'
-          }
-  `}
+    ${isPackaging ? "border-amber-300" : "border-[#DDE1E6]"
+          }`}
+      //   ${data.type === 'PACKAGING'
+      //           ? 'border-[#9BB8F2] bg-[#f5f8ff] shadow-[0_0_12px_rgba(23,88,186,0.07)]'
+      //           : 'border-[#DDE1E6] hover:border-[#cfd6df]'
+      //         }
+      // `}
       >
 
-        {data.type === 'PACKAGING' && (
+        {/* {data.type === 'PACKAGING' && (
           <div className="absolute top-2 left-2 bg-[#E8F0FF] text-[#1758BA] text-[12px] px-3 py-[4px] rounded-[8px] shadow-sm border border-[#bfd4ff] leading-none">
+           
+          </div>
+        )} */}
+        {isPackaging && (
+          <div className={`mt-2 absolute left-4 w-fit rounded-full bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700
+            ${(data.status === 'PUBLISH') ? "mt-7" : "mt-2"
+            }`}
+          >
             ضریب قیمت {data.ratio}
           </div>
         )}
-
 
         {/* <div className='border p-4 rounded-[20px] border-[#DDE1E6] flex flex-col gap-4 w-full max-w-full relative'> */}
         <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-3'>
@@ -164,11 +173,11 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
 
             {(data.type === "PACKAGING" || data.status === 'READY_TO_PUBLISH' || data.status === 'PUBLISH') && <PublishSettingsDialog formData={data} formId={data.id} />}
 
-              {data.type !== "PACKAGING" &&(
-                          <IconButton onClick={handleCopy} disabled={loading}>
-                            <Image src={CopyIcon} alt='copy' width={24} height={24} />
-                          </IconButton>
-              )}
+            {data.type !== "PACKAGING" && (
+              <IconButton onClick={handleCopy} disabled={loading}>
+                <Image src={CopyIcon} alt='copy' width={24} height={24} />
+              </IconButton>
+            )}
 
             {data.status === 'CREATE' && data.type !== "PACKAGING" && (
               <Link href={`/builder/${data.id}`}>

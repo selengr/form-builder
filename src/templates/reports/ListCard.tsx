@@ -52,17 +52,40 @@ const ListCard: FC<ListCardProps> = ({ data }) => {
     router.push(`/stats/${id}`)
   }
 
+  const isPackaging = type === "PACKAGING";
   return (
-    <div className='flex flex-col gap-4 rounded-2xl border border-[#DDE1E6] p-5 shadow-sm'>
+
+    <div
+      className={`flex flex-col gap-3 rounded-2xl border p-5 shadow-sm relative ${isPackaging ? "border-amber-300" : "border-[#DDE1E6]"
+        }`}
+    >
+      {isPackaging && (
+        <div className="mb-1 absolute left-5 w-fit rounded-full bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700">
+          بسته‌بندی
+        </div>
+      )}
+
       <InfoRow label='نام' value={name} bold />
       <InfoRow label='نوع' value={formTypePersian[type]} bold />
       <InfoRow label='دسترسی' value={accessType || 'عمومی'} bold />
 
-      <div className='flex flex-col gap-2 sm:flex-row'>
-        <ActionButton label='مشاهده نتایج' onClick={handleNavigation} color='#1758BA' hoverColor='#216ee1' />
-        <ActionButton label={data.isCreatedSoloReport ? 'ویرایش گزارش' : 'ساخت گزارش'} onClick={() => router.push(`/reports/create-solo/${id}`)} color='#2CDFC9' />
+      <div className="flex flex-row gap-3">
+        <ActionButton
+          label="مشاهده نتایج"
+          onClick={handleNavigation}
+          color="#1758BA"
+          hoverColor="#216ee1"
+        />
+        {!isPackaging && (
+          <ActionButton
+            label={data.isCreatedSoloReport ? 'ویرایش گزارش' : 'ساخت گزارش'}
+            onClick={() => router.push(`/reports/create-solo/${id}`)}
+            color="#2CDFC9"
+            hoverColor="#26cbb7"
+          />)}
       </div>
     </div>
+
   );
 };
 

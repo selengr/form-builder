@@ -1,37 +1,49 @@
 import React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { IoIosArrowBack } from "react-icons/io";
 import { ISubMenuItemProps } from "@/types/menus";
-// component
 import { MenuIcon } from "../MenuIcon";
 
 const SubMenuItem = React.memo(
-  ({ id, href, icon, title, onClick }: ISubMenuItemProps) => {
+  ({ href, icon, title, onClick }: ISubMenuItemProps) => {
+    const pathname = usePathname();
     const iconSrc = `/api/images?folder=menu&file=${icon}`;
+    const isActive = pathname === href;
 
     return (
-      <div
-        className="w-full bg-white border-b border-[#DDE1E6] border-r-4 border-r-[#0066CC]
-                   py-4 pr-8 rounded-[4px] group transition-all"
+      <Link
+        href={href}
+        onClick={onClick}
         style={{ userSelect: "none" }}
+        className={`
+          group flex items-center justify-between w-full
+          px-5 py-3 rounded-md
+          border-b border-[#E4E7EB]
+          transition-all duration-200 ease-out
+          ${isActive
+            ? "bg-[#F3F8FF] border-r-4 border-r-[#0066CC]"
+            : "bg-white hover:bg-[#F3F6FA] active:bg-[#E8EDF4]"
+          }
+        `}
       >
-        <Link
-          href={href}
-          onClick={onClick}
-          className="w-full flex items-center justify-between transition-all duration-200"
-        >
-          <div className="flex items-center gap-2">
-            <MenuIcon src={iconSrc} size={26} />
-            <p className="text-[13px] text-black font-normal">{title}</p>
-          </div>
+        <div className="flex items-center gap-3">
+          <MenuIcon src={iconSrc} size={22} />
+          <span
+            className={`text-[14px] leading-none ${
+              isActive ? "text-[#0066CC] font-medium" : "text-[#222] font-normal"
+            }`}
+          >
+            {title}
+          </span>
+        </div>
 
-          <IoIosArrowBack
-            size="1rem"
-            color="#292D32"
-            className="group-hover:ml-0.5 transition-all"
-          />
-        </Link>
-      </div>
+        <IoIosArrowBack
+          size="1rem"
+          color={isActive ? "#0066CC" : "#292D32"}
+          className="opacity-60 transition-all group-hover:translate-x-[-2px]"
+        />
+      </Link>
     );
   }
 );

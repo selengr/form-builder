@@ -3,15 +3,10 @@
 import { useRouter } from 'next/navigation';
 import { FC } from 'react';
 import { Button } from '@mui/material';
+// components
 import { InfoRow } from '@/components/common/infoRow';
-
-const formTypePersian: Record<string, string> = {
-  TEST: 'آزمون',
-  QUESTION: 'پرسشنامه',
-  SURVEY: 'نظرسنجی',
-  COMPETITION: 'مسابقه',
-};
-
+// constants
+import { formTypePersian } from '@/constants/formDictionaries';
 interface ListCardProps {
   data: {
     id: string;
@@ -19,7 +14,7 @@ interface ListCardProps {
     type: keyof typeof formTypePersian;
     accessType?: string;
     status?: string;
-    isCreatedSoloReport : boolean
+    isCreatedSoloReport: boolean
   };
 }
 

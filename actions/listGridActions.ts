@@ -90,8 +90,12 @@ export async function fetchListGridData(
       data: response.data.content,
       total: response.data.totalElements,
     };
-  } catch (error) {
-    console.error('Server Action Error:', error);
-    throw new Error('خطا در دریافت اطلاعات');
+  } catch (error:any) {
+      console.error('Server Action Error:', error);
+      const message =
+      error?.response?.data?.message?.[0]?.title ||
+      error?.response?.data?.message ||
+      'خطا در دریافت اطلاعات'
+     throw new Error(message);
   }
 }

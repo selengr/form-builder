@@ -115,7 +115,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
   };
 
   return (
-    <>
+    <>  
       <div
         className={`
     border p-4 rounded-[20px] flex flex-col gap-4 w-full max-w-full relative
@@ -130,7 +130,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
 
         {data.type === 'PACKAGING' && (
           <div className="absolute top-2 left-2 bg-[#E8F0FF] text-[#1758BA] text-[12px] px-3 py-[4px] rounded-[8px] shadow-sm border border-[#bfd4ff] leading-none">
-            ضریب قیمت {data.ratio ?? 1}
+            ضریب قیمت {data.ratio}
           </div>
         )}
 
@@ -162,11 +162,13 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
               <Image src={TrashIcon} alt='delete' width={24} height={24} />
             </IconButton>
 
-            {(data.status === 'READY_TO_PUBLISH' || data.status === 'PUBLISH') && <PublishSettingsDialog formData={data} formId={data.id} />}
+            {(data.type === "PACKAGING" || data.status === 'READY_TO_PUBLISH' || data.status === 'PUBLISH') && <PublishSettingsDialog formData={data} formId={data.id} />}
 
-            <IconButton onClick={handleCopy} disabled={loading}>
-              <Image src={CopyIcon} alt='copy' width={24} height={24} />
-            </IconButton>
+              {data.type !== "PACKAGING" &&(
+                          <IconButton onClick={handleCopy} disabled={loading}>
+                            <Image src={CopyIcon} alt='copy' width={24} height={24} />
+                          </IconButton>
+              )}
 
             {data.status === 'CREATE' && data.type !== "PACKAGING" && (
               <Link href={`/builder/${data.id}`}>

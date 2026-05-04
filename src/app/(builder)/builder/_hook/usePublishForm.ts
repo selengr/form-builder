@@ -38,7 +38,6 @@ const publishFormAction = async ({ formId, IsSurvey, IsPackaging }: UsePublishFo
 
     throw new Error(errorMessage);
   }
-
   return result;
 };
 
@@ -48,7 +47,7 @@ export function usePublishForm({ formId, IsSurvey, IsPackaging }: UsePublishForm
   return useMutation({
     mutationFn: () => publishFormAction({ formId, IsSurvey, IsPackaging }),
     onSuccess: () => {
-      toast.success('عملیات با موفقیت انجام شد');
+    toast.success('فرم با موفقیت منتشر شد');
       queryClient.invalidateQueries({
         queryKey: ['form-builder', formId],
       });

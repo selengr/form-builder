@@ -28,15 +28,29 @@ const ELEMENTS = [
 ];
 
 interface DesignerSidebarProps {
-  data: any; // تایپ دقیق‌تر هم می‌تونی بدی
+  data: any;
 }
 
 // eslint-disable-next-line react/display-name
 const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarProps) {
   const { id } = useParams();
-  const isDesktop = useMediaQuery('(min-width:1280px)');
+  const [formTitle, setFormTitle] = useState<string>("");
+  const [packagingId, setPackagingId] = useState<string | null>(null);
   const { formName, formSetting } = useDesigner();
-  const [formTitle, setFormTitle] = useState("");
+  const isDesktop = useMediaQuery('(min-width:1280px)');
+
+  const IsSurvey = data?.typeEnum === "SURVEY"
+  const IsPackaging = data?.typeEnum === "PACKAGING"
+  const IsDataCollection = data?.typeEnum === "DATA_COLLECTION"
+
+  const formIdToUse = IsPackaging && packagingId
+    ? packagingId
+    : id;
+  const publishMutation = usePublishForm({
+    formId: formIdToUse,
+    IsSurvey: Boolean(IsSurvey),
+    IsPackaging: Boolean(packagingId),
+  });
 
   useEffect(() => {
     if (formName) {
@@ -44,30 +58,18 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
     }
   }, [formName]);
 
-  const IsSurvey = data?.typeEnum === "SURVEY"
-  const IsDataCollection = data?.typeEnum === "DATA_COLLECTION"
-  console.log('data?.--------------', data?.typeEnum)
-  const IsPackaging = data?.typeEnum === "PACKAGING"
-  const setId = id
-  debugger
-  const publishMutation = usePublishForm({
-    formId: setId,
-    IsSurvey: Boolean(IsSurvey),
-    IsPackaging: Boolean(IsPackaging),
-  });
+  useEffect(() => {
+    if (data?.typeEnum === 'PACKAGING') {
+      const storedId = localStorage.getItem('selectedPackageId');
+      if (storedId) {
+        setPackagingId(storedId);
+      }
+    }
+  }, [data?.typeEnum]);
 
   const handlePublish = () => {
     publishMutation.mutate();
   };
-
-  // const renderElements = useMemo(
-  //   () =>
-  //     ELEMENTS.map((el, index) => (
-  //       <SidebarBtnElement key={index} formElement={el} disabled={formSetting.formStatus !== 'CREATE'} />
-  //     )),
-  //   [formSetting.formStatus]
-  // );
-
 
   const renderElements = ELEMENTS.map((el, index) => (
     <SidebarBtnElement
@@ -76,7 +78,6 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
       disabled={formSetting.formStatus !== 'CREATE'}
     />
   ));
-
 
   const TopBar = (
     <div className="flex justify-between items-center gap-1 bg-[#F7F7FF] px-4 py-2 rounded-lg">
@@ -129,7 +130,7 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
         <div className="p-1 rounded-lg h-full flex flex-col justify-between gap-4">
           <div className="flex flex-col gap-2">{renderElements}</div>
         </div>
-        {!IsDataCollection && <>{PublishButton}</> }
+        {!IsDataCollection && <>{PublishButton}</>}
       </div>
     );
   }
@@ -138,7 +139,7 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
     <Fragment>
       <div dir="rtl" className="right-0 w-full flex flex-col rounded-[10px] gap-2 p-4 bg-white border-[1.5px] border-[#DDE1E6] ">
         {TopBar}
-        {!IsDataCollection && <>{PublishButton}</> }
+        {!IsDataCollection && <>{PublishButton}</>}
       </div>
       <DesignerBottomSheet>
         <div className="flex flex-col w-full gap-3">{renderElements}</div>

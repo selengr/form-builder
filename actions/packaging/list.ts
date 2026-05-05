@@ -74,7 +74,6 @@ export async function PackagingList(
     const message =
       error?.response?.data?.message?.[0]?.title ||
       error?.response?.data?.message ||
-      error?.response?.data ||
       'خطای نامشخص';
 
     throw new Error(message);

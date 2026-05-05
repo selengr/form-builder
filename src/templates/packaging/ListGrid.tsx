@@ -95,7 +95,7 @@ const ListGrid: React.FC<Props> = ({
   const router = useRouter();
 
   const updatedSearchBoxList = searchBoxList.map((item) => {
-    if (item.fieldName === 'formSetting.name' && query) {
+    if (item.fieldName === 'name' && query) {
       return { ...item, fieldValue: query };
     }
     return item;

@@ -129,7 +129,7 @@ export function CalculatorCard({
           <div className="flex flex-col">
             <h3 className="text-[#161616] text-sm break-words">{calculator.name ?? '--'}</h3>
             <span className="text-[#393939] text-xs">
-              #محاسبه‌گر - {calculator.label}
+              #محاسبه‌گر
             </span>
           </div>
         </div>

@@ -136,8 +136,8 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
           </div>
         )} */}
         {isPackaging && (
-          <div className={`mt-2 absolute left-4 w-fit rounded-full bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700
-            ${(data.status === 'PUBLISH') ? "mt-7" : "mt-2"
+          <div className={`mt-2 absolute left-4 w-fit rounded-full bg-amber-100 px-2 py-1 text-[10px] font-medium text-amber-700
+            ${(data.status === 'PUBLISH' || data.status === 'UN_PUBLISH') ? "mt-8" : "mt-2"
             }`}
           >
             ضریب قیمت {data.ratio}

@@ -30,7 +30,7 @@ const SubMenuItem = React.memo(
         <div className="flex items-center gap-3">
           <MenuIcon src={iconSrc} size={22} />
           <span
-            className={`text-[14px] leading-none ${
+            className={`text-[12px] leading-none ${
               isActive ? "text-[#0066CC] font-medium" : "text-[#222] font-normal"
             }`}
           >

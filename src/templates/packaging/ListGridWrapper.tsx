@@ -30,14 +30,14 @@ export default function ListGridWrapper() {
     fieldOperation: "DSC"
   });
   const filterBoxList: any = [];
-    const searchBoxList: any = [
-      {
-        fieldName: 'name',
-        fieldOperation: 'MATCH',
-        fieldValue: '',
-        nextConditionOperator: 'OR',
-      },
-    ];
+      const searchBoxList: any = [
+        {
+          fieldName: 'name',
+          fieldOperation: 'MATCH',
+          fieldValue: '',
+          nextConditionOperator: 'OR',
+        },
+      ];
 
    const applyFilter = () => {
     const params = new URLSearchParams(searchParams);

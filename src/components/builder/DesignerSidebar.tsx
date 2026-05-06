@@ -7,6 +7,7 @@ import { Fragment, memo, useState } from 'react';
 import { Button, IconButton, useMediaQuery } from '@mui/material';
 //type
 import { FormElements } from '@/types/FormElements';
+import { SELECTED_PACKAG_ID_KEY } from '@/templates/packaging/ListCard';
 // hook
 import useDesigner from '@/hooks/useDesigner';
 import { usePublishForm } from '@/app/(builder)/builder/_hook/usePublishForm';
@@ -60,14 +61,14 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
 
   useEffect(() => {
     if (data?.typeEnum === 'PACKAGING') {
-      const storedId = localStorage.getItem('selectedPackageId');
+      const storedId = localStorage.getItem(SELECTED_PACKAG_ID_KEY);
       if (storedId) {
         setPackagingId(storedId);
       }
     }
 
     return () => {
-      localStorage.removeItem('selectedPackageId');
+      localStorage.removeItem(SELECTED_PACKAG_ID_KEY);
     };
   }, [data?.typeEnum]);
 

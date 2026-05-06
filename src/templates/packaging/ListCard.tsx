@@ -30,6 +30,7 @@ interface ListCardProps {
   showStatus?: boolean;
 }
 export const REPORT_BACK_KEY = 'report_return_path';
+export const SELECTED_PACKAG_ID_KEY = 'selectedPackageId';
 // ---------------------------------------------------------------------
 const ListCard: React.FC<ListCardProps> = ({
   data,
@@ -69,7 +70,7 @@ const ListCard: React.FC<ListCardProps> = ({
 
   const handleEditClick = () => {
     try {
-      localStorage.setItem('selectedPackageId', String(data.id));
+      localStorage.setItem(SELECTED_PACKAG_ID_KEY, String(data.id));
     } catch { }
 
     router.push(`/builder/${data.formId}?admin=packaging`);

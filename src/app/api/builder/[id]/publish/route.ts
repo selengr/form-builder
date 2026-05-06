@@ -14,7 +14,6 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   const formId = params.id
   const body = await req.json()
   const { IsSurvey, IsPackaging } = publishSchema.parse(body)
-  console.log('IsPackaging------------------', IsPackaging)
   let url = ''
   if(IsSurvey){
     url = `/admin/form/survey/finalization/${formId}`

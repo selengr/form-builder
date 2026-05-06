@@ -60,7 +60,7 @@ const ListCard: FC<ListCardProps> = ({ data }) => {
         }`}
     >
       {isPackaging && (
-        <div className="mb-1 absolute left-5 w-fit rounded-full bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700">
+        <div className="mb-1 absolute left-5 w-fit rounded-full bg-amber-100 px-2 py-1 text-[10px] font-medium text-amber-700">
           بسته‌بندی
         </div>
       )}

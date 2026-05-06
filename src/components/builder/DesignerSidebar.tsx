@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { Fragment, memo, useState } from 'react';
 import { Button, IconButton, useMediaQuery } from '@mui/material';
 //type
@@ -35,8 +35,9 @@ interface DesignerSidebarProps {
 // eslint-disable-next-line react/display-name
 const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarProps) {
   const { id } = useParams();
+  const searchParams = useSearchParams();
+  const pid = searchParams.get('pid');
   const [formTitle, setFormTitle] = useState<string>("");
-  const [packagingId, setPackagingId] = useState<string | null>(null);
   const { formName, formSetting } = useDesigner();
   const isDesktop = useMediaQuery('(min-width:1280px)');
 
@@ -44,33 +45,18 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
   const IsPackaging = data?.typeEnum === "PACKAGING"
   const IsDataCollection = data?.typeEnum === "DATA_COLLECTION"
 
-  const formIdToUse = IsPackaging && packagingId
-    ? packagingId
-    : id;
-  const publishMutation = usePublishForm({
-    formId: formIdToUse,
-    IsSurvey: Boolean(IsSurvey),
-    IsPackaging: Boolean(packagingId),
-  });
+  const formIdToUse = IsPackaging && pid ? pid : id;
+    const publishMutation = usePublishForm({
+      formId: formIdToUse,
+      IsSurvey: Boolean(IsSurvey),
+      IsPackaging: Boolean(pid),
+    });
 
   useEffect(() => {
     if (formName) {
       setFormTitle(formName);
     }
   }, [formName]);
-
-  useEffect(() => {
-    if (data?.typeEnum === 'PACKAGING') {
-      const storedId = localStorage.getItem(SELECTED_PACKAG_ID_KEY);
-      if (storedId) {
-        setPackagingId(storedId);
-      }
-    }
-
-    return () => {
-      localStorage.removeItem(SELECTED_PACKAG_ID_KEY);
-    };
-  }, [data?.typeEnum]);
 
   const handlePublish = () => {
     publishMutation.mutate();

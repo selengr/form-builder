@@ -23,12 +23,11 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
      url = `/form/ready-to-publish/${formId}`
   }
   const endpoint = url
-
   const newReq = new Request(req.url, {
     method: "PUT",
     headers: req.headers,
   })
-
+  console.log('endpoint', endpoint)
   return handleApiProxy(newReq, {
     endpoint: `/psya${endpoint}`,
     method: "PUT",

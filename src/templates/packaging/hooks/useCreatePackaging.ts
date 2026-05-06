@@ -19,7 +19,7 @@ export function useCreatePackaging({ push, onClose }: { push: any; onClose: () =
         onSuccess: (result) => {
             toast.success('عملیات با موفقیت انجام شد');
             onClose()
-            push(`/builder/${result.formId}?admin=packaging`);
+            push(`/builder/${result.formId}?admin=packaging&pid=${result.id}`);
         },
         onError: (error: any) => {
             toast.error(error?.message || 'خطا در ایجاد فرم');

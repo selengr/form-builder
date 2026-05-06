@@ -69,11 +69,7 @@ const ListCard: React.FC<ListCardProps> = ({
   };
 
   const handleEditClick = () => {
-    try {
-      localStorage.setItem(SELECTED_PACKAG_ID_KEY, String(data.id));
-    } catch { }
-
-    router.push(`/builder/${data.formId}?admin=packaging`);
+    router.push(`/builder/${data.formId}?admin=packaging&pid=${data.id}`);
   };
 
   const handleNavigateToReport = () => {

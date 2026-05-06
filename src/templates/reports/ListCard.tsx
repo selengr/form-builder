@@ -59,12 +59,7 @@ const ListCard: FC<ListCardProps> = ({ data }) => {
       className={`flex flex-col gap-3 rounded-2xl border p-5 shadow-sm relative ${isPackaging ? "border-amber-300" : "border-[#DDE1E6]"
         }`}
     >
-      {isPackaging && (
-        <div className="mb-1 absolute left-5 w-fit rounded-full bg-amber-100 px-2 py-1 text-[10px] font-medium text-amber-700">
-          بسته‌بندی
-        </div>
-      )}
-
+  
       <InfoRow label='نام' value={name} bold />
       <InfoRow label='نوع' value={formTypePersian[type]} bold />
       <InfoRow label='دسترسی' value={accessType || 'عمومی'} bold />

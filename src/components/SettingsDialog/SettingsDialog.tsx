@@ -1,6 +1,7 @@
 'use client';
 import { z } from 'zod';
 import { toast } from 'sonner';
+import Image from 'next/image';
 import { CgClose } from 'react-icons/cg';
 import { useForm } from 'react-hook-form';
 import { IoSettingsOutline } from 'react-icons/io5';
@@ -10,6 +11,8 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { Box, Button, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
 // lib
 import { convertObject } from '@/lib/settingsUtils';
+// icon 
+import EditIcon from '@/../public/images/home-page/edit-green.svg';
 // hook
 import FieldSwitchPair from './FieldSwitchPair';
 import FormProvider, { RHFTextField } from '../hook-form';
@@ -17,9 +20,10 @@ import FormProvider, { RHFTextField } from '../hook-form';
 import { formSetting } from '../../../actions/builder/form-setting';
 
 interface Props {
-  formName: string;
   data:any;
-  onChangeName: (newName: string) => void;
+  formName: string;
+  isBuilderPage?: boolean;
+  onChangeName?: (newName: string) => void;
 
 }
 
@@ -126,12 +130,12 @@ const propertiesSchema = z.object({
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
-export default function SettingsDialog({ formName, onChangeName,data }: Props) {
-  const [openDialog, setOpenDialog] = useState(false);
-  const [formFieldName, setFormFieldName] = useState<string>(formName);
-  const [formFieldId, setFormFieldId] = useState<string>(data.formSettingModel.label??"");
+export default function SettingsDialog({ formName, onChangeName, data, isBuilderPage }: Props) {
   const { id: formId } = useParams();
   const searchParams = useSearchParams();
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [formFieldName, setFormFieldName] = useState<string>(formName);
+  const [formFieldId, setFormFieldId] = useState<string>(data?.formSettingModel?.label??"");
   const search = searchParams.get('admin');
   const IsDataCollection = search ==='data-collection';
 
@@ -174,7 +178,7 @@ export default function SettingsDialog({ formName, onChangeName,data }: Props) {
     try {
       await formSetting(formId as string, body as any);
       handleOpen();
-      onChangeName(formFieldName);
+      onChangeName?.(formFieldName);
       } catch (error:any) {
          toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
       }
@@ -211,7 +215,7 @@ export default function SettingsDialog({ formName, onChangeName,data }: Props) {
   }, [openDialog]);
 
   return (
-    <>
+    <>  
       <IconButton
         onClick={handleOpen}
         sx={{
@@ -221,7 +225,8 @@ export default function SettingsDialog({ formName, onChangeName,data }: Props) {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <IoSettingsOutline color='#2A2A2A' />
+          {!isBuilderPage && <IoSettingsOutline color='#2A2A2A' />}
+          {isBuilderPage && <Image src={EditIcon} alt='edit' width={24} height={24} />}
       </IconButton>
       <Dialog
         open={openDialog}

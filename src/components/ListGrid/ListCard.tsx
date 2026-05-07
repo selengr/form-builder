@@ -12,6 +12,7 @@ import { AxiosApi } from '@/services/axios/AxiosApi';
 // components
 import ConfirmDialog from '../confirm-dialog';
 import { InfoRow } from '@/components/common/infoRow';
+import SettingsDialog from '../SettingsDialog/SettingsDialog';
 import { SwitchButton } from '@/components/Switch/SwitchButton';
 import PublishSettingsDialog from '../PublishSettingsDialog/PublishSettingsDialog';
 // image
@@ -41,8 +42,9 @@ interface ListCardProps {
 
 export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+   const [formTitle, setFormTitle] = useState<string>("");
+  const [openConfirmDialog, setOpenConfirmDialog] = useState<boolean>(false);
 
   const handlePublishStatus = useCallback(async () => {
     try {
@@ -113,6 +115,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
 
     return 'نامشخص';
   };
+
   const isPackaging = data?.type === "PACKAGING";
   return (
     <>
@@ -129,7 +132,6 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
       //         }
       // `}
       >
-
         {/* {data.type === 'PACKAGING' && (
           <div className="absolute top-2 left-2 bg-[#E8F0FF] text-[#1758BA] text-[12px] px-3 py-[4px] rounded-[8px] shadow-sm border border-[#bfd4ff] leading-none">
            
@@ -179,6 +181,8 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
               </IconButton>
             )}
 
+            {data.status !== 'CREATE' && <SettingsDialog isBuilderPage={true} formName={data.name} data={data}/>}
+            
             {data.status === 'CREATE' && data.type !== "PACKAGING" && (
               <Link href={`/builder/${data.id}`}>
                 <IconButton disabled={loading} color='primary'>

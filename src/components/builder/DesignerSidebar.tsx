@@ -80,7 +80,7 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
           </IconButton>
         </Link>
         {/* پاس دادن data به SettingsDialog */}
-        {formTitle && <SettingsDialog formName={formTitle} onChangeName={setFormTitle} data={data} />}
+        {formTitle && <SettingsDialog formName={data.name} data={data} />}
       </div>
     </div>
   );

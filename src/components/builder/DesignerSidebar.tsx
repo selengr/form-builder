@@ -5,20 +5,18 @@ import { useEffect } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { Fragment, memo, useState } from 'react';
 import { Button, IconButton, useMediaQuery } from '@mui/material';
-import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 //type
 import { FormElements } from '@/types/FormElements';
 // hook
 import useDesigner from '@/hooks/useDesigner';
 import { usePublishForm } from '@/app/(builder)/builder/_hook/usePublishForm';
 // component
+import ConfirmDialog from '../confirm-dialog';
 import SidebarBtnElement from './SidebarBtnElement';
 import DesignerBottomSheet from './DesignerBottomSheet';
 import SettingsDialog from '../SettingsDialog/SettingsDialog';
 // image
 import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
-import { toast } from 'sonner';
-import ConfirmDialog from '../confirm-dialog';
 
 const ELEMENTS = [
   FormElements.TEXT_FIELD,
@@ -29,7 +27,6 @@ const ELEMENTS = [
   FormElements.PACKAGE_INJECTION_FIELD,
   FormElements.INFO_FIELD
 ];
-
 interface DesignerSidebarProps {
   data: any;
 }

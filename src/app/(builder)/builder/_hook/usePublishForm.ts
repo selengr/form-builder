@@ -1,8 +1,9 @@
 'use client';
 
 import { toast } from 'sonner';
-import { getAuthToken } from '@/utils/getAuthToken';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+// hook
+import { getAuthToken } from '@/utils/getAuthToken';
 
 interface UsePublishFormParams {
   formId?: string | string[];
@@ -47,9 +48,9 @@ export function usePublishForm({ formId, IsSurvey, IsPackaging }: UsePublishForm
   return useMutation({
     mutationFn: () => publishFormAction({ formId, IsSurvey, IsPackaging }),
     onSuccess: () => {
-    toast.success('فرم با موفقیت منتشر شد');
+      toast.success('فرم با موفقیت منتشر شد');
       queryClient.invalidateQueries({
-        queryKey: ['form-builder', formId],
+        queryKey: ['form-builder'],
       });
     },
     onError: (err) => {

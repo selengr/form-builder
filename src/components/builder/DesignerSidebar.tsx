@@ -5,9 +5,9 @@ import { useEffect } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { Fragment, memo, useState } from 'react';
 import { Button, IconButton, useMediaQuery } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 //type
 import { FormElements } from '@/types/FormElements';
-import { SELECTED_PACKAG_ID_KEY } from '@/templates/packaging/ListCard';
 // hook
 import useDesigner from '@/hooks/useDesigner';
 import { usePublishForm } from '@/app/(builder)/builder/_hook/usePublishForm';
@@ -17,6 +17,8 @@ import DesignerBottomSheet from './DesignerBottomSheet';
 import SettingsDialog from '../SettingsDialog/SettingsDialog';
 // image
 import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
+import { toast } from 'sonner';
+import ConfirmDialog from '../confirm-dialog';
 
 const ELEMENTS = [
   FormElements.TEXT_FIELD,
@@ -38,6 +40,8 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
   const searchParams = useSearchParams();
   const pid = searchParams.get('pid');
   const [formTitle, setFormTitle] = useState<string>("");
+  const [openConfirm, setOpenConfirm] = useState<boolean>(false);
+
   const { formName, formSetting } = useDesigner();
   const isDesktop = useMediaQuery('(min-width:1280px)');
 
@@ -46,11 +50,11 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
   const IsDataCollection = data?.typeEnum === "DATA_COLLECTION"
 
   const formIdToUse = IsPackaging && pid ? pid : id;
-    const publishMutation = usePublishForm({
-      formId: formIdToUse,
-      IsSurvey: Boolean(IsSurvey),
-      IsPackaging: Boolean(pid),
-    });
+  const publishMutation = usePublishForm({
+    formId: formIdToUse,
+    IsSurvey: Boolean(IsSurvey),
+    IsPackaging: Boolean(pid),
+  });
 
   useEffect(() => {
     if (formName) {
@@ -58,8 +62,20 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
     }
   }, [formName]);
 
+  const confirmPublish = () => {
+    publishMutation.mutate(undefined, {
+      onSuccess: () => {
+        setOpenConfirm(false);
+      }
+    });
+  };
+
   const handlePublish = () => {
-    publishMutation.mutate();
+    // if (!hasQuestion) {
+    //   toast.error('امکان انتشار فرم بدون داشتن سوال وجود ندارد.');
+    //   return;
+    // }
+    setOpenConfirm(true)
   };
 
   const renderElements = ELEMENTS.map((el, index) => (
@@ -122,6 +138,14 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
           <div className="flex flex-col gap-2">{renderElements}</div>
         </div>
         {!IsDataCollection && <>{PublishButton}</>}
+
+
+        <ConfirmationPublishDialog
+          open={openConfirm}
+          loading={publishMutation.isPending}
+          onClose={() => setOpenConfirm(false)}
+          onConfirm={confirmPublish}
+        />
       </div>
     );
   }
@@ -135,8 +159,57 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
       <DesignerBottomSheet>
         <div className="flex flex-col w-full gap-3">{renderElements}</div>
       </DesignerBottomSheet>
+      <ConfirmationPublishDialog
+        open={openConfirm}
+        loading={publishMutation.isPending}
+        onClose={() => setOpenConfirm(false)}
+        onConfirm={confirmPublish}
+      />
     </Fragment>
   );
 });
 
 export default DesignerSidebar;
+// ----------------------------------------------------------
+interface ConfirmationPublishDialogProps {
+  open: boolean;
+  loading: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}
+
+export const ConfirmationPublishDialog = ({
+  open,
+  loading,
+  onClose,
+  onConfirm,
+}: ConfirmationPublishDialogProps) => {
+  return (
+    <ConfirmDialog
+      open={open}
+      onClose={onClose}
+      title={`تأیید انتشار فرم`}
+      content='پس از نهایی کردن فرم، امکان ویرایش یا تغییر آن وجود نخواهد داشت. آیا ادامه می‌دهید؟'
+      cancelText='انصراف'
+      loading={loading}
+      action={
+        <Button
+          fullWidth
+          disabled={loading}
+          variant='contained'
+          onClick={onConfirm}
+          sx={{
+            fontWeight: '400',
+            fontSize: '15px',
+            height: '50px',
+            borderRadius: '8px',
+            '&:hover': {
+              bgcolor: (theme) => theme.palette.primary.main,
+            },
+          }}>
+          انتشار فرم
+        </Button>
+      }
+    />
+  );
+};

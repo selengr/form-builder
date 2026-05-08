@@ -53,7 +53,7 @@ export default function CreatePackagingModal({ open, onClose }: ICreatePackaging
 
   const { mutation, SubCategoryData } = useGetSubCategory();
   const { Category, isFetchingCategory } = useGetParentCategory();
-  const { Survey: Packaging, isFetchingSurvey: isFetchingPackaging } = useGetPackagingPurpose();
+  const { Survey: Packaging, isFetchingSurvey: isFetchingPackaging } = useGetPackagingPurpose(open);
 
   const methods = useForm<PackaginigFormSchemaType>({
     resolver: zodResolver(propertiesSchema),

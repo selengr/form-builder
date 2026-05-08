@@ -49,8 +49,8 @@ interface TCreateSurveyModalProps {
 export default function CreateSurveyModal({ open, onClose }: TCreateSurveyModalProps) {
   const router = useRouter();
   const { mutate, isPending } = useCreateSurvey();
-  const { Survey, isFetchingSurvey } = useGetSurveyPurpose();
-  const { TargetPlatform, isFetchingTargetPlatform } = useGetTargetPlatform();
+  const { Survey, isFetchingSurvey } = useGetSurveyPurpose(open);
+  const { TargetPlatform, isFetchingTargetPlatform } = useGetTargetPlatform(open);
 
   const methods = useForm<SurveyFormSchemaType>({
     resolver: zodResolver(propertiesSchema),

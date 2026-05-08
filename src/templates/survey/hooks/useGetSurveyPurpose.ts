@@ -5,11 +5,12 @@ import { getSurveyPurposeAction } from '../../../../actions/survey/getSurveyPurp
 
 export const SURVEY_PURPOSE_QUERY_KEY = ['survey-purpose'] as const;
 
-export function useGetSurveyPurpose() {
+export function useGetSurveyPurpose(open:boolean) {
   const { data, isFetching, isLoading, isError, error } = useQuery({
     queryKey: SURVEY_PURPOSE_QUERY_KEY,
     queryFn: () => getSurveyPurposeAction(),
     staleTime: 5 * 60 * 1000,
+    enabled : open
   });
 
   return {

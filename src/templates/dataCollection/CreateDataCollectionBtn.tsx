@@ -68,7 +68,7 @@ interface IProps {
 export default function CreateDataCollectionBtn({ open, onClose }: IProps) {
   const router = useRouter();
   const { mutate, isPending } = useCreateDataCollection();
-  const { TargetPlatform, isFetchingTargetPlatform } = useGetTargetPlatform();
+  const { TargetPlatform, isFetchingTargetPlatform } = useGetTargetPlatform(open);
 
   const methods = useForm<FormSchemaType>({
     resolver: zodResolver(propertiesSchema),

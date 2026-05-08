@@ -136,7 +136,6 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
         </div>
         {!IsDataCollection && <>{PublishButton}</>}
 
-
         <ConfirmationPublishDialog
           open={openConfirm}
           loading={publishMutation.isPending}

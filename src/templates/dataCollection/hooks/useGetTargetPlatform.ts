@@ -5,7 +5,7 @@ import { getTargetPlatformAction } from '../../../../actions/dataCollection/getT
 
 export const TARGET_PLATFORM_QUERY_KEY = ['TargetPlatform'] as const;
 
-export function useGetTargetPlatform(open:boolean) {
+export function useGetTargetPlatform(open?:boolean) {
   const { data, isFetching, isLoading, isError, error } = useQuery({
     queryKey: TARGET_PLATFORM_QUERY_KEY,
     queryFn: () => getTargetPlatformAction(),

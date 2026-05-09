@@ -101,8 +101,8 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
     try {
       setLoading(true);
 
-      await AxiosApi.post('/api/send-code', {
-        phone: formValue,
+      await AxiosApi.post('/send-code', {
+        phoneNumber: formValue,
       });
 
       setStep('otp'); 

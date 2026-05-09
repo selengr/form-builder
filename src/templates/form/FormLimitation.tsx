@@ -1,12 +1,12 @@
 'use client';
 
-import { Box, TextField, Typography } from '@mui/material';
+import { Box, Button, TextField, Typography } from '@mui/material';
 import AnimatedBox from './AnimatedBox';
 import ActionButtons from './ActionButtons';
 import { ILimitation } from '@/hooks/useParticipateForm';
 import { Dispatch, SetStateAction } from 'react';
 import { useFormLimitation } from '@/hooks/useFormLimitation';
-
+import AuthCode from 'react-auth-code-input'; 
 interface Props {
   type: '' | 'PHONE_NUMBER' | 'EMAIL';
   setLimitation: Dispatch<SetStateAction<ILimitation>>;
@@ -15,11 +15,73 @@ interface Props {
 }
 
 export default function FormLimitation({ type, setLimitation, setQuestion, addQuestion }: Props) {
-  const { formValue, error, helperText, loading, handleChange, handleSubmit, takePartApi, isValid } = useFormLimitation(type, setLimitation, setQuestion, addQuestion);
+  const {
+     formValue,
+     error,
+     helperText,
+     loading,
+     handleChange, 
+     handleSubmit,
+     takePartApi,
+     isValid,
+
+      step, 
+      otpCode, 
+      setOtpCode, 
+      otpError, 
+      otpLength, 
+      confirmOtp, 
+      handleNext, 
+   } = useFormLimitation(type, setLimitation, setQuestion, addQuestion);
 
   const isPhone = type === 'PHONE_NUMBER';
   const label = isPhone ? 'شماره موبایل' : 'ایمیل';
   const placeholder = isPhone ? '09129876543' : 'example@gmail.com';
+
+
+  // NEW — OTP VIEW
+  if (step === 'otp') {
+    return (
+      <Box padding='1rem'>
+        <Typography variant='body2'>
+          کد احراز به شماره همراه {formValue} ارسال شد. کد را وارد کنید.
+        </Typography>
+
+        <Box width='100%' display='flex' marginTop='1.5rem'>
+          <AuthCode
+            length={otpLength}
+            onChange={(otpValue) => setOtpCode(otpValue)}
+            allowedCharacters='numeric'
+            containerClassName='flex justify-space-between flex-row-reverse w-full'
+            inputClassName='w-10 h-10 text-center bg-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 mx-auto'
+          />
+        </Box>
+
+        {otpError && (
+          <Typography
+            variant='caption'
+            color='error'
+            sx={{ marginTop: '10px', display: 'block' }}
+          >
+            {otpError}
+          </Typography>
+        )}
+
+        <Box display='flex' mt={3}>
+          <Button
+            onClick={confirmOtp}
+            variant='contained'
+            disabled={loading}
+            sx={{ flex: 2 }}
+          >
+            تایید
+          </Button>
+        </Box>
+      </Box>
+    );
+  }
+
+
   return (
     <>
       <AnimatedBox key='form-limitation'>
@@ -57,9 +119,7 @@ export default function FormLimitation({ type, setLimitation, setQuestion, addQu
         </Box>
       </AnimatedBox>
 
-      
-
-      <ActionButtons disablePrev nextAction={!isValid ? handleSubmit : takePartApi} loadingNext={loading} />
+      <ActionButtons disablePrev nextAction={!isValid ? handleSubmit : handleNext} loadingNext={loading} />
     </>
   );
 }

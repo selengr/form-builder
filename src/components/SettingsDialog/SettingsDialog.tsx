@@ -18,8 +18,6 @@ import FieldSwitchPair from './FieldSwitchPair';
 import FormProvider, { RHFTextField } from '../hook-form';
 // actions
 import { formSetting } from '../../../actions/builder/form-setting';
-import { queryClient } from '@/lib/react-query.config';
-
 interface Props {
   data:any;
   formName: string;
@@ -178,9 +176,6 @@ export default function SettingsDialog({ formName, onChangeName, data, isBuilder
 
     try {
       await formSetting(isBuilderCardId ?? formId as string, body as any);
-      queryClient.invalidateQueries({
-        queryKey: ['datas_builder_query'],
-      });
       handleOpen();
       onChangeName?.(formFieldName);
       } catch (error:any) {

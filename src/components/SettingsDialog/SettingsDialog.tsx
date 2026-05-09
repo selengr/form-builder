@@ -18,11 +18,12 @@ import FieldSwitchPair from './FieldSwitchPair';
 import FormProvider, { RHFTextField } from '../hook-form';
 // actions
 import { formSetting } from '../../../actions/builder/form-setting';
+import { queryClient } from '@/lib/react-query.config';
 
 interface Props {
   data:any;
   formName: string;
-  isBuilderPage?: boolean;
+  isBuilderCardId?: string;
   onChangeName?: (newName: string) => void;
 
 }
@@ -130,7 +131,7 @@ const propertiesSchema = z.object({
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
-export default function SettingsDialog({ formName, onChangeName, data, isBuilderPage }: Props) {
+export default function SettingsDialog({ formName, onChangeName, data, isBuilderCardId }: Props) {
   const { id: formId } = useParams();
   const searchParams = useSearchParams();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -176,7 +177,10 @@ export default function SettingsDialog({ formName, onChangeName, data, isBuilder
     }
 
     try {
-      await formSetting(formId as string, body as any);
+      await formSetting(isBuilderCardId ?? formId as string, body as any);
+      queryClient.invalidateQueries({
+        queryKey: ['datas_builder_query'],
+      });
       handleOpen();
       onChangeName?.(formFieldName);
       } catch (error:any) {
@@ -225,8 +229,8 @@ export default function SettingsDialog({ formName, onChangeName, data, isBuilder
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-          {!isBuilderPage && <IoSettingsOutline color='#2A2A2A' />}
-          {isBuilderPage && <Image src={EditIcon} alt='edit' width={24} height={24} />}
+          {!Boolean(isBuilderCardId) && <IoSettingsOutline color='#2A2A2A' />}
+          {Boolean(isBuilderCardId) && <Image src={EditIcon} alt='edit' width={24} height={24} />}
       </IconButton>
       <Dialog
         open={openDialog}

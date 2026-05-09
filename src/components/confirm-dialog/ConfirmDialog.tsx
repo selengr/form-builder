@@ -49,7 +49,7 @@ export default function ConfirmDialog({ title, content, action, open, onClose, c
             variant='outlined'
             disableRipple
             sx={{
-              height: 50,
+              height: 50    ,
               fontWeight: 500,
               fontSize: 15,
               borderRadius: 2,

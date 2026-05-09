@@ -43,7 +43,7 @@ interface ListCardProps {
 export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-   const [formTitle, setFormTitle] = useState<string>("");
+  const [fromName, setFormName] = useState<string>(data.name);
   const [openConfirmDialog, setOpenConfirmDialog] = useState<boolean>(false);
 
   const handlePublishStatus = useCallback(async () => {
@@ -148,7 +148,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
 
         {/* <div className='border p-4 rounded-[20px] border-[#DDE1E6] flex flex-col gap-4 w-full max-w-full relative'> */}
         <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-3'>
-          <InfoRow label='نام' value={data.name} bold />
+          <InfoRow label='نام' value={fromName} bold />
           {(data.status === 'PUBLISH' || data.status === 'UN_PUBLISH') && <SwitchButton disabled={loading} checked={data.status === 'PUBLISH'} onChange={handlePublishStatus} />}
         </div>
 
@@ -181,7 +181,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
               </IconButton>
             )}
 
-            {data.status !== 'CREATE' && <SettingsDialog isBuilderPage={true} formName={data.name} data={data}/>}
+            {data.status !== 'CREATE' && <SettingsDialog isBuilderCardId={data.id} formName={data.name} data={data} onChangeName={setFormName}/>}
             
             {data.status === 'CREATE' && data.type !== "PACKAGING" && (
               <Link href={`/builder/${data.id}`}>

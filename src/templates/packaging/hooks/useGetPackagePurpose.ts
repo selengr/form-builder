@@ -5,7 +5,7 @@ import { getPackagePurposeAction } from '../../../../actions/packaging/getPackag
 
 export const PACKAGE_PURPOSE_QUERY_KEY = ['package-purpose'] as const;
 
-export function useGetPackagePurpose(open:boolean) {
+export function useGetPackagePurpose(open?:boolean) {
   const { data, isFetching, isLoading, isError, error } = useQuery({
     queryKey: PACKAGE_PURPOSE_QUERY_KEY,
     queryFn: () => getPackagePurposeAction(),

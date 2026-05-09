@@ -11,6 +11,12 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
   const [error, setError] = useState(false);
   const [helperText, setHelperText] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const [step, setStep] = useState<'form' | 'otp'>('form');
+  const [otpCode, setOtpCode] = useState<string>('');
+  const [otpError, setOtpError] = useState<string>('');
+  const otpLength = 5;
+
   const searchParams = useSearchParams();
   const refId = searchParams.get('refId');
   const from = searchParams.get('from');
@@ -90,6 +96,48 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
     }
   };
 
+
+    const sendOtp = async () => {
+    try {
+      setLoading(true);
+
+      await AxiosApi.post('/api/send-code', {
+        phone: formValue,
+      });
+
+      setStep('otp'); 
+    } catch (error: any) {
+      toast.error('ارسال کد با خطا مواجه شد');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+    const confirmOtp = async () => {
+    try {
+      setLoading(true);
+
+      await AxiosApi.post('/api/confirm-code', {
+        phone: formValue,
+        code: otpCode,
+      });
+
+      await takePartApi(); 
+    } catch (error: any) {
+      setOtpError('کد وارد شده صحیح نیست');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+   const handleNext = () => {
+    if (type === 'PHONE_NUMBER') {
+      sendOtp();
+    } else {
+      takePartApi();
+    }
+  };
+
   const isValid = type === 'PHONE_NUMBER' ? validatePhone(formValue) : validateEmail(formValue);
 
   return {
@@ -101,5 +149,13 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
     handleSubmit,
     takePartApi,
     isValid,
+
+    step, 
+    otpCode, 
+    setOtpCode, 
+    otpError, 
+    otpLength, 
+    confirmOtp, 
+    handleNext, 
   };
 };

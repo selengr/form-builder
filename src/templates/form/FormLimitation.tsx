@@ -57,6 +57,8 @@ export default function FormLimitation({ type, setLimitation, setQuestion, addQu
         </Box>
       </AnimatedBox>
 
+      
+
       <ActionButtons disablePrev nextAction={!isValid ? handleSubmit : takePartApi} loadingNext={loading} />
     </>
   );

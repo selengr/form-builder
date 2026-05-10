@@ -21,7 +21,7 @@ const OTP_EXPIRE_SECONDS = 120;
 
 export default function PhoneOtpPage({
   phone,
-  otpLength = 5,
+  otpLength = 6,
   isLoading = false,
   onBack,
   onResend,
@@ -82,14 +82,12 @@ export default function PhoneOtpPage({
         </Typography>
       </Box>
 
-      {/* Description */}
       <Typography variant="body2" mb={4}>
         کد احراز به شماره همراه {phone} با سرشماره 50004848 پیامک شد. کد ارسال شده را وارد کنید.
       </Typography>
 
-      {/* OTP Input - Fixed sizing and responsiveness */}
       <Box sx={{ display: 'flex', justifyContent: 'center' }} mt={2}>
-        <Box width="100%" maxWidth={340}>
+        <Box width="100%" maxWidth={380}>
           <AuthCode
             length={otpLength}
             allowedCharacters="numeric"
@@ -104,7 +102,6 @@ export default function PhoneOtpPage({
         </Box>
       </Box>
 
-      {/* Error Message */}
       <Box minHeight="24px" mt={1}>
         {otpError && (
           <Typography variant="caption" color="error" sx={{ pr: 1 }}>
@@ -113,7 +110,6 @@ export default function PhoneOtpPage({
         )}
       </Box>
 
-      {/* Timer Section */}
       <Box display="flex" justifyContent="center" alignItems="center" mt={2} mb={4}>
         {remainingSeconds > 0 ? (
           <>
@@ -134,7 +130,6 @@ export default function PhoneOtpPage({
         )}
       </Box>
 
-      {/* ✅ FINAL SYNCED BUTTONS SECTION */}
       <div
         className={`w-full justify-center items-center ${
           isInIframe ? 'm-1 my-0' : 'mt-8'

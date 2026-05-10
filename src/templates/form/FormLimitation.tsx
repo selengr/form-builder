@@ -67,7 +67,7 @@ export default function FormLimitation({ type, setLimitation, setQuestion, addQu
         <AnimatedBox key="otp-page">
           <PhoneOtpPage
             phone={formValue}
-            otpLength={5}
+            otpLength={6}
             isLoading={loading}
             onBack={() => setStep('form')}
             onResend={resendOtp}

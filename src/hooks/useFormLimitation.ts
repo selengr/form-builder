@@ -71,7 +71,7 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
         refId: refId ?? undefined,
 
         eventId,
-        sendCode: Number(otpCode),
+        code: Number(otpCode),
       });
 
       // const params: any = {

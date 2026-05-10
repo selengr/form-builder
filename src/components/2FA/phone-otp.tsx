@@ -74,8 +74,7 @@ export default function PhoneOtpPage({
   };
 
   return (
-    <Box width="100%" maxWidth="600px" mx="auto">
-      {/* Header Section */}
+    <Box width="100%">
       <Box display="flex" alignItems="center" mb={2}>
         <Image src={TwoFAIcon} alt="احراز هویت" />
         <Typography ml={1} variant="body1" fontWeight="bold">

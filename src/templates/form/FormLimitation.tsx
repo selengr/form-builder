@@ -53,34 +53,36 @@ export default function FormLimitation({ type, setLimitation, setQuestion, addQu
   };
 
   /* ------------ OTP PAGE ------------ */
-
-  if (isPhone && step === 'otp') {
-    return (
-      <AnimatedBox key="otp-page">
-        <PhoneOtpPage
-          phone={formValue}
-          otpLength={5}
-          isLoading={loading}
-          onBack={() => setStep('form')}
-          onResend={resendOtp}
-          onConfirm={confirmOtp}
-        />
-      </AnimatedBox>
-    );
-  }
-
-  /* ------------ FORM PAGE ------------ */
-
-return (
-  <Box width="100%" maxWidth="600px" mx="auto">
-    <AnimatedBox key="form-limitation">
-      <Box
+return(
+  <Box
+  width="100%"
+  maxWidth="600px"
+  mx="auto"
+  display="flex"
+  flexDirection="column"
+  minHeight={320}
+  maxHeight={450}
+>
+  {isPhone && step === 'otp' ? (
+    <AnimatedBox key="otp-page">
+      <PhoneOtpPage
+        phone={formValue}
+        otpLength={5}
+        isLoading={loading}
+        onBack={() => setStep('form')}
+        onResend={resendOtp}
+        onConfirm={confirmOtp}
+      />
+    </AnimatedBox>
+  ) : (
+    <>
+      <AnimatedBox key="form-limitation">
+         <Box
         display="flex"
         flexDirection="column"
         gap={2}
         width="100%"
       >
-        {/* Label */}
         <Typography
           sx={{
             fontWeight: 700,
@@ -90,7 +92,6 @@ return (
           {label}
         </Typography>
 
-        {/* Input */}
         <TextField
           placeholder={placeholder}
           type={isPhone ? 'tel' : 'text'}
@@ -127,7 +128,6 @@ return (
           }}
         />
 
-        {/* Description */}
         <Typography
           variant="subtitle2"
           sx={{
@@ -139,15 +139,17 @@ return (
           لطفاً {label} خود را برای ادامه وارد کنید
         </Typography>
       </Box>
-    </AnimatedBox>
+      </AnimatedBox>
+      <Box maxWidth="600px" mt="-15px">
+        <ActionButtons
+          disablePrev
+          nextAction={handleNext}
+          loadingNext={loading}
+        />
+      </Box>
 
-    {/* Buttons */}
-    <ActionButtons
-      disablePrev
-      nextAction={handleNext}
-      loadingNext={loading}
-    />
-  </Box>
-);
-
+    </>
+  )}
+</Box>
+)
 }

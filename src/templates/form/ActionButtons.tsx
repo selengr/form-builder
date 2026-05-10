@@ -3,7 +3,6 @@
 import { Button } from '@mui/material';
 import { useIframeDetector } from '@/hooks/useIframeDetector';
 
-// @ts-ignore
 export default function ActionButtons({
   prevAction = () => {},
   nextAction = () => {},
@@ -19,46 +18,62 @@ export default function ActionButtons({
   loadingPrev?: boolean;
   loadingNext?: boolean;
 }) {
-  const {isInIframe} = useIframeDetector();
+  const { isInIframe } = useIframeDetector();
+
   const buttonHeight = isInIframe ? 42 : 52;
+
   return (
-   <div
-        className={`w-full justify-center items-center ${
-          isInIframe ? 'm-1 my-0' : 'm-4'
-        }`}
-      >
-      <div className='bg-[#F7F7FF] rounded-xl overflow-hidden flex items-center'>
+    <div
+      className={`w-full ${
+        isInIframe ? 'mt-4' : 'mt-8'
+      }`}
+    >
+      <div className="bg-[#F7F7FF] rounded-xl overflow-hidden flex items-center w-full">
         <Button
-          variant='contained'
+          variant="contained"
           loading={loadingPrev}
           onClick={prevAction}
           disabled={disablePrev}
           sx={{
             width: 120,
+            minWidth: 120,
             height: buttonHeight,
             borderRadius: 0,
             bgcolor: '#1758BA',
             boxShadow: 'none',
-            '&:hover': { bgcolor: '#174AA0' },
-          }}>
+            fontWeight: 600,
+
+            '&:hover': {
+              bgcolor: '#174AA0',
+              boxShadow: 'none',
+            },
+          }}
+        >
           قبلی
         </Button>
 
-        <div className='flex-1 flex items-center justify-center px-4'></div>
+        <div className="flex-1" />
 
         <Button
-          variant='contained'
-          onClick={nextAction}
+          variant="contained"
           loading={loadingNext}
+          onClick={nextAction}
           disabled={disableNext}
           sx={{
             width: 120,
+            minWidth: 120,
             height: buttonHeight,
             borderRadius: 0,
             bgcolor: '#1758BA',
             boxShadow: 'none',
-            '&:hover': { bgcolor: '#174AA0' },
-          }}>
+            fontWeight: 600,
+
+            '&:hover': {
+              bgcolor: '#174AA0',
+              boxShadow: 'none',
+            },
+          }}
+        >
           بعدی
         </Button>
       </div>

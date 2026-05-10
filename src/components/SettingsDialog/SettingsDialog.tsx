@@ -28,10 +28,10 @@ interface Props {
 
 const responseLimitationOptions = [
   { label: 'از طریق شماره همراه', value: 'PHONE_NUMBER' },
-  {
-    label: 'از طریق ایمیل',
-    value: 'EMAIL',
-  },
+  // {
+  //   label: 'از طریق ایمیل',
+  //   value: 'EMAIL',
+  // },
 ];
 
 const layoutOptions = [
@@ -42,18 +42,18 @@ const layoutOptions = [
 const themeOptions = [{ label: 'تم 1', value: 'theme_1' }];
 
 const fieldsConfig = [
-  {
-    name: 'timeToComplete',
-    label: 'زمان شروع',
-    type: 'time-picker',
-    disabled: false,
-  },
-  {
-    name: 'expireDate',
-    label: 'تاریخ فعال سازی و انقضا فرم',
-    type: 'date-picker',
-    disabled: false,
-  },
+  // {
+  //   name: 'timeToComplete',
+  //   label: 'زمان شروع',
+  //   type: 'time-picker',
+  //   disabled: false,
+  // },
+  // {
+  //   name: 'expireDate',
+  //   label: 'تاریخ فعال سازی و انقضا فرم',
+  //   type: 'date-picker',
+  //   disabled: false,
+  // },
   {
     name: 'responseLimitation',
     label: 'محدودیت پاسخ‌‌دهی',
@@ -117,14 +117,14 @@ const propertiesSchema = z.object({
   //   value: z.string(),
   //   checked: z.boolean(),
   // }),
-  expireDate: z.object({
-    value: z.any(),
-    checked: z.boolean(),
-  }),
-  timeToComplete: z.object({
-    value: z.any(),
-    checked: z.boolean(),
-  }),
+  // expireDate: z.object({
+  //   value: z.any(),
+  //   checked: z.boolean(),
+  // }),
+  // timeToComplete: z.object({
+  //   value: z.any(),
+  //   checked: z.boolean(),
+  // }),
 });
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
@@ -149,9 +149,12 @@ export default function SettingsDialog({ formName, onChangeName, data, isBuilder
     defaultValues: {
       name: formFieldName,
       label: formFieldId,
-      expireDate: { checked: false, value: '' },
-      timeToComplete: { checked: false, value: '' },
-      responseLimitation: { checked: false, value: '' },
+      responseLimitation: {
+      checked: !!data?.formSettingModel?.responseLimitation,
+      value: data?.formSettingModel?.responseLimitation ?? '',
+    },
+      // expireDate: { checked: false, value: '' },
+      // timeToComplete: { checked: false, value: '' },
       // layout: { checked: false, value: [] },
       // theme: { checked: false, value: '' },
     },
@@ -184,30 +187,22 @@ export default function SettingsDialog({ formName, onChangeName, data, isBuilder
   }
 
   useEffect(() => {
-    if (data?.formSettingModel) {
-      // فقط فیلدهای سوئیچ‌پیر
-      const serverValues = {
-        expireDate: {
-          checked: !!data.formSettingModel.expireDate,
-          value: data.formSettingModel.expireDate || '',
-        },
-        timeToComplete: {
-          checked: !!data.formSettingModel.timeToComplete,
-          value: data.formSettingModel.timeToComplete || '',
-        },
-        responseLimitation: {
-          checked: !!data.formSettingModel.responseLimitation,
-          value: data.formSettingModel.responseLimitation || '',
-        },
-        // name: formName || '',
-        // label: data.formSettingModel.label || '',
-      };
+  if (data?.formSettingModel) {
+    const serverValue = data.formSettingModel.responseLimitation;
 
-      reset((prev) => ({ ...prev, ...serverValues }));
-      // setFormFieldName(formName || '')
-      // setFormFieldId(data.formSettingModel.label || '')
-    }
-  }, [data, reset]);
+    const serverValues = {
+      responseLimitation: {
+        checked: !!serverValue,
+        value: serverValue ?? '',
+      },
+    };
+
+    reset((prev) => ({
+      ...prev,
+      ...serverValues,
+    }));
+  }
+}, [data, reset]);
 
   useEffect(() => {
     reset();

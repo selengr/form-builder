@@ -1,13 +1,14 @@
 'use client';
 
-import { Box, Button, TextField, Typography } from '@mui/material';
 import AnimatedBox from './AnimatedBox';
-import ActionButtons from './ActionButtons';
-import { ILimitation } from '@/hooks/useParticipateForm';
+import { Box,TextField, Typography } from '@mui/material';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { useFormLimitation } from '@/hooks/useFormLimitation';
-import AuthCode from 'react-auth-code-input';
+// components
+import ActionButtons from './ActionButtons';
 import PhoneOtpPage from '@/components/2FA/phone-otp';
+// hooks
+import { ILimitation } from '@/hooks/useParticipateForm';
+import { useFormLimitation } from '@/hooks/useFormLimitation';
 interface Props {
   type: '' | 'PHONE_NUMBER' | 'EMAIL';
   setLimitation: Dispatch<SetStateAction<ILimitation>>;
@@ -25,7 +26,6 @@ export default function FormLimitation({ type, setLimitation, setQuestion, addQu
     handleSubmit,
     takePartApi,
     isValid,
-
     sendOtp,
     resendOtp,
     confirmOtp

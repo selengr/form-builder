@@ -8,13 +8,11 @@ import { AxiosApi } from '@/services/axios/AxiosApi';
 
 export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimitation: (limitation: ILimitation) => void, setQuestion: (data: any) => void, addQuestion: (data: any) => void) => {
   const [formValue, setFormValue] = useState('');
+  const [eventId, setEventId] = useState('');
   const [error, setError] = useState(false);
   const [helperText, setHelperText] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const [otpCode, setOtpCode] = useState<string>('');
-  const [otpError, setOtpError] = useState<string>('');
-  const otpLength = 5;
 
   const searchParams = useSearchParams();
   const refId = searchParams.get('refId');
@@ -62,7 +60,7 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
     setHelperText(type === 'PHONE_NUMBER' ? 'شماره تلفن همراه الزامی می‌باشد' : 'ایمیل الزامی است');
   };
 
-  const takePartApi = async () => {
+  const takePartApi = async (otpCode?:string) => {
     try {
       setLoading(true);
       const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
@@ -71,6 +69,9 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
         formId: !isLink ? slug : null,  
         username: formValue,
         refId: refId ?? undefined,
+
+        eventId,
+        sendCode: Number(otpCode),
       });
 
       // const params: any = {
@@ -100,10 +101,10 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
     try {
       setLoading(true);
 
-      await AxiosApi.post('/send-code', {
+      const response = await AxiosApi.post('/send-code', {
         phoneNumber: formValue,
       });
-
+      setEventId(response.data.eventId)
       toast.success('کد تایید ارسال شد');
       return true;
     } catch (error: any) {
@@ -128,12 +129,12 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
     try {
       setLoading(true);
 
-      await AxiosApi.post('/confirm-code', {
-        phone: formValue,
-        code: otpCode,
-      });
+      // await AxiosApi.post('/confirm-code', {
+      //   eventId,
+      //   code: otpCode,
+      // });
 
-      await takePartApi();
+      await takePartApi(otpCode);
 
       return { success: true };
     } catch (error: any) {

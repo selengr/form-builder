@@ -144,6 +144,7 @@ export default function PhoneOtpPage({
           <Button
             variant="contained"
             onClick={onBack}
+            disabled={isLoading}
             sx={{
               width: 120,
               height: buttonHeight,
@@ -162,6 +163,7 @@ export default function PhoneOtpPage({
             variant="contained"
             onClick={handleConfirmOtp}
             loading={isLoading}
+            disabled={isLoading}
             sx={{
               width: 120,
               height: buttonHeight,

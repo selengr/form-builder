@@ -73,7 +73,7 @@ const ListCard: React.FC<ListCardProps> = ({
   };
 
   const handlePreview = () => {
-    router.push(`/preview/${data.id}?rep=list`);
+    router.push(`/preview/${data.formId}?rep=list`);
   };
 
   const handleNavigateToReport = () => {

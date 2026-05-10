@@ -72,6 +72,10 @@ const ListCard: React.FC<ListCardProps> = ({
     router.push(`/builder/${data.formId}?admin=packaging&pid=${data.id}`);
   };
 
+  const handlePreview = () => {
+    router.push(`/preview/${data.id}?rep=list`);
+  };
+
   const handleNavigateToReport = () => {
     localStorage.setItem(REPORT_BACK_KEY, "/packaging");
     router.push(`/reports/create-solo/${data.formId}`)
@@ -101,7 +105,7 @@ const ListCard: React.FC<ListCardProps> = ({
           <div className="max-w-[100px] md:min-w-[105px]">
             <ActionButton
               label="مشاهده"
-              onClick={handleEditClick}
+              onClick={handlePreview}
               color="#1758BA"
               hoverColor="#216ee1"
             />

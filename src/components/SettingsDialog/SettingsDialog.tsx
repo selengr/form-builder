@@ -224,8 +224,8 @@ export default function SettingsDialog({ formName, onChangeName, data, isBuilder
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-          {!Boolean(isBuilderCardId) && <IoSettingsOutline color='#2A2A2A' />}
-          {Boolean(isBuilderCardId) && <Image src={EditIcon} alt='edit' width={24} height={24} />}
+          {!isBuilderCardId && <IoSettingsOutline color='#2A2A2A' />}
+          {isBuilderCardId && <Image src={EditIcon} alt='edit' width={24} height={24} />}
       </IconButton>
       <Dialog
         open={openDialog}

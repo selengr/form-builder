@@ -54,7 +54,7 @@ export default function FormLimitation({ type, setLimitation, setQuestion, addQu
 
   /* ------------ OTP PAGE ------------ */
 
-  // if (isPhone && step === 'otp') {
+  if (isPhone && step === 'otp') {
     return (
       <AnimatedBox key="otp-page">
         <PhoneOtpPage
@@ -67,52 +67,87 @@ export default function FormLimitation({ type, setLimitation, setQuestion, addQu
         />
       </AnimatedBox>
     );
-  // }
+  }
 
   /* ------------ FORM PAGE ------------ */
 
-  return (
-    <>
-      <AnimatedBox key='form-limitation'>
-        <Box display='flex' flexDirection='column' gap={1} width='100%' maxWidth='600px'>
-          <Box display='flex' justifyContent='space-between' width='100%'>
-            <Typography sx={{ marginRight: '25px', fontWeight: 600 }}>{label}</Typography>
-          </Box>
+return (
+  <Box width="100%" maxWidth="600px" mx="auto">
+    <AnimatedBox key="form-limitation">
+      <Box
+        display="flex"
+        flexDirection="column"
+        gap={2}
+        width="100%"
+      >
+        {/* Label */}
+        <Typography
+          sx={{
+            fontWeight: 700,
+            fontSize: '1rem',
+          }}
+        >
+          {label}
+        </Typography>
 
-          <TextField
-            placeholder={placeholder}
-            type={isPhone ? 'tel' : 'text'}
-            value={formValue}
-            onChange={(e) => handleChange(e.target.value)}
-            error={error}
-            helperText={helperText}
-            fullWidth
-            sx={{
-              '& .MuiInputBase-root': { padding: 1.5 },
-              '& input': { padding: 0 },
-            }}
-            inputProps={{
-              ...(isPhone && {
-                maxLength: 11,
-                pattern: '[0-9]*',
-                onInput: (e: React.ChangeEvent<HTMLInputElement>) => {
-                  e.target.value = e.target.value.replace(/[^0-9]/g, '');
-                },
-              }),
-            }}
-          />
+        {/* Input */}
+        <TextField
+          placeholder={placeholder}
+          type={isPhone ? 'tel' : 'text'}
+          value={formValue}
+          onChange={(e) => handleChange(e.target.value)}
+          error={error}
+          helperText={helperText}
+          fullWidth
+          sx={{
+            '& .MuiInputBase-root': {
+              height: 56,
+              borderRadius: '16px',
+              backgroundColor: '#F5F7FA',
+              px: 1,
+            },
 
-          <Typography variant='subtitle2' sx={{ fontSize: 12, fontWeight: 500 }}>
-            لطفاً {label} خود را برای ادامه وارد کنید
-          </Typography>
-        </Box>
-      </AnimatedBox>
+            '& input': {
+              py: 0,
+              fontSize: '1rem',
+            },
 
-      <ActionButtons
-        disablePrev
-        nextAction={handleNext}
-        loadingNext={loading}
-      />
-    </>
-  );
+            '& .MuiFormHelperText-root': {
+              mr: 0.5,
+            },
+          }}
+          inputProps={{
+            ...(isPhone && {
+              maxLength: 11,
+              pattern: '[0-9]*',
+              onInput: (e: React.ChangeEvent<HTMLInputElement>) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+              },
+            }),
+          }}
+        />
+
+        {/* Description */}
+        <Typography
+          variant="subtitle2"
+          sx={{
+            fontSize: 12,
+            fontWeight: 500,
+            color: '#666',
+          }}
+        >
+          لطفاً {label} خود را برای ادامه وارد کنید
+        </Typography>
+      </Box>
+    </AnimatedBox>
+
+    {/* Buttons */}
+    <ActionButtons
+      disablePrev
+      nextAction={handleNext}
+      loadingNext={loading}
+    />
+  </Box>
+);
+
 }

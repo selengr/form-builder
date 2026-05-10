@@ -6,6 +6,7 @@ import AuthCode from 'react-auth-code-input';
 import { BiAlarm } from 'react-icons/bi';
 import { Box, Button, Typography, useTheme } from '@mui/material';
 import TwoFAIcon from '@/../public/images/purchase-order/TwoFAIcon.svg';
+import { useIframeDetector } from '@/hooks/useIframeDetector';
 
 interface PhoneOtpPageProps {
   phone: string;
@@ -27,6 +28,8 @@ export default function PhoneOtpPage({
   onConfirm,
 }: PhoneOtpPageProps) {
   const { palette } = useTheme();
+  const { isInIframe } = useIframeDetector();
+  const buttonHeight = isInIframe ? 42 : 52;
 
   const [otpCode, setOtpCode] = useState('');
   const [otpError, setOtpError] = useState('');
@@ -35,11 +38,9 @@ export default function PhoneOtpPage({
 
   useEffect(() => {
     if (remainingSeconds <= 0) return;
-
     const timer = setInterval(() => {
       setRemainingSeconds((prev) => prev - 1);
     }, 1000);
-
     return () => clearInterval(timer);
   }, [remainingSeconds]);
 
@@ -54,11 +55,8 @@ export default function PhoneOtpPage({
       setOtpError('کد تایید را کامل وارد نمایید.');
       return;
     }
-
     setOtpError('');
-
     const result = await onConfirm(otpCode);
-
     if (!result.success) {
       setOtpError(result.message || 'کد وارد شده صحیح نیست');
     }
@@ -69,7 +67,6 @@ export default function PhoneOtpPage({
     setOtpError('');
     const ok = await onResend();
     setResending(false);
-
     if (ok) {
       setOtpCode('');
       setRemainingSeconds(OTP_EXPIRE_SECONDS);
@@ -77,99 +74,108 @@ export default function PhoneOtpPage({
   };
 
   return (
-    <Box width="100%" maxWidth="600px">
+    <Box width="100%" maxWidth="600px" mx="auto">
+      {/* Header Section */}
       <Box display="flex" alignItems="center" mb={2}>
         <Image src={TwoFAIcon} alt="احراز هویت" />
-        <Typography mr={1} variant="body1" fontWeight="bold">
+        <Typography ml={1} variant="body1" fontWeight="bold">
           تایید شماره موبایل
         </Typography>
       </Box>
 
-      <Box display="flex" flexDirection="column" gap={2}>
-        <Typography variant="body2">
-          کد تایید به شماره{' '}
-          <Typography component="span" fontWeight="bold">
-            {phone}
-          </Typography>{' '}
-          پیامک شد. لطفاً کد ارسال‌شده را وارد کنید.
-        </Typography>
+      {/* Description */}
+      <Typography variant="body2" mb={4}>
+        کد احراز به شماره همراه {phone} با سرشماره 50004848 پیامک شد. کد ارسال شده را وارد کنید.
+      </Typography>
 
-        <Box width="100%" display="flex" mt={1}>
+      {/* OTP Input - Fixed sizing and responsiveness */}
+      <Box sx={{ display: 'flex', justifyContent: 'center' }} mt={2}>
+        <Box width="100%" maxWidth={340}>
           <AuthCode
             length={otpLength}
             allowedCharacters="numeric"
+            // value={otpCode}
             onChange={(value) => {
               setOtpCode(value);
               if (otpError) setOtpError('');
             }}
-            containerClassName="flex justify-space-between flex-row-reverse w-full"
-            inputClassName="w-10 h-10 text-center bg-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 mx-auto"
+            containerClassName="flex justify-between flex-row-reverse w-full gap-2"
+            inputClassName="flex-1 h-[52px] max-w-[56px] text-center bg-gray-100 rounded-xl text-lg font-medium focus:outline-none focus:ring-2 focus:ring-blue-400 border border-transparent transition-all"
           />
         </Box>
+      </Box>
 
+      {/* Error Message */}
+      <Box minHeight="24px" mt={1}>
         {otpError && (
-          <Typography
-            component="span"
-            variant="caption"
-            color="error"
-            sx={{
-              minHeight: '14px',
-              fontSize: '0.75rem',
-              pr: '0.5rem',
-            }}
-          >
+          <Typography variant="caption" color="error" sx={{ pr: 1 }}>
             {otpError}
           </Typography>
         )}
+      </Box>
 
-        <Box display="flex" justifyContent="center" alignItems="center" my={2}>
-          {remainingSeconds > 0 ? (
-            <>
-              <BiAlarm size="1.1rem" color={palette.grey[700]} />
-              <Typography fontSize="0.8rem" mr={1} color={palette.grey[700]}>
-                {timeText}
-              </Typography>
-            </>
-          ) : (
-            <Button
-              onClick={handleResend}
-              disabled={resending || isLoading}
-              size="small"
-              sx={{ mx: 'auto' }}
-            >
-              ارسال مجدد
-            </Button>
-          )}
-        </Box>
-
-        <Box display="flex" gap={1}>
+      {/* Timer Section */}
+      <Box display="flex" justifyContent="center" alignItems="center" mt={2} mb={4}>
+        {remainingSeconds > 0 ? (
+          <>
+            <BiAlarm size="1.1rem" color={palette.grey[700]} />
+            <Typography fontSize="0.8rem" mr={1} color={palette.grey[700]}>
+              {timeText}
+            </Typography>
+          </>
+        ) : (
           <Button
-            onClick={handleConfirmOtp}
-            variant="contained"
-            disabled={isLoading}
-            sx={{
-              borderRadius: '10px',
-              boxShadow: 'none',
-              flex: 2,
-            }}
+            onClick={handleResend}
+            disabled={resending || isLoading}
+            size="small"
+            sx={{ fontWeight: 600 }}
           >
-            تایید
+            ارسال مجدد
           </Button>
+        )}
+      </Box>
 
+      {/* ✅ FINAL SYNCED BUTTONS SECTION */}
+      <div
+        className={`w-full justify-center items-center ${
+          isInIframe ? 'm-1 my-0' : 'mt-8'
+        }`}
+      >
+        <div className="bg-[#F7F7FF] rounded-xl overflow-hidden flex items-center">
           <Button
-            variant="outlined"
+            variant="contained"
             onClick={onBack}
-            disabled={isLoading}
             sx={{
-              borderRadius: '10px',
+              width: 120,
+              height: buttonHeight,
+              borderRadius: 0,
+              bgcolor: '#1758BA',
               boxShadow: 'none',
-              flex: 1,
+              '&:hover': { bgcolor: '#174AA0' },
             }}
           >
             بازگشت
           </Button>
-        </Box>
-      </Box>
+
+          <div className="flex-1 flex items-center justify-center px-4"></div>
+
+          <Button
+            variant="contained"
+            onClick={handleConfirmOtp}
+            loading={isLoading}
+            sx={{
+              width: 120,
+              height: buttonHeight,
+              borderRadius: 0,
+              bgcolor: '#1758BA',
+              boxShadow: 'none',
+              '&:hover': { bgcolor: '#174AA0' },
+            }}
+          >
+            تایید
+          </Button>
+        </div>
+      </div>
     </Box>
   );
 }

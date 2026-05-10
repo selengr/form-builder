@@ -12,7 +12,6 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
   const [helperText, setHelperText] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const [step, setStep] = useState<'form' | 'otp'>('form');
   const [otpCode, setOtpCode] = useState<string>('');
   const [otpError, setOtpError] = useState<string>('');
   const otpLength = 5;
@@ -97,7 +96,7 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
   };
 
 
-    const sendOtp = async () => {
+  const sendOtp = async (): Promise<boolean> => {
     try {
       setLoading(true);
 
@@ -105,36 +104,46 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
         phoneNumber: formValue,
       });
 
-      setStep('otp'); 
+      toast.success('کد تایید ارسال شد');
+      return true;
     } catch (error: any) {
-      toast.error('ارسال کد با خطا مواجه شد');
+      const message =
+        error?.response?.data?.message?.[0]?.title ||
+        'ارسال کد با خطا مواجه شد';
+
+      toast.error(message);
+      return false;
     } finally {
       setLoading(false);
     }
   };
 
-    const confirmOtp = async () => {
+  const resendOtp = async (): Promise<boolean> => {
+    return sendOtp();
+  };
+
+  const confirmOtp = async (
+    otpCode: string
+  ): Promise<{ success: boolean; message?: string }> => {
     try {
       setLoading(true);
 
-      await AxiosApi.post('/api/confirm-code', {
+      await AxiosApi.post('/confirm-code', {
         phone: formValue,
         code: otpCode,
       });
 
-      await takePartApi(); 
+      await takePartApi();
+
+      return { success: true };
     } catch (error: any) {
-      setOtpError('کد وارد شده صحیح نیست');
+      const message =
+        error?.response?.data?.message?.[0]?.title ||
+        'کد وارد شده صحیح نیست';
+
+      return { success: false, message };
     } finally {
       setLoading(false);
-    }
-  };
-
-   const handleNext = () => {
-    if (type === 'PHONE_NUMBER') {
-      sendOtp();
-    } else {
-      takePartApi();
     }
   };
 
@@ -150,12 +159,8 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
     takePartApi,
     isValid,
 
-    step, 
-    otpCode, 
-    setOtpCode, 
-    otpError, 
-    otpLength, 
-    confirmOtp, 
-    handleNext, 
+    sendOtp,
+    resendOtp,
+    confirmOtp,
   };
 };

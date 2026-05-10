@@ -4,9 +4,10 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import AnimatedBox from './AnimatedBox';
 import ActionButtons from './ActionButtons';
 import { ILimitation } from '@/hooks/useParticipateForm';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useFormLimitation } from '@/hooks/useFormLimitation';
 import AuthCode from 'react-auth-code-input'; 
+import PhoneOtpPage from '@/components/2FA/phone-otp';
 interface Props {
   type: '' | 'PHONE_NUMBER' | 'EMAIL';
   setLimitation: Dispatch<SetStateAction<ILimitation>>;
@@ -25,62 +26,50 @@ export default function FormLimitation({ type, setLimitation, setQuestion, addQu
      takePartApi,
      isValid,
 
-      step, 
-      otpCode, 
-      setOtpCode, 
-      otpError, 
-      otpLength, 
-      confirmOtp, 
-      handleNext, 
+    sendOtp,
+    resendOtp,
+    confirmOtp
    } = useFormLimitation(type, setLimitation, setQuestion, addQuestion);
+
+  const [step, setStep] = useState<'form' | 'otp'>('form');
 
   const isPhone = type === 'PHONE_NUMBER';
   const label = isPhone ? 'شماره موبایل' : 'ایمیل';
   const placeholder = isPhone ? '09129876543' : 'example@gmail.com';
 
 
-  // NEW — OTP VIEW
-  if (step === 'otp') {
+  const handleNext = async () => {
+    if (!isValid) {
+      handleSubmit();
+      return;
+    }
+
+    if (isPhone) {
+      const success = await sendOtp();
+      if (success) setStep('otp');
+    } else {
+      await takePartApi();
+    }
+  };
+
+  /* ------------ OTP PAGE ------------ */
+
+  // if (isPhone && step === 'otp') {
     return (
-      <Box padding='1rem'>
-        <Typography variant='body2'>
-          کد احراز به شماره همراه {formValue} ارسال شد. کد را وارد کنید.
-        </Typography>
-
-        <Box width='100%' display='flex' marginTop='1.5rem'>
-          <AuthCode
-            length={otpLength}
-            onChange={(otpValue) => setOtpCode(otpValue)}
-            allowedCharacters='numeric'
-            containerClassName='flex justify-space-between flex-row-reverse w-full'
-            inputClassName='w-10 h-10 text-center bg-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 mx-auto'
-          />
-        </Box>
-
-        {otpError && (
-          <Typography
-            variant='caption'
-            color='error'
-            sx={{ marginTop: '10px', display: 'block' }}
-          >
-            {otpError}
-          </Typography>
-        )}
-
-        <Box display='flex' mt={3}>
-          <Button
-            onClick={confirmOtp}
-            variant='contained'
-            disabled={loading}
-            sx={{ flex: 2 }}
-          >
-            تایید
-          </Button>
-        </Box>
-      </Box>
+      <AnimatedBox key="otp-page">
+        <PhoneOtpPage
+          phone={formValue}
+          otpLength={5}
+          isLoading={loading}
+          onBack={() => setStep('form')}
+          onResend={resendOtp}
+          onConfirm={confirmOtp}
+        />
+      </AnimatedBox>
     );
-  }
+  // }
 
+  /* ------------ FORM PAGE ------------ */
 
   return (
     <>
@@ -119,7 +108,11 @@ export default function FormLimitation({ type, setLimitation, setQuestion, addQu
         </Box>
       </AnimatedBox>
 
-      <ActionButtons disablePrev nextAction={!isValid ? handleSubmit : handleNext} loadingNext={loading} />
+      <ActionButtons
+        disablePrev
+        nextAction={handleNext}
+        loadingNext={loading}
+      />
     </>
   );
 }

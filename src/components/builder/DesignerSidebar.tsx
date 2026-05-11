@@ -27,8 +27,23 @@ const ELEMENTS = [
   FormElements.MULTIPLE_CHOICE_IMAGE,
   FormElements.PACKAGE_INJECTION_FIELD,
 ];
+export interface FormSettingModel {
+  responseLimitation: string | null;
+  label?: string | null;
+}
+
+export type FormTypeEnum =
+  | 'SURVEY'
+  | 'PACKAGING'
+  | 'DATA_COLLECTION';
+
+export interface DesignerSidebarData {
+  typeEnum: FormTypeEnum;
+  formSettingModel?: FormSettingModel | null;
+}
+
 interface DesignerSidebarProps {
-  data: any;
+  data: DesignerSidebarData;
 }
 // eslint-disable-next-line react/display-name
 const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarProps) {

@@ -73,6 +73,13 @@ export default function PhoneOtpPage({
     }
   };
 
+  const maskPhone = (phone: string) => {
+  if (phone.length < 7) return phone;
+  const start = phone.slice(0, 3);
+  const end = phone.slice(-4);
+  return `${start}****${end}`;
+};
+
   return (
     <Box width="100%">
       <Box display="flex" alignItems="center" mb={2}>
@@ -83,7 +90,7 @@ export default function PhoneOtpPage({
       </Box>
 
       <Typography variant="body2" mb={4}>
-        کد احراز به شماره همراه {phone} با سرشماره 50004848 پیامک شد. کد ارسال شده را وارد کنید.
+        کد احراز به شماره همراه {maskPhone(phone)} با سرشماره 50004848 پیامک شد. کد ارسال شده را وارد کنید.
       </Typography>
 
       <Box sx={{ display: 'flex', justifyContent: 'center' }} mt={2}>

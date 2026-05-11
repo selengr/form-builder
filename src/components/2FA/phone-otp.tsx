@@ -74,11 +74,11 @@ export default function PhoneOtpPage({
   };
 
   const maskPhone = (phone: string) => {
-  if (phone.length < 7) return phone;
-  const start = phone.slice(0, 4);
-  const end = phone.slice(-4);
-  return `${end}***${start}`;
-};
+    if (phone.length < 7) return phone;
+    const start = phone.slice(0, 4);
+    const end = phone.slice(-4);
+    return `${end}***${start}`;
+  };
 
   return (
     <Box width="100%">
@@ -95,6 +95,7 @@ export default function PhoneOtpPage({
 
       <Box sx={{ display: 'flex', justifyContent: 'center' }} mt={2}>
         <Box width="100%" maxWidth={380}>
+
           <AuthCode
             length={otpLength}
             allowedCharacters="numeric"
@@ -103,8 +104,9 @@ export default function PhoneOtpPage({
               setOtpCode(value);
               if (otpError) setOtpError('');
             }}
-            containerClassName="flex justify-between flex-row-reverse w-full gap-2"
-            inputClassName="flex-1 h-[52px] max-w-[56px] text-center bg-gray-100 rounded-xl text-lg font-medium focus:outline-none focus:ring-2 focus:ring-blue-400 border border-transparent transition-all"
+            containerClassName="flex flex-row-reverse justify-center w-full gap-2 sm:gap-3"
+            inputClassName="w-full max-w-[42px] sm:max-w-[52px] h-[42px] sm:h-[52px] text-center bg-gray-100 rounded-xl text-lg font-medium focus:outline-none focus:ring-2 focus:ring-blue-400 border border-transparent transition-all"
+
           />
         </Box>
       </Box>
@@ -130,7 +132,10 @@ export default function PhoneOtpPage({
             onClick={handleResend}
             disabled={resending || isLoading}
             size="small"
-            sx={{ fontWeight: 600 }}
+            sx={{
+              fontWeight: 500,
+              fontSize: { xs: 10, sm: 13 },
+            }}
           >
             ارسال مجدد
           </Button>
@@ -138,28 +143,28 @@ export default function PhoneOtpPage({
       </Box>
 
       <div
-        className={`w-full justify-center items-center ${
-          isInIframe ? 'm-1 my-0' : 'mt-8'
-        }`}
+        className={`w-full justify-center items-center ${isInIframe ? 'm-1 my-0' : 'mt-8'
+          }`}
       >
-        <div className="bg-[#F7F7FF] rounded-xl overflow-hidden flex items-center">
+        <div className="h-10 sm:h-12 bg-[#F7F7FF] rounded-xl overflow-hidden flex items-center">
           <Button
             variant="contained"
             onClick={onBack}
             disabled={isLoading}
             sx={{
-              width: 120,
+              width: { xs: 100, sm: 120 },
               height: buttonHeight,
               borderRadius: 0,
               bgcolor: '#1758BA',
               boxShadow: 'none',
+              fontSize: { xs: 11, sm: 14 },
               '&:hover': { bgcolor: '#174AA0' },
             }}
           >
             بازگشت
           </Button>
 
-          <div className="flex-1 flex items-center justify-center px-4"></div>
+          <div className="flex-1 flex items-center justify-center px-4 sm:p-0"></div>
 
           <Button
             variant="contained"
@@ -167,11 +172,12 @@ export default function PhoneOtpPage({
             loading={isLoading}
             disabled={isLoading}
             sx={{
-              width: 120,
+              width: { xs: 100, sm: 120 },
               height: buttonHeight,
               borderRadius: 0,
               bgcolor: '#1758BA',
               boxShadow: 'none',
+              fontSize: { xs: 11, sm: 14 },
               '&:hover': { bgcolor: '#174AA0' },
             }}
           >

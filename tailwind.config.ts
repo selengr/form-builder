@@ -22,7 +22,7 @@ const config: Config = {
                 },],
             },
         }, screens: {
-            xs: "375px", sm: "768", md: "900px", lg: "1280px",
+            xs: "375px", sm: "768px", md: "900px", lg: "1280px",
         }, backgroundImage: {
             'banner-m-bg1': "url('/images/home-page/banner-m-bg1.svg')",
             'banner-d-bg1': "url('/images/home-page/banner-d-bg1.svg')",

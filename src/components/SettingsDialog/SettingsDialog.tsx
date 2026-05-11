@@ -35,12 +35,12 @@ const responseLimitationOptions = [
   // },
 ];
 
-const layoutOptions = [
-  { label: 'نمایش فهرستی', value: 'list-view' },
-  { label: 'نمایش صفحه‌ای', value: 'page-view' },
-];
+// const layoutOptions = [
+//   { label: 'نمایش فهرستی', value: 'list-view' },
+//   { label: 'نمایش صفحه‌ای', value: 'page-view' },
+// ];
 
-const themeOptions = [{ label: 'تم 1', value: 'theme_1' }];
+// const themeOptions = [{ label: 'تم 1', value: 'theme_1' }];
 
 const fieldsConfig = [
   // {

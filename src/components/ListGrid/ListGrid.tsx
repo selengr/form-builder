@@ -27,7 +27,6 @@ export interface SearchBoxItem {
   fieldValue: string | string[];
   nextConditionOperator: 'OR' | 'AND';
 }
-
 interface Props {
   searchBoxList: SearchBoxItem[];
   filterBoxList: SearchBoxItem[];

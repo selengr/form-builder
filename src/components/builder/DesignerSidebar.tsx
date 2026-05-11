@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
 import { Fragment, memo, useState } from 'react';
+import { useParams, useSearchParams } from 'next/navigation';
 import { Button, IconButton, useMediaQuery } from '@mui/material';
 //type
 import { FormElements } from '@/types/FormElements';
@@ -19,18 +19,17 @@ import SettingsDialog from '../SettingsDialog/SettingsDialog';
 import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
 
 const ELEMENTS = [
+  FormElements.RATING,
+  FormElements.SPECTRAL,
   FormElements.TEXT_FIELD,
+  FormElements.INFO_FIELD,
   FormElements.MULTIPLE_CHOICE,
   FormElements.MULTIPLE_CHOICE_IMAGE,
-  FormElements.SPECTRAL,
-  FormElements.RATING,
   FormElements.PACKAGE_INJECTION_FIELD,
-  FormElements.INFO_FIELD
 ];
 interface DesignerSidebarProps {
   data: any;
 }
-
 // eslint-disable-next-line react/display-name
 const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarProps) {
   const { id } = useParams();
@@ -38,9 +37,9 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
   const pid = searchParams.get('pid');
   const [formTitle, setFormTitle] = useState<string>("");
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
-const [formLimitation, setFormLimitation] = useState<string | null>(
-  data?.formSettingModel?.responseLimitation ?? null
-);
+  const [formLimitation, setFormLimitation] = useState<string | null>(
+    data?.formSettingModel?.responseLimitation ?? null
+  );
 
   const { formName, formSetting } = useDesigner();
   const isDesktop = useMediaQuery('(min-width:1280px)');
@@ -56,18 +55,11 @@ const [formLimitation, setFormLimitation] = useState<string | null>(
     IsPackaging: Boolean(pid),
   });
 
-    useEffect(() => {
-      if (formName) {
-        setFormTitle(formName);
-      }
-    }, [formName]);
-
-    // useEffect(() => {
-    //   if (data?.formSettingModel?.responseLimitation !== undefined) {
-    //     setFormLimitation(data.formSettingModel.responseLimitation);
-    //   }
-    // }, []);
-
+  useEffect(() => {
+    if (formName) {
+      setFormTitle(formName);
+    }
+  }, [formName]);
 
   const confirmPublish = () => {
     publishMutation.mutate(undefined, {

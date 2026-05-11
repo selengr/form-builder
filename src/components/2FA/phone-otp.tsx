@@ -75,9 +75,9 @@ export default function PhoneOtpPage({
 
   const maskPhone = (phone: string) => {
   if (phone.length < 7) return phone;
-  const start = phone.slice(0, 3);
+  const start = phone.slice(0, 4);
   const end = phone.slice(-4);
-  return `${start}****${end}`;
+  return `${end}***${start}`;
 };
 
   return (

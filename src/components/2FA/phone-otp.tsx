@@ -31,10 +31,10 @@ export default function PhoneOtpPage({
   const { isInIframe } = useIframeDetector();
   const buttonHeight = isInIframe ? 42 : 52;
 
-  const [otpCode, setOtpCode] = useState('');
-  const [otpError, setOtpError] = useState('');
+  const [otpCode, setOtpCode] = useState<string>('');
+  const [otpError, setOtpError] = useState<string>('');
+  const [resending, setResending] = useState<boolean>(false);
   const [remainingSeconds, setRemainingSeconds] = useState(OTP_EXPIRE_SECONDS);
-  const [resending, setResending] = useState(false);
 
   useEffect(() => {
     if (remainingSeconds <= 0) return;

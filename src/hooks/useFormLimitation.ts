@@ -60,37 +60,36 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
     setHelperText(type === 'PHONE_NUMBER' ? 'شماره تلفن همراه الزامی می‌باشد' : 'ایمیل الزامی است');
   };
 
-  const takePartApi = async (otpCode?:string) => {
-    try {
-      setLoading(true);
-      const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
-      const response = await AxiosApi.post('/take-part/check-answer-to-form-before', {
+ const takePartApi = async (otpCode?: string): Promise<boolean> => {
+  try {
+    setLoading(true);
+
+    const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
+
+    const response = await AxiosApi.post('/take-part/check-answer-to-form-before', {
         link: isLink ? slug : null,
-        formId: !isLink ? slug : null,  
+        formId: !isLink ? slug : null,
         username: formValue,
         refId: refId ?? undefined,
-
         eventId,
         code: Number(otpCode),
       });
 
-      // const params: any = {
-      //   slug,
-      //   username: formValue,
-      // };
-
-      // if (refId) params.refId = refId;
-      // if (from) params.from = from;
-
-      // const response = await checkAnswerBeforeAction(params);
-
       addQuestion(response.data);
       setQuestion(response.data.questionModel);
       setLimitation({ isLimited: false, limitationType: '' });
+
+      return true;
     } catch (error: any) {
-      toast.error(error?.response?.data?.message?.[0]?.title || 'انجام عملیات با خطا مواجه شد');
+      const message =
+        error?.response?.data?.message?.[0]?.title ||
+        'انجام عملیات با خطا مواجه شد';
+
+      toast.error(message);
       setError(true);
-      setHelperText(error?.response?.data?.message?.[0]?.title || 'انجام عملیات با خطا مواجه شد');
+      setHelperText(message);
+
+      return false;
     } finally {
       setLoading(false);
     }
@@ -126,27 +125,16 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
   const confirmOtp = async (
     otpCode: string
   ): Promise<{ success: boolean; message?: string }> => {
-    try {
-      setLoading(true);
+    const success = await takePartApi(otpCode);
 
-      // await AxiosApi.post('/confirm-code', {
-      //   eventId,
-      //   code: otpCode,
-      // });
+    if (success) return { success: true };
 
-      await takePartApi(otpCode);
-
-      return { success: true };
-    } catch (error: any) {
-      const message =
-        error?.response?.data?.message?.[0]?.title ||
-        'کد وارد شده صحیح نیست';
-
-      return { success: false, message };
-    } finally {
-      setLoading(false);
-    }
+    return {
+      success: false,
+      message: 'کد وارد شده صحیح نیست',
+    };
   };
+
 
   const isValid = type === 'PHONE_NUMBER' ? validatePhone(formValue) : validateEmail(formValue);
 

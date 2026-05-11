@@ -18,6 +18,7 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
     question,
     formData,
     formName,
+    setFormName,
     ValidatedInput,
     handleValidationUpdate,
     handleNext,
@@ -44,6 +45,7 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
           setLimitation={setLimitation}
           setQuestion={setQuestion}
           addQuestion={(data) => {
+            setFormName(data.formName)
             setTakePartId(data.takePart)
             initializeQuestion(data);
             setLimitationStepPassed(true);

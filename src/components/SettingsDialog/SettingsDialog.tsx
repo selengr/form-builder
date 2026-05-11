@@ -19,11 +19,12 @@ import FormProvider, { RHFTextField } from '../hook-form';
 // actions
 import { formSetting } from '../../../actions/builder/form-setting';
 interface Props {
-  data:any;
+  data: any;
   formName: string;
+  formLimitation?: string | null;
   isBuilderCardId?: string;
   onChangeName?: (newName: string) => void;
-
+  onChangeLimitation?: (value: string | null) => void;
 }
 
 const responseLimitationOptions = [
@@ -83,32 +84,46 @@ const propertiesSchema = z.object({
     .trim()
     .transform((value) => value.replace(/\s+/g, ' '))
     .pipe(z.string().min(2, { message: 'حداقل باید 2 و حداکثر 100 کاراکتر باشد' }).max(100, { message: 'حداقل باید 2 و حداکثر 100 کاراکتر باشد' })),
-    label: z
-      .string()
-      .trim()
-      .transform((value) => {
-        const normalized = value.replace(/\s+/g, ' ');
-        return normalized === '' ? null : normalized;
-      })
-      .nullable()
-      .refine(
-        (value) =>
-          value === null ||
-          !/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/.test(value),
-        {
-          message: 'استفاده از حروف فارسی مجاز نیست',
-        }
-      )
+  label: z
+    .string()
+    .trim()
+    .transform((value) => {
+      const normalized = value.replace(/\s+/g, ' ');
+      return normalized === '' ? null : normalized;
+    })
+    .nullable()
     .refine(
-        (value) => value === null || (value.length >= 8 && value.length <= 30),
+      (value) =>
+        value === null ||
+        !/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/.test(value),
+      {
+        message: 'استفاده از حروف فارسی مجاز نیست',
+      }
+    )
+    .refine(
+      (value) => value === null || (value.length >= 8 && value.length <= 30),
+      {
+        message: 'حداقل باید 8 و حداکثر 30 کاراکتر باشد',
+      }
+    ),
+    responseLimitation: z
+      .object({
+        value: z.string(),
+        checked: z.boolean(),
+      })
+      .refine(
+        (data) => {
+          if (data.checked && !data.value) {
+            return false;
+          }
+          return true;
+        },
         {
-          message: 'حداقل باید 8 و حداکثر 30 کاراکتر باشد',
+          message: 'لطفاً نوع محدودیت پاسخ‌دهی را انتخاب کنید',
+          path: ['value'],
         }
       ),
-  responseLimitation: z.object({
-    value: z.string(),
-    checked: z.boolean(),
-  }),
+
   // layout: z.object({
   //   value: z.array(z.string()),
   //   checked: z.boolean(),
@@ -129,19 +144,19 @@ const propertiesSchema = z.object({
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
-export default function SettingsDialog({ formName, onChangeName, data, isBuilderCardId }: Props) {
+export default function SettingsDialog({ formName, onChangeName, data, isBuilderCardId, formLimitation, onChangeLimitation }: Props) {
   const { id: formId } = useParams();
   const searchParams = useSearchParams();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [formFieldName, setFormFieldName] = useState<string>(formName);
-  const [formFieldId, setFormFieldId] = useState<string>(data?.formSettingModel?.label??"");
+  const [formFieldId, setFormFieldId] = useState<string>(data?.formSettingModel?.label ?? "");
   const search = searchParams.get('admin');
-  const IsDataCollection = search ==='data-collection';
+  const IsDataCollection = search === 'data-collection';
 
   const handleOpen = useCallback(() => {
     setOpenDialog((prev) => !prev);
-    reset();
   }, []);
+
 
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
@@ -150,9 +165,9 @@ export default function SettingsDialog({ formName, onChangeName, data, isBuilder
       name: formFieldName,
       label: formFieldId,
       responseLimitation: {
-      checked: !!data?.formSettingModel?.responseLimitation,
-      value: data?.formSettingModel?.responseLimitation ?? '',
-    },
+        checked: !!formLimitation,
+        value: formLimitation ?? '',
+      },
       // expireDate: { checked: false, value: '' },
       // timeToComplete: { checked: false, value: '' },
       // layout: { checked: false, value: [] },
@@ -168,48 +183,51 @@ export default function SettingsDialog({ formName, onChangeName, data, isBuilder
 
   async function onSubmit(values: propertiesFormSchemaType) {
     const lab = formFieldId
-    const body : any = {
+    const body: any = {
       ...convertObject(values as any, fieldsConfig),
       name: formFieldName,
     };
-    
-    if(lab && IsDataCollection){
+
+    if (lab && IsDataCollection) {
       body["label"] = lab
     }
 
     try {
       await formSetting(isBuilderCardId ?? formId as string, body as any);
       handleOpen();
+
+      toast.success('تنظیمات با موفقیت ثبت شد');
       onChangeName?.(formFieldName);
-      } catch (error:any) {
-         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
-      }
+
+      onChangeLimitation?.(
+        values.responseLimitation.checked
+          ? values.responseLimitation.value
+          : null
+      );
+  
+    } catch (error: any) {
+      toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
+    }
   }
 
   useEffect(() => {
-  if (data?.formSettingModel) {
-    const serverValue = data.formSettingModel.responseLimitation;
-
-    const serverValues = {
+    reset({
+      name: formFieldName,
+      label: formFieldId,
       responseLimitation: {
-        checked: !!serverValue,
-        value: serverValue ?? '',
+        checked: !!formLimitation,
+        value: formLimitation ?? '',
       },
-    };
+    });
+  }, [formLimitation, reset]);
 
-    reset((prev) => ({
-      ...prev,
-      ...serverValues,
-    }));
-  }
-}, [data, reset]);
 
   useEffect(() => {
     reset();
   }, [openDialog]);
 
   return (
-    <>  
+    <>
       <IconButton
         onClick={handleOpen}
         sx={{
@@ -219,8 +237,8 @@ export default function SettingsDialog({ formName, onChangeName, data, isBuilder
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-          {!isBuilderCardId && <IoSettingsOutline color='#2A2A2A' />}
-          {isBuilderCardId && <Image src={EditIcon} alt='edit' width={24} height={24} />}
+        {!isBuilderCardId && <IoSettingsOutline color='#2A2A2A' />}
+        {isBuilderCardId && <Image src={EditIcon} alt='edit' width={24} height={24} />}
       </IconButton>
       <Dialog
         open={openDialog}
@@ -285,7 +303,7 @@ export default function SettingsDialog({ formName, onChangeName, data, isBuilder
                         }}
                       />
                     </Box>
-                   {IsDataCollection && <Box display='flex' flexDirection='column' gap={1}>
+                    {IsDataCollection && <Box display='flex' flexDirection='column' gap={1}>
                       <Typography variant='subtitle2' fontWeight='600' fontSize='15px'>
                         شناسه:
                       </Typography>

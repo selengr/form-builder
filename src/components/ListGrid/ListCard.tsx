@@ -35,6 +35,9 @@ interface ListCardProps {
     formPublishSetting: {
       capacityPublicLink: number | null;
     };
+    formSettingModel: {
+      responseLimitation: string | null;
+    };
     questionListSize: number;
   };
   setRefreshGrid: (fn: (prev: any) => boolean) => void;
@@ -45,6 +48,9 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [fromName, setFormName] = useState<string>(data.name);
   const [openConfirmDialog, setOpenConfirmDialog] = useState<boolean>(false);
+  const [formLimitation, setFormLimitation] = useState<string | null>(
+  data?.formSettingModel?.responseLimitation ?? null
+);
 
   const handlePublishStatus = useCallback(async () => {
     try {
@@ -181,7 +187,16 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
               </IconButton>
             )}
 
-            {data.status !== 'CREATE' && <SettingsDialog isBuilderCardId={data.id} formName={data.name} data={data} onChangeName={setFormName}/>}
+            {data.status !== 'CREATE' && ( 
+              <SettingsDialog 
+               data={data} 
+               isBuilderCardId={data.id}
+               formName={data.name}
+               onChangeName={setFormName}
+               formLimitation={formLimitation}
+               onChangeLimitation={setFormLimitation}
+               />
+               )}
             
             {data.status === 'CREATE' && data.type !== "PACKAGING" && (
               <Link href={`/builder/${data.id}`}>

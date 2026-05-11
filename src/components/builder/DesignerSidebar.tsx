@@ -38,6 +38,9 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
   const pid = searchParams.get('pid');
   const [formTitle, setFormTitle] = useState<string>("");
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
+const [formLimitation, setFormLimitation] = useState<string | null>(
+  data?.formSettingModel?.responseLimitation ?? null
+);
 
   const { formName, formSetting } = useDesigner();
   const isDesktop = useMediaQuery('(min-width:1280px)');
@@ -53,11 +56,18 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
     IsPackaging: Boolean(pid),
   });
 
-  useEffect(() => {
-    if (formName) {
-      setFormTitle(formName);
-    }
-  }, [formName]);
+    useEffect(() => {
+      if (formName) {
+        setFormTitle(formName);
+      }
+    }, [formName]);
+
+    // useEffect(() => {
+    //   if (data?.formSettingModel?.responseLimitation !== undefined) {
+    //     setFormLimitation(data.formSettingModel.responseLimitation);
+    //   }
+    // }, []);
+
 
   const confirmPublish = () => {
     publishMutation.mutate(undefined, {
@@ -92,8 +102,17 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
             <CodiconEye color="#2A2A2A" />
           </IconButton>
         </Link>
-        {/* پاس دادن data به SettingsDialog */}
-        {formTitle && <SettingsDialog formName={data.name} data={data} />}
+
+        {formTitle && (
+          <SettingsDialog
+            formName={formTitle}
+            data={data}
+            formLimitation={formLimitation}
+            onChangeName={setFormTitle}
+            onChangeLimitation={setFormLimitation}
+          />
+        )}
+
       </div>
     </div>
   );

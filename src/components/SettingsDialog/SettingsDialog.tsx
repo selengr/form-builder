@@ -9,15 +9,20 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { Box, Button, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
+
 // lib
 import { convertObject } from '@/lib/settingsUtils';
-// icon 
+
+// icon
 import EditIcon from '@/../public/images/home-page/edit-green.svg';
+
 // hook
 import FieldSwitchPair from './FieldSwitchPair';
 import FormProvider, { RHFTextField } from '../hook-form';
+
 // actions
 import { formSetting } from '../../../actions/builder/form-setting';
+
 interface Props {
   data: any;
   formName: string;
@@ -29,32 +34,9 @@ interface Props {
 
 const responseLimitationOptions = [
   { label: 'از طریق شماره همراه', value: 'PHONE_NUMBER' },
-  // {
-  //   label: 'از طریق ایمیل',
-  //   value: 'EMAIL',
-  // },
 ];
 
-// const layoutOptions = [
-//   { label: 'نمایش فهرستی', value: 'list-view' },
-//   { label: 'نمایش صفحه‌ای', value: 'page-view' },
-// ];
-
-// const themeOptions = [{ label: 'تم 1', value: 'theme_1' }];
-
 const fieldsConfig = [
-  // {
-  //   name: 'timeToComplete',
-  //   label: 'زمان شروع',
-  //   type: 'time-picker',
-  //   disabled: false,
-  // },
-  // {
-  //   name: 'expireDate',
-  //   label: 'تاریخ فعال سازی و انقضا فرم',
-  //   type: 'date-picker',
-  //   disabled: false,
-  // },
   {
     name: 'responseLimitation',
     label: 'محدودیت پاسخ‌‌دهی',
@@ -62,28 +44,20 @@ const fieldsConfig = [
     options: responseLimitationOptions,
     disabled: false,
   },
-  // {
-  //   name: 'layout',
-  //   label: 'حالت نمایش',
-  //   type: 'multi-select',
-  //   options: layoutOptions,
-  //   disabled: true,
-  // },
-  // {
-  //   name: 'theme',
-  //   label: 'پوسته',
-  //   type: 'select',
-  //   options: themeOptions,
-  //   disabled: true,
-  // },
 ];
 
 const propertiesSchema = z.object({
   name: z
     .string()
     .trim()
-    .transform((value) => value.replace(/\s+/g, ' '))
-    .pipe(z.string().min(2, { message: 'حداقل باید 2 و حداکثر 100 کاراکتر باشد' }).max(100, { message: 'حداقل باید 2 و حداکثر 100 کاراکتر باشد' })),
+    .transform((v) => v.replace(/\s+/g, ' '))
+    .pipe(
+      z
+        .string()
+        .min(2, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' })
+        .max(50, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' })
+    ),
+
   label: z
     .string()
     .trim()
@@ -96,60 +70,45 @@ const propertiesSchema = z.object({
       (value) =>
         value === null ||
         !/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/.test(value),
-      {
-        message: 'استفاده از حروف فارسی مجاز نیست',
-      }
+      { message: 'استفاده از حروف فارسی مجاز نیست' }
     )
     .refine(
       (value) => value === null || (value.length >= 8 && value.length <= 30),
+      { message: 'حداقل باید 8 و حداکثر 30 کاراکتر باشد' }
+    ),
+
+  responseLimitation: z
+    .object({
+      value: z.string(),
+      checked: z.boolean(),
+    })
+    .refine(
+      (data) => {
+        if (data.checked && !data.value) return false;
+        return true;
+      },
       {
-        message: 'حداقل باید 8 و حداکثر 30 کاراکتر باشد',
+        message: 'لطفاً نوع محدودیت پاسخ‌دهی را انتخاب کنید',
+        path: ['value'],
       }
     ),
-    responseLimitation: z
-      .object({
-        value: z.string(),
-        checked: z.boolean(),
-      })
-      .refine(
-        (data) => {
-          if (data.checked && !data.value) {
-            return false;
-          }
-          return true;
-        },
-        {
-          message: 'لطفاً نوع محدودیت پاسخ‌دهی را انتخاب کنید',
-          path: ['value'],
-        }
-      ),
-
-  // layout: z.object({
-  //   value: z.array(z.string()),
-  //   checked: z.boolean(),
-  // }),
-  // theme: z.object({
-  //   value: z.string(),
-  //   checked: z.boolean(),
-  // }),
-  // expireDate: z.object({
-  //   value: z.any(),
-  //   checked: z.boolean(),
-  // }),
-  // timeToComplete: z.object({
-  //   value: z.any(),
-  //   checked: z.boolean(),
-  // }),
 });
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
-export default function SettingsDialog({ formName, onChangeName, data, isBuilderCardId, formLimitation, onChangeLimitation }: Props) {
+export default function SettingsDialog({
+  formName,
+  onChangeName,
+  data,
+  isBuilderCardId,
+  formLimitation,
+  onChangeLimitation,
+}: Props) {
   const { id: formId } = useParams();
   const searchParams = useSearchParams();
-  const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [formFieldName, setFormFieldName] = useState<string>(formName);
-  const [formFieldId, setFormFieldId] = useState<string>(data?.formSettingModel?.label ?? "");
+
+  const [openDialog, setOpenDialog] = useState(false);
+
   const search = searchParams.get('admin');
   const IsDataCollection = search === 'data-collection';
 
@@ -157,21 +116,16 @@ export default function SettingsDialog({ formName, onChangeName, data, isBuilder
     setOpenDialog((prev) => !prev);
   }, []);
 
-
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
     mode: 'all',
     defaultValues: {
-      name: formFieldName,
-      label: formFieldId,
+      name: formName,
+      label: data?.formSettingModel?.label ?? '',
       responseLimitation: {
         checked: !!formLimitation,
         value: formLimitation ?? '',
       },
-      // expireDate: { checked: false, value: '' },
-      // timeToComplete: { checked: false, value: '' },
-      // layout: { checked: false, value: [] },
-      // theme: { checked: false, value: '' },
     },
   });
 
@@ -182,29 +136,29 @@ export default function SettingsDialog({ formName, onChangeName, data, isBuilder
   } = methods;
 
   async function onSubmit(values: propertiesFormSchemaType) {
-    const lab = formFieldId
     const body: any = {
       ...convertObject(values as any, fieldsConfig),
-      name: formFieldName,
+      name: values.name,
     };
 
-    if (lab && IsDataCollection) {
-      body["label"] = lab
+    if (values.label && IsDataCollection) {
+      body['label'] = values.label;
     }
 
     try {
-      await formSetting(isBuilderCardId ?? formId as string, body as any);
-      handleOpen();
+      await formSetting(isBuilderCardId ?? (formId as string), body);
 
       toast.success('تنظیمات با موفقیت ثبت شد');
-      onChangeName?.(formFieldName);
+
+      onChangeName?.(values.name);
 
       onChangeLimitation?.(
         values.responseLimitation.checked
           ? values.responseLimitation.value
           : null
       );
-  
+
+      handleOpen();
     } catch (error: any) {
       toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
     }
@@ -212,19 +166,14 @@ export default function SettingsDialog({ formName, onChangeName, data, isBuilder
 
   useEffect(() => {
     reset({
-      name: formFieldName,
-      label: formFieldId,
+      name: formName,
+      label: data?.formSettingModel?.label ?? '',
       responseLimitation: {
         checked: !!formLimitation,
         value: formLimitation ?? '',
       },
     });
-  }, [formLimitation, reset]);
-
-
-  useEffect(() => {
-    reset();
-  }, [openDialog]);
+  }, [formName, formLimitation, data, reset]);
 
   return (
     <>
@@ -236,13 +185,17 @@ export default function SettingsDialog({ formName, onChangeName, data, isBuilder
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-        }}>
-        {!isBuilderCardId && <IoSettingsOutline color='#2A2A2A' />}
-        {isBuilderCardId && <Image src={EditIcon} alt='edit' width={24} height={24} />}
+        }}
+      >
+        {!isBuilderCardId && <IoSettingsOutline color="#2A2A2A" />}
+        {isBuilderCardId && (
+          <Image src={EditIcon} alt="edit" width={24} height={24} />
+        )}
       </IconButton>
+
       <Dialog
         open={openDialog}
-        dir='ltr'
+        dir="ltr"
         sx={{
           overflow: 'hidden',
           scrollbarWidth: 'none',
@@ -254,16 +207,18 @@ export default function SettingsDialog({ formName, onChangeName, data, isBuilder
             backdropFilter: 'blur(4px)',
             backgroundColor: 'hsl(0deg 0% 100% / 50%)',
           },
-        }}>
+        }}
+      >
         {openDialog && (
           <>
-            <div className='flex items-center justify-start'>
-              <button className='mx-4 mt-4 mb-0' onClick={handleOpen}>
-                <CgClose color='#404040' width={25} height={25} size='1.5rem' />
+            <div className="flex items-center justify-start">
+              <button className="mx-4 mt-4 mb-0" onClick={handleOpen}>
+                <CgClose size="1.5rem" color="#404040" />
               </button>
             </div>
+
             <DialogContent
-              dir='rtl'
+              dir="rtl"
               sx={{
                 maxHeight: '75vh',
                 scrollbarWidth: 'thin',
@@ -271,30 +226,32 @@ export default function SettingsDialog({ formName, onChangeName, data, isBuilder
                 width: '450px',
                 paddingX: 1,
                 paddingTop: 0,
-              }}>
-              <div dir='rtl' className='flex flex-col pb-4 p-2'>
-                <div className='flex justify-center items-baseline mb-6'>
-                  <p className='font-bold text-center text-[20px]'>تنظیمات پرسشنامه</p>
+              }}
+            >
+              <div className="flex flex-col pb-4 p-2">
+                <div className="flex justify-center items-baseline mb-6">
+                  <p className="font-bold text-center text-[20px]">
+                    تنظیمات پرسشنامه
+                  </p>
                 </div>
+
                 <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                   <Box
                     sx={{
                       display: 'flex',
                       flexDirection: 'column',
-                      height: '100%',
                       paddingX: 1.5,
                       direction: 'ltr',
                       width: '100%',
                       gap: '20px',
-                    }}>
-                    <Box display='flex' flexDirection='column' gap={1}>
-                      <Typography variant='subtitle2' fontWeight='600' fontSize='15px'>
+                    }}
+                  >
+                    <Box display="flex" flexDirection="column" gap={1}>
+                      <Typography fontWeight="600" fontSize="15px">
                         نام پرسشنامه:
                       </Typography>
                       <RHFTextField
-                        name='name'
-                        value={formFieldName}
-                        onChange={(event) => setFormFieldName(event.target.value)}
+                        name="name"
                         sx={{
                           '& .MuiInputBase-root': {
                             borderRadius: '10px',
@@ -303,64 +260,69 @@ export default function SettingsDialog({ formName, onChangeName, data, isBuilder
                         }}
                       />
                     </Box>
-                    {IsDataCollection && <Box display='flex' flexDirection='column' gap={1}>
-                      <Typography variant='subtitle2' fontWeight='600' fontSize='15px'>
-                        شناسه:
-                      </Typography>
-                      <RHFTextField
-                        name='label'
-                        value={formFieldId}
-                        onChange={(event) => setFormFieldId(event.target.value)}
-                        sx={{
-                          '& .MuiInputBase-root': {
-                            borderRadius: '10px',
-                            fontWeight: '600',
-                          },
-                        }}
-                      />
-                    </Box>
-                    }
+
+                    {IsDataCollection && (
+                      <Box display="flex" flexDirection="column" gap={1}>
+                        <Typography fontWeight="600" fontSize="15px">
+                          شناسه:
+                        </Typography>
+                        <RHFTextField
+                          name="label"
+                          sx={{
+                            '& .MuiInputBase-root': {
+                              borderRadius: '10px',
+                              fontWeight: '600',
+                            },
+                          }}
+                        />
+                      </Box>
+                    )}
+
                     {fieldsConfig.map((field) => (
-                      <FieldSwitchPair key={field.name} fieldName={field.name} label={field.label} type={field.type} options={field.options} disabled={field?.disabled} />
+                      <FieldSwitchPair
+                        key={field.name}
+                        fieldName={field.name}
+                        label={field.label}
+                        type={field.type}
+                        options={field.options}
+                        disabled={field.disabled}
+                      />
                     ))}
                   </Box>
+
                   <Box
                     sx={{
                       display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
                       gap: '16px',
                       paddingX: '16px',
                       width: '100%',
                       marginTop: '38px',
-                    }}>
+                    }}
+                  >
                     <Button
-                      type='submit'
+                      type="submit"
                       fullWidth
-                      variant='contained'
-                      loading={isSubmitting}
+                      variant="contained"
                       disabled={isSubmitting}
-                      disableRipple
                       sx={{
                         bgcolor: '#1758BA',
                         height: '50px',
-                        color: 'white',
                         fontSize: '16px',
                         fontWeight: '700',
                         borderRadius: '10px',
                         boxShadow: 'none',
-                        '&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active': {
-                          bgcolor: '#1758BA',
-                          boxShadow: 'none',
-                        },
-                      }}>
+                        '&:hover': { bgcolor: '#1758BA' },
+                      }}
+                    >
                       ثبت
                     </Button>
+
                     <Button
-                      disabled={isSubmitting}
-                      type='button'
+                      type="button"
                       fullWidth
-                      className='text-[16px] text-[#1758BA]'
+                      variant="outlined"
+                      disabled={isSubmitting}
+                      onClick={handleOpen}
                       sx={{
                         height: '50px',
                         fontWeight: '700',
@@ -368,15 +330,8 @@ export default function SettingsDialog({ formName, onChangeName, data, isBuilder
                         fontSize: '16px',
                         color: '#1758BA',
                         borderColor: '#1758BA',
-                        bgcolor: 'white',
-                        '&.MuiButtonBase-root:hover': {
-                          bgcolor: 'transparent',
-                          boxShadow: 'none',
-                          color: '#1758BA',
-                        },
                       }}
-                      variant='outlined'
-                      onClick={handleOpen}>
+                    >
                       انصراف
                     </Button>
                   </Box>

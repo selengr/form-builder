@@ -19,13 +19,22 @@ import SettingsDialog from '../SettingsDialog/SettingsDialog';
 import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
 
 const ELEMENTS = [
-  FormElements.RATING,
-  FormElements.SPECTRAL,
+  // FormElements.RATING,
+  // FormElements.SPECTRAL,
+  // FormElements.TEXT_FIELD,
+  // FormElements.INFO_FIELD,
+  // FormElements.MULTIPLE_CHOICE,
+  // FormElements.MULTIPLE_CHOICE_IMAGE,
+  // FormElements.PACKAGE_INJECTION_FIELD,
+
   FormElements.TEXT_FIELD,
-  FormElements.INFO_FIELD,
   FormElements.MULTIPLE_CHOICE,
   FormElements.MULTIPLE_CHOICE_IMAGE,
+  FormElements.SPECTRAL,
+  FormElements.RATING,
   FormElements.PACKAGE_INJECTION_FIELD,
+  FormElements.INFO_FIELD
+
 ];
 export interface FormSettingModel {
   responseLimitation: string | null;

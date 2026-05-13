@@ -159,7 +159,7 @@ const ListGrid: React.FC<IProps> = ({
                         </div>
 
                         {/* search row */}
-                            <div className={`w-full mt-2 max-w-[470px] ${items.length > 5 ? "ml-4" : "ml-0"}`}>
+                            <div className={`w-full mt-2 max-w-[470px] ${items.length > 4 ? "sm:ml-4" : "sm:ml-0"}`}>
                                 <Suspense fallback={<div>در حال بارگذاری جستجو...</div>}>
                                     <ImmediateSearchInput onSearch={setQuery} />
                                 </Suspense>
@@ -172,14 +172,14 @@ const ListGrid: React.FC<IProps> = ({
                             flexWrap='nowrap'
                             sx={{
                                 width: 1,
-                                mx: 'auto',
                                 mt: 1,
                                 mb: 5,
                                 pb: 4,
                                 flexDirection: 'column',
                                 gap: 2,
                                 overflowY: 'auto',
-                                px: { xs: 1, sm: 0 },
+                                px: { xs: 0, sm: 0 },
+                                mx: { xs: 0, sm: 'auto' },
                                 height: {
                                     xs: 'calc(100vh - 310px)',
                                     sm: 'calc(100vh - 290px)',

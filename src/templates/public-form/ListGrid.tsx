@@ -6,17 +6,14 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
-import React, { ReactNode, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from '@mui/material';
-
+// components
 import SearchInput from '@/components/ListGrid/SearchInput';
-import CreateFormBtn from '@/components/CreateFormBtn/CreateFormBtn';
-
-import Filter from '@/../public/images/home-page/FilterAA.svg';
-import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
+// image
 import TotalGrid from '@/../public/images/home-page/total-grid.svg';
 import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
-
+// action
 import { fetchListGridData } from '../../../actions/listGridActions';
 
 export interface SearchBoxItem {
@@ -26,18 +23,13 @@ export interface SearchBoxItem {
     nextConditionOperator: 'OR' | 'AND';
 }
 
-interface Props {
-    searchBoxList: SearchBoxItem[];
-    filterBoxList: SearchBoxItem[];
-    filterComponent: ReactNode;
+interface IProps {
     url: string;
-    CartComponent?: React.ComponentType<any>;
-    disableFilter?: boolean;
-    textTotal?: [string, string];
-    searchQueryFilter?: any;
-    showCreateButton?: boolean;
     title: string;
-    CreateButton?: any;
+    searchQueryFilter?: any;
+    textTotal?: [string, string];
+    searchBoxList: SearchBoxItem[];
+    CartComponent?: React.ComponentType<any>;
 }
 
 const PAGE_SIZE = 10;
@@ -49,18 +41,13 @@ const DEFAULT_SEARCH_FILTER = {
     fieldOperation: 'DSC',
 };
 
-const ListGrid: React.FC<Props> = ({
-    filterComponent,
-    searchBoxList,
-    filterBoxList,
-    CartComponent,
+const ListGrid: React.FC<IProps> = ({
     url,
-    disableFilter,
-    searchQueryFilter = DEFAULT_SEARCH_FILTER,
-    showCreateButton = false,
     title,
+    searchBoxList,
+    CartComponent,
+    searchQueryFilter = DEFAULT_SEARCH_FILTER,
     textTotal = ['تعداد کل فرم‌ها', 'عدد'],
-    CreateButton,
 }) => {
     const router = useRouter();
     const { ref, inView } = useInView();
@@ -68,13 +55,7 @@ const ListGrid: React.FC<Props> = ({
     const searchParams = useSearchParams();
     const query = searchParams.get('query') || '';
 
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [totalData, setTotalData] = useState<number>(0);
-
-    useEffect(() => {
-        setIsDialogOpen(searchParams.get('new') !== null);
-    }, [searchParams]);
 
     const updatedSearchBoxList = useMemo(() => {
         return searchBoxList.map((item) =>
@@ -84,11 +65,6 @@ const ListGrid: React.FC<Props> = ({
         );
     }, [searchBoxList, query]);
 
-    const queryKey = useMemo(
-        () => ['list-grid', query, searchQueryFilter, filterBoxList],
-        [query, searchQueryFilter, filterBoxList]
-    );
-
     const {
         data,
         error,
@@ -97,12 +73,12 @@ const ListGrid: React.FC<Props> = ({
         isFetching,
         isFetchingNextPage,
     } = useInfiniteQuery({
-        queryKey,
+        queryKey: ['public-form', query],
         queryFn: ({ pageParam = 0 }) =>
             fetchListGridData(
                 { pageParam },
                 updatedSearchBoxList,
-                filterBoxList,
+                [],
                 url,
                 searchQueryFilter
             ),
@@ -130,16 +106,8 @@ const ListGrid: React.FC<Props> = ({
 
     const items = data?.pages.flatMap((p) => p.data) || [];
 
-    const handleOpenDialog = () => router.push('?new');
-
-    const handleCloseDialog = () => {
-        const params = new URLSearchParams(searchParams.toString());
-        params.delete('new');
-        router.replace(`?${params.toString()}`);
-    };
-
     return (
-        <div className="p-2 sm:p-3 md:p-4 h-screen w-full flex flex-col overflow-hidden">
+        <div className="p-2 sm:py-3 h-screen w-full flex flex-col overflow-hidden">
             {isFetching && !isFetchingNextPage && <LinearProgress />}
 
             <Grid
@@ -190,46 +158,22 @@ const ListGrid: React.FC<Props> = ({
                         </div>
 
                         {/* search & filter row */}
-                        <div className='w-full max-w-[560px] mx-auto px-2 sm:px-0'>
-                            <div className='flex items-center justify-center gap-2 mt-3'>
+                        <Grid
+                            display='flex'
+                            sx={{
+                                width: '100%',
+                                maxWidth: '560px',
+                                justifyContent: 'center',
+                                mt: 1,
+                                gap: 2,
+                            }}>
+                            <Grid size={{ xs: 12, sm: 10 }} sx={{ display: 'flex', alignItems: 'center', gap: '12px', mx: 'auto' }}>
                                 <div className='flex-1 min-w-0'>
                                     <SearchInput />
                                 </div>
 
-                                {!disableFilter && (
-                                    <IconButton
-                                        onClick={() => setIsFilterOpen(true)}
-                                        sx={{
-                                            border: '1px solid #c9c9c9',
-                                            borderRadius: '15px',
-                                            width: { xs: 44, sm: 50 },
-                                            height: { xs: 44, sm: 50 },
-                                            flexShrink: 0,
-                                        }}
-                                    >
-                                        <Image src={Filter} width={24} height={24} className='sm:w-[30px] sm:h-[30px]' alt="filter" />
-                                    </IconButton>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* create button */}
-                        {showCreateButton && (
-                            <div className="flex justify-center mt-3">
-                                <IconButton
-                                    onClick={handleOpenDialog}
-                                    sx={{
-                                        width: { xs: 44, sm: 50 },
-                                        height: { xs: 44, sm: 50 },
-                                        border: '1px solid #1758BA',
-                                    }}
-                                >
-                                    <Image src={PlusIcon} width={20} height={20} alt="create" />
-                                </IconButton>
-                            </div>
-                        )}
-
-                        <CreateFormBtn open={isDialogOpen} onClose={handleCloseDialog} />
+                            </Grid>
+                        </Grid>
 
                         {/* content */}
                         <Grid

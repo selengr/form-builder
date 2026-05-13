@@ -22,14 +22,11 @@ const searchBoxList = [
 export default function ListGridWrapper() {
   return (
     <ListGrid
+    title='فرم‌های عمومی'
       searchBoxList={searchBoxList}
-      filterBoxList={[]}
-      url='/public-page/form/main-list'
-      filterComponent={null}
       CartComponent={PublicFormCard}
-      disableFilter={false}
       searchQueryFilter={FORM_FILTER}
-      title='فرم‌های عمومی'
+      url='/public-page/form/main-list'
     />
   );
 }

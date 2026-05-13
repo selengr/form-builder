@@ -10,7 +10,6 @@ import React, { ReactNode, useEffect, useMemo, useState } from 'react';
 import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from '@mui/material';
 
 import SearchInput from '@/components/ListGrid/SearchInput';
-import BottomSheet from '@/components/BottomSheet/BottomSheet';
 import CreateFormBtn from '@/components/CreateFormBtn/CreateFormBtn';
 
 import Filter from '@/../public/images/home-page/FilterAA.svg';
@@ -140,7 +139,7 @@ const ListGrid: React.FC<Props> = ({
     };
 
     return (
-        <div className="p-2 h-screen w-full flex flex-col">
+        <div className="p-2 sm:p-3 md:p-4 h-screen w-full flex flex-col overflow-hidden">
             {isFetching && !isFetchingNextPage && <LinearProgress />}
 
             <Grid
@@ -159,8 +158,8 @@ const ListGrid: React.FC<Props> = ({
                     sx={{
                         bgcolor: 'white',
                         borderRadius: '16px',
-                        p: 2,
-                        mx: 1,
+                        p: { xs: 1, sm: 2 },
+                        mx: { xs: 0, sm: 1 },
                         width: 1,
                         overflow: 'hidden',
                     }}
@@ -176,62 +175,58 @@ const ListGrid: React.FC<Props> = ({
                                 <MdOutlineKeyboardArrowRight />
                             </IconButton>
 
-                            <p className="font-bold">{title}</p>
+                            <p className="font-bold text-sm sm:text-base truncate px-8">{title}</p>
                         </div>
 
-                        {/* total */}
-                        <div className='flex justify-between gap-2 bg-[#ECFAFF] rounded-2xl px-[10px] py-4 w-full max-w-[400px]'>
-                            <div className='flex items-center gap-[10px]'>
-                                <Image src={TotalGrid} width={20} height={20} alt='filter' draggable={false} />
-                                <p className='text-sm text-[#393939]'>{textTotal[0]}:</p>
+                        {/* total - fixed for mobile */}
+                        <div className='flex justify-between gap-2 bg-[#ECFAFF] rounded-2xl px-3 sm:px-[10px] py-3 sm:py-4 w-[calc(100%-16px)] sm:w-full max-w-[400px] mx-auto hover:brightness-98 transition-all duration-200'>
+                            <div className='flex items-center gap-[6px] sm:gap-[10px] flex-shrink-0'>
+                                <Image src={TotalGrid} width={18} height={18} className='sm:w-5 sm:h-5 select-none' alt='total' draggable={false} />
+                                <p className='text-xs sm:text-sm text-[#393939] whitespace-nowrap'>{textTotal[0]}:</p>
                             </div>
-                            <p className='flex items-center text-sm text-[#393939] font-bold'>
-                                {totalData} {textTotal[1]}
+                            <p className='flex items-center text-xs sm:text-sm text-[#393939] font-bold text-left break-words'>
+                                {totalData.toLocaleString('fa-IR')} {textTotal[1]}
                             </p>
                         </div>
 
-                        {/* search */}
-                        <Grid
-                            display='flex'
-                            sx={{
-                                width: '100%',
-                                maxWidth: '560px',
-                                justifyContent: 'center',
-                                mt: 1,
-                                gap: 2,
-                            }}>
-                            <Grid size={{ xs: 12, sm: 10 }} sx={{ display: 'flex', alignItems: 'center', gap: '12px', mx: 'auto' }}>
-                                <SearchInput />
+                        {/* search & filter row */}
+                        <div className='w-full max-w-[560px] mx-auto px-2 sm:px-0'>
+                            <div className='flex items-center justify-center gap-2 mt-3'>
+                                <div className='flex-1 min-w-0'>
+                                    <SearchInput />
+                                </div>
 
-                                {disableFilter && (
+                                {!disableFilter && (
                                     <IconButton
                                         onClick={() => setIsFilterOpen(true)}
                                         sx={{
                                             border: '1px solid #c9c9c9',
                                             borderRadius: '15px',
-                                            width: 50,
-                                            height: 50,
+                                            width: { xs: 44, sm: 50 },
+                                            height: { xs: 44, sm: 50 },
+                                            flexShrink: 0,
                                         }}
                                     >
-                                        <Image src={Filter} width={30} height={30} alt="" />
+                                        <Image src={Filter} width={24} height={24} className='sm:w-[30px] sm:h-[30px]' alt="filter" />
                                     </IconButton>
                                 )}
-                            </Grid>
-                        </Grid>
+                            </div>
+                        </div>
 
                         {/* create button */}
                         {showCreateButton && (
-                            <IconButton
-                                onClick={handleOpenDialog}
-                                sx={{
-                                    mt: 2,
-                                    width: 50,
-                                    height: 50,
-                                    border: '1px solid #1758BA',
-                                }}
-                            >
-                                <Image src={PlusIcon} width={20} height={20} alt="" />
-                            </IconButton>
+                            <div className="flex justify-center mt-3">
+                                <IconButton
+                                    onClick={handleOpenDialog}
+                                    sx={{
+                                        width: { xs: 44, sm: 50 },
+                                        height: { xs: 44, sm: 50 },
+                                        border: '1px solid #1758BA',
+                                    }}
+                                >
+                                    <Image src={PlusIcon} width={20} height={20} alt="create" />
+                                </IconButton>
+                            </div>
                         )}
 
                         <CreateFormBtn open={isDialogOpen} onClose={handleCloseDialog} />
@@ -244,15 +239,17 @@ const ListGrid: React.FC<Props> = ({
                             sx={{
                                 width: 1,
                                 mx: 'auto',
-                                mt: 1,
+                                mt: 2,
                                 mb: 5,
                                 pb: 4,
                                 flexDirection: 'column',
                                 gap: 2,
                                 overflowY: 'auto',
+                                px: { xs: 1, sm: 0 },
                                 height: {
-                                    xs: 'calc(100vh - 290px)',
-                                    md: 'calc(100vh - 210px)',
+                                    xs: 'calc(100vh - 310px)',
+                                    sm: 'calc(100vh - 290px)',
+                                    md: 'calc(100vh - 230px)',
                                 },
                             }}>
                             {items.length === 0 && !isFetching && (
@@ -262,10 +259,11 @@ const ListGrid: React.FC<Props> = ({
                                         flexDirection: 'column',
                                         alignItems: 'center',
                                         mt: 10,
+                                        px: 2,
                                     }}
                                 >
-                                    <Image src={formListEmpty} height={250} alt="" />
-                                    <Typography>موردی یافت نشد</Typography>
+                                    <Image src={formListEmpty} height={200} className="sm:h-[250px] w-auto" alt="empty" />
+                                    <Typography sx={{ mt: 2 }}>موردی یافت نشد</Typography>
                                 </Box>
                             )}
 
@@ -273,7 +271,7 @@ const ListGrid: React.FC<Props> = ({
                                 const isLast = i === items.length - 1;
 
                                 return (
-                                    <Grid key={i} sx={{ width: 1, maxWidth: 470, mx: 'auto' }}>
+                                    <Grid key={i} sx={{ width: 1, maxWidth: 470, mx: 'auto', px: { xs: 0.5, sm: 0 } }}>
                                         {CartComponent && <CartComponent data={item} />}
 
                                         {isLast && (
@@ -288,9 +286,6 @@ const ListGrid: React.FC<Props> = ({
                         </Grid>
                     </Grid>
 
-                    <BottomSheet open={isFilterOpen} onClose={() => setIsFilterOpen(false)}>
-                        {filterComponent}
-                    </BottomSheet>
                 </Grid>
             </Grid>
         </div>

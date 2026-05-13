@@ -1,6 +1,6 @@
 'use client';
 
-import ListCard from './ListCard';
+import PublicFormCard from './ListCard';
 import ListGrid, { type SearchBoxItem } from './ListGrid';
 
 const FORM_FILTER = {
@@ -26,7 +26,7 @@ export default function ListGridWrapper() {
       filterBoxList={[]}
       url='/public-page/form/main-list'
       filterComponent={null}
-      CartComponent={ListCard}
+      CartComponent={PublicFormCard}
       disableFilter={false}
       searchQueryFilter={FORM_FILTER}
       title='فرم‌های عمومی'

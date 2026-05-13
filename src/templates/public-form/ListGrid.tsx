@@ -6,7 +6,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from '@mui/material';
 // components
 import SearchInput from '@/components/ListGrid/SearchInput';
@@ -15,6 +15,8 @@ import TotalGrid from '@/../public/images/home-page/total-grid.svg';
 import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
 // action
 import { fetchListGridData } from '../../../actions/listGridActions';
+import { useDebounce } from '@/hooks/useDebounce';
+import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
 
 export interface SearchBoxItem {
     fieldName: string;
@@ -28,7 +30,6 @@ interface IProps {
     title: string;
     searchQueryFilter?: any;
     textTotal?: [string, string];
-    searchBoxList: SearchBoxItem[];
     CartComponent?: React.ComponentType<any>;
 }
 
@@ -44,7 +45,6 @@ const DEFAULT_SEARCH_FILTER = {
 const ListGrid: React.FC<IProps> = ({
     url,
     title,
-    searchBoxList,
     CartComponent,
     searchQueryFilter = DEFAULT_SEARCH_FILTER,
     textTotal = ['تعداد کل فرم‌ها', 'عدد'],
@@ -52,18 +52,18 @@ const ListGrid: React.FC<IProps> = ({
     const router = useRouter();
     const { ref, inView } = useInView();
 
-    const searchParams = useSearchParams();
-    const query = searchParams.get('query') || '';
-
+    const [query, setQuery] = useState('');
     const [totalData, setTotalData] = useState<number>(0);
+    const debouncedValue = useDebounce(query, 500);
 
-    const updatedSearchBoxList = useMemo(() => {
-        return searchBoxList.map((item) =>
-            item.fieldName === 'formSetting.name' && query
-                ? { ...item, fieldValue: query }
-                : item
-        );
-    }, [searchBoxList, query]);
+    const searchBoxList = useMemo(() => [
+        {
+            fieldName: "formSetting.name",
+            fieldOperation: "MATCH" as const,
+            fieldValue: debouncedValue || "",
+            nextConditionOperator: "OR" as const,
+        },
+    ], [debouncedValue]);
 
     const {
         data,
@@ -73,11 +73,11 @@ const ListGrid: React.FC<IProps> = ({
         isFetching,
         isFetchingNextPage,
     } = useInfiniteQuery({
-        queryKey: ['public-form', query],
+        queryKey: ['public-form', searchBoxList, url],
         queryFn: ({ pageParam = 0 }) =>
             fetchListGridData(
                 { pageParam },
-                updatedSearchBoxList,
+                searchBoxList,
                 [],
                 url,
                 searchQueryFilter
@@ -86,6 +86,7 @@ const ListGrid: React.FC<IProps> = ({
         getNextPageParam: (lastPage, allPages) =>
             lastPage?.data?.length === PAGE_SIZE ? allPages.length : undefined,
         refetchOnWindowFocus: false,
+        placeholderData: (previousData) => previousData,
     });
 
     useEffect(() => {
@@ -157,23 +158,12 @@ const ListGrid: React.FC<IProps> = ({
                             </p>
                         </div>
 
-                        {/* search & filter row */}
-                        <Grid
-                            display='flex'
-                            sx={{
-                                width: '100%',
-                                maxWidth: '560px',
-                                justifyContent: 'center',
-                                mt: 1,
-                                gap: 2,
-                            }}>
-                            <Grid size={{ xs: 12, sm: 10 }} sx={{ display: 'flex', alignItems: 'center', gap: '12px', mx: 'auto' }}>
-                                <div className='flex-1 min-w-0'>
-                                    <SearchInput />
-                                </div>
-
-                            </Grid>
-                        </Grid>
+                        {/* search row */}
+                            <div className={`w-full mt-2 max-w-[470px] ${items.length > 5 ? "ml-4" : "ml-0"}`}>
+                                <Suspense fallback={<div>در حال بارگذاری جستجو...</div>}>
+                                    <ImmediateSearchInput onSearch={setQuery} />
+                                </Suspense>
+                            </div>
 
                         {/* content */}
                         <Grid
@@ -183,7 +173,7 @@ const ListGrid: React.FC<IProps> = ({
                             sx={{
                                 width: 1,
                                 mx: 'auto',
-                                mt: 2,
+                                mt: 1,
                                 mb: 5,
                                 pb: 4,
                                 flexDirection: 'column',

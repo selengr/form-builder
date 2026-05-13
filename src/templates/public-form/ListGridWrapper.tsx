@@ -1,7 +1,7 @@
 'use client';
 
+import ListGrid from './ListGrid';
 import PublicFormCard from './ListCard';
-import ListGrid, { type SearchBoxItem } from './ListGrid';
 
 const FORM_FILTER = {
   type: 'ALL',
@@ -10,20 +10,10 @@ const FORM_FILTER = {
   fieldOperation: 'DSC',
 };
 
-const searchBoxList = [
-  {
-    fieldName: 'formSetting.name',
-    fieldOperation: 'MATCH',
-    fieldValue: '',
-    nextConditionOperator: 'OR',
-  },
-] satisfies SearchBoxItem[];
-
 export default function ListGridWrapper() {
   return (
     <ListGrid
     title='فرم‌های عمومی'
-      searchBoxList={searchBoxList}
       CartComponent={PublicFormCard}
       searchQueryFilter={FORM_FILTER}
       url='/public-page/form/main-list'
@@ -31,6 +21,18 @@ export default function ListGridWrapper() {
   );
 }
 
+
+
+
+
+// const searchBoxList = [
+//   {
+//     fieldName: 'formSetting.name',
+//     fieldOperation: 'MATCH',
+//     fieldValue: '',
+//     nextConditionOperator: 'OR',
+//   },
+// ] satisfies SearchBoxItem[];
 // 'use client';
 
 // import ListCard from './ListCard';

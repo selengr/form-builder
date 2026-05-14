@@ -108,7 +108,7 @@ const ListGrid: React.FC<IProps> = ({
     const items = data?.pages.flatMap((p) => p.data) || [];
 
     return (
-        <div className="p-2 sm:py-3 h-screen w-full flex flex-col overflow-hidden">
+        <div className="p-2 sm:py-3 h-full w-full flex flex-col overflow-hidden">
             {isFetching && !isFetchingNextPage && <LinearProgress />}
 
             <Grid

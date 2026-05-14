@@ -14,7 +14,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
         "flex grow md:mt-0",
         isSurvey
             ? "h-[100vh]"
-            : "h-[calc(50vh-60px)] mt-[60px] md:h-[calc(100vh-0px)]"
+            : "h-[calc(50vh-60px)] mt-[75px] md:h-[calc(100vh-0px)]"
     );
 
     return (

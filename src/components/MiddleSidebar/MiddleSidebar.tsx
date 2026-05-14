@@ -24,7 +24,7 @@ export default function MiddleSidebar() {
         <Image src={`/api/images?folder=logo&file=LOGO.svg`} width={150} height={38} alt='Psya-Logo' priority draggable={false} />
       </div>
 
-      <div className='flex-1 overflow-y-auto pr-3 flex flex-col gap-4' style={{ scrollbarWidth: 'thin' }}>
+      <div className='flex-1 overflow-y-auto pr-3 flex flex-col' style={{ scrollbarWidth: 'thin' }}>
         {!!userInfo && loading && <MenuItemSkeleton />}
         <MenuList menuLinks={menuLinks} />
       </div>

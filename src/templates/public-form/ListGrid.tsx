@@ -2,20 +2,20 @@
 
 import Image from 'next/image';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from '@mui/material';
-// components
-import SearchInput from '@/components/ListGrid/SearchInput';
 // image
 import TotalGrid from '@/../public/images/home-page/total-grid.svg';
 import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
+// hooks
+import { useDebounce } from '@/hooks/useDebounce';
 // action
 import { fetchListGridData } from '../../../actions/listGridActions';
-import { useDebounce } from '@/hooks/useDebounce';
+// components
 import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
 
 export interface SearchBoxItem {
@@ -108,7 +108,7 @@ const ListGrid: React.FC<IProps> = ({
     const items = data?.pages.flatMap((p) => p.data) || [];
 
     return (
-        <div className="p-2 sm:py-3 h-full w-full flex flex-col overflow-hidden">
+        <div className="p-1 sm:py-2 h-full w-full flex flex-col overflow-hidden">
             {isFetching && !isFetchingNextPage && <LinearProgress />}
 
             <Grid

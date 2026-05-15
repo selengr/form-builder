@@ -16,7 +16,7 @@ export default function PublishSettingsDialog({ formId , formData }: PublishSett
 
   const handleOpen = useCallback(() => {
     setIsAnimating(true);
-    setOpenDialog((prev) => !prev);
+    setTimeout(() =>setOpenDialog((prev) => !prev), 50);
     setTimeout(() => setIsAnimating(false), 150);
   }, []);
 

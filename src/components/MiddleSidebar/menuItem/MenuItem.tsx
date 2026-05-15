@@ -47,9 +47,9 @@ export const MenuItem = React.memo(
               className={`
                 absolute right-0 top-0 h-full w-[4px]
                 rounded-l-full transition-all duration-300
-                ${isActive
+                ${isActive && !isExpanded
                   ? "bg-[#2CDFC9] opacity-100"
-                  : "opacity-0 group-hover:opacity-40 bg-[#2CDFC9]"
+                  : "opacity-0"
                 }
               `}
             />
@@ -143,7 +143,6 @@ export const MenuItem = React.memo(
             <div className="bg-[#F8F9FA]">
               <div
                 className="
-                  mr-3 pr-2
                   flex flex-col
                 "
               >

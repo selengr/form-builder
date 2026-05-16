@@ -26,3 +26,19 @@ export const MenuIcon = ({
     )}
   />
 );
+
+export const SubMenuIcon = ({
+  src,
+}: MenuIconProps) => (
+  <Image
+    src={src}
+    alt="icon"
+    loading="lazy"
+    draggable={false}
+    width={0}
+    height={0}
+    className={clsx(
+      "h-6 w-6 sm:h-7 sm:w-7 transition-all duration-300 group-hover:rotate-6 group-active:rotate-6"
+     )}
+  />
+);

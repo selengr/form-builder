@@ -8,18 +8,19 @@ import { Drawer, IconButton } from '@mui/material';
 import Logo from '@/../public/images/home-page/psya-logo.svg';
 import MenuIcon from '@/../public/images/home-page/menu/ic_menu.svg';
 // hooks
-import { useMenu, useUserInfo } from '@/hooks';
+import { useMenu } from '@/hooks';
 // types
 import { IServerMenuItem } from '@/types/menus';
 // view
 import MenuList from '../menuList/MenuList';
 import MenuItemSkeleton from '../menuItemSkeleton';
+import { useUserInfoNew } from '@/hooks/useUserInfoNew';
 
 const MobileMenu: React.FC = () => {
-  const { userInfo } = useUserInfo();
-  const [open, setOpen] = useState(false);
-  const { menu, loading } = useMenu(userInfo);
-  const [isRotated, setIsRotated] = useState(false);
+  const { isAuthenticated } =  useUserInfoNew();
+  const { menu, loading } = useMenu(isAuthenticated)
+  const [open, setOpen] = useState<boolean>(false);
+  const [isRotated, setIsRotated] = useState<boolean>(false);
 
   const menuLinks : IServerMenuItem[] | any = useMemo(() => {
     return menu?.aclList?.filter((i) => i.type === 'menu') || [];
@@ -29,7 +30,7 @@ const MobileMenu: React.FC = () => {
     setIsRotated((prev) => !prev);
     setTimeout(() => {
       setOpen((prev) => !prev);
-    }, 300);
+    }, 200);
   };
 
   return (
@@ -39,7 +40,7 @@ const MobileMenu: React.FC = () => {
       </IconButton>
 
       <Drawer anchor='left' open={open} onClose={toggleDrawer}>
-        <div className='w-[75vw] max-w-[330px] min-h-screen bg-white px-5 py-5 flex flex-col gap-8 overflow-y-auto' style={{ scrollbarWidth: 'thin' }}>
+        <div className='w-[75vw] max-w-[340px] min-h-screen bg-white px-4 py-5 flex flex-col gap-8 overflow-y-auto' style={{ scrollbarWidth: 'thin' }}>
           <div className='w-full flex flex-col gap-10 items-start'>
             <div className='flex flex-row justify-between w-full items-center'>
               <Image src={Logo} width={111} height={38} alt='Psya-Logo' priority draggable={false} />
@@ -58,7 +59,7 @@ const MobileMenu: React.FC = () => {
               </IconButton>
             </div>
             <div className='flex flex-col items-start w-full'>
-              {!!userInfo && loading && <MenuItemSkeleton />}
+              {!!isAuthenticated && loading && <MenuItemSkeleton />}
               <MenuList menuLinks={menuLinks} onItemClick={() => setOpen(false)} />
             </div>
           </div>

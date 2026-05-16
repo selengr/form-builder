@@ -2,10 +2,9 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IoIosArrowBack, IoIosArrowDown } from "react-icons/io";
-
+// componenst
 import { MenuIcon } from "./MenuIcon";
 import SubMenuItem from "./subMenu/SubMenuItem";
-
 // type
 import { IMenuItemProps } from "@/types/menus";
 
@@ -59,7 +58,7 @@ export const MenuItem = React.memo(
                 onClick={onToggle}
                 className={`
                   w-full flex items-center justify-between
-                  px-4 py-2
+                  px-3 py-2
                   transition-transform duration-200
                   ${isActive ? "translate-x-[4px]" : "group-hover:translate-l-[1px]"}
                 `}
@@ -71,9 +70,8 @@ export const MenuItem = React.memo(
                       ${isActive ? "scale-105" : "group-hover:scale-105"}
                     `}
                   >
-                    <MenuIcon src={iconPath} size={22} />
+                    <MenuIcon src={iconPath} size={23} />
                   </div>
-
                   <p
                     className="
                       text-[13px] sm:text-[14px]
@@ -85,7 +83,6 @@ export const MenuItem = React.memo(
                     {title}
                   </p>
                 </div>
-
 
                 {isExpanded ? (
                   <IoIosArrowDown size="1.3rem" color="#292D32" />
@@ -103,7 +100,7 @@ export const MenuItem = React.memo(
                 onClick={onClick}
                 className={`
                   w-full flex items-center justify-between
-                  px-4 py-2
+                  px-3 py-2
                   transition-transform duration-200
                   ${isActive ? "translate-x-[4px]" : "group-hover:translate-l-[1px]"}
                 `}
@@ -115,7 +112,7 @@ export const MenuItem = React.memo(
                       ${isActive ? "scale-105" : "group-hover:scale-105"}
                     `}
                   >
-                    <MenuIcon src={iconPath} size={22} />
+                    <MenuIcon src={iconPath} size={23} />
                   </div>
 
                   <p

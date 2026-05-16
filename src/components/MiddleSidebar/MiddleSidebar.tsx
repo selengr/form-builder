@@ -3,16 +3,17 @@
 import Image from 'next/image';
 import { useMemo } from 'react';
 // hooks
-import { useMenu, useUserInfo } from '@/hooks';
+import { useMenu } from '@/hooks';
 // types
 import { IServerMenuItem } from '@/types/menus';
 // components
 import MenuList from './menuList/MenuList';
 import MenuItemSkeleton from './menuItemSkeleton';
+import { useUserInfoNew } from '@/hooks/useUserInfoNew';
 
 export default function MiddleSidebar() {
-  const { userInfo } = useUserInfo();
-  const { menu, loading } = useMenu(userInfo)
+  const { isAuthenticated } =  useUserInfoNew();
+  const { menu, loading } = useMenu(isAuthenticated)
 
   const menuLinks : IServerMenuItem[] | any = useMemo(() => {
     return menu?.aclList?.filter((i) => i?.type === 'menu') || [];
@@ -25,7 +26,7 @@ export default function MiddleSidebar() {
       </div>
 
       <div className='flex-1 overflow-y-auto pr-3 flex flex-col' style={{ scrollbarWidth: 'thin' }}>
-        {!!userInfo && loading && <MenuItemSkeleton />}
+        {!!isAuthenticated && loading && <MenuItemSkeleton />}
         <MenuList menuLinks={menuLinks} />
       </div>
     </div>

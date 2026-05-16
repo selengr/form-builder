@@ -32,7 +32,7 @@ export const MenuItem = React.memo(
           style={{ userSelect: "none" }}
           className={`
             group relative w-full rounded-xl pt-3
-            transition-all duration-300 ease-out
+            transition-all duration-200 ease-out
             overflow-hidden
             ${isActive
               ? "bg-[#F7F9FC]"
@@ -45,7 +45,7 @@ export const MenuItem = React.memo(
             <div
               className={`
                 absolute right-0 top-0 h-full w-[4px]
-                rounded-l-full transition-all duration-300
+                rounded-l-full transition-all duration-200
                 ${isActive && !isExpanded
                   ? "bg-[#2CDFC9] opacity-100"
                   : "opacity-0"
@@ -66,7 +66,7 @@ export const MenuItem = React.memo(
                 <div className="flex items-center gap-3">
                   <div
                     className={`
-                      transition-transform duration-300
+                      transition-transform duration-200
                       ${isActive ? "scale-105" : "group-hover:scale-105"}
                     `}
                   >
@@ -108,7 +108,7 @@ export const MenuItem = React.memo(
                 <div className="flex items-center gap-2">
                   <div
                     className={`
-                      transition-transform duration-300
+                      transition-transform duration-200
                       ${isActive ? "scale-105" : "group-hover:scale-105"}
                     `}
                   >
@@ -130,7 +130,7 @@ export const MenuItem = React.memo(
                 <IoIosArrowBack
                   size="1.1rem"
                   color={isActive ? "#0066CC" : "#4B5563"}
-                  className="transition-all duration-300 group-hover:-translate-x-1"
+                  className="transition-all duration-200 group-hover:-translate-x-1"
                 />
               </Link>
             )}
@@ -200,7 +200,7 @@ export const MenuItem = React.memo(
 //           style={{ userSelect: "none" }}
 //           className={`
 //             group relative w-full rounded-xl
-//             transition-all duration-300 ease-out
+//             transition-all duration-200 ease-out
 //             overflow-hidden
 //             ${
 //               isActive
@@ -213,7 +213,7 @@ export const MenuItem = React.memo(
 //           <div
 //             className={`
 //               absolute right-0 top-0 h-full w-[4px]
-//               rounded-l-full transition-all duration-300
+//               rounded-l-full transition-all duration-200
 //               ${
 //                 isActive
 //                   ? "bg-[#0066CC] opacity-100"
@@ -234,7 +234,7 @@ export const MenuItem = React.memo(
 //               <div className="flex items-center gap-3">
 //                 <div
 //                   className={`
-//                     transition-transform duration-300
+//                     transition-transform duration-200
 //                     ${isActive ? "scale-105" : "group-hover:scale-105"}
 //                   `}
 //                 >
@@ -259,7 +259,7 @@ export const MenuItem = React.memo(
 //               {/* arrow */}
 //               <div
 //                 className={`
-//                   transition-all duration-300
+//                   transition-all duration-200
 //                   ${isExpanded ? "rotate-0" : "rotate-0"}
 //                 `}
 //               >
@@ -267,14 +267,14 @@ export const MenuItem = React.memo(
 //                   <IoIosArrowDown
 //                     size="1.1rem"
 //                     color={isActive ? "#0066CC" : "#4B5563"}
-//                     className="transition-all duration-300"
+//                     className="transition-all duration-200"
 //                   />
 //                 ) : (
 //                   <IoIosArrowBack
 //                     size="1.1rem"
 //                     color={isActive ? "#0066CC" : "#4B5563"}
 //                     className="
-//                       transition-all duration-300
+//                       transition-all duration-200
 //                       group-hover:-translate-x-0.5
 //                     "
 //                   />
@@ -294,7 +294,7 @@ export const MenuItem = React.memo(
 //               <div className="flex items-center gap-3">
 //                 <div
 //                   className={`
-//                     transition-transform duration-300
+//                     transition-transform duration-200
 //                     ${isActive ? "scale-105" : "group-hover:scale-105"}
 //                   `}
 //                 >
@@ -320,7 +320,7 @@ export const MenuItem = React.memo(
 //                 size="1.1rem"
 //                 color={isActive ? "#0066CC" : "#4B5563"}
 //                 className="
-//                   transition-all duration-300
+//                   transition-all duration-200
 //                   group-hover:-translate-x-0.5
 //                 "
 //               />
@@ -332,7 +332,7 @@ export const MenuItem = React.memo(
 //         {hasChildren && children && (
 //           <div
 //             className={`
-//               overflow-hidden transition-all duration-300 ease-in-out
+//               overflow-hidden transition-all duration-200 ease-in-out
 //               ${
 //                 isExpanded
 //                   ? "max-h-[1000px] opacity-100 mt-1"
@@ -393,7 +393,7 @@ export const MenuItem = React.memo(
 //     return (
 //       <div className="w-full">
 //         <div
-//           className="gap-1 w-full py-2 rounded-sm duration-300 group border-b border-[#DDE1E6]"
+//           className="gap-1 w-full py-2 rounded-sm duration-200 group border-b border-[#DDE1E6]"
 //           style={{ userSelect: 'none' }}
 //         >
 //           {hasChildren ? (

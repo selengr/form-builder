@@ -30,7 +30,7 @@ export default function ListGridWrapper() {
 
   const filterBoxList = useMemo(() => [], []);
 
-  const searchBoxList = useMemo(
+  const searchBoxList : any = useMemo(
     () => [
       {
         fieldName: 'formSetting.name',
@@ -90,8 +90,25 @@ export default function ListGridWrapper() {
           
           {/* type */}
           <div className='w-full flex flex-col gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
-            <FormControl>
-              <FormLabel>بر اساس نوع</FormLabel>
+            <FormControl 
+                sx={{
+                    '& .MuiTypography-root': {
+                      fontSize: '14px',
+                      color: '#393939',
+                      fontWeight: 400,
+                    },
+                  }}>
+              <FormLabel 
+                 sx={{
+                      fontSize: '15px',
+                      color: '#161616',
+                      fontWeight: 700,
+                      mb: '8px',
+                      '&.Mui-focused': {
+                        color: '#161616',
+                      },
+                    }}
+              >بر اساس نوع</FormLabel>
               <RadioGroup value={formType.type} onChange={handleChange('type')}>
                 <FormControlLabel value='ALL' control={<Radio />} label='همه' />
                 <FormControlLabel value='COMPETITION' control={<Radio />} label='مسابقه' />
@@ -103,8 +120,25 @@ export default function ListGridWrapper() {
 
           {/* status */}
           <div className='w-full flex flex-col gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
-            <FormControl>
-              <FormLabel>بر اساس دسترسی</FormLabel>
+            <FormControl 
+                sx={{
+                    '& .MuiTypography-root': {
+                      fontSize: '14px',
+                      color: '#393939',
+                      fontWeight: 400,
+                    },
+                  }}>
+              <FormLabel 
+                 sx={{
+                      fontSize: '15px',
+                      color: '#161616',
+                      fontWeight: 700,
+                      mb: '8px',
+                      '&.Mui-focused': {
+                        color: '#161616',
+                      },
+                    }}
+              >بر اساس دسترسی</FormLabel>
               <RadioGroup value={formType.status} onChange={handleChange('status')}>
                 <FormControlLabel value='ALL' control={<Radio />} label='همه' />
                 <FormControlLabel value='PUBLIC' control={<Radio />} label='عمومی' />
@@ -115,8 +149,25 @@ export default function ListGridWrapper() {
 
           {/* report */}
           <div className='w-full flex flex-col gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
-            <FormControl>
-              <FormLabel>بر اساس گزارش</FormLabel>
+            <FormControl 
+                sx={{
+                    '& .MuiTypography-root': {
+                      fontSize: '14px',
+                      color: '#393939',
+                      fontWeight: 400,
+                    },
+                  }}>
+              <FormLabel 
+                 sx={{
+                      fontSize: '15px',
+                      color: '#161616',
+                      fontWeight: 700,
+                      mb: '8px',
+                      '&.Mui-focused': {
+                        color: '#161616',
+                      },
+                    }}
+              >بر اساس گزارش</FormLabel>
               <RadioGroup
                 value={formType.isCreatedSoloReport}
                 onChange={handleChange('isCreatedSoloReport')}
@@ -130,8 +181,25 @@ export default function ListGridWrapper() {
 
           {/* date */}
           <div className='w-full flex flex-col gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
-            <FormControl>
-              <FormLabel>بر اساس زمان</FormLabel>
+            <FormControl 
+                sx={{
+                    '& .MuiTypography-root': {
+                      fontSize: '14px',
+                      color: '#393939',
+                      fontWeight: 400,
+                    },
+                  }}>
+              <FormLabel 
+                 sx={{
+                      fontSize: '15px',
+                      color: '#161616',
+                      fontWeight: 700,
+                      mb: '8px',
+                      '&.Mui-focused': {
+                        color: '#161616',
+                      },
+                    }}
+              >بر اساس زمان</FormLabel>
               <RadioGroup
                 value={formType.fieldOperation}
                 onChange={handleChange('fieldOperation')}
@@ -145,7 +213,7 @@ export default function ListGridWrapper() {
         </div>
       </div>
 
-      <div className='sticky bottom-0 bg-white pt-4 pb-2'>
+      {/* <div className='sticky bottom-0 bg-white pt-4 pb-2'>
         <div className='flex gap-4 w-full'>
           <Button fullWidth variant='contained' onClick={applyFilter}>
             اعمال فیلتر
@@ -155,7 +223,55 @@ export default function ListGridWrapper() {
           </Button>
         </div>
       </div>
-    </div>
+ */}
+
+      
+        {/* دکمه‌های ثابت در پایین */}
+        <div className='sticky bottom-0 bg-white pt-4 pb-2'>
+          <div className='flex gap-4 items-center justify-between w-full'>
+            <Button
+              sx={{
+                height: '52px',
+                bgcolor: '#1758BA',
+                boxShadow: 'none',
+                borderRadius: '8px',
+                color: 'white',
+                fontSize: '14px',
+                fontWeight: 700,
+                '&.MuiButtonBase-root:hover': {
+                  bgcolor: '#1758BA',
+                  boxShadow: 'none',
+                },
+              }}
+              fullWidth
+              variant='contained'
+              onClick={applyFilter}>
+              اعمال فیلتر
+            </Button>
+            <Button
+              sx={{
+                height: '52px',
+                bgcolor: 'white',
+                border: '1px solid #1758BA',
+                boxShadow: 'none',
+                borderRadius: '8px',
+                color: '#1758BA',
+                fontSize: '14px',
+                fontWeight: 700,
+                '&.MuiButtonBase-root:hover': {
+                  bgcolor: 'transparent',
+                  boxShadow: 'none',
+                },
+              }}
+              fullWidth
+              variant='outlined'
+              onClick={resetFilter}>
+              حذف فیلتر
+            </Button>
+          </div>
+        </div>
+      </div>
+    // </div>
   );
 
   return (

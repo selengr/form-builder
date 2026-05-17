@@ -20,7 +20,7 @@ export default function MiddleSidebar() {
   }, [menu?.aclList]);
 
   return (
-    <div className='min-w-[400px] w-[400px] min-h-screen bg-white px-5 py-5 flex flex-col gap-8'>
+    <div className='min-w-[400px] w-[400px] min-h-screen bg-white px-5 py-5 flex flex-col gap-5'>
       <div className='flex flex-col gap-5 items-center flex-shrink-0'>
         <Image src={`/api/images?folder=logo&file=LOGO.svg`} width={150} height={38} alt='Psya-Logo' priority draggable={false} />
       </div>

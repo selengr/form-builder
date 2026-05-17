@@ -130,7 +130,7 @@ const ListGrid: React.FC<Props> = ({
       searchQueryFilter.fieldOperation,
     ],
     queryFn: ({ pageParam }) =>
-      fetchListGridData({ pageParam }, updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
+      fetchListGridData({ pageParam } as any, updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       const PAGE_SIZE = 10;

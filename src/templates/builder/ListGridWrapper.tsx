@@ -8,6 +8,22 @@ import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } f
 import Image from 'next/image';
 import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
 
+
+type FormFilter = {
+  type: 'ALL' | 'COMPETITION' | 'QUESTION' | 'TEST';
+  status: 'ALL' | 'PUBLIC' | 'PRIVATE';
+  isCreatedSoloReport: 'ALL' | 'true' | 'false';
+  fieldOperation: 'ASC' | 'DSC';
+};
+
+const DEFAULT_FILTER: FormFilter = {
+  type: 'ALL',
+  status: 'ALL',
+  isCreatedSoloReport: 'ALL',
+  fieldOperation: 'DSC',
+};
+
+
 export default function ListGridWrapper() {
   const [refreshGrid, setRefreshGrid] = useState(false);
   const searchParams = useSearchParams();

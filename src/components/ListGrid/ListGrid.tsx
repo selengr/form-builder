@@ -7,7 +7,7 @@ import { useInView } from 'react-intersection-observer';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
-import { Box, Grid2 as Grid, IconButton, LinearProgress, CircularProgress, Typography } from '@mui/material';
+import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from '@mui/material';
 // hook
 import { useDebounce } from '@/hooks/useDebounce';
 // componenst
@@ -21,7 +21,6 @@ import TotalGrid from '@/../public/images/home-page/total-grid.svg';
 import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
 // action
 import { fetchListGridData, SearchQueryFilter } from '../../../actions/listGridActions';
-import ListCardSkeleton from './ListCardSkeleton';
 
 export interface SearchBoxItem {
   fieldName: string;

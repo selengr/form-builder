@@ -173,34 +173,32 @@ const ListGrid: React.FC<Props> = ({
   };
 
   return (
-    <div className="p-2 h-screen w-full flex flex-col">
+    <div className="p-1 sm:py-2 h-full w-full flex flex-col overflow-hidden">
+
       <Grid
         width="100%"
         display="flex"
         sx={{
           overflowY: 'hidden',
-          userSelect: 'none',
           height: { xs: 'calc(100vh - 60px)', md: '100vh' },
           flexDirection: { xs: 'column', lg: 'row' },
         }}
       >
         <Grid
           container
-          display="flex"
           flexDirection="column"
           alignItems="center"
           sx={{
             bgcolor: 'white',
             borderRadius: '16px',
-            p: 2,
-            mx: 1,
+            p: { xs: 1, sm: 2 },
+            mx: { xs: 0, sm: 1 },
             width: 1,
-            overflowY: 'hidden',
-            height: '100%',
+            overflow: 'hidden',
           }}
         >
           <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
-            
+
             {/* Header */}
             <div className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative shrink-0">
               <IconButton sx={{ position: 'absolute', left: '8px' }} onClick={() => router.push('/')}>

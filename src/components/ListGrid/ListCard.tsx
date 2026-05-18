@@ -65,7 +65,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
       if (res.data) {
         toast.success('عملیات با موفقیت انجام شد');
         setRefreshGrid((prev) => !prev);
-         queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
+        queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
       }
     } catch (error) {
       console.error(error);
@@ -82,6 +82,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
       if (res.data) {
         toast.success('رونوشت با موفقیت انجام شد');
         setRefreshGrid((prev) => !prev);
+        queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
       }
     } catch (error) {
       console.error(error);
@@ -96,6 +97,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
       const res = await AxiosApi.delete(`/form/${data.id}`);
       if (res.data) {
         toast.success(`فرم (${data.name}) با موفقیت حذف شد`);
+        queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
         setRefreshGrid((prev) => !prev);
       }
     } catch (error) {

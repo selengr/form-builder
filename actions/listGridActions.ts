@@ -9,11 +9,11 @@ interface SearchBoxItem {
   nextConditionOperator: 'OR' | 'AND';
 }
 
-interface SearchQueryFilter {
+export interface SearchQueryFilter {
   type: string;
   status: string;
   isCreatedSoloReport: string;
-  fieldOperation: 'DSC' | 'ASC';
+  fieldOperation: 'DSC' | 'ASC' | string;
 }
 
 const PAGE_SIZE = 10;

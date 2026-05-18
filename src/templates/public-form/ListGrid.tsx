@@ -184,7 +184,7 @@ const ListGrid: React.FC<IProps> = ({
                                     md: 'calc(100vh - 230px)',
                                 },
                             }}>
-                            {!isFetching  && (
+                            {isFetching && !isFetchingNextPage && (
 
                                 <>
                                     {Array.from({ length: 5 }).map((_, i) => (
@@ -200,14 +200,20 @@ const ListGrid: React.FC<IProps> = ({
                                 <Box
                                     sx={{
                                         display: 'flex',
+                                        justifyContent: 'center',
                                         flexDirection: 'column',
                                         alignItems: 'center',
-                                        mt: 10,
-                                        px: 2,
+                                        height: '100%',
+                                        width: '100%',
                                     }}
                                 >
-                                    <Image src={formListEmpty} height={200} className="sm:h-[250px] w-auto" alt="empty" />
-                                    <Typography sx={{ mt: 2 }}>موردی یافت نشد</Typography>
+                                    <div className='h-44 sm:h-56 bg ml-14 sm:ml-3'>
+
+                                        <Image src={formListEmpty} height={200} className="sm:h-[250px] w-auto" alt="empty" priority />
+                                    </div>
+
+                                    <span className='text-[#999] text-sm md:text-md'>موردی یافت نشد</span>
+
                                 </Box>
                             )}
 

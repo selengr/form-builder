@@ -326,11 +326,10 @@ const ListGrid: React.FC<IProps> = ({
                       width={0}
                       className='w-full h-full'
                       draggable={false}
+                      priority
                     />
                   </div>
-                  <Typography sx={{ fontSize: '18px', color: '#999' }}>
 
-                  </Typography>
                   <span className='text-[#999] text-sm md:text-md'>موردی یافت نشد</span>
                 </Box>
               ) : (

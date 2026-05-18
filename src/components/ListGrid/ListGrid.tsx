@@ -78,7 +78,7 @@ const ListGrid: React.FC<IProps> = ({
   searchQueryFilter = DEFAULT_SEARCH_FILTER,
   showCreateButton = false,
   textTotal = ['تعداد کل فرم‌ها', 'عدد'],
-    SkeletonComponent
+  SkeletonComponent
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -305,7 +305,7 @@ const ListGrid: React.FC<IProps> = ({
                       sx={{ width: 1, mx: 'auto', maxWidth: '470px' }}
                       size={{ xs: 12, md: 10, xl: 9 }}
                     >
-                      { <SkeletonComponent />}
+                      {<SkeletonComponent />}
                     </Grid>
                   ))}
                 </>
@@ -316,14 +316,22 @@ const ListGrid: React.FC<IProps> = ({
                     justifyContent: 'center',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    height: '60vh',
+                    height: '100%',
                     width: '100%',
                   }}
                 >
-                  <Image src={formListEmpty} alt="No forms found" height={256} priority draggable={false} />
+                  <div className='h-44 sm:h-56 bg ml-10 sm:ml-3'>
+                    <Image src={formListEmpty} alt="No forms found"
+                      height={0}
+                      width={0}
+                      className='w-full h-full'
+                      draggable={false}
+                    />
+                  </div>
                   <Typography sx={{ fontSize: '18px', color: '#999' }}>
-                    موردی یافت نشد
+
                   </Typography>
+                  <span className='text-[#999] text-sm md:text-md'>موردی یافت نشد</span>
                 </Box>
               ) : (
                 pages?.pages?.map((page, pageIndex) =>

@@ -289,7 +289,7 @@ export default function ListGridWrapper() {
       disableFilter={false}
       refreshGrid={refreshGrid}
       searchQueryFilter={formType}
-      skeletonComponent={ListCardSkeleton}
+      SkeletonComponent={()=> <ListCardSkeleton />}
     />
   );
 }

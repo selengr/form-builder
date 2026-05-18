@@ -29,7 +29,7 @@ export default function ListGridWrapper() {
       disableFilter
       refreshGrid={refreshGrid}
       searchQueryFilter={formType}
-      skeletonComponent={ReportListCardSkeleton}
+      SkeletonComponent={()=> <ReportListCardSkeleton />}
     />
   );
 }

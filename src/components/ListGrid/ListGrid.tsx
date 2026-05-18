@@ -53,7 +53,8 @@ interface IProps {
   showCreateButton?: boolean;
   title: string;
   CreateButton?: () => React.ReactNode;
-  skeletonComponent: () => React.ReactNode;
+  SkeletonComponent: () => ReactNode
+
 }
 
 const DEFAULT_SEARCH_FILTER = {
@@ -77,7 +78,7 @@ const ListGrid: React.FC<IProps> = ({
   searchQueryFilter = DEFAULT_SEARCH_FILTER,
   showCreateButton = false,
   textTotal = ['تعداد کل فرم‌ها', 'عدد'],
-  skeletonComponent
+    SkeletonComponent
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -304,7 +305,7 @@ const ListGrid: React.FC<IProps> = ({
                       sx={{ width: 1, mx: 'auto', maxWidth: '470px' }}
                       size={{ xs: 12, md: 10, xl: 9 }}
                     >
-                      {skeletonComponent()}
+                      { <SkeletonComponent />}
                     </Grid>
                   ))}
                 </>

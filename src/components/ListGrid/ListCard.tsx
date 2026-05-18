@@ -21,6 +21,7 @@ import CopyIcon from '@/../public/images/home-page/copy.svg';
 import TrashIcon from '@/../public/images/home-page/trash.svg';
 // constants
 import { formStatusPersian, formTypePersian, TFormType } from '@/constants/formDictionaries';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface ListCardProps {
   data: {
@@ -45,6 +46,7 @@ interface ListCardProps {
 
 export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
   const router = useRouter();
+    const queryClient = useQueryClient()
   const [loading, setLoading] = useState<boolean>(false);
   const [fromName, setFormName] = useState<string>(data.name);
   const [openConfirmDialog, setOpenConfirmDialog] = useState<boolean>(false);
@@ -63,6 +65,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
       if (res.data) {
         toast.success('عملیات با موفقیت انجام شد');
         setRefreshGrid((prev) => !prev);
+         queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
       }
     } catch (error) {
       console.error(error);

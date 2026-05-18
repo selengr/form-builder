@@ -128,6 +128,7 @@ const ListGrid: React.FC<IProps> = ({
       searchQueryFilter.status,
       searchQueryFilter.isCreatedSoloReport,
       searchQueryFilter.fieldOperation,
+      updatedSearchBoxList
     ],
     queryFn: ({ pageParam }) =>
       fetchListGridData(

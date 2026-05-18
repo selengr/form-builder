@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
-import React, { Suspense, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from '@mui/material';
 // image
 import TotalGrid from '@/../public/images/home-page/total-grid.svg';
@@ -16,6 +16,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 // action
 import { fetchListGridData } from '../../../actions/listGridActions';
 // components
+import CardSkeleton from './CardSkeleton ';
 import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
 
 export interface SearchBoxItem {
@@ -109,7 +110,6 @@ const ListGrid: React.FC<IProps> = ({
 
     return (
         <div className="p-1 sm:py-2 h-full w-full flex flex-col overflow-hidden">
-            {isFetching && !isFetchingNextPage && <LinearProgress />}
 
             <Grid
                 width="100%"
@@ -159,9 +159,9 @@ const ListGrid: React.FC<IProps> = ({
                         </div>
 
                         {/* search row */}
-                            <div className={`w-full mt-2 max-w-[470px] ${items.length > 4 ? "sm:ml-4" : "sm:ml-0"}`}>
-                                <ImmediateSearchInput onSearch={setQuery} />
-                              </div>
+                        <div className={`w-full mt-2 max-w-[470px] ${items.length > 4 ? "sm:ml-4" : "sm:ml-0"}`}>
+                            <ImmediateSearchInput onSearch={setQuery} />
+                        </div>
 
                         {/* content */}
                         <Grid
@@ -184,6 +184,18 @@ const ListGrid: React.FC<IProps> = ({
                                     md: 'calc(100vh - 230px)',
                                 },
                             }}>
+                            {!isFetching  && (
+
+                                <>
+                                    {Array.from({ length: 5 }).map((_, i) => (
+                                        <Grid key={i} sx={{ width: 1, maxWidth: 470, mx: 'auto' }}>
+                                            <CardSkeleton />
+                                        </Grid>
+                                    ))}
+                                </>
+                            )}
+
+
                             {items.length === 0 && !isFetching && (
                                 <Box
                                     sx={{

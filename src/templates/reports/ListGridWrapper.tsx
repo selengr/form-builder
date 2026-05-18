@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import ListCard from './ListCard';
 import ListGrid from '@/components/ListGrid/ListGrid';
+import ReportListCardSkeleton from './ReportListCardSkeleton';
 
 export default function ListGridWrapper() {
   const [refreshGrid, setRefreshGrid] = useState(false);
@@ -28,6 +29,7 @@ export default function ListGridWrapper() {
       disableFilter
       refreshGrid={refreshGrid}
       searchQueryFilter={formType}
+      skeletonComponent={ReportListCardSkeleton}
     />
   );
 }

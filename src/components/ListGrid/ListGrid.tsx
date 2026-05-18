@@ -6,22 +6,22 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
-import React, { ReactNode, Suspense, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Grid2 as Grid, IconButton, LinearProgress, CircularProgress, Typography } from '@mui/material';
-
-import SearchInput from './SearchInput';
+// hook
+import { useDebounce } from '@/hooks/useDebounce';
+// componenst
 import BottomSheet from '../BottomSheet/BottomSheet';
+import ImmediateSearchInput from './ImmediateSearchInput';
 import CreateFormBtn from '../CreateFormBtn/CreateFormBtn';
-
+// image
 import Filter from '@/../public/images/home-page/FilterAA.svg';
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 import TotalGrid from '@/../public/images/home-page/total-grid.svg';
 import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
-
+// action
 import { fetchListGridData, SearchQueryFilter } from '../../../actions/listGridActions';
-import ImmediateSearchInput from './ImmediateSearchInput';
-import { useDebounce } from '@/hooks/useDebounce';
-
+import ListCardSkeleton from './ListCardSkeleton';
 
 export interface SearchBoxItem {
   fieldName: string;
@@ -29,13 +29,12 @@ export interface SearchBoxItem {
   fieldValue: string | string[];
   nextConditionOperator: 'OR' | 'AND';
 }
-
 interface PageResponse {
   data: any[];
   total: number;
 }
 
-interface Props {
+interface IProps {
   searchBoxList: SearchBoxItem[];
   filterBoxList: SearchBoxItem[];
   filterComponent: ReactNode;
@@ -54,6 +53,7 @@ interface Props {
   showCreateButton?: boolean;
   title: string;
   CreateButton?: () => React.ReactNode;
+  skeletonComponent: () => React.ReactNode;
 }
 
 const DEFAULT_SEARCH_FILTER = {
@@ -63,20 +63,21 @@ const DEFAULT_SEARCH_FILTER = {
   fieldOperation: 'DSC',
 };
 
-const ListGrid: React.FC<Props> = ({
-  filterComponent,
+const ListGrid: React.FC<IProps> = ({
+  url,
+  title,
+  onCheck,
+  refreshGrid,
+  CreateButton,
+  disableFilter,
   searchBoxList,
   filterBoxList,
   CartComponent,
-  url,
-  onCheck,
-  refreshGrid,
-  disableFilter,
+  filterComponent,
   searchQueryFilter = DEFAULT_SEARCH_FILTER,
   showCreateButton = false,
-  title,
   textTotal = ['تعداد کل فرم‌ها', 'عدد'],
-  CreateButton,
+  skeletonComponent
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -296,9 +297,17 @@ const ListGrid: React.FC<Props> = ({
               }}
             >
               {isFetching && allItems.length === 0 ? (
-                <Grid sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} size={{ xs: 12, md: 10, xl: 9 }}>
-                  <CircularProgress />
-                </Grid>
+                <>
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Grid
+                      key={i}
+                      sx={{ width: 1, mx: 'auto', maxWidth: '470px' }}
+                      size={{ xs: 12, md: 10, xl: 9 }}
+                    >
+                      {skeletonComponent()}
+                    </Grid>
+                  ))}
+                </>
               ) : allItems.length === 0 ? (
                 <Box
                   sx={{
@@ -316,7 +325,7 @@ const ListGrid: React.FC<Props> = ({
                   </Typography>
                 </Box>
               ) : (
-                pages?.pages.map((page, pageIndex) =>
+                pages?.pages?.map((page, pageIndex) =>
                   page.data.map((data, index) => {
                     const key = `${pageIndex}-${index}`;
                     const isLastItem =
@@ -368,7 +377,6 @@ const ListGrid: React.FC<Props> = ({
               backgroundColor: 'white',
               borderRadius: '16px',
               gap: 1,
-              m: 1,
               ml: 0,
               p: 2,
               maxWidth: '300px',

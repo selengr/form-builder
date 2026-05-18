@@ -1,11 +1,13 @@
 'use client';
 
+import Image from 'next/image';
 import React, { useMemo, useState, useCallback } from 'react';
-import ListGrid from '@/components/ListGrid/ListGrid';
-import ListCard from '@/components/ListGrid/ListCard';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
-import Image from 'next/image';
+// components
+import ListGrid from '@/components/ListGrid/ListGrid';
+import ListCard from '@/components/ListGrid/ListCard';
+import ListCardSkeleton from '@/components/ListGrid/ListCardSkeleton';
 import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
 
 type FormType = {
@@ -16,10 +18,11 @@ type FormType = {
 };
 
 export default function ListGridWrapper() {
-  const [refreshGrid, setRefreshGrid] = useState(false);
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
   const { push } = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [refreshGrid, setRefreshGrid] = useState(false);
 
   const [formType, setFormType] = useState<FormType>({
     type: 'ALL',
@@ -286,6 +289,7 @@ export default function ListGridWrapper() {
       disableFilter={false}
       refreshGrid={refreshGrid}
       searchQueryFilter={formType}
+      skeletonComponent={ListCardSkeleton}
     />
   );
 }

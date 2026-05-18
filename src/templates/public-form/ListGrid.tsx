@@ -160,10 +160,8 @@ const ListGrid: React.FC<IProps> = ({
 
                         {/* search row */}
                             <div className={`w-full mt-2 max-w-[470px] ${items.length > 4 ? "sm:ml-4" : "sm:ml-0"}`}>
-                                <Suspense fallback={<div>در حال بارگذاری جستجو...</div>}>
-                                    <ImmediateSearchInput onSearch={setQuery} />
-                                </Suspense>
-                            </div>
+                                <ImmediateSearchInput onSearch={setQuery} />
+                              </div>
 
                         {/* content */}
                         <Grid

@@ -255,7 +255,7 @@ const ListGrid: React.FC<IProps> = ({
               sx={{ width: '100%', maxWidth: '560px', justifyContent: 'center', mt: 1, gap: 2 }}
             >
               <Grid size={{ xs: 12, sm: 10 }} sx={{ display: 'flex', alignItems: 'center', gap: '12px', mx: 'auto' }}>
-                   <ImmediateSearchInput onSearch={setQuery} />
+                <ImmediateSearchInput onSearch={setQuery} />
                 {!disableFilter && (
                   <IconButton
                     onClick={openFilter}
@@ -286,7 +286,7 @@ const ListGrid: React.FC<IProps> = ({
                 mt: 1,
                 mb: 5,
                 pb: 4,
-                mr : isFetching || allItems.length > 3 ? -1.2 : 0,
+                mr: { xs: 0, md: isFetching || allItems.length > 3 ? -1.2 : 0 },
                 flexDirection: 'column',
                 gap: 2,
                 overflowY: 'auto',
@@ -301,7 +301,7 @@ const ListGrid: React.FC<IProps> = ({
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Grid
                       key={i}
-                      sx={{ width: 1, mx: 'auto', maxWidth: '470px'  }}
+                      sx={{ width: 1, mx: 'auto', maxWidth: '470px' }}
                       size={{ xs: 12, md: 10, xl: 9 }}
                     >
                       {<SkeletonComponent />}

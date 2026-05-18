@@ -153,7 +153,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
         )}
 
         {/* <div className='border p-4 rounded-[20px] border-[#DDE1E6] flex flex-col gap-4 w-full max-w-full relative'> */}
-        <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-3'>
+        <div className='flex flex-row justify-between items-center gap-3'>
           <InfoRow label='نام' value={fromName} bold />
           {(data.status === 'PUBLISH' || data.status === 'UN_PUBLISH') && <SwitchButton disabled={loading} checked={data.status === 'PUBLISH'} onChange={handlePublishStatus} />}
         </div>

@@ -86,31 +86,31 @@ serverApi.interceptors.response.use(
   async (error: AxiosError) => {
     const config = error.config as AxiosRequestConfig | undefined;
     const status = error.response?.status;
-    const maxRetries = 3;
+    // const maxRetries = 3;
 
-    const retryableStatuses = [
-      HttpStatus.INTERNAL_SERVER_ERROR,
-      HttpStatus.BAD_GATEWAY,
-      HttpStatus.SERVICE_UNAVAILABLE,
-      HttpStatus.GATEWAY_TIMEOUT,
-    ];
+    // const retryableStatuses = [
+    //   HttpStatus.INTERNAL_SERVER_ERROR,
+    //   HttpStatus.BAD_GATEWAY,
+    //   HttpStatus.SERVICE_UNAVAILABLE,
+    //   HttpStatus.GATEWAY_TIMEOUT,
+    // ];
 
-    if (
-      config &&
-      config._shouldRetry &&
-      config._retryCount! < maxRetries &&
-      (!status || retryableStatuses.includes(status))
-    ) {
-      config._retryCount!++;
-      const delay = config._delay! * config._retryCount!;
+    // if (
+    //   config &&
+    //   config._shouldRetry &&
+    //   config._retryCount! < maxRetries &&
+    //   (!status || retryableStatuses.includes(status))
+    // ) {
+    //   config._retryCount!++;
+    //   const delay = config._delay! * config._retryCount!;
 
-      console.warn(
-        `🔁 Retry ${config._retryCount}/${maxRetries} → ${config.method?.toUpperCase()} ${config.url}`,
-      );
+    //   console.warn(
+    //     `🔁 Retry ${config._retryCount}/${maxRetries} → ${config.method?.toUpperCase()} ${config.url}`,
+    //   );
 
-      await new Promise((r) => setTimeout(r, delay));
-      return serverApi(config);
-    }
+    //   await new Promise((r) => setTimeout(r, delay));
+    //   return serverApi(config);
+    // }
 
     console.error('‼️ SERVER API ERROR', {
       url: config?.url,

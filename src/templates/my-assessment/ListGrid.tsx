@@ -20,6 +20,7 @@ import BottomSheet from '@/components/BottomSheet/BottomSheet';
 import CreateFormBtn from '@/components/CreateFormBtn/CreateFormBtn';
 // action
 import { assessmentlist } from '../../../actions/myAssessments/assessmentlist';
+import FormCardSkeleton from '../public-form/CardSkeleton ';
 
 export interface SearchBoxItem {
   fieldName: string;
@@ -222,7 +223,7 @@ const ListGrid: React.FC<Props> = ({
   const renderContent = useCallback(() => {
     const allItems = pages?.pages.flatMap((page) => page.data) || [];
  if (isFetching && !isFetchingNextPage) {
-      return (<ListCardSkeleton />);
+      return (<FormCardSkeleton />);
     }
 
     if (allItems.length === 0) {
@@ -255,20 +256,19 @@ const ListGrid: React.FC<Props> = ({
     () =>
       filterComponent && (
         <Grid
-          width='100%'
-          display={{ xs: 'none', lg: 'flex' }}
-          flexDirection='column'
-          justifyContent='flex-start'
-          alignItems='center'
-          sx={{
-            backgroundColor: 'white',
-            borderRadius: '16px',
-            gap: 1,
-            m: 1,
-            ml: 0,
-            p: 2,
-            maxWidth: '300px',
-          }}>
+                  width='100%'
+                  display={{ xs: 'none', lg: 'flex' }}
+                  flexDirection='column'
+                  justifyContent='flex-start'
+                  alignItems='center'
+                  sx={{
+                    backgroundColor: 'white',
+                    borderRadius: '16px',
+                    gap: 1,
+                    ml: 0,
+                    p: 2,
+                    maxWidth: '300px',
+                  }}>
           <Grid sx={{ width: '100%', minWidth: '200px', maxWidth: '300px' }}>{filterComponent}</Grid>
         </Grid>
       ),
@@ -276,31 +276,29 @@ const ListGrid: React.FC<Props> = ({
   );
 
   return (
-    <div className={'p-2 h-screen w-full flex flex-col'}>
-        <Grid
-          width='100%'
-          display='flex'
-          sx={{
-            overflowY: 'hidden',
-            userSelect: 'none',
-            height: { xs: 'calc(100vh - 60px)', md: '100vh' },
-            flexDirection: { xs: 'column', lg: 'row' },
-          }}>
+      <div className="p-1 sm:py-2 h-full w-full flex flex-col overflow-hidden">
           <Grid
-            display='flex'
-            flexDirection='column'
-            justifyContent='flex-start'
-            alignItems='center'
-            container
+            width="100%"
+            display="flex"
             sx={{
-              bgcolor: 'white',
-              borderRadius: '16px',
-              p: 2,
-              mx: 1,
-              width: 1,
               overflowY: 'hidden',
-              height: '100%',
-            }}>
+              height: { xs: 'calc(100vh - 60px)', md: '100vh' },
+              flexDirection: { xs: 'column', lg: 'row' },
+            }}
+          >
+            <Grid
+              container
+              flexDirection="column"
+              alignItems="center"
+              sx={{
+                bgcolor: 'white',
+                borderRadius: '16px',
+                p: { xs: 1, sm: 2 },
+                mx: { xs: 0, sm: 1 },
+                width: 1,
+                overflow: 'hidden',
+              }}
+            >
             <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
               {renderHeader()}
               <Box
@@ -332,24 +330,25 @@ const ListGrid: React.FC<Props> = ({
                 {CreateButton && CreateButton()}
               </Box>
               {renderSearchAndFilter()}
-              <Grid
-                id='content'
-                container
-                flexWrap='nowrap'
-                sx={{
-                  width: 1,
-                  mx: 'auto',
-                  mt: 1,
-                  mb: 5,
-                  pb: 4,
-                  flexDirection: 'column',
-                  gap: 2,
-                  overflowY: 'auto',
-                  height: {
-                    xs: 'calc(100vh - 290px)',
-                    md: 'calc(100vh - 210px)',
-                  },
-                }}>
+                <Grid
+                            id='content'
+                            container
+                            flexWrap='nowrap'
+                            sx={{
+                              width: 1,
+                              mx: 'auto',
+                              mt: 2.5,
+                              mb: 5,
+                              pb: 4,
+                              mr: { xs: 0, md: -1.2 },
+                              flexDirection: 'column',
+                              gap: 1,
+                              overflowY: 'auto',
+                              height: {
+                                xs: 'calc(100vh - 290px)',
+                                md: 'calc(100vh - 210px)',
+                              },
+                            }}>
                 {renderContent()}
               </Grid>
             </Grid>

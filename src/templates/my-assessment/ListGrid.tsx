@@ -156,10 +156,8 @@ const ListGrid: React.FC<Props> = ({
   if (error) {
      console.log('error as any', error as any)
      console.log('error as any', error.message as any)
-     console.log('error digi----', error?.digest as any)
      debugger
     toast.error(error.message);
-    toast.error(error?.digest as any);
   }
 
   const renderHeader = useCallback(

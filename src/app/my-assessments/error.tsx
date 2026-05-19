@@ -9,6 +9,7 @@ export default function ErrorPage({
     <div>
       <h2>مشکلی پیش آمد</h2>
       <p>Digest: {error.digest}</p>
+      <p>Digest: {error.message}</p>
     </div>
   );
 }

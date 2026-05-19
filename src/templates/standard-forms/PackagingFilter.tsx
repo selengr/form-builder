@@ -33,7 +33,7 @@ export default function PackagingFilter({
   };
 
   return (
-    <div className='flex h-[calc(100vh-60px)] w-full flex-col items-center justify-between'>
+    <div className='flex h-[calc(100%-60px)] sm:h-[calc(100vh-60px)] w-full flex-col items-center justify-between'>
 
       {/* Header */}
       <div className='w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4'>

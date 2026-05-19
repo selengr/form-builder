@@ -4,25 +4,21 @@ import { toast } from 'sonner';
 import Image from 'next/image';
 import { useInView } from 'react-intersection-observer';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from '@mui/material';
 // images
 import Filter from '@/../public/images/home-page/FilterAA.svg';
-import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 import TotalGrid from '@/../public/images/home-page/total-grid.svg';
-import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
 // components
-import SearchInput from '@/components/ListGrid/SearchInput';
 import BottomSheet from '@/components/BottomSheet/BottomSheet';
-import CreateFormBtn from '@/components/CreateFormBtn/CreateFormBtn';
 // action
-import { PackagingList } from '../../../actions/packaging/list';
 import ListCardSkeleton from './ListCardSkeleton';
 import { useDebounce } from '@/hooks/useDebounce';
-import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
 import EmptyList from '@/components/ListGrid/EmptyList';
+import { PackagingList } from '../../../actions/packaging/list';
+import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
 
 export interface SearchBoxItem {
   fieldName: string;
@@ -65,27 +61,16 @@ const ListGrid: React.FC<Props> = ({
   refreshGrid,
   disableFilter,
   searchQueryFilter = DEFAULT_SEARCH_FILTER,
-  showCreateButton = false,
   title,
   textTotal = ['تعداد کل فرم‌ها', 'عدد'],
-  CreateButton
 }) => {
   const router = useRouter();
   const [totalData, setTotalData] = useState<number | null>(null);
   const { ref, inView } = useInView();
-  const searchParams = useSearchParams();
-  const [isFilterOpen, setIsFilterOpen] = useState(true);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
 
   const [query, setQuery] = useState('');
   const debouncedSearch = useDebounce(query, 500);
-
-  // const updatedSearchBoxList = searchBoxList.map((item) => {
-  //   if (item.fieldName === 'name' && query) {
-  //     return { ...item, fieldValue: query };
-  //   }
-  //   return item;
-  // });
 
   const updatedSearchBoxList = useMemo(() => {
     return searchBoxList.map((item) =>
@@ -104,7 +89,7 @@ const ListGrid: React.FC<Props> = ({
     isFetchingNextPage,
     refetch,
   } = useInfiniteQuery({
-    queryKey: ['datas_builder_query', debouncedSearch, searchQueryFilter, filterBoxList],
+    queryKey: ['datas_form_stantards_query', debouncedSearch, searchQueryFilter, filterBoxList],
     queryFn: ({ pageParam }) => PackagingList(pageParam, updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
@@ -134,10 +119,11 @@ const ListGrid: React.FC<Props> = ({
   }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   useEffect(() => {
-    // if (refreshGrid) {
-    handleRefreshGrid();
-    // }
-  }, [refreshGrid, handleRefreshGrid]);
+    if (refreshGrid) {
+      handleRefreshGrid();
+    }
+  }, [refreshGrid]);
+
 
   useEffect(() => {
     if (pages?.pages?.[0]?.total !== undefined) {
@@ -147,9 +133,12 @@ const ListGrid: React.FC<Props> = ({
     }
   }, [pages]);
 
-  if (error) {
-    toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
-  }
+  useEffect(() => {
+    if (error) {
+      toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
+    }
+  }, [error]);
+
 
   const renderHeader = useCallback(
     () => (
@@ -207,7 +196,7 @@ const ListGrid: React.FC<Props> = ({
             </IconButton>
           )}
         </Grid>
-      </Grid> 
+      </Grid>
     ),
     [disableFilter, openFilter],
   );

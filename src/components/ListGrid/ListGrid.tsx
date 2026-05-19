@@ -298,17 +298,7 @@ const ListGrid: React.FC<IProps> = ({
               }}
             >
               {isFetching && allItems.length === 0 ? (
-                <>
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Grid
-                      key={i}
-                      sx={{ width: 1, mx: 'auto', maxWidth: '470px' }}
-                      size={{ xs: 12, md: 10, xl: 9 }}
-                    >
-                      {<SkeletonComponent />}
-                    </Grid>
-                  ))}
-                </>
+                   <SkeletonComponent />
               ) : allItems.length === 0 ? (
                 <Box
                   sx={{

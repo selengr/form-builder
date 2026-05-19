@@ -9,9 +9,10 @@ const ListCardSkeleton: React.FC = () => {
             {
                 Array.from({ length: 4 }).map((_, index) => (
                     <Grid2
-                        sx={{ width: 1, mx: 'auto', maxWidth: '470px',
-                            
-                         }}
+                        sx={{
+                            width: 1, mx: 'auto', maxWidth: '470px',
+
+                        }}
                         key={index}
                         size={{ xs: 12, md: 10, xl: 9 }}
                     >

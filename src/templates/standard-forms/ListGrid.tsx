@@ -22,6 +22,7 @@ import { PackagingList } from '../../../actions/packaging/list';
 import ListCardSkeleton from './ListCardSkeleton';
 import { useDebounce } from '@/hooks/useDebounce';
 import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
+import EmptyList from '@/components/ListGrid/EmptyList';
 
 export interface SearchBoxItem {
   fieldName: string;
@@ -239,22 +240,8 @@ const ListGrid: React.FC<Props> = ({
     }
 
     if (allItems.length === 0) {
-      return (
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            alignItems: 'center',
-            height: '60vh',
-            width: '100%',
-          }}>
-          <Image src={formListEmpty} alt='No forms found' height={256} priority draggable={false} />
-          <Typography sx={{ fontSize: '18px', color: '#999' }}>موردی یافت نشد</Typography>
-        </Box>
-      );
+      return (<EmptyList />);
     }
-
 
     // @ts-ignore
     return pages.pages.map((page, pageIndex) =>

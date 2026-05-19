@@ -9,17 +9,19 @@ const ListCardSkeleton: React.FC = () => {
             {
                 Array.from({ length: 4 }).map((_, index) => (
                     <Grid2
-                        sx={{ width: 1, mx: 'auto', maxWidth: '470px' }}
+                        sx={{ width: 1, mx: 'auto', maxWidth: '470px',
+                            
+                         }}
                         key={index}
                         size={{ xs: 12, md: 10, xl: 9 }}
                     >
                         <div
                             className="
                                     border border-[#DDE1E6] 
-                                    p-4 rounded-2xl 
+                                    p-2 rounded-2xl 
                                     flex flex-col gap-4 
                                     w-full relative 
-                                    bg-white
+                                    bg-white -mr-3
                                 "
                         >
                             <div className="flex flex-wrap gap-2 w-full items-center justify-between">

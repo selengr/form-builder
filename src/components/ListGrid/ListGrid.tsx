@@ -20,7 +20,7 @@ import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 import TotalGrid from '@/../public/images/home-page/total-grid.svg';
 import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
 // action
-import { fetchListGridData, SearchQueryFilter } from '../../../actions/listGridActions';
+import { fetchListGridData } from '../../../actions/listGridActions';
 
 export interface SearchBoxItem {
   fieldName: string;
@@ -48,7 +48,7 @@ interface IProps {
   refreshGrid?: boolean;
   disableFilter?: boolean;
   textTotal?: [string, string];
-  searchQueryFilter?: SearchQueryFilter;
+  searchQueryFilter?: any;
   showCreateButton?: boolean;
   title: string;
   CreateButton?: () => React.ReactNode;

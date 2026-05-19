@@ -154,9 +154,6 @@ const ListGrid: React.FC<Props> = ({
   }, [pages]);
 
   if (error) {
-     console.log('error as any', error as any)
-     console.log('error as any', error.message as any)
-     debugger
     toast.error(error.message);
   }
 
@@ -244,9 +241,6 @@ const ListGrid: React.FC<Props> = ({
           }}>
           <Image src={formListEmpty} alt='No forms found' height={256} priority draggable={false} />
           <Typography sx={{ fontSize: '18px', color: '#999' }}>موردی یافت نشد</Typography>
-          <span className='text-red-500'>
-               {error?.message}
-          </span>
         </Box>
       );
     }

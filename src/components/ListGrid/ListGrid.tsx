@@ -21,6 +21,7 @@ import TotalGrid from '@/../public/images/home-page/total-grid.svg';
 import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
 // action
 import { fetchListGridData, SearchQueryFilter } from '../../../actions/listGridActions';
+import EmptyList from './EmptyList';
 
 export interface SearchBoxItem {
   fieldName: string;
@@ -300,28 +301,7 @@ const ListGrid: React.FC<IProps> = ({
               {isFetching && allItems.length === 0 ? (
                    <SkeletonComponent />
               ) : allItems.length === 0 ? (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    height: '100%',
-                    width: '100%',
-                  }}
-                >
-                  <div className='h-44 sm:h-56 bg ml-10 sm:ml-3'>
-                    <Image src={formListEmpty} alt="No forms found"
-                      height={0}
-                      width={0}
-                      className='w-full h-full'
-                      draggable={false}
-                      priority
-                    />
-                  </div>
-
-                  <span className='text-[#999] text-sm md:text-md'>موردی یافت نشد</span>
-                </Box>
+                   <EmptyList error={error?.message}/>
               ) : (
                 pages?.pages?.map((page, pageIndex) =>
                   page.data.map((data, index) => {

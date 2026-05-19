@@ -155,9 +155,9 @@ const ListGrid: React.FC<Props> = ({
     }
   }, [pages]);
 
-  if (error) {
-    toast.error(error.message);
-  }
+  useEffect(() => {
+    if (error) toast.error((error as Error).message);
+  }, [error]);
 
   const renderHeader = useCallback(
     () => (
@@ -229,7 +229,7 @@ const ListGrid: React.FC<Props> = ({
     }
 
     if (allItems.length === 0) {
-      return (<EmptyList />);
+      return (<EmptyList error={error?.message}/>);
     }
 
     // @ts-ignore

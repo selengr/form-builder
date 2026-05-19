@@ -85,6 +85,6 @@ console.log('validCombinedRestrictionList--------------------------------------'
       error?.response?.data?.message ||
       'انجام عملیات با خطا مواجه شد';
 
-    throw new Error(message);
+    throw new Error(error);
   }
 }

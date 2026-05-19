@@ -7,10 +7,12 @@ import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
 
 interface EmptyListProps {
   title?: string;
+  error?: string;
   containerHeight?: string | number;
 }
 
 const EmptyList: React.FC<EmptyListProps> = ({
+  error,
   title = 'موردی یافت نشد',
   containerHeight = '100%',
 }) => {
@@ -38,7 +40,7 @@ const EmptyList: React.FC<EmptyListProps> = ({
       </div>
 
       <span className="text-[#999] text-sm sm:text-base md:text-md">
-        {title}
+        {error ? <span className='text-red-500 font-semibold text-sm'>خطا در بارگزاری لیست</span> : title}
       </span>
     </Box>
   );

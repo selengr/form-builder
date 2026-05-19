@@ -277,11 +277,6 @@ const ListGrid: React.FC<Props> = ({
 
   return (
     <div className={'p-2 h-screen w-full flex flex-col'}>
-      {isFetching && !isFetchingNextPage ? (
-        <Box sx={{ width: '100%' }}>
-          <LinearProgress />
-        </Box>
-      ) : (
         <Grid
           width='100%'
           display='flex'
@@ -364,7 +359,7 @@ const ListGrid: React.FC<Props> = ({
           </Grid>
           {renderDesktopFilter()}
         </Grid>
-      )}
+
     </div>
   );
 };

@@ -19,6 +19,7 @@ import BottomSheet from '@/components/BottomSheet/BottomSheet';
 import CreateFormBtn from '@/components/CreateFormBtn/CreateFormBtn';
 // action
 import { PackagingList } from '../../../actions/packaging/list';
+import ListCardSkeleton from './ListCardSkeleton';
 
 export interface SearchBoxItem {
   fieldName: string;
@@ -245,6 +246,23 @@ const ListGrid: React.FC<Props> = ({
       );
     }
 
+    // if (isFetching && !isFetchingNextPage) {
+  return (
+    <>
+      {Array.from({ length: 4 }).map((_, index) => (
+        <Grid
+          sx={{ width: 1, mx: 'auto', maxWidth: '470px' }}
+          key={index}
+          size={{ xs: 12, md: 10, xl: 9 }}
+        >
+          <ListCardSkeleton />
+        </Grid>
+      ))}
+    </>
+  );
+// }
+
+
     // @ts-ignore
     return pages.pages.map((page, pageIndex) =>
       page.data.map((data: any, index: number) => {
@@ -292,36 +310,29 @@ const ListGrid: React.FC<Props> = ({
   );
 
   return (
-    <div className={'p-2 h-screen w-full flex flex-col'}>
-      {isFetching && !isFetchingNextPage ? (
-        <Box sx={{ width: '100%' }}>
-          <LinearProgress />
-        </Box>
-      ) : (
-        <Grid
-          width='100%'
-          display='flex'
-          sx={{
-            overflowY: 'hidden',
-            userSelect: 'none',
-            height: { xs: 'calc(100vh - 60px)', md: '100vh' },
-            flexDirection: { xs: 'column', lg: 'row' },
-          }}>
+     <div className="p-1 sm:py-2 h-full w-full flex flex-col overflow-hidden">
           <Grid
-            display='flex'
-            flexDirection='column'
-            justifyContent='flex-start'
-            alignItems='center'
-            container
-            sx={{
-              bgcolor: 'white',
-              borderRadius: '16px',
-              p: 2,
-              mx: 1,
-              width: 1,
-              overflowY: 'hidden',
-              height: '100%',
-            }}>
+               width="100%"
+               display="flex"
+               sx={{
+                 overflowY: 'hidden',
+                 height: { xs: 'calc(100vh - 60px)', md: '100vh' },
+                 flexDirection: { xs: 'column', lg: 'row' },
+               }}
+             >
+               <Grid
+                 container
+                 flexDirection="column"
+                 alignItems="center"
+                 sx={{
+                   bgcolor: 'white',
+                   borderRadius: '16px',
+                   p: { xs: 1, sm: 2 },
+                   mx: { xs: 0, sm: 1 },
+                   width: 1,
+                   overflow: 'hidden',
+                 }}
+                 >
             <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
               {renderHeader()}
               <Box
@@ -380,7 +391,6 @@ const ListGrid: React.FC<Props> = ({
           </Grid>
           {renderDesktopFilter()}
         </Grid>
-      )}
     </div>
   );
 };

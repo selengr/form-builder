@@ -16,7 +16,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 // action
 import { fetchListGridData } from '../../../actions/listGridActions';
 // components
-import CardSkeleton from './CardSkeleton ';
+import CardSkeleton from './CardSkeleton';
 import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
 
 export interface SearchBoxItem {
@@ -185,14 +185,7 @@ const ListGrid: React.FC<IProps> = ({
                                 },
                             }}>
                             {isFetching && !isFetchingNextPage && (
-
-                                <>
-                                    {Array.from({ length: 5 }).map((_, i) => (
-                                        <Grid key={i} sx={{ width: 1, maxWidth: 470, mx: 'auto' }}>
-                                            <CardSkeleton />
-                                        </Grid>
-                                    ))}
-                                </>
+                                <CardSkeleton />
                             )}
 
 

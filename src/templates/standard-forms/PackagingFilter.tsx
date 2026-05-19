@@ -57,7 +57,7 @@ export default function PackagingFilter({
 
         {/* Time Filter */}
         <div className='w-full bg-[#F7F7FF] rounded-[20px] px-4 pt-4 pb-3'>
-          <FilterBox labe="بر اساس زمان">
+          <FilterBox label="بر اساس زمان">
             <RadioGroup value={formType.fieldOperation} onChange={handleTypeChange}>
               <FormControlLabel value='DSC' control={<Radio />} label='جدیدترین' />
               <FormControlLabel value='ASC' control={<Radio />} label='قدیمی‌ترین' />

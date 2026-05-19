@@ -70,35 +70,15 @@ const ListGrid: React.FC<Props> = ({
   textTotal = ['تعداد کل فرم‌ها', 'عدد'],
   CreateButton
 }) => {
+  const router = useRouter();
   const [totalData, setTotalData] = useState<number | null>(null);
   const { ref, inView } = useInView();
   const searchParams = useSearchParams();
+  const [isFilterOpen, setIsFilterOpen] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const [query, setQuery] = useState('');
   const debouncedSearch = useDebounce(query, 500);
-
-  useEffect(() => {
-    if (searchParams.get('new') !== null) {
-      setIsDialogOpen(true);
-    } else {
-      setIsDialogOpen(false);
-    }
-  }, [searchParams]);
-
-  const handleCloseDialog = () => {
-    setIsDialogOpen(false);
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    newSearchParams.delete('new');
-    router.replace(`?${newSearchParams.toString()}`);
-  };
-
-  const handleOpenDialog = () => {
-    router.push('?new');
-  };
-
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const router = useRouter();
 
   // const updatedSearchBoxList = searchBoxList.map((item) => {
   //   if (item.fieldName === 'name' && query) {
@@ -227,7 +207,7 @@ const ListGrid: React.FC<Props> = ({
             </IconButton>
           )}
         </Grid>
-      </Grid>
+      </Grid> 
     ),
     [disableFilter, openFilter],
   );

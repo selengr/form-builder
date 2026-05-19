@@ -22,7 +22,7 @@ const ListCardSkeleton: React.FC = () => {
                                     p-2 rounded-2xl 
                                     flex flex-col gap-4 
                                     w-full relative 
-                                    bg-white -mr-3
+                                    bg-white
                                 "
                         >
                             <div className="flex flex-wrap gap-2 w-full items-center justify-between">

@@ -93,19 +93,19 @@ export async function assessmentlist(
 
     const response = await serverApi.get(fullURL);
 
-    if (!response?.data) {
-      throw new Error('خطا در دریافت اطلاعات');
-    }
+    // if (!response?.data) {
+    //   throw new Error('خطا در دریافت اطلاعات');
+    // }
 
     return {
       data: response.data.content,
       total: response.data.totalElements,
     };
   } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      'انجام عملیات با خطا مواجه شد';
+    // const message =
+    //   error?.response?.data?.message?.[0]?.title ||
+    //   error?.response?.data?.message ||
+    //   'انجام عملیات با خطا مواجه شد';
 
     throw new Error(error);
   }

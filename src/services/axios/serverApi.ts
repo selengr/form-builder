@@ -1,36 +1,9 @@
-import axios, { AxiosError, AxiosHeaders, AxiosRequestConfig } from 'axios';
+import axios, { AxiosError, AxiosHeaders, InternalAxiosRequestConfig } from 'axios';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/authConfig';
+import { ApiError, extractErrorMessage, TApiErrorResponse } from './error-handler';
 
 export const runtime = 'nodejs';
-
-/* =========================
-   HTTP STATUS ENUM
-========================= */
-
-enum HttpStatus {
-  UNAUTHORIZED = 401,
-  INTERNAL_SERVER_ERROR = 500,
-  BAD_GATEWAY = 502,
-  SERVICE_UNAVAILABLE = 503,
-  GATEWAY_TIMEOUT = 504,
-}
-
-/* =========================
-   AXIOS CONFIG EXTENSION
-========================= */
-
-declare module 'axios' {
-  export interface AxiosRequestConfig {
-    _retryCount?: number;
-    _shouldRetry?: boolean;
-    _delay?: number;
-  }
-}
-
-/* =========================
-   AXIOS INSTANCE (SERVER)
-========================= */
 
 export const serverApi = axios.create({
   baseURL: `${process.env.BASE_URL}/psya`,
@@ -59,7 +32,7 @@ async function getAccessToken(): Promise<string | null> {
 ========================= */
 
 serverApi.interceptors.request.use(
-  async (config: any) => {
+  async (config: InternalAxiosRequestConfig) => {
     const token = await getAccessToken();
 
     if (token) {
@@ -68,10 +41,6 @@ serverApi.interceptors.request.use(
         `Bearer ${token}`,
       );
     }
-
-    config._retryCount ??= 0;
-    config._shouldRetry ??= true;
-    config._delay ??= 1000;
 
     return config;
   },
@@ -83,43 +52,9 @@ serverApi.interceptors.request.use(
 
 serverApi.interceptors.response.use(
   (response) => response,
-  async (error: AxiosError) => {
-    const config = error.config as AxiosRequestConfig | undefined;
-    const status = error.response?.status;
-    // const maxRetries = 3;
+    async (error: AxiosError<TApiErrorResponse>) => {
 
-    // const retryableStatuses = [
-    //   HttpStatus.INTERNAL_SERVER_ERROR,
-    //   HttpStatus.BAD_GATEWAY,
-    //   HttpStatus.SERVICE_UNAVAILABLE,
-    //   HttpStatus.GATEWAY_TIMEOUT,
-    // ];
-
-    // if (
-    //   config &&
-    //   config._shouldRetry &&
-    //   config._retryCount! < maxRetries &&
-    //   (!status || retryableStatuses.includes(status))
-    // ) {
-    //   config._retryCount!++;
-    //   const delay = config._delay! * config._retryCount!;
-
-    //   console.warn(
-    //     `🔁 Retry ${config._retryCount}/${maxRetries} → ${config.method?.toUpperCase()} ${config.url}`,
-    //   );
-
-    //   await new Promise((r) => setTimeout(r, delay));
-    //   return serverApi(config);
-    // }
-
-    console.error('‼️ SERVER API ERROR', {
-      url: config?.url,
-      method: config?.method,
-      status,
-      data: error.response?.data,
-      message: error.message,
-    });
-
-    throw error;
+    const message = extractErrorMessage(error);
+    throw new ApiError(message);
   },
 );

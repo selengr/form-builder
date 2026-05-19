@@ -102,11 +102,6 @@ export async function assessmentlist(
       total: response.data.totalElements,
     };
   } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      'انجام عملیات با خطا مواجه شد';
-
-    throw new Error(message);
+     throw new Error(error);
   }
 }

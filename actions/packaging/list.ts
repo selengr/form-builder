@@ -1,5 +1,4 @@
 'use server';
-
 import { serverApi } from '@/services/axios/serverApi';
 
 interface SearchBoxItem {

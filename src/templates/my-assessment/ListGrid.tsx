@@ -12,10 +12,11 @@ import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from '@mui
 import Filter from '@/../public/images/home-page/FilterAA.svg';
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 import TotalGrid from '@/../public/images/home-page/total-grid.svg';
-import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
 // components
-import BottomSheet from '@/components/BottomSheet/BottomSheet';
+import ListCardSkeleton from './ListCardSkeleton';
+import EmptyList from '@/components/ListGrid/EmptyList';
 import SearchInput from '@/components/ListGrid/SearchInput';
+import BottomSheet from '@/components/BottomSheet/BottomSheet';
 import CreateFormBtn from '@/components/CreateFormBtn/CreateFormBtn';
 // action
 import { assessmentlist } from '../../../actions/myAssessments/assessmentlist';
@@ -220,29 +221,12 @@ const ListGrid: React.FC<Props> = ({
 
   const renderContent = useCallback(() => {
     const allItems = pages?.pages.flatMap((page) => page.data) || [];
-    if (isFetching && !isFetchingNextPage) {
-      return (
-        <Box sx={{ width: '100%', mt: 2 }}>
-          <LinearProgress />
-        </Box>
-      );
+ if (isFetching && !isFetchingNextPage) {
+      return (<ListCardSkeleton />);
     }
 
     if (allItems.length === 0) {
-      return (
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            alignItems: 'center',
-            height: '60vh',
-            width: '100%',
-          }}>
-          <Image src={formListEmpty} alt='No forms found' height={256} priority draggable={false} />
-          <Typography sx={{ fontSize: '18px', color: '#999' }}>موردی یافت نشد</Typography>
-        </Box>
-      );
+      return (<EmptyList />);
     }
 
     // @ts-ignore

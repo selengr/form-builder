@@ -7,7 +7,7 @@ const ListCardSkeleton: React.FC = () => {
     return (
         <>
             {
-                Array.from({ length: 4 }).map((_, index) => (
+                Array.from({ length: 5 }).map((_, index) => (
                     <Grid2
                         sx={{
                             width: 1, mx: 'auto', maxWidth: '470px',

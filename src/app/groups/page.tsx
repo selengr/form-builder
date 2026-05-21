@@ -148,7 +148,7 @@ const GroupsPage: React.FC = () => {
                 <span>تعداد کل گروه‌ها:</span>
               </div>
               {isLoading ? (
-                <div className="w-10 h-4 bg-gray-200 rounded animate-pulse" />
+                <div className="w-10 h-6 bg-gray-200 rounded animate-pulse" />
               ) : (
                 <span className='font-semibold text-[#2a2a2a]'>
                   {data?.pages[0]?.total ?? 0} عدد

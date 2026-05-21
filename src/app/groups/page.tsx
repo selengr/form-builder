@@ -4,21 +4,20 @@ import Image from 'next/image';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { LinearProgress } from '@mui/material';
+import { useQueryClient } from '@tanstack/react-query';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import React, { Suspense, useState, useRef, useEffect, useCallback } from 'react';
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-// utils
-import { getAuthToken } from '@/utils/getAuthToken';
 // images
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 import TotalGrid from '@/../public/images/home-page/total-grid.svg';
 // components
-import { GroupListItem, IGroup } from './components/groupListItem';
+import { GroupListItem } from './components/groupListItem';
 import { GroupDialogTrigger } from './components/GroupDialogTrigger';
 import { InvalidConfirmDialog } from './components/invalidConfirmDialog';
 import { CreateGroupDialog } from '@/app/groups/components/createGroupDialog';
 import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
 // action
+import { useGroupsList } from './[id]/_hook/useGroupslist';
 import { changeGroupStatusAction } from '../../../actions/groups/group';
 
 export interface GroupItemAPI {
@@ -27,80 +26,17 @@ export interface GroupItemAPI {
   groupMemberCount: number;
   invalid?: boolean
 }
-
 export interface GroupListResponse {
   content: GroupItemAPI[];
   totalElements: number;
 }
-
-const fetchGroups = async ({
-  pageParam = 0,
-  query = '',
-}: {
-  pageParam?: number;
-  query?: string;
-}): Promise<{ groups: IGroup[]; total: number; nextPage: number | null }> => {
-  const token = await getAuthToken();
-
-  const defaultSearchFilterModel = {
-    searchFilterBoxList: [
-      {
-        restrictionList: query
-          ? [
-            {
-              fieldName: 'name',
-              fieldOperation: 'MATCH',
-              fieldValue: query,
-              nextConditionOperator: 'AND',
-            },
-          ]
-          : [],
-      },
-    ],
-    sortList: [{ fieldName: 'id', type: 'DSC' }],
-    page: pageParam,
-    rows: 10,
-  };
-  const encodedSearchFilterModel = encodeURIComponent(
-    JSON.stringify(defaultSearchFilterModel)
-  );
-
-  const response = await fetch(
-    `/api/group/list?searchFilterModel=${encodedSearchFilterModel}`,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || 'Failed to fetch groups');
-  }
-
-  const data: GroupListResponse = await response.json();
-
-  return {
-    groups: data.content.map((item) => ({
-      id: item.groupId,
-      name: item.groupName,
-      description: '',
-      userCount: item.groupMemberCount,
-      invalid: item.invalid,
-    })),
-    total: data.totalElements,
-    nextPage: data.content.length > 0 ? pageParam + 1 : null,
-  };
-};
-
+// ----------------------------------------------------------------------
 const GroupsPage: React.FC = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [query, setQuery] = useState('');
   const pathWithoutQuery = '/groups';
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
-  const [query, setQuery] = useState('');
   const [showCreateGroupDialog, setShowCreateGroupDialog] = useState(false);
   const [onenConfirmationDialog, setOnenConfirmationDialog] = useState(false);
 
@@ -108,7 +44,6 @@ const GroupsPage: React.FC = () => {
   const [storedGroupId, setStoredGroupId] = useState<number>(0)
   const [storedisActive, setStoredisActive] = useState<boolean>(false)
   const [disabledSwitches, setDisabledSwitches] = useState<number[]>([])
-
 
   const {
     data,
@@ -118,12 +53,7 @@ const GroupsPage: React.FC = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ['groups', query],
-    queryFn: ({ pageParam }) => fetchGroups({ pageParam, query }),
-    getNextPageParam: (lastPage) => lastPage.nextPage,
-    initialPageParam: 0,
-  });
+  } = useGroupsList(query);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -189,8 +119,8 @@ const GroupsPage: React.FC = () => {
         setOnenConfirmationDialog(false);
       }
 
-    } catch (error :any) {
-      toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+    } catch (error: any) {
+      toast.error(error?.message);
     } finally {
       setLoading(false)
       setDisabledSwitches((prev) =>
@@ -225,18 +155,14 @@ const GroupsPage: React.FC = () => {
               onClick={() => router.push('/groups?new')}
               className='w-[50px] h-[50px] border border-[#1758BA] rounded-xl flex items-center justify-center hover:bg-gray-100 transition'
               aria-label='افزودن گروه جدید'>
-              <Suspense fallback={<div>...</div>}>
-                <Image src={PlusIcon} alt='افزودن' width={24} height={24} draggable={false} />
-              </Suspense>
+              <Image src={PlusIcon} alt='افزودن' width={24} height={24} draggable={false} />
             </button>
           </div>
         </div>
 
         <div className='flex justify-center mb-3'>
           <div className='w-full max-w-lg'>
-            <Suspense fallback={<div>در حال بارگذاری جستجو...</div>}>
-              <ImmediateSearchInput onSearch={setQuery} />
-            </Suspense>
+            <ImmediateSearchInput onSearch={setQuery} />
           </div>
         </div>
 
@@ -247,8 +173,8 @@ const GroupsPage: React.FC = () => {
             <p className='text-red-500'>خطا در بارگذاری گروه‌ها: {(error as Error).message}</p>
           ) : (
             <div className='w-full max-w-lg flex flex-col gap-[10px] overflow-y-auto'>
-              {data?.pages.flatMap((page) =>
-                page.groups.map((group) => (
+              {data?.pages?.flatMap((page: any) =>
+                page.groups.map((group: any) => (
                   <GroupListItem
                     key={group.id} group={group}
                     handleChangeStatus={handleChangeStatus}

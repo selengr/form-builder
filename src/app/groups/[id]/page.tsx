@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { Box, CircularProgress } from '@mui/material'
 import { useQueryClient } from '@tanstack/react-query'
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md'
-import React, { Suspense, useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 // images
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
@@ -144,8 +144,8 @@ export default function GroupDetailsPage() {
   }
 
   return (
-    <div className='p-2 w-full h-[calc(100vh-20px)] flex flex-col'>
-      <main className='p-4 bg-white flex flex-col rounded-xl h-full'>
+    <div className="p-1 sm:py-2 h-full w-full flex flex-col overflow-hidden">
+      <main className='p-4 mx-1 bg-white flex flex-col rounded-xl h-full'>
         <div className='min-h-[52px] flex items-center justify-center relative rounded-xl bg-[#F7F7FF] mb-4 px-2'>
           <p className='text-[16px] font-bold text-[#2a2a2a]'>جزئیات گروه</p>
           <button onClick={() => router.push('/groups')} className='absolute right-2 p-1 rounded-full hover:bg-gray-200'>

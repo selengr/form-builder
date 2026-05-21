@@ -1,6 +1,5 @@
-import { SwitchButton } from "@/components/Switch/SwitchButton";
 import { IUserGroupMemmerInfo } from "@/types/setting";
-import { Checkbox } from "@mui/material";
+import { SwitchButton } from "@/components/Switch/SwitchButton";
 
 interface MemberListItemProps {
   member: IUserGroupMemmerInfo;
@@ -12,22 +11,31 @@ interface MemberListItemProps {
 
 
 export const MemberListItem = ({ member, selectedUsers, handleUserCheckboxChange, handleChangeStatus, disabledSwitches }: MemberListItemProps) => (
-  <li className='relative flex items-center justify-between p-4 hover:bg-gray-50'>
-    <div className='flex items-center gap-3'>
-      {/* <Checkbox
-        checked={selectedUsers.includes(member.introducedUserJTGroupId)}
-        onChange={(e) => handleUserCheckboxChange(member.introducedUserJTGroupId, e.target.checked)}
-        sx={{ color: '#1758BA', '&.Mui-checked': { color: '#1758BA' } }}
-      /> */}
-      <span className='text-gray-800 font-medium'>{member.userName} {member.userFamily}</span>
-      <span className='absolute left-40 text-gray-500 text-sm flex sm:block'>نام کاربری: {member.userUsername}</span>
-      <span className='absolute left-28 text-gray-500 text-sm flex sm:block'>{member.userGender}</span>
+  <li className="flex items-center justify-between p-4 hover:bg-gray-50">
+    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 w-[80%] justify-between">
+      <span className="text-gray-800 font-medium">
+        {member.userName} {member.userFamily}
+      </span>
+
+      <div className="flex flex-col sm:flex-row gap-1 sm:gap-6">
+        <span className="text-gray-500 text-sm justify-end">
+          نام کاربری: {member.userUsername}
+        </span>
+
+        <span className="text-gray-500 text-sm">
+          {member.userGender}
+        </span>
+      </div>
+
     </div>
+
     <SwitchButton
-      sx={{ position: 'absolute', top: 20, right: 25 }}
       checked={!member.invalid}
       disabled={disabledSwitches.includes(member.introducedUserJTGroupId)}
-      onChange={() => handleChangeStatus(member.invalid!, member.introducedUserJTGroupId)}
+      onChange={() =>
+        handleChangeStatus(member.invalid!, member.introducedUserJTGroupId)
+      }
     />
   </li>
+
 );

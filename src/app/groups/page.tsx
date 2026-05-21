@@ -131,8 +131,8 @@ const GroupsPage: React.FC = () => {
   }, [queryClient]);
 
   return (
-    <div className='p-2 w-full h-[calc(100vh - 60px)] md:h-screen flex flex-col' draggable={false}>
-      <main className='p-4 bg-white flex flex-col rounded-xl h-full'>
+   <div className="p-1 sm:py-2 h-full w-full flex flex-col overflow-hidden">
+      <main className='p-4 mx-1 bg-white flex flex-col rounded-xl h-full'>
         <div className='min-h-[52px] flex items-center justify-center relative rounded-xl bg-[#F7F7FF] mb-4 px-2'>
           <p className='text-[16px] font-bold text-[#2a2a2a]'>گروه‌ها</p>
           <button onClick={() => router.push('/')} className='absolute right-2 p-1 rounded-full hover:bg-gray-200' aria-label='بازگشت به صفحه اصلی'>

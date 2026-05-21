@@ -128,7 +128,8 @@ serverApi.interceptors.response.use(
 
 
 
-       const message = extractErrorMessage(error);
+const message = extractErrorMessage(error as AxiosError<TApiErrorResponse>);
+
 
        return Promise.reject(new ApiError(message));
 

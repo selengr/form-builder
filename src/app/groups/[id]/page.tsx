@@ -118,8 +118,8 @@ export default function GroupDetailsPage() {
         });
       }
 
-    } catch (error :any) {
-       toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+    } catch (error: any) {
+      toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
     } finally {
       setLoading(false)
       setDisabledSwitches((prev) =>
@@ -153,29 +153,30 @@ export default function GroupDetailsPage() {
           </button>
         </div>
 
-        <div className='border justify-between w-full border-gray-200 rounded-xl p-4 pt-6 pb-3 flex mb-4'>
-          <div className='flex flex-col gap-[10px]'>
-            <InfoRow label='نام گروه' value={groupName ?? '---'} bold />
-            <InfoRow label='تعداد اعضا' value={`${members.length} نفر`} bold />
+        <div className="border relative border-gray-200 rounded-xl p-4 pt-6 pb-3 flex flex-col gap-4 mb-4 md:flex-row md:items-center md:justify-between">
+
+          {/* Group info */}
+          <div className="flex flex-col gap-[10px]">
+            <InfoRow label="نام گروه" value={groupName ?? '---'} bold />
+            <InfoRow label="تعداد اعضا" value={`${members.length} نفر`} bold />
           </div>
 
-          <div className='flex justify-center mb-3 w-[50%]'>
-            <div className='w-full max-w-lg'>
-              <Suspense fallback={<div>در حال بارگذاری جستجو...</div>}>
-                <ImmediateSearchInput onSearch={setQuery} />
-              </Suspense>
-            </div>
+          <div className="w-full md:w-[40%]">
+            <ImmediateSearchInput onSearch={setQuery} />
           </div>
 
-          <button
-            onClick={() => setShowCreateMemberDialog(true)}
-            className='w-[50px] h-[50px] border border-[#1758BA] rounded-xl flex items-center justify-center hover:bg-gray-100 transition'
-            aria-label='افزودن گروه جدید'>
-            <Suspense fallback={<div>...</div>}>
-              <Image src={PlusIcon} alt='افزودن' width={24} height={24} draggable={false} />
-            </Suspense>
-          </button>
+          <div className="absolute top-5 left-5 md:static flex md:justify-center">
+            <button
+              onClick={() => setShowCreateMemberDialog(true)}
+              className="w-[50px] h-[50px] border border-[#1758BA] rounded-xl flex items-center justify-center hover:bg-gray-100 transition"
+              aria-label="افزودن گروه جدید"
+            >
+              <Image src={PlusIcon} alt="افزودن" width={24} height={24} draggable={false} />
+            </button>
+          </div>
+
         </div>
+
 
         <div className='flex flex-col flex-1 min-h-0'>
           <div className='flex justify-between items-center mb-3'>

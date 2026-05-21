@@ -6,12 +6,13 @@ import { useRouter } from 'next/navigation';
 import { LinearProgress } from '@mui/material';
 import { useQueryClient } from '@tanstack/react-query';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
-import React, { Suspense, useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 // images
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 import TotalGrid from '@/../public/images/home-page/total-grid.svg';
 // components
 import { GroupListItem } from './components/groupListItem';
+import GroupsListSkeleton from './components/GroupListSkeleton';
 import { GroupDialogTrigger } from './components/GroupDialogTrigger';
 import { InvalidConfirmDialog } from './components/invalidConfirmDialog';
 import { CreateGroupDialog } from '@/app/groups/components/createGroupDialog';
@@ -19,7 +20,6 @@ import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
 // action
 import { useGroupsList } from './[id]/_hook/useGroupslist';
 import { changeGroupStatusAction } from '../../../actions/groups/group';
-import GroupsListSkeleton from './components/GroupListSkeleton';
 
 export interface GroupItemAPI {
   groupName: string;
@@ -144,12 +144,17 @@ const GroupsPage: React.FC = () => {
           <div className='flex w-full max-w-lg items-center'>
             <div className='flex-1 bg-[#ECFAFF] rounded-xl px-4 py-3.5 flex justify-between items-center ml-2'>
               <div className='flex items-center gap-2 text-sm text-[#393939]'>
-                <Suspense fallback={<div>...</div>}>
-                  <Image src={TotalGrid} width={20} height={20} alt='filter' draggable={false} />
-                </Suspense>
+                <Image src={TotalGrid} width={20} height={20} alt='filter' draggable={false} />
                 <span>تعداد کل گروه‌ها:</span>
               </div>
-              <span className='font-semibold text-[#2a2a2a]'> {data?.pages[0]?.total ?? 0} عدد</span>
+              {isLoading ? (
+                <div className="w-10 h-4 bg-gray-200 rounded animate-pulse" />
+              ) : (
+                <span className='font-semibold text-[#2a2a2a]'>
+                  {data?.pages[0]?.total ?? 0} عدد
+                </span>
+              )}
+
             </div>
 
             <button
@@ -168,11 +173,11 @@ const GroupsPage: React.FC = () => {
         </div>
 
         <div className='flex justify-center flex-1 pb-6 min-h-0'>
-          {isLoading &&  <GroupsListSkeleton /> }
-          { isError && (
+          {isLoading && <GroupsListSkeleton />}
+          {isError && (
             <p className='text-red-500'>خطا در بارگذاری گروه‌ها: {(error as Error).message}</p>
           )}
-          { !isError && !isLoading &&
+          {!isError && !isLoading &&
             <div className='w-full max-w-lg flex flex-col gap-[10px] overflow-y-auto'>
               {data?.pages?.flatMap((page: any) =>
                 page.groups.map((group: any) => (
@@ -198,9 +203,7 @@ const GroupsPage: React.FC = () => {
         </div>
       </main>
 
-      <Suspense fallback={null}>
-        <GroupDialogTrigger setShowCreateGroupDialog={setShowCreateGroupDialog} />
-      </Suspense>
+      <GroupDialogTrigger setShowCreateGroupDialog={setShowCreateGroupDialog} />
 
       {showCreateGroupDialog && <CreateGroupDialog onClose={() => router.back()} onSubmit={handleCreateGroupSubmit} />}
 

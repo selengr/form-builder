@@ -19,6 +19,7 @@ import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
 // action
 import { useGroupsList } from './[id]/_hook/useGroupslist';
 import { changeGroupStatusAction } from '../../../actions/groups/group';
+import GroupsListSkeleton from './components/GroupListSkeleton';
 
 export interface GroupItemAPI {
   groupName: string;
@@ -167,11 +168,11 @@ const GroupsPage: React.FC = () => {
         </div>
 
         <div className='flex justify-center flex-1 pb-6 min-h-0'>
-          {isLoading ? (
-            <p className='text-gray-600'>در حال بارگذاری گروه‌ها...</p>
-          ) : isError ? (
+          {isLoading &&  <GroupsListSkeleton /> }
+          { isError && (
             <p className='text-red-500'>خطا در بارگذاری گروه‌ها: {(error as Error).message}</p>
-          ) : (
+          )}
+          { !isError && !isLoading &&
             <div className='w-full max-w-lg flex flex-col gap-[10px] overflow-y-auto'>
               {data?.pages?.flatMap((page: any) =>
                 page.groups.map((group: any) => (
@@ -188,12 +189,12 @@ const GroupsPage: React.FC = () => {
                   <div className='w-full'>
                     <LinearProgress />
                   </div>
-                ) : !hasNextPage ? (
+                ) : !hasNextPage && !isLoading ? (
                   <p className='text-gray-400'>همه گروه‌ها بارگذاری شدند.</p>
                 ) : null}
               </div>
             </div>
-          )}
+          }
         </div>
       </main>
 

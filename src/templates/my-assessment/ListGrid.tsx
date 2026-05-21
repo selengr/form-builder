@@ -153,7 +153,7 @@ const ListGrid: React.FC<Props> = ({
     }
   }, [pages]);
 
-  if (error) {
+  if (error) {debugger
     toast.error(error.message);
   }
 

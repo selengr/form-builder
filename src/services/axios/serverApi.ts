@@ -88,29 +88,29 @@ serverApi.interceptors.response.use(
     const status = error.response?.status;
     const maxRetries = 3;
 
-    const retryableStatuses = [
-      HttpStatus.INTERNAL_SERVER_ERROR,
-      HttpStatus.BAD_GATEWAY,
-      HttpStatus.SERVICE_UNAVAILABLE,
-      HttpStatus.GATEWAY_TIMEOUT,
-    ];
+    // const retryableStatuses = [
+    //   HttpStatus.INTERNAL_SERVER_ERROR,
+    //   HttpStatus.BAD_GATEWAY,
+    //   HttpStatus.SERVICE_UNAVAILABLE,
+    //   HttpStatus.GATEWAY_TIMEOUT,
+    // ];
 
-    if (
-      config &&
-      config._shouldRetry &&
-      config._retryCount! < maxRetries &&
-      (!status || retryableStatuses.includes(status))
-    ) {
-      config._retryCount!++;
-      const delay = config._delay! * config._retryCount!;
+    // if (
+    //   config &&
+    //   config._shouldRetry &&
+    //   config._retryCount! < maxRetries &&
+    //   (!status || retryableStatuses.includes(status))
+    // ) {
+    //   config._retryCount!++;
+    //   const delay = config._delay! * config._retryCount!;
 
-      console.warn(
-        `🔁 Retry ${config._retryCount}/${maxRetries} → ${config.method?.toUpperCase()} ${config.url}`,
-      );
+    //   console.warn(
+    //     `🔁 Retry ${config._retryCount}/${maxRetries} → ${config.method?.toUpperCase()} ${config.url}`,
+    //   );
 
-      await new Promise((r) => setTimeout(r, delay));
-      return serverApi(config);
-    }
+    //   await new Promise((r) => setTimeout(r, delay));
+    //   return serverApi(config);
+    // }
 
     console.error('‼️ SERVER API ERROR', {
       url: config?.url,
@@ -120,6 +120,50 @@ serverApi.interceptors.response.use(
       message: error.message,
     });
 
-    throw error;
+//     throw error;
+//   },
+// );
+
+
+
+
+
+       const message = extractErrorMessage(error);
+
+       return Promise.reject(new ApiError(message));
+
+
   },
 );
+
+
+
+
+export type TApiErrorResponse = {
+  message?: string | { title?: string }[];
+};
+
+export function extractErrorMessage(error: AxiosError<TApiErrorResponse>): string {
+  const data = error.response?.data;
+
+  if (Array.isArray(data?.message)) {
+    return data.message[0]?.title || 'انجام عملیات با خطا مواجه شد';
+  }
+
+  if (typeof data?.message === 'string') {
+    return data.message;
+  }
+
+  return 'انجام عملیات با خطا مواجه شد';
+}
+
+export class ApiError extends Error {
+
+  constructor(message: string, public status?: number) {
+    super(message);
+    this.name = 'خطا';
+    this.status = status;
+  }
+}
+
+

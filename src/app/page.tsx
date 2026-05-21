@@ -1,8 +1,5 @@
-// import HomePage from '@/templates/homePage/home';
 import HomePageX from '@/templates/homePage/home2';
 
-export const dynamic = 'force-dynamic';
-
-export default async function Home() {
+export default function Home() {
   return <HomePageX />;
 }

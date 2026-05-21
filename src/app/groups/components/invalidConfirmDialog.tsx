@@ -9,7 +9,7 @@ interface IInvalidConfirmDialogProps {
     loading: boolean;
     title?: string;
     onClose: () => void;
-    onConfirm: (rememberAllocation : boolean) => void;
+    onConfirm: (rememberAllocation: boolean) => void;
 }
 
 export const buttonStylesError = {
@@ -70,52 +70,81 @@ export const InvalidConfirmDialog: React.FC<IInvalidConfirmDialogProps> = ({
                 dir="rtl"
                 sx={{
                     maxHeight: '75vh',
-                    paddingX: 1,
-                    paddingTop: 0,
-                    paddingBottom: 0,
+                    px: 1,
+                    pt: 0,
+                    pb: 0,
                     display: 'flex',
                     flexDirection: 'column',
                     textAlign: 'center',
                 }}
             >
-                <Typography variant="h6" fontWeight="bold" mb={2}>
+                <Typography
+                    fontWeight="bold"
+                    mb={2}
+                    px={1}
+                    sx={{ fontSize: { xs: "15px", sm: "18px" } }}
+                >
                     ایا میخواهید تخصیص های قبلی {title} را نگه دارید
                 </Typography>
 
-
-                <Typography color="error" mt={2} mb={2}>
+                <Typography
+                    color="error"
+                    mt={2}
+                    mb={2}
+                    sx={{ fontSize: { xs: "13px", sm: "16px" } }}
+                >
                     در صورت اطمینان گزینه بله یا خیر را انتخاب کنید
                 </Typography>
 
-                <Box display="flex" justifyContent="center" alignItems="center" pb={2} gap="16px" px="16px" mt="24px" mb={2}>
+                <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    pb={2}
+                    gap="12px"
+                    px="12px"
+                    mt="24px"
+                    mb={2}
+                    flexWrap="wrap"
+                >
                     <Button
                         onClick={() => onConfirm(true)}
                         variant="contained"
                         disabled={loading}
-                        sx={{ ...buttonStyles, }}
+                        sx={{
+                            ...buttonStyles,
+                            fontSize: { xs: "12px", sm: "14px" },
+                            height: { xs: "38px", sm: "50px" },
+                            px: { xs: 1.5, sm: 2 },
+                        }}
                     >
                         بله، نگه دارید
                     </Button>
+
                     <Button
                         onClick={() => onConfirm(false)}
                         variant="contained"
                         disabled={loading}
-                        sx={{ ...buttonStyles, ...buttonStylesError }}
+                        sx={{
+                            ...buttonStyles,
+                            ...buttonStylesError,
+                            fontSize: { xs: "12px", sm: "14px" },
+                            height: { xs: "38px", sm: "50px" },
+                            px: { xs: 1.5, sm: 2 },
+                        }}
                     >
-                         خیر, لغو تخصیص کن
+                        خیر, لغو تخصیص کن
                     </Button>
 
                     <Button
                         variant="outlined"
-                        onClick={() => {
-                            onClose()
-                        }}
+                        onClick={() => onClose()}
                         disabled={loading}
                         sx={{
-                            height: "50px",
-                            fontWeight: "700",
+                            height: { xs: "38px", sm: "50px" },
+                            fontWeight: 700,
                             borderRadius: "10px",
-                            fontSize: "16px",
+                            fontSize: { xs: "12px", sm: "16px" },
                             color: "#1758BA",
                             borderColor: "#1758BA",
                             bgcolor: "white",
@@ -133,6 +162,7 @@ export const InvalidConfirmDialog: React.FC<IInvalidConfirmDialogProps> = ({
                     </Button>
                 </Box>
             </DialogContent>
+
         </Dialog>
     );
 };

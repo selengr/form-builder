@@ -3,8 +3,13 @@ import { AxiosError } from "axios";
 export type TApiErrorResponse = {
   message?: string | { title?: string }[];
 };
-
+// ------------------------------------------------------------
 export function extractErrorMessage(error: AxiosError<TApiErrorResponse>): string {
+
+  if (!error.response) {
+  return 'خطا در ارتباط با سرور'; 
+  }
+
   const data = error.response?.data;
 
   if (Array.isArray(data?.message)) {
@@ -17,7 +22,7 @@ export function extractErrorMessage(error: AxiosError<TApiErrorResponse>): strin
 
   return 'انجام عملیات با خطا مواجه شد';
 }
-
+// ------------------------------------------------------------
 export class ApiError extends Error {
 
   constructor(message: string, public status?: number) {

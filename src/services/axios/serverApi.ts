@@ -1,6 +1,6 @@
-import axios, { AxiosError, AxiosHeaders, InternalAxiosRequestConfig } from 'axios';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/authConfig';
+import axios, { AxiosError, AxiosHeaders, InternalAxiosRequestConfig } from 'axios';
 import { ApiError, extractErrorMessage, TApiErrorResponse } from './error-handler';
 
 export const runtime = 'nodejs';
@@ -52,9 +52,11 @@ serverApi.interceptors.request.use(
 
 serverApi.interceptors.response.use(
   (response) => response,
-    async (error: AxiosError<TApiErrorResponse>) => {
+  (error: AxiosError<TApiErrorResponse>) => {
 
     const message = extractErrorMessage(error);
-    throw new ApiError(message);
+    const status = error.response?.status;
+
+    return Promise.reject(new ApiError(message, status));
   },
 );

@@ -55,7 +55,7 @@ export const CancelGroupAllocationModal: React.FC<ICancelGroupAllocationModalPro
             flexDirection: 'column',
           }}>
           <Box className='flex justify-center items-baseline'>
-            <Typography variant='h6' component='p' fontWeight='bold' textAlign='center'>
+            <Typography variant="subtitle2" component='p' fontWeight='600' textAlign='center'>
               افزودن عضو به گروه {groupName}
             </Typography>
           </Box>

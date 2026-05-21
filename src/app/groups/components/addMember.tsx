@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
-import { Box, Button, MenuItem, Typography } from '@mui/material';
+import { Box, Button, Grid, MenuItem, Typography } from '@mui/material';
 // utils
 import { getAuthToken } from '@/utils/getAuthToken';
 // components
@@ -136,140 +136,139 @@ const AddMember: React.FC<AddMemberProps> = ({ handleOpen, groupId }) => {
     }
   }
 
-  return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: '100%',
-          bgcolor: '#F7F7FF',
-          borderRadius: '8px',
-          padding: 2,
-          paddingBottom: 4,
-          marginY: 2,
-          gap: 1,
-          direction: 'ltr',
-        }}>
-        <Box display='flex' gap={1} width='100%'>
+return (
+  <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+    <Box
+      sx={{
+        width: '100%',
+        bgcolor: '#F7F7FF',
+        borderRadius: '8px',
+        p: 2,
+        pb: 4,
+        my: 2,
+        direction: 'ltr',
+      }}
+    >
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6}>
           <Box sx={inputFieldContainerSx}>
-            <Typography variant='subtitle2' fontWeight='700'>
+            <Typography variant="subtitle2" fontWeight="600">
               نام:
             </Typography>
-            <RHFTextField sx={textFieldCommonSx} name='name' fullWidth />
+            <RHFTextField sx={textFieldCommonSx} name="name" fullWidth />
           </Box>
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
           <Box sx={inputFieldContainerSx}>
-            <Typography variant='subtitle2' fontWeight='700'>
+            <Typography variant="subtitle2" fontWeight="600">
               نام خانوادگی:
             </Typography>
-            <RHFTextField sx={textFieldCommonSx} name='family' fullWidth />
+            <RHFTextField sx={textFieldCommonSx} name="family" fullWidth />
           </Box>
-        </Box>
+        </Grid>
 
-        <Box display='flex' gap={1} width='100%'>
+        <Grid item xs={12} sm={6}>
           <Box sx={inputFieldContainerSx}>
-            <Typography variant='subtitle2' fontWeight='700'>
+            <Typography variant="subtitle2" fontWeight="600">
               تلفن همراه:
             </Typography>
             <RHFTextField
               sx={textFieldCommonSx}
-              name='phone'
-              type='tel'
+              name="phone"
+              type="tel"
               slotProps={{
-                htmlInput: {
-                  maxLength: 11,
-                },
+                htmlInput: { maxLength: 11 },
               }}
               fullWidth
             />
           </Box>
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
           <Box sx={inputFieldContainerSx}>
-            <Typography variant='subtitle2' fontWeight='700'>
+            <Typography variant="subtitle2" fontWeight="600">
               جنسیت:
             </Typography>
-            <RHFSelect fullWidth name='gender' sx={textFieldCommonSx}>
-              <MenuItem value=''>انتخاب کنید</MenuItem>
-              {[
-                { value: 'MALE', label: 'مرد' },
-                { value: 'FEMALE', label: 'زن' },
-              ].map((item) => (
-                <MenuItem key={item.value} value={item.value}>
-                  {item.label}
-                </MenuItem>
-              ))}
+            <RHFSelect fullWidth name="gender" sx={textFieldCommonSx}>
+              <MenuItem value="">انتخاب کنید</MenuItem>
+              <MenuItem value="MALE">مرد</MenuItem>
+              <MenuItem value="FEMALE">زن</MenuItem>
             </RHFSelect>
           </Box>
-        </Box>
+        </Grid>
+      </Grid>
+    </Box>
 
-      </Box>
-
-      <Box
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection:'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: 2,
+        px: 2,
+        width: '100%',
+        mt: 4,
+        mb: 3,
+      }}
+    >
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        disabled={isSubmitting || !isValid}
         sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: '16px',
-          paddingX: '16px',
-          width: '100%',
-          marginTop: '32px',
-          marginBottom: '24px',
-        }}>
-        <Button
-          type='submit'
-          fullWidth
-          variant='contained'
-          disabled={isSubmitting || !isValid}
-          loading={isSubmitting}
-          sx={{
+          bgcolor: '#1758BA',
+          height: '54px',
+          color: 'white',
+          fontSize: { xs: '13px', sm: '16px' },
+          fontWeight: '700',
+          borderRadius: '10px',
+          boxShadow: 'none',
+          '&:hover': {
             bgcolor: '#1758BA',
-            height: '54px',
-            color: 'white',
-            fontSize: {
-              xs: '13px',
-              sm: '16px',
-            },
-            fontWeight: '700',
-            borderRadius: '10px',
             boxShadow: 'none',
-            '&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active': {
-              bgcolor: '#1758BA',
-              boxShadow: 'none',
-            },
-          }}>
-          افزودن عضو
-        </Button>
-        <Button
-          disabled={isSubmitting}
-          type='button'
-          fullWidth
-          sx={{
-            height: '54px',
-            fontWeight: '700',
-            borderRadius: '10px',
-            fontSize: '16px',
+          },
+        }}
+      >
+        افزودن عضو
+      </Button>
+
+      <Button
+        disabled={isSubmitting}
+        type="button"
+        fullWidth
+        variant="outlined"
+        onClick={() => {
+          handleOpen();
+          reset();
+        }}
+        sx={{
+          height: '54px',
+          fontWeight: '700',
+          borderRadius: '10px',
+          fontSize: '16px',
+          color: '#1758BA',
+          borderColor: '#1758BA',
+          bgcolor: 'white',
+          '&:hover': {
+            bgcolor: 'transparent',
+            boxShadow: 'none',
             color: '#1758BA',
-            borderColor: '#1758BA',
-            bgcolor: 'white',
-            '&.MuiButtonBase-root:hover': {
-              bgcolor: 'transparent',
-              boxShadow: 'none',
-              color: '#1758BA',
-            },
-            '&.Mui-disabled': {
-              borderColor: '#d9d9d9',
-              color: '#b0b0b0',
-            },
-          }}
-          variant='outlined'
-          onClick={() => {
-            handleOpen();
-            reset();
-          }}>
-          انصراف
-        </Button>
-      </Box>
-    </FormProvider>
-  );
+          },
+          '&.Mui-disabled': {
+            borderColor: '#d9d9d9',
+            color: '#b0b0b0',
+          },
+        }}
+      >
+        انصراف
+      </Button>
+    </Box>
+  </FormProvider>
+);
+
 }
 
 export default AddMember;

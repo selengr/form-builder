@@ -1,7 +1,7 @@
 import Image from "next/image";
 import FaqClient from "./components/FaqClient";
 
-export const revalidate = 3600; 
+export const dynamic = "force-static";
 
 export default async function FAQPage() {
 

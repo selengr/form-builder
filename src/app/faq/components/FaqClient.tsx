@@ -1,8 +1,8 @@
 "use client";
 
+import React from "react";
 import { useState, useMemo } from "react";
 import CustomAccordionGroup from "./accordion";
-import React from "react";
 
 const HighlightedText = ({ text, highlight }: { text: string; highlight: string }) => {
   if (!highlight.trim()) return <span>{text}</span>;

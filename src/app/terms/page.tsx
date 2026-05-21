@@ -1,5 +1,3 @@
-'use client';
-
 import Image from 'next/image';
 
 export const dynamic = "force-static";
@@ -73,6 +71,7 @@ export default function HomePage() {
       content: 'شرایط فوق، توافقی بین شما و سایا است. در صورت بی‌اعتباری بخشی از این شرایط، سایر بندها همچنان معتبر خواهند بود. عدم اعمال یک حق توسط سایا به معنای صرف‌نظر از آن حق نیست.',
     },
   ];
+
   return (
     <div className='relative h-[calc(100vh-60px)] md:h-full max-h-screen overflow-hidden w-full' style={{ userSelect: 'none' }}>
       <div className='absolute inset-0 -z-10 pointer-events-none bg-[#fcfcfe]'></div>
@@ -94,6 +93,7 @@ export default function HomePage() {
           </div>
           <h1 className='xs:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 font-d7'>قوانین و مقررات</h1>
         </div>
+
         <div className='p-4 overflow-y-scroll scroll-hide bg-white rounded-2xl'>
           <div className='w-full xs:min-w-[80vw] xs:max-w-[90vw] md:min-w-[40vw] md:max-w-[50vw] lg:min-w-[30vw] lg:max-w-[40vw] mx-auto'>
             <p className='text-gray-700 leading-loose mb-6 text-justify' dir={'rtl'}>
@@ -105,6 +105,7 @@ export default function HomePage() {
               یا سوپراپلیکیشن ام‌رسالت، به منزله موافقت شما با شرایط استفاده از سایا است. این شرایط، توافقی الزام‌آور بین کاربر و سایا است. لطفاً این شرایط را با دقت مطالعه کنید. در صورت عدم موافقت،
               نمی‌توانید از این پلتفرم استفاده نمایید.
             </p>
+
             <hr className='my-6 border-t border-gray-200' />
 
             {termsContent.map((item, index) => (
@@ -114,10 +115,10 @@ export default function HomePage() {
                   <h2 className='font-bold text-gray-800 text-base sm:text-lg lg:text-xl'>{item.title}</h2>
                 </div>
 
-                {/* محتوای پاراگراف */}
-                <p className='font-medium text-gray-700 leading-loose text-justify whitespace-pre-line'>{item.content}</p>
+                <p className='font-medium text-gray-700 leading-loose text-justify whitespace-pre-line'>
+                  {item.content}
+                </p>
 
-                {/* جداکننده بین آیتم‌ها */}
                 {index < termsContent.length - 1 && <hr className='my-6 border-t border-gray-200' />}
               </div>
             ))}

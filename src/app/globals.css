@@ -1,4 +1,3 @@
-/* app/globals.css */
 @import "../../public/fonts/font.css";
 @tailwind base;
 @tailwind components;
@@ -21,7 +20,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
   background-color: #F2F4F8 !important;
-  background-image: url("../../public/images/home-page/bg-pattern.svg");
+  background-image: url("/images/home-page/bg-pattern.svg");
   background-repeat: repeat;
 }
 

@@ -3,7 +3,7 @@ import FaqClient from "./components/FaqClient";
 
 export const revalidate = 3600; 
 
-export default async function HomePage() {
+export default async function FAQPage() {
 
   const accordionItems = [
     {

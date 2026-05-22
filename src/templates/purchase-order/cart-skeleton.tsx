@@ -18,12 +18,12 @@ export const ShoppingCartSkeleton = () => {
         </div>
       </div>
 
-     <div className="w-full lg:w-[450px] bg-white rounded-2xl p-4 shadow-sm h-auto lg:h-full flex flex-col">
+      <div className="w-full lg:w-[430px] bg-white rounded-2xl p-4 shadow-sm h-auto lg:h-full flex flex-col">
         <div className="animate-pulse bg-gray-100 rounded-lg h-12 mb-4" />
-     
-       <div className="animate-pulse mt-auto flex flex-col gap-4">
-           <div className="bg-gray-50 rounded-2xl h-40 p-4" />
-           <div className="h-12 bg-gray-100 rounded-xl" />
+
+        <div className="animate-pulse mt-auto flex flex-col gap-4">
+          <div className="bg-gray-50 rounded-2xl h-40 p-4" />
+          <div className="h-12 bg-gray-100 rounded-xl" />
         </div>
       </div>
     </div>

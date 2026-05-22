@@ -23,7 +23,7 @@ const EmptyCart = () => {
 
         <Link
           href="/builder"
-          className="inline-block mt-4 px-8 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"
+          className="inline-block mt-4 px-8 py-3 bg-[#1758BA] text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"
         >
           فرم‌های من
         </Link>

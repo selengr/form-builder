@@ -20,7 +20,7 @@ import { ShoppingCartSkeleton } from '@/templates/purchase-order/cart-skeleton';
 const formatCurrency = (amount: number) => new Intl.NumberFormat('fa-IR').format(amount) + ' تومان';
 const formatCurrencyNumber = (amount: number) => new Intl.NumberFormat('fa-IR').format(amount);
 
-const InvoiceSection = ({ purchaseOrder, handlePayment }: any) => {
+const InvoiceSection = ({ purchaseOrder, handlePayment, isEmpty }: any) => {
   const { totalAmount, infrastructureCost, purchaseOrderDetailModels, tax, payAble, purchaseOrderId } = purchaseOrder || {};
   const subtotal = totalAmount || 0;
   const infrastructureCostFinal = purchaseOrderDetailModels.length * infrastructureCost;
@@ -33,10 +33,11 @@ const InvoiceSection = ({ purchaseOrder, handlePayment }: any) => {
       </div>
 
       <div className='bg-[#F4F6FB] rounded-2xl flex flex-col gap-3 p-4 mt-auto'>
-        <div className='flex justify-between text-sm text-[#393939] font-medium'>
+        {!isEmpty && <div className='flex justify-between text-sm text-[#393939] font-medium'>
           <span>مجموع:</span>
           <span className='font-bold'>{formatCurrency(subtotal)}</span>
         </div>
+        }
         {/*<hr className='border-gray-300 border-dashed border-b-1 mx-3' />*/}
         {/*<div className='flex justify-between text-sm text-[#393939] font-medium'>*/}
         {/*  <span>مالیات:</span>*/}
@@ -44,21 +45,24 @@ const InvoiceSection = ({ purchaseOrder, handlePayment }: any) => {
         {/*</div>*/}
         <hr className='border-gray-300 border-dashed border-b-1 mx-3' />
         <div className='flex justify-between text-sm text-[#393939] font-medium items-center'>
-          <div className='flex flex-col'>
+          {!isEmpty && <div className='flex flex-col'>
             <span>هزینه:</span>
             <span>زیرساخت</span>
           </div>
-          <div className='flex flex-row'>
+          }
+          {!isEmpty && <div className='flex flex-row'>
             <span className='flex justify-end font-light text-xs'>({purchaseOrderDetailModels.length}*{formatCurrencyNumber(infrastructureCost)})</span>
             <span className='font-bold'>{formatCurrency(infrastructureCostFinal)}</span>
           </div>
+          }
         </div>
 
         <hr className='border-gray-300 border-dashed border-b-1 mx-3' />
-        <div className='flex justify-between text-sm text-[#1758BA] font-bold'>
+        {!isEmpty && <div className='flex justify-between text-sm text-[#1758BA] font-bold'>
           <span>قابل پرداخت:</span>
           <span className='font-bold'>{formatCurrency(total)}</span>
         </div>
+        }
       </div>
 
       <Button
@@ -73,7 +77,7 @@ const InvoiceSection = ({ purchaseOrder, handlePayment }: any) => {
             backgroundColor: '#1758BA',
           },
         }}
-        disabled={!purchaseOrderId}
+        disabled={!purchaseOrderId || !isEmpty}
         onClick={handlePayment}>
         <span className='text-sm font-medium'>پرداخت صورت حساب</span>
       </Button>
@@ -82,7 +86,7 @@ const InvoiceSection = ({ purchaseOrder, handlePayment }: any) => {
 };
 
 const PageStateWrapper = ({ isFetching, error, purchaseOrderDetailModels }: any) => {
-  if (isFetching) return <ShoppingCartSkeleton />; 
+  if (isFetching) return <ShoppingCartSkeleton />;
   if (error) {
     return (
       <div className='flex items-center justify-center min-h-screen text-red-500 p-4'>
@@ -90,9 +94,6 @@ const PageStateWrapper = ({ isFetching, error, purchaseOrderDetailModels }: any)
       </div>
     );
   }
-
-  // const isEmpty = !purchaseOrderDetailModels?.length;
-  // if (isEmpty) return <EmptyCart />;
 
   return null;
 };
@@ -162,8 +163,8 @@ export default function ShoppingCartPage() {
             <h3 className='text-[#161616] font-bold text-base'>سبد خرید</h3>
           </div>
           <div className='flex-1 overflow-y-auto space-y-4 px-2 lg:px-6'>
-              {isEmpty && <EmptyCart />}
-              {!isEmpty && purchaseOrderDetailModels?.map((detail, index) => (
+            {isEmpty && <EmptyCart />}
+            {!isEmpty && purchaseOrderDetailModels?.map((detail, index) => (
               <CartItem
                 key={detail.purchaseOrderDetailId}
                 open={open}
@@ -182,11 +183,11 @@ export default function ShoppingCartPage() {
         </div>
 
         <div className='w-full lg:w-[450px] hidden lg:flex'>
-          <InvoiceSection purchaseOrder={purchaseOrder} handlePayment={handlePayment} />
+          <InvoiceSection isEmpty={isEmpty} purchaseOrder={purchaseOrder} handlePayment={handlePayment} />
         </div>
 
         <div className='z-20 lg:hidden'>
-          <InvoiceSection purchaseOrder={purchaseOrder} handlePayment={handlePayment} />
+          <InvoiceSection isEmpty={isEmpty} purchaseOrder={purchaseOrder} handlePayment={handlePayment} />
         </div>
       </div>
 

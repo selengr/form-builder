@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { CgClose } from 'react-icons/cg';
-import { Box, Button, CircularProgress, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
 
 interface IInvalidConfirmDialogProps {
     open: boolean;

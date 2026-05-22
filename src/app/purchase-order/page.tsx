@@ -83,7 +83,7 @@ const InvoiceSection = ({ purchaseOrder, handlePayment }: any) => {
 };
 
 const PageStateWrapper = ({ isFetching, error, purchaseOrderDetailModels }: any) => {
-  if (isFetching) return <ShoppingCartSkeleton />; 
+  return <ShoppingCartSkeleton />; 
   if (error) {
     return (
       <div className='flex items-center justify-center min-h-screen text-red-500 p-4'>
@@ -149,9 +149,10 @@ export default function ShoppingCartPage() {
   const pageState = <PageStateWrapper isFetching={isFetching} error={error} purchaseOrderDetailModels={purchaseOrderDetailModels} />;
 
   if (isFetching || error || !purchaseOrderDetailModels || purchaseOrderDetailModels.length === 0) {
-    return pageState;
+    return <ShoppingCartSkeleton />
   }
 
+  return <ShoppingCartSkeleton />
   return (
     <>
       <div dir='rtl' className='w-full px-2 py-4 lg:p-4 flex flex-col lg:flex-row gap-4 h-[calc(100vh-60px)] lg:h-screen'>

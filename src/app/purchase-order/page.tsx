@@ -91,8 +91,8 @@ const PageStateWrapper = ({ isFetching, error, purchaseOrderDetailModels }: any)
     );
   }
 
-  const isEmpty = !purchaseOrderDetailModels?.length;
-  if (isEmpty) return <EmptyCart />;
+  // const isEmpty = !purchaseOrderDetailModels?.length;
+  // if (isEmpty) return <EmptyCart />;
 
   return null;
 };
@@ -147,9 +147,12 @@ export default function ShoppingCartPage() {
 
   const pageState = <PageStateWrapper isFetching={isFetching} error={error} purchaseOrderDetailModels={purchaseOrderDetailModels} />;
 
-  if (isFetching || error || !purchaseOrderDetailModels || purchaseOrderDetailModels.length === 0) {
+  // if (isFetching || error || !purchaseOrderDetailModels || purchaseOrderDetailModels.length === 0) {
+  if (isFetching || error) {
     return pageState;
   }
+
+  const isEmpty = !purchaseOrderDetailModels?.length;
 
   return (
     <>
@@ -159,7 +162,8 @@ export default function ShoppingCartPage() {
             <h3 className='text-[#161616] font-bold text-base'>سبد خرید</h3>
           </div>
           <div className='flex-1 overflow-y-auto space-y-4 px-2 lg:px-6'>
-            {purchaseOrderDetailModels?.map((detail, index) => (
+              {isEmpty && <EmptyCart />}
+              {!isEmpty && purchaseOrderDetailModels?.map((detail, index) => (
               <CartItem
                 key={detail.purchaseOrderDetailId}
                 open={open}

@@ -77,7 +77,7 @@ const InvoiceSection = ({ purchaseOrder, handlePayment, isEmpty }: any) => {
             backgroundColor: '#1758BA',
           },
         }}
-        disabled={!purchaseOrderId || !isEmpty}
+        disabled={!purchaseOrderId || isEmpty}
         onClick={handlePayment}>
         <span className='text-sm font-medium'>پرداخت صورت حساب</span>
       </Button>
@@ -85,18 +85,6 @@ const InvoiceSection = ({ purchaseOrder, handlePayment, isEmpty }: any) => {
   );
 };
 
-const PageStateWrapper = ({ isFetching, error, purchaseOrderDetailModels }: any) => {
-  if (isFetching) return <ShoppingCartSkeleton />;
-  if (error) {
-    return (
-      <div className='flex items-center justify-center min-h-screen text-red-500 p-4'>
-        <p>خطا در بارگذاری اطلاعات: {error.message}</p>
-      </div>
-    );
-  }
-
-  return null;
-};
 
 export default function ShoppingCartPage() {
   const { push } = useRouter();
@@ -146,26 +134,29 @@ export default function ShoppingCartPage() {
 
   const toggleConfirm = () => setOpen((prev) => !prev);
 
-  const pageState = <PageStateWrapper isFetching={isFetching} error={error} purchaseOrderDetailModels={purchaseOrderDetailModels} />;
-
-  // if (isFetching || error || !purchaseOrderDetailModels || purchaseOrderDetailModels.length === 0) {
-  if (isFetching || error) {
-    return pageState;
-  }
-
   const isEmpty = !purchaseOrderDetailModels?.length;
 
   return (
     <>
       <div dir='rtl' className='w-full px-2 py-4 lg:p-4 flex flex-col lg:flex-row gap-4 h-[calc(100vh-60px)] lg:h-screen'>
+        
         <div className='w-full flex-grow bg-white rounded-2xl p-4 shadow-sm lg:max-h-screen flex flex-col mobile:mb-[10px] lg:mb-0 h-2/3 lg:h-full'>
           <div className='bg-[#F7F7FF] rounded-lg h-12 flex justify-center items-center mb-6 shrink-0'>
             <h3 className='text-[#161616] font-bold text-base'>سبد خرید</h3>
           </div>
+        
           <div className='flex-1 overflow-y-auto space-y-4 px-2 lg:px-6'>
-            {isEmpty && <EmptyCart />}
-            {!isEmpty && purchaseOrderDetailModels?.map((detail, index) => (
-              <CartItem
+            {isFetching ? (
+              <ShoppingCartSkeleton />
+            ) : error ? (
+              <div className='text-red-500 text-center py-10'>
+                <p>خطا در بارگذاری اطلاعات: {error}</p>
+              </div>
+            ) : !purchaseOrderDetailModels?.length ? (
+              <EmptyCart />
+            ) : (
+              purchaseOrderDetailModels.map((detail, index) => (
+                   <CartItem
                 key={detail.purchaseOrderDetailId}
                 open={open}
                 index={index}
@@ -178,7 +169,8 @@ export default function ShoppingCartPage() {
                 setDeleteId={setDeleteId}
                 setDescription={setDescription}
               />
-            ))}
+              ))
+            )}
           </div>
         </div>
 

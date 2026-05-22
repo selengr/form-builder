@@ -16,9 +16,9 @@ export function extractErrorMessage(error: AxiosError<TApiErrorResponse>): strin
     return data.message[0]?.title || 'انجام عملیات با خطا مواجه شد';
   }
 
-  if (typeof data?.message === 'string') {
-    return data.message;
-  }
+  // if (typeof data?.message === 'string') {
+  //   return data.message;
+  // }
 
   return 'انجام عملیات با خطا مواجه شد';
 }

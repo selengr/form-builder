@@ -18,6 +18,7 @@ import { fetchListGridData } from '../../../actions/listGridActions';
 // components
 import CardSkeleton from './CardSkeleton';
 import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
+import EmptyList from '@/components/ListGrid/EmptyList';
 
 export interface SearchBoxItem {
     fieldName: string;
@@ -153,9 +154,16 @@ const ListGrid: React.FC<IProps> = ({
                                 <Image src={TotalGrid} width={18} height={18} className='sm:w-5 sm:h-5 select-none' alt='total' draggable={false} />
                                 <p className='text-xs sm:text-sm text-[#393939] whitespace-nowrap'>{textTotal[0]}:</p>
                             </div>
-                            <p className='flex items-center text-xs sm:text-sm text-[#393939] font-bold text-left break-words'>
-                                {totalData.toLocaleString('fa-IR')} {textTotal[1]}
-                            </p>
+
+
+                            {isFetching ? (
+                                <div className="w-10 h-6 bg-gray-200 rounded animate-pulse" />
+                            ) : (
+                                <p className='flex items-center text-xs sm:text-sm text-[#393939] font-bold text-left break-words'>
+                                    {totalData.toLocaleString('fa-IR')}   {textTotal[1]}
+                                </p>
+                            )}
+
                         </div>
 
                         {/* search row */}
@@ -200,12 +208,7 @@ const ListGrid: React.FC<IProps> = ({
                                         width: '100%',
                                     }}
                                 >
-                                    <div className='h-44 sm:h-56 bg ml-14 sm:ml-3'>
-
-                                        <Image src={formListEmpty} height={200} className="sm:h-[250px] w-auto" alt="empty" priority />
-                                    </div>
-
-                                    <span className='text-[#999] text-sm md:text-md'>موردی یافت نشد</span>
+                                      <EmptyList error={error?.message}/>
 
                                 </Box>
                             )}

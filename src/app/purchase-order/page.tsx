@@ -134,6 +134,10 @@ export default function ShoppingCartPage() {
 
   const toggleConfirm = () => setOpen((prev) => !prev);
 
+if(isFetching){
+  return <ShoppingCartSkeleton />
+}
+
   const isEmpty = !purchaseOrderDetailModels?.length;
 
   return (
@@ -146,11 +150,9 @@ export default function ShoppingCartPage() {
           </div>
         
           <div className='flex-1 overflow-y-auto space-y-4 px-2 lg:px-6'>
-            {isFetching ? (
-              <ShoppingCartSkeleton />
-            ) : error ? (
+            { error ? (
               <div className='text-red-500 text-center py-10'>
-                <p>خطا در بارگذاری اطلاعات: {error}</p>
+                <p>خطا در بارگذاری اطلاعات: {error.message}</p>
               </div>
             ) : !purchaseOrderDetailModels?.length ? (
               <EmptyCart />

@@ -13,7 +13,6 @@ import ConfirmDialog from '@/components/confirm-dialog';
 import { useGetPurchaseOrder } from './_hook/useGetPurchaseOrder';
 // templates
 import { CartItem, EmptyCart } from '@/templates/purchase-order';
-import LoadingCart from '@/templates/purchase-order/loading-cart';
 // actions
 import { deletePurchaseOrderDetailAction } from '../../../actions/cart/purchaseOrderDetail';
 import { ShoppingCartSkeleton } from '@/templates/purchase-order/cart-skeleton';
@@ -83,7 +82,7 @@ const InvoiceSection = ({ purchaseOrder, handlePayment }: any) => {
 };
 
 const PageStateWrapper = ({ isFetching, error, purchaseOrderDetailModels }: any) => {
-  return <ShoppingCartSkeleton />; 
+  if (isFetching) return <ShoppingCartSkeleton />; 
   if (error) {
     return (
       <div className='flex items-center justify-center min-h-screen text-red-500 p-4'>
@@ -149,10 +148,9 @@ export default function ShoppingCartPage() {
   const pageState = <PageStateWrapper isFetching={isFetching} error={error} purchaseOrderDetailModels={purchaseOrderDetailModels} />;
 
   if (isFetching || error || !purchaseOrderDetailModels || purchaseOrderDetailModels.length === 0) {
-    return <ShoppingCartSkeleton />
+    return pageState;
   }
 
-  return <ShoppingCartSkeleton />
   return (
     <>
       <div dir='rtl' className='w-full px-2 py-4 lg:p-4 flex flex-col lg:flex-row gap-4 h-[calc(100vh-60px)] lg:h-screen'>

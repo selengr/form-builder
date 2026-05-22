@@ -92,8 +92,6 @@ const PageStateWrapper = ({ isFetching, error, purchaseOrderDetailModels }: any)
     );
   }
 
-  // if (isFetching) return <LoadingCart />;
-
   const isEmpty = !purchaseOrderDetailModels?.length;
   if (isEmpty) return <EmptyCart />;
 

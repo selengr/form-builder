@@ -1,4 +1,4 @@
-export const CartSkeleton = () => {
+export const ShoppingCartSkeleton = () => {
   return (
     <div className="w-full px-2 py-4 lg:p-4 flex flex-col lg:flex-row gap-4 h-[calc(100vh-60px)] lg:h-screen animate-pulse">
       <div className="w-full flex-grow bg-white rounded-2xl p-4 shadow-sm h-2/3 lg:h-full">

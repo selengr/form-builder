@@ -16,6 +16,7 @@ import { CartItem, EmptyCart } from '@/templates/purchase-order';
 import LoadingCart from '@/templates/purchase-order/loading-cart';
 // actions
 import { deletePurchaseOrderDetailAction } from '../../../actions/cart/purchaseOrderDetail';
+import { ShoppingCartSkeleton } from '@/templates/purchase-order/cart-skeleton';
 
 const formatCurrency = (amount: number) => new Intl.NumberFormat('fa-IR').format(amount) + ' تومان';
 const formatCurrencyNumber = (amount: number) => new Intl.NumberFormat('fa-IR').format(amount);
@@ -82,6 +83,7 @@ const InvoiceSection = ({ purchaseOrder, handlePayment }: any) => {
 };
 
 const PageStateWrapper = ({ isFetching, error, purchaseOrderDetailModels }: any) => {
+  if (isFetching) return <ShoppingCartSkeleton />; 
   if (error) {
     return (
       <div className='flex items-center justify-center min-h-screen text-red-500 p-4'>
@@ -90,7 +92,7 @@ const PageStateWrapper = ({ isFetching, error, purchaseOrderDetailModels }: any)
     );
   }
 
-  if (isFetching) return <LoadingCart />;
+  // if (isFetching) return <LoadingCart />;
 
   const isEmpty = !purchaseOrderDetailModels?.length;
   if (isEmpty) return <EmptyCart />;

@@ -29,7 +29,10 @@ export default function HomePageX() {
 
   return (
     <div
-      className='h-screen w-full overflow-y-scroll -mt-[60px] lg:mt-0 pb-48 overflow-x-hidden z-0'
+      // className="h-[100dvh] w-full overflow-hidden -mt-[60px] lg:mt-0"
+        className="min-h-[100dvh] w-full overflow-x-hidden -mt-[60px] lg:mt-0"
+        // className='w-full min-h-screen overflow-x-hidden -mt-[60px]' 
+      // className='h-screen w-full overflow-y-scroll -mt-[60px] lg:mt-0 pb-48 overflow-x-hidden z-0'
       style={{
         background: 'linear-gradient(to bottom, #ffffff, #eff6ff, #eff6ff)',
         userSelect: 'none',
@@ -66,7 +69,18 @@ export default function HomePageX() {
         {/* تصویر سمت چپ */}
         <section className='z-10 w-full lg:w-1/2 flex justify-center items-center'>
           <div className='relative w-full max-w-[500px] aspect-[9/16] lg:aspect-auto lg:h-[590px]'>
-            <Image src='/api/images?folder=home&file=curvyBG.svg' alt='Decorative background shape' fill className='object-contain animate-rotate-slow pointer-events-none -z-20' priority />
+            <div className="absolute inset-0 -z-20 pointer-events-none">
+  <div className="relative w-full h-full transform-gpu will-change-transform">
+    <Image
+      src="/api/images?folder=home&file=curvyBG.svg"
+      alt="Decorative background shape"
+      fill
+      // className="object-contain animate-rotate-slow"
+      priority
+      draggable={false}
+    />
+  </div>
+</div>
 
             {/* گوشی موبایل */}
             <div className='absolute inset-0 w-[70%] lg:w-[90%] mx-auto aspect-[9/16] -z-10'>

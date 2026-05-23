@@ -492,7 +492,7 @@ const ListGrid: React.FC<Props> = ({
     refetch,
   } = useInfiniteQuery({
     queryKey: ['datas_builder_query', debouncedSearch, searchQueryFilter, filterBoxList],
-    queryFn: ({ pageParam }) => fetchListGridData( {pageParam} , updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
+    queryFn: ({ pageParam }) => fetchListGridData({ pageParam }, updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       const PAGE_SIZE = 10;
@@ -534,9 +534,9 @@ const ListGrid: React.FC<Props> = ({
     }
   }, [pages]);
 
- useEffect(() => {
-        if (error) toast.error((error as Error).message);
-    }, [error]);
+  useEffect(() => {
+    if (error) toast.error((error as Error).message);
+  }, [error]);
 
 
   const renderHeader = useCallback(
@@ -558,9 +558,14 @@ const ListGrid: React.FC<Props> = ({
           <Image src={TotalGrid} width={20} height={20} alt='filter' draggable={false} />
           <p className='text-sm text-[#393939]'>{textTotal[0]}:</p>
         </div>
-        <p className='flex items-center text-sm text-[#393939] font-bold'>
-          {totalData} {textTotal[1]}
-        </p>
+
+        {isFetching ? (
+          <div className="w-10 h-6 bg-gray-200 rounded animate-pulse" />
+        ) : (
+          <p className='flex items-center text-sm text-[#393939] font-bold'>
+            {totalData} {textTotal[1]}
+          </p>
+        )}
       </div>
     ),
     [totalData, textTotal],
@@ -578,7 +583,7 @@ const ListGrid: React.FC<Props> = ({
           gap: 2,
         }}>
         <Grid size={{ xs: 12, sm: 10 }} sx={{ display: 'flex', alignItems: 'center', gap: '12px', mx: 'auto' }}>
-           <ImmediateSearchInput onSearch={setQuery} />
+          <ImmediateSearchInput onSearch={setQuery} />
           {!disableFilter && (
             <IconButton
               onClick={openFilter}
@@ -610,7 +615,7 @@ const ListGrid: React.FC<Props> = ({
 
     if (allItems.length === 0) {
       return (
-        <EmptyList error={error?.message}/>
+        <EmptyList error={error?.message} />
       );
     }
 
@@ -661,36 +666,30 @@ const ListGrid: React.FC<Props> = ({
   );
 
   return (
-    <div className={'p-2 h-screen w-full flex flex-col'}>
-      {isFetching && !isFetchingNextPage ? (
-        <Box sx={{ width: '100%' }}>
-          <LinearProgress />
-        </Box>
-      ) : (
-        <Grid
-          width='100%'
-          display='flex'
-          sx={{
-            overflowY: 'hidden',
-            userSelect: 'none',
-            height: { xs: 'calc(100vh - 60px)', md: '100vh' },
-            flexDirection: { xs: 'column', lg: 'row' },
-          }}>
-          <Grid
-            display='flex'
-            flexDirection='column'
-            justifyContent='flex-start'
-            alignItems='center'
-            container
-            sx={{
-              bgcolor: 'white',
-              borderRadius: '16px',
-              p: 2,
-              mx: 1,
-              width: 1,
-              overflowY: 'hidden',
-              height: '100%',
-            }}>
+        <div className="p-1 sm:py-2 h-full w-full flex flex-col overflow-hidden">
+            <Grid
+                width="100%"
+                display="flex"
+                sx={{
+                    overflowY: 'hidden',
+                    height: { xs: 'calc(100vh - 60px)', md: '100vh' },
+                    flexDirection: { xs: 'column', lg: 'row' },
+                }}
+            >
+                <Grid
+                    container
+                    flexDirection="column"
+                    alignItems="center"
+                    sx={{
+                        bgcolor: 'white',
+                        borderRadius: '16px',
+                        p: { xs: 1, sm: 2 },
+                        mx: { xs: 0, sm: 1 },
+                        width: 1,
+                        overflow: 'hidden',
+                    }}
+                >
+
             <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
               {renderHeader()}
               <Box
@@ -722,24 +721,26 @@ const ListGrid: React.FC<Props> = ({
                 {CreateButton && CreateButton()}
               </Box>
               {renderSearchAndFilter()}
-              <Grid
-                id='content'
-                container
-                flexWrap='nowrap'
-                sx={{
-                  width: 1,
-                  mx: 'auto',
-                  mt: 1,
-                  mb: 5,
-                  pb: 4,
-                  flexDirection: 'column',
-                  gap: 2,
-                  overflowY: 'auto',
-                  height: {
-                    xs: 'calc(100vh - 290px)',
-                    md: 'calc(100vh - 210px)',
-                  },
-                }}>
+                <Grid
+                                         id='content'
+                                         container
+                                         flexWrap='nowrap'
+                                         sx={{
+                                             width: 1,
+                                             mt: 1,
+                                             mb: 5,
+                                             pb: 4,
+                                             flexDirection: 'column',
+                                             gap: 2,
+                                             overflowY: 'auto',
+                                             px: { xs: 0, sm: 0 },
+                                             mx: { xs: 0, sm: 'auto' },
+                                             height: {
+                                                 xs: 'calc(100vh - 310px)',
+                                                 sm: 'calc(100vh - 290px)',
+                                                 md: 'calc(100vh - 230px)',
+                                             },
+                                         }}>
                 {renderContent()}
               </Grid>
             </Grid>
@@ -749,7 +750,6 @@ const ListGrid: React.FC<Props> = ({
           </Grid>
           {renderDesktopFilter()}
         </Grid>
-      )}
     </div>
   );
 };

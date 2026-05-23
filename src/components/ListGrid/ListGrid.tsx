@@ -654,7 +654,6 @@ const ListGrid: React.FC<Props> = ({
             backgroundColor: 'white',
             borderRadius: '16px',
             gap: 1,
-            m: 1,
             ml: 0,
             p: 2,
             maxWidth: '300px',

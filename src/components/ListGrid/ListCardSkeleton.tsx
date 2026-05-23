@@ -12,14 +12,13 @@ export default function ListCardSkeleton() {
           size={{ xs: 12, md: 10, xl: 9 }}
         >
 
-
           <div
             className="
-      border border-[#DDE1E6]
-      p-4 rounded-[20px]
-      flex flex-col gap-4
-      w-full max-w-full
-      "
+              border border-[#DDE1E6]
+              p-4 rounded-[20px]
+              flex flex-col gap-4
+              w-full max-w-full pb-5
+              "
           >
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
@@ -34,7 +33,7 @@ export default function ListCardSkeleton() {
               <Skeleton variant="text" height={24} width="50%" />
               <Skeleton variant="text" height={24} width="45%" />
               <Skeleton variant="text" height={24} width="50%" />
-              <Skeleton variant="text" height={24} width="40%" />
+              {/* <Skeleton variant="text" height={24} width="40%" /> */}
             </div>
 
             {/* Actions */}

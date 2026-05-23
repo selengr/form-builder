@@ -184,7 +184,7 @@ const ListGrid: React.FC<Props> = ({
         </div>
 
         {isFetching ? (
-          <div className="w-10 h-6 bg-gray-200 rounded animate-pulse" />
+          <div className="w-11 h-5 bg-gray-200 rounded animate-pulse" />
         ) : (
           <p className='flex items-center text-sm text-[#393939] font-bold'>
             {totalData} {textTotal[1]}

@@ -146,10 +146,10 @@ const ListGrid: React.FC<Props> = ({
   }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   useEffect(() => {
-    // if (refreshGrid) {
-    handleRefreshGrid();
-    // }
-  }, [refreshGrid, handleRefreshGrid]);
+    if (refreshGrid) {
+      handleRefreshGrid();
+    }
+  }, [refreshGrid]);
 
   useEffect(() => {
     if (pages?.pages?.[0]?.total !== undefined) {

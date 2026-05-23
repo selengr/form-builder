@@ -41,18 +41,13 @@ interface ListCardProps {
     };
     questionListSize: number;
   };
-  setRefreshGrid: (fn: (prev: any) => boolean) => void;
 }
 
-export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
+export default function ListCard({ data }: ListCardProps) {
   const router = useRouter();
-    const queryClient = useQueryClient()
+  const queryClient = useQueryClient()
   const [loading, setLoading] = useState<boolean>(false);
-  const [fromName, setFormName] = useState<string>(data.name);
   const [openConfirmDialog, setOpenConfirmDialog] = useState<boolean>(false);
-  const [formLimitation, setFormLimitation] = useState<string | null>(
-  data?.formSettingModel?.responseLimitation ?? null
-);
 
   const handlePublishStatus = useCallback(async () => {
     try {
@@ -64,8 +59,8 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
       });
       if (res.data) {
         toast.success('عملیات با موفقیت انجام شد');
-        setRefreshGrid((prev) => !prev);
-        // queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
+        // setRefreshGrid((prev) => !prev);
+        queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
       }
     } catch (error) {
       console.error(error);
@@ -73,7 +68,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
     } finally {
       setLoading(false);
     }
-  }, [data.id, data.status, setRefreshGrid]);
+  }, [data.id, data.status]);
 
   const handleCopy = useCallback(async () => {
     try {
@@ -81,7 +76,6 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
       const res = await AxiosApi.post(`/form/${data.id}/duplicate`);
       if (res.data) {
         toast.success('رونوشت با موفقیت انجام شد');
-        setRefreshGrid((prev) => !prev);
         queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
       }
     } catch (error) {
@@ -89,7 +83,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
     } finally {
       setLoading(false);
     }
-  }, [data.id, setRefreshGrid]);
+  }, [data.id]);
 
   const handleDelete = async () => {
     try {
@@ -98,7 +92,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
       if (res.data) {
         toast.success(`فرم (${data.name}) با موفقیت حذف شد`);
         queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
-        setRefreshGrid((prev) => !prev);
+        // setRefreshGrid((prev) => !prev);
       }
     } catch (error) {
       console.error(error);
@@ -159,7 +153,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
 
         {/* <div className='border p-4 rounded-[20px] border-[#DDE1E6] flex flex-col gap-4 w-full max-w-full relative'> */}
         <div className='flex flex-row justify-between items-center gap-3'>
-          <InfoRow label='نام' value={fromName} bold />
+          <InfoRow label='نام' value={data.name} bold />
           {(data.status === 'PUBLISH' || data.status === 'UN_PUBLISH') && <SwitchButton disabled={loading} checked={data.status === 'PUBLISH'} onChange={handlePublishStatus} />}
         </div>
 
@@ -192,17 +186,15 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
               </IconButton>
             )}
 
-            {data.status !== 'CREATE' && ( 
-              <SettingsDialog 
-               data={data} 
-               isBuilderCardId={data.id}
-               formName={data.name}
-               onChangeName={setFormName}
-               formLimitation={formLimitation}
-               onChangeLimitation={setFormLimitation}
-               />
-               )}
-            
+            {data.status !== 'CREATE' && (
+              <SettingsDialog
+                data={data}
+                isBuilderCardId={data.id}
+                formName={data.name}
+                formLimitation={data?.formSettingModel?.responseLimitation ?? null}
+              />
+            )}
+
             {data.status === 'CREATE' && data.type !== "PACKAGING" && (
               <Link href={`/builder/${data.id}`}>
                 <IconButton disabled={loading} color='primary'>

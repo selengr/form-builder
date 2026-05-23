@@ -242,7 +242,6 @@ const ListGrid: React.FC<Props> = ({
 
         return (
           <Grid sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} key={key} size={{ xs: 12, md: 10, xl: 9 }}>
-             <AssessmentsCardSkeleton />
             {CartComponent && <CartComponent onCheck={onCheck} data={data} refreshGrid={handleRefreshGrid} />}
             {isLastItem && (
               <>

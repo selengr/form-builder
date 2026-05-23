@@ -160,9 +160,14 @@ const ListGrid: React.FC<Props> = ({
           <Image src={TotalGrid} width={20} height={20} alt='filter' draggable={false} />
           <p className='text-sm text-[#393939]'>{textTotal[0]}:</p>
         </div>
-        <p className='flex items-center text-sm text-[#393939] font-bold'>
-          {totalData} {textTotal[1]}
-        </p>
+
+        {isFetching ? (
+          <div className="w-11 h-5 bg-gray-200 rounded animate-pulse" />
+        ) : (
+          <p className='flex items-center text-sm text-[#393939] font-bold'>
+            {totalData} {textTotal[1]}
+          </p>
+        )}
       </div>
     ),
     [totalData, textTotal],

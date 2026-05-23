@@ -132,10 +132,10 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
     <>
       <div
         className={`
-    border p-4 rounded-[20px] flex flex-col gap-4 w-full max-w-full relative
-    transition-all duration-200
-    hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]
-    ${isPackaging ? "border-amber-300" : "border-[#DDE1E6]"
+          border p-4 rounded-[20px] flex flex-col gap-4 w-full max-w-full relative
+          transition-all duration-200
+          hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]
+          ${isPackaging ? "border-amber-300" : "border-[#DDE1E6]"
           }`}
       //   ${data.type === 'PACKAGING'
       //           ? 'border-[#9BB8F2] bg-[#f5f8ff] shadow-[0_0_12px_rgba(23,88,186,0.07)]'

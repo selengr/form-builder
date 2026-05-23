@@ -21,6 +21,7 @@ import CreateFormBtn from '@/components/CreateFormBtn/CreateFormBtn';
 // action
 import { assessmentlist } from '../../../actions/myAssessments/assessmentlist';
 import FormCardSkeleton from '../public-form/CardSkeleton';
+import AssessmentsCardSkeleton from './CardSkeleton';
 
 export interface SearchBoxItem {
   fieldName: string;
@@ -224,7 +225,7 @@ const ListGrid: React.FC<Props> = ({
     const allItems = pages?.pages.flatMap((page) => page.data) || [];
     if (isFetching && !isFetchingNextPage) {
       return (
-        <FormCardSkeleton />
+        <AssessmentsCardSkeleton />
       )
     }
 
@@ -241,6 +242,7 @@ const ListGrid: React.FC<Props> = ({
 
         return (
           <Grid sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} key={key} size={{ xs: 12, md: 10, xl: 9 }}>
+             <AssessmentsCardSkeleton />
             {CartComponent && <CartComponent onCheck={onCheck} data={data} refreshGrid={handleRefreshGrid} />}
             {isLastItem && (
               <>

@@ -147,7 +147,7 @@ const ListGrid: React.FC<Props> = ({
 
   useEffect(() => {
     if (refreshGrid) {
-    handleRefreshGrid();
+      handleRefreshGrid();
     }
   }, [refreshGrid]);
 
@@ -364,7 +364,7 @@ const ListGrid: React.FC<Props> = ({
             </Grid>
           </Grid>
           <BottomSheet open={isFilterOpen} onClose={() => setIsFilterOpen(false)}>
-            <Grid>{filterComponent}</Grid>
+            {filterComponent}
           </BottomSheet>
         </Grid>
         {renderDesktopFilter()}

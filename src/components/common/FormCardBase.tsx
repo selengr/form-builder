@@ -126,7 +126,7 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
       </div>
 
       {/* دکمه اصلی */}
-      <div className="flex w-full gap-2 flex-col sm:flex-row mt-2">
+      <div className="flex w-full gap-2 flex-row mt-2">
         <button
           disabled={buttonDisabled}
           className="bg-[#1758BA] disabled:bg-slate-300 hover:bg-[#216ee1] transition duration-200 px-3 h-[42px] w-full sm:w-auto sm:flex-1 text-[14px] rounded-lg text-white disabled:cursor-not-allowed"

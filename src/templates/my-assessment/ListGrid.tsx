@@ -115,7 +115,7 @@ const ListGrid: React.FC<Props> = ({
     isFetchingNextPage,
     refetch,
   } = useInfiniteQuery({
-    queryKey: ['datas_builder_query', query, searchQueryFilter, filterBoxList],
+    queryKey: ['datas_builder_query', debouncedSearch, searchQueryFilter, filterBoxList],
     queryFn: ({ pageParam }) => assessmentlist({ pageParam }, updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
@@ -180,12 +180,7 @@ const ListGrid: React.FC<Props> = ({
         <div className='flex items-center gap-[10px]'>
           <Image src={TotalGrid} width={20} height={20} alt='filter' draggable={false} />
           <p className='text-sm text-[#393939]'>{textTotal[0]}:</p>
-
-
-
-
         </div>
-
 
         {isFetching ? (
           <div className="w-10 h-6 bg-gray-200 rounded animate-pulse" />
@@ -194,8 +189,6 @@ const ListGrid: React.FC<Props> = ({
             {totalData} {textTotal[1]}
           </p>
         )}
-
-
       </div>
     ),
     [totalData, textTotal],

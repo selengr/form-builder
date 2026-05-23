@@ -9,6 +9,7 @@ import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from '@mui/material';
 // components
+import EmptyList from './EmptyList';
 import BottomSheet from '../BottomSheet/BottomSheet';
 import CreateFormBtn from '../CreateFormBtn/CreateFormBtn';
 // image
@@ -19,8 +20,6 @@ import TotalGrid from '@/../public/images/home-page/total-grid.svg';
 import { fetchListGridData } from '../../../actions/listGridActions';
 import { useDebounce } from '@/hooks/useDebounce';
 import ImmediateSearchInput from './ImmediateSearchInput';
-import EmptyList from './EmptyList';
-// import { fetchData } from './dataService';
 
 export interface SearchBoxItem {
   fieldName: string;
@@ -280,6 +279,7 @@ const ListGrid: React.FC<Props> = ({
             borderRadius: '16px',
             gap: 1,
             ml: 0,
+            mr: 0,
             p: 2,
             maxWidth: '300px',
           }}>

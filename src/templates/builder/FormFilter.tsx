@@ -21,7 +21,7 @@ type Props = {
 
 function FilterSidebar({ formType, onChange, onApply, onReset }: Props) {
   return (
-    <div className='flex h-[calc(100vh-50px)] w-full flex-col'>
+    <div className='flex h-[calc(100vh-50px)] w-full flex-col '>
       
       <div className='w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4'>
         <div className='flex items-center w-full justify-center gap-2'>

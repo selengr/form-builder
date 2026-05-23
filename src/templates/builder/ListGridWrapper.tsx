@@ -56,7 +56,7 @@ export default function ListGridWrapper() {
 
   const FilterSidebar = () => {
     return (
-      <div className='flex h-[calc(100vh-50px)] w-full flex-col'>
+      <div className='flex h-[calc(100vh-50px)] w-full flex-col overflow-y-hidden'>
         {/* هدر فیلتر */}
         <div className='w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4'>
           <div className='flex items-center w-full justify-center gap-2'>

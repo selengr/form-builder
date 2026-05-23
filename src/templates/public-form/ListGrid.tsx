@@ -7,18 +7,17 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from '@mui/material';
+import { Box, Grid2 as Grid, IconButton, LinearProgress } from '@mui/material';
 // image
 import TotalGrid from '@/../public/images/home-page/total-grid.svg';
-import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
 // hooks
 import { useDebounce } from '@/hooks/useDebounce';
 // action
 import { fetchListGridData } from '../../../actions/listGridActions';
 // components
 import CardSkeleton from './CardSkeleton';
-import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
 import EmptyList from '@/components/ListGrid/EmptyList';
+import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
 
 export interface SearchBoxItem {
     fieldName: string;
@@ -181,6 +180,7 @@ const ListGrid: React.FC<IProps> = ({
                                 mt: 1,
                                 mb: 5,
                                 pb: 4,
+                                mr: { xs: 0, md: totalData! > 2 || isFetching ? -1.2 : 0 },
                                 flexDirection: 'column',
                                 gap: 2,
                                 overflowY: 'auto',
@@ -208,7 +208,7 @@ const ListGrid: React.FC<IProps> = ({
                                         width: '100%',
                                     }}
                                 >
-                                      <EmptyList error={error?.message}/>
+                                    <EmptyList error={error?.message} />
 
                                 </Box>
                             )}

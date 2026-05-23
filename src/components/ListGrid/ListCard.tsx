@@ -65,7 +65,7 @@ export default function ListCard({ data, setRefreshGrid }: ListCardProps) {
       if (res.data) {
         toast.success('عملیات با موفقیت انجام شد');
         setRefreshGrid((prev) => !prev);
-        queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
+        // queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
       }
     } catch (error) {
       console.error(error);

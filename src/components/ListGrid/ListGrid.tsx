@@ -665,90 +665,91 @@ const ListGrid: React.FC<Props> = ({
   );
 
   return (
-        <div className="p-1 sm:py-2 h-full w-full flex flex-col overflow-hidden">
-            <Grid
-                width="100%"
-                display="flex"
-                sx={{
-                    overflowY: 'hidden',
-                    height: { xs: 'calc(100vh - 60px)', md: '100vh' },
-                    flexDirection: { xs: 'column', lg: 'row' },
-                }}
-            >
-                <Grid
-                    container
-                    flexDirection="column"
-                    alignItems="center"
+    <div className="p-1 sm:py-2 h-full w-full flex flex-col overflow-hidden">
+      <Grid
+        width="100%"
+        display="flex"
+        sx={{
+          overflowY: 'hidden',
+          height: { xs: 'calc(100vh - 60px)', md: '100vh' },
+          flexDirection: { xs: 'column', lg: 'row' },
+        }}
+      >
+        <Grid
+          container
+          flexDirection="column"
+          alignItems="center"
+          sx={{
+            bgcolor: 'white',
+            borderRadius: '16px',
+            p: { xs: 1, sm: 2 },
+            mx: { xs: 0, sm: 1 },
+            width: 1,
+            overflow: 'hidden',
+          }}
+        >
+
+          <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
+            {renderHeader()}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '12px',
+                width: 1,
+                flexWrap: { xs: 'nowrap', sm: 'nowrap' },
+              }}>
+              {renderTotalCount()}
+              {showCreateButton && (
+                <div className='min-w-[50px] w-[50px] h-full'>
+                  <IconButton
+                    onClick={handleOpenDialog}
                     sx={{
-                        bgcolor: 'white',
-                        borderRadius: '16px',
-                        p: { xs: 1, sm: 2 },
-                        mx: { xs: 0, sm: 1 },
-                        width: 1,
-                        overflow: 'hidden',
-                    }}
-                >
+                      width: '50px',
+                      height: '50px',
+                      borderRadius: '16px',
+                      border: '1px solid #1758BA',
+                    }}>
+                    <Image src={PlusIcon} alt='' width={22} height={22} />
+                  </IconButton>
 
-            <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
-              {renderHeader()}
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  gap: '12px',
-                  width: 1,
-                  flexWrap: { xs: 'nowrap', sm: 'nowrap' },
-                }}>
-                {renderTotalCount()}
-                {showCreateButton && (
-                  <div className='min-w-[50px] w-[50px] h-full'>
-                    <IconButton
-                      onClick={handleOpenDialog}
-                      sx={{
-                        width: '50px',
-                        height: '50px',
-                        borderRadius: '16px',
-                        border: '1px solid #1758BA',
-                      }}>
-                      <Image src={PlusIcon} alt='' width={22} height={22} />
-                    </IconButton>
-
-                    <CreateFormBtn open={isDialogOpen} onClose={handleCloseDialog} />
-                  </div>
-                )}
-                {CreateButton && CreateButton()}
-              </Box>
-              {renderSearchAndFilter()}
-                <Grid
-                                         id='content'
-                                         container
-                                         flexWrap='nowrap'
-                                         sx={{
-                                             width: 1,
-                                             mt: 1,
-                                             mb: 5,
-                                             pb: 4,
-                                             flexDirection: 'column',
-                                             gap: 2,
-                                             overflowY: 'auto',
-                                             px: { xs: 0, sm: 0 },
-                                             mx: { xs: 0, sm: 'auto' },
-                                             height: {
-                                                 xs: 'calc(100vh - 310px)',
-                                                 sm: 'calc(100vh - 290px)',
-                                                 md: 'calc(100vh - 230px)',
-                                             },
-                                         }}>
-                {renderContent()}
-              </Grid>
+                  <CreateFormBtn open={isDialogOpen} onClose={handleCloseDialog} />
+                </div>
+              )}
+              {CreateButton && CreateButton()}
+            </Box>
+            {renderSearchAndFilter()}
+            <Grid
+              id='content'
+              container
+              flexWrap='nowrap'
+              sx={{
+                width: 1,
+                mt: 1,
+                mb: 5,
+                pb: 4,
+                mr: { xs: 0, md: totalData! > 2 || isFetching ? -1.2 : 0 },
+                flexDirection: 'column',
+                gap: 2,
+                overflowY: 'auto',
+                px: { xs: 0, sm: 0 },
+                mx: { xs: 0, sm: 'auto' },
+                height: {
+                  xs: 'calc(100vh - 310px)',
+                  sm: 'calc(100vh - 290px)',
+                  md: 'calc(100vh - 230px)',
+                },
+              }}>
+              {renderContent()}
             </Grid>
-            <BottomSheet open={isFilterOpen} onClose={() => setIsFilterOpen(false)}>
-              <Grid>{filterComponent}</Grid>
-            </BottomSheet>
           </Grid>
-          {renderDesktopFilter()}
+          <BottomSheet open={isFilterOpen} onClose={() => setIsFilterOpen(false)}>
+            <Grid>{filterComponent}</Grid>
+          </BottomSheet>
         </Grid>
+        {renderDesktopFilter()}
+      </Grid>
     </div>
   );
 };

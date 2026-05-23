@@ -136,7 +136,8 @@ const ListGrid: React.FC<Props> = ({
     if (!disableFilter) {
       setIsFilterOpen(true);
     }
-  }, [disableFilter]);
+  }, [disableFilter])
+
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
@@ -145,10 +146,10 @@ const ListGrid: React.FC<Props> = ({
   }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   useEffect(() => {
-    // if (refreshGrid) {
+    if (refreshGrid) {
     handleRefreshGrid();
-    // }
-  }, [refreshGrid, handleRefreshGrid]);
+    }
+  }, [refreshGrid]);
 
   useEffect(() => {
     if (pages?.pages?.[0]?.total !== undefined) {

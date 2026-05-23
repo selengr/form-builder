@@ -404,10 +404,11 @@ export interface SearchBoxItem {
   nextConditionOperator: 'OR' | 'AND';
 }
 interface Props {
+  url: string;
+  title: string;
   searchBoxList: SearchBoxItem[];
   filterBoxList: SearchBoxItem[];
   filterComponent: ReactNode;
-  url: string;
   onCheck?: (id: any, checked: any) => void;
   onDelete?: () => void;
   CartComponent?: React.ComponentType<{
@@ -421,9 +422,8 @@ interface Props {
   textTotal?: [string, string];
   searchQueryFilter?: { type: string; status: string, isCreatedSoloReport: string, fieldOperation: string };
   showCreateButton?: boolean;
-  title: string;
-  CreateButton? : any
-  SkeletonComponent? : () => ReactNode
+  CreateButton?: () => React.ReactNode;
+  SkeletonComponent: () => ReactNode
 }
 
 const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'ALL', isCreatedSoloReport: 'ALL', fieldOperation: "DSC" };
@@ -534,9 +534,10 @@ const ListGrid: React.FC<Props> = ({
     }
   }, [pages]);
 
-  if (error) {
-    toast.error(error.message);
-  }
+ useEffect(() => {
+        if (error) toast.error((error as Error).message);
+    }, [error]);
+
 
   const renderHeader = useCallback(
     () => (

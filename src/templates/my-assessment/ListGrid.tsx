@@ -115,7 +115,7 @@ const ListGrid: React.FC<Props> = ({
     isFetchingNextPage,
     refetch,
   } = useInfiniteQuery({
-    queryKey: ['datas_builder_query', debouncedSearch, searchQueryFilter, filterBoxList],
+    queryKey: ['datas_assessments_query', debouncedSearch, searchQueryFilter, filterBoxList],
     queryFn: ({ pageParam }) => assessmentlist({ pageParam }, updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {

@@ -6,22 +6,22 @@ import { useInView } from 'react-intersection-observer';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
-import React, { ReactNode, useCallback, useEffect, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from '@mui/material';
 // images
 import Filter from '@/../public/images/home-page/FilterAA.svg';
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 import TotalGrid from '@/../public/images/home-page/total-grid.svg';
 // components
-import ListCardSkeleton from './ListCardSkeleton';
+import AssessmentsCardSkeleton from './CardSkeleton';
 import EmptyList from '@/components/ListGrid/EmptyList';
-import SearchInput from '@/components/ListGrid/SearchInput';
 import BottomSheet from '@/components/BottomSheet/BottomSheet';
 import CreateFormBtn from '@/components/CreateFormBtn/CreateFormBtn';
+import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
 // action
 import { assessmentlist } from '../../../actions/myAssessments/assessmentlist';
-import FormCardSkeleton from '../public-form/CardSkeleton';
-import AssessmentsCardSkeleton from './CardSkeleton';
+//hooks
+import { useDebounce } from '@/hooks/useDebounce';
 
 export interface SearchBoxItem {
   fieldName: string;
@@ -72,7 +72,8 @@ const ListGrid: React.FC<Props> = ({
   const [totalData, setTotalData] = useState<number | null>(null);
   const { ref, inView } = useInView();
   const searchParams = useSearchParams();
-  const query = searchParams.get('query')?.toString() || '';
+  const [query, setQuery] = useState('');
+  const debouncedSearch = useDebounce(query, 500);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
@@ -97,12 +98,13 @@ const ListGrid: React.FC<Props> = ({
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const router = useRouter();
 
-  const updatedSearchBoxList = searchBoxList.map((item) => {
-    if (item.fieldName === 'formSetting.name' && query) {
-      return { ...item, fieldValue: query };
-    }
-    return item;
-  });
+  const updatedSearchBoxList = useMemo(() => {
+    return searchBoxList.map((item) =>
+      item.fieldName === 'formSetting.name'
+        ? { ...item, fieldValue: debouncedSearch }
+        : item
+    );
+  }, [searchBoxList, debouncedSearch]);
 
   const {
     data: pages,
@@ -178,10 +180,22 @@ const ListGrid: React.FC<Props> = ({
         <div className='flex items-center gap-[10px]'>
           <Image src={TotalGrid} width={20} height={20} alt='filter' draggable={false} />
           <p className='text-sm text-[#393939]'>{textTotal[0]}:</p>
+
+
+
+
         </div>
-        <p className='flex items-center text-sm text-[#393939] font-bold'>
-          {totalData} {textTotal[1]}
-        </p>
+
+
+        {isFetching ? (
+          <div className="w-10 h-6 bg-gray-200 rounded animate-pulse" />
+        ) : (
+          <p className='flex items-center text-sm text-[#393939] font-bold'>
+            {totalData} {textTotal[1]}
+          </p>
+        )}
+
+
       </div>
     ),
     [totalData, textTotal],
@@ -199,7 +213,7 @@ const ListGrid: React.FC<Props> = ({
           gap: 2,
         }}>
         <Grid size={{ xs: 12, sm: 10 }} sx={{ display: 'flex', alignItems: 'center', gap: '12px', mx: 'auto' }}>
-          <SearchInput />
+          <ImmediateSearchInput onSearch={setQuery} />
           {!disableFilter && (
             <IconButton
               onClick={openFilter}
@@ -230,7 +244,7 @@ const ListGrid: React.FC<Props> = ({
     }
 
     if (allItems.length === 0) {
-      return (<EmptyList error={error?.message}/>);
+      return (<EmptyList error={error?.message} />);
     }
 
     // @ts-ignore

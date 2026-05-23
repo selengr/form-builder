@@ -384,17 +384,17 @@ import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from '@mui/material';
 // components
-import SearchInput from './SearchInput';
 import BottomSheet from '../BottomSheet/BottomSheet';
 import CreateFormBtn from '../CreateFormBtn/CreateFormBtn';
 // image
 import Filter from '@/../public/images/home-page/FilterAA.svg';
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 import TotalGrid from '@/../public/images/home-page/total-grid.svg';
-import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
 // action
 import { fetchListGridData } from '../../../actions/listGridActions';
 import { useDebounce } from '@/hooks/useDebounce';
+import ImmediateSearchInput from './ImmediateSearchInput';
+import EmptyList from './EmptyList';
 // import { fetchData } from './dataService';
 
 export interface SearchBoxItem {
@@ -423,24 +423,26 @@ interface Props {
   showCreateButton?: boolean;
   title: string;
   CreateButton? : any
+  SkeletonComponent? : () => ReactNode
 }
 
 const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'ALL', isCreatedSoloReport: 'ALL', fieldOperation: "DSC" };
 
 const ListGrid: React.FC<Props> = ({
-  filterComponent,
-  searchBoxList,
-  filterBoxList,
-  CartComponent,
+  title,
   url,
   onCheck,
   refreshGrid,
+  searchBoxList,
+  filterBoxList,
+  CartComponent,
   disableFilter,
+  filterComponent,
   searchQueryFilter = DEFAULT_SEARCH_FILTER,
   showCreateButton = false,
-  title,
   textTotal = ['تعداد کل فرم‌ها', 'عدد'],
-  CreateButton
+  CreateButton,
+  SkeletonComponent
 }) => {
   const [totalData, setTotalData] = useState<number | null>(null);
   const { ref, inView } = useInView();
@@ -575,7 +577,7 @@ const ListGrid: React.FC<Props> = ({
           gap: 2,
         }}>
         <Grid size={{ xs: 12, sm: 10 }} sx={{ display: 'flex', alignItems: 'center', gap: '12px', mx: 'auto' }}>
-          <SearchInput />
+           <ImmediateSearchInput onSearch={setQuery} />
           {!disableFilter && (
             <IconButton
               onClick={openFilter}
@@ -601,26 +603,13 @@ const ListGrid: React.FC<Props> = ({
     const allItems = pages?.pages.flatMap((page) => page.data) || [];
     if (isFetching && !isFetchingNextPage) {
       return (
-        <Box sx={{ width: '100%', mt: 2 }}>
-          <LinearProgress />
-        </Box>
+        <SkeletonComponent />
       );
     }
 
     if (allItems.length === 0) {
       return (
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            alignItems: 'center',
-            height: '60vh',
-            width: '100%',
-          }}>
-          <Image src={formListEmpty} alt='No forms found' height={256} priority draggable={false} />
-          <Typography sx={{ fontSize: '18px', color: '#999' }}>موردی یافت نشد</Typography>
-        </Box>
+        <EmptyList error={error?.message}/>
       );
     }
 

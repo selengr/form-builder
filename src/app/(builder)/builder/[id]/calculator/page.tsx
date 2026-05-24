@@ -4,7 +4,6 @@ import { getCalculationListAction } from '../../../../../../actions/calculator/c
 
 export default async function CalculatorPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-
   if (!id) return <div>آیدی نامعتبر است</div>;
 
   const data = await getCalculationListAction(id)

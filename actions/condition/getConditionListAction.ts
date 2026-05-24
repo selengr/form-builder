@@ -12,7 +12,7 @@ export async function getConditionListAction(formId: string) {
 
   const baseUrl = `/condition/main-list/${formId}`;
   const queryString = `?searchFilterModel=${encodeURIComponent(JSON.stringify(filterModel))}`;
-  const url = baseUrl + queryString;
+  const url = baseUrl
 
   const res = await serverApi.get(url);
   return res.data.content;

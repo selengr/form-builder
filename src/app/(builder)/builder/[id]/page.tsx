@@ -1,21 +1,10 @@
-'use client';
-
-import { toast } from 'sonner';
-import { useEffect } from 'react';
-import BuilderLoading from './loading';
-import { useParams } from 'next/navigation';
-import useActionDesigner from '@/hooks/useActionDesigner';
-import useActionElements from '@/hooks/useActionElements';
-import { idGenerator } from '@/lib/idGenerator';
-import { FormElementInstance } from '@/types/FormElements';
-import FormBuilder from '@/templates/builder/FormBuilder';
-import { useGetForm } from '../_hook/useGetForm';
-import { fetchFormData } from '../../../../../actions/builder/getForm';
 import FormBuilderWapper from '@/templates/builder/FormBuilderWapper';
+import { getFormDataAction } from '../../../../../actions/builder/getForm';
 
-export default function BuilderPage() {
-  const { id } = useParams();
-  const data = await fetchFormData()
+export const revalidate = 300; 
+
+export default async function BuilderPage({ params }: { params: { id: string } }) {
+ const data = await getFormDataAction(params.id)
 
   return <FormBuilderWapper data={data} />;
 }

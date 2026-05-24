@@ -2,7 +2,7 @@
 
 import { serverApi } from '@/services/axios/serverApi';
 
-export async function fetchFormData(id: string) {
-    const res: any = await serverApi.get(`/api/builder/${id}`);
-    return res.data
+export async function getFormDataAction(id: string) {
+    const response = await serverApi.get(`/form/${id}`);
+    return response.data;
 }

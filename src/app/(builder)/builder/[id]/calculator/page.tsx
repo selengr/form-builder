@@ -1,5 +1,6 @@
 import CalculatorList from '@/templates/calculator/CalculatorList';
-import { getCalculationListAction, getFormDataAction } from '../../../../../../actions/calculator/calculation';
+import { getFormDataAction } from '../../../../../../actions/builder/getForm';
+import { getCalculationListAction } from '../../../../../../actions/calculator/calculation';
 
 export const revalidate = 300; 
 

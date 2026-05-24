@@ -1,5 +1,5 @@
 import ConditionList from '@/templates/condition/ConditionList';
-import { getFormDataAction } from '../../../../../../actions/calculator/calculation';
+import { getFormDataAction } from '../../../../../../actions/builder/getForm';
 import { getConditionListAction } from '../../../../../../actions/condition/getConditionListAction';
 
 export const revalidate = 300; 

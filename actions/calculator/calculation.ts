@@ -53,8 +53,3 @@ export async function getCalculationListAction(id: string) {
   const res = await serverApi.get(url);
   return res.data.content;
 }
-
-export async function getFormDataAction(id: string) {
-      const response = await serverApi.get(`/form/${id}`);
-      return response.data;
-}

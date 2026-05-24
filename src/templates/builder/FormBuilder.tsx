@@ -30,15 +30,15 @@ const FormBuilder = memo(function FormBuilder({ data }: FormBuilderProps) {
 
   return (
     <DndContext sensors={sensors}>
-      <div dir="ltr" className="flex w-full mx-auto h-[calc(100vh-1rem)]">
+      {/* <div dir="ltr" className="flex w-full mx-auto h-[calc(100vh-1rem)]">
         <main className="flex flex-col w-full">
-          <div className="flex w-full items-start justify-center relative h-full">
+          <div className="flex w-full items-start justify-center relative h-full"> */}
             {/* پاس دادن دیتا به Designer */}
             <Designer data={data} />
-          </div>
-        </main>
-        {/* {createPortal(<DragOverlayWrapper />, document.body)} */}
-      </div>
+          {/* </div>
+        </main> */}
+        {createPortal(<DragOverlayWrapper />, document.body)}
+      {/* </div> */}
     </DndContext>
   );
 });

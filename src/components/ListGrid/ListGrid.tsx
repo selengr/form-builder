@@ -354,7 +354,7 @@ const ListGrid: React.FC<Props> = ({
                 mt: 1,
                 mb: 5,
                 pb: 4,
-                mr: { xs: 0, md: totalData! > 2 || isFetching ? -1.2 : 0 },
+                // mr: { xs: 0, md: totalData! > 2 || isFetching ? -1.2 : 0 },
                 flexDirection: 'column',
                 gap: 2,
                 overflowY: 'auto',
@@ -365,6 +365,7 @@ const ListGrid: React.FC<Props> = ({
                   sm: 'calc(100vh - 290px)',
                   md: 'calc(100vh - 230px)',
                 },
+                scrollbarWidth : "none"
               }}>
               {renderContent()}
             </Grid>

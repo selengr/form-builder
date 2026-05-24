@@ -312,7 +312,7 @@ const ListGrid: React.FC<Props> = ({
                 mt: 2.5,
                 mb: 5,
                 pb: 4,
-                         mr: { xs: 0, md: -1.2 },
+                scrollbarWidth : "none",
                 flexDirection: 'column',
                 gap: 1,
                 overflowY: 'auto',

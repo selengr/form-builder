@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import DragOverlayWrapper from '../../components/builder/DragOverlayWrapper';
 import Designer from './Designer';
+import DesignerSkeleton from '@/components/builder/DesignerSidebarSkeleton';
 
 interface FormBuilderProps {
   data: any;

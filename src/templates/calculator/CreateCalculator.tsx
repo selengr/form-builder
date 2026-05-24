@@ -10,19 +10,26 @@ const buttonSx: SxProps<Theme> = {
   height: 52,
   width: '100%',
   marginTop: '10px',
-  marginBottom: '20px',
+  marginBottom: '10px',
   display: 'flex',
   alignItems: 'center',
+  borderRadius: '8px',
   justifyContent: 'center',
   color: '#6F6F6F',
   cursor: 'pointer',
+  fontSize: { xs: 12, md: 14 },
   border: '1px dashed #DDE1E6',
   '&:hover': {
     backgroundColor: '#F7F7FF',
   },
 };
 
-const CreateCalculator = () => {
+const buttonSxDisabled: SxProps<Theme> = {
+  ...buttonSx,
+  border: "none"
+};
+
+const CreateCalculator = ({ isCreateMode }: { isCreateMode: boolean }) => {
   const router = useRouter();
   const { id } = useParams();
   const isDesktop = useMediaQuery('(min-width:768px)');
@@ -35,6 +42,14 @@ const CreateCalculator = () => {
       router.push(`/builder/${id}/calculator/create`);
     }
   };
+
+  if (!isCreateMode) {
+    return (
+      <Button variant="text" fullWidth sx={buttonSxDisabled}>
+        منتشر شده
+      </Button>
+    )
+  }
 
   return (
     <>

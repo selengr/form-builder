@@ -166,7 +166,7 @@ const ListGrid: React.FC<IProps> = ({
                         </div>
 
                         {/* search row */}
-                        <div className={`w-full mt-2 max-w-[470px] ${items.length > 4 ? "sm:ml-4" : "sm:ml-0"}`}>
+                        <div className={`w-full mt-2 max-w-[470px]`}>
                             <ImmediateSearchInput onSearch={setQuery} />
                         </div>
 
@@ -180,7 +180,8 @@ const ListGrid: React.FC<IProps> = ({
                                 mt: 1,
                                 mb: 5,
                                 pb: 4,
-                                mr: { xs: 0, md: totalData! > 2 || isFetching ? -1.2 : 0 },
+                                 scrollbarWidth : "none",
+                                // mr: { xs: 0, md: totalData! > 2 || isFetching ? -1.2 : 0 },
                                 flexDirection: 'column',
                                 gap: 2,
                                 overflowY: 'auto',

@@ -66,9 +66,9 @@ export default function ListGridWrapper() {
         </div>
 
         {/* محتوای فیلترها */}
-        <div className='flex-1 overflow-y-auto pb-4'>
+        <div className='flex-1 overflow-y-auto pb-4' style={{ scrollbarWidth: 'thin' }}>
           <div className='flex flex-col gap-4 w-full'>
-            <div className='flex flex-col gap-4'>
+            <div className='flex flex-col gap-4' >
               {/* بخش نوع فیلتر */}
               <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
                 <FormControl

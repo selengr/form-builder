@@ -136,8 +136,8 @@ export function ConditionCard({ qacWithOutFilterOptions, index, condition, disab
         </div>
       </div>
 
-      <div className='rounded-lg p-[10px] flex justify-between w-full cursor-pointer border-[1px] border-[#1758BA] bg-[#fff]'>
-        <div className='flex justify-center items-center gap-[10px]'>
+      <div className='rounded-lg py-0 md:py-2 p-[10px] flex justify-between w-full cursor-pointer border-[1px] border-[#1758BA] bg-[#fff]'>
+        <div className='flex justify-center items-center gap-1 md:gap-[10px]'>
           <ConditionCardOperator qacWithOutFilterOptions={qacWithOutFilterOptions} condition={condition} />
         </div>
       </div>

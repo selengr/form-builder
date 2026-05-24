@@ -41,7 +41,7 @@ export default function MainSidebar() {
 
   return (
     <>
-      <div className='flex flex-col justify-between min-w-[100px] bg-white overflow-y-auto no-scrollbar'>
+      <div className='flex flex-col justify-between min-w-[100px] bg-white overflow-y-auto no-scrollbar' style={{ scrollbarWidth: 'none' }}>
         <div className='flex flex-col items-center gap-4 pt-4'>
           <Link href={endPoint}>
             <Image src={MresalatLogo} alt='Mresalat_Logo' width={64} height={15} priority draggable={false} />

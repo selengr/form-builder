@@ -36,7 +36,7 @@ export default function MiddleSidebar() {
         </Link>
       </div>
 
-      <div className='flex-1 overflow-y-auto pr-3 flex flex-col' style={{ scrollbarWidth: 'thin' }}>
+      <div className='flex-1 overflow-y-auto pr-3 flex flex-col' style={{ scrollbarWidth: 'none' }}>
         {!!isAuthenticated && loading && <MenuItemSkeleton />}
         <MenuList menuLinks={menuLinks} />
       </div>

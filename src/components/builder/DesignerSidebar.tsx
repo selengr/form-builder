@@ -11,14 +11,22 @@ import { FormElements } from '@/types/FormElements';
 import useDesigner from '@/hooks/useDesigner';
 import { usePublishForm } from '@/app/(builder)/builder/_hook/usePublishForm';
 // component
+import ConfirmDialog from '../confirm-dialog';
 import SidebarBtnElement from './SidebarBtnElement';
 import DesignerBottomSheet from './DesignerBottomSheet';
 import SettingsDialog from '../SettingsDialog/SettingsDialog';
 // image
 import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
-import { ConfirmationPublishDialog } from './ConfirmationPublishDialog';
 
 const ELEMENTS = [
+  // FormElements.RATING,
+  // FormElements.SPECTRAL,
+  // FormElements.TEXT_FIELD,
+  // FormElements.INFO_FIELD,
+  // FormElements.MULTIPLE_CHOICE,
+  // FormElements.MULTIPLE_CHOICE_IMAGE,
+  // FormElements.PACKAGE_INJECTION_FIELD,
+
   FormElements.TEXT_FIELD,
   FormElements.MULTIPLE_CHOICE,
   FormElements.MULTIPLE_CHOICE_IMAGE,
@@ -193,3 +201,46 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
 });
 
 export default DesignerSidebar;
+// ----------------------------------------------------------
+interface ConfirmationPublishDialogProps {
+  open: boolean;
+  loading: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}
+
+export const ConfirmationPublishDialog = ({
+  open,
+  loading,
+  onClose,
+  onConfirm,
+}: ConfirmationPublishDialogProps) => {
+  return (
+    <ConfirmDialog
+      open={open}
+      onClose={onClose}
+      title={`تأیید انتشار فرم`}
+      content='پس از نهایی کردن فرم، امکان ویرایش یا تغییر آن وجود نخواهد داشت. آیا ادامه می‌دهید؟'
+      cancelText='انصراف'
+      loading={loading}
+      action={
+        <Button
+          fullWidth
+          disabled={loading}
+          variant='contained'
+          onClick={onConfirm}
+          sx={{
+            fontWeight: '400',
+            fontSize: '15px',
+            height: '50px',
+            borderRadius: '8px',
+            '&:hover': {
+              bgcolor: (theme) => theme.palette.primary.main,
+            },
+          }}>
+          انتشار فرم
+        </Button>
+      }
+    />
+  );
+};

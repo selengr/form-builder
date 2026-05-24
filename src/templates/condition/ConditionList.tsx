@@ -22,15 +22,13 @@ const ConditionList: React.FC<IProps> = ({ conditions, formData }) => {
 
   return (
     <>
-      {isCreateMode && (
         <div className="w-full max-w-[530px] -mr-3">
-          <CreateCondition />
+          <CreateCondition isCreateMode={isCreateMode}/>
         </div>
-      )}
       <div dir='rtl' className='w-full overflow-y-auto h-full flex justify-center'>
-        <div className='w-full max-w-[520px] flex flex-col p-[13px]'>
+        <div className='w-full max-w-[520px] flex flex-col p-0 md:p-[13px]'>
           {Array.isArray(conditions) && conditions.length > 0 && (
-            <div dir='rtl' className='bg-[#F7F7FF] rounded-lg p-[10px] w-full flex flex-col gap-3  mb-10'>
+            <div dir='rtl' className='bg-[#F7F7FF] rounded-lg p-0 md:p-[10px] w-full flex flex-col gap-3  mb-10'>
               {conditions?.map((condition: IGetCondition, index: number) => (
                 <ConditionCard qacWithOutFilterOptions={qacWithOutFilterOptions}
                   key={condition.id} condition={condition} index={index} disabled={!isCreateMode} />

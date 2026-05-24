@@ -1,12 +1,11 @@
 'use client'
-import React from 'react'
-import { useEffect } from 'react';
+import React, { useEffect } from 'react'
 import FormBuilder from './FormBuilder';
 import { idGenerator } from '@/lib/idGenerator';
 import useActionDesigner from '@/hooks/useActionDesigner';
 import useActionElements from '@/hooks/useActionElements';
 import { FormElementInstance } from '@/types/FormElements';
-// ------------------------------------------------------------
+
 export default function FormBuilderWapper({ data }: any) {
     const setElements = useActionElements();
     const {
@@ -19,20 +18,16 @@ export default function FormBuilderWapper({ data }: any) {
 
     useEffect(() => {
         if (!data) return;
-        const questionGroupIds =
-            data?.questionGroups?.map((g: any) => g.questionGroupId) || [];
+        
+        const questionGroupIds = data?.questionGroups?.map((g: any) => g.questionGroupId) || [];
         setQuestionGroups(questionGroupIds);
-
         setFormSetting(data.formSettingModel);
 
-        const allQuestions =
-            data?.questionGroups?.flatMap((g: any) => g.questions) || [];
-
+        const allQuestions = data?.questionGroups?.flatMap((g: any) => g.questions) || [];
         const cleanedQuestions = allQuestions.map((q: FormElementInstance) => {
             const { questionPropertyList, optionList, spectralPlaceList, ...rest } = q;
             return rest;
         });
-
         setElements(cleanedQuestions);
 
         if (data?.startPageMsg) {
@@ -46,7 +41,6 @@ export default function FormBuilderWapper({ data }: any) {
         if (data?.endPageList?.length > 0) {
             const endPage = data.endPageList[0];
             const { endPageId, ...rest } = endPage;
-
             addFinishPage({
                 questionId: endPageId,
                 questionType: 'TitleFieldFinish',
@@ -55,15 +49,7 @@ export default function FormBuilderWapper({ data }: any) {
         }
 
         setFormName(data.name);
-    }, [
-        data,
-        addFinishPage,
-        addStartPage,
-        setElements,
-        setFormName,
-        setQuestionGroups,
-        setFormSetting,
-    ]);
+    }, [data]); 
 
     return <FormBuilder data={data} />;
 }

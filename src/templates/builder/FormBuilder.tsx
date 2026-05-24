@@ -37,7 +37,7 @@ const FormBuilder = memo(function FormBuilder({ data }: FormBuilderProps) {
             <Designer data={data} />
           </div>
         </main>
-        {createPortal(<DragOverlayWrapper />, document.body)}
+        {/* {createPortal(<DragOverlayWrapper />, document.body)} */}
       </div>
     </DndContext>
   );

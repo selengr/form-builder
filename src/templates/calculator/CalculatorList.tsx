@@ -7,12 +7,12 @@ import { CalculatorCard } from './CalculatorCard';
 import CreateCalculator from './CreateCalculator';
 
 interface IProps {
+  formData: any
   calculators: ICalculator[];
 }
 
-const CalculatorList: React.FC<IProps> = ({ calculators }) => {
-  const { formData, isLoading } = useFormData();
-
+const CalculatorList: React.FC<IProps> = ({ calculators, formData }) => {
+  
   const isCreateMode = formData?.formSettingModel?.formStatus === 'CREATE';
 
   return (
@@ -32,7 +32,7 @@ const CalculatorList: React.FC<IProps> = ({ calculators }) => {
                   key={calculator.id}         
                   index={index}
                   calculator={calculator}
-                  disabled={!isCreateMode || isLoading}
+                  disabled={!isCreateMode}
                 />
               ))}
             </div>

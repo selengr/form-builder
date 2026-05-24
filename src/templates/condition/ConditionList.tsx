@@ -7,7 +7,7 @@ import CreateCondition from './CreateCondition';
 import { useGetQacWithOutFilterList } from '@/app/reports/create-solo/[id]/_hooks/useGetQacWithOutFilterList';
 
 interface IProps {
-   formData: {
+  formData: {
     formSettingModel: {
       formStatus: string
     };
@@ -20,9 +20,9 @@ const ConditionList: React.FC<IProps> = ({ conditions, formData }) => {
 
   const isCreateMode = formData?.formSettingModel?.formStatus === 'CREATE';
 
-  return (      
+  return (
     <>
-       {isCreateMode && (
+      {isCreateMode && (
         <div className="w-full max-w-[530px] -mr-3">
           <CreateCondition />
         </div>
@@ -32,8 +32,8 @@ const ConditionList: React.FC<IProps> = ({ conditions, formData }) => {
           {Array.isArray(conditions) && conditions.length > 0 && (
             <div dir='rtl' className='bg-[#F7F7FF] rounded-lg p-[10px] w-full flex flex-col gap-3  mb-10'>
               {conditions?.map((condition: IGetCondition, index: number) => (
-                <ConditionCard  qacWithOutFilterOptions={qacWithOutFilterOptions} 
-                key={condition.id} condition={condition} index={index} disabled={isCreateMode} />
+                <ConditionCard qacWithOutFilterOptions={qacWithOutFilterOptions}
+                  key={condition.id} condition={condition} index={index} disabled={!isCreateMode} />
               ))}
             </div>
           )}

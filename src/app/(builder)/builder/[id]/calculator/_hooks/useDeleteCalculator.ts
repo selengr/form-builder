@@ -1,15 +1,17 @@
 import { toast } from 'sonner';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { useMutation} from '@tanstack/react-query';
 // action
 import { deleteCalculatorAction } from '../../../../../../../actions/calculator/calculation';
 
 export const useDeleteCalculator = () => {
-  const queryClient = useQueryClient();
+  const router = useRouter();
+  
   const mutation = useMutation({
     mutationKey: ['delete-calculation'],
     mutationFn: (id: number) => deleteCalculatorAction(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(['Calculation_List'] as any);
+      router.refresh()
       toast.success(` محاسبه گر با موفقیت حذف شد`);
     },
     onError: () => {

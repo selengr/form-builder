@@ -1,6 +1,7 @@
 import CalculatorList from '@/templates/calculator/CalculatorList';
 import { getCalculationListAction, getFormDataAction } from '../../../../../../actions/calculator/calculation';
 
+export const revalidate = 300; 
 
 export default async function CalculatorPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

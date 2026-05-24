@@ -1,6 +1,5 @@
 'use client';
 
-import { useFormData } from '@/hooks';
 import { ICalculator } from '@/types/calculator';
 
 import { CalculatorCard } from './CalculatorCard';
@@ -16,7 +15,7 @@ interface IProps {
 }
 
 const CalculatorList: React.FC<IProps> = ({ calculators, formData }) => {
-  
+
   const isCreateMode = formData?.formSettingModel?.formStatus === 'CREATE';
 
   return (
@@ -33,7 +32,7 @@ const CalculatorList: React.FC<IProps> = ({ calculators, formData }) => {
             <div className="bg-[#F7F7FF] rounded-lg p-[10px] w-full flex flex-col gap-3 mb-10">
               {calculators.map((calculator, index) => (
                 <CalculatorCard
-                  key={calculator.id}         
+                  key={calculator.id}
                   index={index}
                   calculator={calculator}
                   disabled={!isCreateMode}

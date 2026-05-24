@@ -22,6 +22,7 @@ import { useGetOnlyAllCalculation } from '@/app/(builder)/builder/[id]/condition
 // ---------------------------------------------------------------------------------
 export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClose, condition, isEdit = false }) => {
   const { id } = useParams();
+  const router = useRouter();
 
   const { qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter();
   const { onlyAllCalculationOptions, isFetchingOnlyAllCalculation } = useGetOnlyAllCalculation();
@@ -102,9 +103,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
       {
         onSuccess: async () => {
           handleClose();
-        },
-        onError: (error: any) => {
-          // ...
+          router.refresh()
         },
       },
     );

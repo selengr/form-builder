@@ -676,7 +676,8 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
         });
       }
       queryClient.invalidateQueries({ queryKey: ['calculators'] });
-      queryClient.invalidateQueries({ queryKey: ['Calculation_List'] });
+      router.refresh()
+      // queryClient.invalidateQueries({ queryKey: ['Calculation_List'] });
       handleClosePage()
       toast.success('محاسبه گر با موفقیت ثبت شد');
     } catch (error) {

@@ -7,7 +7,11 @@ import { CalculatorCard } from './CalculatorCard';
 import CreateCalculator from './CreateCalculator';
 
 interface IProps {
-  formData: any
+  formData: {
+    formSettingModel: {
+      formStatus: string
+    };
+  }
   calculators: ICalculator[];
 }
 

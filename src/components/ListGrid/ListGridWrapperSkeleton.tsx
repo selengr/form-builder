@@ -11,10 +11,12 @@ import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
 interface IProps {
     name: string
     headerName: string;
-     SkeletonComponent: ElementType; 
+    hasCreateBtn?: boolean;
+    hasSidebarFilter?: boolean;
+    SkeletonComponent: ElementType;
 }
 
-export default function ListGridWrapperSkeleton({ name, headerName, SkeletonComponent }: IProps) {
+export default function ListGridWrapperSkeleton({ name, headerName, SkeletonComponent, hasSidebarFilter = true, hasCreateBtn = true }: IProps) {
 
     function FilterSkeleton() {
         return (
@@ -216,9 +218,10 @@ export default function ListGridWrapperSkeleton({ name, headerName, SkeletonComp
                             }}>
                             {renderTotalCountSkeleton()}
 
-                            <div className='min-w-[50px] w-[50px] h-full'>
+                            {hasCreateBtn && <div className='min-w-[50px] w-[50px] h-full'>
                                 <div className='w-[50px] h-[50px] rounded-[16px] border border-gray-300 bg-gray-200 animate-pulse' />
                             </div>
+                            }
                         </Box>
 
                         {/* Search and filter */}
@@ -263,25 +266,27 @@ export default function ListGridWrapperSkeleton({ name, headerName, SkeletonComp
 
                 </Grid>
 
-                <Grid
-                    width='100%'
-                    display={{ xs: 'none', lg: 'flex' }}
-                    flexDirection='column'
-                    justifyContent='flex-start'
-                    alignItems='center'
-                    sx={{
-                        backgroundColor: 'white',
-                        borderRadius: '16px',
-                        gap: 1,
-                        ml: 0,
-                        mr: 0,
-                        p: 2,
-                        maxWidth: '300px',
-                    }}>
-                    <Grid sx={{ width: '100%', minWidth: '200px', maxWidth: '300px' }}>
-                        <FilterSidebarSkeleton />
+                {hasSidebarFilter &&
+                    <Grid
+                        width='100%'
+                        display={{ xs: 'none', lg: 'flex' }}
+                        flexDirection='column'
+                        justifyContent='flex-start'
+                        alignItems='center'
+                        sx={{
+                            backgroundColor: 'white',
+                            borderRadius: '16px',
+                            gap: 1,
+                            ml: 0,
+                            mr: 0,
+                            p: 2,
+                            maxWidth: '300px',
+                        }}>
+                        <Grid sx={{ width: '100%', minWidth: '200px', maxWidth: '300px' }}>
+                            <FilterSidebarSkeleton />
+                        </Grid>
                     </Grid>
-                </Grid>
+                }
             </Grid>
         </div>
     );

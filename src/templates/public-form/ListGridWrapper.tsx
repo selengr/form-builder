@@ -1,7 +1,22 @@
 'use client';
 
-import ListGrid from './ListGrid';
+import dynamic from 'next/dynamic';
 import PublicFormCard from './ListCard';
+import ListGridWrapperSkeleton from '@/components/ListGrid/ListGridWrapperSkeleton';
+import CardSkeleton from './CardSkeleton';
+
+const ListGrid = dynamic(() => import('./ListGrid'), {
+  ssr: false,
+  loading: () => (
+    <ListGridWrapperSkeleton
+      name='فرم‌های عمومی'
+      headerName='تعداد کل فرم‌ها'
+      hasCreateBtn={false}
+      hasSidebarFilter={false}
+      SkeletonComponent={CardSkeleton}
+    />
+  ),
+});
 
 const FORM_FILTER = {
   type: 'ALL',
@@ -13,7 +28,7 @@ const FORM_FILTER = {
 export default function ListGridWrapper() {
   return (
     <ListGrid
-    title='فرم‌های عمومی'
+      title='فرم‌های عمومی'
       CartComponent={PublicFormCard}
       searchQueryFilter={FORM_FILTER}
       url='/public-page/form/main-list'

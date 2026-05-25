@@ -8,9 +8,9 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 // componnets
 import ListCard from '@/components/ListGrid/ListCard';
-import ListGridWrapperSkeleton from './ListGridWrapperSkeleton';
 import ListCardSkeleton from '@/components/ListGrid/ListCardSkeleton';
 import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
+import ListGridWrapperSkeleton from '@/components/ListGrid/ListGridWrapperSkeleton';
 
 const ListGrid = dynamic(() => import('@/components/ListGrid/ListGrid'), {
   ssr: false,
@@ -271,28 +271,18 @@ export default function ListGridWrapper() {
   };
 
   return (
-    <Suspense fallback={
-      <ListGridWrapperSkeleton
-        name='فرم‌های من'
-        headerName='تعداد کل فرم‌ها'
-        SkeletonComponent={ListCardSkeleton}
-      ></ListGridWrapperSkeleton>
-    }>
-
-      <ListGrid
-        title='فرم‌های من'
-        showCreateButton
-        searchBoxList={searchBoxList}
-        filterBoxList={filterBoxList}
-        url='/form/main-list'
-        filterComponent={<FilterSidebar />}
-        CartComponent={(item: any) => <ListCard setRefreshGrid={setRefreshGrid} {...item} />}
-        disableFilter={false}
-        refreshGrid={refreshGrid}
-        searchQueryFilter={formType}
-        SkeletonComponent={() => <ListCardSkeleton />}
-      />
-    </Suspense>
-
+    <ListGrid
+      title='فرم‌های من'
+      showCreateButton
+      searchBoxList={searchBoxList}
+      filterBoxList={filterBoxList}
+      url='/form/main-list'
+      filterComponent={<FilterSidebar />}
+      CartComponent={(item: any) => <ListCard setRefreshGrid={setRefreshGrid} {...item} />}
+      disableFilter={false}
+      refreshGrid={refreshGrid}
+      searchQueryFilter={formType}
+      SkeletonComponent={() => <ListCardSkeleton />}
+    />
   );
 }

@@ -73,7 +73,7 @@ const CreateCalculatorDialog: React.FC<ICreateCalculatorDialogProps> = ({ open, 
             }}
           >
             <p>در حال بارگیری ماشین حساب...</p>
-            <BuilderLoading className="min-h-16" />
+            {/* <BuilderLoading className="min-h-16" /> */}
           </Container>
         )}
 

@@ -22,7 +22,7 @@ const ConditionList: React.FC<IProps> = ({ conditions, formData }) => {
 
   return (
     <>
-        <div className="w-full max-w-[530px] -mr-3">
+        <div className="w-full max-w-[530px] md:-mr-3">
           <CreateCondition isCreateMode={isCreateMode}/>
         </div>
       <div dir='rtl' className='w-full overflow-y-auto h-full flex justify-center'>

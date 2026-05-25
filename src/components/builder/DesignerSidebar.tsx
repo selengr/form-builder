@@ -144,7 +144,7 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
         fontWeight: 500,
         fontSize: 15,
         borderRadius: '10px',
-        height: 58,
+          height: {xs: 45 , md: 58},
         mt: 1,
         '&:hover': {
           backgroundColor: '#1758BA',

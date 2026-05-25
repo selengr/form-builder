@@ -1,14 +1,27 @@
 'use client';
 
 import Image from 'next/image';
+import { Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import React, { useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 // componnets
-import ListGrid from '@/components/ListGrid/ListGrid';
 import ListCard from '@/components/ListGrid/ListCard';
+import ListGridWrapperSkeleton from './ListGridWrapperSkeleton';
 import ListCardSkeleton from '@/components/ListGrid/ListCardSkeleton';
 import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
+
+const ListGrid = dynamic(() => import('@/components/ListGrid/ListGrid'), {
+  ssr: false,
+  loading: () => (
+    <ListGridWrapperSkeleton
+      name='فرم‌های من'
+      headerName='تعداد کل فرم‌ها'
+      SkeletonComponent={ListCardSkeleton}
+    />
+  ),
+});
 
 export default function ListGridWrapper() {
   const [refreshGrid, setRefreshGrid] = useState(false);
@@ -258,18 +271,28 @@ export default function ListGridWrapper() {
   };
 
   return (
-    <ListGrid
-      title='فرم‌های من'
-      showCreateButton
-      searchBoxList={searchBoxList}
-      filterBoxList={filterBoxList}
-      url='/form/main-list'
-      filterComponent={<FilterSidebar />}
-      CartComponent={(item: any) => <ListCard setRefreshGrid={setRefreshGrid} {...item} />}
-      disableFilter={false}
-      refreshGrid={refreshGrid}
-      searchQueryFilter={formType}
-       SkeletonComponent={()=> <ListCardSkeleton />}
-    />
+    <Suspense fallback={
+      <ListGridWrapperSkeleton
+        name='فرم‌های من'
+        headerName='تعداد کل فرم‌ها'
+        SkeletonComponent={ListCardSkeleton}
+      ></ListGridWrapperSkeleton>
+    }>
+
+      <ListGrid
+        title='فرم‌های من'
+        showCreateButton
+        searchBoxList={searchBoxList}
+        filterBoxList={filterBoxList}
+        url='/form/main-list'
+        filterComponent={<FilterSidebar />}
+        CartComponent={(item: any) => <ListCard setRefreshGrid={setRefreshGrid} {...item} />}
+        disableFilter={false}
+        refreshGrid={refreshGrid}
+        searchQueryFilter={formType}
+        SkeletonComponent={() => <ListCardSkeleton />}
+      />
+    </Suspense>
+
   );
 }

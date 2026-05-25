@@ -47,7 +47,7 @@ interface Props {
   searchQueryFilter?: { type: string; status: string, isCreatedSoloReport: string, fieldOperation: string };
   showCreateButton?: boolean;
   CreateButton?: () => React.ReactNode;
-  SkeletonComponent: () => ReactNode
+  SkeletonComponent: () =>  React.ReactNode;
 }
 
 const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'ALL', isCreatedSoloReport: 'ALL', fieldOperation: "DSC" };

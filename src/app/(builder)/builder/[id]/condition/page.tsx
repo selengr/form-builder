@@ -1,8 +1,13 @@
+import { serverApi } from '@/services/axios/serverApi';
 import ConditionList from '@/templates/condition/ConditionList';
-import { getFormDataAction } from '../../../../../../actions/builder/getForm';
 import { getConditionListAction } from '../../../../../../actions/condition/getConditionListAction';
 
 export const revalidate = 300; 
+
+async function getFormDataAction(id: string) {
+    const response = await serverApi.get(`/form/${id}`);
+    return response.data;
+}
 
 export default async function ConditionPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

@@ -38,11 +38,9 @@ export default function RootLayout({
         <NextTopLoader showSpinner={false} />
 
         <RootProvider>
-          <Suspense fallback={<div />}>
             <LayoutWrapper>
               {children}
             </LayoutWrapper>
-          </Suspense>
         </RootProvider>
       </body>
     </html>

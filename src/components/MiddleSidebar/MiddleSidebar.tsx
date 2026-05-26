@@ -6,20 +6,43 @@ import { useMemo } from 'react';
 // hooks
 import { useMenu } from '@/hooks';
 // types
-import { IServerMenuItem } from '@/types/menus';
 import Logo from "/public/images/logo/logo2.svg";
 // components
 import MenuList from './menuList/MenuList';
 import MenuItemSkeleton from './menuItemSkeleton';
-import { useUserInfoNew } from '@/hooks/useUserInfoNew';
+import { IUserInfoResponse } from '@actions/auth';
+import { IServerMenuItem } from '@/types/menus';
 
-export default function MiddleSidebar() {
-  const { isAuthenticated } = useUserInfoNew();
+interface IProps {
+  loading?: boolean;
+  isAuthenticated: boolean;
+  userInfo?: IUserInfoResponse | null;
+}
+
+export default function MiddleSidebar({isAuthenticated}: IProps) {
   const { menu, loading } = useMenu(isAuthenticated)
-
+  
   const menuLinks: IServerMenuItem[] | any = useMemo(() => {
-    return menu?.aclList?.filter((i) => i?.type === 'menu') || [];
+    if (!menu?.aclList) return [];
+
+    return menu.aclList.filter((item) => 
+      item?.type === 'menu'
+    );
   }, [menu?.aclList]);
+
+  //   const menuLinks: IServerMenuItem[] | any = useMemo(() => {
+  //   return menu?.aclList?.filter((i) => i?.type === 'menu') || [];
+  // }, [menu?.aclList]);
+
+  // const menuLinks = useMemo(() => {
+  //   if (!userInfo?.aclList) return [];
+
+  //   return userInfo.aclList.filter((item) => 
+  //     item?.type === 'menu' && 
+  //     item?.data?.langId?.includes('acl.psya')
+  //   );
+  // }, [userInfo?.aclList]);
+
 
   return (
     <div className='min-w-[400px] w-[400px] min-h-screen bg-white px-5 py-5 flex flex-col gap-5'>

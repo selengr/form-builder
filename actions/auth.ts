@@ -2,20 +2,35 @@
 
 import { serverApi } from '@/services/axios/serverApi';
 
-interface IFetchUserInfoResult {
-  userInfo: any;
-  isAuthenticated: boolean;
-  error: Error | null;
+export interface IUser {
+  id: number;
+  fullName: string;
+  username: string;
+  nationalCode: string;
+  dateOfBorn: string | null;
+  citizen: string | null;
 }
 
-export async function fetchUserInfoServer(): Promise<IFetchUserInfoResult> {
+export interface IUserInfoResponse {
+  user: IUser;
+  aclList: any[];
+  userRoles: any[];
+}
+
+export interface IUserInfo   {
+  userInfo: IUserInfoResponse | null;
+  isAuthenticated: boolean;
+  error: string | Error | null;
+}
+
+export async function fetchUserInfoServer(): Promise<IUserInfo  > {
   try {
-    const res = await serverApi.get<any>('/authorization/front-panel/non-org-user-role/find-user-loggedin-info',{
+    const response = await serverApi.get<any>('/authorization/front-panel/non-org-user-role/find-user-loggedin-info',{
        baseURL: process.env.BASE_URL,
     });
 
     return {
-      userInfo: res.data,
+      userInfo: response.data,
       isAuthenticated: true,
       error: null,
     };

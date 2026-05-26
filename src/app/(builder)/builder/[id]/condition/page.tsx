@@ -1,6 +1,6 @@
 import { serverApi } from '@/services/axios/serverApi';
 import ConditionList from '@/templates/condition/ConditionList';
-import { getConditionListAction } from '../../../../../../actions/condition/getConditionListAction';
+import { getConditionListAction } from '@actions/condition/getConditionListAction';
 
 export const revalidate = 300; 
 

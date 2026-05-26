@@ -1,8 +1,13 @@
+import { serverApi } from '@/services/axios/serverApi';
 import CalculatorList from '@/templates/calculator/CalculatorList';
-import { getFormDataAction } from '../../../../../../actions/builder/getForm';
-import { getCalculationListAction } from '../../../../../../actions/calculator/calculation';
+import { getCalculationListAction } from '@actions/calculator/calculation';
 
 export const revalidate = 300; 
+
+async function getFormDataAction(id: string) {
+    const response = await serverApi.get(`/form/${id}`);
+    return response.data;
+}
 
 export default async function CalculatorPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

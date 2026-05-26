@@ -1,5 +1,4 @@
-'use server';
-
+// only ssr
 import { serverApi } from '@/services/axios/serverApi';
 
 export async function createCalculationAction(payload: {

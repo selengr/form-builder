@@ -25,7 +25,7 @@
       "@/*": [
         "./src/*"
       ],
-      "@actions/*": ["./src/actions/*"]
+      "@actions/*": ["./actions/*"]
     },
     "target": "ES2017"
   },

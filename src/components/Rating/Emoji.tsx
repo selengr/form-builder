@@ -100,7 +100,7 @@ gap-2 select-none">
                                         alt={emoji.label}
                                         fill
                                         quality={100}
-                                        priority={true}
+                                        priority
                                         sizes="56px"
                                         className="object-contain transition-all duration-200"
                                         style={{

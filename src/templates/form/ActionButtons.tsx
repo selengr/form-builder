@@ -17,7 +17,7 @@ export default function ActionButtons({
   disableNext?: boolean;
   loadingPrev?: boolean;
   loadingNext?: boolean;
-}) {
+}) {  
   const { isInIframe } = useIframeDetector();
 
   const buttonHeight = isInIframe ? 42 : 52;

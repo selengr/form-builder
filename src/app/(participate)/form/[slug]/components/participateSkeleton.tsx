@@ -8,14 +8,14 @@ import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 export const ParticipateLoadingSkeleton = ({ firstload }: { firstload?: boolean }) => {
 
     return (
-        <div className={`w-full flex flex-col overflow-hidden p-4`}>
-            <div className={`flex flex-col bg-white rounded-xl md:h-full max-h-screen h-[100vh]`}>
+        <div className={`w-full flex flex-col overflow-hidden h-[calc(100dvh-76px)] md:h-screen p-2 sm:p-3`}>
+            <div className={`flex flex-col bg-white rounded-xl overflow-hidden h-full shadow-sm`}>
 
                 <div className='shrink-0 flex items-center justify-center gap-4 bg-[#F7F7FF] rounded-lg px-4 py-4 mb-4 relative m-2 z-10'>
 
                     {firstload && <div className="w-6 h-6 right-2 absolute bg-gray-200 rounded-full animate-pulse"></div>}
                     {!firstload &&
-                        <IconButton sx={{ position: 'absolute', left: '8px' }}>
+                        <IconButton sx={{ position: 'absolute', left: { xs: '2px', sm: '8px' }, top: '50%', transform: 'translateY(-50%)' }}>
                             <MdOutlineKeyboardArrowRight color='#292D32' />
                         </IconButton>
                     }
@@ -23,8 +23,22 @@ export const ParticipateLoadingSkeleton = ({ firstload }: { firstload?: boolean 
                         <div className="h-6 bg-gray-200 rounded-sm md:w-44 w-24 animate-pulse"></div>
                     </p>
 
-                    <Button size='medium' className='rounded-full' sx={{ position: 'absolute', right: '8px' }} endIcon={<Image alt='report' src={BugIcon} height={24} width={24} />}>
-                        <span className='text-xs'>گزارش</span>
+                    <Button
+                        size="medium"
+                        className="rounded-full"
+                        sx={{ position: 'absolute', right: { xs: '2px', sm: '8px' }, top: '50%', transform: 'translateY(-50%)' }}
+                        endIcon={
+                            <div className="relative w-[18px] h-[18px] sm:w-[24px] sm:h-[24px]">
+                                <Image
+                                    alt="report"
+                                    src={BugIcon}
+                                    fill
+                                    className="object-contain"
+                                />
+                            </div>
+                        }
+                    >
+                        <span className="text-xs">گزارش</span>
                     </Button>
                 </div>
 

@@ -84,15 +84,14 @@ export const MenuItem = React.memo(
                   </p>
                 </div>
 
-                {isExpanded ? (
-                  <IoIosArrowDown size="1.3rem" color="#292D32" />
-                ) : (
-                  <IoIosArrowBack
-                    size="1.3rem"
-                    color="#292D32"
-                    className="group-hover:ml-0.5 transition-transform "
-                  />
-                )}
+                <IoIosArrowBack
+                  size="1.3rem"
+                  color="#292D32"
+                  className={`transition-transform duration-300 ease-in-out ${isExpanded ? "rotate-[-90deg]" : "rotate-0"
+                    } group-hover:ml-0.5`}
+                />
+
+
               </button>
             ) : (
               <Link
@@ -136,26 +135,26 @@ export const MenuItem = React.memo(
             )}
           </div>
 
-          {hasChildren && isExpanded && children && (
-            <div className="bg-[#F8F9FA]">
-              <div
-                className="
-                  flex flex-col
-                "
-              >
-                {children.map((child) => (
+          <div
+            className={`grid transition-all duration-300 ease-in-out ${isExpanded
+                ? "grid-rows-[1fr] opacity-100"
+                : "grid-rows-[0fr] opacity-0"
+              }`}
+          >
+            <div className="overflow-hidden bg-[#F8F9FA]">
+              <div className="flex flex-col">
+                {hasChildren && children?.map((child) => (
                   <SubMenuItem
                     key={child.id}
-                    id={child.id}
+                    {...child}
                     href={child.link}
-                    icon={child.icon}
-                    title={child.title}
                     onClick={onClick}
                   />
                 ))}
               </div>
             </div>
-          )}
+          </div>
+
         </div>
       </div>
     );

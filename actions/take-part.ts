@@ -98,7 +98,7 @@ export async function insertAnswerAction(params: {
     id?: number
   }>
 }) {
-  try {
+  // try {
     const { formId, takePartId, questionId, answerList } = params
 
     const res = await serverApi.post("/take-part/insert-answer", {
@@ -109,14 +109,14 @@ export async function insertAnswerAction(params: {
     })
 
     return res.data
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      'انجام عملیات با خطا مواجه شد';
+  // } catch (error: any) {
+  //   const message =
+  //     error?.response?.data?.message?.[0]?.title ||
+  //     error?.response?.data?.message ||
+  //     'انجام عملیات با خطا مواجه شد';
 
-    throw new Error(message);
-  }
+  //   throw new Error(message);
+  // }
 }
 
 

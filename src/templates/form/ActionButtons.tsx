@@ -36,7 +36,7 @@ export default function ActionButtons({
           sx={{
             width: 120,
             minWidth: 120,
-            height: { xs: 44, sm: buttonHeight },
+            height: { xs: 42, sm: buttonHeight },
             borderRadius: 0,
             bgcolor: '#1758BA',
             boxShadow: 'none',
@@ -64,7 +64,7 @@ export default function ActionButtons({
           sx={{
             width: 120,
             minWidth: 120,
-            height: { xs: 44, sm: buttonHeight },
+            height: { xs: 42, sm: buttonHeight },
             borderRadius: 0,
             bgcolor: '#1758BA',
             boxShadow: 'none',

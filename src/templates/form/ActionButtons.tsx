@@ -4,8 +4,8 @@ import { Button } from '@mui/material';
 import { useIframeDetector } from '@/hooks/useIframeDetector';
 
 export default function ActionButtons({
-  prevAction = () => {},
-  nextAction = () => {},
+  prevAction = () => { },
+  nextAction = () => { },
   disablePrev = false,
   disableNext = false,
   loadingPrev = false,
@@ -24,9 +24,8 @@ export default function ActionButtons({
 
   return (
     <div
-      className={`w-full ${
-        isInIframe ? 'mt-4' : 'mt-8'
-      }`}
+      className={`w-full ${isInIframe ? 'mt-4' : 'mt-8'
+        }`}
     >
       <div className="bg-[#F7F7FF] rounded-xl overflow-hidden flex items-center w-full">
         <Button
@@ -37,12 +36,15 @@ export default function ActionButtons({
           sx={{
             width: 120,
             minWidth: 120,
-            height: buttonHeight,
+            height: { xs: 44, sm: buttonHeight },
             borderRadius: 0,
             bgcolor: '#1758BA',
             boxShadow: 'none',
             fontWeight: 600,
-
+            fontSize: {
+              xs: '0.75rem',
+              sm: '0.875rem',
+            },
             '&:hover': {
               bgcolor: '#174AA0',
               boxShadow: 'none',
@@ -62,12 +64,15 @@ export default function ActionButtons({
           sx={{
             width: 120,
             minWidth: 120,
-            height: buttonHeight,
+            height: { xs: 44, sm: buttonHeight },
             borderRadius: 0,
             bgcolor: '#1758BA',
             boxShadow: 'none',
             fontWeight: 600,
-
+            fontSize: {
+              xs: '0.75rem',
+              sm: '0.875rem',
+            },
             '&:hover': {
               bgcolor: '#174AA0',
               boxShadow: 'none',

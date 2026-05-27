@@ -17,7 +17,7 @@ function Header({ handleOpenReportDialog, replace, formName, surveyParam }: Head
 
       {!surveyParam && (
         <IconButton
-          sx={{ position: 'absolute', left: '8px', top: '50%', transform: 'translateY(-50%)' }}
+          sx={{ position: 'absolute', left: { xs: '2px', sm: '8px' }, top: '50%', transform: 'translateY(-50%)' }}
           onClick={() => replace('/')}
         >
           <MdOutlineKeyboardArrowRight color="#292D32" />
@@ -28,8 +28,17 @@ function Header({ handleOpenReportDialog, replace, formName, surveyParam }: Head
         onClick={handleOpenReportDialog}
         size="medium"
         className="rounded-full"
-        sx={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)' }}
-        endIcon={<Image alt="report" src={BugIcon} height={24} width={24} />}
+        sx={{ position: 'absolute', right: { xs: '2px', sm: '8px' }, top: '50%', transform: 'translateY(-50%)' }}
+        endIcon={
+          <div className="relative w-[18px] h-[18px] sm:w-[24px] sm:h-[24px]">
+            <Image
+              alt="report"
+              src={BugIcon}
+              fill
+              className="object-contain"
+            />
+          </div>
+        }
       >
         <span className="text-xs">گزارش</span>
       </Button>

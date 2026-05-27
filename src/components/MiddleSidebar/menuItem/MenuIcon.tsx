@@ -15,7 +15,7 @@ export const MenuIcon = ({
   <Image
     src={src}
     alt="icon"
-    loading="lazy"
+    priority
     draggable={false}
     width={0}
     height={0}
@@ -29,16 +29,20 @@ export const MenuIcon = ({
 
 export const SubMenuIcon = ({
   src,
+  size,
+  className
 }: MenuIconProps) => (
   <Image
     src={src}
     alt="icon"
-    loading="lazy"
+    priority
     draggable={false}
     width={0}
     height={0}
     className={clsx(
-      "h-6 w-6 sm:h-7 sm:w-7 transition-all duration-300 group-hover:rotate-6 group-active:rotate-6"
-     )}
+      "h-6 w-6 sm:h-6 sm:w-6 transition-all duration-300 group-hover:rotate-6 group-active:rotate-6",
+      size && `w-[${size}px] h-[${size}px]`,
+      className
+    )}
   />
 );

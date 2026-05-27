@@ -6,7 +6,7 @@ import BugIcon from '@/../public/images/home-page/menu/bugIcon.svg';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 
 export const ParticipateLoadingSkeleton = ({ firstload }: { firstload?: boolean }) => {
-    console.log('firstload', firstload)
+
     return (
         <div className={`w-full flex flex-col overflow-hidden p-4`}>
             <div className={`flex flex-col bg-white rounded-xl md:h-full max-h-screen h-[100vh]`}>
@@ -19,8 +19,8 @@ export const ParticipateLoadingSkeleton = ({ firstload }: { firstload?: boolean 
                             <MdOutlineKeyboardArrowRight color='#292D32' />
                         </IconButton>
                     }
-                    <p className='text-base font-bold text-[#161616] text-center mx-7'>
-                        <div className="h-6 bg-gray-200 rounded-sm w-44 animate-pulse"></div>
+                    <p className='text-base font-bold text-[#161616] text-center -mr-5'>
+                        <div className="h-6 bg-gray-200 rounded-sm md:w-44 w-24 animate-pulse"></div>
                     </p>
 
                     <Button size='medium' className='rounded-full' sx={{ position: 'absolute', right: '8px' }} endIcon={<Image alt='report' src={BugIcon} height={24} width={24} />}>

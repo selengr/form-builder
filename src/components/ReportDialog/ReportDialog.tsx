@@ -146,22 +146,37 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport, user
           backgroundColor: 'hsl(0deg 0% 100% / 50%)',
         },
       }}>
-      <DialogTitle sx={{ pb: 2, fontWeight: '700', textAlign: 'center' }}> گزارش تخلف </DialogTitle>
+      <DialogTitle sx={{ pb: 2, fontWeight: '600', textAlign: 'center', fontSize: { xs: 14, md: 17 } }}> گزارش تخلف </DialogTitle>
       <DialogContent dividers>
         {loading ? (
           <div className='flex justify-center py-4'>
             <CircularProgress size={24} />
           </div>
         ) : error ? (
-          <div className='text-red-500 text-center py-4'>{error}</div>
+          <div className='text-red-500 text-center py-2'>{error}</div>
         ) : Array.isArray(reportData) && reportData.length > 0 ? (
-          <FormControl component='fieldset' fullWidth margin='normal'>
+          <FormControl component='fieldset' fullWidth margin='normal'
+            sx={{
+
+              '& .MuiFormLabel-root': {
+                fontSize: { xs: 14, md: 16 }
+              },
+              '& .MuiTypography-root': {
+                fontSize: { xs: 12, md: 14 }
+              }
+            }}
+          >
             <FormLabel component='legend' sx={{ mb: 1, fontWeight: '600', color: 'inherit' }}>
               نوع گزارش:
             </FormLabel>
             <RadioGroup aria-label='report-reason' name='report-reason' value={selectedReportKey} onChange={handleRadioChange}>
               {reportData.map((item: any) => (
-                <FormControlLabel key={item.value} value={item.value} control={<Radio size='small' />} label={item.key.split('.').pop()} />
+                <FormControlLabel
+                  key={item.value}
+                  value={item.value}
+
+                  control={<Radio size='small' />}
+                  label={item.key.split('.').pop()} />
               ))}
             </RadioGroup>
           </FormControl>
@@ -172,14 +187,14 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport, user
         <TextField
           multiline
           fullWidth
-          rows={4}
+          rows={3}
           autoFocus
           margin='normal'
           label='توضیحات گزارش'
           placeholder='دلیل گزارش خود را بنویسید...'
           value={reportText}
           onChange={(e) => setReportText(e.target.value)}
-          sx={{ mt: 2 }}
+          sx={{ mt: 2, fontSize: 11 }}
         />
       </DialogContent>
       <DialogActions
@@ -199,7 +214,7 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport, user
           color='primary'
           sx={{
             marginX: '0 !important',
-            height: '52px',
+            height: { xs: 42, md: 52 },
             fontWeight: '600',
             fontSize: '15px',
             borderRadius: '12px',
@@ -215,7 +230,7 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport, user
           variant='outlined'
           sx={{
             marginX: '0 !important',
-            height: '52px',
+            height: { xs: 42, md: 52 },
             fontWeight: '600',
             fontSize: '15px',
             borderRadius: '12px',

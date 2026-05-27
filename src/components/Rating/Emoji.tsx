@@ -1,17 +1,17 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
-import SadIcon from "@/public/images/icons/rating/sad.svg";
-import AngryIcon from "@/public/images/icons/rating/angry.svg";
-import HappyIcon from "@/public/images/icons/rating/happy.svg";
-import LaughIcon from "@/public/images/icons/rating/laugh.svg";
-import NeutralIcon from "@/public/images/icons/rating/neutral.svg";
+import SadIcon from "/public/images/icons/rating/sad.svg";
+import AngryIcon from "/public/images/icons/rating/angry.svg";
+import HappyIcon from "/public/images/icons/rating/happy.svg";
+import LaughIcon from "/public/images/icons/rating/laugh.svg";
+import NeutralIcon from "/public/images/icons/rating/neutral.svg";
 
 
 type EmojiItem = {
     id: number;
     label: string;
-    url: string;
+    icon: string;
 
 };
 
@@ -25,33 +25,13 @@ type EmojiRatingProps = {
 
 
 const EMOJIS: EmojiItem[] = [
-    {
-        id: 1,
-        label: "Very bad",
-        url: "angry.svg",
-    },
-    {
-        id: 2,
-        label: "Bad",
-        url: "neutral.svg",
-    },
-    {
-        id: 3,
-        label: "Okay",
-        url: "happy.svg",
-    },
-    {
-        id: 4,
-        label: "Good",
-        url: "sad.svg",
+    { id: 1, label: "Very bad", icon: AngryIcon },
+    { id: 2, label: "Bad", icon: NeutralIcon },
+    { id: 3, label: "Okay", icon: HappyIcon },
+    { id: 4, label: "Good", icon: SadIcon },
+    { id: 5, label: "Great", icon: LaughIcon },
+];
 
-    },
-    {
-        id: 5,
-        label: "Great",
-        url: "laugh.svg",
-    },
-]
 
 const renderLable = (value: string) => {
     return (
@@ -102,7 +82,7 @@ gap-2 select-none">
                                     className={`relative w-14 h-14 ${isPopping ? "emoji-pop" : ""}`}
                                 >
                                     <Image
-                                        src={`/images/icons/rating/${emoji.url}`}
+                                        src={emoji.icon}
                                         alt={emoji.label}
                                         fill
                                         quality={100}

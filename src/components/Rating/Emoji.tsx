@@ -1,6 +1,12 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
+import SadIcon from "@/public/images/icons/rating/sad.svg";
+import AngryIcon from "@/public/images/icons/rating/angry.svg";
+import HappyIcon from "@/public/images/icons/rating/happy.svg";
+import LaughIcon from "@/public/images/icons/rating/laugh.svg";
+import NeutralIcon from "@/public/images/icons/rating/neutral.svg";
+
 
 type EmojiItem = {
     id: number;

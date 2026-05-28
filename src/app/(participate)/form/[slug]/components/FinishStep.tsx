@@ -28,7 +28,6 @@ interface FinishStepProps {
 }
 
 export function FinishStep({ question, showReportForResponder, takePartId, formName, replace, formId }: FinishStepProps) {
-  const pathname = usePathname();
   const { isInIframe, modalSize } = useIframeDetector();
   const { mutate, isPending } = useShowResultUser();
   const {
@@ -51,7 +50,7 @@ export function FinishStep({ question, showReportForResponder, takePartId, formN
       });
     }
   }, [question.formId, takePartId])
-debugger
+
   if (showReportForResponder) return null
 
   return (

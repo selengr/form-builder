@@ -5,7 +5,7 @@ import ActionButtons from '@/templates/form/ActionButtons';
 import BugIcon from '@/../public/images/home-page/menu/bugIcon.svg';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 
-export const ParticipateLoadingSkeleton = ({ firstload }: { firstload?: boolean }) => {
+export const ParticipateLoadingSkeleton = ({ firstload, isPreview }: { firstload?: boolean; isPreview?: boolean }) => {
 
     return (
         <div className={`w-full flex flex-col overflow-hidden h-[calc(100dvh-76px)] md:h-screen p-2 sm:p-3`}>
@@ -19,57 +19,75 @@ export const ParticipateLoadingSkeleton = ({ firstload }: { firstload?: boolean 
                             <MdOutlineKeyboardArrowRight color='#292D32' />
                         </IconButton>
                     }
-                    <p className='text-base font-bold text-[#161616] text-center -mr-5'>
-                        <div className="h-6 bg-gray-200 rounded-sm md:w-44 w-24 animate-pulse"></div>
-                    </p>
 
-                    <Button
-                        size="medium"
-                        className="rounded-full"
-                        sx={{ position: 'absolute', right: { xs: '2px', sm: '8px' }, top: '50%', transform: 'translateY(-50%)' }}
-                        endIcon={
-                            <div className="relative w-[18px] h-[18px] sm:w-[24px] sm:h-[24px]">
-                                <Image
-                                    alt="report"
-                                    src={BugIcon}
-                                    fill
-                                    className="object-contain"
-                                />
-                            </div>
-                        }
-                    >
-                        <span className="text-xs">گزارش</span>
-                    </Button>
+                    <div className="px-12 mx-5 flex items-center justify-center w-full">
+                        <div className="h-6 w-40 sm:w-48 md:w-64 rounded-md bg-gray-200 animate-pulse max-w-full" />
+                    </div>
+
+                    {!isPreview &&
+                        <Button
+                            size="medium"
+                            className="rounded-full"
+                            sx={{ position: 'absolute', right: { xs: '2px', sm: '8px' }, top: '50%', transform: 'translateY(-50%)' }}
+                            endIcon={
+                                <div className="relative w-[18px] h-[18px] sm:w-[24px] sm:h-[24px]">
+                                    <Image
+                                        alt="report"
+                                        src={BugIcon}
+                                        fill
+                                        className="object-contain"
+                                    />
+                                </div>
+                            }
+                        >
+                            <span className="text-xs">گزارش</span>
+                        </Button>
+                    }
                 </div>
 
                 <div className='flex-1 overflow-y-auto px-4'>
                     <div className='w-full max-w-3xl mx-auto pb-6 animate-pulse'>
-                        <Box display='flex' gap={2} flexDirection='column' width='100%' maxWidth='600px'>
-
-                            <Box sx={{ mt: 10, px: 6 }} className={`
-                                    w-[99%] h-full
-                                    rounded-2full mt-8 p-6
-                                    `}>
-                                <Skeleton
-                                    variant="rectangular"
-                                    height={56}
-                                    sx={{ borderRadius: 1 }}
-                                />
-
-                                <Box sx={{ mt: 5 }}>
-                                    <Skeleton variant="text" width="95%" height={16} />
-                                    <Skeleton variant="text" width="80%" height={16} />
-                                </Box>
-                                <Skeleton variant="text" width="70%" height={14} sx={{ mt: 0.5 }} />
-                            </Box>
-                        </Box>
+                        <div
+                            className={`
+                                w-full h-full
+                                flex items-center
+                                rounded-xl
+                                my-8 p-8 md:p-12
+                            `}
+                            >
+                            <QuestionFieldSkeleton />
+                        </div>
                     </div>
                 </div>
 
-                <div className='shrink-0 w-full flex justify-between items-center px-2 py-4 rounded-xl'>
+                <div className='shrink-0 w-full flex justify-between items-center p-3 rounded-xl'>
                     <ActionButtons disableNext={firstload ? true : false} disablePrev={true} />
                 </div>
             </div>
         </div>
+    );
+};
+
+
+const QuestionFieldSkeleton = () => {
+    return (
+        <Box display='flex' gap={1.5} flexDirection='column' width='100%' maxWidth='600px'>
+            <Box display='flex' flexDirection='column' gap={0.5} width='100%'>
+                <Skeleton variant="text" sx={{ width: { xs: "80%", md: "60%", borderRadius: 1 } }} height={24} />
+                <Skeleton variant="text" sx={{ width: { xs: "50%", md: "20%", borderRadius: 1 } }} height={16} />
+            </Box>
+
+            <Skeleton
+                variant="rectangular"
+                width="100%"
+                height={50}
+                sx={{
+                    borderRadius: '12px',
+                    bgcolor: 'rgba(0,0,0,0.06)',
+                }}
+            />
+
+            <Skeleton variant="text" sx={{ width: { xs: "65%", md: "40%", borderRadius: 1 } }} height={16} />
+        </Box>
     );
 };

@@ -88,7 +88,7 @@ export function QuestionStep({
         </div>
 
         {/* Footer */}
-        <div className='shrink-0 w-full flex justify-between items-center px-2 py-4 rounded-xl'>
+        <div className='shrink-0 w-full flex justify-between items-center p-3 rounded-xl'>
           <ActionButtons loadingNext={questionLoading} disablePrev={prevBlock || questionLoading} nextAction={handleNextStep} prevAction={handlePrevStep} />
         </div>
       </div>

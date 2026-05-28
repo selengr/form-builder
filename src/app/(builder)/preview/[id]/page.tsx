@@ -23,7 +23,7 @@ export default function PreviewPage() {
     window.scrollTo(0, 0);
   }, []);
 
-  if (status === 'loading') return <ParticipateLoadingSkeleton />;
+  if (status === 'loading') return <ParticipateLoadingSkeleton isPreview={true}/>;
 
   if (status === 'notExist') {
     return (
@@ -65,8 +65,7 @@ export default function PreviewPage() {
           </div>
         </div>
 
-        {/* Footer always at bottom */}
-        <div className='shrink-0 w-full flex justify-between items-center px-2 py-4 rounded-xl'>
+        <div className='shrink-0 w-full flex justify-between items-center p-3 rounded-xl'>
           <PreviewProgress />
         </div>
       </div>

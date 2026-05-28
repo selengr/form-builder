@@ -289,25 +289,25 @@ const FormComponent = memo(function FormComponent({
             {...commonTextFieldProps}
           />
         );
-      case 'DATE':
-        return (
-          <Box display='flex' flexDirection='column' gap={1} width='100%'>
-            <DatePickerWrapper isError={!!error}>
-              <DatePickerCustome
-                inputClass='picker-input'
-                value={value}
-                onChange={handleLocalChange as any}
-              />
-              <BsCalendarDate size='1.4rem' className='calendar-icon' color='#424242' />
-            </DatePickerWrapper>
-
-            {!!error && (
-              <Typography color='#d32f2f' variant="caption" sx={{ mt: 0.5, fontSize: '0.75rem' }}>
-                {error}
-              </Typography>
-            )}
-          </Box>
-        );
+     case 'DATE':
+  return (
+    <Box display='flex' flexDirection='column' gap={1} width='100%'>
+      <DatePickerWrapper isError={!!error}>
+        <DatePickerCustome 
+          inputClass='picker-input' 
+          value={value} 
+          onChange={handleLocalChange as any} 
+        />
+        <BsCalendarDate size='1.4rem' className='calendar-icon' color='#424242' />
+      </DatePickerWrapper>
+      
+      {!!error && (
+        <Typography color='#d32f2f' variant="caption" sx={{ mt: 0.5, fontSize: '0.75rem' }}>
+          {error}
+        </Typography>
+      )}
+    </Box>
+  );
 
       case 'TIME':
         return (

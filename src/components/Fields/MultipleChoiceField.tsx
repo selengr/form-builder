@@ -276,6 +276,7 @@ function FormComponent({ elementInstance, onChange, error, value }: { elementIns
           '&.MuiFormLabel-root.MuiFormLabel-colorPrimary.Mui-focused': {
             color: '#353535',
           },
+          textAlign: "justify"
         }}
         id={String(element?.questionId)}>
         {element.title}

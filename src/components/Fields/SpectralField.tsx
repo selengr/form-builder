@@ -337,16 +337,13 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
       <Typography
         sx={{
           marginBottom: description ? '0.5rem' : '3rem',
-          fontSize: '1rem',
+           fontSize: { xs: 15, sm: 16 },
           fontWeight: '600',
+          textAlign: "justify"
         }}>
         {element.title}
       </Typography>
-      {description && (
-        <Typography sx={{ fontSize: '12px', fontWeight: '500', marginBottom: '3rem' }} variant='subtitle2'>
-          {description}
-        </Typography>
-      )}
+
       {spectralType === 'SPECTRAL' ? (
         <>
           <MyRangeSlider
@@ -379,6 +376,11 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
           />
           {!!error && <Typography color='#f44336'>{error}</Typography>}
         </>
+      )}
+     {description && (
+        <Typography sx={{ fontSize: '12px', fontWeight: '500', marginTop: '3rem' }} variant='subtitle2'>
+          {description}
+        </Typography>
       )}
     </Box>
   );

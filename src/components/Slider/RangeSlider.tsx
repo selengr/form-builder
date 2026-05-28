@@ -6,7 +6,7 @@ interface MyRangeSliderProps extends SliderProps {
 
 export const MyRangeSlider = styled(Slider, {
   shouldForwardProp: (prop) => prop !== 'isempty',
-})<MyRangeSliderProps>(({ isempty }) => ({
+})<MyRangeSliderProps>(({ theme, isempty }) => ({
   color: '#2CDFC9',
   height: 30,
   '& .MuiSlider-mark': {
@@ -15,6 +15,17 @@ export const MyRangeSlider = styled(Slider, {
   '& .MuiSlider-markLabel': {
     top: '55px !important',
     color: 'gray',
+
+
+      whiteSpace: 'normal',
+      wordBreak: 'break-word',
+      overflowWrap: 'anywhere',
+      textAlign: 'center',
+      lineHeight: 1.2,
+      maxWidth: '100px',
+      width: 'max-content',
+      transform: 'translateX(-50%)',
+
   },
   '& .MuiSlider-markLabelActive': {
     color: '#1758BA !important',
@@ -68,4 +79,35 @@ export const MyRangeSlider = styled(Slider, {
   '& .MuiSlider-valueLabelOpen': {
     transform: 'translate(0px, 13px) !important',
   },
+
+  [theme.breakpoints.down('sm')]: {
+    height: 32,
+    padding: '12px 0',
+
+    '& .MuiSlider-markLabel': {
+      top: '55px !important',
+      color: 'gray',
+      fontSize: '12px',
+      whiteSpace: 'normal',
+      wordBreak: 'break-word',
+      overflowWrap: 'anywhere',
+      textAlign: 'center',
+      lineHeight: 1.2,
+      maxWidth: '64px',
+      width: 'max-content',
+      transform: 'translateX(-50%)',
+    },
+
+    '& .MuiSlider-valueLabel': {
+      fontSize: 12,
+      '& span': {
+        fontSize: '13px',
+      },
+    },
+
+    '& .MuiSlider-valueLabelOpen': {
+      transform: 'translateY(10px)',
+    },
+  },
+
 }));

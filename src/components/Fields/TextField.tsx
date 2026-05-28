@@ -344,7 +344,7 @@ const FormComponent = memo(function FormComponent({
   return (
     <Box display='flex' gap={1} flexDirection='column' width='100%' maxWidth='600px'>
       <Box display='flex' flexDirection='column' justifyContent='space-between' width='100%'>
-        <Typography sx={{ marginRight: '25px', fontWeight: '600', margin: 0, textAlign: "justify" }}>{element.title}</Typography>
+        <Typography sx={{ fontSize:{ xs: 15, sm: 16 }, marginRight: '25px', fontWeight: '600', margin: 0, textAlign: "justify" }}>{element.title}</Typography>
         {min && max ? (
           <Typography sx={{ fontSize: '12px', direction: 'rtl', textWrap: 'nowrap', fontWeight: '400' }} variant='subtitle2'>
             {min + ' / ' + max}

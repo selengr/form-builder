@@ -413,7 +413,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
               indeterminate={selectedGroupIds.length > 0 && selectedGroupIds.length < groups.length}
               onChange={handleToggleAll}
             />
-            <Typography>انتخاب همه</Typography>
+            <Typography sx={{ fontSize: { xs: '12px', sm: '14px' } }}>انتخاب همه</Typography>
           </Box>
 
           <Box display="flex" flexDirection="column" gap="6px" mb={2} width={"100%"}>
@@ -526,7 +526,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
               disabled={isSubmitting || !isValid}
               sx={{
                 bgcolor: "#1758BA",
-                height: "54px",
+                height: { xs: 45, md: 52 },
                 color: "white",
                 fontSize: { xs: "13px", sm: "16px" },
                 fontWeight: "700",
@@ -551,7 +551,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
               disabled={isSubmitting}
               sx={{
                 width: "161px",
-                height: "54px",
+                height: { xs: 45, md: 52 },
                 fontWeight: "700",
                 borderRadius: "10px",
                 fontSize: "16px",

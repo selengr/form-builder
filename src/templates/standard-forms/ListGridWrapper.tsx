@@ -1,11 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import dynamic from 'next/dynamic';
+import { useState, Suspense } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 // componenst
 import ListCard from './ListCard';
-import ListGrid from './ListGrid';
+const ListGrid = dynamic(() => import('./ListGrid'), {
+  ssr: false,
+});
 import PackagingFilter from './PackagingFilter';
+import ListCardSkeleton from './ListCardSkeleton';
+import ListGridWrapperSkeleton from '@/components/ListGrid/ListGridWrapperSkeleton';
 interface IFormTypeState {
   isCreatedSoloReport: 'ALL' | 'true' | 'false';
   fieldOperation: 'DSC' | 'ASC';
@@ -33,7 +38,7 @@ export default function ListGridWrapper() {
     },
   ];
 
-   const applyFilter = () => {
+  const applyFilter = () => {
     const params = new URLSearchParams(searchParams);
     if (params.size) params.delete('query');
     push(`${pathname}?${params.toString()}`);
@@ -50,14 +55,20 @@ export default function ListGridWrapper() {
   };
 
   return (
-    <>
+    <Suspense fallback={<ListGridWrapperSkeleton
+      name='فرم‌های عمومی'
+      headerName='تعداد کل فرم‌ها'
+      hasCreateBtn={false}
+      hasSidebarFilter={false}
+      SkeletonComponent={ListCardSkeleton}
+    />}>
       <ListGrid
         url={apiAddress}
         title='فرم های پرکاربرد'
         textTotal={['تعداد کل فرم ها', 'عدد']}
         searchBoxList={searchBoxList}
         filterBoxList={filterBoxList}
-         filterComponent={
+        filterComponent={
           <PackagingFilter
             formType={formType}
             setFormType={setFormType}
@@ -72,7 +83,6 @@ export default function ListGridWrapper() {
         refreshGrid={refreshGrid}
         searchQueryFilter={formType}
       />
-
-    </>
+    </Suspense>
   );
 }

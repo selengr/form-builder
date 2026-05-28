@@ -1,12 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import dynamic from 'next/dynamic';
+import { Suspense, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 // views
 import ListCard from './ListCard';
-import ListGrid from './ListGrid';
+import CardSkeleton from './CardSkeleton';
+const ListGrid = dynamic(() => import('./ListGrid'), {
+  ssr: false,
+});
 // images
 import MyAssessmentsFilter from './MyAssessmentsFilter';
+import ListGridWrapperSkeleton from '@/components/ListGrid/ListGridWrapperSkeleton';
 
 type TFormTypeFilter = {
   type: 'ALL' | 'COMPETITION' | 'QUESTION' | 'SURVEY' | 'TEST';
@@ -56,23 +61,31 @@ export default function ListGridWrapper() {
   };
 
   return (
-    <ListGrid
-      title='ارزیابی‌های من'
-      searchBoxList={searchBoxList}
-      filterBoxList={filterBoxList}
-      url='/user/form/main-list'
-      filterComponent={
-        <MyAssessmentsFilter
-          formType={formType}
-          setFormType={setFormType}
-          onApply={handleApply}
-          onReset={handleReset}
-        />
-      }
-      CartComponent={(item: any) => <ListCard {...item} />}
-      disableFilter={false}
-      refreshGrid={refreshGrid}
-      searchQueryFilter={formType}
-    />
+    <Suspense fallback={<ListGridWrapperSkeleton
+      name='ارزیابی‌های من'
+      headerName='تعداد کل فرم‌ها'
+      hasCreateBtn={false}
+      hasSidebarFilter={false}
+      SkeletonComponent={CardSkeleton}
+    />}>
+      <ListGrid
+        title='ارزیابی‌های من'
+        searchBoxList={searchBoxList}
+        filterBoxList={filterBoxList}
+        url='/user/form/main-list'
+        filterComponent={
+          <MyAssessmentsFilter
+            formType={formType}
+            setFormType={setFormType}
+            onApply={handleApply}
+            onReset={handleReset}
+          />
+        }
+        CartComponent={(item: any) => <ListCard {...item} />}
+        disableFilter={false}
+        refreshGrid={refreshGrid}
+        searchQueryFilter={formType}
+      />
+    </Suspense>
   );
 }

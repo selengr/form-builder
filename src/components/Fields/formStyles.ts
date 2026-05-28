@@ -3,7 +3,7 @@ import { SxProps, Theme } from '@mui/material';
 export const commonTextFieldSx: SxProps<Theme> = {
   '& .MuiInputBase-root': {
     padding: 1.5,
-    borderRadius: '10px',
+    borderRadius: '12px',
     backgroundColor: '#fff',
     transition: 'border-color 160ms ease, box-shadow 160ms ease',
   },

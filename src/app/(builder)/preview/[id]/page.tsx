@@ -23,13 +23,6 @@ export default function PreviewPage() {
     window.scrollTo(0, 0);
   }, []);
 
-  // if (status === 'loading') {
-  //   return (
-  //     <div className='w-full h-screen flex justify-center items-center bg-white'>
-  //       <Loading />
-  //     </div>
-  //   );
-  // }
   if (status === 'loading') return <ParticipateLoadingSkeleton />;
 
   if (status === 'notExist') {
@@ -57,13 +50,15 @@ export default function PreviewPage() {
       <div className={`flex flex-col bg-white rounded-xl overflow-hidden h-full shadow-sm`}>
 
         <div className='w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative'>
-          <IconButton sx={{ position: 'absolute', left: '8px' }} onClick={() => router.push(admin ? `/user-reports/${paramId}` : `/builder/${paramId}`)}>
+          <IconButton sx={{ position: 'absolute', left: { xs: '2px', sm: '8px' } }} onClick={() => router.push(admin ? `/user-reports/${paramId}` : `/builder/${paramId}`)}>
             <MdOutlineKeyboardArrowRight color='#292D32' />
           </IconButton>
-          <p className='text-[16px] text-center font-bold text-[#161616]'>{title}</p>
+          <p
+            className="px-8 text-base font-bold text-[#161616] text-center truncate max-w-full"
+            title={title}
+          >{title}</p>
         </div>
 
-        {/* Main content (centered 60%) */}
         <div className='flex-1 overflow-y-auto px-4'>
           <div className='w-full max-w-3xl mx-auto pb-6'>
             <PreviewQuestion />

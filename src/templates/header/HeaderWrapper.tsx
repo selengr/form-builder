@@ -19,7 +19,7 @@ export default function LayoutWrapper({
     "flex grow md:mt-0",
     isSurvey
       ? "min-h-screen"
-      : "min-h-[calc(100vh-75px)] mt-[75px] md:mt-0 md:min-h-screen"
+      : "min-h-[calc(100vh-75px)] mt-[75px] md:mt-0 md:min-h-screen overflow-hidden"
   );
 
   return (

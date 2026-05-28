@@ -1,11 +1,11 @@
 'use client';
 
-import { memo, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { memo, useEffect, useState } from 'react';
 import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
-import DragOverlayWrapper from '../../components/builder/DragOverlayWrapper';
+// components
 import Designer from './Designer';
-import DesignerSkeleton from '@/components/builder/DesignerSidebarSkeleton';
+import DragOverlayWrapper from '../../components/builder/DragOverlayWrapper';
 
 interface FormBuilderProps {
   data: any;

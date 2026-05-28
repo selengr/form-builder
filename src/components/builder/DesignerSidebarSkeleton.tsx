@@ -3,7 +3,7 @@ import { Fragment } from 'react';
 export default function ResponsiveSkeleton() {
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full flex flex-col">
       <div className="bg-white w-full h-full lg:flex-row rounded-xl flex flex-col">
         <div className="rounded-xl h-full w-full flex flex-col-reverse lg:flex-row py-4 lg:justify-center justify-between lg:pr-4 pb-0 flex-grow px-4">
           <div className="py-4 px-0 pt-4 lg:pt-0 w-full max-w-[920px] flex overflow-y-auto lg:pr-4 lg:pl-0 flex-col items-center bg-white gap-4 select-none">

@@ -81,7 +81,7 @@ export default function PublishSettingsDialog({ formId , formData }: PublishSett
         }}>
         <Box className='flex items-center justify-start' sx={{ p: 2, pb : 0 }}>
           <IconButton onClick={handleOpen} aria-label='بستن'>
-            <CgClose color='#404040' size='1.5rem' />
+            <CgClose color='#404040' className="text-[1.25rem] md:text-[1.35rem]" />
           </IconButton>
         </Box>
         <DialogContent
@@ -96,7 +96,7 @@ export default function PublishSettingsDialog({ formId , formData }: PublishSett
             flexDirection: 'column',
           }}>
           <Box className='flex justify-center items-baseline' sx={{ mb: 2 }}>
-            <Typography variant='h6' component='p' fontWeight='bold' textAlign='center'>
+            <Typography variant='h6' component='p' fontWeight='bold' textAlign='center' sx={{fontSize: { xs: '16px', sm: '18px', md: '20px' } }}>
               تنظیمات انتشار
             </Typography>
           </Box>

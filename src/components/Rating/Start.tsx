@@ -106,13 +106,31 @@ export default function StarRating({
         );
     };
 
+    // const renderLable = (value: string) => {
+    //     return (
+    //         <p className="mx-1 text-md font-medium transition-colors">
+    //             {value}
+    //         </p>
+    //     )
+    // };
     const renderLable = (value: string) => {
-        return (
-            <p className="mx-1 text-md font-medium transition-colors">
-                {value}
-            </p>
-        )
-    };
+    return (
+        <p className="
+            mx-1 font-medium transition-colors
+            text-center          
+            whitespace-normal    
+            break-words          
+            sm:max-w-[120px]     
+            xs:max-w-[110px]      
+            max-w-[80px]         
+            leading-tight        
+            xs:text-[12px] sm:text-sm
+        ">
+            {value}
+        </p>
+    );
+};
+
 
     return (
         <div

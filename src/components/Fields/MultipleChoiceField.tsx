@@ -269,7 +269,7 @@ function FormComponent({ elementInstance, onChange, error, value }: { elementIns
     <FormControl sx={{ maxWidth: '750px' }}>
       <FormLabel
         sx={{
-          marginBottom: description ? '0.5rem' : '2rem',
+          marginBottom: '2rem',
           fontWeight: '600',
           color: '#353535',
           fontSize: { xs: 15, sm: 16 },

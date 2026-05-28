@@ -13,19 +13,16 @@ export const MyRangeSlider = styled(Slider, {
     display: 'none !important',
   },
   '& .MuiSlider-markLabel': {
-    top: '55px !important',
-    color: 'gray',
-
-
+      top: '55px !important',
+      color: 'gray',
       whiteSpace: 'normal',
       wordBreak: 'break-word',
       overflowWrap: 'anywhere',
       textAlign: 'center',
       lineHeight: 1.2,
-      maxWidth: '100px',
+      maxWidth: '90px',
       width: 'max-content',
-      transform: 'translateX(-50%)',
-
+      transform: 'translateX(-50%)'
   },
   '& .MuiSlider-markLabelActive': {
     color: '#1758BA !important',
@@ -109,5 +106,4 @@ export const MyRangeSlider = styled(Slider, {
       transform: 'translateY(10px)',
     },
   },
-
 }));

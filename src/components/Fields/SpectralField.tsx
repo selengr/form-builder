@@ -336,7 +336,7 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
     <Box width='100%' maxWidth='1000px'>
       <Typography
         sx={{
-          marginBottom: description ? '0.5rem' : '3rem',
+          marginBottom: '2rem',
            fontSize: { xs: 15, sm: 16 },
           fontWeight: '600',
           textAlign: "justify"

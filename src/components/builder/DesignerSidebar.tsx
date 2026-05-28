@@ -111,7 +111,7 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
 
   const TopBar = (
     <div className="flex justify-between items-center gap-1 bg-[#F7F7FF] px-4 py-2 rounded-lg">
-      <p className="text-[16px] text-[#2a2a2a] font-bold break-words whitespace-pre-wrap">{formTitle}</p>
+      <p className="text-[16px] text-[#2a2a2a] font-bold truncate max-w-full">{formTitle}</p>
       <div className="flex gap-2">
         <Link href={`/preview/${id}`}>
           <IconButton sx={{ height: 40, width: 40 }}>

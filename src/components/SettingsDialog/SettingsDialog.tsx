@@ -55,8 +55,8 @@ const propertiesSchema = z.object({
     .pipe(
       z
         .string()
-        .min(2, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' })
-        .max(50, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' })
+        .min(2, { message: 'حداقل باید 2 و حداکثر 70 کاراکتر باشد' })
+        .max(70, { message: 'حداقل باید 2 و حداکثر 70 کاراکتر باشد' })
     ),
 
   label: z

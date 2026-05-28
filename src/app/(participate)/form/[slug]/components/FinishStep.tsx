@@ -9,7 +9,7 @@ import AnimatedBox from '@/templates/form/AnimatedBox';
 // images
 import finalStep from '@/../public/images/home-page/finalStep.svg';
 // components
-import { Header } from './header';
+import Header from './header';
 import LoginWithPhone from '@/components/common/loginWithPhone';
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
 import BuilderLoading from '@/app/(builder)/builder/[id]/loading';
@@ -51,8 +51,7 @@ export function FinishStep({ question, showReportForResponder, takePartId, formN
       });
     }
   }, [question.formId, takePartId])
-
-  if (isPending) return <BuilderLoading />;
+debugger
   if (showReportForResponder) return null
 
   return (

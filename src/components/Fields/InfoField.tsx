@@ -105,14 +105,13 @@ function FormComponent({ elementInstance }: { elementInstance?: FormElementInsta
 
   return (
     <Box display='flex' gap={1} flexDirection='column' width='100%' maxWidth='600px'>
-      <section className='z-50 text-center lg:text-right lg:w-1/2 mb-3 lg:mb-0'>
+      <section className='z-50 text-center lg:text-right lg:w-1/2'>
         <h1 className='text-base sm:text-lg lg:text-2xl text-[#183B56] font-extrabold leading-tight font-d7'>
           <span className='relative inline-block'>
             <span className='relative z-10'>{element.title}</span>
-            <span className='absolute bottom-0 left-0 w-full h-[50%] bg-[#2cdfc9] z-0 rounded-sm skew-x-4 -skew-y-6'></span>
+            <span className='absolute bottom-0 right-0 w-full max-w-72 h-[50%] bg-[#2cdfc9] rounded-sm skew-x-4 -skew-y-6 -z-50'></span>
           </span>
         </h1>
-
       </section>
 
       {message && (
@@ -121,7 +120,8 @@ function FormComponent({ elementInstance }: { elementInstance?: FormElementInsta
             fontWeight: { xs: 500, sm: 600 },
             fontSize: { xs: 15, sm: 16 },
             whiteSpace: 'pre-line',
-            textAlign: "justify"
+            textAlign: "justify",
+            marginTop: 3
           }}
           component='div'
           dangerouslySetInnerHTML={{ __html: formatTextWithLinksAndLineBreaks(message) }}

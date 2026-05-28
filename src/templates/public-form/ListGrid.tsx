@@ -148,22 +148,23 @@ const ListGrid: React.FC<IProps> = ({
                         </div>
 
                         {/* total - fixed for mobile */}
-                        <div className='flex justify-between gap-2 bg-[#ECFAFF] rounded-2xl px-3 sm:px-[10px] py-3 sm:py-4 w-[calc(100%-16px)] sm:w-full max-w-[400px] mx-auto hover:brightness-98 transition-all duration-200'>
-                            <div className='flex items-center gap-[6px] sm:gap-[10px] flex-shrink-0'>
-                                <Image src={TotalGrid} width={18} height={18} className='sm:w-5 sm:h-5 select-none' alt='total' draggable={false} />
-                                <p className='text-xs sm:text-sm text-[#393939] whitespace-nowrap'>{textTotal[0]}:</p>
+                        <Grid sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} size={{ xs: 12, md: 10, xl: 9 }}>
+                             <div className='flex justify-between gap-2 bg-[#ECFAFF] rounded-2xl px-[10px] py-4 w-full'>
+                                <div className='flex items-center gap-[6px] sm:gap-[10px] flex-shrink-0'>
+                                    <Image src={TotalGrid} width={18} height={18} className='sm:w-5 sm:h-5 select-none' alt='total' draggable={false} />
+                                    <p className='text-xs sm:text-sm text-[#393939] whitespace-nowrap'>{textTotal[0]}:</p>
+                                </div>
+
+
+                                {isFetching ? (
+                                    <div className="w-11 h-5 bg-gray-200 rounded animate-pulse" />
+                                ) : (
+                                    <p className='flex items-center text-xs sm:text-sm text-[#393939] font-bold text-left break-words'>
+                                        {totalData.toLocaleString('fa-IR')}   {textTotal[1]}
+                                    </p>
+                                )}
                             </div>
-
-
-                            {isFetching ? (
-                                <div className="w-11 h-5 bg-gray-200 rounded animate-pulse" />
-                            ) : (
-                                <p className='flex items-center text-xs sm:text-sm text-[#393939] font-bold text-left break-words'>
-                                    {totalData.toLocaleString('fa-IR')}   {textTotal[1]}
-                                </p>
-                            )}
-
-                        </div>
+                        </Grid>
 
                         {/* search row */}
                         <div className={`w-full mt-2 max-w-[470px]`}>
@@ -180,7 +181,7 @@ const ListGrid: React.FC<IProps> = ({
                                 mt: 1,
                                 mb: 5,
                                 pb: 4,
-                                 scrollbarWidth : "none",
+                                scrollbarWidth: "none",
                                 // mr: { xs: 0, md: totalData! > 2 || isFetching ? -1.2 : 0 },
                                 flexDirection: 'column',
                                 gap: 2,

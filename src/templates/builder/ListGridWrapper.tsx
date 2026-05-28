@@ -13,14 +13,7 @@ import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
 import ListGridWrapperSkeleton from '@/components/ListGrid/ListGridWrapperSkeleton';
 
 const ListGrid = dynamic(() => import('@/components/ListGrid/ListGrid'), {
-  ssr: false,
-  loading: () => (
-    <ListGridWrapperSkeleton
-      name='فرم‌های من'
-      headerName='تعداد کل فرم‌ها'
-      SkeletonComponent={ListCardSkeleton}
-    />
-  ),
+  ssr: false
 });
 
 export default function ListGridWrapper() {
@@ -271,6 +264,11 @@ export default function ListGridWrapper() {
   };
 
   return (
+    <Suspense fallback={<ListGridWrapperSkeleton
+      name='فرم‌های من'
+      headerName='تعداد کل فرم‌ها'
+      SkeletonComponent={ListCardSkeleton}
+    />}>
     <ListGrid
       title='فرم‌های من'
       showCreateButton
@@ -284,5 +282,6 @@ export default function ListGridWrapper() {
       searchQueryFilter={formType}
       SkeletonComponent={() => <ListCardSkeleton />}
     />
+      </Suspense>
   );
 }

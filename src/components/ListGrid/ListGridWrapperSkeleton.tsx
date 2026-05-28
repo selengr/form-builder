@@ -128,7 +128,7 @@ export default function ListGridWrapperSkeleton({ name, headerName, SkeletonComp
     );
 
     const renderTotalCountSkeleton = () => (
-        <div className='flex justify-between gap-2 bg-[#ECFAFF] rounded-2xl px-[10px] py-4 w-full max-w-[400px]'>
+        <div className='flex justify-between gap-2 bg-[#ECFAFF] rounded-2xl px-[10px] py-4 w-full'>
             <div className='flex items-center gap-[10px]'>
                 <Image src={TotalGrid} width={20} height={20} alt='filter' draggable={false} />
                 <p className='text-sm text-[#393939]'>{headerName}:</p>
@@ -206,24 +206,24 @@ export default function ListGridWrapperSkeleton({ name, headerName, SkeletonComp
                 >
                     <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
                         {renderHeaderSkeleton()}
+                        <Grid sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} size={{ xs: 12, md: 10, xl: 9 }}>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    gap: '12px',
+                                    width: 1,
+                                    flexWrap: { xs: 'nowrap', sm: 'nowrap' },
+                                }}>
+                                {renderTotalCountSkeleton()}
 
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                gap: '12px',
-                                width: 1,
-                                flexWrap: { xs: 'nowrap', sm: 'nowrap' },
-                            }}>
-                            {renderTotalCountSkeleton()}
-
-                            {hasCreateBtn && <div className='min-w-[50px] w-[50px] h-full'>
-                                <div className='w-[50px] h-[50px] rounded-[16px] border border-gray-300 bg-gray-200 animate-pulse' />
-                            </div>
-                            }
-                        </Box>
-
+                                {hasCreateBtn && <div className='min-w-[50px] w-[50px] h-full'>
+                                    <div className='w-[50px] h-[50px] rounded-[16px] border border-gray-300 bg-gray-200 animate-pulse' />
+                                </div>
+                                }
+                            </Box>
+                        </Grid>
                         {/* Search and filter */}
                         <Grid
                             display='flex'

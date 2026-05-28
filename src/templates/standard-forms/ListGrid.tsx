@@ -155,7 +155,7 @@ const ListGrid: React.FC<Props> = ({
 
   const renderTotalCount = useCallback(
     () => (
-      <div className='flex justify-between gap-2 bg-[#ECFAFF] rounded-2xl px-[10px] py-4 w-full max-w-[400px]'>
+      <div className='flex justify-between gap-2 bg-[#ECFAFF] rounded-2xl px-[10px] py-4 w-full'>
         <div className='flex items-center gap-[10px]'>
           <Image src={TotalGrid} width={20} height={20} alt='filter' draggable={false} />
           <p className='text-sm text-[#393939]'>{textTotal[0]}:</p>
@@ -289,18 +289,20 @@ const ListGrid: React.FC<Props> = ({
         >
           <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
             {renderHeader()}
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: '12px',
-                width: 1,
-                flexWrap: { xs: 'nowrap', sm: 'nowrap' },
-              }}>
-              {renderTotalCount()}
+            <Grid sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} size={{ xs: 12, md: 10, xl: 9 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: '12px',
+                  width: 1,
+                  flexWrap: { xs: 'nowrap', sm: 'nowrap' },
+                }}>
+                {renderTotalCount()}
 
-            </Box>
+              </Box>
+            </Grid>
             {renderSearchAndFilter()}
             <Grid
               id='content'
@@ -312,7 +314,7 @@ const ListGrid: React.FC<Props> = ({
                 mt: 2.5,
                 mb: 5,
                 pb: 4,
-                scrollbarWidth : "none",
+                scrollbarWidth: "none",
                 flexDirection: 'column',
                 gap: 1,
                 overflowY: 'auto',

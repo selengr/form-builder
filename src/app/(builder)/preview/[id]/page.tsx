@@ -1,13 +1,14 @@
 'use client';
 
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import usePreview from '@/hooks/usePreview';
 import { useEffect } from 'react';
-import PreviewQuestion from '@/templates/preview/PreviewQuestion';
-import PreviewProgress from '@/templates/preview/PreviewProgress';
-import Loading from './loading';
 import { Button, IconButton } from '@mui/material';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
+// hooks
+import usePreview from '@/hooks/usePreview';
+// templates
+import PreviewQuestion from '@/templates/preview/PreviewQuestion';
+import PreviewProgress from '@/templates/preview/PreviewProgress';
 import { ParticipateLoadingSkeleton } from '@/app/(participate)/form/[slug]/components/participateSkeleton';
 
 export default function PreviewPage() {

@@ -9,7 +9,7 @@ type PostReportSoloParams = {
 };
 
 export async function postReportSoloAction({ data, isEdit }: PostReportSoloParams) {
-  try {
+  // try {
     const url = isEdit ? `/report/solo/${data?.[0]?.id}` : `/report/solo`;
 
     const res = isEdit
@@ -17,12 +17,12 @@ export async function postReportSoloAction({ data, isEdit }: PostReportSoloParam
       : await serverApi.post(url, data);
 
     return res.data;
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      'انجام عملیات با خطا مواجه شد';
+  // } catch (error: any) {
+  //   const message =
+  //     error?.response?.data?.message?.[0]?.title ||
+  //     error?.response?.data?.message ||
+  //     'انجام عملیات با خطا مواجه شد';
 
-    throw new Error(message);
-  }
+  //   throw new Error(message);
+  // }
 }

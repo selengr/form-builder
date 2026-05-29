@@ -367,6 +367,7 @@ const ListGrid: React.FC<Props> = ({
                     xs: 'calc(100vh - 290px)',
                     md: 'calc(100vh - 210px)',
                   },
+                   scrollbarWidth : "none"
                 }}>
                 {renderContent()}
               </Grid>

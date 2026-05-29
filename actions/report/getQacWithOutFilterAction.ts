@@ -5,7 +5,7 @@ import { serverApi } from '@/services/axios/serverApi';
 export type GetQacWithOutFilterParams = { formId: string | number };
 
 export async function getQacWithOutFilterAction({ formId }: GetQacWithOutFilterParams) {
-  try {
+  // try {
     const customComboFilterModel = {
       type: 'COMBO',
       entity: 'QUESTIONS',
@@ -22,12 +22,12 @@ export async function getQacWithOutFilterAction({ formId }: GetQacWithOutFilterP
 
     const res = await serverApi.get(url);
     return res.data;
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      'انجام عملیات با خطا مواجه شد';
+  // } catch (error: any) {
+  //   const message =
+  //     error?.response?.data?.message?.[0]?.title ||
+  //     error?.response?.data?.message ||
+  //     'انجام عملیات با خطا مواجه شد';
 
-    throw new Error(message);
-  }
+  //   throw new Error(message);
+  // }
 }

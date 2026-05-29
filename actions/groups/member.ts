@@ -8,18 +8,18 @@ export async function changeMemberStatusAction(input: {
   invalid: boolean;
   rememberAllocation: boolean;
 }) {
-  try {
+  // try {
     const res = await serverApi.post(
       '/user-group/introducer/change-status-member',
       input
     );
     return { ok: res.status === 200 };
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      'انجام عملیات با خطا مواجه شد';
+  // } catch (error: any) {
+  //   const message =
+  //     error?.response?.data?.message?.[0]?.title ||
+  //     error?.response?.data?.message ||
+  //     'انجام عملیات با خطا مواجه شد';
 
-    throw new Error(message);
-  }
+  //   throw new Error(message);
+  // }
 }

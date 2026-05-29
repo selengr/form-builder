@@ -2,23 +2,21 @@
 
 import { serverApi } from '@/services/axios/serverApi';
 
+export type ActionResponse<T = any> = {
+  ok: boolean;
+  message?: string;
+  data?: T;
+};
+
 export async function changeGroupStatusAction(input: {
   groupId: number;
   invalid: boolean;
   rememberAllocation: boolean;
-}) {
-  try {
+}): Promise<ActionResponse> {
     const res = await serverApi.post(
       '/user-group/introducer/change-status-group',
       input
     );
+   
     return { ok: res.status === 200 };
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      'انجام عملیات با خطا مواجه شد';
-
-    throw new Error(message);
-  }
 }

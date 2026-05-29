@@ -6,20 +6,20 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
-import React, { ReactNode, useCallback, useEffect, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from '@mui/material';
 // components
-import SearchInput from './SearchInput';
+import EmptyList from './EmptyList';
 import BottomSheet from '../BottomSheet/BottomSheet';
 import CreateFormBtn from '../CreateFormBtn/CreateFormBtn';
 // image
 import Filter from '@/../public/images/home-page/FilterAA.svg';
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 import TotalGrid from '@/../public/images/home-page/total-grid.svg';
-import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
 // action
 import { fetchListGridData } from '../../../actions/listGridActions';
-// import { fetchData } from './dataService';
+import { useDebounce } from '@/hooks/useDebounce';
+import ImmediateSearchInput from './ImmediateSearchInput';
 
 export interface SearchBoxItem {
   fieldName: string;
@@ -28,10 +28,11 @@ export interface SearchBoxItem {
   nextConditionOperator: 'OR' | 'AND';
 }
 interface Props {
+  url: string;
+  title: string;
   searchBoxList: SearchBoxItem[];
   filterBoxList: SearchBoxItem[];
   filterComponent: ReactNode;
-  url: string;
   onCheck?: (id: any, checked: any) => void;
   onDelete?: () => void;
   CartComponent?: React.ComponentType<{
@@ -45,32 +46,35 @@ interface Props {
   textTotal?: [string, string];
   searchQueryFilter?: { type: string; status: string, isCreatedSoloReport: string, fieldOperation: string };
   showCreateButton?: boolean;
-  title: string;
-  CreateButton? : any
+  CreateButton?: () => React.ReactNode;
+  SkeletonComponent: () =>  React.ReactNode;
 }
 
 const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'ALL', isCreatedSoloReport: 'ALL', fieldOperation: "DSC" };
 
 const ListGrid: React.FC<Props> = ({
-  filterComponent,
-  searchBoxList,
-  filterBoxList,
-  CartComponent,
+  title,
   url,
   onCheck,
   refreshGrid,
+  searchBoxList,
+  filterBoxList,
+  CartComponent,
   disableFilter,
+  filterComponent,
   searchQueryFilter = DEFAULT_SEARCH_FILTER,
   showCreateButton = false,
-  title,
   textTotal = ['تعداد کل فرم‌ها', 'عدد'],
-  CreateButton
+  CreateButton,
+  SkeletonComponent
 }) => {
   const [totalData, setTotalData] = useState<number | null>(null);
   const { ref, inView } = useInView();
   const searchParams = useSearchParams();
-  const query = searchParams.get('query')?.toString() || '';
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const [query, setQuery] = useState('');
+  const debouncedSearch = useDebounce(query, 500);
 
   useEffect(() => {
     if (searchParams.get('new') !== null) {
@@ -94,12 +98,13 @@ const ListGrid: React.FC<Props> = ({
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const router = useRouter();
 
-  const updatedSearchBoxList = searchBoxList.map((item) => {
-    if (item.fieldName === 'formSetting.name' && query) {
-      return { ...item, fieldValue: query };
-    }
-    return item;
-  });
+  const updatedSearchBoxList = useMemo(() => {
+    return searchBoxList.map((item) =>
+      item.fieldName === 'formSetting.name'
+        ? { ...item, fieldValue: debouncedSearch }
+        : item
+    );
+  }, [searchBoxList, debouncedSearch]);
 
   const {
     data: pages,
@@ -110,8 +115,8 @@ const ListGrid: React.FC<Props> = ({
     isFetchingNextPage,
     refetch,
   } = useInfiniteQuery({
-    queryKey: ['datas_builder_query', query, searchQueryFilter, filterBoxList],
-    queryFn: ({ pageParam }) => fetchListGridData( {pageParam} , updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
+    queryKey: ['datas_builder_query', debouncedSearch, searchQueryFilter, filterBoxList],
+    queryFn: ({ pageParam }) => fetchListGridData({ pageParam }, updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       const PAGE_SIZE = 10;
@@ -140,10 +145,10 @@ const ListGrid: React.FC<Props> = ({
   }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   useEffect(() => {
-    // if (refreshGrid) {
-    handleRefreshGrid();
-    // }
-  }, [refreshGrid, handleRefreshGrid]);
+    if (refreshGrid) {
+      handleRefreshGrid();
+    }
+  }, [refreshGrid]);
 
   useEffect(() => {
     if (pages?.pages?.[0]?.total !== undefined) {
@@ -153,9 +158,10 @@ const ListGrid: React.FC<Props> = ({
     }
   }, [pages]);
 
-  if (error) {
-    toast.error(error.message);
-  }
+  useEffect(() => {
+    if (error) toast.error((error as Error).message);
+  }, [error]);
+
 
   const renderHeader = useCallback(
     () => (
@@ -171,14 +177,19 @@ const ListGrid: React.FC<Props> = ({
 
   const renderTotalCount = useCallback(
     () => (
-      <div className='flex justify-between gap-2 bg-[#ECFAFF] rounded-2xl px-[10px] py-4 w-full max-w-[400px]'>
+      <div className='flex justify-between gap-2 bg-[#ECFAFF] rounded-2xl px-[10px] py-4 w-full'>
         <div className='flex items-center gap-[10px]'>
           <Image src={TotalGrid} width={20} height={20} alt='filter' draggable={false} />
           <p className='text-sm text-[#393939]'>{textTotal[0]}:</p>
         </div>
-        <p className='flex items-center text-sm text-[#393939] font-bold'>
-          {totalData} {textTotal[1]}
-        </p>
+
+        {isFetching ? (
+          <div className="w-11 h-5 bg-gray-200 rounded animate-pulse" />
+        ) : (
+          <p className='flex items-center text-sm text-[#393939] font-bold'>
+            {totalData} {textTotal[1]}
+          </p>
+        )}
       </div>
     ),
     [totalData, textTotal],
@@ -196,7 +207,7 @@ const ListGrid: React.FC<Props> = ({
           gap: 2,
         }}>
         <Grid size={{ xs: 12, sm: 10 }} sx={{ display: 'flex', alignItems: 'center', gap: '12px', mx: 'auto' }}>
-          <SearchInput />
+          <ImmediateSearchInput onSearch={setQuery} />
           {!disableFilter && (
             <IconButton
               onClick={openFilter}
@@ -222,26 +233,13 @@ const ListGrid: React.FC<Props> = ({
     const allItems = pages?.pages.flatMap((page) => page.data) || [];
     if (isFetching && !isFetchingNextPage) {
       return (
-        <Box sx={{ width: '100%', mt: 2 }}>
-          <LinearProgress />
-        </Box>
+        <SkeletonComponent />
       );
     }
 
     if (allItems.length === 0) {
       return (
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            alignItems: 'center',
-            height: '60vh',
-            width: '100%',
-          }}>
-          <Image src={formListEmpty} alt='No forms found' height={256} priority draggable={false} />
-          <Typography sx={{ fontSize: '18px', color: '#999' }}>موردی یافت نشد</Typography>
-        </Box>
+        <EmptyList error={error?.message} />
       );
     }
 
@@ -280,8 +278,8 @@ const ListGrid: React.FC<Props> = ({
             backgroundColor: 'white',
             borderRadius: '16px',
             gap: 1,
-            m: 1,
             ml: 0,
+            mr: 0,
             p: 2,
             maxWidth: '300px',
           }}>
@@ -292,95 +290,94 @@ const ListGrid: React.FC<Props> = ({
   );
 
   return (
-    <div className={'p-2 h-screen w-full flex flex-col'}>
-      {isFetching && !isFetchingNextPage ? (
-        <Box sx={{ width: '100%' }}>
-          <LinearProgress />
-        </Box>
-      ) : (
+    <div className="p-1 sm:py-2 h-full w-full flex flex-col overflow-hidden">
+      <Grid
+        width="100%"
+        display="flex"
+        sx={{
+          overflowY: 'hidden',
+          height: { xs: 'calc(100vh - 60px)', md: '100vh' },
+          flexDirection: { xs: 'column', lg: 'row' },
+        }}
+      >
         <Grid
-          width='100%'
-          display='flex'
+          container
+          flexDirection="column"
+          alignItems="center"
           sx={{
-            overflowY: 'hidden',
-            userSelect: 'none',
-            height: { xs: 'calc(100vh - 60px)', md: '100vh' },
-            flexDirection: { xs: 'column', lg: 'row' },
-          }}>
-          <Grid
-            display='flex'
-            flexDirection='column'
-            justifyContent='flex-start'
-            alignItems='center'
-            container
-            sx={{
-              bgcolor: 'white',
-              borderRadius: '16px',
-              p: 2,
-              mx: 1,
-              width: 1,
-              overflowY: 'hidden',
-              height: '100%',
-            }}>
-            <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
-              {renderHeader()}
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  gap: '12px',
-                  width: 1,
-                  flexWrap: { xs: 'nowrap', sm: 'nowrap' },
-                }}>
-                {renderTotalCount()}
-                {showCreateButton && (
-                  <div className='min-w-[50px] w-[50px] h-full'>
-                    <IconButton
-                      onClick={handleOpenDialog}
-                      sx={{
-                        width: '50px',
-                        height: '50px',
-                        borderRadius: '16px',
-                        border: '1px solid #1758BA',
-                      }}>
-                      <Image src={PlusIcon} alt='' width={22} height={22} />
-                    </IconButton>
+            bgcolor: 'white',
+            borderRadius: '16px',
+            p: { xs: 1, sm: 2 },
+            mx: { xs: 0, sm: 1 },
+            width: 1,
+            overflow: 'hidden',
+          }}
+        >
 
-                    <CreateFormBtn open={isDialogOpen} onClose={handleCloseDialog} />
-                  </div>
-                )}
-                {CreateButton && CreateButton()}
-              </Box>
-              {renderSearchAndFilter()}
-              <Grid
-                id='content'
-                container
-                flexWrap='nowrap'
-                sx={{
-                  width: 1,
-                  mx: 'auto',
-                  mt: 1,
-                  mb: 5,
-                  pb: 4,
-                  flexDirection: 'column',
-                  gap: 2,
-                  overflowY: 'auto',
-                  height: {
-                    xs: 'calc(100vh - 290px)',
-                    md: 'calc(100vh - 210px)',
-                  },
-                }}>
-                {renderContent()}
-              </Grid>
+          <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
+            {renderHeader()}
+           <Grid sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} size={{ xs: 12, md: 10, xl: 9 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '12px',
+                width: "100%",
+                flexWrap: { xs: 'nowrap', sm: 'nowrap' },
+              }}>
+              {renderTotalCount()}
+              {showCreateButton && (
+                <div className='min-w-[50px] w-[50px] h-full'>
+                  <IconButton
+                    onClick={handleOpenDialog}
+                    sx={{
+                      width: '50px',
+                      height: '50px',
+                      borderRadius: '16px',
+                      border: '1px solid #1758BA',
+                    }}>
+                    <Image src={PlusIcon} alt='' width={22} height={22} />
+                  </IconButton>
+
+                  <CreateFormBtn open={isDialogOpen} onClose={handleCloseDialog} />
+                </div>
+              )}
+              {CreateButton && CreateButton()}
+            </Box>
             </Grid>
-            <BottomSheet open={isFilterOpen} onClose={() => setIsFilterOpen(false)}>
-              <Grid>{filterComponent}</Grid>
-            </BottomSheet>
+            {renderSearchAndFilter()}
+            <Grid
+              id='content'
+              container
+              flexWrap='nowrap'
+              sx={{
+                width: 1,
+                mt: 1,
+                mb: 5,
+                pb: 4,
+                // mr: { xs: 0, md: totalData! > 2 || isFetching ? -1.2 : 0 },
+                flexDirection: 'column',
+                gap: 2,
+                overflowY: 'auto',
+                px: { xs: 0, sm: 0 },
+                mx: { xs: 0, sm: 'auto' },
+                height: {
+                  xs: 'calc(100vh - 310px)',
+                  sm: 'calc(100vh - 290px)',
+                  md: 'calc(100vh - 230px)',
+                },
+                scrollbarWidth : "none"
+              }}>
+              {renderContent()}
+            </Grid>
           </Grid>
-          {renderDesktopFilter()}
+          <BottomSheet open={isFilterOpen} onClose={() => setIsFilterOpen(false)}>
+            <Grid>{filterComponent}</Grid>
+          </BottomSheet>
         </Grid>
-      )}
+        {renderDesktopFilter()}
+      </Grid>
     </div>
   );
 };

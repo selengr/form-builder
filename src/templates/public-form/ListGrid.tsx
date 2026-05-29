@@ -6,16 +6,17 @@ import { useRouter } from 'next/navigation';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
-import React, { Suspense, useEffect, useMemo, useState } from 'react';
-import { Box, Grid2 as Grid, IconButton, LinearProgress, Typography } from '@mui/material';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Box, Grid2 as Grid, IconButton, LinearProgress } from '@mui/material';
 // image
 import TotalGrid from '@/../public/images/home-page/total-grid.svg';
-import formListEmpty from '@/../public/images/home-page/formListEmpty.png';
 // hooks
 import { useDebounce } from '@/hooks/useDebounce';
 // action
 import { fetchListGridData } from '../../../actions/listGridActions';
 // components
+import CardSkeleton from './CardSkeleton';
+import EmptyList from '@/components/ListGrid/EmptyList';
 import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
 
 export interface SearchBoxItem {
@@ -109,7 +110,6 @@ const ListGrid: React.FC<IProps> = ({
 
     return (
         <div className="p-1 sm:py-2 h-full w-full flex flex-col overflow-hidden">
-            {isFetching && !isFetchingNextPage && <LinearProgress />}
 
             <Grid
                 width="100%"
@@ -148,22 +148,28 @@ const ListGrid: React.FC<IProps> = ({
                         </div>
 
                         {/* total - fixed for mobile */}
-                        <div className='flex justify-between gap-2 bg-[#ECFAFF] rounded-2xl px-3 sm:px-[10px] py-3 sm:py-4 w-[calc(100%-16px)] sm:w-full max-w-[400px] mx-auto hover:brightness-98 transition-all duration-200'>
-                            <div className='flex items-center gap-[6px] sm:gap-[10px] flex-shrink-0'>
-                                <Image src={TotalGrid} width={18} height={18} className='sm:w-5 sm:h-5 select-none' alt='total' draggable={false} />
-                                <p className='text-xs sm:text-sm text-[#393939] whitespace-nowrap'>{textTotal[0]}:</p>
+                        <Grid sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} size={{ xs: 12, md: 10, xl: 9 }}>
+                             <div className='flex justify-between gap-2 bg-[#ECFAFF] rounded-2xl px-[10px] py-4 w-full'>
+                                <div className='flex items-center gap-[6px] sm:gap-[10px] flex-shrink-0'>
+                                    <Image src={TotalGrid} width={18} height={18} className='sm:w-5 sm:h-5 select-none' alt='total' draggable={false} />
+                                    <p className='text-xs sm:text-sm text-[#393939] whitespace-nowrap'>{textTotal[0]}:</p>
+                                </div>
+
+
+                                {isFetching ? (
+                                    <div className="w-11 h-5 bg-gray-200 rounded animate-pulse" />
+                                ) : (
+                                    <p className='flex items-center text-xs sm:text-sm text-[#393939] font-bold text-left break-words'>
+                                        {totalData.toLocaleString('fa-IR')}   {textTotal[1]}
+                                    </p>
+                                )}
                             </div>
-                            <p className='flex items-center text-xs sm:text-sm text-[#393939] font-bold text-left break-words'>
-                                {totalData.toLocaleString('fa-IR')} {textTotal[1]}
-                            </p>
-                        </div>
+                        </Grid>
 
                         {/* search row */}
-                            <div className={`w-full mt-2 max-w-[470px] ${items.length > 4 ? "sm:ml-4" : "sm:ml-0"}`}>
-                                <Suspense fallback={<div>در حال بارگذاری جستجو...</div>}>
-                                    <ImmediateSearchInput onSearch={setQuery} />
-                                </Suspense>
-                            </div>
+                        <div className={`w-full mt-2 max-w-[470px]`}>
+                            <ImmediateSearchInput onSearch={setQuery} />
+                        </div>
 
                         {/* content */}
                         <Grid
@@ -175,6 +181,8 @@ const ListGrid: React.FC<IProps> = ({
                                 mt: 1,
                                 mb: 5,
                                 pb: 4,
+                                scrollbarWidth: "none",
+                                // mr: { xs: 0, md: totalData! > 2 || isFetching ? -1.2 : 0 },
                                 flexDirection: 'column',
                                 gap: 2,
                                 overflowY: 'auto',
@@ -186,18 +194,24 @@ const ListGrid: React.FC<IProps> = ({
                                     md: 'calc(100vh - 230px)',
                                 },
                             }}>
+                            {isFetching && !isFetchingNextPage && (
+                                <CardSkeleton />
+                            )}
+
+
                             {items.length === 0 && !isFetching && (
                                 <Box
                                     sx={{
                                         display: 'flex',
+                                        justifyContent: 'center',
                                         flexDirection: 'column',
                                         alignItems: 'center',
-                                        mt: 10,
-                                        px: 2,
+                                        height: '100%',
+                                        width: '100%',
                                     }}
                                 >
-                                    <Image src={formListEmpty} height={200} className="sm:h-[250px] w-auto" alt="empty" />
-                                    <Typography sx={{ mt: 2 }}>موردی یافت نشد</Typography>
+                                    <EmptyList error={error?.message} />
+
                                 </Box>
                             )}
 

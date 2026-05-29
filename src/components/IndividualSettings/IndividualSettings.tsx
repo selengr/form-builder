@@ -58,6 +58,7 @@ const textFieldCommonSx = {
     bgcolor: '#fff',
     borderRadius: '10px',
     paddingY: '0',
+    fontSize: { xs: '12px', sm: '14px' },
   },
 };
 
@@ -66,7 +67,18 @@ const inputFieldContainerSx = {
   flexDirection: 'column',
   gap: '8px',
   width: '100%',
-  paddingX: 0.5,
+  // paddingX: 0.5,
+   '& input': {
+    fontSize: { xs: '14px', sm: '16px' },
+    padding: { xs: '13px', sm: '15px' },
+  },
+  '& .MuiInputLabel-root': {
+    fontSize: { xs: '12px', sm: '14px' },
+  }
+};
+const TypographySx = {
+  fontSize: { xs: '12px', sm: '14px' },
+  fontWeight: { xs: 500, sm: 600 },
 };
 
 const nameSchema = z
@@ -356,13 +368,13 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
           }}>
           <Box display='flex' gap={1} width='100%'>
             <Box sx={inputFieldContainerSx}>
-              <Typography variant='subtitle2' fontWeight='700'>
+              <Typography variant='subtitle2' sx={TypographySx}>
                 نام:
               </Typography>
               <RHFTextField disabled={!!introducedUserJTGroupId} sx={textFieldCommonSx} name='name' fullWidth />
             </Box>
             <Box sx={inputFieldContainerSx}>
-              <Typography variant='subtitle2' fontWeight='700'>
+              <Typography variant='subtitle2' sx={TypographySx}>
                 نام خانوادگی:
               </Typography>
               <RHFTextField disabled={!!introducedUserJTGroupId} sx={textFieldCommonSx} name='family' fullWidth />
@@ -371,7 +383,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
 
           <Box display='flex' gap={1} width='100%'>
             <Box sx={inputFieldContainerSx}>
-              <Typography variant='subtitle2' fontWeight='700'>
+              <Typography variant='subtitle2' sx={TypographySx}>
                 تلفن همراه:
               </Typography>
               <RHFTextField
@@ -389,7 +401,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
               />
             </Box>
             <Box sx={inputFieldContainerSx}>
-              <Typography variant='subtitle2' fontWeight='700'>
+              <Typography variant='subtitle2' sx={TypographySx}>
                 جنسیت:
               </Typography>
               <RHFSelect disabled={!!introducedUserJTGroupId} fullWidth name='gender' sx={textFieldCommonSx} >
@@ -405,8 +417,8 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
               </RHFSelect>
             </Box>
           </Box>
-          <Box display='flex' justifyContent='space-between' alignItems='center' mx={2} mt={2}>
-            <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>
+          <Box display='flex' justifyContent='space-between' alignItems='center' mx={{xs: 0, md :1}} mt={2}>
+            <Typography variant='subtitle2' sx={TypographySx}>
               نمایش نتیجه به پاسخ دهنده
             </Typography>
             <SwitchButton
@@ -507,7 +519,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
               disabled={isSubmitting || !isValid && removedMember.length === 0}
               sx={{
                 bgcolor: '#1758BA',
-                height: '54px',
+                height: { xs: 45, md: 52 },
                 color: 'white',
                 fontSize: {
                   xs: '13px',
@@ -528,7 +540,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
               type='button'
               fullWidth
               sx={{
-                height: '54px',
+                height: { xs: 45, md: 52 },
                 fontWeight: '700',
                 borderRadius: '10px',
                 fontSize: '16px',

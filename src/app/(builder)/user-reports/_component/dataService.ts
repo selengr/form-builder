@@ -52,7 +52,7 @@ export async function fetchData(
   });
 
   const searchFilterBoxListPayload = [{ restrictionList: validCombinedRestrictionList }];
-
+  
   const params = {
     searchFilterBoxList: searchFilterBoxListPayload,
     sortList: [{ fieldName: 'id', type: searchQueryFilter.fieldOperation  }],

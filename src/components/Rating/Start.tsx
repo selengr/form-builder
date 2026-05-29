@@ -92,6 +92,7 @@ export default function StarRating({
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4 8.24 4 9.91 4.81 11 6.09 12.09 4.81 13.76 4 15.5 4 18 4 20 6 20 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                 </svg>
             );
+
         return (
             <svg
                 viewBox="0 0 24 24"
@@ -107,12 +108,23 @@ export default function StarRating({
     };
 
     const renderLable = (value: string) => {
-        return (
-            <p className="mx-1 text-md font-medium transition-colors">
-                {value}
-            </p>
-        )
-    };
+    return (
+        <p className="
+            mx-1 font-medium transition-colors
+            text-center          
+            whitespace-normal    
+            break-words          
+            sm:max-w-[120px]     
+            xs:max-w-[110px]      
+            max-w-[80px]         
+            leading-tight        
+            xs:text-[12px] sm:text-sm
+        ">
+            {value}
+        </p>
+    );
+};
+
 
     return (
         <div

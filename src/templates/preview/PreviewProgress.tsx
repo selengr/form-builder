@@ -35,7 +35,7 @@ export default function PreviewProgress() {
           disabled={index === 0}
           sx={{
             width: 120,
-            height: 52,
+            height: { xs: 42, sm: 52 },
             borderRadius: 0,
             bgcolor: '#1758BA',
             boxShadow: 'none',
@@ -45,7 +45,7 @@ export default function PreviewProgress() {
         </Button>
 
         <div className='w-full flex items-center justify-center px-4'>
-          <Typography fontSize={16} fontWeight={600}>
+          <Typography fontSize={{ xs: 13, sm: 15 }} fontWeight={600}>
             سوال {numQuestions === 0 ? 0 : index + 1} از {numQuestions}
           </Typography>
         </div>
@@ -56,7 +56,7 @@ export default function PreviewProgress() {
           disabled={index + 1 === numQuestions || numQuestions === 0}
           sx={{
             width: 120,
-            height: 52,
+            height: { xs: 42, sm: 52 },
             borderRadius: 0,
             bgcolor: '#1758BA',
             boxShadow: 'none',

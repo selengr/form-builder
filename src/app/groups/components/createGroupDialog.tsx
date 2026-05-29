@@ -80,7 +80,7 @@ export function CreateGroupDialog({ onClose, onSubmit }: CreateGroupDialogProps)
   return (
     <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50'>
       <div className='bg-white rounded-xl p-6 w-full max-w-md flex flex-col gap-4'>
-        <h2 className='text-xl font-bold text-[#2a2a2a] text-center'>ایجاد گروه جدید</h2>
+        <h2 className='text-sm md:text-lg font-bold text-[#2a2a2a] text-center'>ایجاد گروه جدید</h2>
 
         <div className='flex flex-col gap-2'>
           <label htmlFor='group-name' className='text-sm font-medium text-gray-700'>
@@ -89,14 +89,14 @@ export function CreateGroupDialog({ onClose, onSubmit }: CreateGroupDialogProps)
           <input
             id='group-name'
             type='text'
-            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${error ? 'border-red-500 focus:ring-red-300' : 'border-gray-300 focus:ring-[#1758BA]'}`}
+            className={`text-xs md:text-sm w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${error ? 'border-red-500 focus:ring-red-300' : 'border-gray-300 focus:ring-[#1758BA]'}`}
             value={groupName}
             onChange={(e) => setGroupName(e.target.value)}
             placeholder='مثال: گروه کارکنان'
           />
         </div>
 
-        <div className='bg-gray-100 rounded-lg max-h-[150px] flex items-center justify-center text-gray-500 border border-dashed border-gray-300'>
+        <div className='text-xs md:text-sm bg-gray-100 rounded-lg max-h-[150px] flex items-center justify-center text-gray-500 border border-dashed border-gray-300'>
           <UploaderPage onFileUploadSuccess={handleReceivedFileId} />
         </div>
 
@@ -105,10 +105,10 @@ export function CreateGroupDialog({ onClose, onSubmit }: CreateGroupDialogProps)
         {error && <p className='text-red-600 text-sm text-center mt-2'>{error}</p>}
 
         <div className='flex justify-center gap-3 mt-1 w-2/3 mx-auto'>
-          <button onClick={handleSubmit} disabled={loading} className='px-5 py-3 w-full bg-[#1758BA] text-white rounded-lg hover:bg-[#216ee1] transition disabled:opacity-50'>
+          <button onClick={handleSubmit} disabled={loading} className='px-5 py-1 md:py-3 w-full bg-[#1758BA] text-white rounded-lg hover:bg-[#216ee1] transition disabled:opacity-50'>
             {loading ? 'در حال ارسال...' : 'ثبت'}
           </button>
-          <button onClick={onClose} className='px-5 py-3 border w-full border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition'>
+          <button onClick={onClose} className='px-5 py-1 md:py-3 border w-full border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition'>
             انصراف
           </button>
         </div>
@@ -130,12 +130,12 @@ export function DownloadSampleButton() {
   return (
     <div className='bg rounded-lg max-h-[150px] flex flex-col items-center justify-center text-gray-600 border border-dashed border-gray-300 p-4'>
 
-      <p className="text-sm text-gray-500 mb-2">
+      <p className="text-xs md:text-sm text-gray-500 mb-2">
         این یک فایل نمونه ایجاد گروه است. لطفاً آن را دانلود کرده و مطابق فرمت آن فایل خود را تکمیل و بارگذاری کنید.
       </p>
       <button
         onClick={downloadSampleFile}
-        className="px-4 py-2 bg-[#1758BA] text-white rounded-lg flex items-center gap-2 hover:bg-[#216ee1] transition shadow-sm hover:shadow-md"
+        className="text-xs md:text-sm py-1 px-4 sm:py-2 bg-[#1758BA] text-white rounded-lg flex items-center gap-2 hover:bg-[#216ee1] transition shadow-sm hover:shadow-md"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

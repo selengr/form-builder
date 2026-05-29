@@ -9,9 +9,9 @@ interface PublishFormParams {
 }
 
 export async function publishFormServer({ formId, survey, dataCollection }: PublishFormParams) {
-  if (!formId) throw new Error('Form id is required');
+  // if (!formId) throw new Error('Form id is required');
 
-  try { 
+  // try { 
     if (survey) {
       return await serverApi.put(`/admin/form/survey/finalization/${formId}`);
     } else if (dataCollection) {
@@ -19,14 +19,14 @@ export async function publishFormServer({ formId, survey, dataCollection }: Publ
     } else {
       return await serverApi.put(`/form/ready-to-publish/${formId}`);
     }
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      'انجام عملیات با خطا مواجه شد';
+  // } catch (error: any) {
+  //   const message =
+  //     error?.response?.data?.message?.[0]?.title ||
+  //     error?.response?.data?.message ||
+  //     'انجام عملیات با خطا مواجه شد';
 
-    throw new Error(message);
-  }
+  //   throw new Error(message);
+  // }
 }
 
 export async function publishFormAction(formId: string|string[], survey: boolean, dataCollection: boolean ) {

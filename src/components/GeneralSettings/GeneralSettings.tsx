@@ -154,7 +154,7 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
         toast.success('با موفقیت به سبد خرید افزوده شد.', {
           className: `max-w-[300px]`,
           duration: 6000,
-          action: { 
+          action: {
             label: 'مشاهده سبد خرید',
             onClick: () => {
               push('/purchase-order');
@@ -162,9 +162,9 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
           },
         });
 
-     } catch (error:any) {
-        toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
-    }
+      } catch (error: any) {
+        toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
+      }
     },
     [formId, handleOpen, reset, setError],
   );
@@ -199,14 +199,14 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
           display: 'flex',
           flexDirection: 'column',
           height: '100%',
-          paddingX: 1.5,
+          paddingX: { xs: 1, md: 1.5 },
           direction: 'ltr',
           width: '100%',
           gap: 1,
         }}>
         <Box display='flex' gap={1} mt={4}>
           <IconButtonContainer>
-            <LuRefreshCcw size='1.5rem' color='#1758BA' />
+            <LuRefreshCcw className="text-[1.25rem] md:text-[1.35rem] mx-2 md:m-0" color='#1758BA' />
           </IconButtonContainer>
 
           <RHFTextField
@@ -223,7 +223,7 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
             }}
           />
 
-          <CopyToClipboardButton link={FINAL_LINK} icon={<LuCopy size='1.5rem' color='#1758BA' />} />
+          <CopyToClipboardButton link={FINAL_LINK} icon={<LuCopy className="text-[1.25rem] md:text-[1.35rem] mx-2 md:m-0" color='#1758BA' />} />
 
           <IconButtonContainer>
             <Share
@@ -232,12 +232,12 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
                 text: 'لینک سایا',
                 url: FINAL_LINK,
               }}>
-              <IoShareSocialSharp size='1.5rem' color='#1758BA' />
+              <IoShareSocialSharp className="text-[1.25rem] md:text-[1.35rem] mx-2 md:m-0" color='#1758BA' />
             </Share>
           </IconButtonContainer>
         </Box>
 
-        <Box display='flex' alignItems='center' justifyContent='space-between' gap={3} mt={1}>
+        <Box display='flex' alignItems='center' justifyContent='space-between' gap={{ xs: 2, md: 2 }} mt={1}>
           <Box display='flex' flexDirection='column' gap={1} flex={1}>
             <Typography fontWeight={700} fontSize='14px'>
               ظرفیت:
@@ -313,7 +313,7 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
           loading={isSubmitting}
           sx={{
             bgcolor: 'primary.main',
-            height: 54,
+            height: { xs: 45, md: 52 },
             color: 'white',
             fontSize: { xs: '13px', sm: '16px' },
             fontWeight: 700,
@@ -336,7 +336,7 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
           variant='outlined'
           onClick={handleCancel}
           sx={{
-            height: 54,
+            height: { xs: 45, md: 52 },
             fontWeight: 700,
             borderRadius: '10px',
             fontSize: { xs: '13px', sm: '16px' },

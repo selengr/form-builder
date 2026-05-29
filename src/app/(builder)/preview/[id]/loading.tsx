@@ -1,11 +1,5 @@
-import { ImSpinner2 } from 'react-icons/im';
+import { ParticipateLoadingSkeleton } from "@/app/(participate)/form/[slug]/components/participateSkeleton";
 
-function PreviewLoading() {
-  return (
-    <div className='flex items-center justify-center w-full h-full'>
-      <ImSpinner2 className='animate-spin h-12 w-12' />
-    </div>
-  );
+export default function PreviewLoading() {
+  return <ParticipateLoadingSkeleton firstload={true} isPreview/>
 }
-
-export default PreviewLoading;

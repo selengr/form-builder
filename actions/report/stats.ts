@@ -7,7 +7,7 @@ export async function getStatsDataAction(
   page: number = 1,
   pageSize: number = 25
 ) {
-  try {
+  // try {
     const rows = pageSize === -1 ? 100000 : pageSize;
     const pageNumber = pageSize === -1 ? 0 : page - 1;
 
@@ -38,26 +38,26 @@ export async function getStatsDataAction(
       allData: dataWithIndex,
       totalItems: rawData.totalElements || rawData.content.length,
     };
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      'انجام عملیات با خطا مواجه شد';
+  // } catch (error: any) {
+  //   const message =
+  //     error?.response?.data?.message?.[0]?.title ||
+  //     error?.response?.data?.message ||
+  //     'انجام عملیات با خطا مواجه شد';
 
-    throw new Error(message);
-  }
+  //   throw new Error(message);
+  // }
 }
 
 export async function getFormDataAction(id: string) {
-  try {
+  // try {
     const response = await serverApi.get(`/form/${id}`);
     return response.data;
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      'انجام عملیات با خطا مواجه شد';
+  // } catch (error: any) {
+  //   const message =
+  //     error?.response?.data?.message?.[0]?.title ||
+  //     error?.response?.data?.message ||
+  //     'انجام عملیات با خطا مواجه شد';
 
-    throw new Error(message);
-  }
+  //   throw new Error(message);
+  // }
 }

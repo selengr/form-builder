@@ -99,48 +99,49 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
   };
 
   return (
-    <div className="border p-4 rounded-2xl border-[#DDE1E6] flex flex-col gap-3 w-full max-w-full relative">
+    <div className="border p-4 rounded-2xl border-[#DDE1E6] flex flex-col gap-3 w-full max-w-full relative hover:shadow-sm transition-shadow duration-200">
       {/* دکمه گزارش */}
       <div className="absolute top-2 left-2 z-10">
         <Button
           onClick={handleReport}
           size="medium"
-          className="rounded-full"
-          endIcon={<Image alt="report" src={BugIcon} height={24} width={24} />}
+          className="rounded-full min-w-[70px]"
+          endIcon={<Image alt="report" src={BugIcon} height={20} width={20} />}
         >
-          <span className="text-xs">گزارش</span>
+          <span className="text-xs whitespace-nowrap">گزارش</span>
         </Button>
       </div>
 
       {/* اطلاعات فرم */}
-      <InfoRow label="نام" value={data.name} bold />
-      <InfoRow label="نوع" value={formTypePersian[data.type]} bold />
-      {showStatus && (
-        <InfoRow
-          label="وضعیت"
-          value={data.takeParts.length > 0 ? 'انجام شده' : 'انجام نشده'}
-          bold
-        />
-      )}
+      <div className="space-y-2">
+        <InfoRow label="نام" value={data.name} bold />
+        <InfoRow label="نوع" value={formTypePersian[data.type]} bold />
+        {showStatus && (
+          <InfoRow
+            label="وضعیت"
+            value={data.takeParts.length > 0 ? 'انجام شده' : 'انجام نشده'}
+            bold
+          />
+        )}
+      </div>
 
       {/* دکمه اصلی */}
-      <div className="flex w-full gap-2 flex-row">
+      <div className="flex w-full gap-2 flex-row mt-2">
         <button
           disabled={buttonDisabled}
-          className="bg-[#1758BA] disabled:bg-slate-300 hover:bg-[#216ee1] transition duration-200 max-w-full sm:max-w-[200px] px-2 h-[42px] w-full text-[14px] rounded-lg text-white"
+          className="bg-[#1758BA] disabled:bg-slate-300 hover:bg-[#216ee1] transition duration-200 px-3 h-[42px] w-full sm:w-auto sm:flex-1 text-[14px] rounded-lg text-white disabled:cursor-not-allowed"
           onClick={handleClick}
         >
           {buttonText}
         </button>
-        {/* { data.takeParts.length > 0 && */}
-        {data.showReportForResponder   &&
+        {data.showReportForResponder && (
           <button
-            className="bg-[#2CDFC9] disabled:bg-slate-300 hover:bg-[#2CDFC9] transition duration-200 max-w-full sm:max-w-[200px] px-2 h-[42px] w-full text-[14px] rounded-lg text-white"
+            className="bg-[#2CDFC9] disabled:bg-slate-300 hover:bg-[#2CDFC9] transition duration-200 px-3 h-[42px] w-full sm:w-auto sm:flex-1 text-[14px] rounded-lg text-white"
             onClick={handleShowResult}
           >
             مشاهده نتیجه
           </button>
-        }
+        )}
       </div>
 
       {dialogState === 'login' && (

@@ -1,12 +1,20 @@
 'use client';
 
+import Image from 'next/image';
+import { Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import React, { useState } from 'react';
-import ListGrid from '@/components/ListGrid/ListGrid';
-import ListCard from '@/components/ListGrid/ListCard';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
-import Image from 'next/image';
+// componnets
+import ListCard from '@/components/ListGrid/ListCard';
+import ListCardSkeleton from '@/components/ListGrid/ListCardSkeleton';
 import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
+import ListGridWrapperSkeleton from '@/components/ListGrid/ListGridWrapperSkeleton';
+
+const ListGrid = dynamic(() => import('@/components/ListGrid/ListGrid'), {
+  ssr: false
+});
 
 export default function ListGridWrapper() {
   const [refreshGrid, setRefreshGrid] = useState(false);
@@ -54,7 +62,7 @@ export default function ListGridWrapper() {
 
   const FilterSidebar = () => {
     return (
-      <div className='flex h-[calc(100vh-50px)] w-full flex-col'>
+      <div className='flex h-[calc(100vh-50px)] w-full flex-col overflow-y-hidden'>
         {/* هدر فیلتر */}
         <div className='w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4'>
           <div className='flex items-center w-full justify-center gap-2'>
@@ -64,9 +72,9 @@ export default function ListGridWrapper() {
         </div>
 
         {/* محتوای فیلترها */}
-        <div className='flex-1 overflow-y-auto pb-4'>
+        <div className='flex-1 overflow-y-auto pb-4' style={{ scrollbarWidth: 'thin' }}>
           <div className='flex flex-col gap-4 w-full'>
-            <div className='flex flex-col gap-4'>
+            <div className='flex flex-col gap-4' >
               {/* بخش نوع فیلتر */}
               <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
                 <FormControl
@@ -256,6 +264,11 @@ export default function ListGridWrapper() {
   };
 
   return (
+    <Suspense fallback={<ListGridWrapperSkeleton
+      name='فرم‌های من'
+      headerName='تعداد کل فرم‌ها'
+      SkeletonComponent={ListCardSkeleton}
+    />}>
     <ListGrid
       title='فرم‌های من'
       showCreateButton
@@ -267,6 +280,8 @@ export default function ListGridWrapper() {
       disableFilter={false}
       refreshGrid={refreshGrid}
       searchQueryFilter={formType}
+      SkeletonComponent={() => <ListCardSkeleton />}
     />
+      </Suspense>
   );
 }

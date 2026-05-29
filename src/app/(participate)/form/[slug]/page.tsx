@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useParticipateForm } from '@/hooks/useParticipateForm';
-import Loading from '@/app/(builder)/preview/[id]/loading';
-import ResponsiveContainer from '@/templates/form/ContentWrapper';
 import FormLimitation from '@/templates/form/FormLimitation';
+import { useParticipateForm } from '@/hooks/useParticipateForm';
+import ResponsiveContainer from '@/templates/form/ContentWrapper';
 import { ErrorStep, FinishStep, QuestionStep } from './components';
+import { ParticipateLoadingSkeleton } from './components/participateSkeleton';
 
 export default function ParticipateFormPage({ params }: { params: { slug: string } }) {
   const [limitationStepPassed, setLimitationStepPassed] = useState(false);
@@ -35,7 +35,7 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
     showReportForResponder
   } = useParticipateForm();
 
-  if (firstLoading) return <LoadingScreen />;
+  if (firstLoading) return <ParticipateLoadingSkeleton />;
 
   if (limitation.isLimited && !limitationStepPassed) {
     return (
@@ -86,13 +86,5 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
       formId={realFormID}
       replace={replace}
     />
-  );
-}
-
-function LoadingScreen() {
-  return (
-    <div className='w-full h-screen flex justify-center items-center bg-white'>
-      <Loading />
-    </div>
   );
 }

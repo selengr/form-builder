@@ -59,7 +59,7 @@ export function PreviewProvider({ children }: { children: ReactNode }) {
   const [{ questions, status, index, answer, title }, dispatch] = useReducer(reducer, initialState);
   const numQuestions: number = questions.length;
   const currentIndex = searchParams?.get('question');
-  const search = searchParams.get('rep');
+  const search = searchParams.get('rep  ');
   const admin = search === 'list';
 
   useEffect(() => {

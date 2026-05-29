@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { Box, CircularProgress } from '@mui/material'
 import { useQueryClient } from '@tanstack/react-query'
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md'
-import React, { Suspense, useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 // images
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
@@ -118,8 +118,8 @@ export default function GroupDetailsPage() {
         });
       }
 
-    } catch (error :any) {
-       toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+    } catch (error: any) {
+      toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
     } finally {
       setLoading(false)
       setDisabledSwitches((prev) =>
@@ -144,8 +144,8 @@ export default function GroupDetailsPage() {
   }
 
   return (
-    <div className='p-2 w-full h-[calc(100vh-20px)] flex flex-col'>
-      <main className='p-4 bg-white flex flex-col rounded-xl h-full'>
+    <div className="p-1 sm:py-2 h-full w-full flex flex-col overflow-hidden">
+      <main className='p-4 mx-1 bg-white flex flex-col rounded-xl h-full'>
         <div className='min-h-[52px] flex items-center justify-center relative rounded-xl bg-[#F7F7FF] mb-4 px-2'>
           <p className='text-[16px] font-bold text-[#2a2a2a]'>جزئیات گروه</p>
           <button onClick={() => router.push('/groups')} className='absolute right-2 p-1 rounded-full hover:bg-gray-200'>
@@ -153,29 +153,30 @@ export default function GroupDetailsPage() {
           </button>
         </div>
 
-        <div className='border justify-between w-full border-gray-200 rounded-xl p-4 pt-6 pb-3 flex mb-4'>
-          <div className='flex flex-col gap-[10px]'>
-            <InfoRow label='نام گروه' value={groupName ?? '---'} bold />
-            <InfoRow label='تعداد اعضا' value={`${members.length} نفر`} bold />
+        <div className="border relative border-gray-200 rounded-xl p-4 pt-6 pb-3 flex flex-col gap-4 mb-4 md:flex-row md:items-center md:justify-between">
+
+          {/* Group info */}
+          <div className="flex flex-col gap-[10px]">
+            <InfoRow label="نام گروه" value={groupName ?? '---'} bold />
+            <InfoRow label="تعداد اعضا" value={`${members.length} نفر`} bold />
           </div>
 
-          <div className='flex justify-center mb-3 w-[50%]'>
-            <div className='w-full max-w-lg'>
-              <Suspense fallback={<div>در حال بارگذاری جستجو...</div>}>
-                <ImmediateSearchInput onSearch={setQuery} />
-              </Suspense>
-            </div>
+          <div className="w-full md:w-[40%]">
+            <ImmediateSearchInput onSearch={setQuery} />
           </div>
 
-          <button
-            onClick={() => setShowCreateMemberDialog(true)}
-            className='w-[50px] h-[50px] border border-[#1758BA] rounded-xl flex items-center justify-center hover:bg-gray-100 transition'
-            aria-label='افزودن گروه جدید'>
-            <Suspense fallback={<div>...</div>}>
-              <Image src={PlusIcon} alt='افزودن' width={24} height={24} draggable={false} />
-            </Suspense>
-          </button>
+          <div className="absolute top-5 left-5 md:static flex md:justify-center">
+            <button
+              onClick={() => setShowCreateMemberDialog(true)}
+              className="w-[50px] h-[50px] border border-[#1758BA] rounded-xl flex items-center justify-center hover:bg-gray-100 transition"
+              aria-label="افزودن گروه جدید"
+            >
+              <Image src={PlusIcon} alt="افزودن" width={24} height={24} draggable={false} />
+            </button>
+          </div>
+
         </div>
+
 
         <div className='flex flex-col flex-1 min-h-0'>
           <div className='flex justify-between items-center mb-3'>

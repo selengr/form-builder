@@ -3,10 +3,10 @@
 import { serverApi } from '@/services/axios/serverApi';
 
 export async function issueRequestAction() {
-  try {
+  // try {
     const { data } = await serverApi.post('/purchase-order/createIssueRequest');
     return data;
-  } catch (error) {
-    return Promise.resolve('');
-  }
+  // } catch (error) {
+  //   return Promise.resolve('');
+  // }
 }

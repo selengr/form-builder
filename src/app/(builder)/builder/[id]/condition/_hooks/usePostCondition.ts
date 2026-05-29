@@ -1,12 +1,11 @@
 'use client';
 
 import { toast } from 'sonner';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { IPostCondition } from '@/types/condition';
 import { postConditionAction } from '../../../../../../../actions/condition/postConditionAction';
 
 export const usePostCondition = (isEdit: boolean) => {
-  const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationKey: ['post-condition', isEdit],
@@ -14,7 +13,6 @@ export const usePostCondition = (isEdit: boolean) => {
       postConditionAction({ data, isEdit }),
 
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['Condition_List'] });
       toast.success(`شرط با موفقیت ${isEdit ? 'ویرایش' : 'ایجاد'} شد`);
     },
     onError: () => {

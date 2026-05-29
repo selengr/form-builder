@@ -66,10 +66,13 @@ export function QuestionStep({
     handlePrev();
   };
 
-
   return (
-    <div className={`w-full flex flex-col overflow-hidden ${isSurvey ? "p-0" : "p-4"}`}>
-      <div className={`flex flex-col bg-white rounded-xl md:h-full max-h-screen ${isSurvey ? "h-[100vh]" : "h-[100vh]"}`}>
+    // <div className={`h-full w-full flex flex-col overflow-hidden ${isSurvey ? "p-0" : "p-2 sm:p-3"}`}>
+    //   <div className={`flex flex-col bg-white rounded-xl h-[calc(100vh - 60px)]
+    //     ${isSurvey ? "h-[100vh]" : " md:h-[100vh]"}`}>
+    <div className={`w-full flex flex-col overflow-hidden ${isSurvey ? "h-screen" : "h-[calc(100dvh-76px)] md:h-screen"} ${isSurvey ? "p-0" : "p-2 sm:p-3"}`}>
+
+      <div className={`flex flex-col bg-white rounded-xl overflow-hidden h-full shadow-sm`}>
         {/* Header */}
         <Header surveyParam={isSurvey} formName={formName} handleOpenReportDialog={handleReportDialog} replace={replace} />
 
@@ -85,7 +88,7 @@ export function QuestionStep({
         </div>
 
         {/* Footer */}
-        <div className='shrink-0 w-full flex justify-between items-center px-2 py-4 rounded-xl'>
+        <div className='shrink-0 w-full flex justify-between items-center p-3 rounded-xl'>
           <ActionButtons loadingNext={questionLoading} disablePrev={prevBlock || questionLoading} nextAction={handleNextStep} prevAction={handlePrevStep} />
         </div>
       </div>

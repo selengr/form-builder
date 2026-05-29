@@ -51,32 +51,50 @@ export default function PublishSettingsTabValue({ handleOpen, formId, formData }
           TabIndicatorProps={{ style: { backgroundColor: '#2CDFC9' } }}
           value={value}
           onChange={handleChange}
-          scrollButtons
-          variant='scrollable'
+          variant="fullWidth"
+          scrollButtons={false}
           sx={{
-            '&.MuiTabs-root': {
-              width: '100%',
-              paddingX: { md: '10px', lg: '40px' },
-            },
+            width: '100%',
+            px: { xs: 1, sm: 2, md: '10px', lg: '40px' },
+            minHeight: { xs: 40, sm: 44, md: 48 },
+
             '& .MuiTabs-indicator': {
-              height: '3px',
+              height: { xs: 2, sm: 3 },
               borderRadius: '3px 3px 0 0',
             },
+
+            '& .MuiTabs-flexContainer': {
+              justifyContent: 'space-between',
+            },
+
             '& .Mui-selected': {
               color: '#393939 !important',
               fontWeight: 700,
             },
-            '& .MuiTabs-flexContainer': {
-              display: 'flex',
-              justifyContent: 'space-between',
-              width: '100%',
+
+            '& .MuiTab-root': {
+              flex: 1,
+              minWidth: 0,
+              px: { xs: 0.5, sm: 1, md: 2 },
+              py: { xs: 0.75, sm: 1, md: 1 },
+              minHeight: { xs: 40, sm: 44, md: 48 },
+
+              fontSize: { xs: '12px', sm: '13px', md: '14px' },
+              fontWeight: { xs: 600, md: 700 },
+              lineHeight: 1.15,
+
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
             },
-          }}>
-          <Tab disableRipple label='عمومی' value='general' />
-          <Tab disableRipple label='انفرادی' value='individual' />
-          <Tab disableRipple label='گروهی' value='group' />
-          <Tab disableRipple label='اعضای ام‌رسالت' value='mresalat' disabled />
+          }}
+        >
+          <Tab disableRipple label="عمومی" value="general" />
+          <Tab disableRipple label="انفرادی" value="individual" />
+          <Tab disableRipple label="گروهی" value="group" />
+          <Tab disableRipple label="اعضای ام‌رسالت" value="mresalat" disabled />
         </Tabs>
+
       </Box>
 
       <CustomTabPanel value={value} index='general'>

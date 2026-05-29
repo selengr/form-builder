@@ -22,6 +22,7 @@ import FormProvider, { RHFTextField } from '../hook-form';
 
 // actions
 import { formSetting } from '../../../actions/builder/form-setting';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {
   data: any;
@@ -54,8 +55,8 @@ const propertiesSchema = z.object({
     .pipe(
       z
         .string()
-        .min(2, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' })
-        .max(50, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' })
+        .min(2, { message: 'حداقل باید 2 و حداکثر 70 کاراکتر باشد' })
+        .max(70, { message: 'حداقل باید 2 و حداکثر 70 کاراکتر باشد' })
     ),
 
   label: z
@@ -106,6 +107,7 @@ export default function SettingsDialog({
 }: Props) {
   const { id: formId } = useParams();
   const searchParams = useSearchParams();
+      const queryClient = useQueryClient()
 
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -149,7 +151,7 @@ export default function SettingsDialog({
       await formSetting(isBuilderCardId ?? (formId as string), body);
 
       toast.success('تنظیمات با موفقیت ثبت شد');
-
+        queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
       onChangeName?.(values.name);
 
       onChangeLimitation?.(

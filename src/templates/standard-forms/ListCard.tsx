@@ -47,8 +47,7 @@ const ListCard: React.FC<ListCardProps> = ({
           duration: 70000,
         }
       );
-
-
+      
     } catch (error: any) {
       toast.error(error?.message || 'خطا در انجام عملیات');
     } finally {

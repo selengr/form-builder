@@ -105,14 +105,23 @@ function FormComponent({ elementInstance }: { elementInstance?: FormElementInsta
 
   return (
     <Box display='flex' gap={1} flexDirection='column' width='100%' maxWidth='600px'>
-      <Typography sx={{ marginRight: 3, fontWeight: 600, fontSize: 18 }}>{element.title}</Typography>
+      <section className='z-50 text-center lg:text-right lg:w-1/2'>
+        <h1 className='text-base sm:text-lg lg:text-2xl text-[#183B56] font-extrabold leading-tight font-d7'>
+          <span className='relative inline-block'>
+            <span className='relative z-10'>{element.title}</span>
+            <span className='absolute bottom-0 right-0 w-full max-w-72 h-[50%] bg-[#2cdfc9] rounded-sm skew-x-4 -skew-y-6 -z-50'></span>
+          </span>
+        </h1>
+      </section>
+
       {message && (
         <Typography
           sx={{
-            marginRight: 3,
-            fontWeight: 600,
-            fontSize: 16,
+            fontWeight: { xs: 500, sm: 600 },
+            fontSize: { xs: 15, sm: 16 },
             whiteSpace: 'pre-line',
+            textAlign: "justify",
+            marginTop: 3
           }}
           component='div'
           dangerouslySetInnerHTML={{ __html: formatTextWithLinksAndLineBreaks(message) }}
@@ -199,16 +208,16 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         const { data } = await createQuestionAction(newField);
         addElement(selectedElement?.position?.realPosition ?? insertIdx, data);
       } else {
-          const { data } = await updateQuestionAction(String(element.questionId), newField);
-          updateElement(element.questionId, data);
+        const { data } = await updateQuestionAction(String(element.questionId), newField);
+        updateElement(element.questionId, data);
       }
 
       setOpenDialog(false);
       setSelectedElement(null);
       reset();
-      } catch (error:any) {
-         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
-      }
+    } catch (error: any) {
+      toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
+    }
   };
 
   return (
@@ -247,7 +256,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
                   borderRadius: '10px',
                 },
               }}>
-              <RHFTextField name='label' dir='ltr'/>
+              <RHFTextField name='label' dir='ltr' />
             </Box>
           </Stack>
         }

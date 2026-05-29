@@ -1,16 +1,23 @@
 'use client';
 
-import { memo } from 'react';
 import { createPortal } from 'react-dom';
+import { memo, useEffect, useState } from 'react';
 import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
-import DragOverlayWrapper from '../../components/builder/DragOverlayWrapper';
+// components
 import Designer from './Designer';
+import DragOverlayWrapper from '../../components/builder/DragOverlayWrapper';
 
 interface FormBuilderProps {
   data: any;
 }
 
 const FormBuilder = memo(function FormBuilder({ data }: FormBuilderProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
       delay: 100,
@@ -30,15 +37,8 @@ const FormBuilder = memo(function FormBuilder({ data }: FormBuilderProps) {
 
   return (
     <DndContext sensors={sensors}>
-      <div dir="ltr" className="flex w-full mx-auto h-[calc(100vh-1rem)]">
-        <main className="flex flex-col w-full">
-          <div className="flex w-full items-start justify-center relative h-full">
-            {/* پاس دادن دیتا به Designer */}
-            <Designer data={data} />
-          </div>
-        </main>
-        {createPortal(<DragOverlayWrapper />, document.body)}
-      </div>
+      <Designer data={data} />
+      {mounted && createPortal(<DragOverlayWrapper />, document.body)}
     </DndContext>
   );
 });

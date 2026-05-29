@@ -1,5 +1,4 @@
-'use server';
-
+// this is not server action
 import { serverApi } from '@/services/axios/serverApi';
 
 export async function getConditionListAction(formId: string) {

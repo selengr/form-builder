@@ -9,89 +9,100 @@ interface SearchBoxItem {
   nextConditionOperator: 'OR' | 'AND';
 }
 
+export interface SearchQueryFilter {
+  type: string;
+  status: string;
+  isCreatedSoloReport: string;
+  fieldOperation: 'DSC' | 'ASC' | string;
+}
+
 const PAGE_SIZE = 10;
-const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'PUBLIC', isCreatedSoloReport: 'ALL', fieldOperation: "DSC" };
+
+const DEFAULT_SEARCH_FILTER: SearchQueryFilter = {
+  type: 'ALL',
+  status: 'PUBLIC',
+  isCreatedSoloReport: 'ALL',
+  fieldOperation: 'DSC',
+};
+
+function buildFilterRestrictions(filter: SearchQueryFilter): SearchBoxItem[] {
+  const mapping: Array<{
+    key: keyof SearchQueryFilter;
+    fieldName: string;
+  }> = [
+    { key: 'type', fieldName: 'typeEnum' },
+    { key: 'status', fieldName: 'status' },
+    { key: 'isCreatedSoloReport', fieldName: 'isCreatedSoloReport.filter' },
+  ];
+
+  return mapping
+    .filter(({ key }) => filter[key] && filter[key] !== 'ALL')
+    .map(({ key, fieldName }) => ({
+      fieldName,
+      fieldOperation: 'EQUAL',
+      fieldValue: filter[key],
+      nextConditionOperator: 'AND',
+    }));
+}
+
+function isValidRestriction(item?: SearchBoxItem) {
+  if (!item) return false;
+
+  if (typeof item.fieldValue === 'string') {
+    return item.fieldValue.trim() !== '';
+  }
+
+  if (Array.isArray(item.fieldValue)) {
+    return item.fieldValue.length > 0;
+  }
+
+  return true;
+}
 
 export async function fetchListGridData(
-  {
-    pageParam = 0,
-  }: {
-    pageParam: number;
-  },
+  { pageParam = 0 }: { pageParam: number },
   searchBoxList: SearchBoxItem[],
   filterBoxList: SearchBoxItem[],
   url: string,
-  searchQueryFilter = DEFAULT_SEARCH_FILTER,
+  searchQueryFilter: SearchQueryFilter = DEFAULT_SEARCH_FILTER,
 ) {
-  try {
-    const filterRestrictions: SearchBoxItem[] = [];
+  // try {
+    const filterRestrictions = buildFilterRestrictions(searchQueryFilter);
 
-    if (searchQueryFilter.type && searchQueryFilter.type !== 'ALL') {
-      filterRestrictions.push({
-        fieldName: 'typeEnum',
-        fieldOperation: 'EQUAL',
-        fieldValue: searchQueryFilter.type,
-        nextConditionOperator: 'AND',
-      });
-    }
-
-    if (searchQueryFilter.status && searchQueryFilter.status !== 'ALL') {
-      filterRestrictions.push({
-        fieldName: 'status',
-        fieldOperation: 'EQUAL',
-        fieldValue: searchQueryFilter.status,
-        nextConditionOperator: 'AND',
-      });
-    }
-    if (searchQueryFilter.isCreatedSoloReport && searchQueryFilter.isCreatedSoloReport !== 'ALL') {
-      filterRestrictions.push({
-        fieldName: 'isCreatedSoloReport.filter',
-        fieldOperation: 'EQUAL',
-        fieldValue: searchQueryFilter.isCreatedSoloReport,
-        nextConditionOperator: 'AND',
-      });
-    }
-
-    const validCombinedRestrictionList = [
+    const restrictionList = [
       ...searchBoxList,
       ...filterBoxList,
       ...filterRestrictions,
-    ].filter((item) => {
-      if (!item) return false;
-      if (typeof item.fieldValue === 'string') return item.fieldValue !== '';
-      if (Array.isArray(item.fieldValue)) return item.fieldValue.length > 0;
-      return true;
-    });
-
-    const searchFilterBoxListPayload = [
-      { restrictionList: validCombinedRestrictionList },
-    ];
+    ].filter(isValidRestriction);
 
     const params = {
-      searchFilterBoxList: searchFilterBoxListPayload,
-      sortList: [{ fieldName: 'id', type: searchQueryFilter?.fieldOperation ?? 'DSC' }],
+      searchFilterBoxList: [{ restrictionList }],
+      sortList: [
+        {
+          fieldName: 'id',
+          type: searchQueryFilter.fieldOperation,
+        },
+      ],
       page: pageParam,
       rows: PAGE_SIZE,
     };
 
-    const queryString = JSON.stringify(params);
-    const encodedParams = encodeURIComponent(queryString);
-    const fullURL =
-      `${url}?searchFilterModel=` +
-      (encodedParams === encodeURIComponent('{}') ? '' : encodedParams);
+    const encodedParams = encodeURIComponent(JSON.stringify(params));
 
-    const response = await serverApi.get(fullURL);
+    const fullURL = `${url}?searchFilterModel=${encodedParams}`;
 
-    if (!response?.data) {
+    const { data } = await serverApi.get(fullURL);
+
+    if (!data) {
       throw new Error('خطا در دریافت اطلاعات');
     }
 
     return {
-      data: response.data.content,
-      total: response.data.totalElements,
+      data: data.content,
+      total: data.totalElements,
     };
-  } catch (error) {
-    console.error('Server Action Error:', error);
-    throw new Error('خطا در دریافت اطلاعات');
-  }
+  // } catch (error) {
+  //   console.error('Server Action Error:', error);
+  //   throw new Error('خطا در دریافت اطلاعات');
+  // }
 }

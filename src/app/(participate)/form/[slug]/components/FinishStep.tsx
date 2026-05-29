@@ -9,7 +9,7 @@ import AnimatedBox from '@/templates/form/AnimatedBox';
 // images
 import finalStep from '@/../public/images/home-page/finalStep.svg';
 // components
-import { Header } from './header';
+import Header from './header';
 import LoginWithPhone from '@/components/common/loginWithPhone';
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
 import BuilderLoading from '@/app/(builder)/builder/[id]/loading';
@@ -28,7 +28,6 @@ interface FinishStepProps {
 }
 
 export function FinishStep({ question, showReportForResponder, takePartId, formName, replace, formId }: FinishStepProps) {
-  const pathname = usePathname();
   const { isInIframe, modalSize } = useIframeDetector();
   const { mutate, isPending } = useShowResultUser();
   const {
@@ -52,7 +51,6 @@ export function FinishStep({ question, showReportForResponder, takePartId, formN
     }
   }, [question.formId, takePartId])
 
-  if (isPending) return <BuilderLoading />;
   if (showReportForResponder) return null
 
   return (

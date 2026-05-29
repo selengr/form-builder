@@ -269,21 +269,19 @@ function FormComponent({ elementInstance, onChange, error, value }: { elementIns
     <FormControl sx={{ maxWidth: '750px' }}>
       <FormLabel
         sx={{
-          marginBottom: description ? '0.5rem' : '2rem',
+          marginBottom: '2rem',
           fontWeight: '600',
           color: '#353535',
+          fontSize: { xs: 15, sm: 16 },
           '&.MuiFormLabel-root.MuiFormLabel-colorPrimary.Mui-focused': {
             color: '#353535',
           },
+          textAlign: "justify"
         }}
         id={String(element?.questionId)}>
         {element.title}
       </FormLabel>
-      {description && (
-        <Typography sx={{ fontSize: '12px', fontWeight: '500', marginBottom: '2rem' }} variant='subtitle2'>
-          {description}
-        </Typography>
-      )}
+
       {isMultipleChoiceSelectionAllowed ? (
         <>
           <FormGroup>
@@ -302,6 +300,11 @@ function FormComponent({ elementInstance, onChange, error, value }: { elementIns
           </RadioGroup>
           {!!error && <Typography color='#f44336'>{error}</Typography>}
         </>
+      )}
+      {description && (
+        <Typography sx={{ fontSize: '12px', fontWeight: '500', marginTop: '2rem' }} variant='subtitle2'>
+          {description}
+        </Typography>
       )}
     </FormControl>
   );
@@ -440,22 +443,22 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       delete removeId.questionId;
 
       try {
-          const { data }: any = await createQuestionAction(removeId as any);
+        const { data }: any = await createQuestionAction(removeId as any);
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;
         const newData = {
           ...data,
         };
-debugger
+        debugger
         const positionToUse = lastIndexOfGroup === -1 ? firstIndexAfterThePreviousSelectedGroup : lastIndexOfGroup + 1;
         addElement(selectedElement?.position?.realPosition ?? positionToUse, newData);
 
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
-      } catch (error:any) {
-         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+      } catch (error: any) {
+        toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     } else {
       try {
@@ -470,8 +473,8 @@ debugger
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
-      } catch (error:any) {
-         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+      } catch (error: any) {
+        toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     }
   }
@@ -510,7 +513,7 @@ debugger
                   borderRadius: '10px',
                 },
               }}>
-              <RHFTextField name='label' dir='ltr'/>
+              <RHFTextField name='label' dir='ltr' />
             </Box>
           </Stack>
         }

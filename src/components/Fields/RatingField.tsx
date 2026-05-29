@@ -216,24 +216,20 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
     <Box width='100%' maxWidth='1000px'>
       <Typography
         sx={{
-          marginBottom: description ? '0.5rem' : '3rem',
-          fontSize: '1rem',
+          marginBottom: '2rem',
+          fontSize:{ xs: 15, sm: 16 },
           fontWeight: '600',
+          textAlign: "justify"
         }}>
         {element.title}
       </Typography>
-      {description && (
-        <Typography sx={{ fontSize: '12px', fontWeight: '500', marginBottom: '3rem' }} variant='subtitle2'>
-          {description}
-        </Typography>
-      )}
       {ratingType === 'STAR' ? (
         <>
 
           <StarRating
             value={startValue}
             onChange={handleChange}
-            precision={0.2}
+            precision={0.25}
             startValue={start}
             endValue={end}
           />
@@ -245,7 +241,7 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
           <StarRating
             value={startValue}
             onChange={handleChange}
-            precision={0.2}
+            precision={0.25}
             heart={true}
             startValue={start}
             endValue={end}
@@ -260,11 +256,12 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
           startValue={start}
           endValue={end}
         />
-
-      )
-
-
-      }
+      )}
+            {description && (
+        <Typography sx={{ fontSize: '12px', fontWeight: '500', marginTop: '2rem', textAlign: "justify" }} variant='subtitle2'>
+          {description}
+        </Typography>
+      )}
     </Box>
   );
 }

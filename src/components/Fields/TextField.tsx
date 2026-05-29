@@ -26,13 +26,14 @@ import DatePicker from 'react-multi-date-picker';
 import 'react-multi-date-picker/styles/layouts/mobile.css';
 import { SwitchButton } from '../Switch/SwitchButton';
 import TextFieldPair from '../TextFieldPair/TextFieldPair';
-import TimePickerStyled from '../SettingsDialog/TimePicker.styled';
+import TimePickerStyled, { DatePickerWrapper } from '../SettingsDialog/TimePicker.styled';
 import TimePicker from 'react-multi-date-picker/plugins/analog_time_picker';
 import { GoClock } from 'react-icons/go';
 import { BsCalendarDate } from 'react-icons/bs';
 import { DatePicker as DatePickerCustome } from '../DatePicker/DatePicker';
 // actions
 import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/question';
+import { commonTextFieldSx } from './formStyles';
 
 const questionType: ElementsType = 'TEXT_FIELD';
 
@@ -215,15 +216,8 @@ const FormComponent = memo(function FormComponent({
     onChange: isPreview ? undefined : handleLocalChange,
     error: !!error,
     helperText: error,
-    sx: {
-      '& .MuiInputBase-root': {
-        padding: 1.5,
-      },
-      '& input': {
-        padding: 0,
-      },
-    },
-    fullWidth: true,
+    sx: commonTextFieldSx,
+    fullWidth: true
   };
 
   const renderContent = () => {
@@ -295,24 +289,26 @@ const FormComponent = memo(function FormComponent({
             {...commonTextFieldProps}
           />
         );
-      case 'DATE':
-        return (
-          <Box
-            display='flex'
-            justifyContent='flex-start'
-            alignItems='center'
-            sx={{
-              '& .rmdp-wrapper.rmdp-border': {
-                borderRadius: '20px',
-              },
-            }}>
-            <Box display='flex' alignItems='center' height='56px' borderRadius='10px' border={!error ? '1px solid #d4d4d4' : '1px solid #f44336'} textAlign='center'>
-              <DatePickerCustome inputClass='h-[50px] px-4 border-none outline-none w-full rounded-xl text-center p-1' value={value} onChange={handleLocalChange as any} />
-              <BsCalendarDate size='1.6rem' className='ml-2' color='#424242' />
-            </Box>
-            {!!error && <Typography color='#f44336'>{error}</Typography>}
-          </Box>
-        );
+     case 'DATE':
+  return (
+    <Box display='flex' flexDirection='column' gap={1} width='100%'>
+      <DatePickerWrapper isError={!!error}>
+        <DatePickerCustome 
+          inputClass='picker-input' 
+          value={value} 
+          onChange={handleLocalChange as any} 
+        />
+        <BsCalendarDate size='1.4rem' className='calendar-icon' color='#424242' />
+      </DatePickerWrapper>
+      
+      {!!error && (
+        <Typography color='#d32f2f' variant="caption" sx={{ mt: 0.5, fontSize: '0.75rem' }}>
+          {error}
+        </Typography>
+      )}
+    </Box>
+  );
+
       case 'TIME':
         return (
           <Box display='flex' justifyContent='flex-start' alignItems='center'>
@@ -347,17 +343,17 @@ const FormComponent = memo(function FormComponent({
 
   return (
     <Box display='flex' gap={1} flexDirection='column' width='100%' maxWidth='600px'>
-      <Box display='flex' justifyContent='space-between' width='100%'>
-        <Typography sx={{ marginRight: '25px', fontWeight: '600' }}>{element.title}</Typography>
+      <Box display='flex' flexDirection='column' justifyContent='space-between' width='100%'>
+        <Typography sx={{ fontSize:{ xs: 15, sm: 16 }, marginRight: '25px', fontWeight: '600', margin: 0, marginBottom : "2rem", textAlign: "justify" }}>{element.title}</Typography>
         {min && max ? (
-          <Typography sx={{ direction: 'rtl', textWrap: 'nowrap', fontWeight: '600' }} variant='subtitle2'>
+          <Typography sx={{ fontSize: '12px', direction: 'rtl', textWrap: 'nowrap', fontWeight: '400' }} variant='subtitle2'>
             {min + ' / ' + max}
           </Typography>
         ) : null}
       </Box>
       {renderContent()}
       {description && (
-        <Typography sx={{ fontSize: '12px', fontWeight: '500' }} variant='subtitle2'>
+        <Typography sx={{ fontSize: '12px', fontWeight: '600', marginTop : "2rem" }} variant='subtitle2'>
           {description}
         </Typography>
       )}
@@ -541,8 +537,8 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
-      } catch (error:any) {
-         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+      } catch (error: any) {
+        toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     } else {
       try {
@@ -557,8 +553,8 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
-      } catch (error:any) {
-         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+      } catch (error: any) {
+        toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     }
   }
@@ -610,7 +606,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
                   borderRadius: '10px',
                 },
               }}>
-              <RHFTextField name='label' dir='ltr'/>
+              <RHFTextField name='label' dir='ltr' />
             </Box>
           </Stack>
         }

@@ -1,7 +1,7 @@
-'use client';
-
 import { UnderConstruction } from '@/components/underConstruction';
 
-export default function ComingSoon() {
+export const dynamic = "force-static";
+
+export default function ComingSoonT() {
   return <UnderConstruction />;
 }

@@ -12,7 +12,7 @@ type IProps = {
 };
 
 export async function getPackagingFormsComboAction(): Promise<IProps> {
-try{  
+// try{  
   const customComboFilterModel = {
     type: 'COMBO',
     entity: 'PROJECTS',
@@ -27,12 +27,12 @@ try{
 
   const { data } = await serverApi.get<IProps>(url);
   return data;
-} catch (error: any) {
-  const message =
-    error?.response?.data?.message?.[0]?.title ||
-    error?.response?.data?.message ||
-    'خطای نامشخص';
+// } catch (error: any) {
+//   const message =
+//     error?.response?.data?.message?.[0]?.title ||
+//     error?.response?.data?.message ||
+//     'خطای نامشخص';
 
-  throw new Error(message);
-}
+//   throw new Error(message);
+// }
 }

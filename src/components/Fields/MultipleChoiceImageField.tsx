@@ -260,10 +260,12 @@ function FormComponent({ elementInstance, onChange, error, value }: { elementIns
       sx={{
         width: '100%',
         maxWidth: '1000px',
+        textAlign: "justify"
       }}>
       <FormLabel
         sx={{
-          marginBottom: description ? '0.5rem' : '3rem',
+          marginBottom: '2rem',
+          fontSize: { xs: 15, sm: 16 },
           '&.MuiFormLabel-root.MuiFormLabel-colorPrimary.Mui-focused': {
             color: '#353535',
           },
@@ -271,49 +273,89 @@ function FormComponent({ elementInstance, onChange, error, value }: { elementIns
         id={String(element?.questionId)}>
         {element.title}
       </FormLabel>
-      {description && (
-        <Typography sx={{ fontSize: '12px', fontWeight: '500', marginBottom: '3rem' }} variant='subtitle2'>
-          {description}
-        </Typography>
-      )}
+
       {isMultipleChoiceSelectionAllowed ? (
         <>
           <FormGroup
             sx={{
               display: 'flex',
               flexDirection: 'row',
+              flexWrap: 'wrap', // Prevents overflow on mobile by wrapping lines
               justifyContent: 'center',
-              gap: 4,
+              gap: { xs: 1.5, sm: 3 }, // Responsive gap
+              width: '100%',
               '& .MuiCheckbox-root': {
-                display: 'none',
+                display: 'none', // Hiding default checkbox
               },
-            }}>
-            {newOptionList?.map((option: any) => (
-              <FormControlLabel
-                sx={{
-                  '& img': {
-                    width: { xs: '105px', sm: '164px' },
-                    height: { xs: '105px', sm: '164px' },
-                    borderRadius: '12px',
-                  },
-                }}
-                key={option?.id}
-                value={String(option.id)}
-                onChange={handleChange}
-                control={<Checkbox checked={selectedValue?.includes(String(option.id))} />}
-                label={
-                  <div
-                    style={{
-                      borderRadius: '10px',
-                      outline: selectedValue?.includes(String(option.id)) ? '3px solid #1758BA' : '3px solid transparent',
-                      transition: 'outline 0.5s ease',
-                    }}>
-                    <Image width={128} height={128} draggable={false} loading={'eager'} alt='' src={process.env.NEXT_PUBLIC_BASE_URL + '/filemanager' + option?.link} />
-                  </div>
-                }
-              />
-            ))}
+            }}
+          >
+            {newOptionList?.map((option: any) => {
+              const isSelected = selectedValue?.includes(String(option.id));
+
+              return (
+                <FormControlLabel
+                  key={option?.id}
+                  value={String(option?.id)}
+                  onChange={handleChange}
+                  control={<Checkbox checked={isSelected} />}
+                  label={
+                    <Box
+                      sx={{
+                        position: 'relative',
+                        borderRadius: '16px',
+                        overflow: 'hidden',
+                        padding: '6px',
+                        border: '2px solid',
+                        borderColor: isSelected ? '#1758BA' : 'rgba(0, 0, 0, 0.06)',
+                        backgroundColor: isSelected ? 'rgba(23, 88, 186, 0.03)' : '#ffffff',
+                        boxShadow: isSelected
+                          ? '0 8px 20px rgba(23, 88, 186, 0.15)'
+                          : '0 4px 12px rgba(0, 0, 0, 0.03)',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+
+                        '&:hover': {
+                          transform: 'translateY(-1px)',
+                          borderColor: isSelected ? '#1758BA' : 'rgba(23, 88, 186, 0.3)',
+                          boxShadow: '0 12px 24px rgba(0, 0, 0, 0.08)',
+                        },
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          position: 'relative',
+                          width: { xs: '100px', sm: '150px' },
+                          height: { xs: '100px', sm: '150px' },
+                          borderRadius: '12px',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <Image
+                          src={`${process.env.NEXT_PUBLIC_BASE_URL}/filemanager${option?.link}`}
+                          alt={option?.title || 'option image'}
+                          fill
+                          sizes="(max-width: 600px) 100px, 150px"
+                          priority
+                          draggable={false}
+                          style={{
+                            objectFit: 'cover',
+                            transition: 'transform 0.3s ease',
+                          }}
+                        />
+                      </Box>
+                    </Box>
+                  }
+                  sx={{
+                    margin: 0,
+                    '& .MuiFormControlLabel-label': {
+                      width: '100%',
+                    },
+                  }}
+                />
+              );
+            })}
           </FormGroup>
+
           {!!error && <Typography color='#f44336'>{error}</Typography>}
         </>
       ) : (
@@ -322,41 +364,94 @@ function FormComponent({ elementInstance, onChange, error, value }: { elementIns
             sx={{
               display: 'flex',
               flexDirection: 'row',
+              flexWrap: 'wrap', // جلوگیری از overflow در موبایل با شکستن خط
               justifyContent: 'center',
-              gap: 4,
+              gap: { xs: 1.5, sm: 3 }, // گپ کمتر برای موبایل جهت جلوگیری از بیرون‌زدگی
+              width: '100%',
               '& .MuiRadio-root': {
-                display: 'none',
+                display: 'none', // پنهان کردن رادیو پیش‌فرض
               },
             }}
             onChange={handleChange}
-            name={String(element?.questionId)}>
-            {newOptionList?.map((option: any) => (
-              <FormControlLabel
-                key={option?.id}
-                value={String(option?.id)}
-                control={<Radio checked={selectedValue === String(option.id)} />}
-                sx={{
-                  '& img': {
-                    width: { xs: '105px', sm: '164px' },
-                    height: { xs: '105px', sm: '164px' },
-                    borderRadius: '12px',
-                  },
-                }}
-                label={
-                  <div
-                    style={{
-                      borderRadius: '10px',
-                      outline: selectedValue === String(option.id) ? '3px solid #1758BA' : '3px solid transparent',
-                      transition: 'outline 0.5s ease',
-                    }}>
-                    <Image width={128} height={128} draggable={false} loading={'eager'} alt='' src={process.env.NEXT_PUBLIC_BASE_URL + '/filemanager' + option?.link} />
-                  </div>
-                }
-              />
-            ))}
+            name={String(element?.questionId)}
+          >
+            {newOptionList?.map((option: any) => {
+              const isSelected = selectedValue === String(option.id);
+
+              return (
+                <FormControlLabel
+                  key={option?.id}
+                  value={String(option?.id)}
+                  control={<Radio checked={isSelected} />}
+                  label={
+                    <Box
+                      sx={{
+                        position: 'relative',
+                        borderRadius: '16px',
+                        overflow: 'hidden',
+                        padding: '6px',
+                        border: '2px solid',
+                        borderColor: isSelected ? '#1758BA' : 'rgba(0, 0, 0, 0.06)',
+                        backgroundColor: isSelected ? 'rgba(23, 88, 186, 0.03)' : '#ffffff',
+                        boxShadow: isSelected
+                          ? '0 8px 20px rgba(23, 88, 186, 0.15)'
+                          : '0 4px 12px rgba(0, 0, 0, 0.03)',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+
+                        '&:hover': {
+                          transform: 'translateY(-1px)',
+                          borderColor: isSelected ? '#1758BA' : 'rgba(23, 88, 186, 0.3)',
+                          boxShadow: '0 12px 24px rgba(0, 0, 0, 0.08)',
+                          '& img': {
+                            transform: 'scale(1.00)',
+                          }
+                        },
+                      }}
+                    >
+
+                      <Box
+                        sx={{
+                          position: 'relative',
+                          width: { xs: '100px', sm: '150px' },
+                          height: { xs: '100px', sm: '150px' },
+                          borderRadius: '12px',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <Image
+                          src={`${process.env.NEXT_PUBLIC_BASE_URL}/filemanager${option?.link}`}
+                          alt={option?.title || 'option image'}
+                          fill
+                          sizes="(max-width: 600px) 100px, 150px"
+                          priority
+                          draggable={false}
+                          style={{
+                            objectFit: 'cover',
+                            transition: 'transform 0.3s ease',
+                          }}
+                        />
+                      </Box>
+                    </Box>
+                  }
+                  sx={{
+                    margin: 0,
+                    '& .MuiFormControlLabel-label': {
+                      width: '100%',
+                    }
+                  }}
+                />
+              );
+            })}
           </RadioGroup>
+
           {!!error && <Typography color='#f44336'>{error}</Typography>}
         </>
+      )}
+      {description && (
+        <Typography sx={{ fontSize: '12px', fontWeight: '500', marginTop: '2rem' }} variant='subtitle2'>
+          {description}
+        </Typography>
       )}
     </FormControl>
   );
@@ -379,7 +474,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   );
   const searchParams = useSearchParams();
   const search = searchParams.get('admin');
-   const isSurvey = search === 'survey' || search === 'data-collection';
+  const isSurvey = search === 'survey' || search === 'data-collection';
   const defaultValues = useMemo(() => {
     const matchingElement = elements?.find((el: any) => el?.questionId === element?.questionId);
     const optionListCopy = matchingElement ? [...element.optionList] : [];
@@ -541,8 +636,8 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
-      } catch (error:any) {
-         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+      } catch (error: any) {
+        toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     } else {
       try {
@@ -557,8 +652,8 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
-      } catch (error:any) {
-         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+      } catch (error: any) {
+        toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     }
   }
@@ -597,7 +692,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
                   borderRadius: '10px',
                 },
               }}>
-              <RHFTextField name='label'  dir='ltr'/>
+              <RHFTextField name='label' dir='ltr' />
             </Box>
           </Stack>
         }

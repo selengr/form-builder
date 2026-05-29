@@ -39,7 +39,7 @@ export const EditCalculatorDialogMobile: React.FC<IProps> = ({ calcId }) => {
           (editLoading && (
             <div className='flex flex-col items-center justify-center w-full h-full min-w-[600px] min-h-[300px] bg-white bg-opacity-80 border border-gray-300 rounded-lg shadow-lg'>
               <p>در حال بارگیری محاسبه‌گر...</p>
-              <BuilderLoading className='min-h-16' />
+              {/* <BuilderLoading className='min-h-16' /> */}
             </div>
           ))}
         {error && <p>Error loading calculators: {(error as Error).message}</p>}

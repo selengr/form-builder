@@ -1,11 +1,32 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 const EmptyCart = () => {
   return (
-    <div dir='rtl' className='min-w-full mx-auto px-4 py-6'>
-      <div className='w-full bg-white rounded-2xl p-6 flex flex-col items-center justify-center min-h-[calc(100vh-50px)] shadow-sm'>
-        <Image src='/images/home-page/empty-shopping-cart.svg' alt='empty' width={400} height={400} loading='lazy' draggable={false} className='max-w-xs max-h-[600px] object-contain mb-0' />
-        <span className='text-[#404040] font-bold text-base text-center'>در حال حاضر سبد خرید شما خالی است</span>
+    <div className='w-full min-full h-full flex flex-col items-center justify-center p-6 text-center'>
+      <Image
+        src={"images/home-page/empty-shopping-cart.svg"}
+        alt='سبد خرید خالی است'
+        width={0}
+        height={0}
+        priority={true}
+        draggable={false}
+        className='max-w-[400px] w-full h-auto object-contain'
+      />
+
+      <div className="space-y-4">
+        <h2 className='text-[#404040] font-bold text-md md:text-lg'>
+          در حال حاضر سبد خرید شما خالی است
+        </h2>
+
+        <p className="text-gray-500 text-sm">برای ساخت و انتشار فرم میتواند به فرم ساز سر بزنید.</p>
+
+        <Link
+          href="/builder"
+          className="inline-block mt-4 px-8 py-3 bg-[#1758BA] text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"
+        >
+          فرم‌های من
+        </Link>
       </div>
     </div>
   );

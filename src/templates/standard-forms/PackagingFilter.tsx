@@ -33,7 +33,7 @@ export default function PackagingFilter({
   };
 
   return (
-    <div className='flex h-[calc(100vh-60px)] w-full flex-col items-center justify-between'>
+    <div className='flex h-[calc(100%-60px)] sm:h-[calc(100vh-60px)] w-full flex-col items-center justify-between'>
 
       {/* Header */}
       <div className='w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4'>
@@ -46,25 +46,23 @@ export default function PackagingFilter({
 
         {/* Report Filter */}
         <div className='w-full bg-[#F7F7FF] rounded-[20px] px-4 pt-4 pb-3'>
-          <FormControl>
-            <FormLabel sx={{ fontSize: 15, fontWeight: 700 }}>بر اساس گزارش</FormLabel>
+          <FilterBox label='بر اساس گزارش'>
             <RadioGroup value={formType.isCreatedSoloReport} onChange={handleIsCreatedSoloReportChange}>
               <FormControlLabel value='ALL' control={<Radio />} label='همه' />
               <FormControlLabel value='true' control={<Radio />} label='دارای گزارش' />
               <FormControlLabel value='false' control={<Radio />} label='بدون گزارش' />
             </RadioGroup>
-          </FormControl>
+          </FilterBox>
         </div>
 
         {/* Time Filter */}
         <div className='w-full bg-[#F7F7FF] rounded-[20px] px-4 pt-4 pb-3'>
-          <FormControl>
-            <FormLabel sx={{ fontSize: 15, fontWeight: 700 }}>بر اساس زمان</FormLabel>
+          <FilterBox label="بر اساس زمان">
             <RadioGroup value={formType.fieldOperation} onChange={handleTypeChange}>
               <FormControlLabel value='DSC' control={<Radio />} label='جدیدترین' />
               <FormControlLabel value='ASC' control={<Radio />} label='قدیمی‌ترین' />
             </RadioGroup>
-          </FormControl>
+          </FilterBox>
         </div>
 
       </div>
@@ -99,6 +97,35 @@ export default function PackagingFilter({
           حذف فیلتر
         </Button>
       </div>
+    </div>
+  );
+}
+
+
+function FilterBox({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className='rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
+      <FormControl
+        sx={{
+          '& .MuiTypography-root': {
+            fontSize: '14px',
+            color: '#393939',
+            fontWeight: 400,
+          },
+        }}
+      >
+        <FormLabel
+          sx={{
+            fontSize: '15px',
+            color: '#161616',
+            fontWeight: 700,
+            mb: '8px',
+          }}
+        >
+          {label}
+        </FormLabel>
+        {children}
+      </FormControl>
     </div>
   );
 }

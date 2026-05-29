@@ -1,10 +1,6 @@
-import ListGridWrapper from '@/templates/builder/ListGridWrapper';
-import { Suspense } from 'react';
+import ListGridWrapper from "@/templates/builder/ListGridWrapper";
 
 export default function FormBuilderPage() {
-  return (
-    <Suspense>
-      <ListGridWrapper />
-    </Suspense>
-  );
+  return <ListGridWrapper />
 }
+  

@@ -1,11 +1,17 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
+import SadIcon from "/public/images/icons/rating/sad.svg";
+import AngryIcon from "/public/images/icons/rating/angry.svg";
+import HappyIcon from "/public/images/icons/rating/happy.svg";
+import LaughIcon from "/public/images/icons/rating/laugh.svg";
+import NeutralIcon from "/public/images/icons/rating/neutral.svg";
+
 
 type EmojiItem = {
     id: number;
     label: string;
-    url: string;
+    icon: string;
 
 };
 
@@ -19,40 +25,30 @@ type EmojiRatingProps = {
 
 
 const EMOJIS: EmojiItem[] = [
-    {
-        id: 1,
-        label: "Very bad",
-        url: "angry.svg",
-    },
-    {
-        id: 2,
-        label: "Bad",
-        url: "neutral.svg",
-    },
-    {
-        id: 3,
-        label: "Okay",
-        url: "happy.svg",
-    },
-    {
-        id: 4,
-        label: "Good",
-        url: "sad.svg",
+    { id: 1, label: "Very bad", icon: AngryIcon },
+    { id: 2, label: "Bad", icon: NeutralIcon },
+    { id: 3, label: "Okay", icon: HappyIcon },
+    { id: 4, label: "Good", icon: SadIcon },
+    { id: 5, label: "Great", icon: LaughIcon },
+];
 
-    },
-    {
-        id: 5,
-        label: "Great",
-        url: "laugh.svg",
-    },
-]
 
 const renderLable = (value: string) => {
     return (
-        <p className="mx-1 text-md font-medium transition-colors">
+        <p className="
+            mx-1 font-medium transition-colors
+            text-center          
+            whitespace-normal    
+            break-words          
+            sm:max-w-[120px]     
+            xs:max-w-[110px]      
+            max-w-[80px]         
+            leading-tight        
+            xs:text-[12px] sm:text-sm
+        ">
             {value}
         </p>
-    )
+    );
 };
 
 export default function EmojiRating({
@@ -66,15 +62,15 @@ export default function EmojiRating({
     const [popIndex, setPopIndex] = useState<number | null>(null);
 
     const value = controlledValue ?? internalValue;
-    
+
     return (
-        <div dir="ltr" className="w-full flex flex-row items-center justify-center
-gap-2 select-none">
+        <div dir="ltr" className="w-full flex flex-row items-center justify-center gap-2 select-none px-12">
             <span className="md:flex hidden justify-between mt-2">
                 {startValue && renderLable(startValue)}
             </span>
             <div className="flex flex-col">
-                <div className="flex justify-between w-full x-2 gap-4">
+                <div className="flex w-full max-w-full justify-center gap-2 sm:gap-4 px-0">
+
                     {EMOJIS.map((emoji) => {
                         const isActive = emoji.id == value;
                         const isPopping = emoji.id == popIndex;
@@ -92,15 +88,17 @@ gap-2 select-none">
                                     setTimeout(() => setPopIndex(null), 180);
                                 }}
                             >
-                                <div
+                                {/* <div
                                     className={`relative w-14 h-14 ${isPopping ? "emoji-pop" : ""}`}
-                                >
+                                > */}
+                                <div className={`relative w-12 h-12 sm:w-14 sm:h-14 ${isPopping ? "emoji-pop" : ""}`}>
+
                                     <Image
-                                        src={`/images/icons/rating/${emoji.url}`}
+                                        src={emoji.icon}
                                         alt={emoji.label}
                                         fill
                                         quality={100}
-                                        priority={true}
+                                        priority
                                         sizes="56px"
                                         className="object-contain transition-all duration-200"
                                         style={{
@@ -197,7 +195,7 @@ export function RangeSlider({ value, max, onChange }: RangeSliderProps) {
         percent = 0;
     } else if (value == 1) {
         percent = (0.35 / max) * 100;
-    } else if (value == 2) {   
+    } else if (value == 2) {
         percent = (1.4 / max) * 100;
     } else if (value == 3) {
         percent = (2.49 / max) * 100;

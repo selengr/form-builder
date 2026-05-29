@@ -10,7 +10,7 @@ import Avatar from '@/components/Avatar/Avatar';
 import MenuSidebar from '@/components/SideBar/MenuSidebar';
 import MiddleSidebar from '../MiddleSidebar/MiddleSidebar';
 // hooks
-import { useUserInfo } from '@/hooks/useUserInfo';
+import { useUserInfoNew } from '@/hooks/useUserInfoNew';
 // images
 import LogoutIcon from '@/../public/images/home-page/logout.svg';
 import InfoIcon from '@/../public/images/home-page/info-icon.svg';
@@ -26,7 +26,7 @@ const SidebarButton = ({ icon, label, onClick }: { icon: JSX.Element; label: str
 export default function MainSidebar() {
   const pathname = usePathname();
   const isSurvey = pathname.includes('survey-');
-  const { userInfo, loading } = useUserInfo();
+  const { userInfo, isAuthenticated, loading } = useUserInfoNew();
   const avatar = userInfo?.user?.fullName;
   const endPoint = process.env.NEXT_PUBLIC_MRESALAT_ENDPOINT + '/';
 
@@ -41,7 +41,7 @@ export default function MainSidebar() {
 
   return (
     <>
-      <div className='flex flex-col justify-between min-w-[100px] bg-white overflow-y-auto no-scrollbar'>
+      <div className='flex flex-col justify-between min-w-[100px] bg-white overflow-y-auto no-scrollbar' style={{ scrollbarWidth: 'none' }}>
         <div className='flex flex-col items-center gap-4 pt-4'>
           <Link href={endPoint}>
             <Image src={MresalatLogo} alt='Mresalat_Logo' width={64} height={15} priority draggable={false} />
@@ -80,7 +80,7 @@ export default function MainSidebar() {
         </div>
       </div>
 
-     {!isSurvey && <MiddleSidebar />}
+      {!isSurvey && <MiddleSidebar isAuthenticated={isAuthenticated} userInfo={userInfo} loading={loading} />}
     </>
   );
 }

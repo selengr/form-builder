@@ -1,6 +1,5 @@
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
-import { Suspense } from 'react';
 import { RootProvider } from '@/providers';
 import NextTopLoader from 'nextjs-toploader';
 import LayoutWrapper from '@/templates/header/HeaderWrapper';
@@ -11,10 +10,6 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon/favicon.svg',
   },
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#2CDFC9' },
-    { media: '(prefers-color-scheme: dark)', color: '#1758BA' },
-  ],
   appleWebApp: {
     statusBarStyle: 'black-translucent',
   },
@@ -25,6 +20,10 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#2CDFC9' },
+    { media: '(prefers-color-scheme: dark)', color: '#1758BA' },
+  ],
 };
 
 export default function RootLayout({

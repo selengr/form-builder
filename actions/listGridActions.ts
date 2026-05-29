@@ -66,7 +66,7 @@ export async function fetchListGridData(
   url: string,
   searchQueryFilter: SearchQueryFilter = DEFAULT_SEARCH_FILTER,
 ) {
-  try {
+  // try {
     const filterRestrictions = buildFilterRestrictions(searchQueryFilter);
 
     const restrictionList = [
@@ -101,8 +101,8 @@ export async function fetchListGridData(
       data: data.content,
       total: data.totalElements,
     };
-  } catch (error) {
-    console.error('Server Action Error:', error);
-    throw new Error('خطا در دریافت اطلاعات');
-  }
+  // } catch (error) {
+  //   console.error('Server Action Error:', error);
+  //   throw new Error('خطا در دریافت اطلاعات');
+  // }
 }

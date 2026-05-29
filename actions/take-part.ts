@@ -8,7 +8,7 @@ export async function takePartAction(params: {
   from?: string
   refId?: string
 }) {
-  try {
+  // try {
     const { slug, username, from, refId } = params
     const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
 
@@ -21,20 +21,20 @@ export async function takePartAction(params: {
     })
 
     return { data: res.data }
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      'انجام عملیات با خطا مواجه شد';
+  // } catch (error: any) {
+  //   const message =
+  //     error?.response?.data?.message?.[0]?.title ||
+  //     error?.response?.data?.message ||
+  //     'انجام عملیات با خطا مواجه شد';
 
-    throw new Error(message);
-  }
+  //   throw new Error(message);
+  // }
 }
 
 export async function checkResponseLimitationAction(params: {
   slug: string
 }) {
-  try {
+  // try {
     const { slug } = params
     const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
 
@@ -44,14 +44,14 @@ export async function checkResponseLimitationAction(params: {
     })
 
    return { data: res.data }
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      'انجام عملیات با خطا مواجه شد';
+  // } catch (error: any) {
+  //   const message =
+  //     error?.response?.data?.message?.[0]?.title ||
+  //     error?.response?.data?.message ||
+  //     'انجام عملیات با خطا مواجه شد';
 
-    throw new Error(message);
-  }
+  //   throw new Error(message);
+  // }
 }
 
 export async function checkAnswerBeforeAction(params: {
@@ -60,7 +60,7 @@ export async function checkAnswerBeforeAction(params: {
   refId?: string
   from?: string
 }) {
-  try {
+  // try {
     const { slug, username, refId, from } = params
     const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
 
@@ -79,13 +79,13 @@ export async function checkAnswerBeforeAction(params: {
     );
 
     return { data: res.data }
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      'انجام عملیات با خطا مواجه شد';
-    throw new Error(message);
-  }
+  // } catch (error: any) {
+  //   const message =
+  //     error?.response?.data?.message?.[0]?.title ||
+  //     error?.response?.data?.message ||
+  //     'انجام عملیات با خطا مواجه شد';
+  //   throw new Error(message);
+  // }
 }
 
 export async function insertAnswerAction(params: {
@@ -123,7 +123,7 @@ export async function insertAnswerAction(params: {
 export async function getPreviousQuestionAction(params: {
   takePartId: any
 }) {
-  try {
+  // try {
     const { takePartId } = params
 
     const res = await serverApi.post("/question/previous-question", {
@@ -131,14 +131,14 @@ export async function getPreviousQuestionAction(params: {
     })
 
     return { data: res.data }
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      error?.response?.data ||
-      error?.message ||
-      'خطا در بازگشت به سوال قبلی';
+  // } catch (error: any) {
+  //   const message =
+  //     error?.response?.data?.message?.[0]?.title ||
+  //     error?.response?.data?.message ||
+  //     error?.response?.data ||
+  //     error?.message ||
+  //     'خطا در بازگشت به سوال قبلی';
 
-    throw new Error(message);
-  }
+  //   throw new Error(message);
+  // }
 }

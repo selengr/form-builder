@@ -18,7 +18,7 @@ import { ElementsType, FormElements } from '@/types/FormElements';
 // actions
 // import { fetchUserInfo } from '@/lib/auth';
 import { fetchUserInfoServer } from '../../actions/auth';
-import { AxiosApi } from '@/services/axios/AxiosApi';
+// import { AxiosApi } from '@/services/axios/AxiosApi';
 
 export interface ILimitation {
   isLimited: boolean;
@@ -174,13 +174,13 @@ export const useParticipateForm = () => {
 
   const fetchInitialData = useCallback(async () => {
     try {
-      const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
+      // const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
 
-      const result = await AxiosApi.post('/take-part/check-response-limitation-form', {
-        link: isLink ? slug : null,
-        id: !isLink ? slug : null,
-      });
-      // const result = await checkResponseLimitationAction({ slug })
+      // const result = await AxiosApi.post('/take-part/check-response-limitation-form', {
+      //   link: isLink ? slug : null,
+      //   id: !isLink ? slug : null,
+      // });
+      const result = await checkResponseLimitationAction({ slug })
 
       const { userInfo } = await fetchUserInfoServer();
       const username = userInfo?.user?.username || null;
@@ -241,25 +241,25 @@ export const useParticipateForm = () => {
 
   const checkAnswerBefore = async (username: string | null) => {
     try {
-      const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
-      const url = "/take-part/check-answer-to-form-before"
-      const res = await AxiosApi.post(url, {
-        link: isLink ? slug : null,
-        formId: !isLink ? slug : null,
-        username,
-        refId: refId ?? undefined,
-        from: from ?? undefined,
-      });
-
-      // const params: any = {
-      //   slug,
+      // const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
+      // const url = "/take-part/check-answer-to-form-before"
+      // const res = await AxiosApi.post(url, {
+      //   link: isLink ? slug : null,
+      //   formId: !isLink ? slug : null,
       //   username,
-      // };
+      //   refId: refId ?? undefined,
+      //   from: from ?? undefined,
+      // });
 
-      // if (refId) params.refId = refId;
-      // if (from) params.from = from;
+      const params: any = {
+        slug,
+        username,
+      };
 
-      // const res = await checkAnswerBeforeAction(params);
+      if (refId) params.refId = refId;
+      if (from) params.from = from;
+
+      const res = await checkAnswerBeforeAction(params);
 
 
       setTakePartId(res.data.takePart);

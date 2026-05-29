@@ -18,7 +18,7 @@ export async function PackagingList(
   url: string,
   searchQueryFilter = DEFAULT_SEARCH_FILTER,
 ) {
-  try {
+  // try {
     const filterRestrictions: SearchBoxItem[] = [];
 
     if (searchQueryFilter.isCreatedSoloReport && searchQueryFilter.isCreatedSoloReport !== 'ALL') {
@@ -69,12 +69,12 @@ export async function PackagingList(
       total: response.data.totalElements,
     };
     
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      'خطای نامشخص';
+  // } catch (error: any) {
+  //   const message =
+  //     error?.response?.data?.message?.[0]?.title ||
+  //     error?.response?.data?.message ||
+  //     'خطای نامشخص';
 
-    throw new Error(message);
-  }
+  //   throw new Error(message);
+  // }
 }

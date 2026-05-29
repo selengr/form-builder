@@ -12,7 +12,7 @@ type TargetPlatformResponse = {
 };
 
 export async function getTargetPlatformAction(): Promise<TargetPlatformResponse> {
-  try {
+  // try {
     const customComboFilterModel = {
       type: 'COMBO',
       entity: 'PROJECTS',
@@ -26,12 +26,12 @@ export async function getTargetPlatformAction(): Promise<TargetPlatformResponse>
 
     const { data } = await serverApi.get<TargetPlatformResponse>(baseUrl + queryString);
     return data;
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      'انجام عملیات با خطا مواجه شد';
+  // } catch (error: any) {
+  //   const message =
+  //     error?.response?.data?.message?.[0]?.title ||
+  //     error?.response?.data?.message ||
+  //     'انجام عملیات با خطا مواجه شد';
 
-    throw new Error(message);
-  }
+  //   throw new Error(message);
+  // }
 }

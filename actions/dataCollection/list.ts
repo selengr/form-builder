@@ -19,7 +19,7 @@ export async function dataCollectionFilter(
   url: string,
   searchQueryFilter = DEFAULT_SEARCH_FILTER,
 ) {
-  try {
+  // try {
     const filterRestrictions: SearchBoxItem[] = [];
 
     if (searchQueryFilter.surveyTargetPlatformEnum && searchQueryFilter.surveyTargetPlatformEnum !== 'ALL') {
@@ -69,12 +69,12 @@ export async function dataCollectionFilter(
       data: response.data.content,
       total: response.data.totalElements,
     };
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      'انجام عملیات با خطا مواجه شد';
+  // } catch (error: any) {
+  //   const message =
+  //     error?.response?.data?.message?.[0]?.title ||
+  //     error?.response?.data?.message ||
+  //     'انجام عملیات با خطا مواجه شد';
 
-    throw new Error(message);
-  }
+  //   throw new Error(message);
+  // }
 }

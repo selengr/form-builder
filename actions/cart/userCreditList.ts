@@ -3,7 +3,7 @@
 import { serverApi } from '@/services/axios/serverApi';
 
 export async function userCreditListAction(issueRequestId: number) {
-  try {
+  // try {
     const body = { issueRequestId };
 
     const response = await serverApi.post(
@@ -15,7 +15,7 @@ export async function userCreditListAction(issueRequestId: number) {
     );
 
     return response.data;
-  } catch (error) {
-    return Promise.resolve('');
-  }
+  // } catch (error) {
+  //   return Promise.resolve('');
+  // }
 }

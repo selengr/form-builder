@@ -3,7 +3,7 @@
 import { serverApi } from '@/services/axios/serverApi';
 
 export async function fetchParentCategory() {
-  try {
+  // try {
     const customComboFilterModel = {
       type: 'COMBO',
       entity: 'PROJECTS',
@@ -26,12 +26,12 @@ export async function fetchParentCategory() {
     }
 
     return response.data;
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      'انجام عملیات با خطا مواجه شد';
+  // } catch (error: any) {
+  //   const message =
+  //     error?.response?.data?.message?.[0]?.title ||
+  //     error?.response?.data?.message ||
+  //     'انجام عملیات با خطا مواجه شد';
 
-    throw new Error(message);
-  }
+  //   throw new Error(message);
+  // }
 }

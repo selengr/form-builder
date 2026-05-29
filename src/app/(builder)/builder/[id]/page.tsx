@@ -1,7 +1,7 @@
 import { serverApi } from '@/services/axios/serverApi';
 import FormBuilderWapper from '@/templates/builder/FormBuilderWapper';
 
-export async function getFormDataAction(id: string) {
+async function getFormDataAction(id: string) {
     const response = await serverApi.get(`/form/${id}`);
     return response.data;
 }

@@ -4,7 +4,7 @@ const AssessmentsCardSkeleton: React.FC = () => {
   return (
     <>
       {Array.from({ length: 5 }).map((_, i) => (
-       <Grid2 sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} size={{ xs: 12, md: 10, xl: 9 }}>
+       <Grid2 key={i} sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} size={{ xs: 12, md: 10, xl: 9 }}>
           <div className="border border-[#DDE1E6] p-3 rounded-2xl flex flex-col gap-0 w-full max-w-full">
 
             {/* Info Rows Skeleton */}

@@ -154,6 +154,7 @@ export default function ListGridWrapperSkeleton({ name, headerName, SkeletonComp
         <div className='w-full flex flex-col gap-4 items-center'>
             {[1, 2, 3, 4, 5].map((index) => (
                 <Grid
+                    key={index}
                     id='content'
                     container
                     flexWrap='nowrap'

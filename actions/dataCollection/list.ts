@@ -61,9 +61,9 @@ export async function dataCollectionFilter(
 
     const response = await serverApi.get(fullURL);
 
-    if (!response?.data) {
-      throw new Error('خطا در دریافت اطلاعات');
-    }
+    // if (!response?.data) {
+    //   throw new Error('خطا در دریافت اطلاعات');
+    // }
 
     return {
       data: response.data.content,

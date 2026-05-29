@@ -19,7 +19,7 @@ export async function surveyFilter(
   url: string,
   searchQueryFilter = DEFAULT_SEARCH_FILTER,
 ) {
-  try {
+  // try {
     const filterRestrictions: SearchBoxItem[] = [];
 
     if (searchQueryFilter.isCreatedSoloReport && searchQueryFilter.isCreatedSoloReport !== 'ALL') {
@@ -70,21 +70,21 @@ console.log('validCombinedRestrictionList--------------------------------------'
 
     const response = await serverApi.get(fullURL);
 
-    if (!response?.data) {
-      throw new Error('خطا در دریافت اطلاعات');
-    }
+    // if (!response?.data) {
+    //   throw new Error('خطا در دریافت اطلاعات');
+    // }
 
     return {
       data: response.data.content,
       total: response.data.totalElements,
     };
     
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      'انجام عملیات با خطا مواجه شد';
+  // } catch (error: any) {
+  //   const message =
+  //     error?.response?.data?.message?.[0]?.title ||
+  //     error?.response?.data?.message ||
+  //     'انجام عملیات با خطا مواجه شد';
 
-    throw new Error(error);
-  }
+  //   throw new Error(error);
+  // }
 }

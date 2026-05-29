@@ -12,7 +12,7 @@ import {
   checkAnswerBeforeAction,
   getPreviousQuestionAction,
   checkResponseLimitationAction,
-} from "../../actions/take-part"
+} from "@actions/take-part"
 // types
 import { ElementsType, FormElements } from '@/types/FormElements';
 // actions

@@ -7,7 +7,7 @@ type TicketListResponse = {
 };
 
 export async function getTicketListAction(id: string | string[]): Promise<any[]> {
-  try {
+  // try {
     const filterModel = {
       searchFilterBoxList: [{ restrictionList: [] }],
       sortList: [{ fieldName: 'id', type: 'DSC' }],
@@ -21,12 +21,12 @@ export async function getTicketListAction(id: string | string[]): Promise<any[]>
 
     const { data } = await serverApi.get<TicketListResponse>(url);
     return data.content;
-  } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      'انجام عملیات با خطا مواجه شد';
+  // } catch (error: any) {
+  //   const message =
+  //     error?.response?.data?.message?.[0]?.title ||
+  //     error?.response?.data?.message ||
+  //     'انجام عملیات با خطا مواجه شد';
 
-    throw new Error(message);
-  }
+  //   throw new Error(message);
+  // }
 }

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect } from 'react';
 import { Fragment, memo, useState } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { Button, IconButton, useMediaQuery } from '@mui/material';
 //type
 import { FormElements } from '@/types/FormElements';
@@ -57,6 +57,7 @@ interface DesignerSidebarProps {
 // eslint-disable-next-line react/display-name
 const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarProps) {
   const { id } = useParams();
+  const { refresh } = useRouter();
   const searchParams = useSearchParams();
   const pid = searchParams.get('pid');
   const [formTitle, setFormTitle] = useState<string>("");
@@ -88,6 +89,7 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
   const confirmPublish = () => {
     publishMutation.mutate(undefined, {
       onSuccess: () => {
+        refresh()
         setOpenConfirm(false);
       }
     });

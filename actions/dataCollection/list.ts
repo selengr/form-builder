@@ -68,14 +68,10 @@ export async function dataCollectionFilter(
       };
 
     } catch (error: any) {
-      const message =
-        error?.response?.data?.message?.[0]?.title ||
-        error?.response?.data?.message ||
-        'انجام عملیات با خطا مواجه شد';
 
         return {
         success: false,
-        message: message,
+        message: error?.message
       };
     }
 }

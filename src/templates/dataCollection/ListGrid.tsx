@@ -110,13 +110,20 @@ const ListGrid: React.FC<Props> = ({
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: ['datas_builder_query', query, searchQueryFilter, filterBoxList],
-    queryFn: ({ pageParam }) => dataCollectionFilter( pageParam , updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
+    queryFn: async ({ pageParam }) => {
+      const result = await dataCollectionFilter( pageParam , updatedSearchBoxList, filterBoxList, url, searchQueryFilter)
+      if(!result.success){
+        throw new Error(result.message)
+      }
+      return result.data
+    },
     getNextPageParam: (lastPage, allPages) => {
       const PAGE_SIZE = 10;
       return lastPage.data && lastPage.data.length === PAGE_SIZE ? allPages.length : undefined;
     },
     initialPageParam: 0,
     refetchOnWindowFocus: false,
+    retry: 2
   });
 
   const handleRefreshGrid = useCallback(() => {

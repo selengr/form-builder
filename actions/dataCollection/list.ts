@@ -19,7 +19,7 @@ export async function dataCollectionFilter(
   url: string,
   searchQueryFilter = DEFAULT_SEARCH_FILTER,
 ) {
-  // try {
+  try {
     const filterRestrictions: SearchBoxItem[] = [];
 
     if (searchQueryFilter.surveyTargetPlatformEnum && searchQueryFilter.surveyTargetPlatformEnum !== 'ALL') {
@@ -59,22 +59,23 @@ export async function dataCollectionFilter(
       `${url}?searchFilterModel=` +
       (encodedParams === encodeURIComponent('{}') ? '' : encodedParams);
 
-    const response = await serverApi.get(fullURL);
+      const response = await serverApi.get(fullURL);
 
-    // if (!response?.data) {
-    //   throw new Error('خطا در دریافت اطلاعات');
-    // }
+      return {
+        success: true,
+        data: response.data.content,
+        total: response.data.totalElements,
+      };
 
-    return {
-      data: response.data.content,
-      total: response.data.totalElements,
-    };
-  // } catch (error: any) {
-  //   const message =
-  //     error?.response?.data?.message?.[0]?.title ||
-  //     error?.response?.data?.message ||
-  //     'انجام عملیات با خطا مواجه شد';
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message?.[0]?.title ||
+        error?.response?.data?.message ||
+        'انجام عملیات با خطا مواجه شد';
 
-  //   throw new Error(message);
-  // }
+        return {
+        success: false,
+        message: message,
+      };
+    }
 }

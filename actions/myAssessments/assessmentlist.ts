@@ -89,10 +89,6 @@ export async function assessmentlist(
 
   const response = await serverApi.get(fullURL);
 
-  if (!response?.data) {
-    throw new Error('خطا در دریافت اطلاعات');
-  }
-
   return {
     data: response.data.content,
     total: response.data.totalElements,

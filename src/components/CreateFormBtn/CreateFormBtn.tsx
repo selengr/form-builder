@@ -49,6 +49,7 @@ export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
   });
 
   const {
+    reset,
     watch,
     setValue,
     getValues,
@@ -78,18 +79,25 @@ export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
     };
 
     try {
-      const response = await creatFormAction(body)
-      toast.success('عملیات با موفقیت انجام شد');
-      onClose()
-      router.push(`/builder/${response?.data?.id}`);
-      } catch (error:any) {
-         toast.error( error?.message || 'خطا در ایجاد فرم');
+      const result = await creatFormAction(body)
+
+      if (result.success) {
+        toast.success('عملیات با موفقیت انجام شد');
+        router.push(`/builder/${result.data?.id}`);
+        // onClose();
+        reset()
+      } else {
+        toast.error(result.message || 'خطا در ایجاد فرم');
+      }
+    } catch (error: any) {
+      toast.error(error?.message);
     }
   };
 
   const handleClose = () => {
     if (isSubmitting || mutation.isPending) return;
     onClose();
+    reset()
   };
 
   const handleTabChange = (_: unknown, newValue: string) => {
@@ -202,7 +210,7 @@ export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
                     bgcolor: '#1758BA',
                   },
                   '& .MuiTabs-list': {
-                    width : "100%"
+                    width: "100%"
                   }
                 }}>
                 {[
@@ -219,7 +227,7 @@ export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
                     sx={{
                       color: '#000',
                       fontWeight: 600,
-                      width:"100%"
+                      width: "100%"
                       // px: 5,
                       // flex: 1
                     }}
@@ -299,8 +307,8 @@ export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
                 fullWidth
                 disableElevation
                 variant='contained'
-                loading={isSubmitting || mutation.isPending}
-                disabled={isSubmitting || mutation.isPending}
+                loading={isSubmitting}
+                disabled={isSubmitting}
                 sx={{
                   bgcolor: '#1758BA',
                   fontWeight: '400',
@@ -334,7 +342,7 @@ export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
                   },
                 }}
                 onClick={handleClose}
-                disabled={isSubmitting || mutation.isPending}>
+                disabled={isSubmitting}>
                 <Typography color='#1758BA' variant='body2' component={'p'} py={0.5} fontWeight='600'>
                   انصراف
                 </Typography>

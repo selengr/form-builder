@@ -66,7 +66,7 @@ export async function fetchListGridData(
   url: string,
   searchQueryFilter: SearchQueryFilter = DEFAULT_SEARCH_FILTER,
 ) {
-  // try {
+  try {
     const filterRestrictions = buildFilterRestrictions(searchQueryFilter);
 
     const restrictionList = [
@@ -93,16 +93,15 @@ export async function fetchListGridData(
 
     const { data } = await serverApi.get(fullURL);
 
-    if (!data) {
-      throw new Error('خطا در دریافت اطلاعات');
-    }
-
-    return {
-      data: data.content,
-      total: data.totalElements,
-    };
-  // } catch (error) {
-  //   console.error('Server Action Error:', error);
-  //   throw new Error('خطا در دریافت اطلاعات');
-  // }
+      return {
+        success: true,
+        data: data.content,
+        total: data.totalElements,
+      };
+    } catch (error: any) {
+        return {
+        success: false,
+        message: error?.message
+      };
+   }
 }

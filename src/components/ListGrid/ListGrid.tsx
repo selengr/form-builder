@@ -47,7 +47,7 @@ interface Props {
   searchQueryFilter?: { type: string; status: string, isCreatedSoloReport: string, fieldOperation: string };
   showCreateButton?: boolean;
   CreateButton?: () => React.ReactNode;
-  SkeletonComponent: () =>  React.ReactNode;
+  SkeletonComponent: () => React.ReactNode;
 }
 
 const DEFAULT_SEARCH_FILTER = { type: 'ALL', status: 'ALL', isCreatedSoloReport: 'ALL', fieldOperation: "DSC" };
@@ -116,7 +116,13 @@ const ListGrid: React.FC<Props> = ({
     refetch,
   } = useInfiniteQuery({
     queryKey: ['datas_builder_query', debouncedSearch, searchQueryFilter, filterBoxList],
-    queryFn: ({ pageParam }) => fetchListGridData({ pageParam }, updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
+    queryFn: async ({ pageParam }) => {
+      const result = await fetchListGridData({ pageParam }, updatedSearchBoxList, filterBoxList, url, searchQueryFilter)
+      if (!result.success) {
+        throw new Error(result.message)
+      }
+      return result
+    },
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       const PAGE_SIZE = 10;
@@ -316,35 +322,35 @@ const ListGrid: React.FC<Props> = ({
 
           <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
             {renderHeader()}
-           <Grid sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} size={{ xs: 12, md: 10, xl: 9 }}>
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: '12px',
-                width: "100%",
-                flexWrap: { xs: 'nowrap', sm: 'nowrap' },
-              }}>
-              {renderTotalCount()}
-              {showCreateButton && (
-                <div className='min-w-[50px] w-[50px] h-full'>
-                  <IconButton
-                    onClick={handleOpenDialog}
-                    sx={{
-                      width: '50px',
-                      height: '50px',
-                      borderRadius: '16px',
-                      border: '1px solid #1758BA',
-                    }}>
-                    <Image src={PlusIcon} alt='' width={22} height={22} />
-                  </IconButton>
+            <Grid sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} size={{ xs: 12, md: 10, xl: 9 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: '12px',
+                  width: "100%",
+                  flexWrap: { xs: 'nowrap', sm: 'nowrap' },
+                }}>
+                {renderTotalCount()}
+                {showCreateButton && (
+                  <div className='min-w-[50px] w-[50px] h-full'>
+                    <IconButton
+                      onClick={handleOpenDialog}
+                      sx={{
+                        width: '50px',
+                        height: '50px',
+                        borderRadius: '16px',
+                        border: '1px solid #1758BA',
+                      }}>
+                      <Image src={PlusIcon} alt='' width={22} height={22} />
+                    </IconButton>
 
-                  <CreateFormBtn open={isDialogOpen} onClose={handleCloseDialog} />
-                </div>
-              )}
-              {CreateButton && CreateButton()}
-            </Box>
+                    <CreateFormBtn open={isDialogOpen} onClose={handleCloseDialog} />
+                  </div>
+                )}
+                {CreateButton && CreateButton()}
+              </Box>
             </Grid>
             {renderSearchAndFilter()}
             <Grid
@@ -367,7 +373,7 @@ const ListGrid: React.FC<Props> = ({
                   sm: 'calc(100vh - 290px)',
                   md: 'calc(100vh - 230px)',
                 },
-                scrollbarWidth : "none"
+                scrollbarWidth: "none"
               }}>
               {renderContent()}
             </Grid>

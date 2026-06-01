@@ -75,14 +75,20 @@ const ListGrid: React.FC<IProps> = ({
         isFetchingNextPage,
     } = useInfiniteQuery({
         queryKey: ['public-form', searchBoxList, url],
-        queryFn: ({ pageParam = 0 }) =>
-            fetchListGridData(
+        queryFn: async ({ pageParam = 0 }) => {
+            const result = await fetchListGridData(
                 { pageParam },
                 searchBoxList,
                 [],
                 url,
                 searchQueryFilter
-            ),
+            )
+            debugger
+            if (!result.success) {
+                throw new Error(result.message)
+            }
+            return result
+        },
         initialPageParam: 0,
         getNextPageParam: (lastPage, allPages) =>
             lastPage?.data?.length === PAGE_SIZE ? allPages.length : undefined,
@@ -149,7 +155,7 @@ const ListGrid: React.FC<IProps> = ({
 
                         {/* total - fixed for mobile */}
                         <Grid sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} size={{ xs: 12, md: 10, xl: 9 }}>
-                             <div className='flex justify-between gap-2 bg-[#ECFAFF] rounded-2xl px-[10px] py-4 w-full'>
+                            <div className='flex justify-between gap-2 bg-[#ECFAFF] rounded-2xl px-[10px] py-4 w-full'>
                                 <div className='flex items-center gap-[6px] sm:gap-[10px] flex-shrink-0'>
                                     <Image src={TotalGrid} width={18} height={18} className='sm:w-5 sm:h-5 select-none' alt='total' draggable={false} />
                                     <p className='text-xs sm:text-sm text-[#393939] whitespace-nowrap'>{textTotal[0]}:</p>

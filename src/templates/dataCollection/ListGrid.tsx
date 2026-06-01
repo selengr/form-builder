@@ -115,7 +115,7 @@ const ListGrid: React.FC<Props> = ({
       if(!result.success){
         throw new Error(result.message)
       }
-      return result.data
+      return result
     },
     getNextPageParam: (lastPage, allPages) => {
       const PAGE_SIZE = 10;

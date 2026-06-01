@@ -12,7 +12,7 @@ export const InfoRow: FC<InfoRowProps> = ({ label, value, bold = false, classNam
   return (
     <div className={clsx('flex items-start gap-1 text-[#393939] text-sm rtl:flex-row', className)}>
       <span className='whitespace-nowrap'>{label}:</span>
-      <span className={clsx(bold && 'font-bold')}>{value}</span>
+      <span className={clsx(bold && 'font-bold max-w-[80%]')}>{value}</span>
     </div>
   );
 };

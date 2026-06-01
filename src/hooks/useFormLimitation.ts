@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { ILimitation } from '@/hooks/useParticipateForm';
 // action
-import { checkAnswerBeforeAction } from '../../actions/take-part';
+// import { checkAnswerBeforeAction } from '../../actions/take-part';
 import { AxiosApi } from '@/services/axios/AxiosApi';
 
 export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimitation: (limitation: ILimitation) => void, setQuestion: (data: any) => void, addQuestion: (data: any) => void) => {

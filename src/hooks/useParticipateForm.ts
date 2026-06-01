@@ -181,9 +181,17 @@ export const useParticipateForm = () => {
       //   id: !isLink ? slug : null,
       // });
       const result = await checkResponseLimitationAction({ slug })
-
       const { userInfo } = await fetchUserInfoServer();
-      const username = userInfo?.user?.username || null;
+            const username = userInfo?.user?.username || null;
+
+       if (!result.success) {
+        toast.error(result.message || 'خطا در بررسی محدودیت پاسخ');
+        setHasError({ 
+          status: true, 
+          message: result.message || 'خطا در بررسی محدودیت پاسخ' 
+        });
+        return;
+      }
 
       if (result?.data?.loggedInStatus === false && result?.data?.responseLimitation) {
         setLimitation({
@@ -219,6 +227,15 @@ export const useParticipateForm = () => {
         from: from ?? undefined,
         refId: refId ?? undefined,
       })
+
+      if (!res.success) {
+        toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+        setHasError({
+          status: true,
+          message: res.message || 'انجام عملیات با خطا مواجه شد',
+        });
+        return;
+      }
 
       const q = res.data?.questionModel;
 
@@ -261,6 +278,15 @@ export const useParticipateForm = () => {
 
       const res = await checkAnswerBeforeAction(params);
 
+        if (!res.success) {
+          const message = res.message || 'انجام عملیات با خطا مواجه شد';
+          toast.error(message);
+          setHasError({
+            status: true,
+            message,
+          });
+          return;
+        }
 
       setTakePartId(res.data.takePart);
       setFormName(res.data?.formName);
@@ -404,12 +430,17 @@ export const useParticipateForm = () => {
         questionId: question.questionId,
         answerList,
       })
-
-      if (res.questionId) {
-        initializeQuestion(res, res.oldAnswers ?? []);
+      
+       if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
+        
+      if (res.data.questionId) {
+        initializeQuestion(res.data, res.data.oldAnswers ?? []);
       } else {
         setFinishPage(true);
-        setShowReportForResponder(res?.showReportForResponder);
+        setShowReportForResponder(res.data?.showReportForResponder);
       }
     } catch (error: any) {
       toast.error(error?.message || 'انجام عملیات با خطا مواجه شد', {
@@ -430,6 +461,15 @@ export const useParticipateForm = () => {
       setQuestionLoading(true);
       const res = await getPreviousQuestionAction({ takePartId })
       // const res = await AxiosApi.post('/question/previous-question', { takePartId });
+      
+         if (!res.success) {
+            toast.error(res.message || 'خطا در بازگشت به سوال قبلی', {
+              className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
+              duration: 2000,
+            });
+            return;
+          }
+     
       const q = res.data.questionModel;
       const a = res.data.oldAnswers?.answersModel ?? [];
       initializeQuestion(q, a);

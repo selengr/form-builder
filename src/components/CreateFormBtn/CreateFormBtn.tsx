@@ -118,6 +118,7 @@ export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
         '& .MuiPaper-root': {
           borderRadius: '24px',
           margin: '10px',
+          overflow: 'hidden',
         },
         '& .MuiDialog-container': {
           backdropFilter: 'blur(4px)',
@@ -129,6 +130,11 @@ export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
           display: 'flex',
           justifyContent: 'flex-start',
           alignItems: 'center',
+          position: 'sticky',
+          top: 0,
+          zIndex: 10,
+          backgroundColor: 'white',
+          marginBottom: '-1px',
         }}>
         <IconButton disabled={isSubmitting || mutation.isPending} aria-label='close' onClick={handleClose} sx={{ marginX: 1, marginTop: 1, marginBottom: 0 }}>
           <IoClose color='#404040' width={25} height={25} />
@@ -137,20 +143,40 @@ export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
       <DialogContent
         dir='rtl'
         sx={{
+          position: "relative",
           maxHeight: '75vh',
           height: 'auto',
           scrollbarWidth: 'none',
           maxWidth: '100%',
           width: '450px',
           paddingX: 1,
-          paddingBottom: 1,
+          paddingBottom: 0,
           paddingTop: 0,
+          overflowY: 'auto',
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
+          scrollBehavior: 'smooth',
         }}>
-        <Box width='100%' display='flex' justifyContent='center' alignItems='center' mb={2}>
+        <Box
+          width='100%'
+          sx={{
+            position: "sticky",
+            top: 0,
+            background: "#FFF",
+            zIndex: 99,
+            transform: 'translateZ(0)',
+            paddingBottom: 2,
+            marginTop: 0,
+          }}
+          display='flex'
+          justifyContent='center'
+          alignItems='center'>
           <Typography variant='subtitle2' color='#404040' fontSize='16px' fontWeight='700'>
             فرم جدید
           </Typography>
         </Box>
+
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Box
             sx={{
@@ -217,7 +243,6 @@ export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
                   { value: 'QUESTION', label: 'پرسشنامه' },
                   { value: 'TEST', label: 'آزمون' },
                   { value: 'COMPETITION', label: 'مسابقه' }
-                  // { value: 'SURVEY', label: 'نظرسنجی' },
                 ].map((tab) => (
                   <Tab
                     key={tab.value}
@@ -228,8 +253,6 @@ export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
                       color: '#000',
                       fontWeight: 600,
                       width: "100%"
-                      // px: 5,
-                      // flex: 1
                     }}
                   />
                 ))}
@@ -301,7 +324,22 @@ export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
               </Box>
             </Box>
 
-            <Box display='flex' gap={3} width='100%' marginTop={5} marginBottom={2} paddingX='40px'>
+            <Box
+              display='flex'
+              sx={{
+                position: "sticky",
+                bottom: 0,
+                background: "#FFF",
+                transform: 'translateZ(0)',
+                zIndex: 99,
+                marginTop: '1px',
+              }}
+              gap={3}
+              width='100%'
+              marginTop={2}
+              paddingTop={2}
+              paddingBottom={2}
+              paddingX='40px'>
               <Button
                 type='submit'
                 fullWidth

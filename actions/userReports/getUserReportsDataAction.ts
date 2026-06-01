@@ -23,16 +23,16 @@ export async function getUserReportsDataAction(page: number = 1, pageSize: numbe
     ];
 
     return {
+      success: true,
       headData,
       allData: rawData.content,
       totalItems: rawData.totalElements || rawData.content.length,
     };
- } catch (error: any) {
-    const message =
-      error?.response?.data?.message?.[0]?.title ||
-      error?.response?.data?.message ||
-      'انجام عملیات با خطا مواجه شد';
 
-    throw new Error(message);
+ } catch (error: any) {
+    return {
+       success: false,
+       message: error?.message
+    }
   }
 }

@@ -16,8 +16,11 @@ export const useStatsViewModel = () => {
       setIsLoading(true);
       // @ts-ignore
       const data = await userReports.getUserReportsData(page, pageSize);
-
-      setHeadData(data.headData);
+      if(!data.success) {
+          toast.error( data?.message || 'انجام عملیات با خطا مواجه شد');
+          return
+      }
+      setHeadData(data.headData!);
       setAllData(data.allData);
       setTotalItems(data.totalItems);
     } catch (error: any) {

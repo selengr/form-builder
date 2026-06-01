@@ -68,7 +68,6 @@ export async function dataCollectionFilter(
       };
 
     } catch (error: any) {
-
         return {
         success: false,
         message: error?.message

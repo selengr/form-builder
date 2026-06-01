@@ -1,144 +1,90 @@
-"use server"
+"use server";
 
-import { serverApi } from "@/services/axios/serverApi"
+import { api } from "@/services/axios/actionWapper";
+
+const PUBLIC_SLUG_REGEX = /^(public-|solo-|group-|survey-)/;
+
+function isPublicSlug(slug: string) {
+  return PUBLIC_SLUG_REGEX.test(slug);
+}
 
 export async function takePartAction(params: {
-  slug: string
-  username: string | null
-  from?: string
-  refId?: string
+  slug: string;
+  username: string | null;
+  from?: string;
+  refId?: string;
 }) {
-  // try {
-    const { slug, username, from, refId } = params
-    const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
+  const { slug, username, from, refId } = params;
+  const isLink = isPublicSlug(slug);
 
-    const res = await serverApi.post("/take-part", {
-      link: isLink ? slug : null,
-      formId: !isLink ? slug : null,
-      username,
-      from: from ?? "PUBLIC_PAGE",
-      refId: refId ?? null,
-    })
-
-    return { data: res.data }
-  // } catch (error: any) {
-  //   const message =
-  //     error?.response?.data?.message?.[0]?.title ||
-  //     error?.response?.data?.message ||
-  //     'انجام عملیات با خطا مواجه شد';
-
-  //   throw new Error(message);
-  // }
+  return api.post("/take-part", {
+    link: isLink ? slug : null,
+    formId: !isLink ? slug : null,
+    username,
+    from: from ?? "PUBLIC_PAGE",
+    refId: refId ?? null,
+  });
 }
 
 export async function checkResponseLimitationAction(params: {
-  slug: string
+  slug: string;
 }) {
-  // try {
-    const { slug } = params
-    const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
+  const { slug } = params;
+  const isLink = isPublicSlug(slug);
 
-    const res = await serverApi.post("/take-part/check-response-limitation-form", {
-      link: isLink ? slug : null,
-      id: !isLink ? slug : null,
-    })
-
-   return { data: res.data }
-  // } catch (error: any) {
-  //   const message =
-  //     error?.response?.data?.message?.[0]?.title ||
-  //     error?.response?.data?.message ||
-  //     'انجام عملیات با خطا مواجه شد';
-
-  //   throw new Error(message);
-  // }
+  return api.post("/take-part/check-response-limitation-form", {
+    link: isLink ? slug : null,
+    id: !isLink ? slug : null,
+  });
 }
 
 export async function checkAnswerBeforeAction(params: {
-  slug: string
-  username: string | null
-  refId?: string
-  from?: string
+  slug: string;
+  username: string | null;
+  refId?: string;
+  from?: string;
 }) {
-  // try {
-    const { slug, username, refId, from } = params
-    const isLink = /^(public-|solo-|group-|survey-)/.test(slug)
+  const { slug, username, refId, from } = params;
+  const isLink = isPublicSlug(slug);
 
-    const payload: any = {
-      link: isLink ? slug : null,
-      formId: !isLink ? slug : null,
-      username,
-    };
+  const payload: any = {
+    link: isLink ? slug : null,
+    formId: !isLink ? slug : null,
+    username,
+  };
 
-    if (refId) payload.refId = refId;
-    if (from) payload.from = from;
+  if (refId) payload.refId = refId;
+  if (from) payload.from = from;
 
-    const res = await serverApi.post(
-      "/take-part/check-answer-to-form-before",
-      payload
-    );
-
-    return { data: res.data }
-  // } catch (error: any) {
-  //   const message =
-  //     error?.response?.data?.message?.[0]?.title ||
-  //     error?.response?.data?.message ||
-  //     'انجام عملیات با خطا مواجه شد';
-  //   throw new Error(message);
-  // }
+  return api.post("/take-part/check-answer-to-form-before", payload);
 }
 
 export async function insertAnswerAction(params: {
-  formId: string | number
-  takePartId: any
-  questionId: string | number
+  formId: string | number;
+  takePartId: any;
+  questionId: string | number;
   answerList: Array<{
-    optionId: number | null
-    answer: string
-    id?: number
-  }>
+    optionId: number | null;
+    answer: string;
+    id?: number;
+  }>;
 }) {
-  // try {
-    const { formId, takePartId, questionId, answerList } = params
+  const { formId, takePartId, questionId, answerList } = params;
 
-    const res = await serverApi.post("/take-part/insert-answer", {
-      formId,
-      takePartId,
-      questionId,
-      answerList,
-    })
-
-    return res.data
-  // } catch (error: any) {
-  //   const message =
-  //     error?.response?.data?.message?.[0]?.title ||
-  //     error?.response?.data?.message ||
-  //     'انجام عملیات با خطا مواجه شد';
-
-  //   throw new Error(message);
-  // }
+  return api.post("/take-part/insert-answer", {
+    formId,
+    takePartId,
+    questionId,
+    answerList,
+  });
 }
 
-
 export async function getPreviousQuestionAction(params: {
-  takePartId: any
+  takePartId: any;
 }) {
-  // try {
-    const { takePartId } = params
+  const { takePartId } = params;
 
-    const res = await serverApi.post("/question/previous-question", {
-      takePartId,
-    })
-
-    return { data: res.data }
-  // } catch (error: any) {
-  //   const message =
-  //     error?.response?.data?.message?.[0]?.title ||
-  //     error?.response?.data?.message ||
-  //     error?.response?.data ||
-  //     error?.message ||
-  //     'خطا در بازگشت به سوال قبلی';
-
-  //   throw new Error(message);
-  // }
+  return api.post("/question/previous-question", {
+    takePartId,
+  });
 }

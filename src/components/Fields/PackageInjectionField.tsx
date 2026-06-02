@@ -260,7 +260,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   );
 }
 // ------------------------------------------------------- loading
-const SkeletonMenuItem = () => (
+export const SkeletonMenuItem = () => (
   <MenuItem
     disabled
     sx={{

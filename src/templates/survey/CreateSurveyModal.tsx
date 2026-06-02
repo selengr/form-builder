@@ -15,6 +15,7 @@ import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
 import { useCreateSurvey } from './hooks/useCreateSurvey';
 import { useGetSurveyPurpose } from './hooks/useGetSurveyPurpose';
 import { useGetTargetPlatform } from './hooks/useGetTargetPlatform';
+import { SkeletonMenuItem } from '@/components/Fields/PackageInjectionField';
 
 interface IGetTargetPlatform {
   value: string;
@@ -175,7 +176,7 @@ export default function CreateSurveyModal({ open, onClose }: TCreateSurveyModalP
 
                 <RHFSelect fullWidth name='surveyTargetPlatformEnum' sx={textFieldCommonSx} >
                   <MenuItem value=''>انتخاب کنید</MenuItem>
-                  {isFetchingSurvey && <MenuItem value=''><PreviewLoading /></MenuItem>}
+                  {isFetchingSurvey && <MenuItem value=''><SkeletonMenuItem /></MenuItem>}
                   {TargetPlatform?.map((item: IGetTargetPlatform) => (
                     <MenuItem key={item.value} value={item.value}>
                       {item.caption}

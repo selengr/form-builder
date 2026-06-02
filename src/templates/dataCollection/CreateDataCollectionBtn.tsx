@@ -14,6 +14,7 @@ import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
 // hooks
 import { useGetTargetPlatform } from './hooks/useGetTargetPlatform';
 import { useCreateDataCollection } from './hooks/useCreateDataCollection';
+import { SkeletonMenuItem } from '@/components/Fields/PackageInjectionField';
 
 interface IGetTargetPlatform {
   value: string;
@@ -191,7 +192,7 @@ export default function CreateDataCollectionBtn({ open, onClose }: IProps) {
 
                 <RHFSelect fullWidth name='targetPlatformEnum' sx={textFieldCommonSx} >
                   <MenuItem value=''>انتخاب کنید</MenuItem>
-                  {isFetchingTargetPlatform && <MenuItem value=''><PreviewLoading /></MenuItem>}
+                  {isFetchingTargetPlatform && <MenuItem value=''><SkeletonMenuItem /></MenuItem>}
                   {TargetPlatform?.map((item: IGetTargetPlatform) => (
                     <MenuItem key={item.value} value={item.value}>
                       {item.caption}

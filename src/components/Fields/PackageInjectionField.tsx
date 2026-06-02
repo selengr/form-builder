@@ -130,7 +130,13 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
     };
 
     try {
-      await createPackagingFormInjection(body);
+      const res = await createPackagingFormInjection(body);
+
+      if (!res.success) {
+        toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+        return;
+      }
+
       await queryClient.invalidateQueries({ queryKey: ["form-builder", element.formId] })
       const newComeingData = await refetch()
 

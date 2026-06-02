@@ -16,6 +16,10 @@ export function updateQuestionAction(questionId: string, payload: any) {
   return api.put(`/question/${questionId}`, payload);
 }
 
+export function createPackagingFormInjection(payload: IPostPackageFormInjectionBody) {
+  return api.post('/form/form-injection', payload);
+}
+
 // export async function createQuestionAction(payload: any) {
 //   // try {
 //     const res = await serverApi.post('/question', payload);
@@ -44,16 +48,16 @@ export function updateQuestionAction(questionId: string, payload: any) {
 //   // }
 // }
 
-export async function createPackagingFormInjection(payload: IPostPackageFormInjectionBody) {
-  // try {
-    const res: any = await serverApi.post(`/form/form-injection`, payload);
-    return { data: res.data };
-  // } catch (error: any) {
-  //   const message =
-  //     error?.response?.data?.message?.[0]?.title ||
-  //     error?.response?.data?.message ||
-  //     'انجام عملیات با خطا مواجه شد';
+// export async function createPackagingFormInjection(payload: IPostPackageFormInjectionBody) {
+//   // try {
+//     const res: any = await serverApi.post(`/form/form-injection`, payload);
+//     return { data: res.data };
+//   // } catch (error: any) {
+//   //   const message =
+//   //     error?.response?.data?.message?.[0]?.title ||
+//   //     error?.response?.data?.message ||
+//   //     'انجام عملیات با خطا مواجه شد';
 
-  //   throw new Error(message);
-  // }
-}
+//   //   throw new Error(message);
+//   // }
+// }

@@ -443,14 +443,19 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       delete removeId.questionId;
 
       try {
-        const { data }: any = await createQuestionAction(removeId as any);
+        const res = await createQuestionAction(removeId as any);
+
+        if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
+        const data = res.data
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;
         const newData = {
           ...data,
         };
-        debugger
         const positionToUse = lastIndexOfGroup === -1 ? firstIndexAfterThePreviousSelectedGroup : lastIndexOfGroup + 1;
         addElement(selectedElement?.position?.realPosition ?? positionToUse, newData);
 
@@ -462,7 +467,12 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       }
     } else {
       try {
-        const { data }: any = await updateQuestionAction(String(finalFieldData?.questionId), finalFieldData);
+        const res: any = await updateQuestionAction(String(finalFieldData?.questionId), finalFieldData);
+        if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
+        const data = res.data
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;

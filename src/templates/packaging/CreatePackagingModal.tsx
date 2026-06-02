@@ -15,6 +15,7 @@ import { useGetSubCategory } from '@/components/CreateFormBtn/hooks/useGetSubCat
 import { useGetParentCategory } from '@/components/CreateFormBtn/hooks/useGetParentCategory';
 import { useGetSurveyPurpose as useGetPackagingPurpose } from '../survey/hooks/useGetSurveyPurpose';
 import { SkeletonMenuItem } from '@/components/Fields/PackageInjectionField';
+import { useGetPackagePurpose } from './hooks/useGetPackagePurpose';
 
 interface IGetTargetPlatform {
   value: string;
@@ -53,7 +54,7 @@ export default function CreatePackagingModal({ open, onClose }: ICreatePackaging
 
   const { mutation, SubCategoryData } = useGetSubCategory();
   const { Category, isFetchingCategory } = useGetParentCategory();
-  const { Survey: Packaging, isFetchingSurvey: isFetchingPackaging } = useGetPackagingPurpose(open);
+  const { Package, isFetchingPackage } = useGetPackagePurpose(open);
 
   const methods = useForm<PackaginigFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
@@ -87,7 +88,7 @@ export default function CreatePackagingModal({ open, onClose }: ICreatePackaging
 
     const body = {
       name,
-      targetLabelEnum: targetLabelEnum === "GENERAL" ? "DEFAULT" : targetLabelEnum,
+      targetLabelEnum: targetLabelEnum,
       formCategorysModel: {
         categoryId: allCategoryIds,
       },
@@ -191,8 +192,8 @@ export default function CreatePackagingModal({ open, onClose }: ICreatePackaging
 
                 <RHFSelect fullWidth name='targetLabelEnum' sx={textFieldCommonSx}>
                   <MenuItem value=''>انتخاب کنید</MenuItem>
-                  {isFetchingPackaging && <MenuItem value=''><SkeletonMenuItem /></MenuItem>}
-                  {Packaging?.map((item: IGetTargetPlatform) => (
+                  {isFetchingPackage && <MenuItem value=''><SkeletonMenuItem /></MenuItem>}
+                  {Package?.map((item: IGetTargetPlatform) => (
                     <MenuItem key={item.value} value={item.value}>
                       {item.caption}
                     </MenuItem>

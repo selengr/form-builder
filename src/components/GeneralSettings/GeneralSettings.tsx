@@ -111,7 +111,6 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
 
   const onSubmit = useCallback(
     async (values: PropertiesFormSchemaType) => {
-      console.log('value', values.showReportForResponder)
 
       const token = await getAuthToken();
       try {
@@ -149,19 +148,22 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
           return;
         }
         queryClient.invalidateQueries({ queryKey: ['datas_builder_query'] });
-        handleOpen();
-        reset();
-        toast.success('با موفقیت به سبد خرید افزوده شد.', {
-          className: `max-w-[300px]`,
-          duration: 6000,
-          action: {
-            label: 'مشاهده سبد خرید',
-            onClick: () => {
-              push('/purchase-order');
+        if(values.capacityPublicLink){
+          toast.success('با موفقیت به سبد خرید افزوده شد.', {
+            className: `max-w-[300px]`,
+            duration: 6000,
+            action: {
+              label: 'مشاهده سبد خرید',
+              onClick: () => {
+                push('/purchase-order');
+              },
             },
-          },
-        });
-
+          });
+        } else {
+          toast.success('اعمال تغییرات با موفقیت به انجام شد.');
+        }
+       handleOpen();
+        reset();
       } catch (error: any) {
         toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
       }
@@ -189,7 +191,7 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
   }
 
   const handleRedirection = () => {
-    push("/reports")
+    push(`/reports/create-solo/${formId}`)
   }
 
   return (

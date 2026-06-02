@@ -132,7 +132,7 @@ const propertiesSchema = z
       .trim()
       .transform((value) => value.replace(/\s+/g, ' '))
       .pipe(z.string().min(1, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' }).max(3999, { message: 'حداقل باید 1 و حداکثر 4000 کاراکتر باشد' })),
- label: z
+    label: z
       .string()
       .trim()
       .transform((value) => {
@@ -337,7 +337,7 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
       <Typography
         sx={{
           marginBottom: '2rem',
-           fontSize: { xs: 15, sm: 16 },
+          fontSize: { xs: 15, sm: 16 },
           fontWeight: '600',
           textAlign: "justify"
         }}>
@@ -377,7 +377,7 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
           {!!error && <Typography color='#f44336'>{error}</Typography>}
         </>
       )}
-     {description && (
+      {description && (
         <Typography sx={{ fontSize: '12px', fontWeight: '500', marginTop: '3rem' }} variant='subtitle2'>
           {description}
         </Typography>
@@ -548,7 +548,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       questionPropertyList: propertiesData,
       optionList: [],
       spectralPlaceList: updatedSpectralPlaceList,
-        label: label ?? null,
+      label: label ?? null,
     };
 
     if (!selectedYet) {
@@ -556,7 +556,12 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       delete removeId.questionId;
 
       try {
-        const { data }: any = await createQuestionAction(removeId as any);
+        const res = await createQuestionAction(removeId as any);
+        if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
+        const data = res.data
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;
@@ -570,12 +575,17 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
-      } catch (error:any) {
-         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+      } catch (error: any) {
+        toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     } else {
       try {
-        const { data }: any = await updateQuestionAction(String(finalFieldData.questionId), finalFieldData);
+        const res = await updateQuestionAction(String(finalFieldData.questionId), finalFieldData);
+        if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
+        const data = res.data
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;
@@ -586,8 +596,8 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         setOpenDialog(false);
         setSelectedElement(null);
         reset();
-      } catch (error:any) {
-         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+      } catch (error: any) {
+        toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     }
   }
@@ -626,7 +636,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
                   borderRadius: '10px',
                 },
               }}>
-              <RHFTextField name='label' dir='ltr'/>
+              <RHFTextField name='label' dir='ltr' />
             </Box>
           </Stack>
         }

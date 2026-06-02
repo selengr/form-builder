@@ -26,7 +26,13 @@ const ListCard: React.FC<ListCardProps> = ({
   const handleClone = async () => {
     setLoading(true);
     try {
-      await clonePackageAction(id);
+       const res = await clonePackageAction(id);
+
+      if (!res.success) {
+        toast.error(res.message || 'خطا در کپی فرم');
+        return;
+      }
+
 
       toast.success(
         <div className="flex flex-col">

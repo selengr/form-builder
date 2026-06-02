@@ -20,7 +20,7 @@ const KanbanBoard = memo(function KanbanBoard() {
   const elements = useElements();
   const setOpenDialog = useActionOpenDialog();
   const setElements = useActionElements();
-  const setSelectedElement = useActionSelectedElement();  
+  const setSelectedElement = useActionSelectedElement();
   const { questionGroups, formSetting } = useDesigner();
   const [snapshot, setSnapshot] = useState<[] | FormElementInstance[]>([]);
   const itemsByGroup = useMemo(() => {
@@ -36,7 +36,12 @@ const KanbanBoard = memo(function KanbanBoard() {
 
   const changeOrMovePositionApiReducer = useCallback(async (payload: IChangeOrMovePositionApi, activeElement: FormElementInstance, snapshot: FormElementInstance[]) => {
     try {
-      await changeOrMoveQuestionPositionAction(payload);
+      const res = await changeOrMoveQuestionPositionAction(payload);
+      if (!res.success) {
+        toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+        return;
+      }
+
       setElements((allQuestions) => {
         const targetQuestion = allQuestions.find((que) => que.questionId === activeElement?.questionId);
         delete targetQuestion?.draft;

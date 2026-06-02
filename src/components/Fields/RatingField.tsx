@@ -217,7 +217,7 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
       <Typography
         sx={{
           marginBottom: '2rem',
-          fontSize:{ xs: 15, sm: 16 },
+          fontSize: { xs: 15, sm: 16 },
           fontWeight: '600',
           textAlign: "justify"
         }}>
@@ -257,7 +257,7 @@ function FormComponent({ elementInstance, value, onChange, error }: { elementIns
           endValue={end}
         />
       )}
-            {description && (
+      {description && (
         <Typography sx={{ fontSize: '12px', fontWeight: '500', marginTop: '2rem', textAlign: "justify" }} variant='subtitle2'>
           {description}
         </Typography>
@@ -406,7 +406,12 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       delete removeId.questionId;
 
       try {
-        const { data }: any = await createQuestionAction(removeId as any);
+        const res = await createQuestionAction(removeId as any);
+        if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
+        const data = res.data
         delete data.questionPropertyList;
         const newData = {
           ...data,
@@ -423,7 +428,12 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       }
     } else {
       try {
-        const { data }: any = await updateQuestionAction(String(finalFieldData.questionId), finalFieldData);
+        const res = await updateQuestionAction(String(finalFieldData.questionId), finalFieldData);
+        if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
+        const data = res.data
         delete data.questionPropertyList;
         const newData = {
           ...data,

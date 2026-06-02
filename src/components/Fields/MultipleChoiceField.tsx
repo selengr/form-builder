@@ -467,7 +467,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       }
     } else {
       try {
-        const res: any = await updateQuestionAction(String(finalFieldData?.questionId), finalFieldData);
+        const res = await updateQuestionAction(String(finalFieldData?.questionId), finalFieldData);
         if (!res.success) {
           toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
           return;

@@ -624,7 +624,12 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       const removeId: any = { ...finalFieldData };
       delete removeId.questionId;
       try {
-        const { data }: any = await createQuestionAction(removeId as any);
+        const res = await createQuestionAction(removeId as any);
+        if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
+        const data = res.data
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;
@@ -641,7 +646,12 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       }
     } else {
       try {
-        const { data }: any = await updateQuestionAction(String(finalFieldData.questionId), finalFieldData);
+        const res = await updateQuestionAction(String(finalFieldData.questionId), finalFieldData);
+        if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
+        const data = res.data
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;

@@ -148,7 +148,12 @@ export default function SettingsDialog({
     }
 
     try {
-      await formSetting(isBuilderCardId ?? (formId as string), body);
+      const res = await formSetting(isBuilderCardId ?? (formId as string), body);
+
+          if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
 
       toast.success('تنظیمات با موفقیت ثبت شد');
         queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })

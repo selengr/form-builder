@@ -23,7 +23,6 @@ import useActionOpenDialog from '@/hooks/useActionOpenDialog';
 import useActionSelectedElement from '@/hooks/useActionSelectedElement';
 // images
 import RatingIcon from '@/../public/images/home-page/rating.svg';
-import CheckIcon from '@/../public/images/home-page/spectral.svg';
 // type
 import { IFormElementConstructor, IQPLRating, IRatingQTapAndOptionsType } from '@/types/bulider';
 import { ElementsType, FormElement, FormElementInstance } from '../../types/FormElements';

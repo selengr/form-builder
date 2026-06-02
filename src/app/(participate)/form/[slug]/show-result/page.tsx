@@ -74,7 +74,7 @@ const ResultsPage = () => {
 
   return (
     <PageContainer>
-      <div className={`flex flex-col bg-white rounded-xl overflow-hidden`}>
+      <div className={`flex flex-col bg-white rounded-xl overflow-hidden min-h-fit`}>
 
         <div className='shrink-0 m-2 p-4 z-10 w-[calc(100%-16px)]  h-[52px] flex items-center justify-center rounded-lg bg-[#F7F7FF] mb-4 relative'>
           <Link href={`/`} className='absolute right-1 md:right-4'>

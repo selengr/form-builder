@@ -118,7 +118,11 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
     if (!finishPage) {
       try {
-        const res: any = await createEndPageAction(data as any);
+        const res = await createEndPageAction(data as any);
+        if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
         addFinishPage({
           ...selectedElement?.fieldElement,
           questionId: res?.data?.endPageId,
@@ -134,6 +138,10 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
     } else {
       try {
         const res = await updateEndPageAction(data as any);
+        if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
         updateFinishPage({
           ...element,
           description: res?.data?.description,
@@ -143,6 +151,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         reset();
       } catch (error) {
         console.error(error);
+        toast.error('انجام عملیات با خطا مواجه شد');
       }
     }
   }

@@ -47,7 +47,7 @@ export default function PreviewPage() {
   return (
     <div className={`w-full flex flex-col overflow-hidden h-[calc(100dvh-76px)] md:h-screen p-2 sm:p-3`}>
 
-      <div className={`flex flex-col bg-white rounded-xl overflow-hidden h-full shadow-sm`}>
+      <div className={`flex flex-col bg-white rounded-xl overflow-hidden h-full`}>
 
         <div className='shrink-0 m-2 p-4 z-10 w-[calc(100%-16px)]  h-[52px] flex items-center justify-center rounded-lg bg-[#F7F7FF] mb-4 relative'>
           <IconButton sx={{ position: 'absolute', left: { xs: '2px', sm: '8px' } }} onClick={() => router.push(admin ? `/user-reports/${paramId}` : `/builder/${paramId}`)}>

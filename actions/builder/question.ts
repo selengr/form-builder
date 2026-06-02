@@ -8,15 +8,15 @@ export interface IPostPackageFormInjectionBody {
   selectedFormId :number;
 }
 
-export function createQuestionAction(payload: any) {
+export async function createQuestionAction(payload: any) {
   return api.post('/question', payload);
 }
 
-export function updateQuestionAction(questionId: string, payload: any) {
+export async function updateQuestionAction(questionId: string, payload: any) {
   return api.put(`/question/${questionId}`, payload);
 }
 
-export function createPackagingFormInjection(payload: IPostPackageFormInjectionBody) {
+export async function createPackagingFormInjection(payload: IPostPackageFormInjectionBody) {
   return api.post('/form/form-injection', payload);
 }
 

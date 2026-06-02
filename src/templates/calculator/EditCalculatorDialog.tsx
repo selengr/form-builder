@@ -69,7 +69,7 @@ export const EditCalculatorDialog: React.FC<IEditCalculatorDialogProps> = ({ ope
         {isLoading ||
           (editLoading && (
             <div className='flex flex-col items-center justify-center w-full h-full min-w-[600px] min-h-[300px] bg-white bg-opacity-80 border border-gray-300 rounded-lg shadow-lg'>
-              <PreviewLoading />
+              {/* <PreviewLoading /> */}
               <p className='text-lg text-gray-800'>در حال بارگیری ماشین حساب ...</p>
             </div>
           ))}

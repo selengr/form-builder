@@ -6,11 +6,10 @@ import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
-import { Box, MenuItem, Typography } from '@mui/material';
+import { Box, MenuItem, Skeleton, Typography } from '@mui/material';
 // components
 import { RHFSelect } from '../../components/hook-form';
 import FormProvider from '@/components/hook-form/FormProvider';
-import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
 // hooks
 import useDesigner from '@/hooks/useDesigner';
 import useElements from '@/hooks/useElements';
@@ -182,52 +181,77 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
               display: 'flex',
               flexDirection: 'column',
               height: '100%',
-              direction: 'ltr',
               width: '100%',
+              overflow: 'hidden',
+              boxSizing: 'border-box',
               '& .MuiFormControl-root, & .MuiInputBase-root': {
                 borderRadius: '10px',
+                width: '100%',
               },
-            }}>
+            }}
+          >
             <RHFSelect
               fullWidth
-              name='selectedFormId'
+              name="selectedFormId"
               sx={{
-                '& .MuiInputBase-root': {
-                  bgcolor: '#fff',
-                  width: "100%"
-                },
+                '& .MuiInputBase-root': { bgcolor: '#fff' },
               }}
             >
-              {isFetchingForms && <MenuItem value=''><PreviewLoading /></MenuItem>}
-              {FormsList?.map((item: IGetPAckagingForm) => (
-                <MenuItem
-                  key={item.value}
-                  value={item.value}
-                  sx={{
-                    borderRadius: '15px',
-                    mx: 1,
-                    my: 0.5,
-                    px: 2,
-                    py: 1.1,
-                    transition: 'all 0.2s',
-                    '&:hover': {
-                      bgcolor: '#F3F6FD',
-                    },
-                    '&.Mui-selected': {
-                      bgcolor: '#E8F0FF',
-                      fontWeight: 600,
-                    },
-                  }}
-                >
-                  <Box display="flex" flexDirection="column">
-                    <Typography fontSize={14} fontWeight={500}>
-                      {item.caption}
-                    </Typography>
-                  </Box>
-                </MenuItem>
+              {isFetchingForms ? (
+                <>
+                  <SkeletonMenuItem />
+                  <SkeletonMenuItem />
+                </>
+              ) : (
+                FormsList?.map((item: IGetPAckagingForm) => (
+                  <MenuItem
+                    key={item.value}
+                    value={item.value}
+                    sx={{
+                      borderRadius: '12px',
+                      mx: 1,
+                      my: 0.6,
+                      px: 2,
+                      py: 1.5,
+                      display: 'flex',
+                      transition: 'all 0.2s ease-in-out',
+                      flex: 1,
+                      '&:hover': {
+                        bgcolor: '#F3F6FD',
+                        color: '#1976d2',
+                      },
+                      '&.Mui-selected': {
+                        bgcolor: '#E8F0FF !important',
+                        color: '#1565c0',
+                        fontWeight: 600,
+                      },
+                    }}
+                  >
 
-              ))}
+                    <Box sx={{
+                      minWidth: 0,
+                      width: '100%',
+                      display: 'flex',
+                      flexDirection: 'column'
+                    }}>
+                      <Typography
+                        fontSize={14}
+                        fontWeight={500}
+                        lineHeight={1.4}
+                        sx={{
+                          maxWidth: 300,
+                          whiteSpace: 'normal',
+                          wordBreak: 'break-word',
+                          overflowWrap: 'break-word',
+                        }}
+                      >
+                        {item.caption}
+                      </Typography>
+                    </Box>
+                  </MenuItem>
+                )))}
             </RHFSelect>
+
           </Box>
         </Box>
         <FieldDialogActionBottomButtons status={isSubmitting} />
@@ -235,3 +259,37 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
     </FormProvider>
   );
 }
+// ------------------------------------------------------- loading
+const SkeletonMenuItem = () => (
+  <MenuItem
+    disabled
+    sx={{
+      borderRadius: '12px',
+      mx: 1,
+      my: 0.5,
+      px: 2,
+      py: 1.2,
+      display: 'flex',
+      alignItems: 'flex-start',
+      cursor: 'default',
+      '&:hover': {
+        bgcolor: 'transparent',
+      }
+    }}
+  >
+    <Box display="flex" flexDirection="column" sx={{ minWidth: 0, width: '100%' }}>
+      <Skeleton
+        variant="text"
+        width="80%"
+        height={20}
+        sx={{ borderRadius: '4px' }}
+      />
+      <Skeleton
+        variant="text"
+        width="60%"
+        height={16}
+        sx={{ mt: 0.5, borderRadius: '4px' }}
+      />
+    </Box>
+  </MenuItem>
+);

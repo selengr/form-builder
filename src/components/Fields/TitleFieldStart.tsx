@@ -17,7 +17,6 @@ import useActionOpenDialog from '@/hooks/useActionOpenDialog';
 import useActionSelectedElement from '@/hooks/useActionSelectedElement';
 import useSelectedElement from '@/hooks/useSelectedElement';
 import useActionDesigner from '@/hooks/useActionDesigner';
-import { useSearchParams } from 'next/navigation';
 // actions
 import { upsertStartPageAction } from '../../../actions/builder/formStartPage';
 
@@ -109,6 +108,10 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
     if (!startPage) {
       try {
         const res = await upsertStartPageAction(data as any);
+        if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
         addStartPage({
           ...selectedElement?.fieldElement,
           startPageMsg: res.data.startPageMsg,
@@ -123,6 +126,10 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
     } else {
       try {
         const res = await upsertStartPageAction(data as any);
+        if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
         updateStartPage({
           ...element,
           startPageMsg: res.data.startPageMsg,
@@ -132,6 +139,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
         reset();
       } catch (error) {
         console.error(error);
+        toast.error('انجام عملیات با خطا مواجه شد');
       }
     }
   }

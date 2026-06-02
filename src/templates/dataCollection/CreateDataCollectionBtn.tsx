@@ -10,7 +10,6 @@ import { IoClose } from 'react-icons/io5';
 // components
 import FormProvider from '@/components/hook-form/FormProvider';
 import { RHFSelect, RHFTextField } from '@/components/hook-form';
-import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
 // hooks
 import { useGetTargetPlatform } from './hooks/useGetTargetPlatform';
 import { useCreateDataCollection } from './hooks/useCreateDataCollection';

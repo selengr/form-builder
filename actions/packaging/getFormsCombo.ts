@@ -21,7 +21,7 @@ export async function getPackagingFormsComboAction(): Promise<IProps> {
     rows: 1000,
   };
 
-  const baseUrl = `/admin/packaging/forms-custom-combo`;
+  const baseUrl = `/form/forms-custom-combo`;
   const queryString = `?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`;
   const url = baseUrl + queryString;
 

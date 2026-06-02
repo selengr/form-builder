@@ -205,11 +205,23 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
     try {
       if (!selected) {
-        const { data } = await createQuestionAction(newField);
-        addElement(selectedElement?.position?.realPosition ?? insertIdx, data);
+        const res = await createQuestionAction(newField);
+
+        if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
+
+        addElement(selectedElement?.position?.realPosition ?? insertIdx, res.data);
       } else {
-        const { data } = await updateQuestionAction(String(element.questionId), newField);
-        updateElement(element.questionId, data);
+        const res = await updateQuestionAction(String(element.questionId), newField); 
+        
+        if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
+
+        updateElement(element.questionId, res.data);
       }
 
       setOpenDialog(false);

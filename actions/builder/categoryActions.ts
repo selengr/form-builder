@@ -12,7 +12,7 @@ export async function fetchParentCategory() {
   };
 
   const url =
-    `/cateory/parent?customComboFilterModel=` +
+    `/category/parent?customComboFilterModel=` +
     encodeURIComponent(JSON.stringify(customComboFilterModel));
 
   return api.get(url);

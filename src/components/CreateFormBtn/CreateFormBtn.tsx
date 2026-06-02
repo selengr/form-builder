@@ -82,7 +82,7 @@ export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
       const result = await creatFormAction(body)
 
       if (result.success) {
-        toast.success('عملیات با موفقیت انجام شد');
+        toast.success('فرم با موفقیت ایجاد شد');
         router.push(`/builder/${result.data?.id}`);
         // onClose();
         reset()

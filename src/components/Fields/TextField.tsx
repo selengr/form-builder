@@ -289,25 +289,25 @@ const FormComponent = memo(function FormComponent({
             {...commonTextFieldProps}
           />
         );
-     case 'DATE':
-  return (
-    <Box display='flex' flexDirection='column' gap={1} width='100%'>
-      <DatePickerWrapper isError={!!error}>
-        <DatePickerCustome 
-          inputClass='picker-input' 
-          value={value} 
-          onChange={handleLocalChange as any} 
-        />
-        <BsCalendarDate size='1.4rem' className='calendar-icon' color='#424242' />
-      </DatePickerWrapper>
-      
-      {!!error && (
-        <Typography color='#d32f2f' variant="caption" sx={{ mt: 0.5, fontSize: '0.75rem' }}>
-          {error}
-        </Typography>
-      )}
-    </Box>
-  );
+      case 'DATE':
+        return (
+          <Box display='flex' flexDirection='column' gap={1} width='100%'>
+            <DatePickerWrapper isError={!!error}>
+              <DatePickerCustome
+                inputClass='picker-input'
+                value={value}
+                onChange={handleLocalChange as any}
+              />
+              <BsCalendarDate size='1.4rem' className='calendar-icon' color='#424242' />
+            </DatePickerWrapper>
+
+            {!!error && (
+              <Typography color='#d32f2f' variant="caption" sx={{ mt: 0.5, fontSize: '0.75rem' }}>
+                {error}
+              </Typography>
+            )}
+          </Box>
+        );
 
       case 'TIME':
         return (
@@ -344,7 +344,7 @@ const FormComponent = memo(function FormComponent({
   return (
     <Box display='flex' gap={1} flexDirection='column' width='100%' maxWidth='600px'>
       <Box display='flex' flexDirection='column' justifyContent='space-between' width='100%'>
-        <Typography sx={{ fontSize:{ xs: 15, sm: 16 }, marginRight: '25px', fontWeight: '600', margin: 0, marginBottom : "2rem", textAlign: "justify" }}>{element.title}</Typography>
+        <Typography sx={{ fontSize: { xs: 15, sm: 16 }, marginRight: '25px', fontWeight: '600', margin: 0, marginBottom: "2rem", textAlign: "justify" }}>{element.title}</Typography>
         {min && max ? (
           <Typography sx={{ fontSize: '12px', direction: 'rtl', textWrap: 'nowrap', fontWeight: '400' }} variant='subtitle2'>
             {min + ' / ' + max}
@@ -353,7 +353,7 @@ const FormComponent = memo(function FormComponent({
       </Box>
       {renderContent()}
       {description && (
-        <Typography sx={{ fontSize: '12px', fontWeight: '600', marginTop : "2rem" }} variant='subtitle2'>
+        <Typography sx={{ fontSize: '12px', fontWeight: '600', marginTop: "2rem" }} variant='subtitle2'>
           {description}
         </Typography>
       )}
@@ -523,7 +523,12 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       delete removeId.questionId;
 
       try {
-        const { data }: any = await createQuestionAction(removeId as any);
+        const res = await createQuestionAction(removeId as any);
+        if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
+        const data = res.data
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;
@@ -542,7 +547,12 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       }
     } else {
       try {
-        const { data }: any = await updateQuestionAction(String(finalFieldData.questionId), finalFieldData);
+        const res = await updateQuestionAction(String(finalFieldData.questionId), finalFieldData);
+        if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
+        const data = res.data
         delete data.questionPropertyList;
         delete data.optionList;
         delete data.spectralPlaceList;

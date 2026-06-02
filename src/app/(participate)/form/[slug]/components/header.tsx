@@ -45,7 +45,7 @@ function Header({ handleOpenReportDialog, replace, formName, surveyParam }: Head
 
       <div className={`${surveyParam ? "px-0" : "px-12"} mx-5 flex items-center justify-center`}>
         <p
-          className="text-base font-bold text-[#161616] text-center truncate max-w-full"
+          className="text-sm md:text-base font-semibold md:font-bold text-[#161616] text-center truncate max-w-full"
           title={formName}
         >
           {formName}

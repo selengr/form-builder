@@ -12,6 +12,7 @@ import { useReportFlow } from '@/hooks/useReportFlow';
 // components 
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
 import HtmlPreview from '@/components/HtmlPreview/HtmlPreview';
+import PageContainer from '@/templates/layout/PageContainer';
 
 interface ResultRow {
   row: string;
@@ -64,36 +65,45 @@ const ResultsPage = () => {
       .join(" ");
   }, [results]);
 
-
   return (
-    <div className='w-full min-h-screen h-full px-4 py-4 bg-[#f7f7f7]'>
-      <div className='md:container mx-auto flex p-3 flex-col justify-start items-center min-w-screen h-full bg-white rounded-xl w-full '>
-        <div className='relative flex w-full justify-center items-center min-h-[52px] h-[52px] rounded-lg bg-[#F7F7FF]'>
-          <Link href={`/my-assessments`} className='absolute right-4'>
+    <PageContainer>
+      <div className={`flex flex-col bg-white rounded-xl overflow-hidden h-full shadow-sm`}>
+
+        <div className='shrink-0 m-2 p-4 z-10 w-[calc(100%-16px)]  h-[52px] flex items-center justify-center rounded-lg bg-[#F7F7FF] mb-4 relative'>
+          <Link href={`/my-assessments`} className='absolute right-1 md:right-4'>
             <IconButton
               sx={{
-                borderRadius: '9999px',
+                borderRadius: '9999px'
               }}>
               <IoIosArrowForward fontSize='1.1rem' color='#000' />
             </IconButton>
           </Link>
-          <span className='text-[#161616]'>گزارش فرم {search ?? '---'}</span>
+          <p
+            className="mx-5 px-8 text-sm md:text-base font-semibold md:font-bold text-[#161616] text-center truncate max-w-full"
+          >گزارش فرم {search ?? '---'}</p>
           <Button
             onClick={handleReportDialog}
             size='medium' className='rounded-full'
-            sx={{ position: 'absolute', right: '8px' }} endIcon={<Image alt='report'
-              src={BugIcon} height={24} width={24} />}>
+            sx={{ position: 'absolute', right: { xs: '2px', sm: '8px' }, top: '50%', transform: 'translateY(-50%)' }}
+            endIcon={
+              <div className="relative w-[18px] h-[18px] sm:w-[24px] sm:h-[24px]">
+                <Image
+                  alt="report"
+                  src={BugIcon}
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            }>
             <span className='text-xs'>گزارش</span>
           </Button>
         </div>
-
-        {/* <div className='overflow-y-auto w-full flex justif flex-col items-center'>
-          <Image src='/images/calc/ic_empty_report.svg' alt='سایا لوگو' width={416} height={250} priority draggable={false} className='w-full sm:w-[50%] lg:w-[450px]' />
-          </div> */}
-        <div className="overflow-y-auto w-full flex flex-col items-center p-8">
-          <HtmlPreview html={html} />
-        </div>
       </div>
+
+      <div className="overflow-y-auto w-full flex flex-col items-center p-8">
+        <HtmlPreview html={html} />
+      </div>
+      {/* </div> */}
 
       {/* دیالوگ گزارش */}
       {dialogState === 'report' && (
@@ -105,7 +115,8 @@ const ResultsPage = () => {
           resultReportText={html}
         />
       )}
-    </div>
+      {/* </div> */}
+    </PageContainer>
   );
 };
 

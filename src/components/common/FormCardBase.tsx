@@ -4,17 +4,18 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { Button } from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
+// components
+import LoginWithPhone from './loginWithPhone';
 import { InfoRow } from '@/components/common/infoRow';
 import { formTypePersian } from '@/constants/formDictionaries';
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
 import BugIcon from '@/../public/images/home-page/menu/bugIcon.svg';
-import { useShowResultUser } from '@/app/my-assessments/[id]/show-result/hooks/useShowResultUser';
-import LoginWithPhone from './loginWithPhone';
+// hooks
 import { useLoginWithPhone } from '../../hooks/useLoginWithPhone';
+import { useShowResultUser } from '@/app/my-assessments/[id]/show-result/hooks/useShowResultUser';
 // actions
-import { fetchUserInfoServer } from '../../../actions/auth';
+import { fetchUserInfoServer } from '@actions/auth';
 // import { fetchUserInfo } from '@/lib/auth';
-
 interface FormCardBaseProps {
   data: any;
   buttonText: string;

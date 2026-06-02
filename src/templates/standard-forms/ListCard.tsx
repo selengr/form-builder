@@ -33,7 +33,6 @@ const ListCard: React.FC<ListCardProps> = ({
         return;
       }
 
-
       toast.success(
         <div className="flex flex-col">
           <span>یک نسخه از این فرم با موفقیت به فرم‌های من اضافه شد</span>

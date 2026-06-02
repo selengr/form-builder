@@ -8,13 +8,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Button, Dialog, DialogContent, IconButton, MenuItem, Stack, Typography } from '@mui/material';
 // components
 import FormProvider from '@/components/hook-form/FormProvider';
-import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
 import { RHFMultiSelectV0, RHFSelect, RHFTextField } from '@/components/hook-form';
 // hooks
 import { useCreatePackaging } from './hooks/useCreatePackaging';
 import { useGetSubCategory } from '@/components/CreateFormBtn/hooks/useGetSubCategory';
 import { useGetParentCategory } from '@/components/CreateFormBtn/hooks/useGetParentCategory';
 import { useGetSurveyPurpose as useGetPackagingPurpose } from '../survey/hooks/useGetSurveyPurpose';
+import { SkeletonMenuItem } from '@/components/Fields/PackageInjectionField';
 
 interface IGetTargetPlatform {
   value: string;
@@ -191,7 +191,7 @@ export default function CreatePackagingModal({ open, onClose }: ICreatePackaging
 
                 <RHFSelect fullWidth name='targetLabelEnum' sx={textFieldCommonSx}>
                   <MenuItem value=''>انتخاب کنید</MenuItem>
-                  {isFetchingPackaging && <MenuItem value=''><PreviewLoading /></MenuItem>}
+                  {isFetchingPackaging && <MenuItem value=''><SkeletonMenuItem /></MenuItem>}
                   {Packaging?.map((item: IGetTargetPlatform) => (
                     <MenuItem key={item.value} value={item.value}>
                       {item.caption}

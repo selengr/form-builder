@@ -10,7 +10,6 @@ import { IoClose } from 'react-icons/io5';
 // components
 import FormProvider from '@/components/hook-form/FormProvider';
 import { RHFSelect, RHFTextField } from '@/components/hook-form';
-import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
 // hooks
 import { useCreateSurvey } from './hooks/useCreateSurvey';
 import { useGetSurveyPurpose } from './hooks/useGetSurveyPurpose';
@@ -208,7 +207,7 @@ export default function CreateSurveyModal({ open, onClose }: TCreateSurveyModalP
 
                 <RHFSelect fullWidth name='surveyPurposeEnum' sx={textFieldCommonSx}>
                   <MenuItem value=''>انتخاب کنید</MenuItem>
-                  {isFetchingTargetPlatform && <MenuItem value=''><PreviewLoading /></MenuItem>}
+                  {isFetchingTargetPlatform && <MenuItem value=''><SkeletonMenuItem /></MenuItem>}
                   {Survey?.map((item: IGetTargetPlatform) => (
                     <MenuItem key={item.value} value={item.value}>
                       {item.caption}

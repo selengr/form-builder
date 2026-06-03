@@ -106,10 +106,15 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
 
   const onSubmit = async (formData: packageSettingSchemaType) => {
     try {
-      await putPackageSettingAction(packageId, {
+      const res = await putPackageSettingAction(packageId, {
         name: formData.name,
         ratio: formData.ratio,
       });
+
+      if (!res.success) {
+        toast.error(res.message || 'خطا در دریافت تنظیمات پکیج');
+        return;
+      }
       toast.success('عملیات با موفقیت انجام شد');
       queryClient.invalidateQueries({
         queryKey: ['datas_builder_query'],

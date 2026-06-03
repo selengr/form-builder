@@ -3,15 +3,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useMemo } from 'react';
-// hooks
-import { useMenu } from '@/hooks';
 // types
 import Logo from "/public/images/logo/logo2.svg";
 // components
 import MenuList from './menuList/MenuList';
 import MenuItemSkeleton from './menuItemSkeleton';
 import { IUserInfoResponse } from '@actions/auth';
-import { IServerMenuItem } from '@/types/menus';
+// import { IServerMenuItem } from '@/types/menus';
 
 interface IProps {
   loading?: boolean;
@@ -19,29 +17,16 @@ interface IProps {
   userInfo?: IUserInfoResponse | null;
 }
 
-export default function MiddleSidebar({isAuthenticated}: IProps) {
-  const { menu, loading } = useMenu(isAuthenticated)
-  
-  const menuLinks: IServerMenuItem[] | any = useMemo(() => {
-    if (!menu?.aclList) return [];
+export default function MiddleSidebar({isAuthenticated, userInfo}: IProps) {
 
-    return menu.aclList.filter((item) => 
-      item?.type === 'menu'
+  const menuLinks = useMemo(() => {
+    if (!userInfo?.aclList) return [];
+
+    return userInfo.aclList.filter((item) => 
+      item?.type === 'menu' && 
+      item?.data?.langId?.includes('acl.psya')
     );
-  }, [menu?.aclList]);
-
-  //   const menuLinks: IServerMenuItem[] | any = useMemo(() => {
-  //   return menu?.aclList?.filter((i) => i?.type === 'menu') || [];
-  // }, [menu?.aclList]);
-
-  // const menuLinks = useMemo(() => {
-  //   if (!userInfo?.aclList) return [];
-
-  //   return userInfo.aclList.filter((item) => 
-  //     item?.type === 'menu' && 
-  //     item?.data?.langId?.includes('acl.psya')
-  //   );
-  // }, [userInfo?.aclList]);
+  }, [userInfo?.aclList]);
 
 
   return (
@@ -60,7 +45,7 @@ export default function MiddleSidebar({isAuthenticated}: IProps) {
       </div>
 
       <div className='flex-1 overflow-y-auto pr-3 flex flex-col' style={{ scrollbarWidth: 'none' }}>
-        {!!isAuthenticated && loading && <MenuItemSkeleton />}
+        {/* {!!isAuthenticated && loading && <MenuItemSkeleton />} */}
         <MenuList menuLinks={menuLinks} />
       </div>
     </div>

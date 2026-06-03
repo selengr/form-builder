@@ -15,7 +15,15 @@ export interface IPayloadPackage {
 export function useCreatePackaging({ push, onClose }: { push: any; onClose: () => void }) {
 
     return useMutation({
-        mutationFn: ({ data }: { data: IPayloadPackage }) => createPackageAction(data),
+        mutationFn: async ({ data }: { data: IPayloadPackage }) => {
+            const res = await createPackageAction(data);
+
+            if (!res.success) {
+                throw new Error(res.message || 'خطا در ایجاد پکیج');
+            }
+
+            return res.data;
+        },
         onSuccess: (result) => {
             toast.success('عملیات با موفقیت انجام شد');
             onClose()

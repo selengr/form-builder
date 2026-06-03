@@ -43,13 +43,13 @@ interface Props {
   refreshGrid?: boolean;
   disableFilter?: boolean;
   textTotal?: [string, string];
-  searchQueryFilter?: { isCreatedSoloReport: string; fieldOperation :string };
+  searchQueryFilter?: { isCreatedSoloReport: string; fieldOperation: string };
   showCreateButton?: boolean;
   title: string;
-  CreateButton? : any
+  CreateButton?: any
 }
 
-const DEFAULT_SEARCH_FILTER = { isCreatedSoloReport: 'All', fieldOperation : "DSC" };
+const DEFAULT_SEARCH_FILTER = { isCreatedSoloReport: 'All', fieldOperation: "DSC" };
 
 const ListGrid: React.FC<Props> = ({
   filterComponent,
@@ -111,7 +111,13 @@ const ListGrid: React.FC<Props> = ({
     refetch,
   } = useInfiniteQuery({
     queryKey: ['datas_builder_query', query, searchQueryFilter, filterBoxList],
-    queryFn: ({ pageParam }) => PackagingList( pageParam , updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
+    queryFn: async ({ pageParam }) => {
+      const result = await PackagingList(pageParam, updatedSearchBoxList, filterBoxList, url, searchQueryFilter)
+      if (!result.success) {
+        throw new Error(result.message)
+      }
+      return result
+    },
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       const PAGE_SIZE = 10;
@@ -154,7 +160,7 @@ const ListGrid: React.FC<Props> = ({
   }, [pages]);
 
   if (error) {
-    toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+    toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
   }
 
   const renderHeader = useCallback(
@@ -370,7 +376,7 @@ const ListGrid: React.FC<Props> = ({
                     xs: 'calc(100vh - 290px)',
                     md: 'calc(100vh - 210px)',
                   },
-                   scrollbarWidth : "none"
+                  scrollbarWidth: "none"
                 }}>
                 {renderContent()}
               </Grid>

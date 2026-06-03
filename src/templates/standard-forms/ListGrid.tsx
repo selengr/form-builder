@@ -91,7 +91,13 @@ const ListGrid: React.FC<Props> = ({
     refetch,
   } = useInfiniteQuery({
     queryKey: ['datas_form_stantards_query', debouncedSearch, searchQueryFilter, filterBoxList],
-    queryFn: ({ pageParam }) => PackagingList(pageParam, updatedSearchBoxList, filterBoxList, url, searchQueryFilter),
+    queryFn: async ({ pageParam }) => {
+      const result = await PackagingList(pageParam, updatedSearchBoxList, filterBoxList, url, searchQueryFilter)
+      if (!result.success) {
+        throw new Error(result.message)
+      }
+      return result
+    },
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       const PAGE_SIZE = 10;

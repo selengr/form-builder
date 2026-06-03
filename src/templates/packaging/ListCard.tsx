@@ -55,10 +55,12 @@ const ListCard: React.FC<ListCardProps> = ({
             data.id,
             !newValue
           );
-
-          if (!result.response) {
+          if (!result.success) {
             setChecked(!newValue);
+            toast.error(result.message || 'خطا در تغییر وضعیت بسته');
+            return;
           }
+
           toast.success(newValue ? 'بسته فعال شد' : 'بسته غیرفعال شد');
         } catch (error: any) {
           setChecked(!newValue);
@@ -124,7 +126,7 @@ const ListCard: React.FC<ListCardProps> = ({
           <PackagingSettingsDialog packageId={data.id} />
           {data.packagingStausEnum === "CREATE" &&
             <div onClick={handleEditClick}>
-              <IconButton color='primary' sx={{padding:0}}>
+              <IconButton color='primary' sx={{ padding: 0 }}>
                 <Image src={EditIcon} alt='edit' width={24} height={24} />
               </IconButton>
             </div>

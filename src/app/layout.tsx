@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next';
 import { RootProvider } from '@/providers';
 import NextTopLoader from 'nextjs-toploader';
 import LayoutWrapper from '@/templates/header/HeaderWrapper';
+import { fetchUserInfoServer } from '@actions/auth';
 
 export const metadata: Metadata = {
   title: 'ام‌رسالت - سکوی سایا',
@@ -26,20 +27,22 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const result = await fetchUserInfoServer();
+
   return (
     <html lang="fa" dir="rtl" className="scroll-smooth" suppressHydrationWarning>
       <body className="antialiased">
         <NextTopLoader showSpinner={false} />
 
-        <RootProvider>
-            <LayoutWrapper>
-              {children}
-            </LayoutWrapper>
+        <RootProvider initialUserInfo={result.userInfo}>
+          <LayoutWrapper>
+            {children}
+          </LayoutWrapper>
         </RootProvider>
       </body>
     </html>

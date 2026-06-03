@@ -10,9 +10,11 @@ import {
 import { Toaster } from 'sonner';
 import MainPanel from '@/templates/layout/MainPanel';
 import { SessionProvider } from 'next-auth/react';
+import { type IUserInfoResponse } from '@actions/auth';
 
 type RootProviderProps = {
   children: ReactNode;
+  initialUserInfo: IUserInfoResponse | null;
 };
 
 export function RootProvider({ children }: RootProviderProps) {

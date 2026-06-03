@@ -7,9 +7,7 @@ import { useMemo } from 'react';
 import Logo from "/public/images/logo/logo2.svg";
 // components
 import MenuList from './menuList/MenuList';
-import MenuItemSkeleton from './menuItemSkeleton';
 import { IUserInfoResponse } from '@actions/auth';
-// import { IServerMenuItem } from '@/types/menus';
 
 interface IProps {
   loading?: boolean;
@@ -17,7 +15,7 @@ interface IProps {
   userInfo?: IUserInfoResponse | null;
 }
 
-export default function MiddleSidebar({isAuthenticated, userInfo}: IProps) {
+export default function MiddleSidebar({userInfo}: IProps) {
 
   const menuLinks = useMemo(() => {
     if (!userInfo?.aclList) return [];
@@ -45,7 +43,6 @@ export default function MiddleSidebar({isAuthenticated, userInfo}: IProps) {
       </div>
 
       <div className='flex-1 overflow-y-auto pr-3 flex flex-col' style={{ scrollbarWidth: 'none' }}>
-        {/* {!!isAuthenticated && loading && <MenuItemSkeleton />} */}
         <MenuList menuLinks={menuLinks} />
       </div>
     </div>

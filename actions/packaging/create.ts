@@ -3,7 +3,7 @@
 import { api } from '@/services/axios/actionWapper';
 import { IPayloadPackage } from '@/templates/packaging/hooks/useCreatePackaging';
 
-export function createPackageAction(data: IPayloadPackage) {
+export async function createPackageAction(data: IPayloadPackage) {
   return api.post('/admin/packaging', data);
 }
 

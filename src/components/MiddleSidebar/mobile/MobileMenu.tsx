@@ -14,17 +14,22 @@ import { IServerMenuItem } from '@/types/menus';
 // view
 import MenuList from '../menuList/MenuList';
 import MenuItemSkeleton from '../menuItemSkeleton';
-import { useUserInfoNew } from '@/hooks/useUserInfoNew';
+// context
+import { useUserInfo } from '@/context/UserInfoContext ';
 
 const MobileMenu: React.FC = () => {
-  const { isAuthenticated } =  useUserInfoNew();
-  const { menu, loading } = useMenu(isAuthenticated)
+  const { isAuthenticated, userInfo } =  useUserInfo();
   const [open, setOpen] = useState<boolean>(false);
   const [isRotated, setIsRotated] = useState<boolean>(false);
 
-  const menuLinks : IServerMenuItem[] | any = useMemo(() => {
-    return menu?.aclList?.filter((i) => i.type === 'menu') || [];
-  }, [menu]);
+  const menuLinks = useMemo(() => {
+    if (!userInfo?.aclList) return [];
+
+    return userInfo.aclList.filter((item) => 
+      item?.type === 'menu' && 
+      item?.data?.langId?.includes('acl.psya')
+    );
+  }, [userInfo?.aclList]);
 
   const toggleDrawer = () => {
     setIsRotated((prev) => !prev);
@@ -59,7 +64,6 @@ const MobileMenu: React.FC = () => {
               </IconButton>
             </div>
             <div className='flex flex-col items-start w-full'>
-              {!!isAuthenticated && loading && <MenuItemSkeleton />}
               <MenuList menuLinks={menuLinks} onItemClick={() => setOpen(false)} />
             </div>
           </div>

@@ -80,7 +80,15 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
     async function loadData() {
       setLoading(true);
       try {
-        const data = await getPackageSettingAction(packageId);
+        const res = await getPackageSettingAction(packageId);
+
+        if (!res.success) {
+          toast.error(res.message || 'خطا در دریافت تنظیمات پکیج');
+          return;
+        }
+
+       const data = res.data;
+
         reset({
           name: data.name || "",
           ratio: data.ratio || 1

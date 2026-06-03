@@ -34,4 +34,4 @@ export async function getTargetPlatformAction(): Promise<TargetPlatformResponse>
 
   //   throw new Error(message);
   // }
-}
+  }

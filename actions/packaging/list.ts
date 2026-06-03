@@ -18,7 +18,7 @@ export async function PackagingList(
   url: string,
   searchQueryFilter = DEFAULT_SEARCH_FILTER,
 ) {
-  // try {
+  try {
     const filterRestrictions: SearchBoxItem[] = [];
 
     if (searchQueryFilter.isCreatedSoloReport && searchQueryFilter.isCreatedSoloReport !== 'ALL') {
@@ -60,14 +60,18 @@ export async function PackagingList(
 
     const response = await serverApi.get(fullURL);
 
-    if (!response?.data) {
-      throw new Error('خطا در دریافت اطلاعات');
-    } 
-
     return {
+      success: true,
       data: response.data.content,
       total: response.data.totalElements,
     };
+
+    } catch (error: any) {
+        return {
+        success: false,
+        message: error?.message
+      };
+   }
     
   // } catch (error: any) {
   //   const message =

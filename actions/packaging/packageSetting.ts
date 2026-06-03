@@ -2,18 +2,18 @@
 
 import { api } from '@/services/axios/actionWapper';
 
-export function getPackageSettingAction(id: number) {
+export async function getPackageSettingAction(id: number) {
   return api.get(`/admin/packaging/${id}`);
 }
 
-export function putPackageSettingAction(
+export async function putPackageSettingAction(
   id: number,
   payload: { name: string; ratio: number }
 ) {
   return api.put(`/admin/packaging/${id}`, payload);
 }
 
-export function updatePackagingValidity(id: number, invalid: boolean) {
+export async function updatePackagingValidity(id: number, invalid: boolean) {
   return api.put(`/admin/packaging/main-list/invalid`, { id, invalid });
 }
 

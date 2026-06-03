@@ -10,11 +10,12 @@ import Avatar from '@/components/Avatar/Avatar';
 import MenuSidebar from '@/components/SideBar/MenuSidebar';
 import MiddleSidebar from '../MiddleSidebar/MiddleSidebar';
 // hooks
-import { useUserInfoNew } from '@/hooks/useUserInfoNew';
+// import { useUserInfoNew } from '@/hooks/useUserInfoNew';
 // images
 import LogoutIcon from '@/../public/images/home-page/logout.svg';
 import InfoIcon from '@/../public/images/home-page/info-icon.svg';
 import MresalatLogo from '@/../public/images/home-page/mresalat_logo.svg';
+import { useUserInfo } from '@/context/UserInfoContext ';
 
 const SidebarButton = ({ icon, label, onClick }: { icon: JSX.Element; label: string; onClick?: () => void }) => (
   <button onClick={onClick} className='flex flex-col items-center gap-1 min-h-[40px]'>
@@ -26,7 +27,9 @@ const SidebarButton = ({ icon, label, onClick }: { icon: JSX.Element; label: str
 export default function MainSidebar() {
   const pathname = usePathname();
   const isSurvey = pathname.includes('survey-');
-  const { userInfo, isAuthenticated, loading } = useUserInfoNew();
+  // const { userInfo, isAuthenticated, loading } = useUserInfoNew();
+    const { userInfo, isAuthenticated } = useUserInfo();
+  const loading = false; 
   const avatar = userInfo?.user?.fullName;
   const endPoint = process.env.NEXT_PUBLIC_MRESALAT_ENDPOINT + '/';
 

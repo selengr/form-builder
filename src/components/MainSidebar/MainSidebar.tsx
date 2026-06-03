@@ -28,7 +28,7 @@ export default function MainSidebar() {
   const pathname = usePathname();
   const isSurvey = pathname.includes('survey-');
   // const { userInfo, isAuthenticated, loading } = useUserInfoNew();
-    const { userInfo, isAuthenticated } = useUserInfo();
+    const { userInfo, isAuthenticated, clearUserInfo } = useUserInfo();
   const loading = false; 
   const avatar = userInfo?.user?.fullName;
   const endPoint = process.env.NEXT_PUBLIC_MRESALAT_ENDPOINT + '/';
@@ -37,6 +37,7 @@ export default function MainSidebar() {
     if (!userInfo) {
       return signIn('authorize');
     }
+    clearUserInfo();
     await signOut({ redirect: false });
     toast.success('خروج با موفقیت انجام شد');
     location.replace('/');

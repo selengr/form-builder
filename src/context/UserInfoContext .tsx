@@ -1,103 +1,70 @@
-// contexts/user-info-context.tsx
-
 'use client';
 
 import {
   createContext,
-  useCallback,
   useContext,
   useMemo,
   useState,
   type ReactNode,
 } from 'react';
 
-export type UserInfo = {
-  id: string;
-  name: string;
-  email: string;
-  role: 'USER' | 'ADMIN';
-  avatarUrl?: string | null;
-};
+import type { IUserInfoResponse } from '@actions/auth';
 
-type UserInfoState = {
-  user: UserInfo | null;
+type UserInfoContextType = {
+  userInfo: IUserInfoResponse | null;
+  user: IUserInfoResponse['user'] | null;
+  aclList: IUserInfoResponse['aclList'];
+  userRoles: IUserInfoResponse['userRoles'];
+
   isAuthenticated: boolean;
+
+  setUserInfo: (userInfo: IUserInfoResponse | null) => void;
+  clearUserInfo: () => void;
 };
 
-type UserInfoActions = {
-  setUser: (user: UserInfo | null) => void;
-  updateUser: (patch: Partial<UserInfo>) => void;
-  clearUser: () => void;
-};
+const UserInfoContext = createContext<UserInfoContextType | null>(null);
 
-const UserInfoStateContext = createContext<UserInfoState | null>(null);
-const UserInfoActionsContext = createContext<UserInfoActions | null>(null);
-
-type UserInfoProviderProps = {
-  initialUser: UserInfo | null;
+type Props = {
+  initialUserInfo: IUserInfoResponse | null;
   children: ReactNode;
 };
+// ----------------------------------------------------------------------
+export function UserInfoProvider({ initialUserInfo, children }: Props) {
+  const [userInfo, setUserInfo] = useState<IUserInfoResponse | null>(
+    initialUserInfo
+  );
 
-export function UserInfoProvider({
-  initialUser,
-  children,
-}: UserInfoProviderProps) {
-  const [user, setUser] = useState<UserInfo | null>(initialUser);
+  const clearUserInfo = () => {
+    setUserInfo(null);
+  };
 
-  const updateUser = useCallback((patch: Partial<UserInfo>) => {
-    setUser((prev) => {
-      if (!prev) return prev;
+  const value = useMemo<UserInfoContextType>(
+    () => ({
+      userInfo,
+      user: userInfo?.user ?? null,
+      aclList: userInfo?.aclList ?? [],
+      userRoles: userInfo?.userRoles ?? [],
 
-      return {
-        ...prev,
-        ...patch,
-      };
-    });
-  }, []);
+      isAuthenticated: Boolean(userInfo),
 
-  const clearUser = useCallback(() => {
-    setUser(null);
-  }, []);
-
-  const stateValue = useMemo<UserInfoState>(() => {
-    return {
-      user,
-      isAuthenticated: Boolean(user),
-    };
-  }, [user]);
-
-  const actionsValue = useMemo<UserInfoActions>(() => {
-    return {
-      setUser,
-      updateUser,
-      clearUser,
-    };
-  }, [updateUser, clearUser]);
+      setUserInfo,
+      clearUserInfo,
+    }),
+    [userInfo]
+  );
 
   return (
-    <UserInfoStateContext.Provider value={stateValue}>
-      <UserInfoActionsContext.Provider value={actionsValue}>
-        {children}
-      </UserInfoActionsContext.Provider>
-    </UserInfoStateContext.Provider>
+    <UserInfoContext.Provider value={value}>
+      {children}
+    </UserInfoContext.Provider>
   );
 }
 
 export function useUserInfo() {
-  const context = useContext(UserInfoStateContext);
+  const context = useContext(UserInfoContext);
 
   if (!context) {
     throw new Error('useUserInfo must be used inside UserInfoProvider');
-  }
-
-  return context;
-}
-
-export function useUserInfoActions() {
-  const context = useContext(UserInfoActionsContext);
-
-  if (!context) {
-    throw new Error('useUserInfoActions must be used inside UserInfoProvider');
   }
 
   return context;

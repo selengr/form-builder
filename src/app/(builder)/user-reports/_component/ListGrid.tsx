@@ -41,10 +41,10 @@ interface Props {
   refreshData?: () => void;
   refreshGrid?: boolean;
   disableFilter?: boolean;
-  searchQueryFilter?: { responseForDestroyerReport: string; typeOfReport: string, fieldOperation : string };
+  searchQueryFilter?: { responseForDestroyerReport: string; typeOfReport: string, fieldOperation: string };
 }
 
-const DEFAULT_SEARCH_FILTER = { responseForDestroyerReport: 'ALL', typeOfReport: 'ALL', fieldOperation : "ASC" };
+const DEFAULT_SEARCH_FILTER = { responseForDestroyerReport: 'ALL', typeOfReport: 'ALL', fieldOperation: "ASC" };
 
 const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxList, CartComponent, url, onCheck, refreshGrid, disableFilter, searchQueryFilter = DEFAULT_SEARCH_FILTER }) => {
   const { ref, inView } = useInView();
@@ -69,8 +69,7 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
     queryFn: ({ pageParam }) => fetchData({ pageParam }, searchBoxList, filterBoxList, url, searchQueryFilter),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
-      // Assuming PAGE_SIZE is defined in dataService or passed as a prop/constant
-      // debugger
+      // Assuming PAGE_SIZE is defined in dataService or passed as a prop/constant=
       const PAGE_SIZE = 10;
       return lastPage.data && lastPage.data.content.length === PAGE_SIZE ? allPages?.length : undefined;
     },

@@ -83,7 +83,6 @@ const ListGrid: React.FC<IProps> = ({
                 url,
                 searchQueryFilter
             )
-            debugger
             if (!result.success) {
                 throw new Error(result.message)
             }

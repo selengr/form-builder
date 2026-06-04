@@ -49,14 +49,10 @@ const CreateFieldDialog = memo(function CreateFieldDialog() {
           )}
           <DialogContent
             dir='rtl'
-            sx={{
-              maxHeight: '75vh',
-              scrollbarWidth: 'thin',
-              maxWidth: '100%',
-              width: '450px',
-              paddingX: 1,
-              paddingBottom: 0,
-              paddingTop: 0,
+               sx={{
+              paddingX: 3,
+              paddingBottom: 2,
+              paddingTop: 1,
             }}>
             {questionLoading ? (
               <div className='flex min-h-[50vh] items-center justify-center w-full h-full'>

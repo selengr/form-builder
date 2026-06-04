@@ -6,6 +6,7 @@ import { useParticipateForm } from '@/hooks/useParticipateForm';
 import ResponsiveContainer from '@/templates/form/ContentWrapper';
 import { ErrorStep, FinishStep, QuestionStep } from './components';
 import { ParticipateLoadingSkeleton } from './components/participateSkeleton';
+import StartFromContinueDialog from './components/StartFromContinueDialog';
 
 export default function ParticipateFormPage({ params }: { params: { slug: string } }) {
   const [limitationStepPassed, setLimitationStepPassed] = useState(false);
@@ -33,8 +34,8 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
     setTakePartId,
     isCurrentFirstQuestion,
     showReportForResponder,
-    
-        isDialogOpen,
+
+    isDialogOpen,
     handleClose,
     handleConfirm,
     handleStartNew,
@@ -78,18 +79,26 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
   }
 
   return (
-    <QuestionStep
-      question={question}
-      formName={formName}
-      formData={formData}
-      ValidatedInput={ValidatedInput}
-      handleValidationUpdate={handleValidationUpdate}
-      handleNext={handleNext}
-      handlePrev={handlePrev}
-      prevBlock={isCurrentFirstQuestion}
-      questionLoading={questionLoading}
-      formId={realFormID}
-      replace={replace}
-    />
+    <>
+      <QuestionStep
+        question={question}
+        formName={formName}
+        formData={formData}
+        ValidatedInput={ValidatedInput}
+        handleValidationUpdate={handleValidationUpdate}
+        handleNext={handleNext}
+        handlePrev={handlePrev}
+        prevBlock={isCurrentFirstQuestion}
+        questionLoading={questionLoading}
+        formId={realFormID}
+        replace={replace}
+      />
+      <StartFromContinueDialog
+        open={isDialogOpen}
+        onClose={handleClose}
+        onConfirm={handleConfirm}
+        onStartNew={handleStartNew}
+      />
+    </>
   );
 }

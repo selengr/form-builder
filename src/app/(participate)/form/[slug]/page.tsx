@@ -32,7 +32,12 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
     takePartId,
     setTakePartId,
     isCurrentFirstQuestion,
-    showReportForResponder
+    showReportForResponder,
+    
+        isDialogOpen,
+    handleClose,
+    handleConfirm,
+    handleStartNew,
   } = useParticipateForm();
 
   if (firstLoading) return <ParticipateLoadingSkeleton />;

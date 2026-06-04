@@ -16,6 +16,7 @@ import {
 // types
 import { ElementsType, FormElements } from '@/types/FormElements';
 import { useUserInfoContext } from '@/context/UserInfoContext';
+import { useStartFromContinueDialog } from './useStartFromContinueDialog';
 
 export interface ILimitation {
   isLimited: boolean;
@@ -60,6 +61,22 @@ export const useParticipateForm = () => {
   const isCurrentFirstQuestion = useMemo(() => {
     return question?.questionId === firstQuestionId;
   }, [question, firstQuestionId]);
+
+    const handleContinueFromPrevious = useCallback(() => {
+    const username = userInfo?.user?.username || null;
+    checkAnswerBefore(username);
+  }, [userInfo?.user?.username]);
+
+  const handleStartNewResponse = useCallback(() => {
+    const username = userInfo?.user?.username || null;
+    takePart(username);
+  }, [userInfo?.user?.username]);
+
+  const { isDialogOpen, openDialog, handleConfirm, handleStartNew, handleClose } = 
+    useStartFromContinueDialog({
+      onConfirm: handleContinueFromPrevious,
+      onStartNew: handleStartNewResponse,
+    });
 
   const extractProperty = useCallback(
     (list: any[], key: string) => list?.find(item => item.questionPropertyEnum === key)?.value,
@@ -192,7 +209,7 @@ export const useParticipateForm = () => {
           limitationType: result?.data?.responseLimitation,
         });
       } else if(result?.data?.startFromContinue){
-        
+         openDialog(username);
       } else if (result?.data?.responseLimitation) {
         await checkAnswerBefore(username);
       } else {
@@ -517,6 +534,11 @@ export const useParticipateForm = () => {
     hasError,
     realFormID,
     isCurrentFirstQuestion,
-    showReportForResponder
+    showReportForResponder,
+
+    isDialogOpen,
+    handleClose,
+    handleConfirm,
+    handleStartNew,
   };
 };

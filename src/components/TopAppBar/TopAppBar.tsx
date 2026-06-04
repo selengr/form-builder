@@ -1,21 +1,27 @@
 'use client';
 
-import { AppBar, Box, Button, IconButton, Skeleton, Toolbar, Typography } from '@mui/material';
-import Image from 'next/image';
 import Link from 'next/link';
+import Image from 'next/image';
+import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { signIn, signOut } from 'next-auth/react';
-import { toast } from 'sonner';
+import { AppBar, Box, Button, IconButton, Skeleton, Toolbar, Typography } from '@mui/material';
+// components
 import Avatar from '../Avatar/Avatar';
-import { useUserInfo } from '@/hooks/useUserInfo';
+import { useUserInfoContext } from '@/context/UserInfoContext';
 
 const TopAppBar = ({ customActions, appBarSx, toolbarSx, imageSx }: any) => {
   const router = useRouter();
-  const { userInfo, loading } = useUserInfo();
+  const { userInfo, isAuthenticated, clearUserInfo } = useUserInfoContext();
+  const loading = false;
+
   const endPoint = process.env.NEXT_PUBLIC_MRESALAT_ENDPOINT || '';
 
   const handleAuth = async () => {
-    if (userInfo) {
+    if (isAuthenticated) {
+
+      clearUserInfo()
+
       await signOut({ callbackUrl: '/' });
       toast.success('خروج با موفقیت انجام شد');
     } else {

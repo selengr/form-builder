@@ -60,7 +60,7 @@ export function UserInfoProvider({ initialUserInfo, children }: Props) {
   );
 }
 
-export function useUserInfo() {
+export function useUserInfoContext() {
   const context = useContext(UserInfoContext);
 
   if (!context) {

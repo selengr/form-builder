@@ -10,7 +10,7 @@ import Avatar from '@/components/Avatar/Avatar';
 import MenuSidebar from '@/components/SideBar/MenuSidebar';
 import MiddleSidebar from '../MiddleSidebar/MiddleSidebar';
 // context
-import { useUserInfo } from '@/context/UserInfoContext ';
+import { useUserInfoContext } from '@/context/UserInfoContext';
 // images
 import LogoutIcon from '@/../public/images/home-page/logout.svg';
 import InfoIcon from '@/../public/images/home-page/info-icon.svg';
@@ -38,9 +38,9 @@ export default function MainSidebar() {
   const pathname = usePathname();
   const isSurvey = pathname.includes('survey-');
 
-  const { userInfo, isAuthenticated, clearUserInfo } = useUserInfo();
+  const { userInfo, isAuthenticated, clearUserInfo } = useUserInfoContext();
 
-  const loading = false; // چون SSR داریم
+  const loading = false;
   const avatar = userInfo?.user?.fullName;
   const endPoint = process.env.NEXT_PUBLIC_MRESALAT_ENDPOINT + '/';
 
@@ -49,7 +49,7 @@ export default function MainSidebar() {
       return signIn('authorize');
     }
 
-    clearUserInfo(); // پاک کردن کانتکست
+    clearUserInfo();
 
     await signOut({ redirect: false });
 

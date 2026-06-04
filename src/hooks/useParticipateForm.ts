@@ -174,13 +174,8 @@ export const useParticipateForm = () => {
 
   const fetchInitialData = useCallback(async () => {
     try {
-      // const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
-
-      // const result = await AxiosApi.post('/take-part/check-response-limitation-form', {
-      //   link: isLink ? slug : null,
-      //   id: !isLink ? slug : null,
-      // });
       const result = await checkResponseLimitationAction({ slug })
+      debugger
       const { userInfo } = await fetchUserInfoServer();
             const username = userInfo?.user?.username || null;
 

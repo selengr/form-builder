@@ -7,18 +7,13 @@ import { Drawer, IconButton } from '@mui/material';
 // public
 import Logo from '@/../public/images/home-page/psya-logo.svg';
 import MenuIcon from '@/../public/images/home-page/menu/ic_menu.svg';
-// hooks
-import { useMenu } from '@/hooks';
-// types
-import { IServerMenuItem } from '@/types/menus';
 // view
 import MenuList from '../menuList/MenuList';
-import MenuItemSkeleton from '../menuItemSkeleton';
 // context
-import { useUserInfo } from '@/context/UserInfoContext ';
+import { useUserInfoContext } from '@/context/UserInfoContext';
 
 const MobileMenu: React.FC = () => {
-  const { isAuthenticated, userInfo } =  useUserInfo();
+  const { userInfo } =  useUserInfoContext();
   const [open, setOpen] = useState<boolean>(false);
   const [isRotated, setIsRotated] = useState<boolean>(false);
 

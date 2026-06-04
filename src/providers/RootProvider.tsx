@@ -11,7 +11,7 @@ import { Toaster } from 'sonner';
 import MainPanel from '@/templates/layout/MainPanel';
 import { SessionProvider } from 'next-auth/react';
 import { type IUserInfoResponse } from '@actions/auth';
-import { UserInfoProvider } from '@/context/UserInfoContext ';
+import { UserInfoProvider } from '@/context/UserInfoContext';
 
 type RootProviderProps = {
   children: ReactNode;

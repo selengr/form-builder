@@ -15,10 +15,7 @@ import {
 } from "@actions/take-part"
 // types
 import { ElementsType, FormElements } from '@/types/FormElements';
-// actions
-// import { fetchUserInfo } from '@/lib/auth';
-import { fetchUserInfoServer } from '../../actions/auth';
-// import { AxiosApi } from '@/services/axios/AxiosApi';
+import { useUserInfoContext } from '@/context/UserInfoContext';
 
 export interface ILimitation {
   isLimited: boolean;
@@ -37,6 +34,8 @@ export const useParticipateForm = () => {
   const from = searchParams.get('from');
   const refId = searchParams.get('refId');
   const isSurvey = pathname.includes('survey-');
+  const { userInfo } = useUserInfoContext();
+
   const [formName, setFormName] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [realFormID, setRealFormID] = useState();
@@ -176,8 +175,7 @@ export const useParticipateForm = () => {
     try {
       const result = await checkResponseLimitationAction({ slug })
       debugger
-      const { userInfo } = await fetchUserInfoServer();
-            const username = userInfo?.user?.username || null;
+       const username =  userInfo?.user?.username || null;
 
        if (!result.success) {
         toast.error(result.message || 'خطا در بررسی محدودیت پاسخ');

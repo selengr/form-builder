@@ -191,7 +191,7 @@ export const useParticipateForm = () => {
   const fetchInitialData = useCallback(async () => {
     try {
       const result = await checkResponseLimitationAction({ slug })
-      debugger
+
        const username =  userInfo?.user?.username || null;
 
        if (!result.success) {
@@ -227,12 +227,6 @@ export const useParticipateForm = () => {
     setFirstLoading(true)
     setQuestionLoading(true)
     try {
-      // const res = await AxiosApi.post('/take-part', {
-      //   link: isLink ? slug : null,
-      //   formId: !isLink ? slug : null,
-      //   username,
-      //   from : from ?? "PUBLIC_PAGE"
-      // });
       const res = await takePartAction({
         slug,
         username,

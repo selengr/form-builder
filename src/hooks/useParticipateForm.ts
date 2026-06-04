@@ -191,6 +191,8 @@ export const useParticipateForm = () => {
           isLimited: true,
           limitationType: result?.data?.responseLimitation,
         });
+      } else if(result?.data?.startFromContinue){
+        
       } else if (result?.data?.responseLimitation) {
         await checkAnswerBefore(username);
       } else {

@@ -46,7 +46,7 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
   if (limitation.isLimited && !limitationStepPassed) {
     return (
       <ResponsiveContainer>
-        <FormLimitation
+        <FormLimitation   
           type={limitation.limitationType}
           setLimitation={setLimitation}
           setQuestion={setQuestion}

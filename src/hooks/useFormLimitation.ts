@@ -5,6 +5,7 @@ import { ILimitation } from '@/hooks/useParticipateForm';
 // action
 // import { checkAnswerBeforeAction } from '../../actions/take-part';
 import { AxiosApi } from '@/services/axios/AxiosApi';
+import { checkAnswerBeforeAction } from '@actions/take-part';
 
 export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimitation: (limitation: ILimitation) => void, setQuestion: (data: any) => void, addQuestion: (data: any) => void) => {
   const [formValue, setFormValue] = useState('');
@@ -60,20 +61,36 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
     setHelperText(type === 'PHONE_NUMBER' ? 'شماره تلفن همراه الزامی می‌باشد' : 'ایمیل الزامی است');
   };
 
- const takePartApi = async (otpCode?: string): Promise<boolean> => {
-  try {
-    setLoading(true);
+  const takePartApi = async (otpCode?: string): Promise<boolean | undefined> => {
+    try {
+      setLoading(true);
+      // const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
 
-    const isLink = /^(public-|solo-|group-|survey-)/.test(slug);
-
-    const response = await AxiosApi.post('/take-part/check-answer-to-form-before', {
-        link: isLink ? slug : null,
-        formId: !isLink ? slug : null,
-        username: formValue,
-        refId: refId ?? undefined,
+      // const response = await AxiosApi.post('/take-part/check-answer-to-form-before', {
+      //     link: isLink ? slug : null,
+      //     formId: !isLink ? slug : null,
+      //     username: formValue,
+      //     refId: refId ?? undefined,
+      //     eventId,
+      //     code: Number(otpCode),
+      //   });
+      const params: any = {
+        slug,
+        // username,
         eventId,
         code: Number(otpCode),
-      });
+      };
+
+      if (refId) params.refId = refId;
+      if (from) params.from = from;
+
+      const response = await checkAnswerBeforeAction(params);
+
+      if (!response.success) {
+        const message = response.message || 'انجام عملیات با خطا مواجه شد';
+        toast.error(message);
+        return
+      }
 
       addQuestion(response.data);
       setQuestion(response.data.questionModel);

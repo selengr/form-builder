@@ -22,7 +22,7 @@ export const useStartFromContinueDialog = ({
     const handleConfirm = useCallback(() => {
         setIsDialogOpen(false);
         onConfirm();
-        setPendingAction(null);
+        setPendingAction(null); 
     }, [onConfirm]);
 
     const handleStartNew = useCallback(() => {

@@ -203,16 +203,18 @@ export const useParticipateForm = () => {
         return;
       }
 
-      if (result?.data?.loggedInStatus === false && result?.data?.responseLimitation) {
+      if (result?.data?.loggedInStatus === false && result?.data?.responseLimitation) {debugger
         setLimitation({
           isLimited: true,
           limitationType: result?.data?.responseLimitation,
         });
-      } else if(result?.data?.startFromContinue){
-         openDialog(username);
       } else if (result?.data?.responseLimitation) {
         await checkAnswerBefore(username);
-      } else {
+      } 
+      // else if(result?.data?.startFromContinue){
+      //    openDialog(username);
+      // } 
+      else {
         await takePart(username);
       }
     } catch (error: any) {

@@ -34,7 +34,7 @@ export default function DesignerTabs() {
   }, [builderId]);
 
   if (IsDataCollection || !builderId) {
-    return null;
+    return <Box width='100%' sx={{ mt: '10px' }}></Box>
   }
 
   return (

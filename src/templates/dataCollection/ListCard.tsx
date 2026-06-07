@@ -6,13 +6,10 @@ import { IconButton } from '@mui/material';
 import { useRouter } from 'next/navigation';
 // components
 import { InfoRow } from '@/components/common/infoRow';
-import { SwitchButton } from '@/components/Switch/SwitchButton';
 // types
 import { ISurveyItem } from '@/types/survey';
 // images
-import CopyIcon from '@/../public/images/home-page/copy.svg';
 import EditIcon from '@/../public/images/home-page/edit-2.svg';
-import TrashIcon from '@/../public/images/home-page/trash.svg';
 import { CodiconEye } from '../../../public/images/home-page/EyeIcon';
 
 interface IListCardProps {
@@ -54,13 +51,25 @@ const ListCard: React.FC<IListCardProps> = ({
     router.push(`/data-collection/${data.id}?name=${data.name}`);
   };
 
-  const handlePreview = () => {
-    router.push(`/preview/${data.id}?rep=list`);
-  };
+  // const handlePreview = () => {
+  //   router.push(`/preview/${data.id}?rep=list`);
+  // };
 
   const statusMap: Record<string, string> = {
     CREATE: "فعال",
     FINAL: "نهایی",
+  };
+
+  const handlePreview = () => {
+    if (!data.id) return;
+    const params = new URLSearchParams({
+      from: 'TESTING',
+    });
+    if (data.status === 'CREATE') {
+      router.push(`/preview/${data.id}?rep=list`)
+    } else {
+      router.push(`form/${data.id}?${params.toString()}`);
+    }
   };
 
   return (
@@ -89,10 +98,10 @@ const ListCard: React.FC<IListCardProps> = ({
       <div className='flex flex-wrap gap-2 w-full justify-between'>
         <button
           className="bg-[#1758BA] hover:bg-[#216ee1] transition-all duration-200 px-12 h-[42px] text-sm rounded-lg text-white"
-          onClick={handlePreview}
-        >
-          مشاهده
+          onClick={handlePreview}>
+          {data.status === 'CREATE' ? "مشاهده" : "پیش نمایش"}
         </button>
+
         <ActionButtons
           id={data.id}
           onViewList={handleNavigation}

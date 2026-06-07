@@ -23,7 +23,7 @@ export const MenuItem = React.memo(
     const iconPath = `/api/images?folder=menu&file=${icon}`;
 
     const isActive =
-      pathname === href ||
+      pathname.includes(href) ||
       children?.some((child) => pathname === child.link);
 
     return (

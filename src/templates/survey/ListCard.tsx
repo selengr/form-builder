@@ -65,6 +65,19 @@ const ListCard: React.FC<ListCardProps> = ({
     router.push(`/stats/${data.id}`)
   }
 
+  const handlePreview = () => {
+    if (!data.id) return;
+    const params = new URLSearchParams({
+      from: 'TESTING',
+    });
+    if (data.status === 'CREATE') {
+      router.push(`/preview/${data.id}`)
+    } else {
+      router.push(`form/${data.id}?${params.toString()}`);
+    }
+  };
+
+
   return (
     <div className="border p-4 rounded-2xl border-[#DDE1E6] flex flex-col gap-3 w-full max-w-full relative">
 
@@ -88,8 +101,8 @@ const ListCard: React.FC<ListCardProps> = ({
       <div className='flex flex-wrap gap-2 w-full justify-between'>
         <button
           className='bg-[#1758BA] max-w-40 hover:bg-[#216ee1] transition-all duration-200 px-3 h-[42px] text-sm rounded-lg text-white grow sm:grow md:flex-1'
-          onClick={() => router.push(`/preview/${data.id}`)}>
-          مشاهده
+          onClick={handlePreview}>
+          {data.status === 'CREATE' ? "مشاهده" : "پیش نمایش"}
         </button>
 
         <div className='flex gap-2 flex-wrap items-center justify-start'>

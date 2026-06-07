@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { IoIosArrowBack, IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowBack } from "react-icons/io";
 // componenst
 import { MenuIcon } from "./MenuIcon";
 import SubMenuItem from "./subMenu/SubMenuItem";

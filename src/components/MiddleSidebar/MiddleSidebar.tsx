@@ -15,13 +15,13 @@ interface IProps {
   userInfo?: IUserInfoResponse | null;
 }
 
-export default function MiddleSidebar({userInfo}: IProps) {
+export default function MiddleSidebar({ userInfo }: IProps) {
 
   const menuLinks = useMemo(() => {
     if (!userInfo?.aclList) return [];
 
-    return userInfo.aclList.filter((item) => 
-      item?.type === 'menu' && 
+    return userInfo.aclList.filter((item) =>
+      item?.type === 'menu' &&
       item?.data?.langId?.includes('acl.psya')
     );
   }, [userInfo?.aclList]);

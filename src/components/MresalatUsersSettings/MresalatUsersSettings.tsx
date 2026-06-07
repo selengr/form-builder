@@ -1,11 +1,13 @@
 'use client';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import FormProvider, { RHFSelect, RHFSwitch } from '../hook-form';
-import { Box, Button, MenuItem, Typography } from '@mui/material';
-import { MyRangeSlider } from '../Slider/RangeSlider';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
+import { Box, Button, MenuItem, Typography } from '@mui/material';
+// component
+import { MyRangeSlider } from '../Slider/RangeSlider';
+// hhok
+import FormProvider, { RHFSelect } from '../hook-form';
 
 const propertiesSchema = z.object({
   city: z.string().optional(),

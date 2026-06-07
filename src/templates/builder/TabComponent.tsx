@@ -20,6 +20,7 @@ export default function DesignerTabs() {
     let tab = 2; 
     if (lastSegment === 'condition') tab = 0;
     else if (lastSegment === 'calculator') tab = 1;
+    else if (lastSegment === 'create') tab = 1;
     
     return { builderId: id, currentTab: tab };
   }, [pathname]);

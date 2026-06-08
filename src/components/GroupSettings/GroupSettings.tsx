@@ -530,7 +530,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
                 color: "white",
                 fontSize: { xs: "13px", sm: "16px" },
                 fontWeight: "700",
-                width: "161px",
+                minWidth: "161px",
                 borderRadius: "10px",
                 boxShadow: "none",
                 "&:hover": {

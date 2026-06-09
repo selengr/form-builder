@@ -45,6 +45,6 @@ export default function MiddleSidebar({ userInfo }: IProps) {
       <div className='flex-1 overflow-y-auto pr-3 flex flex-col' style={{ scrollbarWidth: 'none' }}>
         <MenuList menuLinks={menuLinks} />
       </div>
-    </div>
+    </div>  
   );
 }

@@ -1,17 +1,18 @@
+import { api } from '@/services/axios/actionWapper';
 import { serverApi } from '@/services/axios/serverApi';
 import FormBuilderWapper from '@/templates/builder/FormBuilderWapper';
+import BuilderErrorPage from './error';
 
 async function getFormDataAction(id: string) {
-  try {
-    const response = await serverApi.get(`/form/${id}`);
-    return response.data;
-  } catch (error: any) {
-    throw new Error(error?.message)
-  }
+    return await api.get(`/form/${id}`);
 }
 
 export default async function BuilderPage({ params }: { params: { id: string } }) {
-  const data = await getFormDataAction(params.id)
+  const response = await getFormDataAction(params.id)
 
-  return <FormBuilderWapper data={data} />;
+  if(!response.success){
+    return <BuilderErrorPage error={response as any} />
+  }
+
+  return <FormBuilderWapper data={response.data} />;
 }

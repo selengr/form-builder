@@ -23,7 +23,7 @@ export default function MiddleSidebar({ userInfo }: IProps) {
     return userInfo.aclList.filter((item) =>
       item?.type === 'menu' &&
       item?.data?.langId?.includes('acl.psya')
-    );
+    ).sort((a, b) => (a?.data?.depth ?? 0) - (b?.data?.depth ?? 0));
   }, [userInfo?.aclList]);
 
 

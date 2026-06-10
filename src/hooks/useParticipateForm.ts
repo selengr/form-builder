@@ -17,6 +17,7 @@ import {
 import { ElementsType, FormElements } from '@/types/FormElements';
 import { useUserInfoContext } from '@/context/UserInfoContext';
 import { useStartFromContinueDialog } from './useStartFromContinueDialog';
+import { handlePaeticipationType } from '@/app/(participate)/form/[slug]/components/handlePaeticipationType';
 
 export interface ILimitation {
   isLimited: boolean;
@@ -49,6 +50,7 @@ export const useParticipateForm = () => {
   const [questionLoading, setQuestionLoading] = useState(false);
   const [firstQuestionId, setFirstQuestionId] = useState<number | string | null>(null);
   const [showReportForResponder, setShowReportForResponder] = useState<boolean>(false);
+  const [responseLimitationResult, setResponseLimitationResult] = useState<any>(null);
   const [hasError, setHasError] = useState<HasError>({ status: false, message: '' });
   const [limitation, setLimitation] = useState<ILimitation>({
     isLimited: false,
@@ -62,17 +64,26 @@ export const useParticipateForm = () => {
     return question?.questionId === firstQuestionId;
   }, [question, firstQuestionId]);
 
-    const handleContinueFromPrevious = useCallback(() => {
+  const handleContinueFromPrevious = useCallback(() => {
     const username = userInfo?.user?.username || null;
-    checkAnswerBefore(username);
-  }, [userInfo?.user?.username]);
+
+    if (responseLimitationResult?.data?.loggedInStatus === false) {
+      setLimitation({
+        isLimited: true,
+        limitationType: "PHONE_NUMBER",
+      });
+    } else {
+      checkAnswerBefore(username);
+    }
+
+  }, [responseLimitationResult]);
 
   const handleStartNewResponse = useCallback(() => {
     const username = userInfo?.user?.username || null;
     takePart(username);
-  }, [userInfo?.user?.username]);
+  }, [responseLimitationResult]);
 
-  const { isDialogOpen, openDialog, handleConfirm, handleStartNew, handleClose } = 
+  const { isDialogOpen, openDialog, handleConfirm, handleStartNew, handleClose } =
     useStartFromContinueDialog({
       onConfirm: handleContinueFromPrevious,
       onStartNew: handleStartNewResponse,
@@ -192,27 +203,37 @@ export const useParticipateForm = () => {
     try {
       const result = await checkResponseLimitationAction({ slug })
 
-       const username =  userInfo?.user?.username || null;
+      const username = userInfo?.user?.username || null;
 
-       if (!result.success) {
+      if (!result.success) {
         toast.error(result.message || 'خطا در بررسی محدودیت پاسخ');
-        setHasError({ 
-          status: true, 
-          message: result.message || 'خطا در بررسی محدودیت پاسخ' 
+        setHasError({
+          status: true,
+          message: result.message || 'خطا در بررسی محدودیت پاسخ'
         });
         return;
       }
+      
+      setResponseLimitationResult(result)
+      await handlePaeticipationType({
+        result,
+        username,
+        setLimitation,
+        checkAnswerBefore,
+        openDialog,
+        takePart
+      });
 
-      if (result?.data?.loggedInStatus === false && result?.data?.responseLimitation) {
-        setLimitation({
-          isLimited: true,
-          limitationType: result?.data?.responseLimitation,
-        });
-      } else if (result?.data?.responseLimitation) {
-        await checkAnswerBefore(username);
-      } else {
-        await takePart(username);
-      }
+      // if (result?.data?.loggedInStatus === false && result?.data?.responseLimitation) {
+      //   setLimitation({
+      //     isLimited: true,
+      //     limitationType: result?.data?.responseLimitation,
+      //   });
+      // } else if (result?.data?.responseLimitation) {
+      //   await checkAnswerBefore(username);
+      // } else {
+      //   await takePart(username);
+      // }
     } catch (error: any) {
       toast.error(error?.response?.data?.message?.[0]?.title || 'انجام عملیات با خطا مواجه شد');
       setHasError({ status: true, message: error?.response?.data?.message?.[0]?.title || 'انجام عملیات با خطا مواجه شد' })
@@ -282,15 +303,15 @@ export const useParticipateForm = () => {
 
       const res = await checkAnswerBeforeAction(params);
 
-        if (!res.success) {
-          const message = res.message || 'انجام عملیات با خطا مواجه شد';
-          toast.error(message);
-          setHasError({
-            status: true,
-            message,
-          });
-          return;
-        }
+      if (!res.success) {
+        const message = res.message || 'انجام عملیات با خطا مواجه شد';
+        toast.error(message);
+        setHasError({
+          status: true,
+          message,
+        });
+        return;
+      }
 
       setTakePartId(res.data.takePart);
       setFormName(res.data?.formName);
@@ -434,12 +455,12 @@ export const useParticipateForm = () => {
         questionId: question.questionId,
         answerList,
       })
-      
-       if (!res.success) {
-          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
-          return;
-        }
-        
+
+      if (!res.success) {
+        toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+        return;
+      }
+
       if (res.data.questionId) {
         initializeQuestion(res.data, res.data.oldAnswers ?? []);
       } else {
@@ -465,15 +486,15 @@ export const useParticipateForm = () => {
       setQuestionLoading(true);
       const res = await getPreviousQuestionAction({ takePartId })
       // const res = await AxiosApi.post('/question/previous-question', { takePartId });
-      
-         if (!res.success) {
-            toast.error(res.message || 'خطا در بازگشت به سوال قبلی', {
-              className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
-              duration: 2000,
-            });
-            return;
-          }
-     
+
+      if (!res.success) {
+        toast.error(res.message || 'خطا در بازگشت به سوال قبلی', {
+          className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
+          duration: 2000,
+        });
+        return;
+      }
+
       const q = res.data.questionModel;
       const a = res.data.oldAnswers?.answersModel ?? [];
       initializeQuestion(q, a);

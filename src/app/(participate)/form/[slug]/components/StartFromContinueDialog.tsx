@@ -2,27 +2,73 @@
 
 import { memo } from 'react';
 import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Button from '@mui/material/Button';
 import { CgClose } from 'react-icons/cg';
+import Button from '@mui/material/Button';
+import { useRouter } from 'next/navigation';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import { Dispatch, SetStateAction, useState } from 'react';
+// context
+import { useUserInfoContext } from '@/context/UserInfoContext';
+// hook
+import { ILimitation, IStartFromContinu } from '@/hooks/useParticipateForm';
 
 interface StartFromContinueDialogProps {
-    open: boolean;
-    onClose: () => void;
-    onConfirm: () => void;
-    onStartNew: () => void;
+    startFromContinue: IStartFromContinu,
+    takePart: (username: string | null) => Promise<void>;
+    setLimitation: Dispatch<SetStateAction<ILimitation>>;
+    checkAnswerBefore: (username: string | null) => Promise<void>;
+    setStartFromContinue: Dispatch<SetStateAction<IStartFromContinu>>;
 }
 
 const StartFromContinueDialog = memo(function StartFromContinueDialog({
-    open,
-    onClose,
-    onConfirm,
-    onStartNew,
+    takePart,
+    setLimitation,
+    startFromContinue,
+    checkAnswerBefore,
+    setStartFromContinue
+
 }: StartFromContinueDialogProps) {
+    const [isDialogOpen, setIsDialogOpen] = useState(startFromContinue.status);
+    const router = useRouter()
+    const { username } = useUserInfoContext();
+
+    const onStartFromContinue = async () => {
+
+        if (startFromContinue?.data?.loggedInStatus === false) {
+            setLimitation({
+                isLimited: true,
+                limitationType: "PHONE_NUMBER",
+            });
+        } else {
+            await checkAnswerBefore(username);
+            setStartFromContinue({
+                status: false,
+                data: null
+            })
+            setIsDialogOpen(false)
+        }
+    }
+
+    const onStartNew = async () => {
+
+        await takePart(username);
+        setStartFromContinue({
+            status: false,
+            data: null
+        })
+        setIsDialogOpen(false)
+
+    }
+
+    const onClose = () => {
+        setIsDialogOpen(false)
+        //    router.back()
+    }
+
     return (
         <Dialog
-            open={open}
+            open={isDialogOpen}
             dir='rtl'
             sx={{
                 overflow: 'hidden',
@@ -36,7 +82,7 @@ const StartFromContinueDialog = memo(function StartFromContinueDialog({
                     backgroundColor: 'hsl(0deg 0% 100% / 50%)',
                 },
             }}>
-            {open && (
+            {isDialogOpen && (
                 <>
                     <div className='flex items-center justify-end'>
                         <button className='mx-4 mt-4 mb-0' onClick={onClose}>
@@ -68,32 +114,34 @@ const StartFromContinueDialog = memo(function StartFromContinueDialog({
                             //   maxWidth : "250px"
                             justifyContent: "end"
                         }}>
-                        <Button
-                            onClick={onStartNew}
-                            type='button'
-                            fullWidth
-                            className='text-[16px] text-[#1758BA]'
-                            sx={{
-                                height: '50px',
-                                maxWidth: "120px",
-                                borderRadius: '10px',
-                                fontWeight: { xs: 500, md: 600 },
-                                fontSize: { xs: '14px', md: '15px' },
-                                color: '#1758BA',
-                                borderColor: '#1758BA',
-                                bgcolor: 'white',
-                                '&.MuiButtonBase-root:hover': {
-                                    bgcolor: 'transparent',
-                                    boxShadow: 'none',
+                        {!startFromContinue.data.responseLimitation && (
+                            <Button
+                                onClick={onStartNew}
+                                type='button'
+                                fullWidth
+                                className='text-[16px] text-[#1758BA]'
+                                sx={{
+                                    height: '50px',
+                                    maxWidth: "120px",
+                                    borderRadius: '10px',
+                                    fontWeight: { xs: 500, md: 600 },
+                                    fontSize: { xs: '14px', md: '15px' },
                                     color: '#1758BA',
-                                },
-                            }}
-                            variant='outlined'
-                        >
-                            شروع از ابتدا
-                        </Button>
+                                    borderColor: '#1758BA',
+                                    bgcolor: 'white',
+                                    '&.MuiButtonBase-root:hover': {
+                                        bgcolor: 'transparent',
+                                        boxShadow: 'none',
+                                        color: '#1758BA',
+                                    },
+                                }}
+                                variant='outlined'
+                            >
+                                شروع از ابتدا
+                            </Button>
+                        )}
                         <Button
-                            onClick={onConfirm}
+                            onClick={onStartFromContinue}
                             fullWidth
                             variant='contained'
                             sx={{

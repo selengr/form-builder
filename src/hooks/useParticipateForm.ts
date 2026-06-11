@@ -14,14 +14,16 @@ import {
   checkResponseLimitationAction,
 } from "@actions/take-part"
 // types
-import { ElementsType, FormElements } from '@/types/FormElements';
 import { useUserInfoContext } from '@/context/UserInfoContext';
-import { useStartFromContinueDialog } from './useStartFromContinueDialog';
-import { handlePaeticipationType } from '@/app/(participate)/form/[slug]/components/handlePaeticipationType';
+import { ElementsType, FormElements } from '@/types/FormElements';
 
 export interface ILimitation {
   isLimited: boolean;
   limitationType: '' | 'PHONE_NUMBER' | 'EMAIL';
+}
+export interface IStartFromContinu {
+  status: boolean;
+  data: any
 }
 
 interface HasError {
@@ -36,7 +38,7 @@ export const useParticipateForm = () => {
   const from = searchParams.get('from');
   const refId = searchParams.get('refId');
   const isSurvey = pathname.includes('survey-');
-  const { userInfo } = useUserInfoContext();
+  const { username } = useUserInfoContext();
 
   const [formName, setFormName] = useState('');
   const [isValid, setIsValid] = useState(false);
@@ -50,11 +52,14 @@ export const useParticipateForm = () => {
   const [questionLoading, setQuestionLoading] = useState(false);
   const [firstQuestionId, setFirstQuestionId] = useState<number | string | null>(null);
   const [showReportForResponder, setShowReportForResponder] = useState<boolean>(false);
-  const [responseLimitationResult, setResponseLimitationResult] = useState<any>(null);
   const [hasError, setHasError] = useState<HasError>({ status: false, message: '' });
   const [limitation, setLimitation] = useState<ILimitation>({
     isLimited: false,
     limitationType: '',
+  });
+  const [startFromContinue, setStartFromContinue] = useState<IStartFromContinu>({
+    status: false,
+    data: null,
   });
 
   const hasFetchedRef = useRef(false);
@@ -63,31 +68,6 @@ export const useParticipateForm = () => {
   const isCurrentFirstQuestion = useMemo(() => {
     return question?.questionId === firstQuestionId;
   }, [question, firstQuestionId]);
-
-  const handleContinueFromPrevious = useCallback(() => {
-    const username = userInfo?.user?.username || null;
-
-    if (responseLimitationResult?.data?.loggedInStatus === false) {
-      setLimitation({
-        isLimited: true,
-        limitationType: "PHONE_NUMBER",
-      });
-    } else {
-      checkAnswerBefore(username);
-    }
-
-  }, [responseLimitationResult]);
-
-  const handleStartNewResponse = useCallback(() => {
-    const username = userInfo?.user?.username || null;
-    takePart(username);
-  }, [responseLimitationResult]);
-
-  const { isDialogOpen, openDialog, handleConfirm, handleStartNew, handleClose } =
-    useStartFromContinueDialog({
-      onConfirm: handleContinueFromPrevious,
-      onStartNew: handleStartNewResponse,
-    });
 
   const extractProperty = useCallback(
     (list: any[], key: string) => list?.find(item => item.questionPropertyEnum === key)?.value,
@@ -203,8 +183,6 @@ export const useParticipateForm = () => {
     try {
       const result = await checkResponseLimitationAction({ slug })
 
-      const username = userInfo?.user?.username || null;
-
       if (!result.success) {
         toast.error(result.message || 'خطا در بررسی محدودیت پاسخ');
         setHasError({
@@ -213,17 +191,34 @@ export const useParticipateForm = () => {
         });
         return;
       }
-      
-      setResponseLimitationResult(result)
-      await handlePaeticipationType({
-        result,
-        username,
-        setLimitation,
-        checkAnswerBefore,
-        openDialog,
-        takePart
-      });
 
+       if (result?.data?.responseLimitation) {
+
+        if (result?.data?.startFromContinue) {
+            setStartFromContinue({
+              status : true,
+              data : result.data
+            });
+        } else if (result?.data?.loggedInStatus === false) {
+            setLimitation({
+                isLimited: true,
+                limitationType: result?.data?.responseLimitation,
+            });
+            return;
+        } else {
+            await checkAnswerBefore(username);
+        }
+
+    } else {
+        if (result?.data?.startFromContinue) {
+             setStartFromContinue({
+              status : true,
+              data : result.data
+            });
+        } else {
+            await takePart(username);
+        }
+    }
       // if (result?.data?.loggedInStatus === false && result?.data?.responseLimitation) {
       //   setLimitation({
       //     isLimited: true,
@@ -549,9 +544,9 @@ export const useParticipateForm = () => {
     isCurrentFirstQuestion,
     showReportForResponder,
 
-    isDialogOpen,
-    handleClose,
-    handleConfirm,
-    handleStartNew,
+    takePart,
+    startFromContinue,
+    checkAnswerBefore,
+    setStartFromContinue
   };
 };

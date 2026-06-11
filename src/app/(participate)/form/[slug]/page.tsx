@@ -35,10 +35,10 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
     isCurrentFirstQuestion,
     showReportForResponder,
 
-    isDialogOpen,
-    handleClose,
-    handleConfirm,
-    handleStartNew,
+    takePart,
+    startFromContinue,
+    checkAnswerBefore,
+    setStartFromContinue
   } = useParticipateForm();
 
   if (firstLoading) return <ParticipateLoadingSkeleton />;
@@ -46,7 +46,7 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
   if (limitation.isLimited && !limitationStepPassed) {
     return (
       <ResponsiveContainer>
-        <FormLimitation   
+        <FormLimitation
           type={limitation.limitationType}
           setLimitation={setLimitation}
           setQuestion={setQuestion}
@@ -56,6 +56,20 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
             initializeQuestion(data);
             setLimitationStepPassed(true);
           }}
+        />
+      </ResponsiveContainer>
+    );
+  }
+
+  if (startFromContinue.status) {
+    return (
+      <ResponsiveContainer>
+        <StartFromContinueDialog
+          takePart={takePart}
+          setLimitation={setLimitation}
+          checkAnswerBefore={checkAnswerBefore}
+          startFromContinue={startFromContinue}
+          setStartFromContinue={setStartFromContinue}
         />
       </ResponsiveContainer>
     );
@@ -79,7 +93,6 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
   }
 
   return (
-    <>
       <QuestionStep
         question={question}
         formName={formName}
@@ -93,12 +106,5 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
         formId={realFormID}
         replace={replace}
       />
-      <StartFromContinueDialog
-        open={isDialogOpen}
-        onClose={handleClose}
-        onConfirm={handleConfirm}
-        onStartNew={handleStartNew}
-      />
-    </>
   );
 }

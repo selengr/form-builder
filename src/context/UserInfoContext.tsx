@@ -11,6 +11,7 @@ import {
 import type { IUserInfoResponse } from '@actions/auth';
 
 type UserInfoContextType = {
+  username: string | null;
   userInfo: IUserInfoResponse | null;
   user: IUserInfoResponse['user'] | null;
   aclList: IUserInfoResponse['aclList'];
@@ -42,6 +43,7 @@ export function UserInfoProvider({ initialUserInfo, children }: Props) {
     () => ({
       userInfo,
       user: userInfo?.user ?? null,
+      username: userInfo?.user?.username ?? null,
       aclList: userInfo?.aclList ?? [],
       userRoles: userInfo?.userRoles ?? [],
 

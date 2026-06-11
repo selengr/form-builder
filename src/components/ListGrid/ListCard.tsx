@@ -111,11 +111,11 @@ export default function ListCard({ data }: ListCardProps) {
     const params = new URLSearchParams({
       from: 'TESTING',
     });
-    if(data.status === 'CREATE'){
-      router.push(`/preview/${data.id}`)
-    } else {
+    // if(data.status === 'CREATE'){
+    //   router.push(`/preview/${data.id}`)
+    // } else {
       router.push(`form/${data.id}?${params.toString()}`);
-    }
+    // }
   };
 
   const getAccessLabel = (accessType?: string[]) => {
@@ -182,7 +182,8 @@ export default function ListCard({ data }: ListCardProps) {
            <button
             className='bg-[#1758BA] max-w-[120px] hover:bg-[#216ee1] transition-all duration-200 px-3 h-[42px] text-sm rounded-lg text-white grow sm:grow md:flex-1'
             onClick={handlePreview}>
-              { data.status === 'CREATE' ? "مشاهده" :  "پیش نمایش" }
+              {/* { data.status === 'CREATE' ? "مشاهده" :  "پیش نمایش" } */}
+                پیش نمایش
           </button>
 
           <div className='flex gap-2 flex-wrap items-center justify-end'>

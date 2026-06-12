@@ -83,11 +83,11 @@ const ListCard: React.FC<ListCardProps> = ({
     const params = new URLSearchParams({
       from: 'TESTING',
     });
-    if (data.packagingStausEnum === 'CREATE') {
-      router.push(`/preview/${data.formId}?rep=list`)
-    } else {
+    // if (data.packagingStausEnum === 'CREATE') {
+    //   router.push(`/preview/${data.formId}?rep=list`)
+    // } else {
       router.push(`form/${data.formId}?${params.toString()}`);
-    }
+    // }
   };
 
   const handleNavigateToReport = () => {
@@ -118,7 +118,8 @@ const ListCard: React.FC<ListCardProps> = ({
         <div className="flex items-center gap-1 flex-wrap">
           <div className="max-w-[100px] md:min-w-[105px]">
             <ActionButton
-              label={data.packagingStausEnum === 'CREATE' ? "مشاهده" : "پیش نمایش"}
+              // label={data.packagingStausEnum === 'CREATE' ? "مشاهده" : "پیش نمایش"}
+              label='پیش نمایش'
               onClick={handlePreview}
               color="#1758BA"
               hoverColor="#216ee1"

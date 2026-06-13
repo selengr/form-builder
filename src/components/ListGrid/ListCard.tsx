@@ -37,6 +37,7 @@ interface ListCardProps {
       capacityPublicLink: number | null;
     };
     formSettingModel: {
+      startFromContinue: boolean | null;
       responseLimitation: string | null;
     };
     questionListSize: number;
@@ -205,6 +206,7 @@ export default function ListCard({ data }: ListCardProps) {
                 isBuilderCardId={data.id}
                 formName={data.name}
                 formLimitation={data?.formSettingModel?.responseLimitation ?? null}
+                startFromContinue={data?.formSettingModel?.startFromContinue ?? null}
               />
             )}
 

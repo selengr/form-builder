@@ -28,6 +28,7 @@ interface Props {
   data: any;
   formName: string;
   formLimitation?: string | null;
+  startFromContinue?: boolean | null;
   isBuilderCardId?: string;
   onChangeName?: (newName: string) => void;
   onChangeLimitation?: (value: string | null) => void;

@@ -63,7 +63,7 @@ const StartFromContinueDialog = memo(function StartFromContinueDialog({
 
     const onClose = () => {
         setIsDialogOpen(false)
-        //    router.back()
+           router.back()
     }
 
     return (
@@ -96,13 +96,12 @@ const StartFromContinueDialog = memo(function StartFromContinueDialog({
                             paddingTop: 1,
                         }}>
                         <div className='text-right'>
-                            <h2 className='text-xl font-bold mb-3 text-gray-800'>
-                                ادامه از پاسخ‌های قبلی
-                            </h2>
-                            <p className='text-gray-600 mb-6 leading-relaxed'>
-                                شما قبلاً شروع به پاسخگویی به این فرم کرده‌اید.
-                                آیا می‌خواهید از جایی که متوقف شده‌اید ادامه دهید یا از ابتدا شروع کنید؟
-                            </p>
+                            <h3 className='text-lg font-bold mb-3 text-gray-800'>
+                               در صورتی که ممکن است این فرم را نیمه‌کاره رها کنید و بخواهید بعد از بازگشت، از همان نقطه ادامه دهید؛ یا اینکه این همان فرمی است که قبلاً نیمه کاره رهایش کرده‌اید و می‌خواهید ادامه آن را تکمیل کنید، شماره تلفن همراه خود را در کادر زیر وارد کنید.
+                            </h3>
+                            {/* <p className='text-gray-600 mb-6 leading-relaxed'>
+                               در صورتی که ممکن است این فرم را نیمه‌کاره رها کنید و بخواهید بعد از بازگشت، از همان نقطه ادامه دهید؛ یا اینکه این همان فرمی است که قبلاً نیمه کاره رهایش کرده‌اید و می‌خواهید ادامه آن را تکمیل کنید، شماره تلفن همراه خود را در کادر زیر وارد کنید.
+                            </p> */}
                         </div>
                     </DialogContent>
                     <DialogActions
@@ -137,7 +136,7 @@ const StartFromContinueDialog = memo(function StartFromContinueDialog({
                                 }}
                                 variant='outlined'
                             >
-                                شروع از ابتدا
+                                خیر
                             </Button>
                         )}
                         <Button
@@ -158,7 +157,7 @@ const StartFromContinueDialog = memo(function StartFromContinueDialog({
                                     boxShadow: 'none',
                                 },
                             }}>
-                            ادامه از پاسخ‌های قبلی
+                           بله
                         </Button>
                     </DialogActions>
                 </>

@@ -118,7 +118,7 @@ const FieldSwitchPair = memo(function FieldSwitchPair({ fieldName, label, type, 
             <div className="flex flex-col gap-2">
               <Box display="flex" justifyContent="space-between" width="100%" gap="16px">
                 <Typography variant="subtitle2" fontWeight="600" fontSize="15px">
-                  <label htmlFor=""></label>
+                   {label}
                 </Typography>
 
                 <SwitchButton

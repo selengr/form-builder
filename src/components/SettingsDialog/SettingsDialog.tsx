@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { IoSettingsOutline } from 'react-icons/io5';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { Box, Button, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
 
 // lib
@@ -113,6 +113,7 @@ export default function SettingsDialog({
   onChangeLimitation,
 }: Props) {
   const { id: formId } = useParams();
+  const router = useRouter()
   const searchParams = useSearchParams();
       const queryClient = useQueryClient()
 
@@ -150,6 +151,7 @@ console.log('data.formSettingModel.startFromContinue---------', data.formSetting
     const body: any = {
       ...convertObject(values as any, fieldsConfig),
       name: values.name,
+      startFromContinue: values.startFromContinue,
     };
 
     if (values.label && IsDataCollection) {
@@ -166,13 +168,22 @@ console.log('data.formSettingModel.startFromContinue---------', data.formSetting
 
       toast.success('تنظیمات با موفقیت ثبت شد');
         queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
+        
       onChangeName?.(values.name);
+
+      onChangeStartFromContinue?.(values.startFromContinue);
 
       onChangeLimitation?.(
         values.responseLimitation.checked
           ? values.responseLimitation.value
           : null
       );
+      // router.refresh()
+      // onChangeLimitation?.(
+      //   values.responseLimitation.checked
+      //     ? values.responseLimitation.value
+      //     : null
+      // );
 
       handleOpen();
     } catch (error: any) {

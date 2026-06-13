@@ -65,11 +65,11 @@ const ListCard: React.FC<IListCardProps> = ({
     const params = new URLSearchParams({
       from: 'TESTING',
     });
-    // if (data.status === 'CREATE') {
-    //   router.push(`/preview/${data.id}?rep=list`)
-    // } else {
+    if (data.status === 'CREATE') {
+      router.push(`/preview/${data.id}?rep=list`)
+    } else {
       router.push(`form/${data.id}?${params.toString()}`);
-    // }
+    }
   };
 
   return (
@@ -99,8 +99,7 @@ const ListCard: React.FC<IListCardProps> = ({
         <button
           className="bg-[#1758BA] hover:bg-[#216ee1] transition-all duration-200 px-12 h-[42px] text-sm rounded-lg text-white"
           onClick={handlePreview}>
-          {/* {data.status === 'CREATE' ? "مشاهده" : "پیش نمایش"} */}
-          پیش نمایش
+          {data.status === 'CREATE' ? "مشاهده" : "پیش نمایش"}
         </button>
 
         <ActionButtons

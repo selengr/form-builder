@@ -7,6 +7,7 @@ import ResponsiveContainer from '@/templates/form/ContentWrapper';
 import { ErrorStep, FinishStep, QuestionStep } from './components';
 import { ParticipateLoadingSkeleton } from './components/participateSkeleton';
 import StartFromContinueDialog from './components/StartFromContinueDialog';
+import Header from './components/header';
 
 export default function ParticipateFormPage({ params }: { params: { slug: string } }) {
   const [limitationStepPassed, setLimitationStepPassed] = useState(false);
@@ -63,15 +64,13 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
 
   if (startFromContinue.status) {
     return (
-      <ResponsiveContainer>
         <StartFromContinueDialog
           takePart={takePart}
           setLimitation={setLimitation}
           checkAnswerBefore={checkAnswerBefore}
           startFromContinue={startFromContinue}
           setStartFromContinue={setStartFromContinue}
-        />
-      </ResponsiveContainer>
+        />  
     );
   }
 

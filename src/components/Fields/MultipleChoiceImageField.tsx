@@ -291,7 +291,9 @@ function FormComponent({ elementInstance, onChange, error, value }: { elementIns
           >
             {newOptionList?.map((option: any) => {
               const isSelected = selectedValue?.includes(String(option.id));
-
+console.log("BASE_URL:", process.env.NEXT_PUBLIC_BASE_URL);
+console.log("FULL_IMAGE_URL:", `${process.env.NEXT_PUBLIC_BASE_URL}/filemanager${option?.link}`);
+debugger
               return (
                 <FormControlLabel
                   key={option?.id}
@@ -336,6 +338,7 @@ function FormComponent({ elementInstance, onChange, error, value }: { elementIns
                           fill
                           sizes="(max-width: 600px) 100px, 150px"
                           priority
+                          unoptimized 
                           draggable={false}
                           style={{
                             objectFit: 'cover',

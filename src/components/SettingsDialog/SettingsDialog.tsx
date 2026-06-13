@@ -139,7 +139,7 @@ export default function SettingsDialog({
     },
   });
 console.log('data.formSettingModel', data.formSettingModel)
-console.log('data.formSettingModel.startFromContinue', data.formSettingModel.startFromContinue)
+console.log('data.formSettingModel.startFromContinue---------', data.formSettingModel.startFromContinue)
   const {
     handleSubmit,
     reset,

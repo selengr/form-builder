@@ -102,6 +102,39 @@ const FieldSwitchPair = memo(function FieldSwitchPair({ fieldName, label, type, 
     }
   };
 
+  if (type === "switch") {
+    return (
+      <Controller
+        name="startFromContinue"
+        control={control}
+        render={({ field }) => {
+          const isChecked = field.value;
+
+          const handleChange = (event: any) => {
+            field.onChange(event.target.checked);
+          };
+
+          return (
+            <div className="flex flex-col gap-2">
+              <Box display="flex" justifyContent="space-between" width="100%" gap="16px">
+                <Typography variant="subtitle2" fontWeight="600" fontSize="15px">
+                  <label htmlFor=""></label>
+                </Typography>
+
+                <SwitchButton
+                  disableRipple
+                  checked={isChecked}
+                  onChange={handleChange}
+                />
+              </Box>
+            </div>
+          );
+        }}
+      />
+
+    )
+  }
+
   return (
     <div className='flex flex-col gap-2'>
       <Box display='flex' justifyContent='space-between' width='100%' gap='16px'>

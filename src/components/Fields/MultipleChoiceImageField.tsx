@@ -280,20 +280,18 @@ function FormComponent({ elementInstance, onChange, error, value }: { elementIns
             sx={{
               display: 'flex',
               flexDirection: 'row',
-              flexWrap: 'wrap', // Prevents overflow on mobile by wrapping lines
+              flexWrap: 'wrap',
               justifyContent: 'center',
-              gap: { xs: 1.5, sm: 3 }, // Responsive gap
+              gap: { xs: 1.5, sm: 3 },
               width: '100%',
               '& .MuiCheckbox-root': {
-                display: 'none', // Hiding default checkbox
+                display: 'none',
               },
             }}
           >
             {newOptionList?.map((option: any) => {
               const isSelected = selectedValue?.includes(String(option.id));
-console.log("BASE_URL:", process.env.NEXT_PUBLIC_BASE_URL);
-console.log("FULL_IMAGE_URL:", `${process.env.NEXT_PUBLIC_BASE_URL}/filemanager${option?.link}`);
-debugger
+
               return (
                 <FormControlLabel
                   key={option?.id}
@@ -338,7 +336,7 @@ debugger
                           fill
                           sizes="(max-width: 600px) 100px, 150px"
                           priority
-                          unoptimized 
+                          unoptimized
                           draggable={false}
                           style={{
                             objectFit: 'cover',
@@ -367,12 +365,12 @@ debugger
             sx={{
               display: 'flex',
               flexDirection: 'row',
-              flexWrap: 'wrap', // جلوگیری از overflow در موبایل با شکستن خط
+              flexWrap: 'wrap',
               justifyContent: 'center',
-              gap: { xs: 1.5, sm: 3 }, // گپ کمتر برای موبایل جهت جلوگیری از بیرون‌زدگی
+              gap: { xs: 1.5, sm: 3 },
               width: '100%',
               '& .MuiRadio-root': {
-                display: 'none', // پنهان کردن رادیو پیش‌فرض
+                display: 'none',
               },
             }}
             onChange={handleChange}
@@ -428,6 +426,7 @@ debugger
                           fill
                           sizes="(max-width: 600px) 100px, 150px"
                           priority
+                          unoptimized
                           draggable={false}
                           style={{
                             objectFit: 'cover',

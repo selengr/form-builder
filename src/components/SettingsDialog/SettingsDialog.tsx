@@ -45,6 +45,12 @@ const fieldsConfig = [
     options: responseLimitationOptions,
     disabled: false,
   },
+    {
+    name: 'startFromContinue',
+    label: 'پاسخ از ادامه',
+    type: 'switch',
+    disabled: false,
+  },
 ];
 
 const propertiesSchema = z.object({
@@ -93,6 +99,7 @@ const propertiesSchema = z.object({
         path: ['value'],
       }
     ),
+    startFromContinue: z.boolean().optional(),
 });
 
 type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
@@ -128,9 +135,11 @@ export default function SettingsDialog({
         checked: !!formLimitation,
         value: formLimitation ?? '',
       },
+      startFromContinue: data?.formSettingModel?.startFromContinue ?? false,
     },
   });
-
+console.log('data.formSettingModel', data.formSettingModel)
+console.log('data.formSettingModel.startFromContinue', data.formSettingModel.startFromContinue)
   const {
     handleSubmit,
     reset,
@@ -179,6 +188,7 @@ export default function SettingsDialog({
         checked: !!formLimitation,
         value: formLimitation ?? '',
       },
+      startFromContinue: data?.formSettingModel?.startFromContinue ?? false,
     });
   }, [formName, formLimitation, data, reset]);
 

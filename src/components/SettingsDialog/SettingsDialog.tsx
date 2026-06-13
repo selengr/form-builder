@@ -169,23 +169,17 @@ export default function SettingsDialog({
         }
 
       toast.success('تنظیمات با موفقیت ثبت شد');
-        queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
+      queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
         
       onChangeName?.(values.name);
 
-      onChangeStartFromContinue?.(values?.startFromContinue!);
+      onChangeStartFromContinue?.(values.startFromContinue ?? null);
 
       onChangeLimitation?.(
         values.responseLimitation.checked
           ? values.responseLimitation.value
           : null
       );
-      // router.refresh()
-      // onChangeLimitation?.(
-      //   values.responseLimitation.checked
-      //     ? values.responseLimitation.value
-      //     : null
-      // );
 
       handleOpen();
     } catch (error: any) {

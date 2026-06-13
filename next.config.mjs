@@ -21,6 +21,12 @@ const nextConfig = {
                 pathname: "/filemanager/**",
             },
             {
+                protocol: "https",
+                hostname: "api.mresalat.ir",
+                port: "",
+                pathname: "/filemanager/**",
+            },
+            {
                 protocol: "http",
                 hostname: "172.16.11.24",
                 port: "8080",

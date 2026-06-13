@@ -39,6 +39,7 @@ const ELEMENTS = [
 export interface FormSettingModel {
   responseLimitation: string | null;
   label?: string | null;
+  startFromContinue?: boolean | null;
 }
 
 export type FormTypeEnum =
@@ -64,6 +65,9 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [formLimitation, setFormLimitation] = useState<string | null>(
     data?.formSettingModel?.responseLimitation ?? null
+  );
+  const [startFromContinue, setStartFromContinue] = useState<boolean | null>(
+    data?.formSettingModel?.startFromContinue ?? null
   );
 
   const { formName, formSetting } = useDesigner();
@@ -128,6 +132,8 @@ const DesignerSidebar = memo(function DesignerSidebar({ data }: DesignerSidebarP
             formLimitation={formLimitation}
             onChangeName={setFormTitle}
             onChangeLimitation={setFormLimitation}
+            startFromContinue={startFromContinue}
+            onChangeStartFromContinue={setStartFromContinue}
           />
         )}
 

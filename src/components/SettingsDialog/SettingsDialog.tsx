@@ -31,6 +31,7 @@ interface Props {
   isBuilderCardId?: string;
   onChangeName?: (newName: string) => void;
   onChangeLimitation?: (value: string | null) => void;
+  onChangeStartFromContinue?: (value: boolean | null) => void;
 }
 
 const responseLimitationOptions = [
@@ -111,9 +112,10 @@ export default function SettingsDialog({
   isBuilderCardId,
   formLimitation,
   onChangeLimitation,
+  startFromContinue,
+  onChangeStartFromContinue
 }: Props) {
   const { id: formId } = useParams();
-  const router = useRouter()
   const searchParams = useSearchParams();
       const queryClient = useQueryClient()
 
@@ -136,11 +138,10 @@ export default function SettingsDialog({
         checked: !!formLimitation,
         value: formLimitation ?? '',
       },
-      startFromContinue: data?.formSettingModel?.startFromContinue ?? false,
+      startFromContinue: startFromContinue ?? false,
     },
   });
-console.log('data.formSettingModel', data.formSettingModel)
-console.log('data.formSettingModel.startFromContinue---------', data.formSettingModel.startFromContinue)
+
   const {
     handleSubmit,
     reset,
@@ -171,7 +172,7 @@ console.log('data.formSettingModel.startFromContinue---------', data.formSetting
         
       onChangeName?.(values.name);
 
-      onChangeStartFromContinue?.(values.startFromContinue);
+      onChangeStartFromContinue?.(values?.startFromContinue!);
 
       onChangeLimitation?.(
         values.responseLimitation.checked

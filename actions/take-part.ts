@@ -43,19 +43,23 @@ export async function checkAnswerBeforeAction(params: {
   username: string | null;
   refId?: string;
   from?: string;
+  // limit
+  eventId?: string;
+  code?: number;
 }) {
-  const { slug, username, refId, from } = params;
+  const { slug, username, refId, from, eventId, code } = params;
   const isLink = isPublicSlug(slug);
 
   const payload: any = {
     link: isLink ? slug : null,
     formId: !isLink ? slug : null,
-    username,
+    username
   };
 
   if (refId) payload.refId = refId;
-  if (from) payload.from = from;
-
+  if (eventId) payload.eventId = eventId;
+  if (code) payload.code = code;
+  payload.from = from ?? "PUBLIC_PAGE";
   return api.post("/take-part/check-answer-to-form-before", payload);
 }
 

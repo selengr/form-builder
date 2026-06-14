@@ -57,6 +57,7 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
             initializeQuestion(data);
             setLimitationStepPassed(true);
           }}
+           setStartFromContinue={setStartFromContinue}
         />
       </ResponsiveContainer>
     );

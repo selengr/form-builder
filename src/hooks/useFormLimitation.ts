@@ -7,7 +7,7 @@ import { ILimitation } from '@/hooks/useParticipateForm';
 import { AxiosApi } from '@/services/axios/AxiosApi';
 import { checkAnswerBeforeAction } from '@actions/take-part';
 
-export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimitation: (limitation: ILimitation) => void, setQuestion: (data: any) => void, addQuestion: (data: any) => void) => {
+export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimitation: (limitation: ILimitation) => void, setQuestion: (data: any) => void, addQuestion: (data: any) => void, setStartFromContinue: any) => {
   const [formValue, setFormValue] = useState('');
   const [eventId, setEventId] = useState('');
   const [error, setError] = useState(false);
@@ -76,13 +76,13 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
       //   });
       const params: any = {
         slug,
-        // username,
+        username: formValue,
         eventId,
         code: Number(otpCode),
       };
 
       if (refId) params.refId = refId;
-      if (from) params.from = from;
+       params.from = from ?? "PUBLIC_PAGE";
 
       const response = await checkAnswerBeforeAction(params);
 
@@ -95,13 +95,13 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
       addQuestion(response.data);
       setQuestion(response.data.questionModel);
       setLimitation({ isLimited: false, limitationType: '' });
+      setStartFromContinue({ status: false, data: null })
 
       return true;
     } catch (error: any) {
       const message =
         error?.response?.data?.message?.[0]?.title ||
         'انجام عملیات با خطا مواجه شد';
-
       toast.error(message);
       setError(true);
       setHelperText(message);

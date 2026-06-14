@@ -298,7 +298,7 @@ export const useParticipateForm = () => {
       };
 
       if (refId) params.refId = refId;
-      if (from) params.from = from;
+      params.from = from ?? "PUBLIC_PAGE";
 
       const res = await checkAnswerBeforeAction(params);
 

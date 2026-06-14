@@ -7,16 +7,17 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import ActionButtons from './ActionButtons';
 import PhoneOtpPage from '@/components/2FA/phone-otp';
 // hooks
-import { ILimitation } from '@/hooks/useParticipateForm';
+import { ILimitation, IStartFromContinu } from '@/hooks/useParticipateForm';
 import { useFormLimitation } from '@/hooks/useFormLimitation';
 interface Props {
   type: '' | 'PHONE_NUMBER' | 'EMAIL';
   setLimitation: Dispatch<SetStateAction<ILimitation>>;
   setQuestion: Dispatch<any>;
   addQuestion: (data: any) => void;
+  setStartFromContinue: Dispatch<SetStateAction<IStartFromContinu>>;
 }
 
-export default function FormLimitation({ type, setLimitation, setQuestion, addQuestion }: Props) {
+export default function FormLimitation({ type, setLimitation, setQuestion, addQuestion, setStartFromContinue }: Props) {
   const {
     formValue,
     error,
@@ -29,7 +30,7 @@ export default function FormLimitation({ type, setLimitation, setQuestion, addQu
     sendOtp,
     resendOtp,
     confirmOtp
-  } = useFormLimitation(type, setLimitation, setQuestion, addQuestion);
+  } = useFormLimitation(type, setLimitation, setQuestion, addQuestion, setStartFromContinue);
 
   const [step, setStep] = useState<'form' | 'otp'>('form');
 

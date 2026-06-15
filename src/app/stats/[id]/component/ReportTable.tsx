@@ -1,13 +1,18 @@
 'use client';
 
 import React from 'react';
-import { Tooltip } from '@mui/material';
-import { ImSpinner2 } from 'react-icons/im';
-import { LuFileChartPie, LuUserMinus, LuUserPlus } from 'react-icons/lu';
+import Image from 'next/image';
 import { toast } from 'sonner';
+import { LuTrash2 } from 'react-icons/lu';
+import { ImSpinner2 } from 'react-icons/im';
+import { Button, Tooltip } from '@mui/material';
+import TrashIcon from '@/../public/images/home-page/trash.svg';
+import { LuFileChartPie, LuUserMinus, LuUserPlus } from 'react-icons/lu';
 import { usePostCondition } from '../show-result/hooks/usePostCondition';
 import { UserType } from '../page';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useDeleteTakePart } from '../show-result/hooks/useDeleteTakePart';
+import ConfirmDialog from '@/components/confirm-dialog';
 
 interface StatsTableProps {
   headData: any[];
@@ -19,7 +24,17 @@ interface StatsTableProps {
 }
 
 export function ReportTable({ headData, allData, isLoading, selectedUsers, setSelectedUsers, formId }: StatsTableProps) {
+  const router = useRouter()
+  const [open, setOpen] = React.useState(false);
+  const [deleteTarget, setDeleteTarget] = React.useState<{ takePartId: number; name: string } | null>(null);
+
   const { mutate } = usePostCondition();
+  const { mutate: deleteTakePart, isPending: loading } = useDeleteTakePart();
+
+  const toggleConfirm = () => {
+    setOpen((prev) => !prev);
+  };
+
   const pathname = usePathname()
 
   const isUserSelected = (takePartId: number) => {
@@ -53,6 +68,36 @@ export function ReportTable({ headData, allData, isLoading, selectedUsers, setSe
       data: [{ formId, takePartId }],
       name,
     });
+  };
+
+  const askDeleteUser = (takePartId: number, name: string) => {
+    setDeleteTarget({ takePartId, name });
+    setOpen(true);
+  };
+
+  const handleRemoveDetail = () => {
+    if (!deleteTarget) return;
+    const loadingToast = toast.loading('در حال حذف کاربر...');
+
+    deleteTakePart(
+      {
+        formId,
+        takePartId: deleteTarget.takePartId,
+      },
+      {
+        onSuccess: () => {
+          toast.dismiss(loadingToast);
+          const updatedSelected = selectedUsers.filter(
+            (u) => u.takePartId !== deleteTarget.takePartId
+          );
+
+          setSelectedUsers(updatedSelected);
+          setOpen(false);
+          setDeleteTarget(null);
+          router.refresh()
+        },
+      }
+    );
   };
 
   return (
@@ -133,6 +178,13 @@ export function ReportTable({ headData, allData, isLoading, selectedUsers, setSe
                             <LuFileChartPie className='w-5 h-5' />
                           </button>
                         }
+                        <button
+                          onClick={() => askDeleteUser(takePartId, name)}
+                          className="rounded-xl p-2 bg-red-600 hover:bg-red-700 text-white transition-colors duration-200 shadow-sm"
+                        >
+                          <LuTrash2 className="w-5 h-5" />
+                        </button>
+
                       </div>
                     </td>
                   </tr>
@@ -142,6 +194,50 @@ export function ReportTable({ headData, allData, isLoading, selectedUsers, setSe
           </table>
         </div>
       )}
+
+
+
+      <ConfirmDialog
+        content={
+          <>
+            <div className="flex flex-row items-center gap-2">
+              <Image src={TrashIcon} alt="delete" width={20} height={20} />
+              <span className="text-xs">
+                {deleteTarget?.name}
+              </span>
+            </div>
+            <br />
+            <p>آیا از حذف این مورد اطمینان دارید؟</p>
+          </>
+        }
+        open={open}
+        title="حذف ردیف"
+        loading={loading}
+        onClose={toggleConfirm}
+        cancelText="انصراف"
+        action={
+          <Button
+            type="submit"
+            fullWidth
+            disableRipple
+            disableElevation
+            variant="contained"
+            disabled={loading}
+            sx={{
+              height: '52px',
+              fontWeight: 500,
+              fontSize: '16px',
+              borderRadius: '12px',
+              boxShadow: 'none',
+              textTransform: 'none',
+            }}
+            onClick={handleRemoveDetail}
+          >
+            حذف کن
+          </Button>
+        }
+      />
+
     </div>
   );
 }

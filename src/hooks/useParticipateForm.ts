@@ -181,7 +181,7 @@ export const useParticipateForm = () => {
 
   const fetchInitialData = useCallback(async () => {
     try {
-      if(from?.includes("TESTING")) {
+      if (from?.includes("TESTING")) {
         await takePart(username)
         return;
       }
@@ -196,33 +196,33 @@ export const useParticipateForm = () => {
         return;
       }
 
-       if (result?.data?.responseLimitation) {
+      if (result?.data?.responseLimitation) {
 
         if (result?.data?.startFromContinue) {
-            setStartFromContinue({
-              status : true,
-              data : result.data
-            });
+          setStartFromContinue({
+            status: true,
+            data: result.data
+          });
         } else if (result?.data?.loggedInStatus === false) {
-            setLimitation({
-                isLimited: true,
-                limitationType: result?.data?.responseLimitation,
-            });
-            return;
+          setLimitation({
+            isLimited: true,
+            limitationType: result?.data?.responseLimitation,
+          });
+          return;
         } else {
-            await checkAnswerBefore(username);
+          await checkAnswerBefore(username);
         }
 
-    } else {
+      } else {
         if (result?.data?.startFromContinue) {
-             setStartFromContinue({
-              status : true,
-              data : result.data
-            });
+          setStartFromContinue({
+            status: true,
+            data: result.data
+          });
         } else {
-            await takePart(username);
+          await takePart(username);
         }
-    }
+      }
       // if (result?.data?.loggedInStatus === false && result?.data?.responseLimitation) {
       //   setLimitation({
       //     isLimited: true,
@@ -314,7 +314,11 @@ export const useParticipateForm = () => {
 
       setTakePartId(res.data.takePart);
       setFormName(res.data?.formName);
-      initializeQuestion(res.data.questionModel, res.data.userAnswerModel?.answersModel ?? []);
+      if (res.data.questionModel.questionId) {
+        initializeQuestion(res.data.questionModel, res.data.questionModel.oldAnswers ?? []);
+      } else {
+        initializeQuestion(res.data.questionModel, res.data.userAnswerModel?.answersModel ?? []);
+      }
     } catch (error: any) {
       toast.error(error?.response?.data?.message?.[0]?.title || 'انجام عملیات با خطا مواجه شد');
       setHasError({ status: true, message: error?.response?.data?.message?.[0]?.title || 'انجام عملیات با خطا مواجه شد' })

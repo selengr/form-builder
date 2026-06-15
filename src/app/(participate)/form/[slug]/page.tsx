@@ -54,7 +54,7 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
           addQuestion={(data) => {
             setFormName(data.formName)
             setTakePartId(data.takePart)
-            initializeQuestion(data);
+            initializeQuestion(data.questionModel, data.questionModel.oldAnswers ?? []);
             setLimitationStepPassed(true);
           }}
            setStartFromContinue={setStartFromContinue}

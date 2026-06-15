@@ -1,20 +1,13 @@
 'use client';
 
+import React from 'react';
 import Image from 'next/image';
-import dynamic from 'next/dynamic';
-import React, { useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 // components
-import ListCard from '@/components/ListGrid/ListCard';
-import ListCardSkeleton from '@/components/ListGrid/ListCardSkeleton';
 import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
 
-const ListGrid = dynamic(() => import('@/components/ListGrid/ListGrid'), {
-  ssr: false
-});
-
-function FilterSidebar({ 
+export default function FilterSidebar({ 
   formType, 
   setFormType, 
   setRefreshGrid 
@@ -36,12 +29,6 @@ function FilterSidebar({
   const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormType((prev: any) => {
       return { ...prev, type: (event.target as HTMLInputElement).value };
-    });
-  };
-
-  const handleStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormType((prev: any) => {
-      return { ...prev, status: (event.target as HTMLInputElement).value };
     });
   };
   
@@ -97,36 +84,6 @@ function FilterSidebar({
               </FormControl>
             </div>
 
-            {/* بخش دسترسی فیلتر */}
-            <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
-              <FormControl
-                sx={{
-                  '& .MuiTypography-root': {
-                    fontSize: '14px',
-                    color: '#393939',
-                    fontWeight: 400,
-                  },
-                }}>
-                <FormLabel
-                  sx={{
-                    fontSize: '15px',
-                    color: '#161616',
-                    fontWeight: 700,
-                    mb: '8px',
-                    '&.Mui-focused': {
-                      color: '#161616',
-                    },
-                  }}
-                  id='demo-controlled-radio-buttons-group'>
-                  بر اساس دسترسی
-                </FormLabel>
-                <RadioGroup aria-labelledby='demo-controlled-radio-buttons-group' name='controlled-radio-buttons-group' value={formType.status} onChange={handleStatusChange}>
-                  <FormControlLabel value='ALL' control={<Radio />} label='همه' />
-                  <FormControlLabel value='PUBLIC' control={<Radio />} label='عمومی' />
-                  <FormControlLabel value='PRIVATE' control={<Radio />} label='خصوصی' />
-                </RadioGroup>
-              </FormControl>
-            </div>
             
             <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
               <FormControl
@@ -252,45 +209,3 @@ function FilterSidebar({
     </div>
   );
 }
-
-export default function ListGridWrapperContent() {
-  const [refreshGrid, setRefreshGrid] = useState(false);
-  const [formType, setFormType] = useState<any>({
-    type: 'ALL',
-    status: 'ALL',
-    isCreatedSoloReport: 'ALL',
-    fieldOperation: "DSC"
-  });
-  
-  const filterBoxList: any = [];
-  const searchBoxList: any = [
-    {
-      fieldName: 'formSetting.name',
-      fieldOperation: 'MATCH',
-      fieldValue: '',
-      nextConditionOperator: 'OR',
-    },
-  ];
-
-  return (
-    <ListGrid
-      title='فرم‌های من'
-      showCreateButton
-      searchBoxList={searchBoxList}
-      filterBoxList={filterBoxList}
-      url='/form/main-list'
-      filterComponent={
-        <FilterSidebar 
-          formType={formType} 
-          setFormType={setFormType} 
-          setRefreshGrid={setRefreshGrid}
-        />
-      }
-      CartComponent={(item: any) => <ListCard setRefreshGrid={setRefreshGrid} {...item} />}
-      disableFilter={false}
-      refreshGrid={refreshGrid}
-      searchQueryFilter={formType}
-      SkeletonComponent={() => <ListCardSkeleton />}
-    />
-  );
-} 

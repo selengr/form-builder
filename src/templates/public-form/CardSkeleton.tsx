@@ -1,12 +1,13 @@
 'use client';
 
-import { Grid, Skeleton } from '@mui/material';
+import { Grid2, Skeleton } from '@mui/material';
 
 const FormCardSkeleton = () => {
   return (
     <>
       {Array.from({ length: 5 }).map((_, i) => (
-        <Grid key={i} sx={{ width: 1, maxWidth: 470, mx: 'auto' }}>
+        <Grid2 sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} key={i} size={{ xs: 12, md: 10, xl: 9 }}>
+
           <div className="border p-4 rounded-2xl border-[#DDE1E6] flex flex-col gap-2 w-full max-w-full relative">
 
             <div className="space-y-2 mt-1">
@@ -25,7 +26,7 @@ const FormCardSkeleton = () => {
 
             </div>
           </div>
-        </Grid >
+        </Grid2 >
       ))}
     </>
   );

@@ -1,23 +1,27 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import dynamic from 'next/dynamic';
 import PublicFormCard from './ListCard';
 import CardSkeleton from './CardSkeleton';
 import ListGridWrapperSkeleton from '@/components/ListGrid/ListGridWrapperSkeleton';
+import FilterSidebar from './FilterSidebar';
 
 const ListGrid = dynamic(() => import('./ListGrid'), {
   ssr: false,
 });
 
-const FORM_FILTER = {
-  type: 'ALL',
-  status: 'ALL',
-  isCreatedSoloReport: 'ALL',
-  fieldOperation: 'DSC',
-};
-
 export default function ListGridWrapper() {
+  const [refreshGrid, setRefreshGrid] = useState(false);
+  const [formType, setFormType] = useState<any>({
+    type: 'ALL',
+    status: 'ALL',
+    isCreatedSoloReport: 'ALL',
+    fieldOperation: "DSC"
+  });
+  
+  const filterBoxList: any = [];
+
   return (
     <Suspense fallback={<ListGridWrapperSkeleton
       name='فرم‌های عمومی'
@@ -29,8 +33,17 @@ export default function ListGridWrapper() {
       <ListGrid
         title='فرم‌های عمومی'
         CartComponent={PublicFormCard}
-        searchQueryFilter={FORM_FILTER}
+        searchQueryFilter={formType}
         url='/public-page/form/main-list'
+        filterComponent={
+        <FilterSidebar 
+          formType={formType} 
+          setFormType={setFormType} 
+          setRefreshGrid={setRefreshGrid}
+        />
+      }
+      filterBoxList={filterBoxList}
+      refreshGrid={refreshGrid}
       />
     </Suspense>
   );

@@ -95,7 +95,7 @@ export default function MyAssessmentsFilter({
                             </RadioGroup>
                         </FormControl>
                     </div>
-                    <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
+                    {/* <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
                         <FormControl
                             sx={{
                                 '& .MuiTypography-root': {
@@ -123,7 +123,7 @@ export default function MyAssessmentsFilter({
                                 <FormControlLabel value='PRIVATE' control={<Radio />} label='اختصاصی' />
                             </RadioGroup>
                         </FormControl>
-                    </div>
+                    </div> */}
 
 
                     <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
@@ -150,7 +150,7 @@ export default function MyAssessmentsFilter({
                         </FormControl>
                     </div>
 
-                    <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
+                    <div className='w-full flex flex-col justify-center gap-2 rounded-[20px] bg-[#F7F7FF] px-4 pt-3 pb-2'>
                         <FormControl
                             sx={{
                                 '& .MuiTypography-root': { fontSize: '14px', color: '#393939', fontWeight: 400 },
@@ -160,7 +160,7 @@ export default function MyAssessmentsFilter({
                                     fontSize: '15px',
                                     color: '#161616',
                                     fontWeight: 700,
-                                    mb: '8px',
+                                    mb: '6px',
                                     '&.Mui-focused': { color: '#161616' },
                                 }}>
                                 بر اساس وضعیت

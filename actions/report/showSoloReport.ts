@@ -2,7 +2,6 @@
 
 import { api } from '@/services/axios/actionWapper';
 import { serverApi } from '@/services/axios/serverApi';
-import { AnyTlsaRecord } from 'dns';
 
 export async function showSoloReport(
   data: { formId: number; takePartId: number }[]
@@ -21,18 +20,18 @@ export async function showSoloReport(
   // }
 }
 
-
 export async function deleteTakePartAction(params: {
-  formId: any;
-  takePartId: any;
+  formId: string | number;
+  takePartId: string | number;
 }) {
   const { takePartId, formId } = params;
 
-  const body : any = [{
-    formId,
-    takePartId,
-    }]
-   
-  
-  return serverApi.delete("/report/solo/take-part-delete", body);
+  const body = [
+    {
+      formId,
+      takePartId,
+    },
+  ];
+
+  return await api.post("/report/solo/take-part-delete", body);
 }

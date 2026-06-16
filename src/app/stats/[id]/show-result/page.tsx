@@ -65,7 +65,7 @@ const ResultsPage = () => {
 
         <div className='shrink-0 m-2 p-4 z-10 w-[calc(100%-16px)] h-[52px] flex items-center justify-center rounded-lg bg-[#F7F7FF] mb-4 relative'>
 
-          <Link href={`/stats/${id}`} className='absolute right-2 md:right-4'>
+          <Link href={`/stats/${id}?name=${search}`} className='absolute right-2 md:right-4'>
             <IconButton
               sx={{
                 borderRadius: '9999px',

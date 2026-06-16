@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { ReportHeader, ReportPagination, ReportTable } from './component';
 import { useStatsViewModel } from './viewModel';
 import { useEffect, useState } from 'react';
@@ -13,9 +13,11 @@ export interface UserType {
 export default function StatsPage() {
   const router = useRouter();
   const params = useParams();
+    const searchParams = useSearchParams();
+  const search = searchParams.get('name');
   const formId = params?.id?.toString(); // اطمینان از string بودن id
 
-  const { formData, headData, allData, isLoading, page: currentPage, setPage: setCurrentPage, pageSize: rowsPerPage, setPageSize: setRowsPerPage, totalItems } = useStatsViewModel();
+  const { headData, allData, refetchStatsData, isLoading, page: currentPage, setPage: setCurrentPage, pageSize: rowsPerPage, setPageSize: setRowsPerPage, totalItems } = useStatsViewModel();
 
   const [selectedUsers, setSelectedUsers] = useState<UserType[]>([]);
 
@@ -35,10 +37,10 @@ export default function StatsPage() {
   return (
     <div className='w-0 grow flex flex-col md:p-4 p-2 overflow-x-hidden'>
       <div className='flex-grow bg-white rounded-xl p-4 overflow-hidden flex flex-col min-w-0'>
-        <ReportHeader title={formData.name || 'گزارش'} onBack={handleNavigation} />
+        <ReportHeader title={search || 'گزارش'} onBack={handleNavigation} />
 
         <div className='flex-grow overflow-hidden min-w-0'>
-          <ReportTable headData={headData} allData={allData} isLoading={isLoading} selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers} formId={Number(formId)} />
+          <ReportTable refetchStatsData={refetchStatsData} headData={headData} allData={allData} isLoading={isLoading} selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers} formId={Number(formId)} />
         </div>
 
         <ReportPagination

@@ -49,7 +49,7 @@ const ListCard: FC<ListCardProps> = ({ data }) => {
 
   const handleNavigation = () => {
     localStorage.setItem("stats", "/reports")
-    router.push(`/stats/${id}`)
+    router.push(`/stats/${id}?name=${name}`)
   }
 
   const isPackaging = type === "PACKAGING";

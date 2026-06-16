@@ -451,7 +451,8 @@ export const useParticipateForm = () => {
       //   takePartId,
       //   questionId: question.questionId,
       //   answerList,
-      // });
+      // })
+
       const res = await insertAnswerAction({
         formId: question.formId,
         takePartId,

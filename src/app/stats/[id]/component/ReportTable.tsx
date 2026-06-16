@@ -21,10 +21,10 @@ interface StatsTableProps {
   selectedUsers: UserType[];
   setSelectedUsers: (users: UserType[]) => void;
   formId: number;
+  refetchStatsData : () => void
 }
 
-export function ReportTable({ headData, allData, isLoading, selectedUsers, setSelectedUsers, formId }: StatsTableProps) {
-  const router = useRouter()
+export function ReportTable({ headData, allData, isLoading, refetchStatsData, selectedUsers, setSelectedUsers, formId }: StatsTableProps) {
   const [open, setOpen] = React.useState(false);
   const [deleteTarget, setDeleteTarget] = React.useState<{ takePartId: number; name: string } | null>(null);
 
@@ -77,7 +77,7 @@ export function ReportTable({ headData, allData, isLoading, selectedUsers, setSe
 
   const handleRemoveDetail = () => {
     if (!deleteTarget) return;
-    const loadingToast = toast.loading('در حال حذف کاربر...');
+    const loadingToast = toast.loading('در حال حذف ردیف...');
 
     deleteTakePart(
       {
@@ -94,8 +94,11 @@ export function ReportTable({ headData, allData, isLoading, selectedUsers, setSe
           setSelectedUsers(updatedSelected);
           setOpen(false);
           setDeleteTarget(null);
-          router.refresh()
+          refetchStatsData()
         },
+        onError: () => {
+           toast.dismiss(loadingToast);
+        }
       }
     );
   };

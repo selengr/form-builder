@@ -16,7 +16,7 @@ export default function StatsPage() {
   const formId = params?.id?.toString();
   const [selectedUsers, setSelectedUsers] = useState<UserType[]>([]);
 
-  const { name, headData, allData, isLoading, page: currentPage, setPage: setCurrentPage, pageSize: rowsPerPage, setPageSize: setRowsPerPage, totalItems } = useStatsViewModel();
+  const { name, headData, refetchStatsData, allData, isLoading, page: currentPage, setPage: setCurrentPage, pageSize: rowsPerPage, setPageSize: setRowsPerPage, totalItems } = useStatsViewModel();
 
   useEffect(() => {
     if (!formId) return
@@ -43,6 +43,7 @@ export default function StatsPage() {
 
         <div className='flex-grow overflow-hidden min-w-0'>
           <ReportTable
+            refetchStatsData={refetchStatsData}
             headData={headData}
             allData={allData}
             isLoading={isLoading}

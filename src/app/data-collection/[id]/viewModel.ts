@@ -44,6 +44,8 @@ export const useStatsViewModel = () => {
     }
   }, [page, pageSize]);
 
+  const refetchStatsData = () => fetchStatsData(page, pageSize);
+
   return {
     page,
     name,
@@ -54,5 +56,6 @@ export const useStatsViewModel = () => {
     isLoading,
     totalItems,
     setPageSize,
+    refetchStatsData
   };
 };

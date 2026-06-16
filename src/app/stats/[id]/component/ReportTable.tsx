@@ -21,7 +21,7 @@ interface StatsTableProps {
   selectedUsers: UserType[];
   setSelectedUsers: (users: UserType[]) => void;
   formId: number;
-  refetchStatsData : () => void
+  refetchStatsData: () => void
 }
 
 export function ReportTable({ headData, allData, isLoading, refetchStatsData, selectedUsers, setSelectedUsers, formId }: StatsTableProps) {
@@ -97,7 +97,7 @@ export function ReportTable({ headData, allData, isLoading, refetchStatsData, se
           refetchStatsData()
         },
         onError: () => {
-           toast.dismiss(loadingToast);
+          toast.dismiss(loadingToast);
         }
       }
     );
@@ -203,14 +203,12 @@ export function ReportTable({ headData, allData, isLoading, refetchStatsData, se
       <ConfirmDialog
         content={
           <>
-            <div className="flex flex-row items-center gap-2">
+            <div className="flex flex-row items-center gap-2 mt-2">
               <Image src={TrashIcon} alt="delete" width={20} height={20} />
-              <span className="text-xs">
+              <p className='font-normal'>آیا از حذف ردیف <span className="font-semibold">
                 {deleteTarget?.name}
-              </span>
+              </span> اطمینان دارید؟</p>
             </div>
-            <br />
-            <p>آیا از حذف این مورد اطمینان دارید؟</p>
           </>
         }
         open={open}
@@ -227,10 +225,10 @@ export function ReportTable({ headData, allData, isLoading, refetchStatsData, se
             variant="contained"
             disabled={loading}
             sx={{
-              height: '52px',
+              height: 45,
               fontWeight: 500,
               fontSize: '16px',
-              borderRadius: '12px',
+              borderRadius: 3,
               boxShadow: 'none',
               textTransform: 'none',
             }}

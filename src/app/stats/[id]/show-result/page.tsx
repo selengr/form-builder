@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { IconButton } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import { IoIosArrowForward } from 'react-icons/io';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import HtmlPreview from '@/components/HtmlPreview/HtmlPreview';
 import PageContainer from '@/templates/layout/PageContainer';
 
@@ -15,12 +15,12 @@ interface Result {
 }
 
 const ResultsPage = () => {
-  const { id } = useParams();
+  // const { id } = useParams();
+  const router = useRouter()
   const [results, setResults] = useState<Result[]>([]);
 
   const searchParams = useSearchParams();
   const search = searchParams.get('name');
-
 
   useEffect(() => {
     const storedResults = localStorage.getItem("testResult");
@@ -65,14 +65,14 @@ const ResultsPage = () => {
 
         <div className='shrink-0 m-2 p-4 z-10 w-[calc(100%-16px)] h-[52px] flex items-center justify-center rounded-lg bg-[#F7F7FF] mb-4 relative'>
 
-          <Link href={`/stats/${id}?name=${search}`} className='absolute right-2 md:right-4'>
+          <div onClick={()=> router.back()} className='absolute right-2 md:right-4'>
             <IconButton
               sx={{
                 borderRadius: '9999px',
               }}>
               <IoIosArrowForward fontSize='1.1rem' color='#000' />
             </IconButton>
-          </Link>
+          </div>
           <p
             className="mx-5 px-8 text-sm md:text-base font-semibold md:font-bold text-[#161616] text-center truncate max-w-full"
           >گزارش فرم {search ?? '---'}</p>

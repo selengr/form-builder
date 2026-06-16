@@ -46,7 +46,7 @@ function FilterSidebar({ formType, onChange, onApply, onReset }: Props) {
             <RadioGroup value={formType.status} onChange={onChange('status')}>
               <FormControlLabel value='ALL' control={<Radio />} label='همه' />
               <FormControlLabel value='PUBLIC' control={<Radio />} label='عمومی' />
-              <FormControlLabel value='PRIVATE' control={<Radio />} label='خصوصی' />
+              <FormControlLabel value='PRIVATE' control={<Radio />} label='اختصاصی' />
             </RadioGroup>
           </FilterBox>
 

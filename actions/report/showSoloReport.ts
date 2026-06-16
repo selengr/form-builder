@@ -1,23 +1,15 @@
 'use server';
 
 import { api } from '@/services/axios/actionWapper';
-import { serverApi } from '@/services/axios/serverApi';
 
 export async function showSoloReport(
   data: { formId: number; takePartId: number }[]
 ) {
-  // try {
-    const url = '/report/solo/show-solo-report';
-    const response = await serverApi.post(url, data);
-    return response.data;
-  // } catch (error: any) {
-  //   const message =
-  //     error?.response?.data?.message?.[0]?.title ||
-  //     error?.response?.data?.message ||
-  //     'انجام عملیات با خطا مواجه شد';
+  const url = '/report/solo/show-solo-report';
 
-  //   throw new Error(message);
-  // }
+  const res = await api.post(url, data);
+
+  return res;
 }
 
 export async function deleteTakePartAction(params: {

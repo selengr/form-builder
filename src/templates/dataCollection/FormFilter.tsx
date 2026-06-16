@@ -30,7 +30,7 @@ const TYPE_OPTIONS = [
 const STATUS_OPTIONS = [
   { value: 'ALL', label: 'همه' },
   { value: 'PUBLIC', label: 'عمومی' },
-  { value: 'PRIVATE', label: 'خصوصی' },
+  { value: 'PRIVATE', label: 'اختصاصی' },
 ] as const;
 
 const FormFilter = ({ formType, setFormType, onApply, onReset }: IFormFilterProps) => {

@@ -123,7 +123,7 @@ function FilterSidebar({
                 <RadioGroup aria-labelledby='demo-controlled-radio-buttons-group' name='controlled-radio-buttons-group' value={formType.status} onChange={handleStatusChange}>
                   <FormControlLabel value='ALL' control={<Radio />} label='همه' />
                   <FormControlLabel value='PUBLIC' control={<Radio />} label='عمومی' />
-                  <FormControlLabel value='PRIVATE' control={<Radio />} label='خصوصی' />
+                  <FormControlLabel value='PRIVATE' control={<Radio />} label='اختصاصی' />
                 </RadioGroup>
               </FormControl>
             </div>

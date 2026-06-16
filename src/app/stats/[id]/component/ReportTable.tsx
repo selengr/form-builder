@@ -10,7 +10,7 @@ import TrashIcon from '@/../public/images/home-page/trash.svg';
 import { LuFileChartPie, LuUserMinus, LuUserPlus } from 'react-icons/lu';
 import { usePostCondition } from '../show-result/hooks/usePostCondition';
 import { UserType } from '../page';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useDeleteTakePart } from '../show-result/hooks/useDeleteTakePart';
 import ConfirmDialog from '@/components/confirm-dialog';
 

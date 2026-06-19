@@ -181,12 +181,12 @@ export function ReportTable({ headData, allData, isLoading, refetchStatsData, se
                             <LuFileChartPie className='w-5 h-5' />
                           </button>
                         }
-                        <button
+                         {pathname.includes('stats') && <button
                           onClick={() => askDeleteUser(takePartId, name)}
                           className="rounded-xl p-2 bg-red-600 hover:bg-red-700 text-white transition-colors duration-200 shadow-sm"
                         >
                           <LuTrash2 className="w-5 h-5" />
-                        </button>
+                        </button>}
 
                       </div>
                     </td>

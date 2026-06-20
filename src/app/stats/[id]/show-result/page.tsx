@@ -49,7 +49,7 @@ const ResultsPage = () => {
               const parsed = JSON.parse(row);
               if (typeof parsed === "string") return parsed;
               if (parsed && typeof parsed === "object" && typeof parsed.html === "string") return parsed.html;
-              return String(parsed ?? "");
+              return String(parsed.content ?? "");
             } catch {
               return row;
             }

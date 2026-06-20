@@ -12,6 +12,8 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { useUserInfoContext } from '@/context/UserInfoContext';
 // hook
 import { ILimitation, IStartFromContinu } from '@/hooks/useParticipateForm';
+import { DialogTitle } from '@mui/material';
+import { FiClock } from 'react-icons/fi';
 
 interface StartFromContinueDialogProps {
     startFromContinue: IStartFromContinu,
@@ -63,7 +65,7 @@ const StartFromContinueDialog = memo(function StartFromContinueDialog({
 
     const onClose = () => {
         setIsDialogOpen(false)
-           router.back()
+        router.back()
     }
 
     return (
@@ -96,18 +98,28 @@ const StartFromContinueDialog = memo(function StartFromContinueDialog({
                             paddingTop: 1,
                         }}>
                         <div className='text-right'>
-                            <h3 className='text-lg font-bold mb-3 text-gray-800'>
-                               در صورتی که ممکن است این فرم را نیمه‌کاره رها کنید و بخواهید بعد از بازگشت، از همان نقطه ادامه دهید؛ یا اینکه این همان فرمی است که قبلاً نیمه کاره رهایش کرده‌اید و می‌خواهید ادامه آن را تکمیل کنید، شماره تلفن همراه خود را در کادر زیر وارد کنید.
-                            </h3>
-                            {/* <p className='text-gray-600 mb-6 leading-relaxed'>
-                               در صورتی که ممکن است این فرم را نیمه‌کاره رها کنید و بخواهید بعد از بازگشت، از همان نقطه ادامه دهید؛ یا اینکه این همان فرمی است که قبلاً نیمه کاره رهایش کرده‌اید و می‌خواهید ادامه آن را تکمیل کنید، شماره تلفن همراه خود را در کادر زیر وارد کنید.
-                            </p> */}
+                            <div className="flex items-center gap-2 justify-start mb-2">
+                                <FiClock className="text-gray-500" />
+                                <h3 className="text-lg font-bold text-gray-800">
+                                    شروع از ادامه
+                                </h3>
+                            </div>
+
+                            <p className="text-gray-600 leading-relaxed">
+
+                                {
+                                    startFromContinue.data.responseLimitation ?
+                                        "در صورتی که ممکن است این فرم را نیمه‌کاره رها کنید و بخواهید بعد از بازگشت، از همان نقطه ادامه دهید؛ یا اینکه این همان فرمی است که قبلاً نیمه کاره رهایش کرده‌اید و می‌خواهید ادامه آن را تکمیل کنید، شماره تلفن همراه خود را در کادر زیر وارد کنید."
+                                        :
+                                        "اگر قبلاً این فرم را نیمه‌کاره رها کرده‌اید، می‌توانید ادامه آن را تکمیل کنید."
+                                }
+                            </p>
                         </div>
                     </DialogContent>
                     <DialogActions
                         sx={{
                             padding: '16px 24px',
-                            gap: '12px',
+                            gap: '4px',
                             // borderTop: '1px solid #e5e5e5',
                             display: "flex",
                             //   maxWidth : "250px"
@@ -120,8 +132,8 @@ const StartFromContinueDialog = memo(function StartFromContinueDialog({
                                 fullWidth
                                 className='text-[16px] text-[#1758BA]'
                                 sx={{
-                                    height: '50px',
-                                    maxWidth: "120px",
+                                    height: '45px',
+                                    maxWidth: "130px",
                                     borderRadius: '10px',
                                     fontWeight: { xs: 500, md: 600 },
                                     fontSize: { xs: '14px', md: '15px' },
@@ -136,7 +148,7 @@ const StartFromContinueDialog = memo(function StartFromContinueDialog({
                                 }}
                                 variant='outlined'
                             >
-                                خیر
+                                شروع فرم جدید
                             </Button>
                         )}
                         <Button
@@ -144,9 +156,9 @@ const StartFromContinueDialog = memo(function StartFromContinueDialog({
                             fullWidth
                             variant='contained'
                             sx={{
-                                maxWidth: "170px",
+                                maxWidth: "150px",
                                 bgcolor: '#1758BA',
-                                height: '50px',
+                                height: '45px',
                                 color: 'white',
                                 fontSize: { xs: '14px', md: '15px' },
                                 fontWeight: { xs: 500, md: 600 },
@@ -157,7 +169,8 @@ const StartFromContinueDialog = memo(function StartFromContinueDialog({
                                     boxShadow: 'none',
                                 },
                             }}>
-                           بله
+                            {startFromContinue.data.responseLimitation ? "بله" : "ادامه فرم قبلی"}
+
                         </Button>
                     </DialogActions>
                 </>

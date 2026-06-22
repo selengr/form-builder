@@ -74,7 +74,7 @@ const ListGrid: React.FC<IProps> = ({
             fieldName: "formSetting.name",
             fieldOperation: "MATCH" as const,
             fieldValue: debouncedValue || "",
-            nextConditionOperator: "OR" as const,
+            nextConditionOperator: "AND" as const,
         },
     ], [debouncedValue]);
 

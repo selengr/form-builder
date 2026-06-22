@@ -61,7 +61,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
       fieldName: "introducedUser.name",
       fieldOperation: "MATCH",
       fieldValue: "",
-      nextConditionOperator: "OR",
+      nextConditionOperator: "AND",
     },
   ])
   const [isShowReportForResponder, setIsShowReportForResponder] = useState<boolean>(false)

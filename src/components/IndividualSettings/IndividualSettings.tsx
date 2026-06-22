@@ -116,7 +116,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
       fieldName: "introducedUser.name",
       fieldOperation: "MATCH",
       fieldValue: "",
-      nextConditionOperator: "OR",
+      nextConditionOperator: "AND",
     },
   ])
   const [isRemoving, setIsRemoving] = useState(false);

@@ -35,7 +35,7 @@ export default function ListGridWrapper() {
           fieldName: 'name',
           fieldOperation: 'MATCH',
           fieldValue: '',
-          nextConditionOperator: 'OR',
+          nextConditionOperator: 'AND',
         },
       ];
 

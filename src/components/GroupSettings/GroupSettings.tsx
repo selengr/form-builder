@@ -66,7 +66,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
       fieldName: "name",
       fieldOperation: "MATCH",
       fieldValue: "",
-      nextConditionOperator: "OR",
+      nextConditionOperator: "AND",
     },
   ])
   const [isRemoving, setIsRemoving] = useState(false);

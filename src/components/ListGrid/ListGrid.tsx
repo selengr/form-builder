@@ -25,7 +25,7 @@ export interface SearchBoxItem {
   fieldName: string;
   fieldOperation: 'MATCH' | 'EQUAL' | 'DSC' | 'ASC' | 'IN';
   fieldValue: string | string[];
-  nextConditionOperator: 'OR' | 'AND';
+  nextConditionOperator: 'AND' | 'AND';
 }
 interface Props {
   url: string;

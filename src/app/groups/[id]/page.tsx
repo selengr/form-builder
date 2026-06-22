@@ -40,7 +40,7 @@ export default function GroupDetailsPage() {
   const [onenConfirmationDialog, setOnenConfirmationDialog] = useState(false);
   const [storedIntroducedUserJTGroupId, setStoredIntroducedUserJTGroupId] = useState<number>(0)
   const [searchBoxList, setSearchBoxList] = useState<SearchBoxItem[]>([
-    { fieldName: 'introducedUser.name', fieldOperation: 'MATCH', fieldValue: '', nextConditionOperator: 'OR' },
+    { fieldName: 'introducedUser.name', fieldOperation: 'MATCH', fieldValue: '', nextConditionOperator: 'AND' },
   ])
 
   // Fetch members
@@ -66,7 +66,7 @@ export default function GroupDetailsPage() {
         fieldName: 'introducedUser.name',
         fieldOperation: 'MATCH',
         fieldValue: query.trim(),
-        nextConditionOperator: 'OR',
+        nextConditionOperator: 'AND',
       },
     ]);
   }, [query]);

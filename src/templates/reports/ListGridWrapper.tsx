@@ -14,7 +14,7 @@ export default function ListGridWrapper() {
       fieldName: 'formSetting.name',
       fieldOperation: 'MATCH',
       fieldValue: '',
-      nextConditionOperator: 'OR',
+      nextConditionOperator: 'AND',
     },
   ];
 

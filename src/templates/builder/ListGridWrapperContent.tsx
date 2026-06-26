@@ -98,7 +98,7 @@ function FilterSidebar({
             </div>
 
             {/* بخش دسترسی فیلتر */}
-            <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
+            {/* <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
               <FormControl
                 sx={{
                   '& .MuiTypography-root': {
@@ -126,7 +126,7 @@ function FilterSidebar({
                   <FormControlLabel value='PRIVATE' control={<Radio />} label='اختصاصی' />
                 </RadioGroup>
               </FormControl>
-            </div>
+            </div> */}
             
             <div className='w-full flex flex-col justify-center gap-4 rounded-[20px] bg-[#F7F7FF] px-4 pt-4 pb-3'>
               <FormControl

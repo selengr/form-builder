@@ -35,7 +35,7 @@ export default function ParticipateFormPage({ params }: { params: { slug: string
     setTakePartId,
     isCurrentFirstQuestion,
     showReportForResponder,
-
+    
     takePart,
     startFromContinue,
     checkAnswerBefore,

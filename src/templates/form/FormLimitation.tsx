@@ -1,7 +1,7 @@
 'use client';
 
 import AnimatedBox from './AnimatedBox';
-import { Box,TextField, Typography } from '@mui/material';
+import { Box, TextField, Typography } from '@mui/material';
 import { Dispatch, SetStateAction, useState } from 'react';
 // components
 import ActionButtons from './ActionButtons';
@@ -9,6 +9,8 @@ import PhoneOtpPage from '@/components/2FA/phone-otp';
 // hooks
 import { ILimitation, IStartFromContinu } from '@/hooks/useParticipateForm';
 import { useFormLimitation } from '@/hooks/useFormLimitation';
+import { ErrorStep } from '@/app/(participate)/form/[slug]/components';
+import { useRouter } from 'next/navigation';
 interface Props {
   type: '' | 'PHONE_NUMBER' | 'EMAIL';
   setLimitation: Dispatch<SetStateAction<ILimitation>>;
@@ -18,6 +20,7 @@ interface Props {
 }
 
 export default function FormLimitation({ type, setLimitation, setQuestion, addQuestion, setStartFromContinue }: Props) {
+  const { replace } = useRouter();
   const {
     formValue,
     error,
@@ -29,6 +32,7 @@ export default function FormLimitation({ type, setLimitation, setQuestion, addQu
     isValid,
     sendOtp,
     resendOtp,
+    hasError,
     confirmOtp
   } = useFormLimitation(type, setLimitation, setQuestion, addQuestion, setStartFromContinue);
 
@@ -37,7 +41,6 @@ export default function FormLimitation({ type, setLimitation, setQuestion, addQu
   const isPhone = type === 'PHONE_NUMBER';
   const label = isPhone ? 'شماره موبایل' : 'ایمیل';
   const placeholder = isPhone ? '09129876543' : 'example@gmail.com';
-
 
   const handleNext = async () => {
     if (!isValid) {
@@ -52,6 +55,10 @@ export default function FormLimitation({ type, setLimitation, setQuestion, addQu
       await takePartApi();
     }
   };
+
+  if (hasError.status) {
+    return <ErrorStep message={hasError.message} replace={replace} />
+  }
 
   /* ------------ OTP PAGE ------------ */
   return (

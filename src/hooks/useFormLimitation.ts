@@ -1,5 +1,5 @@
 import { toast } from 'sonner';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { ILimitation } from '@/hooks/useParticipateForm';
 // action
@@ -7,12 +7,19 @@ import { ILimitation } from '@/hooks/useParticipateForm';
 import { AxiosApi } from '@/services/axios/AxiosApi';
 import { checkAnswerBeforeAction } from '@actions/take-part';
 
+
+interface HasError {
+  status: boolean;
+  message: string;
+}
+
 export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimitation: (limitation: ILimitation) => void, setQuestion: (data: any) => void, addQuestion: (data: any) => void, setStartFromContinue: any) => {
   const [formValue, setFormValue] = useState('');
   const [eventId, setEventId] = useState('');
   const [error, setError] = useState(false);
   const [helperText, setHelperText] = useState('');
   const [loading, setLoading] = useState(false);
+  const [hasError, setHasError] = useState<HasError>({ status: false, message: '' });
 
 
   const searchParams = useSearchParams();
@@ -87,9 +94,7 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
       const response = await checkAnswerBeforeAction(params);
 
       if (!response.success) {
-        const message = response.message || 'انجام عملیات با خطا مواجه شد';
-        toast.error(message);
-        return
+        throw new Error(response.message)
       }
 
       addQuestion(response.data);
@@ -100,10 +105,14 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
       return true;
     } catch (error: any) {
       const message =
-        error?.response?.data?.message?.[0]?.title ||
+        error?.message ||
         'انجام عملیات با خطا مواجه شد';
       toast.error(message);
       setError(true);
+      setHasError({
+          status: true,
+          message: message || 'خطا در بررسی محدودیت پاسخ'
+        });
       setHelperText(message);
 
       return false;
@@ -123,7 +132,7 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
       setEventId(response.data.eventId)
       toast.success('کد تایید ارسال شد');
       return true;
-    } catch (error: any) {
+    } catch (error: any) {debugger
       const message =
         error?.response?.data?.message?.[0]?.title ||
         'ارسال کد با خطا مواجه شد';
@@ -165,6 +174,7 @@ export const useFormLimitation = (type: '' | 'PHONE_NUMBER' | 'EMAIL', setLimita
     takePartApi,
     isValid,
 
+    hasError,
     sendOtp,
     resendOtp,
     confirmOtp,

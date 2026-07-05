@@ -1,15 +1,15 @@
 'use client';
+
 import { memo, useMemo } from 'react';
+import Image from 'next/image';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useDroppable } from '@dnd-kit/core';
 import useMediaQuery from '@mui/material/useMediaQuery';
-
 import QuestionCard from './QuestionCard';
-
 import useActionOpenBottomSheet from '@/hooks/useActionOpenBottomSheet';
 import useActionDesigner from '@/hooks/useActionDesigner';
-
 import { FormElementInstance } from '@/types/FormElements';
+import emptyIllustration from '@/../public/images/home-page/notfound-meh.svg';
 
 type Props = {
   group: number;
@@ -17,7 +17,11 @@ type Props = {
   disabled?: boolean;
 };
 
-const QuestionGroup = memo(function QuestionGroup({ group, questions = [], disabled = false }: Props) {
+const QuestionGroup = memo(function QuestionGroup({
+  group,
+  questions = [],
+  disabled = false,
+}: Props) {
   const isMobile = useMediaQuery('(max-width:1280px)');
   const setOpenBottomSheet = useActionOpenBottomSheet();
   const { setSelectedGroup } = useActionDesigner();
@@ -44,32 +48,59 @@ const QuestionGroup = memo(function QuestionGroup({ group, questions = [], disab
     }
   };
 
+  const dropZoneText = isMobile
+    ? 'سوال مورد نظر را از اینجا اضافه کنید'
+    : 'سوال خود را از پنل کناری به اینجا بکشید';
+
+  const isEmpty = safeQuestions.length === 0;
+
   return (
     <div
       ref={droppable.setNodeRef}
-      className={`flex flex-col w-full rounded-xl items-center justify-center bg-[#f7f7f7] ${
-        safeQuestions.length ? '' : 'border-[1px] border-[#1758BA]'
-      } ${disabled ? 'opacity-50 pointer-events-none' : ''}`}>
+      className={`flex flex-col w-full h-full rounded-2xl border border-[#DDE1E6] bg-[#F8FAFC] overflow-hidden ${
+        disabled ? 'opacity-50 pointer-events-none' : ''
+      }`}
+    >
+      {isEmpty && !isMobile && (
+        <div className="flex flex-col items-center justify-center py-16 px-6 h-[80%]">
+          <Image
+            src={emptyIllustration}
+            alt=""
+            width={350}
+            height={220}
+            className="opacity-80"
+            draggable={false}
+          />
+          <p className="text-[#6F6F6F] text-[14px] md:text-[15px] font-semibold md:font-bold text-center">{dropZoneText}</p>
+        </div>
+      )}
+
       {safeQuestions.length > 0 && (
-        <div className='flex flex-col w-full min-h-[60px] px-2 pt-2 gap-4'>
+        <div className="flex flex-col w-full px-3 pt-3 gap-2">
           <SortableContext items={questionsIds} strategy={verticalListSortingStrategy}>
             {safeQuestions.map((question, index) => (
-              <QuestionCard key={questionsIds[index]} question={question} />
+              <QuestionCard key={questionsIds[index]} question={question} index={index} />
             ))}
           </SortableContext>
         </div>
       )}
 
-      <div className='flex flex-row-reverse items-center justify-center py-2 w-full'>
-        {isMobile ? (
-          <p onClick={handleAddQuestion} className='p-2 text-[#424242] text-center text-sm font-bold cursor-pointer'>
-            برای افزودن سوال این قسمت را لمس کنید
+      {(isMobile || safeQuestions.length > 0) && (
+        <div
+          className={`mx-3 mb-3 mt-2 flex items-center justify-center rounded-xl border border-dashed border-[#DDE1E6] bg-transparent min-h-[56px] ${
+            isMobile && !disabled ? 'cursor-pointer' : ''
+          }`}
+          onClick={isMobile ? handleAddQuestion : undefined}
+        >
+          <p
+            className={`p-3 text-[#6F6F6F] text-center text-sm font-medium ${
+              isMobile && !disabled ? 'cursor-pointer' : ''
+            }`}
+          >
+            {dropZoneText}
           </p>
-        ) : (
-          <p className='p-2 text-[#424242] text-center font-bold'>نوع سوال را از فهرست کناری نگه داشته و بکشید</p>
-        )}
-        {/*<GroupPopUpMenu groupId={group} />*/}
-      </div>
+        </div>
+      )}
     </div>
   );
 });

@@ -1,17 +1,14 @@
 'use client';
+
+import { Fragment } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { useParams, useRouter } from 'next/navigation';
-import { Box, Button, Typography } from '@mui/material';
-
-import { SubCondition } from './SubCondition';
-// components
-import { CircleDivider } from '@/components/condition/CircleDivider';
-import { SubmitButtons } from '@/components/condition/form/SubmitButtons';
-import { SelectController } from '@/components/condition/form/SelectController';
-// lib
 import { formatContainText } from '@/lib/formatContainText';
 import { TConditionData, type TConditionFormData, TSubConditionData } from '@/lib/ConditionFormSchema';
-// hooks
+import { SubCondition } from './SubCondition';
+import SubConditionDivider, { DottedLineWithDots } from './SubConditionDivider';
+import { SubmitButtons } from '@/components/condition/form/SubmitButtons';
+import { SelectController } from '@/components/condition/form/SelectController';
 import { IConditionalSystemProps, IPostCondition } from '@/types/condition';
 import { useConditionalForm } from '@/app/(builder)/builder/[id]/condition/_hooks/useConditionalForm';
 import { usePostCondition } from '@/app/(builder)/builder/[id]/condition/_hooks/usePostCondition';
@@ -19,16 +16,43 @@ import { useGetQacWithOutFilter } from '@/app/(builder)/builder/[id]/condition/_
 import { useGetOnlyAllQuestions } from '@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllQuestions';
 import { useGetOnlyAllCalculation } from '@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation';
 
-// ---------------------------------------------------------------------------------
-export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClose, condition, isEdit = false }) => {
+const actionSelectSx = {
+  flex: 1,
+  minWidth: 0,
+    maxHeight : '52px !important',
+  width: '100% !important',
+   '&.MuiInputBase-root': {
+                borderRadius: '8px',
+                border: 'none'
+              },
+};
+
+export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
+  handleClose,
+  condition,
+  isEdit = false,
+}) => {
   const { id } = useParams();
   const router = useRouter();
 
   const { qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter();
   const { onlyAllCalculationOptions, isFetchingOnlyAllCalculation } = useGetOnlyAllCalculation();
-  const { onlyAllQuestions, onlyAllDateOptions, onlyAllQuestionsOptions, onlySomeQuestionsOptions, isFetchingOnlyAllQuestions } = useGetOnlyAllQuestions();
+  const {
+    onlyAllQuestions,
+    onlyAllDateOptions,
+    onlyAllQuestionsOptions,
+    onlySomeQuestionsOptions,
+    isFetchingOnlyAllQuestions,
+  } = useGetOnlyAllQuestions();
 
-  const { methods, conditions, handleAddCondition, handleRemoveCondition, handleAddSubCondition, handleRemoveSubCondition } = useConditionalForm(condition);
+  const {
+    methods,
+    conditions,
+    handleAddCondition,
+    handleRemoveCondition,
+    handleAddSubCondition,
+    handleRemoveSubCondition,
+  } = useConditionalForm(condition);
 
   const postCondition = usePostCondition(isEdit);
 
@@ -42,7 +66,10 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
             const conditionType = subCondition.conditionType?.split('@')[0];
             const questionType = subCondition.questionType?.split('@')[0];
             const operatorType = subCondition.operatorType?.split('@')[0];
-            const value = typeof subCondition.value !== 'object' ? subCondition.value?.split('@')[0] : subCondition.value;
+            const value =
+              typeof subCondition.value !== 'object'
+                ? subCondition.value?.split('@')[0]
+                : subCondition.value;
             const logicalOperator = subCondition.logicalOperator?.split('@')[0];
 
             let formattedValue: string;
@@ -55,15 +82,19 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
               formattedValue = `{#v_${value}}`;
             } else if (operatorType === 'TEXT') {
               if (conditionType === '#startWithText' || conditionType === '#endWithText') {
-                const InfoField = questionType.split('*')[0]
-                if(InfoField === "INFO_FIELD"){
+                const InfoField = questionType.split('*')[0];
+                if (InfoField === 'INFO_FIELD') {
                   formattedValue = `{"#"}`;
                 } else {
                   formattedValue = `{"${value}"}`;
                 }
               } else if (conditionType === '!#containAnyText' || conditionType === '#containAnyText') {
                 formattedValue = `{${formatContainText(value as string)}}`;
-              } else if (conditionType === '#lenEqualText' || conditionType === '#lenGraterThanText' || conditionType === '!#lenGraterThanText') {
+              } else if (
+                conditionType === '#lenEqualText' ||
+                conditionType === '#lenGraterThanText' ||
+                conditionType === '!#lenGraterThanText'
+              ) {
                 formattedValue = `{#v_${value}}`;
               } else {
                 formattedValue = value as string;
@@ -103,91 +134,123 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
       {
         onSuccess: async () => {
           handleClose();
-          router.refresh()
+          router.refresh();
         },
       },
     );
   };
 
+  const lastSubIndex = (index: number) => conditions[index].subConditions.length - 1;
+
   return (
-    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', direction: 'ltr' }}>
-      <Typography variant='subtitle1' sx={{ display: 'flex', justifyContent: 'center', color: '#404040', fontWeight: 700, mb: 1 }}>
-        شرط
-      </Typography>
+    <div dir="rtl" className="w-full flex flex-col">
       <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
-          {conditions.map((condition, index) => (
-            <Box key={condition.id} sx={{ width: '100%' }}>
-              {condition.subConditions.map((subCondition, subIndex) => (
-                <SubCondition
-                  key={subCondition.id}
-                  index={index}
-                  subIndex={subIndex}
-                  onAddSubCondition={() => handleAddSubCondition(index, subIndex)}
-                  onRemoveSubCondition={() => handleRemoveSubCondition(index, subIndex)}
-                  qacWithOutFilterOptions={qacWithOutFilterOptions}
-                  isFetchingQacWithOutFilter={isFetchingQacWithOutFilter}
-                  onlySomeQuestionsOptions={onlySomeQuestionsOptions}
-                  isFetchingOnlyAllQuestions={isFetchingOnlyAllQuestions}
-                  onlyAllCalculationOptions={onlyAllCalculationOptions}
-                  isFetchingOnlyAllCalculation={isFetchingOnlyAllCalculation}
-                  onlyAllQuestions={onlyAllQuestions}
-                  onlyAllDateOptions={onlyAllDateOptions}
-                />
-              ))}
-              <Box
-                sx={{
-                  ml: { xs: 0, md: 2 },
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1,
-                  flexWrap: 'wrap',
-                  flexDirection: { xs: 'column', md: 'row' },
-                }}>
-                <Typography sx={{ color: '#393939', fontSize: '14px' }}>برو به:</Typography>
-                <SelectController name={`conditions.${index}.returnQuestionId`} options={onlyAllQuestionsOptions} isLoading={isFetchingOnlyAllQuestions} sx={{ minWidth: 240, ml: 2.5 }} />
-                <Typography sx={{ color: '#393939', fontSize: '14px', mr: 3.5 }}>در غیر این صورت برو به:</Typography>
-                <SelectController name={`conditions.${index}.elseQuestionId`} options={onlyAllQuestionsOptions} isLoading={isFetchingOnlyAllQuestions} sx={{ minWidth: 300, width: 380 }} />
-                {index !== 0 && (
-                  <Button
-                    onClick={() => handleRemoveCondition(index)}
-                    sx={{
-                      width: 113,
-                      height: '50px',
-                      bgcolor: '#FA4D560D',
-                      borderRadius: '8px',
-                      border: '1px solid #FA4D56',
-                      '&:hover': { bgcolor: '#FA4D560D' },
-                    }}>
-                    <Typography sx={{ color: '#FA4D56', fontSize: '14px' }}>حذف این شرط</Typography>
-                  </Button>
-                )}
-              </Box>
-              <CircleDivider />
-            </Box>
+        <form onSubmit={methods.handleSubmit(onSubmit)} className="flex flex-col gap-[10px]">
+          {conditions.map((conditionBlock, index) => (
+            <div key={conditionBlock.id} className="flex flex-col gap-3">
+              <div className="flex flex-col w-full rounded-2xl border border-[#DDE1E6] bg-[#F8FAFC] overflow-hidden">
+                {conditionBlock.subConditions.map((subCondition, subIndex) => (
+                  <Fragment key={subCondition.id}>
+                    {subIndex > 0 && (
+                      <SubConditionDivider
+                        conditionIndex={index}
+                        subIndex={subIndex}
+                        onRemove={() => handleRemoveSubCondition(index, subIndex)}
+                      />
+                    )}
+                    <SubCondition
+                      index={index}
+                      subIndex={subIndex}
+                      qacWithOutFilterOptions={qacWithOutFilterOptions}
+                      isFetchingQacWithOutFilter={isFetchingQacWithOutFilter}
+                      onlySomeQuestionsOptions={onlySomeQuestionsOptions}
+                      isFetchingOnlyAllQuestions={isFetchingOnlyAllQuestions}
+                      onlyAllCalculationOptions={onlyAllCalculationOptions}
+                      isFetchingOnlyAllCalculation={isFetchingOnlyAllCalculation}
+                      onlyAllQuestions={onlyAllQuestions}
+                      onlyAllDateOptions={onlyAllDateOptions}
+                    />
+                  </Fragment>
+                ))}
+
+          <div className="p-[14px] pt-[6px] flex flex-col gap-3">
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleAddSubCondition(index, lastSubIndex(index))
+                  }
+                  className="w-full min-h-[52px] rounded-xl border border-dashed border-[#DDE1E6] bg-[#FAFAFA] text-[#888] text-sm font-medium hover:bg-[#F7F7FF] transition-colors"
+                >
+                  افزودن شرط جدید (و)
+                </button>
+
+                <div className="flex flex-col gap-1 p-1 rounded-xl bg-white">
+                  <div className="flex flex-row md:items-center gap-2 md:gap-3 w-full">
+                    <span className="shrink-0 w-32 h-[52px] inline-flex items-center justify-center px-3 py-1.5 rounded-lg bg-[#ECFDF5] text-[#379E76] text-[13px] font-semibold min-w-[72px]">
+                      برو به
+                    </span>
+                    <SelectController
+                      name={`conditions.${index}.returnQuestionId`}
+                      options={onlyAllQuestionsOptions}
+                      isLoading={isFetchingOnlyAllQuestions}
+                      placeholder="آیتم اول"
+                      sx={actionSelectSx}
+                      parentStyle={actionSelectSx}
+                    />
+                  </div>
+
+                  <DottedLineWithDots />
+    
+                  <div className="flex flex-row md:items-center gap-2 md:gap-3 w-full">
+                    <span className="shrink-0 w-32 h-[52px] inline-flex items-center justify-center px-3 py-1.5 rounded-lg bg-[#FFFBEB] text-[#D98213] text-[13px] font-semibold min-w-[72px] whitespace-nowrap">
+                      در غیر اینصورت
+                    </span>
+                    <SelectController
+                      name={`conditions.${index}.elseQuestionId`}
+                      options={onlyAllQuestionsOptions}
+                      isLoading={isFetchingOnlyAllQuestions}
+                      placeholder="آیتم دوم"
+                      sx={actionSelectSx}
+                      parentStyle={actionSelectSx}
+                    />
+                  </div>
+                </div>
+              </div>
+              </div>
+
+              {index !== 0 && (
+                <button
+                  type="button"
+                  onClick={() => handleRemoveCondition(index)}
+                  className="self-end text-[#FA4D56] text-sm font-medium"
+                >
+                  حذف این شرط
+                </button>
+              )}
+            </div>
           ))}
+
           {!isEdit && (
-            <Button
-              variant='outlined'
+            <button
+              type="button"
               onClick={handleAddCondition}
-              sx={{
-                ml: 2,
-                height: 50,
-                maxWidth: 155,
-                color: 'white',
-                bgcolor: '#1758BA',
-                borderRadius: '8px',
-              }}>
+              className="w-full min-h-[52px] rounded-xl border border-dashed border-[#DDE1E6] bg-[#F8FAFC] text-[#888] text-sm font-medium hover:bg-[#F7F7FF] transition-colors"
+            >
               افزودن شرط جدید
-            </Button>
+            </button>
           )}
-          <SubmitButtons 
-               isDisabled={isFetchingQacWithOutFilter || isFetchingOnlyAllQuestions || isFetchingOnlyAllCalculation}
-               isLoading={postCondition.isPending} 
-               handleClose={handleClose} 
-               />
+
+          <SubmitButtons
+            isDisabled={
+              isFetchingQacWithOutFilter ||
+              isFetchingOnlyAllQuestions ||
+              isFetchingOnlyAllCalculation
+            }
+            isLoading={postCondition.isPending}
+            handleClose={handleClose}
+          />
         </form>
       </FormProvider>
-    </Box>
+    </div>
   );
 };

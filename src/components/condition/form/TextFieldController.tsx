@@ -9,7 +9,13 @@ interface TextFieldControllerProps extends Omit<TextFieldProps, 'name'> {
   sx?: any;
 }
 
-export const TextFieldController: React.FC<TextFieldControllerProps> = ({ name, type, sx, ...props }) => {
+export const TextFieldController: React.FC<TextFieldControllerProps> = ({
+  name,
+  type,
+  sx,
+  placeholder = 'مقدار',
+  ...props
+}) => {
   const { control } = useFormContext();
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -29,6 +35,7 @@ export const TextFieldController: React.FC<TextFieldControllerProps> = ({ name, 
           type={type}
           value={value || ''}
           onChange={onChange}
+          placeholder={placeholder}
           error={!!error}
           helperText={error?.message}
           sx={{
@@ -36,7 +43,7 @@ export const TextFieldController: React.FC<TextFieldControllerProps> = ({ name, 
               borderColor: 'none',
               '& fieldset': {
                 paddingLeft: 2,
-                borderRadius: '8px',
+                borderRadius: '12px',
                 border: '1px solid #DDE1E6',
               },
               '&:hover fieldset': {

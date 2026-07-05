@@ -33,8 +33,8 @@ export const ConfirmationPublishDialog = ({
                     sx={{
                         fontWeight: '400',
                         fontSize: '15px',
-                        height: '50px',
-                        borderRadius: '8px',
+                        height: '45px',
+                        borderRadius: '12px',
                         '&:hover': {
                             bgcolor: (theme) => theme.palette.primary.main,
                         },

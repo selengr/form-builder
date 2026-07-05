@@ -4,6 +4,7 @@ import { Active, DragOverlay, useDndMonitor } from '@dnd-kit/core';
 import { SidebarBtnElementDragOverlay } from './SidebarBtnElement';
 import { ElementsType, FormElements } from '@/types/FormElements';
 import useElements from '@/hooks/useElements';
+import { QuestionCardContent } from '@/templates/builder/kanban/QuestionCard';
 
 function DragOverlayWrapper() {
   const elements = useElements();
@@ -46,19 +47,18 @@ function DragOverlayWrapper() {
     node = <SidebarBtnElementDragOverlay formElement={FormElements[type]} />;
   } else if (isQuestionElement) {
     const elementId = draggedItem?.data?.current?.question?.questionId;
+    const elementIndex = elements.findIndex((el) => el.questionId === elementId);
     const element = elements.find((el) => el.questionId === elementId);
 
     if (!element) node = <div>فیلد یافت نشد!</div>;
     else {
-      const DesignerElementComponent = FormElements[element.questionType as ElementsType].designerComponent;
-
       node = (
-        <div
-          dir='rtl'
-          className='flex justify-start box-border items-center outline outline-1 outline-[#1758BA] rounded-xl bg-[#f7f7f7] h-[65px] w-full opacity-90 px-2'
-          style={{ pointerEvents: 'none' }}>
-          <DesignerElementComponent elementInstance={element} />
-        </div>
+        <QuestionCardContent
+          question={element}
+          index={elementIndex >= 0 ? elementIndex : 0}
+          isOverlay={false}
+          showActions={true}
+        />
       );
     }
   }

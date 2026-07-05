@@ -1,35 +1,40 @@
 'use client';
-import React from 'react';
+
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
 
-interface FormulaControlsProps {
+interface ISubmitButtonsProps {
   isLoading: boolean;
   onSubmit: () => void;
   onCancel: () => void;
 }
 
-const FormulaControls: React.FC<FormulaControlsProps> = ({ onSubmit, onCancel, isLoading }) => {
+const FormulaControls: React.FC<ISubmitButtonsProps> = ({ onSubmit, onCancel, isLoading }) => {
   return (
-    <Box display='flex' gap={3} width='100%' sx={{ justifyContent: 'center', marginBottom : {xs : 0, md :2} }}>
+    <Box
+      display="flex"
+      gap={2}
+      width="100%"
+      sx={{ justifyContent: 'center', mt: 3, mb: 1 }}
+    >
       <Button
         onClick={onSubmit}
-        variant='contained'
+        variant="contained"
+        disabled={isLoading}
         sx={{
           backgroundColor: '#1758BA',
-          fontWeight: '500',  
-          fontSize: '15px',
-          borderRadius: '8px',
-          height: '50px',
-          '&.MuiButtonBase-root:hover': {
-            backgroundColor: '#1758BA',
-          },
-          minWidth: '132px',
+          fontWeight: 600,
+          fontSize: 14,
+          borderRadius: '12px',
+          height: '48px',
+          minWidth: { xs: 120, md: 132 },
+          boxShadow: 'none',
+          '&:hover': { backgroundColor: '#134a9e' },
         }}
-        disabled={isLoading}>
-        <Typography variant='body2' py={0.5} sx={{ color: '#fff', fontWeight: 500 }}>
+      >
+        <Typography variant="body2" sx={{ color: '#fff', fontWeight: 600, fontSize: 14 }}>
           {isLoading ? (
             <>
-              <CircularProgress size={20} color='inherit' thickness={5} style={{ marginLeft: 10 }} />
+              <CircularProgress size={20} color="inherit" thickness={5} style={{ marginLeft: 10 }} />
               در حال ارسال…
             </>
           ) : (
@@ -39,18 +44,20 @@ const FormulaControls: React.FC<FormulaControlsProps> = ({ onSubmit, onCancel, i
       </Button>
 
       <Button
-        variant='outlined'
+        variant="outlined"
+        onClick={onCancel}
         sx={{
-          height: '50px',
-          minWidth: '132px',
-          fontWeight: '500',
-          borderRadius: '8px',
-          fontSize: '15px',
+          height: '48px',
+          minWidth: { xs: 120, md: 132 },
+          fontWeight: 600,
+          fontSize: 14,
+          borderRadius: '12px',
           borderColor: '#1758BA',
-          background: '#F7F7FF',
+          background: '#fff',
+          '&:hover': { background: '#F7F7FF', borderColor: '#1758BA' },
         }}
-        onClick={onCancel}>
-        <Typography variant='body2' py={0.5} color='#1758BA' sx={{ fontWeight: 500 }}>
+      >
+        <Typography variant="body2" color="#1758BA" sx={{ fontWeight: 600, fontSize: 14 }}>
           انصراف
         </Typography>
       </Button>

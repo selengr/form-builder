@@ -14,24 +14,24 @@ export async function middleware(req: NextRequest) {
   `);
 
   try {
-    const token = await getToken({
-      req,
-      secret: process.env.NEXTAUTH_SECRET,
-    });
+    // const token = await getToken({
+    //   req,
+    //   secret: process.env.NEXTAUTH_SECRET,
+    // });
 
-    if (!token) {
-      console.warn(`[⛔] Unauthorized access to ${pathname}`);
-      return NextResponse.redirect(new URL('/', req.url));
-    }
+    // if (!token) {
+    //   console.warn(`[⛔] Unauthorized access to ${pathname}`);
+    //   return NextResponse.redirect(new URL('/', req.url));
+    // }
 
     const res = NextResponse.next();
 
-    if (typeof token.access_token === 'string') {
-      res.headers.set('x-access-token', token.access_token);
-      console.log(`[🧠] Injected token for ${pathname}`);
-    }
+    // if (typeof token.access_token === 'string') {
+    //   res.headers.set('x-access-token', token.access_token);
+    //   console.log(`[🧠] Injected token for ${pathname}`);
+    // }
 
-    console.log(`[🔓] Authenticated: ${token.email || token.name || 'unknown'}`);
+    // console.log(`[🔓] Authenticated: ${token.email || token.name || 'unknown'}`);
 
     return res;
   } catch (err) {
@@ -44,5 +44,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/builder/:path*', '/my-assessments/:path*', '/reports/:path*', '/purchase-order/:path*', '/transactions/:path*', '/groups/:path*', '/user-reports/:path*'],
+  // matcher: ['/builder/:path*', '/my-assessments/:path*', '/reports/:path*', '/purchase-order/:path*', '/transactions/:path*', '/groups/:path*', '/user-reports/:path*'],
 };

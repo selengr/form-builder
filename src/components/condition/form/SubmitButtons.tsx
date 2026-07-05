@@ -1,4 +1,5 @@
 'use client';
+
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
 
 interface ISubmitButtonsProps {
@@ -7,35 +8,42 @@ interface ISubmitButtonsProps {
   handleClose: () => void;
 }
 
-export const SubmitButtons: React.FC<ISubmitButtonsProps> = ({ isLoading,isDisabled, handleClose }) => {
+export const SubmitButtons: React.FC<ISubmitButtonsProps> = ({
+  isLoading,
+  isDisabled,
+  handleClose,
+}) => {
   return (
     <Box
-      display='flex'
+      display="flex"
       gap={2}
-      width='100%'
-      marginBottom={2}
-      marginTop={5}
+      width="100%"
       sx={{
-        display: 'flex',
         justifyContent: 'center',
-      }}>
+        mt: 2,
+        mb: 1,
+      }}
+    >
       <Button
         disabled={isLoading || isDisabled}
-        type='submit'
-        variant='contained'
+        type="submit"
+        variant="contained"
         sx={{
           backgroundColor: '#1758BA',
-          borderRadius: '8px',
-          height: '50px',
+          borderRadius: '10px',
+          height: '48px',
+          minWidth: { xs: 120, md: 132 },
+          boxShadow: 'none',
+          '&:hover': { backgroundColor: '#134a9e' },
           '&.MuiButtonBase-root:hover': {
-            backgroundColor: '#1758BA',
+            backgroundColor: '#134a9e',
           },
-          minWidth: 113,
-        }}>
-        <Typography variant='body2' component={'p'} py={0.5} sx={{ color: '#fff', fontWeight: 500 }}>
+        }}
+      >
+        <Typography variant="body2" sx={{ color: '#fff', fontWeight: 600, fontSize: 14 }}>
           {isLoading ? (
             <>
-              <CircularProgress size={20} color='inherit' thickness={5} style={{ marginLeft: 10 }} />
+              <CircularProgress size={20} color="inherit" thickness={5} style={{ marginLeft: 10 }} />
               در حال ارسال…
             </>
           ) : (
@@ -43,18 +51,24 @@ export const SubmitButtons: React.FC<ISubmitButtonsProps> = ({ isLoading,isDisab
           )}
         </Typography>
       </Button>
+
       <Button
         onClick={handleClose}
-        type='button'
-        variant='outlined'
+        type="button"
+        variant="outlined"
         sx={{
-          height: '50px',
-          minWidth: 113,
-          borderRadius: '8px',
+          height: '48px',
+          minWidth: { xs: 120, md: 132 },
+          borderRadius: '10px',
           borderColor: '#1758BA',
-          background: '#F7F7FF',
-        }}>
-        <Typography variant='body2' component={'p'} py={0.5} color={'#1758BA'} sx={{ fontWeight: 500 }}>
+          background: '#fff',
+          '&:hover': {
+            background: '#F7F7FF',
+            borderColor: '#1758BA',
+          },
+        }}
+      >
+        <Typography variant="body2" color="#1758BA" sx={{ fontWeight: 600, fontSize: 14 }}>
           انصراف
         </Typography>
       </Button>

@@ -9,29 +9,24 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
+import { useParams, useRouter } from 'next/navigation';
+import { SlPencil } from 'react-icons/sl';
 
 import { ICalculatorCardProps } from '@/types/calculator';
 import ConfirmDialog from '@/components/confirm-dialog';
 import EditCalculatorDialog from './EditCalculatorDialog';
-
-import { SlPencil } from 'react-icons/sl';
 import { WeuiDeleteOutlined } from '../../../public/images/icons/DeleteIcon';
 import { PhDotsThreeVerticalBold } from '../../../public/images/icons/PhDotsThreeVerticalBold';
-
 import {
   useCheckDependency,
   useDeleteCalculator,
 } from '../../app/(builder)/builder/[id]/calculator/_hooks';
 
-import { useParams, useRouter } from 'next/navigation';
-
-/* --------------------------------- Styles --------------------------------- */
-
 export const buttonStyles = {
-  height: '50px',
+  height: '45px',
   fontWeight: '400',
   fontSize: '15px',
-  borderRadius: '10px',
+  borderRadius: '12px',
   boxShadow: 'none',
   transition: 'background-color 0.3s, border-color 0.3s',
 };
@@ -50,14 +45,14 @@ export const buttonStylesError = {
   '&:active': { bgcolor: '#A32A3A' },
 };
 
-/* -------------------------------- Component -------------------------------- */
-
 export function CalculatorCard({
   calculator,
-  index,
+  index: _index,
   disabled = false,
+  onEdit,
+  onDeleteSuccess,
 }: ICalculatorCardProps) {
-  const { id } = calculator;
+  const { id, name, label } = calculator;
 
   const { push } = useRouter();
   const { id: pageId } = useParams();
@@ -69,15 +64,11 @@ export function CalculatorCard({
   const [hasDependencies, setHasDependencies] = useState(false);
 
   const { mutate: deleteCalc, isPending } = useDeleteCalculator();
-  const {
-    mutate: checkDependency,
-    isPending: depLoading,
-  } = useCheckDependency();
+  const { mutate: checkDependency, isPending: depLoading } = useCheckDependency();
 
   const isMenuOpen = Boolean(anchorEl);
   const isDeleting = isPending || depLoading;
-
-  /* ------------------------------ Event Handlers ------------------------------ */
+  const title = name?.trim() || label?.trim() || '—';
 
   const openMenu = (e: React.MouseEvent<HTMLElement>) => {
     if (disabled) return;
@@ -90,6 +81,11 @@ export function CalculatorCard({
   const openEdit = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation();
     closeMenu();
+
+    if (onEdit) {
+      onEdit(id);
+      return;
+    }
 
     if (isDesktop) setOpenEditDialog(true);
     else push(`/builder/${pageId}/calculator/create?calcId=${id}`);
@@ -107,47 +103,43 @@ export function CalculatorCard({
   };
 
   const performDelete = () => {
-    deleteCalc(id);
+    deleteCalc(id, {
+      onSuccess: () => {
+        onDeleteSuccess?.();
+      },
+    });
     setOpenConfirm(false);
     closeMenu();
     setHasDependencies(false);
   };
 
-  /* ---------------------------------- Render ---------------------------------- */
-
   return (
     <>
       <div
-        className={`bg-white rounded-lg p-[10px] min-h-14 flex justify-between w-full border border-[#1758BA]
-        ${disabled ? 'opacity-50 pointer-events-none' : 'cursor-pointer'}`}
+        dir="rtl"
+        className={`relative w-full min-h-[56px] rounded-xl border border-[#DDE1E6] bg-white px-2 py-2 flex items-center gap-3 pl-12 ${
+          disabled ? 'opacity-50 pointer-events-none' : ''
+        }`}
       >
-        <div className="flex items-center gap-2.5">
-          <div className="bg-[#F7F7FF] h-8 w-8 min-w-8 rounded-[10px] flex justify-center items-center">
-            {index + 1}
-          </div>
+        <button
+          type="button"
+          onClick={openMenu}
+          disabled={disabled}
+          className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-9 h-9 rounded-[10px] hover:bg-[#F7F7FF] transition-colors"
+          aria-label="منو"
+        >
+          <PhDotsThreeVerticalBold color="#9EA3AC" fontSize="2rem" />
+        </button>
 
-          <div className="flex flex-col">
-            <h3 className="text-[#161616] text-sm break-words">{calculator.name ?? '--'}</h3>
-            <span className="text-[#393939] text-xs">
-              #محاسبه‌گر
-            </span>
-          </div>
+  <div className="flex items-start justify-between pr-2 pl-3">
+        <span className="bg-[#F7F7FF] rounded-[10px] h-9 w-9 flex justify-center items-center shrink-0">
+          <Image src="/images/calc/ic_calculator.svg" width={22} height={22} alt="" />
+        </span>
         </div>
+        <p className="flex-1 min-w-0 text-[14px] font-medium text-[#161616] text-right leading-snug break-words">
+          {title}
+        </p>
 
-        <div className="flex items-center gap-2.5">
-          <button
-            className="bg-[#F7F7FF] h-8 w-8 rounded-[10px] flex justify-center items-center"
-            disabled={disabled}
-          >
-            <Image src="/images/calc/math.svg" width={25} height={25} alt="math" />
-          </button>
-
-          <div className="bg-[#F7F7FF] h-8 w-8 rounded-[10px] flex justify-center items-center">
-            <button onClick={openMenu} disabled={disabled}>
-              <PhDotsThreeVerticalBold color="#1758BA" fontSize="1.5rem" />
-            </button>
-          </div>
-        </div>
       </div>
 
       <Menu
@@ -214,7 +206,7 @@ export function CalculatorCard({
             fullWidth
             variant="contained"
             disabled={isDeleting}
-            sx={{ ...buttonStyles, ...buttonStylesAlert }}
+            sx={{ ...buttonStyles, ...buttonStylesError }}
             onClick={tryDelete}
           >
             {isDeleting ? (

@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Stack, Typography } from '@mui/material';
 import FormProvider from '../../components/hook-form/FormProvider';
+import { FIELD_PROPERTIES_FORM_ID } from '@/constants/fieldDialog';
 import { RHFMultiSelect, RHFSwitch, RHFTextField, RHFTextFieldOptionList } from '@/components/hook-form';
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
 import { IFormElementConstructor, IFormOptionList, IQPLSpectral, ISpectralQTapAndOptionsType } from '@/types/bulider';
@@ -243,16 +244,11 @@ const DesignerComponent = memo(function DesignerComponent({ elementInstance }: {
   const designerBtnLabel = SpectralFormElement.designerBtnElement.label;
 
   return (
-    <div
-      className='flex items-start flex-col overflow-hidden absolute'
-      dir='rtl'
-      style={{
-        width: 'calc(100% - 96px)',
-      }}>
-      <p dir='rtl' className='text-base overflow-hidden text-ellipsis w-full' style={{ textWrap: 'nowrap', fontWeight: '700' }}>
+    <div className="flex items-start flex-col overflow-hidden min-w-0 w-full" dir="rtl">
+      <p dir="rtl" className="text-[15px] overflow-hidden text-ellipsis w-full text-[#2A2A2A]" style={{ textWrap: 'nowrap', fontWeight: '700' }}>
         {labelText}
       </p>
-      <p className='text-xs text-[#424242]'>#{designerBtnLabel}</p>
+      <p className="text-xs text-[#888]">#{designerBtnLabel}</p>
     </div>
   );
 });
@@ -603,7 +599,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   }
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} formId={FIELD_PROPERTIES_FORM_ID}>
       <Box
         sx={{
           display: 'flex',

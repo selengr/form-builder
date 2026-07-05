@@ -201,21 +201,41 @@ export default function SettingsDialog({
 
   return (
     <>
+    {!isBuilderCardId && (
       <IconButton
         onClick={handleOpen}
         sx={{
+            height: {xs : 48, md: 32},
+            width: {xs : 48, md: 32},
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: {xs : "13px", md: "6px"},
+            border: 'none',
+            borderRadius: '10px',
+            backgroundColor: '#F7F7FF',
+          }}
+      >
+         <IoSettingsOutline color="#1758BA" className='p-0'/>
+      </IconButton>
+        )}
+
+
+            {isBuilderCardId && (
+        <IconButton
+          onClick={handleOpen}
+          sx={{
           height: '40px',
           width: '40px',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
         }}
-      >
-        {!isBuilderCardId && <IoSettingsOutline color="#2A2A2A" />}
-        {isBuilderCardId && (
+        >
           <Image src={EditIcon} alt="edit" width={24} height={24} />
-        )}
-      </IconButton>
+        </IconButton>
+      )}
+
 
       <Dialog
         open={openDialog}

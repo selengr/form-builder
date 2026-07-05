@@ -1,15 +1,13 @@
 'use client';
-import Image from 'next/image';
+
+import { Fragment } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { Box, IconButton, Typography } from '@mui/material';
 import { getCondition, getInput, getQuestion } from './GetConditionInput';
 import { SelectController } from '@/components/condition/form/SelectController';
 
 type SubConditionProps = {
   index: number;
   subIndex: number;
-  onAddSubCondition: () => void;
-  onRemoveSubCondition: () => void;
   qacWithOutFilterOptions: any[];
   isFetchingQacWithOutFilter: boolean;
   onlySomeQuestionsOptions: any[];
@@ -20,11 +18,17 @@ type SubConditionProps = {
   onlyAllDateOptions: any[];
 };
 
+const fieldSx = {
+  width: '100%',
+  // minWidth: 0,
+    maxHeight : '52px !important',
+  flex: 1,
+  backgroundColor : "white"
+};
+
 export const SubCondition: React.FC<SubConditionProps> = ({
   index,
   subIndex,
-  onAddSubCondition,
-  onRemoveSubCondition,
   qacWithOutFilterOptions,
   isFetchingQacWithOutFilter,
   onlySomeQuestionsOptions,
@@ -40,64 +44,42 @@ export const SubCondition: React.FC<SubConditionProps> = ({
     name: `conditions.${index}.subConditions.${subIndex}`,
   });
 
-  return (
-    <Box
-      sx={{
-        mb: 1,
-        ml: { md: 2 },
-        mt: 1,
-        display: 'flex',
-        flexDirection: 'row',
-      }}>
-      <Box sx={{ display: 'flex', alignItems: 'start' }}>
-        {subIndex === 0 && (
-          <Typography
-            sx={{
-              color: '#393939',
-              fontSize: '14px',
-              width: { xs: 22, md: 63 },
-              pt: 2,
-            }}>
-            اگر
-          </Typography>
-        )}
-        {subIndex > 0 && (
-          <SelectController
-            name={`conditions.${index}.subConditions.${subIndex}.logicalOperator`}
-            options={[
-              { value: '&&', label: 'و' },
-              { value: '||', label: 'یا' },
-            ]}
-            sx={{ minWidth: 58, maxWidth: 58, mr: 1, ml: '-4px', pr: '10px' }}
-          />
-        )}
-      </Box>
+  const valueInput = getInput(
+    currentValues.questionType,
+    currentValues.operatorType,
+    currentValues.conditionType,
+    { name: `conditions.${index}.subConditions.${subIndex}.value` },
+    {
+      onlySomeQuestionsOptions,
+      isFetchingOnlyAllQuestions,
+      onlyAllCalculationOptions,
+      isFetchingOnlyAllCalculation,
+      onlyAllQuestions,
+      onlyAllDateOptions,
+      control,
+      setValue,
+    },
+  );
 
-      <Box
-        rowGap={3}
-        columnGap={2}
-        sx={{
-          gap: 1,
-          width: '100%',
-          display: 'flex',
-          flexWrap: 'wrap',
-        }}>
+  return (
+    <div className="flex flex-col gap-3">
+      {subIndex === 0 && (
+        <p className="text-[14px] bg-white p-[14px] border-b border-b-[#DDE1E6] font-medium text-[#393939] text-right">اگر</p>
+      )}
+
+      <div className="text-[14px] flex flex-col py-[6px] px-[14px] md:flex-row gap-3 md:items-start w-full">
         <SelectController
           name={`conditions.${index}.subConditions.${subIndex}.questionType`}
           options={qacWithOutFilterOptions}
           isLoading={isFetchingQacWithOutFilter}
-          sx={{
-            width: { sm: '100%', md: '100%' },
-            minWidth: 240,
-            maxWidth: 240,
-            flexShrink: 0,
-          }}
+          placeholder="بر اساس"
+          sx={{...fieldSx, width: {xs : "100%" , md : 320}}}
           onChange={(e: any) => {
             const combinedKey = `${e.target?.value?.split('*')[0]}`;
-            if (combinedKey === "INFO_FIELD") {
-              setValue(`conditions.${index}.subConditions.${subIndex}.operatorType`, "TEXT");
-              setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, "#startWithText");
-              setValue(`conditions.${index}.subConditions.${subIndex}.value`, "---");
+            if (combinedKey === 'INFO_FIELD') {
+              setValue(`conditions.${index}.subConditions.${subIndex}.operatorType`, 'TEXT');
+              setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, '#startWithText');
+              setValue(`conditions.${index}.subConditions.${subIndex}.value`, '---');
             } else {
               setValue(`conditions.${index}.subConditions.${subIndex}.operatorType`, '');
               setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, '');
@@ -105,100 +87,51 @@ export const SubCondition: React.FC<SubConditionProps> = ({
             }
           }}
         />
+
         <SelectController
           name={`conditions.${index}.subConditions.${subIndex}.operatorType`}
           options={getQuestion(currentValues.questionType, currentValues)}
-          sx={{
-            width: { sm: '100%', md: '22%' },
-            minWidth: 156,
-            flexShrink: 0,
-          }}
+          placeholder="گویه"
+          sx={{...fieldSx, width: {xs : "100%" , md : 120}}}
           onChange={() => {
-            const questionType = getValues(`conditions.${index}.subConditions.${subIndex}.questionType`)
+            const questionType = getValues(`conditions.${index}.subConditions.${subIndex}.questionType`);
             const combinedKey = `${questionType?.split('*')[0]}`;
-            if (combinedKey === "INFO_FIELD") {
-              setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, "#startWithText");
-              setValue(`conditions.${index}.subConditions.${subIndex}.value`, "---");
+            if (combinedKey === 'INFO_FIELD') {
+              setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, '#startWithText');
+              setValue(`conditions.${index}.subConditions.${subIndex}.value`, '---');
             } else {
               setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, '');
               setValue(`conditions.${index}.subConditions.${subIndex}.value`, '');
             }
           }}
-          isOperator={true}
+          isOperator
           disabled={!currentValues.questionType}
         />
+
         <SelectController
           name={`conditions.${index}.subConditions.${subIndex}.conditionType`}
-          options={getCondition(currentValues.questionType, currentValues.operatorType, currentValues)}
-          sx={{
-            width: { sm: '100%', md: '22%' },
-            minWidth: 156,
-            flexShrink: 0,
-          }}
+          options={getCondition(
+            currentValues.questionType,
+            currentValues.operatorType,
+            currentValues,
+          )}
+          placeholder="عملگر"
+          sx={{...fieldSx, width: {xs : "100%" , md : 120}}}
           onChange={() => {
-            const questionType = getValues(`conditions.${index}.subConditions.${subIndex}.questionType`)
+            const questionType = getValues(`conditions.${index}.subConditions.${subIndex}.questionType`);
             const combinedKey = `${questionType?.split('*')[0]}`;
-            if (combinedKey === "INFO_FIELD") {
-              setValue(`conditions.${index}.subConditions.${subIndex}.value`, "---");
+            if (combinedKey === 'INFO_FIELD') {
+              setValue(`conditions.${index}.subConditions.${subIndex}.value`, '---');
             } else {
               setValue(`conditions.${index}.subConditions.${subIndex}.value`, '');
             }
           }}
-          isOperator={true}
+          isOperator
           disabled={!currentValues.operatorType}
         />
-        {getInput(
-          currentValues.questionType,
-          currentValues.operatorType,
-          currentValues.conditionType,
-          {
-            name: `conditions.${index}.subConditions.${subIndex}.value`,
-          },
-          {
-            onlySomeQuestionsOptions,
-            isFetchingOnlyAllQuestions,
-            onlyAllCalculationOptions,
-            isFetchingOnlyAllCalculation,
-            onlyAllQuestions,
-            onlyAllDateOptions,
-            control,
-            setValue,
-          },
-        )}
-        <Box
-          sx={{
-            display: 'flex',
-            gap: 1,
-          }}>
-          <IconButton
-            onClick={onAddSubCondition}
-            sx={{
-              width: '50px',
-              height: '50px',
-              bgcolor: '#1758BA0D',
-              borderRadius: '10px',
-              border: '1px solid #1758BA',
-            }}>
-            <Image src='/images/home-page/Add-fill.svg' alt='' width={22} height={22} />
-          </IconButton>
-          {subIndex !== 0 && (
-            <IconButton
-              onClick={onRemoveSubCondition}
-              sx={{
-                width: '50px',
-                height: '50px',
-                bgcolor: '#FA4D560D',
-                borderRadius: '10px',
-                border: '1px solid #FA4D56',
-                '&: hover': {
-                  bgcolor: '#FA4D560D',
-                },
-              }}>
-              <Image src='/images/home-page/trash.svg' alt='' width={24} height={24} />
-            </IconButton>
-          )}
-        </Box>
-      </Box>
-    </Box>
+
+        <div className="flex-1 min-w-0 w-full bg-white rounded-xl border-none">{valueInput}</div>
+      </div>
+    </div>
   );
 };

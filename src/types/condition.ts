@@ -66,6 +66,8 @@ export interface IConditionCardProps {
   disabled?: boolean;
   condition: IGetCondition;
   qacWithOutFilterOptions: any[];
+  onEdit?: () => void;
+  onDeleteSuccess?: () => void;
 }
 
 export interface ICreateConditionDialogProps {

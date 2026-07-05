@@ -18,18 +18,18 @@
 .OPERATOR,
 .PARENTHESIS {
   color: #1758ba;
-  background-color: #1758ba1a;
+  background-color: #eafbf9;
 }
 
 .AVG_PARENTHESIS {
-  color: #9d2cdf;
-  background-color: #9d2cdf1a;
+  color: #9333ea;
+  background-color: #f3e8ff;
 }
 
 .asNumber,
 .NUMBER {
-  color: #2cdfc9;
-  background-color: #eafcfa;
+  color: #393939;
+  background-color: #f3f4f6;
 }
 
 .NEW_FIELD .customDropdown::before,
@@ -40,16 +40,17 @@
   height: 30px;
   position: absolute;
   background-size: 15px;
-  background-color: #e8eef8;
   background-position: center;
   border-radius: 0 10px 10px 0;
   background-repeat: no-repeat;
 }
-.NEW_FnFx .customDropdown::before {
-  background-image: url("/images/calc/ic_fx.svg");
-}
 .NEW_FIELD .customDropdown::before {
+  background-color: #dbeafe;
   background-image: url("/images/calc/ic_tick.svg");
+}
+.NEW_FnFx .customDropdown::before {
+  background-color: #ede9fe;
+  background-image: url("/images/calc/ic_fx.svg");
 }
 
 .customDropdown[data-type="down"]::after,
@@ -99,10 +100,11 @@
   margin-top: 0px !important;
 }
 .NEW_FIELD {
-  background-color: #1753af;
+  background-color: #e8f0fe;
 }
+
 .NEW_FnFx {
-  background-color: #9d2cdf;
+  background-color: #f3e8ff;
 }
 
 .NEW_FnFx .customDropdown,
@@ -115,7 +117,7 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 
-  color: #fff;
+  color: #1758ba;
   display: flex;
   padding: 0 4px;
   border-color: none;
@@ -124,6 +126,10 @@
   padding-right: 24px;
   white-space: nowrap;
   justify-content: start;
+}
+
+.NEW_FnFx .customDropdown {
+  color: #9333ea;
 }
 
 .NEW_FnFx .optionsContainer,

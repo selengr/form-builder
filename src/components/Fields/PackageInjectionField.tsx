@@ -10,6 +10,7 @@ import { Box, MenuItem, Skeleton, Typography } from '@mui/material';
 // components
 import { RHFSelect } from '../../components/hook-form';
 import FormProvider from '@/components/hook-form/FormProvider';
+import { FIELD_PROPERTIES_FORM_ID } from '@/constants/fieldDialog';
 // hooks
 import useDesigner from '@/hooks/useDesigner';
 import useElements from '@/hooks/useElements';
@@ -61,7 +62,7 @@ export const PackageInjectionFormElement: FormElement = {
     questionPropertyList: questionPropertyList
   }),
   designerBtnElement: {
-    label: 'افزودن فرم',
+    label: 'فرم‌ها',
     icon: Packaging,
   },
   designerComponent: DesignerComponent,
@@ -161,7 +162,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   }
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} formId={FIELD_PROPERTIES_FORM_ID}>
       <Box
         sx={{
           display: 'flex',

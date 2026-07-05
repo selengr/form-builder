@@ -1,17 +1,17 @@
 'use client';
 
 import { useDraggable } from '@dnd-kit/core';
-import { FormElement, FormElements } from '@/types/FormElements';
-import useDesigner from '@/hooks/useDesigner';
-import { IFormElementConstructor } from '@/types/bulider';
+import Image from 'next/image';
+import clsx from 'clsx';
+import { useMediaQuery } from '@mui/material';
 import { useParams } from 'next/navigation';
+import { FormElement, FormElements } from '@/types/FormElements';
+import { IFormElementConstructor } from '@/types/bulider';
+import { idGenerator } from '@/lib/idGenerator';
+import useDesigner from '@/hooks/useDesigner';
 import useActionOpenDialog from '@/hooks/useActionOpenDialog';
 import useActionSelectedElement from '@/hooks/useActionSelectedElement';
 import useActionOpenBottomSheet from '@/hooks/useActionOpenBottomSheet';
-import Image from 'next/image';
-import { idGenerator } from '@/lib/idGenerator';
-import { useMediaQuery } from '@mui/material';
-import clsx from 'clsx';
 
 interface SidebarBtnElementProps {
   formElement: FormElement;
@@ -38,7 +38,9 @@ function SidebarBtnElement({ formElement, disabled = false }: SidebarBtnElementP
   const handleClick = () => {
     if (disabled || !questionGroups.length) return;
 
-    const targetGroupId = isMobile ? questionGroups.find((group) => group === selectedGroup) : questionGroups[questionGroups.length - 1];
+    const targetGroupId = isMobile
+      ? questionGroups.find((group) => group === selectedGroup)
+      : questionGroups[questionGroups.length - 1];
 
     if (!targetGroupId) return;
 
@@ -62,11 +64,19 @@ function SidebarBtnElement({ formElement, disabled = false }: SidebarBtnElementP
       {...(!isMobile ? draggable.listeners : {})}
       {...(!isMobile ? draggable.attributes : {})}
       disabled={disabled}
-      className={clsx('w-full flex justify-start h-[52px] items-center rounded-lg pr-2', 'bg-[#f7f7ff] text-[#424242]', 'hover:cursor-pointer', disabled && 'opacity-50 cursor-not-allowed')}>
-      <span className='bg-white rounded-xl h-[36px] w-[36px] flex justify-center items-center'>
-        <Image src={icon} width={24} height={24} alt='' />
-      </span>
-      <p className='p-2 font-bold text-right text-[14px]'>{label}</p>
+      className={clsx(
+        'w-full flex items-center gap-3 h-[52px] rounded-xl px-2 flex-row-reverse',
+        'bg-[#F7F7FF] border border-[#F7F7FF] shadow-sm text-[#424242]',
+        'hover:cursor-grab active:cursor-grabbing hover:border-[#2CDFC9]',
+        disabled && 'opacity-50 cursor-not-allowed'
+      )}
+    >
+      {icon && (
+        <span className="bg-white rounded-[10px] h-9 w-9 flex justify-center items-center shrink-0">
+          <Image src={icon} width={22} height={22} alt="" />
+        </span>
+      )}
+      <p className="text-right pr-1 text-[#161616] text-[13px] md:text-sm font-normal flex-1">{label}</p>
     </button>
   );
 }
@@ -75,11 +85,17 @@ export function SidebarBtnElementDragOverlay({ formElement }: { formElement: For
   const { label, icon } = formElement.designerBtnElement;
 
   return (
-    <button dir='rtl' style={{ outline: '1px dashed #1758BA' }} className='text-[#424242] w-full flex justify-start rounded-xl h-[52px] items-center pr-2 bg-[#fff]'>
-      <span className='bg-[#f7f7ff] rounded-xl h-[36px] w-[36px] flex justify-center items-center'>
-        <Image src={icon} width={24} height={24} alt='' />
-      </span>
-      <p className='p-2 text-right text-[14px] font-bold'>{label}</p>
+    <button
+      dir="rtl"
+      style={{ outline: '1px dashed #1758BA' }}
+      className="text-[#424242] flex-row-reverse w-full flex items-center gap-3 rounded-xl h-[52px] px-2 bg-[#F7F7FF] shadow-md"
+    >
+      {icon && (
+        <span className="bg-white rounded-[10px] h-9 w-9 flex justify-center items-center shrink-0">
+          <Image src={icon} width={22} height={22} alt="" />
+        </span>
+      )}
+      <p className="text-right pr-1 text-[#161616] text-[13px] md:text-sm font-normal flex-1">{label}</p>
     </button>
   );
 }

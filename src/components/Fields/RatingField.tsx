@@ -12,6 +12,7 @@ import StarRating from '../Rating/Start';
 import EmojiRating from '../Rating/Emoji';
 import { SwitchButton } from '../Switch/SwitchButton';
 import FormProvider from '../../components/hook-form/FormProvider';
+import { FIELD_PROPERTIES_FORM_ID } from '@/constants/fieldDialog';
 import { RHFMultiSelect, RHFSwitch, RHFTextField } from '@/components/hook-form';
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
 // hook
@@ -448,7 +449,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   }
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} formId={FIELD_PROPERTIES_FORM_ID}>
       <Box
         sx={{
           display: 'flex',

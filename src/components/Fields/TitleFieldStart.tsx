@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { memo } from 'react';
 import { toast } from 'sonner';
 import FormProvider from '../../components/hook-form/FormProvider';
+import { FIELD_PROPERTIES_FORM_ID } from '@/constants/fieldDialog';
 import RHFTextField from '../../components/hook-form/RHFTextField';
 import { IFormElementConstructor } from '@/types/bulider';
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
@@ -37,12 +38,7 @@ const DesignerComponent = memo(function DesignerComponent({ elementInstance }: {
   const startPageMsg = elementInstance?.startPageMsg;
 
   return (
-    <div
-      className='flex items-start flex-col overflow-hidden absolute'
-      dir='rtl'
-      style={{
-        width: 'calc(100% - 56px)',
-      }}>
+    <div className="flex items-start flex-col overflow-hidden min-w-0 w-full" dir="rtl">
       <p dir='rtl' className='text-base overflow-hidden text-ellipsis w-full' style={{ textWrap: 'nowrap', fontWeight: '700' }}>
         {startPageMsg}
       </p>
@@ -145,7 +141,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   }
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(applyChanges)}>
+    <FormProvider methods={methods} onSubmit={handleSubmit(applyChanges)} formId={FIELD_PROPERTIES_FORM_ID}>
       <Box
         sx={{
           display: 'flex',

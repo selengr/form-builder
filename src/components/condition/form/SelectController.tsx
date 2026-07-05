@@ -13,9 +13,21 @@ interface CustomSelectProps extends Omit<SelectProps, 'sx' | 'name'> {
   disabled?: boolean;
   isOperator?: boolean;
   isLoading?: boolean;
+  placeholder?: string;
+  parentStyle?: SxProps<Theme>;
 }
 
-export const SelectController: React.FC<CustomSelectProps> = ({ options, sx, name, onChange, disabled = false, isOperator = false, isLoading = false, ...props }) => {
+export const SelectController: React.FC<CustomSelectProps> = ({
+  options,
+  sx,
+  name,
+  onChange,
+  disabled = false,
+  isOperator = false,
+  isLoading = false,
+  placeholder = '',
+  ...props
+}) => {
   const { control } = useFormContext();
 
   return (
@@ -23,7 +35,7 @@ export const SelectController: React.FC<CustomSelectProps> = ({ options, sx, nam
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <FormControl error={!!error}>
+        <FormControl error={!!error} sx={{...props.parentStyle}}>
           <Select
             IconComponent={IoIosArrowDown}
             variant='outlined'
@@ -38,9 +50,15 @@ export const SelectController: React.FC<CustomSelectProps> = ({ options, sx, nam
               if (isLoading) {
                 return <LinearProgress variant='buffer' value={0} valueBuffer={0} sx={{ width: 28, pt: 1 }} />;
               }
+              if (!selected || selected === '') {
+                return (
+                  <Box component="span" sx={{ color: '#9EA3AC', fontSize: '14px' }}>
+                    {placeholder}
+                  </Box>
+                );
+              }
               const selectedValue = isOperator ? selected?.split('@')[0] : selected;
               const selectedOption = options?.find((option) => {
-                const val = option?.value?.includes('@') ? option?.value?.split('@')[0] : option?.value;
                 return option?.value?.split('@')[0] === selectedValue?.split('@')[0];
               });
               return selectedOption ? selectedOption.label : '';
@@ -52,13 +70,13 @@ export const SelectController: React.FC<CustomSelectProps> = ({ options, sx, nam
                 paddingLeft: '0 !important',
               },
               '&.MuiInputBase-root': {
-                borderRadius: '8px',
+                borderRadius: '12px',
                 paddingLeft: 2,
                 border: error ? '1px solid #FA4D56' : '1px solid #DDE1E6',
                 height: {
                   xs: 52,
-                  // sm: 50,
-                  // md: 52
+                  sm: 50,
+                  md: 52
                 },
               },
               '& .MuiSelect-icon': {

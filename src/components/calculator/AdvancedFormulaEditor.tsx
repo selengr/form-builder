@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Box, Container, IconButton, Stack, TextField, Typography, useMediaQuery } from '@mui/material';
+import { TextField, useMediaQuery } from '@mui/material';
 
 import { htmlToFormula } from '@/lib/htmlToFormula';
 import { Element, FnFxItem } from '@/types/formulaEditor';
@@ -16,18 +16,26 @@ import FormulaInput from '@/components/formula-editor/FormulaInput';
 import FormulaKeypad from '@/components/formula-editor/FormulaKeypad';
 import FormulaControls from '@/components/formula-editor/FormulaControls';
 // action
-import { createCalculationAction, updateCalculationAction } from '../../../actions/calculator/calculation';
+import {
+  createCalculationAction,
+  updateCalculationAction,
+} from '../../../actions/calculator/calculation';
 
 const OPERATOR_TYPES = ['-', '+', '*', '/'];
 const FN_FX_OPTIONS = [{ fnValue: 'avg', fnCaption: 'میانگین()' }];
 const PERSIAN_CHARS_REGEX = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/;
 
-const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ questionList, handleClose, editList, isEdit }) => {
+const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
+  questionList,
+  handleClose,
+  editList,
+  isEdit,
+}) => {
   const { id } = useParams();
   const router = useRouter();
   const pathname = usePathname();
   const queryClient = useQueryClient();
-  const isDesktop = useMediaQuery('(min-width:768px)');
+  const isDesktop = useMediaQuery('(min-width:900px)');
 
   const mainIndex = useRef<number>(-2);
   const contentEditable = useRef<HTMLDivElement>(null);
@@ -59,28 +67,27 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
     }
   }, [isEdit]);
 
-
-  useLayoutEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        if (isEdit) {
-          router.push(`/builder/${id}/calculator/create?calcId=${isEdit}`);
-        } else {
-          router.push(`/builder/${id}/calculator/create`);
-        }
-      }
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  // useLayoutEffect(() => {
+  //   const handleResize = () => {
+  //     if (window.innerWidth < 768) {
+  //       if (isEdit) {
+  //         router.push(`/builder/${id}/calculator/create?calcId=${isEdit}`);
+  //       } else {
+  //         router.push(`/builder/${id}/calculator/create`);
+  //       }
+  //     }
+  //   };
+  //   handleResize();
+  //   window.addEventListener('resize', handleResize);
+  //   return () => {
+  //     window.removeEventListener('resize', handleResize);
+  //   };
+  // }, []);
 
   const initializeFieldRefs = () => {
     if (!elements) return;
 
-    elements.forEach((elem) => {
+    elements.forEach(elem => {
       if (elem.type === 'NEW_FIELD') {
         questionList.dataList.forEach((item: any) => {
           const { UNIC_NAME, STICKY_FUNC } = item.extMap;
@@ -88,8 +95,8 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
             selectFieldRef.current[elem.id as string] = STICKY_FUNC || UNIC_NAME;
           }
         });
-      } else if (elem.type === "NEW_FnFx") {
-        selectAvgRef.current[elem.id as string] = "#avgNumber";
+      } else if (elem.type === 'NEW_FnFx') {
+        selectAvgRef.current[elem.id as string] = '#avgNumber';
       }
     });
   };
@@ -97,7 +104,12 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
   const isLastElementOperand = (): boolean => {
     if (elements.length === 0) return false;
     const lastElement = elements[elements.length - 1];
-    return lastElement.type === 'NEW_FIELD' || lastElement.type === 'PARENTHESIS' || lastElement.type === 'NUMBER' || lastElement.type === 'NEW_FnFx';
+    return (
+      lastElement.type === 'NEW_FIELD' ||
+      lastElement.type === 'PARENTHESIS' ||
+      lastElement.type === 'NUMBER' ||
+      lastElement.type === 'NEW_FnFx'
+    );
   };
 
   const updateCursorPosition = useCallback((newCursorIndex: number) => {
@@ -140,7 +152,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
   const updateElements = useCallback(
     (incomingElements: Element[], newCursorIndex: number, normalize: boolean = true) => {
       //-------- Beta test
-      const cloned = incomingElements.map((e) => ({ ...e })) as Element[];
+      const cloned = incomingElements.map(e => ({ ...e })) as Element[];
       if (normalize) {
         mainIndex.current = -2;
 
@@ -159,19 +171,23 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
       setCursorIndex(newCursorIndex);
       updateCursorPosition(newCursorIndex);
     },
-    [updateCursorPosition],
+    [updateCursorPosition]
   );
 
   const isValidParenthesisPosition = (content: string): boolean => {
     if (content === '(') {
       if (cursorIndex === 0) return true;
       const prevElement = elements[cursorIndex - 1];
-      return prevElement.type === 'OPERATOR' || (prevElement.type === 'PARENTHESIS' && prevElement.content === '(') || (prevElement.type === 'AVG_PARENTHESIS' && prevElement.content === '(');
+      return (
+        prevElement.type === 'OPERATOR' ||
+        (prevElement.type === 'PARENTHESIS' && prevElement.content === '(') ||
+        (prevElement.type === 'AVG_PARENTHESIS' && prevElement.content === '(')
+      );
     } else {
       const prevElement = elements[cursorIndex - 1];
       if (content === ')') {
-        if (prevElement.type === "NEW_FnFx") {
-          return false
+        if (prevElement.type === 'NEW_FnFx') {
+          return false;
         }
       }
       if (cursorIndex === 0) return false;
@@ -211,14 +227,18 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
       return !(prevElement?.type === 'OPERATOR' && nextElement?.type === 'OPERATOR');
     }
 
-    if (prevElement?.type === "NEW_FnFx" && nextElement?.type === "AVG_PARENTHESIS") {
-      return false
+    if (prevElement?.type === 'NEW_FnFx' && nextElement?.type === 'AVG_PARENTHESIS') {
+      return false;
     }
     if (prevElement?.type === 'OPERATOR' && nextElement?.type === 'OPERATOR') {
       return false;
     }
 
-    return !(prevElement?.type === 'PARENTHESIS' && prevElement?.content === '(' && nextElement?.type === 'OPERATOR');
+    return !(
+      prevElement?.type === 'PARENTHESIS' &&
+      prevElement?.content === '(' &&
+      nextElement?.type === 'OPERATOR'
+    );
   };
 
   const handleUndo = useCallback(() => {
@@ -247,9 +267,9 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
       elementsToRemove = endIndex - cursorIndex + 2;
       mainIndex.current += -elementsToRemove;
     } else if (elements[cursorIndex - 1].type === 'AVG_PARENTHESIS') {
-      toast.info("این پرانتز مربوط به تابع میانگین است.", {
-        description: "لطفاً برای حذف تابع میانگین، مکان‌نما را بلافاصله بعد از تابع قرار دهید."
-      })
+      toast.info('این پرانتز مربوط به تابع میانگین است.', {
+        description: 'لطفاً برای حذف تابع میانگین، مکان‌نما را بلافاصله بعد از تابع قرار دهید.',
+      });
       return;
     }
 
@@ -282,7 +302,11 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
         return;
       }
 
-      if ((prevElement.type === 'PARENTHESIS' || prevElement.type === 'AVG_PARENTHESIS') && prevElement.content === '(' && !insideAvg) {
+      if (
+        (prevElement.type === 'PARENTHESIS' || prevElement.type === 'AVG_PARENTHESIS') &&
+        prevElement.content === '(' &&
+        !insideAvg
+      ) {
         toast.error('عملگر نمی‌تواند بلافاصله بعد از پرانتز باز قرار گیرد');
         return;
       }
@@ -295,7 +319,11 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
       }
     }
 
-    if (cursorIndex > 0 && newElements[cursorIndex - 1].type === 'OPERATOR' && OPERATOR_TYPES.includes(newElements[cursorIndex - 1].content)) {
+    if (
+      cursorIndex > 0 &&
+      newElements[cursorIndex - 1].type === 'OPERATOR' &&
+      OPERATOR_TYPES.includes(newElements[cursorIndex - 1].content)
+    ) {
       newElements[cursorIndex - 1].content = content;
     } else {
       newElements.splice(cursorIndex, 0, { type: 'OPERATOR', content });
@@ -322,7 +350,13 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
         return false;
       }
 
-      if (!(prevElement.type === 'OPERATOR' || (prevElement.type === 'PARENTHESIS' && prevElement.content === '(') || (prevElement.type === 'AVG_PARENTHESIS' && prevElement.content === '('))) {
+      if (
+        !(
+          prevElement.type === 'OPERATOR' ||
+          (prevElement.type === 'PARENTHESIS' && prevElement.content === '(') ||
+          (prevElement.type === 'AVG_PARENTHESIS' && prevElement.content === '(')
+        )
+      ) {
         return false;
       }
     }
@@ -423,7 +457,9 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
     const { UNIC_NAME, STICKY_FUNC } = item.extMap;
     const finalId = STICKY_FUNC ?? UNIC_NAME;
 
-    const elementIndex = elements.findIndex((elem) => elem.id === dropdownId && element.mainIndex === elem.mainIndex);
+    const elementIndex = elements.findIndex(
+      elem => elem.id === dropdownId && element.mainIndex === elem.mainIndex
+    );
     if (elementIndex === -1) return;
     const newElements = [...elements];
 
@@ -454,13 +490,22 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
     const nextElement = cursorIndex < elements.length ? elements[cursorIndex] : null;
 
     if (prevElement) {
-      if (prevElement.type === 'NEW_FIELD' || prevElement.type === 'PARENTHESIS' || prevElement.type === 'NUMBER' || prevElement.type === 'NEW_FnFx') {
+      if (
+        prevElement.type === 'NEW_FIELD' ||
+        prevElement.type === 'PARENTHESIS' ||
+        prevElement.type === 'NUMBER' ||
+        prevElement.type === 'NEW_FnFx'
+      ) {
         return false;
       }
     }
 
     if (nextElement) {
-      if (nextElement.type === 'NEW_FIELD' || nextElement.type === 'NUMBER' || nextElement.type === 'NEW_FnFx') {
+      if (
+        nextElement.type === 'NEW_FIELD' ||
+        nextElement.type === 'NUMBER' ||
+        nextElement.type === 'NEW_FnFx'
+      ) {
         return false;
       }
     }
@@ -510,7 +555,9 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
   };
 
   const handleFnFXOptionClick = (item: FnFxItem, id: string) => {
-    const newElements = elements.map((elem) => (elem.id === id ? { ...elem, content: item.fnCaption } : elem));
+    const newElements = elements.map(elem =>
+      elem.id === id ? { ...elem, content: item.fnCaption } : elem
+    );
     setElements(newElements);
     selectAvgRef.current[id] = item.fnValue;
     closeDropdown(id);
@@ -543,7 +590,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
         mainIndex: mainIndex.current + 2,
         isInAvg: true,
       },
-      { type: 'AVG_PARENTHESIS', content: ')' },
+      { type: 'AVG_PARENTHESIS', content: ')' }
     );
 
     // mainIndex.current += 4;
@@ -572,19 +619,21 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
     if (editableDiv) {
       const range = document.caretRangeFromPoint(e.clientX, e.clientY);
       if (range) {
-        const index = Array.from(editableDiv.childNodes).findIndex((node, index) => index === range.endOffset);
+        const index = Array.from(editableDiv.childNodes).findIndex(
+          (node, index) => index === range.endOffset
+        );
         setCursorIndex(index === -1 ? elements.length : index);
       }
     }
   };
 
   const handleClosePage = () => {
-    if (pathname.includes("/create")) {
+    if (pathname.includes('/create')) {
       router.push(`/builder/${id}/calculator`);
     } else {
-      handleClose()
+      handleClose();
     }
-  }
+  };
 
   const validateFormName = (value: string): boolean => {
     if (!value || value.trim() === '') {
@@ -616,7 +665,6 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
     return true;
   };
 
-
   const callApi = async () => {
     if (!validateLabel(label)) {
       return;
@@ -624,7 +672,6 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
     if (!validateFormName(formName)) {
       return;
     }
-
 
     const newFormula = htmlToFormula(elements, selectFieldRef, selectAvgRef);
 
@@ -639,25 +686,22 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
 
     let formula = '';
     const avgNum = newFormula.split('#avg');
-    avgNum.forEach((item) => {
-      if (item.length === 0) return
-      else if (item.includes("MultiSelect")) {
+    avgNum.forEach(item => {
+      if (item.length === 0) return;
+      else if (item.includes('MultiSelect')) {
         formula += `#avg${item}`;
-      }
-      else if (item.includes("SpectralDouble")) {
+      } else if (item.includes('SpectralDouble')) {
         formula += `#avg${item}`;
-      }
-      else if (item.includes('Number')) {
-        formula += `#avg${item.replaceAll('}{', '},{')}`
-      }
-      else formula += item;
+      } else if (item.includes('Number')) {
+        formula += `#avg${item.replaceAll('}{', '},{')}`;
+      } else formula += item;
     });
 
-    const finalFormula = replaceNestedParentheses(formula)
+    const finalFormula = replaceNestedParentheses(formula);
 
     try {
       setLoading(true);
-       if (!isEdit) {
+      if (!isEdit) {
         await createCalculationAction({
           name: formName,
           formBuilderId: id,
@@ -676,9 +720,9 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
         });
       }
       queryClient.invalidateQueries({ queryKey: ['calculators'] });
-      router.refresh()
+      router.refresh();
       // queryClient.invalidateQueries({ queryKey: ['Calculation_List'] });
-      handleClosePage()
+      handleClosePage();
       toast.success('محاسبه گر با موفقیت ثبت شد');
     } catch (error) {
       toast.error('عملیات ناموفق بود مجددا امتحان نمایید');
@@ -690,103 +734,75 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
   if (!isClient) return null;
 
   return (
-    <Container maxWidth='sm' sx={{ padding: '0px', marginTop: { xs: "10px", md: "-25px", position: "relative" } }}>
-      <Typography
-        variant='subtitle1'
-        sx={{
-          display: { xs: "none", md: 'flex' },
-          justifyContent: 'center',
-          color: '#404040',
-          fontWeight: 700,
-          mb: 2
-        }}>
-        محاسبه‌گر
-      </Typography>
-
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          direction: 'ltr',
-          width: '100%',
-          paddingX: { xs: 3, md: 0 }
-        }}>
-        <Box
-          sx={{
-            width: '100%',
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "start",
-            flexDirection: { xs: 'column', sm: 'row' },
-            gap: 2
-          }}>
-          <Stack width={'100%'}>
-            <Typography variant='subtitle2' color='#161616'>
-              نام:
-            </Typography>
+    <div dir="rtl" className="w-full flex flex-col">
+      <div className="w-full flex flex-col gap-4">
+        <div className="w-full flex flex-col sm:flex-row gap-4">
+          <div className="w-full sm:flex-1">
+            <label className="block text-[14px] font-medium text-[#161616] mb-1.5">نام:</label>
             <TextField
+              fullWidth
+              placeholder="نام محاسبه‌گر"
               sx={{
                 '& .MuiOutlinedInput-root': {
+                  borderRadius: '12px',
+                  height: '52px',
+                  backgroundColor: '#fff',
+                  transition: 'all 180ms ease',
+
                   '& fieldset': {
                     borderColor: '#DDE1E6',
-                    borderRadius: '8px',
                   },
-                  '&:hover fieldset': {
-                    borderColor: '#DDE1E6',
+
+                  '&:hover': {
+                    backgroundColor: '#FCFDFF',
+
+                    '& fieldset': {
+                      borderColor: '#8CB5E8',
+                    },
                   },
-                  '&.Mui-focused fieldset': {
-                    borderColor: '#DDE1E6',
+
+                  '&.Mui-focused': {
+                    backgroundColor: '#FCFDFF',
+
+                    '& fieldset': {
+                      borderColor: '#8CB5E8',
+                      borderWidth: '1px',
+                    },
                   },
                 },
+
                 '& input': {
-                  paddingX: 1,
-                  paddingY: 0,
-                  height: '50px',
+                  px: 1.5,
+                  height: '52px',
+                  fontSize: '14px',
                 },
               }}
               value={formName}
-              onChange={(e) => {
+              onChange={e => {
                 const val = e.target.value;
                 setFormName(val);
-
-                if (formNameError) {
-                  validateFormName(val);
-                }
+                if (formNameError) validateFormName(val);
               }}
               onBlur={() => validateFormName(formName)}
               error={Boolean(formNameError)}
               helperText={formNameError}
             />
-          </Stack>
+          </div>
 
-          {isSurvey &&
-            <Stack width={'100%'}>
-              <Typography variant='subtitle2' color='#161616'>
-                شناسه:
-              </Typography>
+          {isSurvey && (
+            <div className="w-full sm:flex-1">
+              <label className="block text-[14px] font-medium text-[#161616] mb-1.5">شناسه:</label>
               <TextField
+                fullWidth
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: '#DDE1E6',
-                      borderRadius: '8px',
-                    },
-                    '&:hover fieldset': {
-                      borderColor: '#DDE1E6',
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#DDE1E6',
-                    },
+                    borderRadius: '12px',
+                    '& fieldset': { borderColor: '#DDE1E6' },
                   },
-                  '& input': {
-                    paddingX: 1,
-                    paddingY: 0,
-                    height: '50px',
-                  },
+                  '& input': { height: '48px' },
                 }}
                 value={label ?? ''}
-                onChange={(e) => {
+                onChange={e => {
                   const val = e.target.value;
                   setLabel(val === '' ? null : val);
                 }}
@@ -794,65 +810,14 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
                 error={Boolean(labelError)}
                 helperText={labelError}
               />
+            </div>
+          )}
+        </div>
 
-            </Stack>
-          }
-        </Box>
-
-
-        <Box
-          sx={{
-            width: '100%',
-            display: "flex",
-            flexDirection: { xs: 'row', sm: 'row' },
-            my: 3,
-          }}>
-          {
-            isDesktop && (
-              <FormulaKeypad
-                handleFnFX={handleFnFX}
-                handleNewField={handleNewField}
-                handleParenthesis={handleParenthesis}
-                handleOperator={handleOperator}
-                handleNumber={handleNumber}
-                handleUndo={handleUndo}
-                contentEditableRef={contentEditable}
-              />
-            )
-          }
-
-
-          <Box
-            sx={{
-              width: { xs: '100%', sm: '73%' },
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'start',
-              mt: { xs: 2, sm: 0 },
-              ml: { xs: 0, sm: 2 },
-            }}>
-            <Typography
-              variant='subtitle1'
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                color: '#404040',
-                fontWeight: 500,
-              }}>
-              اسکریپت:
-            </Typography>
-            <Stack
-              sx={{
-                border: '1px solid #DDE1E6',
-                borderRadius: 2,
-                padding: 1,
-                width: '100%',
-                height: '100%',
-                minHeight: { xs: 250, md: 200 },
-                display: 'flex',
-                flexWrap: 'wrap',
-                flexDirection: 'row',
-              }}>
+        <div className="w-full flex flex-col md:flex-row-reverse lg:flex-row gap-4 items-start">
+          <div className="flex-1 w-full min-w-0 flex flex-col order-2 lg:order-1">
+            <label className="block text-[13px] md:text-sm font-medium text-[#161616] mb-1.5">اسکریپت:</label>
+            <div className="relative w-full rounded-[20px] border border-[#DDE1E6] bg-[#F8FAFC] p-3 h-[250px] max-h-[250px] mb-2 overflow-y-scroll">
               <FormulaInput
                 elements={elements}
                 questionList={questionList}
@@ -864,38 +829,61 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
                 onClick={handleClick}
                 onKeyDown={handleKeyDown}
               />
-            </Stack>
-          </Box>
-        </Box>
+
+              {/* {!isDesktop && (
+                <button
+                  type="button"
+                  onClick={() => setIsMobileKeypadOpen(true)}
+                  className="absolute bottom-3 left-3 w-12 h-12 rounded-full bg-[#2CDFC9] shadow-md flex items-center justify-center hover:bg-[#25c4b3] transition-colors"
+                  aria-label="ماشین حساب"
+                >
+                  <Image src="/images/calc/ic_keypad.svg" width={60} height={60} alt="" />
+                </button>
+              )} */}
+            </div>
+          </div>
+
+           
+
+          {isDesktop && (
+            <div className="order-1 lg:order-2">
+              <FormulaKeypad
+                handleFnFX={handleFnFX}
+                handleNewField={handleNewField}
+                handleParenthesis={handleParenthesis}
+                handleOperator={handleOperator}
+                handleNumber={handleNumber}
+                handleUndo={handleUndo}
+                contentEditableRef={contentEditable}
+              />
+            </div>
+          )}
+          
+        </div>
+   {!isDesktop && (
+               <div className='px-1 flex justify-center items-center'>
+
+                   <FormulaKeypad
+                  handleFnFX={handleFnFX}
+                  handleNewField={handleNewField}
+                  handleParenthesis={handleParenthesis}
+                  handleOperator={handleOperator}
+                  handleNumber={handleNumber}
+                  handleUndo={handleUndo}
+                  contentEditableRef={contentEditable}
+                />
+               </div>
+                )}
+      </div>
 
 
-        <Stack
-          sx={{
-            width: "100%",
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'end'
+      <FormulaControls onSubmit={callApi} onCancel={handleClosePage} isLoading={isLoading} />
 
-          }}>
-          <IconButton
-            sx={{
-              display: { sx: "flex", md: "none" },
-              // transform: open ? 'rotate(180deg)' : undefined,  
-              width: 72,
-              hight: 72,
-            }}
-            onClick={() => setIsMobileKeypadOpen(true)}
-          >
-            <Image src='/images/calc/ic_keypad.svg' width={52} height={52} alt='keypad' />
-          </IconButton>
-
-        </Stack>
-        <FormulaControls onSubmit={callApi} onCancel={handleClosePage} isLoading={isLoading} />
-      </Box>
-
-      <BottomSheet open={isMobileKeypadOpen} onClose={() => setIsMobileKeypadOpen(false)} title="ماشین حساب">
-
+      {/* <BottomSheet
+        open={isMobileKeypadOpen}
+        onClose={() => setIsMobileKeypadOpen(false)}
+        title="ماشین حساب"
+      >
         <FormulaKeypad
           handleFnFX={handleFnFX}
           handleNewField={handleNewField}
@@ -905,8 +893,8 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({ question
           handleUndo={handleUndo}
           contentEditableRef={contentEditable}
         />
-      </BottomSheet>
-    </Container>
+      </BottomSheet> */}
+    </div>
   );
 };
 

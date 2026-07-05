@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 
 import FormProvider from '@/components/hook-form/FormProvider';
+import { FIELD_PROPERTIES_FORM_ID } from '@/constants/fieldDialog';
 import { RHFSwitch, RHFTextField } from '@/components/hook-form';
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
 
@@ -76,11 +77,11 @@ const DesignerComponent = React.memo(({ elementInstance }: { elementInstance: Fo
   const element = elementInstance as CustomInstance;
 
   return (
-    <div className='flex items-start flex-col overflow-hidden absolute' dir='rtl' style={{ width: 'calc(100% - 96px)' }}>
-      <p dir='rtl' className='text-base overflow-hidden text-ellipsis w-full' style={{ textWrap: 'nowrap', fontWeight: 700 }}>
+    <div className="flex items-start flex-col overflow-hidden min-w-0 w-full" dir="rtl">
+      <p dir="rtl" className="text-[15px] overflow-hidden text-ellipsis w-full text-[#2A2A2A]" style={{ textWrap: 'nowrap', fontWeight: 700 }}>
         {element.title}
       </p>
-      <p className='text-xs text-[#424242]'>#بخش راهنما</p>
+      <p className="text-xs text-[#888]">#بخش راهنما</p>
     </div>
   );
 });
@@ -233,7 +234,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   };
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} formId={FIELD_PROPERTIES_FORM_ID}>
       <Box
         sx={{
           display: 'flex',

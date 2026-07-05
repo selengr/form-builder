@@ -14,7 +14,7 @@ interface FormulaKeypadProps {
 }
 
 const FormulaKeypad: React.FC<FormulaKeypadProps> = ({ handleFnFX, handleNewField, handleParenthesis, handleOperator, handleNumber, handleUndo, contentEditableRef }) => {
-  const isDesktop = useMediaQuery('(min-width:768px)');
+  const isDesktop = useMediaQuery('(min-width:900px)');
   return (
     <>
       {isDesktop && <Keypad

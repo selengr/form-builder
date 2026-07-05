@@ -1,44 +1,33 @@
 'use client';
 
-import { CgClose } from 'react-icons/cg';
-import Dialog from '@mui/material/Dialog';
-import { IconButton, styled } from '@mui/material';
-import DialogContent from '@mui/material/DialogContent';
+import { useParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 
 import { IEditCalculatorDialogProps } from '@/types/calculator';
 import AdvancedFormulaEditor from '@/components/calculator/AdvancedFormulaEditor';
-import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
-import PreviewLoading from '@/app/(builder)/preview/[id]/loading';
-// action
+import { CalculatorEditorDialogSkeleton } from '@/components/calculator/AdvancedFormulaEditorSkeleton';
+import CalculatorEditorErrorState from '@/components/calculator/CalculatorEditorErrorState';
+import CalculatorDialogShell from './CalculatorDialogShell';
 import { fetchCalculatorsAction, fetchEditCalculatorsAction } from '../../../actions/calculator/calculator';
 
-const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
-  direction: 'ltr',
-  maxHeight: '75vh',
-  scrollbarWidth: 'thin',
-  maxWidth: '100%',
-  padding: theme.spacing(3.8),
-}));
-
-const StyledDialog = styled(Dialog)(({ theme }) => ({
-  overflow: 'hidden',
-  scrollbarWidth: 'none',
-  '& .MuiPaper-root': {
-    borderRadius: '24px',
-    margin: '10px',
-  },
-  '& .MuiDialog-container': {
-    backdropFilter: 'blur(4px)',
-    backgroundColor: 'hsl(0deg 0% 100% / 50%)',
-  },
-}));
-
-export const EditCalculatorDialog: React.FC<IEditCalculatorDialogProps> = ({ open, setOpen, calcId }) => {
+export const EditCalculatorDialog: React.FC<IEditCalculatorDialogProps> = ({
+  open,
+  setOpen,
+  calcId,
+}) => {
   const { id } = useParams();
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['calculators'],
+  const handleClose = () => setOpen(false);
+
+  const {
+    data,
+    isLoading,
+    isFetching,
+    error,
+    refetch: refetchQuestions,
+  } = useQuery({
+    queryKey: ['calculators', id],
     queryFn: () => fetchCalculatorsAction(id as string),
+    enabled: open && !!id,
     staleTime: 0,
     gcTime: 0,
   });
@@ -46,37 +35,48 @@ export const EditCalculatorDialog: React.FC<IEditCalculatorDialogProps> = ({ ope
   const {
     data: editData,
     isLoading: editLoading,
+    isFetching: editFetching,
     error: errorLoading,
+    refetch: refetchEdit,
   } = useQuery({
-    queryKey: ['edit-calculators'],
+    queryKey: ['edit-calculators', calcId],
     queryFn: () => fetchEditCalculatorsAction(calcId as number),
+    enabled: open && !!calcId,
     staleTime: 0,
     gcTime: 0,
   });
 
-  const handleClose = () => {
-    setOpen((prev) => !prev);
+  const isPageLoading = isLoading || editLoading;
+  const loadError = error || errorLoading;
+  const isRetrying = (isFetching || editFetching) && !isPageLoading;
+
+  const handleRetry = () => {
+    void refetchQuestions();
+    void refetchEdit();
   };
 
   return (
-    <StyledDialog open={open} maxWidth='md'>
-      <StyledDialogContent>
-        <div className='flex items-center justify-end h-6'>
-          <IconButton edge='end' sx={{zIndex:2}} onClick={() => handleClose()}>
-            <CgClose color='#404040' width={25} height={20} size='1.5rem'/>
-          </IconButton>
-        </div>
-        {isLoading ||
-          (editLoading && (
-            <div className='flex flex-col items-center justify-center w-full h-full min-w-[600px] min-h-[300px] bg-white bg-opacity-80 border border-gray-300 rounded-lg shadow-lg'>
-              {/* <PreviewLoading /> */}
-              <p className='text-lg text-gray-800'>در حال بارگیری ماشین حساب ...</p>
-            </div>
-          ))}
-        {error && <p>Error loading calculators: {(error as Error).message}</p>}
-        {data && editData && <AdvancedFormulaEditor questionList={data} handleClose={handleClose} editList={editData} isEdit={true} />}
-      </StyledDialogContent>
-    </StyledDialog>
+    <CalculatorDialogShell open={open} onClose={handleClose}>
+      {isPageLoading && <CalculatorEditorDialogSkeleton />}
+
+      {loadError && !isPageLoading && (
+        <CalculatorEditorErrorState
+          error={loadError}
+          onRetry={handleRetry}
+          onClose={handleClose}
+          isRetrying={isRetrying}
+        />
+      )}
+
+      {data && editData && !isPageLoading && !loadError && (
+        <AdvancedFormulaEditor
+          questionList={data}
+          handleClose={handleClose}
+          editList={editData}
+          isEdit
+        />
+      )}
+    </CalculatorDialogShell>
   );
 };
 

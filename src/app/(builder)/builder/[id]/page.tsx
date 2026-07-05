@@ -7,12 +7,15 @@ async function getFormDataAction(id: string) {
     return await api.get(`/form/${id}`);
 }
 
+const www = {"name":"start-from-puroduction","questionGroups":[{"formId":7378,"position":0,"questionGroupId":7257,"questions":[]}],"typeEnum":"QUESTION","formSettingModel":{"id":null,"name":"start-from-puroduction","label":null,"timeToComplete":null,"expireDate":null,"responseLimitation":null,"startFromContinue":false,"formStatus":"CREATE","surveyTargetPlatformEnum":null,"surveyPurposeEnum":null},"formPublishSettingModel":{"publicationPublicMethod":false,"publicLink":"public-1fd398fb-27a3-4a95-b4ff-188e3460cfeb","capacityPublicLink":0,"publicationMainPageMethod":false,"privateLink":null,"showReportForResponder":false}}
+const www2 = {"name":"start-from-puroduction","questionGroups":[{"formId":7378,"position":0,"questionGroupId":7257,"questions":[{"questionId":10910,"questionGroupId":7257,"formId":7378,"isLocked":null,"title":"test","questionType":"TEXT_FIELD","position":0,"label":"7378@akAIPO-ZnLc","optionList":[],"questionPropertyList":[{"id":51680,"questionId":10910,"questionPropertyEnum":"TEXT_FIELD_PATTERN","value":"SHORT_TEXT"},{"id":51681,"questionId":10910,"questionPropertyEnum":"REQUIRED","value":"false"},{"id":51682,"questionId":10910,"questionPropertyEnum":"EDIT_ANSWER_LOCKED","value":"false"},{"id":51683,"questionId":10910,"questionPropertyEnum":"DESCRIPTION","value":null},{"id":51684,"questionId":10910,"questionPropertyEnum":"MAXIMUM_LEN","value":"250"},{"id":51685,"questionId":10910,"questionPropertyEnum":"MINIMUM_LEN","value":"0"}],"spectralPlaceList":[]}]}],"typeEnum":"QUESTION","formSettingModel":{"id":null,"name":"start-from-puroduction","label":null,"timeToComplete":null,"expireDate":null,"responseLimitation":null,"startFromContinue":false,"formStatus":"CREATE","surveyTargetPlatformEnum":null,"surveyPurposeEnum":null},"formPublishSettingModel":{"publicationPublicMethod":false,"publicLink":"public-1fd398fb-27a3-4a95-b4ff-188e3460cfeb","capacityPublicLink":0,"publicationMainPageMethod":false,"privateLink":null,"showReportForResponder":false}}
+
 export default async function BuilderPage({ params }: { params: { id: string } }) {
-  const response = await getFormDataAction(params.id)
+  // const response = await getFormDataAction(params.id)
 
-  if(!response.success){
-    return <BuilderErrorPage error={response as any} />
-  }
+  // if(!response.success){
+  //   return <BuilderErrorPage error={response as any} />
+  // }
 
-  return <FormBuilderWapper data={response.data} />;
+  return <FormBuilderWapper data={www2} />;
 }

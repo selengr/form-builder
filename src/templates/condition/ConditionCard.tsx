@@ -1,24 +1,22 @@
 'use client';
-// React & Libs
+
+import Image from 'next/image';
 import { useState } from 'react';
 import { Button, CircularProgress, Menu, Typography } from '@mui/material';
-// types
 import { IConditionCardProps } from '@/types/condition';
-// components
 import ConfirmDialog from '@/components/confirm-dialog';
 import { EditConditionDialog } from './EditConditionDialog';
 import { ConditionCardOperator } from './ConditionCardOperator';
-// icons
 import { SlPencil } from 'react-icons/sl';
 import { WeuiDeleteOutlined } from '../../../public/images/icons/DeleteIcon';
 import { PhDotsThreeVerticalBold } from '../../../public/images/icons/PhDotsThreeVerticalBold';
 import { useDeleteCondition } from '@/app/(builder)/builder/[id]/condition/_hooks/useDeleteCondition';
 
 const buttonStyles = {
-  height: '50px',
+  height: '45px',
   fontWeight: '400',
   fontSize: '15px',
-  borderRadius: '10px',
+  borderRadius: '12px',
   boxShadow: 'none',
   transition: 'background-color 0.3s, border-color 0.3s',
 };
@@ -26,21 +24,25 @@ const buttonStyles = {
 const buttonStylesError = {
   bgcolor: '#FA4D56',
   borderColor: '#FA4D56',
-  '&:hover': {
-    bgcolor: '#C6394D',
-  },
-  '&:active': {
-    bgcolor: '#A32A3A',
-  },
+  '&:hover': { bgcolor: '#C6394D' },
+  '&:active': { bgcolor: '#A32A3A' },
 };
 
-export function ConditionCard({ qacWithOutFilterOptions, index, condition, disabled = true }: IConditionCardProps) {
-  const [open, setOpen] = useState<boolean>(false);
-  const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
+export function ConditionCard({
+  qacWithOutFilterOptions,
+  index,
+  condition,
+  disabled = true,
+  onEdit,
+  onDeleteSuccess,
+}: IConditionCardProps) {
+  const [open, setOpen] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const { id } = condition;
   const menuOpen = Boolean(anchorEl);
+  const persianNumber = (index + 1).toLocaleString('fa-IR');
 
   const { mutate: deleteCondition, isPending } = useDeleteCondition();
 
@@ -50,112 +52,131 @@ export function ConditionCard({ qacWithOutFilterOptions, index, condition, disab
     setAnchorEl(event.currentTarget);
   };
 
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
+  const handleCloseMenu = () => setAnchorEl(null);
 
   const handleDelete = () => {
     deleteCondition(id, {
       onSuccess: () => {
+        onDeleteSuccess?.();
         setOpen(false);
         handleCloseMenu();
       },
     });
   };
 
-  const toggleConfirm = () => {
-    setOpen((prev) => !prev);
-  };
-
   return (
-    <div className={`bg-[#F7F7FF] rounded-lg flex ${disabled ? 'opacity-50 pointer-events-none' : ''}`}>
-      <div className='flex flex-col justify-start items-center gap-[10px] pl-[10px]'>
-        <div className='bg-white h-8 w-8 rounded-[10px] flex justify-center items-center'>{index + 1}</div>
-        <div className='bg-white h-8 w-8 rounded-[10px] flex justify-center items-center'>
-          <button onClick={handleOpenMenu} disabled={disabled}>
-            <PhDotsThreeVerticalBold color='#1758BA' fontSize='1.5rem' />
+    <>
+      <div
+        dir="rtl"
+        className={`w-full flex relative flex-row rounded-xl border border-[#DDE1E6] bg-white p-2 ${
+          disabled ? 'opacity-50 pointer-events-none' : ''
+        }`}
+      >
+        <div className="flex items-start justify-between mb-3 pr-2 pl-6">
+                 <span className="bg-[#F7F7FF] rounded-[10px] h-9 w-9 flex justify-center items-center shrink-0">
+                  <Image src={"/images/calc/ic_condition.svg"} width={22} height={22} alt="" />
+                </span>
+
+          <button
+            type="button"
+            onClick={handleOpenMenu}
+            disabled={disabled}
+            className="flex items-center absolute left-3 justify-center w-9 h-9 rounded-[10px] hover:bg-[#F7F7FF] transition-colors"
+            aria-label="منو"
+          >
+            <PhDotsThreeVerticalBold color="#9EA3AC" fontWeight="bold" fontSize="2rem" />
           </button>
-          {menuOpen && !disabled && (
-            <Menu
-              sx={{
-                '& .MuiPaper-root.MuiPaper-elevation': {
-                  borderRadius: '15px',
-                },
-                '& .MuiPaper-root': {
-                  touchAction: 'none',
-                  width: '125px',
-                },
-                '& .MuiLoadingButton-label': {
-                  width: '100%',
-                },
-              }}
-              id='basic-menu'
-              anchorEl={anchorEl}
-              open={menuOpen}
-              onClose={handleCloseMenu}
-              MenuListProps={{
-                'aria-labelledby': 'basic-button',
-              }}>
-              <Button
-                sx={{
-                  paddingX: '10px',
-                  height: '36px',
-                  borderRadius: '10px',
-                  width: '100%',
-                  display: 'flex',
-                  flexDirection: 'row-reverse',
-                  justifyContent: 'space-between',
-                  color: '#1758BA',
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setOpenEditDialog(true);
-                  handleCloseMenu();
-                }}
-                disabled={disabled}>
-                <SlPencil size='1rem' />
-                <Typography sx={{ fontSize: '12px', color: 'black' }}>ویرایش</Typography>
-              </Button>
 
-              <Button
-                sx={{
-                  paddingX: '10px',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  color: '#FA4D56',
-                }}
-                loading={isPending}
-                disabled={isPending || disabled}
-                onClick={toggleConfirm}
-                fullWidth>
-                <Typography sx={{ fontSize: '12px', color: 'black' }}>حذف</Typography>
-                <WeuiDeleteOutlined fontSize='1.2rem' />
-              </Button>
-            </Menu>
-          )}
+    
+     
         </div>
+
+        <ConditionCardOperator
+          qacWithOutFilterOptions={qacWithOutFilterOptions}
+          condition={condition}
+        />
       </div>
 
-      <div className='rounded-lg py-0 md:py-2 p-[10px] flex justify-between w-full cursor-pointer border-[1px] border-[#1758BA] bg-[#fff]'>
-        <div className='flex justify-center items-center gap-1 md:gap-[10px]'>
-          <ConditionCardOperator qacWithOutFilterOptions={qacWithOutFilterOptions} condition={condition} />
-        </div>
-      </div>
+      <Menu
+        anchorEl={anchorEl}
+        open={menuOpen}
+        onClose={handleCloseMenu}
+        sx={{
+          '& .MuiPaper-root': {
+            borderRadius: '15px',
+            width: '125px',
+            touchAction: 'none',
+          },
+        }}
+      >
+        <Button
+          sx={{
+            px: 2,
+            height: 36,
+            borderRadius: '10px',
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'row-reverse',
+            justifyContent: 'space-between',
+            color: '#1758BA',
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onEdit) onEdit();
+            else setOpenEditDialog(true);
+            handleCloseMenu();
+          }}
+          disabled={disabled}
+        >
+          <SlPencil size="1rem" />
+          <Typography sx={{ fontSize: '12px', color: 'black' }}>ویرایش</Typography>
+        </Button>
 
-      {openEditDialog && <EditConditionDialog open={openEditDialog} setOpen={setOpenEditDialog} condition={condition} />}
+        <Button
+          sx={{
+            px: 2,
+            display: 'flex',
+            justifyContent: 'space-between',
+            color: '#FA4D56',
+          }}
+          loading={isPending}
+          disabled={isPending || disabled}
+          onClick={() => setOpen(true)}
+          fullWidth
+        >
+          <Typography sx={{ fontSize: '12px', color: 'black' }}>حذف</Typography>
+          <WeuiDeleteOutlined fontSize="1.2rem" />
+        </Button>
+      </Menu>
+
+      {openEditDialog && (
+        <EditConditionDialog
+          open={openEditDialog}
+          setOpen={setOpenEditDialog}
+          condition={condition}
+        />
+      )}
 
       <ConfirmDialog
-        content='آیا از عملیات حذف اطمینان دارید؟'
+        content="آیا از عملیات حذف اطمینان دارید؟"
         open={open}
-        title='حذف'
+        title="حذف"
         loading={isPending}
-        onClose={toggleConfirm}
-        cancelText='انصراف'
+        onClose={() => setOpen((prev) => !prev)}
+        cancelText="انصراف"
         action={
-          <Button type='submit' fullWidth disableRipple variant='contained' disabled={isPending} sx={{ ...buttonStyles, ...buttonStylesError }} onClick={handleDelete}>
+          <Button
+            type="submit"
+            fullWidth
+            disableRipple
+            variant="contained"
+            disabled={isPending}
+            sx={{ ...buttonStyles, ...buttonStylesError }}
+            onClick={handleDelete}
+          >
             {isPending ? (
               <>
-                <CircularProgress size={20} color='inherit' thickness={5} style={{ marginLeft: 10 }} />
+                <CircularProgress size={20} color="inherit" thickness={5} style={{ marginLeft: 10 }} />
                 در حال حذف…
               </>
             ) : (
@@ -164,6 +185,6 @@ export function ConditionCard({ qacWithOutFilterOptions, index, condition, disab
           </Button>
         }
       />
-    </div>
+    </>
   );
 }

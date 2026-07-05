@@ -110,9 +110,15 @@ const QuestionMenu = memo(function QuestionMenu({ questionID, position, index }:
 
   return (
     <Fragment>
-      <button onClick={handleClick}>
-        <PhDotsThreeVerticalBold color='#1758BA' fontSize='1.5rem' />
-      </button>
+      <button
+          type="button"
+          onClick={handleClick}
+          className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-9 h-9 rounded-[10px] hover:bg-[#F7F7FF] transition-colors" z-50
+          aria-label="منو"
+        >
+          <PhDotsThreeVerticalBold color="#9EA3AC" fontSize="2rem" />
+        </button>
+
       {open && (
         <Menu
           sx={{

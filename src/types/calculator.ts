@@ -16,6 +16,8 @@ export interface ICalculatorCardProps {
   index: number;
   disabled?: boolean;
   calculator: ICalculator;
+  onEdit?: (id: number) => void;
+  onDeleteSuccess?: () => void;
 }
 
 export interface ICalculatorListProps {

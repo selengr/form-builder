@@ -30,12 +30,44 @@ function useFieldDialogTitle() {
   }, [selectedElement]);
 }
 
+const CreateFieldDialogLoading = memo(function CreateFieldDialogLoading({
+  onClose,
+}: {
+  onClose: () => void;
+}) {
+  return (
+    <>
+      <div
+        dir="ltr"
+        className="relative flex shrink-0 items-center justify-center px-4 py-3 min-h-[56px] bg-white"
+      >
+        <IconButton
+          onClick={onClose}
+          aria-label="بستن"
+          sx={{
+            position: 'absolute',
+            right: 12,
+            top: 30,
+            transform: 'translateY(-50%)',
+            p: 0.5,
+          }}
+        >
+          <CgClose color="#404040" size="1.4rem" />
+        </IconButton>
+      </div>
+
+      <div dir="rtl" className="flex flex-1 items-center justify-center w-full min-h-[280px]">
+        <ImSpinner2 className="animate-spin h-12 w-12 text-[#1758BA]" />
+      </div>
+    </>
+  );
+});
+
 const CreateFieldDialogBody = memo(function CreateFieldDialogBody({
   onClose,
 }: {
   onClose: () => void;
 }) {
-  const questionLoading = useQuestionLoading();
   const dialogTitle = useFieldDialogTitle();
 
   return (
@@ -44,22 +76,20 @@ const CreateFieldDialogBody = memo(function CreateFieldDialogBody({
         dir="ltr"
         className="relative flex shrink-0 items-center justify-center px-4 py-3 min-h-[56px] bg-white"
       >
-        {!questionLoading && (
-          <IconButton
-            onClick={onClose}
-            aria-label="بستن"
-            sx={{
-              position: 'absolute',
-              right: 12,
-              top: 30,
-              transform: 'translateY(-50%)',
-              p: 0.5,
-            }}
-          >
-            <CgClose color="#404040" size="1.4rem" />
-          </IconButton>
-        )}
-        {!questionLoading && dialogTitle && (
+        <IconButton
+          onClick={onClose}
+          aria-label="بستن"
+          sx={{
+            position: 'absolute',
+            right: 12,
+            top: 30,
+            transform: 'translateY(-50%)',
+            p: 0.5,
+          }}
+        >
+          <CgClose color="#404040" size="1.4rem" />
+        </IconButton>
+        {dialogTitle && (
           <h2 className="text-[18px] font-bold text-[#404040] px-10 pt-10 text-center truncate">
             {dialogTitle}
           </h2>
@@ -67,22 +97,14 @@ const CreateFieldDialogBody = memo(function CreateFieldDialogBody({
       </div>
 
       <div dir="rtl" className="flex flex-1 flex-col min-h-0 overflow-hidden bg-white">
-        {questionLoading ? (
-          <div className="flex flex-1 items-center justify-center w-full">
-            <ImSpinner2 className="animate-spin h-12 w-12 text-[#1758BA]" />
-          </div>
-        ) : (
-          <div
-            className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-5 pt-2 pb-4"
-            style={{ scrollbarWidth: 'thin' }}
-          >
-            <PropertiesFormSidebar />
-          </div>
-        )}
+        <div
+          className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-5 pt-2 pb-4"
+          style={{ scrollbarWidth: 'thin' }}
+        >
+          <PropertiesFormSidebar />
+        </div>
 
-        {!questionLoading && (
-          <div id={FIELD_DIALOG_FOOTER_ID} className="shrink-0 bg-white px-[80px] font-medium gap-6 pt-4 pb-6" />
-        )}
+        <div id={FIELD_DIALOG_FOOTER_ID} className="shrink-0 bg-white px-[80px] font-medium gap-6 pt-4 pb-6" />
       </div>
     </>
   );
@@ -92,6 +114,7 @@ const CreateFieldDialog = memo(function CreateFieldDialog() {
   const isDesktop = useMediaQuery('(min-width:900px)');
   const setOpenDialog = useActionOpenDialog();
   const openDialog = useOpenDialog();
+  const questionLoading = useQuestionLoading();
   const setSelectedElement = useActionSelectedElement();
 
   const handleClose = useCallback(() => {
@@ -127,7 +150,12 @@ const CreateFieldDialog = memo(function CreateFieldDialog() {
         },
       }}
     >
-      {openDialog ? <CreateFieldDialogBody onClose={handleClose} /> : null}
+      {openDialog &&
+        (questionLoading ? (
+          <CreateFieldDialogLoading onClose={handleClose} />
+        ) : (
+          <CreateFieldDialogBody onClose={handleClose} />
+        ))}
     </Dialog>
   );
 });

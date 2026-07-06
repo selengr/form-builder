@@ -40,12 +40,7 @@ export default function LogicBoard({
   );
 
   useEffect(() => {
-    setItems((prev) => {
-      const prevKey = prev.map((item) => item.sortId).join('|');
-      const nextKey = mergedItems.map((item) => item.sortId).join('|');
-      if (prevKey === nextKey) return prev;
-      return mergedItems;
-    });
+    setItems(mergedItems);
   }, [mergedItems]);
 
   const sensors = useSensors(

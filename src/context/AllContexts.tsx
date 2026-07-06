@@ -16,7 +16,7 @@ export const OpenDialogContext = createContext<null | boolean>(null);
 
 /* ------------------------ Selected Element Context: Value & Action ------------------------ */
 export const ActionSelectedElementContext = createContext<Dispatch<SetStateAction<selectedElementObject | null>> | null>(null);
-export const SelectedElementContext = createContext<null | selectedElementObject>(null);
+export const SelectedElementContext = createContext<selectedElementObject | null | undefined>(undefined);
 
 /* ----------------------- Question Is Loading Context: Value & Action ---------------------- */
 export const ActionQuestionLoadingContext = createContext<Dispatch<SetStateAction<boolean>> | null>(null);

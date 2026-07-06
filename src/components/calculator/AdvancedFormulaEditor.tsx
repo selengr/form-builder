@@ -20,6 +20,7 @@ import {
   createCalculationAction,
   updateCalculationAction,
 } from '../../../actions/calculator/calculation';
+import { invalidateLogicListQueries } from '@/templates/builder/logic/useLogicItems';
 
 const OPERATOR_TYPES = ['-', '+', '*', '/'];
 const FN_FX_OPTIONS = [{ fnValue: 'avg', fnCaption: 'میانگین()' }];
@@ -720,8 +721,8 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         });
       }
       queryClient.invalidateQueries({ queryKey: ['calculators'] });
+      invalidateLogicListQueries(queryClient, String(id));
       router.refresh();
-      // queryClient.invalidateQueries({ queryKey: ['Calculation_List'] });
       handleClosePage();
       toast.success('محاسبه گر با موفقیت ثبت شد');
     } catch (error) {

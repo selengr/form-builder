@@ -32,7 +32,7 @@ const FAKE_QUESTION_LIST: IFieldQuestionData = {
     },
     {
       value: '{#q_11012}',
-      caption: 'جنسیت',
+      caption: 'گاهی اوقات بیدار ماندن مشکل است، مخصوصأ در کلیسا.',
       elementStr: 'MULTIPLE_CHOICE',
       extMap: {
         QUESTION_TYPE: 'MULTIPLE_CHOICE',
@@ -45,7 +45,7 @@ const FAKE_QUESTION_LIST: IFieldQuestionData = {
     },
     {
       value: '{#q_10992}',
-      caption: 'سن',
+      caption: 'بلکه با تنهایی بنیادین و با این واقعیت هم مواجه می سازد که هر یک از ما به تنهایی مسئول وضعیت موجود در زندگی خویشیم.',
       elementStr: 'TEXT_FIELD',
       extMap: {
         QUESTION_TYPE: 'TEXT_FIELD',

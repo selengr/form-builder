@@ -110,10 +110,10 @@ function ParenDeleteRow({
 }) {
   return (
     <div className="flex gap-[6px] mb-[6px] w-full">
-      <button type="button" className={parenBtnClass} onClick={() => handleParenthesis('(')}>
+      <button type="button" className={parenBtnClass} onClick={() => handleParenthesis(')')}>
         (
       </button>
-      <button type="button" className={parenBtnClass} onClick={() => handleParenthesis(')')}>
+      <button type="button" className={parenBtnClass} onClick={() => handleParenthesis('(')}>
         )
       </button>
       <button type="button" className={deleteBtnClass} onClick={handleUndo} aria-label="حذف">

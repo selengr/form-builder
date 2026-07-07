@@ -580,7 +580,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
       0,
       {
         type: 'NEW_FnFx',
-        content: 'میانگین()',
+        content: 'میانگین',
         id: selectId,
       },
       { type: 'AVG_PARENTHESIS', content: '(' },

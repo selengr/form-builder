@@ -146,7 +146,7 @@ const QuestionMenu = memo(function QuestionMenu({ questionID, position, index }:
               display: 'flex',
               justifyContent: 'space-between',
               color: '#222',
-              paddingX: '10px',
+              paddingX: '10px'
             }}
             onClick={async (e) => {
               e.stopPropagation();
@@ -171,7 +171,7 @@ const QuestionMenu = memo(function QuestionMenu({ questionID, position, index }:
             fullWidth
             disabled={loadingDeleteData}
             loading={loadingDuplicateData}>
-            <Typography>تکثیر</Typography>
+            <Typography fontSize={12}>تکثیر</Typography>
             <IonCopyOutline width={18} height={18} />
           </Button>
           <Button
@@ -180,11 +180,11 @@ const QuestionMenu = memo(function QuestionMenu({ questionID, position, index }:
               paddingX: '10px',
               display: 'flex',
               justifyContent: 'space-between',
-              color: '#1758BA',
+              color: '#1758BA'
             }}
             fullWidth
             onClick={getQuestionData}>
-            <Typography>ویرایش</Typography>
+            <Typography fontSize={12}>ویرایش</Typography>
             <SlPencil size='1.15rem' />
           </Button>
           <Button
@@ -198,7 +198,7 @@ const QuestionMenu = memo(function QuestionMenu({ questionID, position, index }:
             fullWidth
             disabled={loadingDuplicateData}
             loading={loadingDeleteData||checkDependencyLoading}>
-            <Typography>حذف</Typography>
+            <Typography fontSize={12}>حذف</Typography>
             <WeuiDeleteOutlined width={20} height={20} />
           </Button>
         </Menu>

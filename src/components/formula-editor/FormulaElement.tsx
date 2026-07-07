@@ -22,7 +22,7 @@ const FormulaElement: React.FC<FormulaElementProps> = ({ element, index, questio
     case 'NEW_FIELD':
       return <FormulaFieldDropdown element={element} options={questionList.dataList} onSelect={onFieldSelect} onClick={onFieldClick} />;
     case 'NEW_FnFx':
-      return <FormulaFnDropdown element={element} options={[{ fnValue: 'avg', fnCaption: 'میانگین()' }]} onSelect={onFnSelect} onClick={onFnClick} />;
+      return <FormulaFnDropdown element={element} options={[{ fnValue: 'avg', fnCaption: 'میانگین' }]} onSelect={onFnSelect} onClick={onFnClick} />;
     default:
       return (
         <div key={elementKey} contentEditable={false} className={`${styles.dynamicbtn} ${styles[element.type]}`} data-type={element.type}>

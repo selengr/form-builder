@@ -1,6 +1,7 @@
 'use client';
 
 import { memo, useCallback, useEffect, useState } from 'react';
+import { useDndMonitor } from '@dnd-kit/core';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import useActionOpenBottomSheet from '@/hooks/useActionOpenBottomSheet';
 import useDesigner from '@/hooks/useDesigner';
@@ -99,6 +100,24 @@ const Designer = memo(function Designer({ data }: DesignerProps) {
     setLogicFormState(null);
   }, []);
 
+  useDndMonitor({
+    onDragEnd: (event) => {
+      if (isQuestionnaireTab || isDisabled) return;
+
+      const { active, over } = event;
+      if (!over) return;
+      if (!active.data?.current?.isSidebarBtnLogic) return;
+      if (over.data?.current?.type !== 'logic-board') return;
+
+      const logicType = active.data.current.logicType;
+      if (logicType === 'calculator') {
+        openCreateCalculator();
+      } else if (logicType === 'condition') {
+        openCreateCondition();
+      }
+    },
+  });
+
   useEffect(() => {
     if (formName) setFormTitle(formName);
   }, [formName]);
@@ -131,12 +150,16 @@ const Designer = memo(function Designer({ data }: DesignerProps) {
             key="calculator"
             title="محاسبه‌گر جدید"
             icon="/images/calc/ic_calculator.svg"
+            logicType="calculator"
+            disabled={isDisabled}
             onClick={openCreateCalculator}
           />,
           <SidebarBtnLogic
             key="condition"
             title="شرط جدید"
             icon="/images/calc/ic_condition.svg"
+            logicType="condition"
+            disabled={isDisabled}
             onClick={openCreateCondition}
           />,
         ];

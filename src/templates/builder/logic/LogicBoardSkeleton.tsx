@@ -56,11 +56,14 @@ export default function LogicBoardSkeleton({
     <div
       dir="rtl"
       className={clsx(
-        'flex flex-col w-full h-full rounded-2xl border border-[#DDE1E6] bg-[#F8FAFC] overflow-hidden min-h-[300px]',
+        'flex flex-col w-full h-full min-h-0 rounded-2xl border border-[#DDE1E6] bg-[#F8FAFC] overflow-hidden',
         className,
       )}
     >
-      <div className="flex flex-col w-full px-3 pt-3 gap-2 pb-3">
+      <div
+        className="flex flex-col w-full flex-1 min-h-0 overflow-y-auto px-3 pt-3 gap-2 pb-3"
+        style={{ scrollbarWidth: 'thin' }}
+      >
         {Array.from({ length: count }).map((_, index) =>
           index % 2 === 0 ? (
             <CalculatorCardSkeleton key={index} />

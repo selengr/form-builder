@@ -37,7 +37,7 @@ export default function LogicBoard({
     disabled,
   });
 
-  const containerClassName = `flex flex-col w-full h-full min-h-[300px] rounded-2xl border border-[#DDE1E6] bg-[#F8FAFC] overflow-hidden ${
+  const containerClassName = `flex flex-col w-full h-full min-h-0 rounded-2xl border border-[#DDE1E6] bg-[#F8FAFC] overflow-hidden ${
     droppable.isOver && !disabled ? 'ring-2 ring-[#2CDFC9] ring-inset' : ''
   } ${disabled ? 'opacity-50 pointer-events-none' : ''}`;
 
@@ -95,7 +95,10 @@ export default function LogicBoard({
           )}
         </>
       ) : (
-        <div className="flex flex-col w-full px-3 pt-3 gap-2 pb-3">
+        <div
+          className="flex flex-col w-full flex-1 min-h-0 overflow-y-auto px-3 pt-3 gap-2 pb-3"
+          style={{ scrollbarWidth: 'thin' }}
+        >
           {items.map((item, index) =>
             item.kind === 'calculator' ? (
               <CalculatorCard

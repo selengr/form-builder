@@ -207,14 +207,14 @@ export default function ListGridWrapperSkeleton({ name, headerName, SkeletonComp
                 >
                     <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
                         {renderHeaderSkeleton()}
-                        <Grid sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} size={{ xs: 12, md: 10, xl: 9 }}>
+                        <div className="w-full max-w-[470px] mx-auto flex flex-col gap-2">
                             <Box
                                 sx={{
                                     display: 'flex',
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                     gap: '12px',
-                                    width: 1,
+                                    width: '100%',
                                     flexWrap: { xs: 'nowrap', sm: 'nowrap' },
                                 }}>
                                 {renderTotalCountSkeleton()}
@@ -224,45 +224,40 @@ export default function ListGridWrapperSkeleton({ name, headerName, SkeletonComp
                                 </div>
                                 }
                             </Box>
-                        </Grid>
-                        {/* Search and filter */}
-                        <Grid
-                            display='flex'
-                            sx={{
-                                width: '100%',
-                                maxWidth: '560px',
-                                justifyContent: 'center',
-                                mt: 1,
-                                gap: 2,
-                            }}>
-                            <Grid size={{ xs: 12, sm: 10 }} sx={{ display: 'flex', alignItems: 'center', gap: '12px', mx: 'auto' }}>
-                                {renderSearchSkeleton()}
-                                <div className='w-[51px] h-[51px] bg-gray-200 rounded-[15px] animate-pulse lg:hidden flex-shrink-0' />
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    width: '100%',
+                                    justifyContent: 'center',
+                                    gap: 2,
+                                }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%' }}>
+                                    {renderSearchSkeleton()}
+                                    <div className='w-[51px] h-[51px] bg-gray-200 rounded-[15px] animate-pulse lg:hidden flex-shrink-0' />
+                                </Box>
+                            </Box>
+                            <Grid
+                                container
+                                flexWrap='nowrap'
+                                sx={{
+                                    width: '100%',
+                                    mt: 1,
+                                    mb: 5,
+                                    pb: 4,
+                                    flexDirection: 'column',
+                                    gap: 2,
+                                    overflowY: 'auto',
+                                    px: 0,
+                                    height: {
+                                        xs: 'calc(100vh - 310px)',
+                                        sm: 'calc(100vh - 290px)',
+                                        md: 'calc(100vh - 230px)',
+                                    },
+                                    scrollbarWidth: 'none',
+                                }}>
+                                {renderCardSkeletons()}
                             </Grid>
-                        </Grid>
-
-                        <Grid
-                            container
-                            flexWrap='nowrap'
-                            sx={{
-                                width: 1,
-                                mt: 1,
-                                mb: 5,
-                                pb: 4,
-                                flexDirection: 'column',
-                                gap: 2,
-                                overflowY: 'auto',
-                                px: { xs: 0, sm: 0 },
-                                mx: { xs: 0, sm: 'auto' },
-                                height: {
-                                    xs: 'calc(100vh - 310px)',
-                                    sm: 'calc(100vh - 290px)',
-                                    md: 'calc(100vh - 230px)',
-                                },
-                                scrollbarWidth: "none"
-                            }}>
-                            {renderCardSkeletons()}
-                        </Grid>
+                        </div>
                     </Grid>
 
                 </Grid>

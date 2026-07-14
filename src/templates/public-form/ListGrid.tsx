@@ -261,68 +261,63 @@ const ListGrid: React.FC<IProps> = ({
                             </div>
 
                             {renderSearchAndFilter()}
+                            <Grid
+                                id='content'
+                                container
+                                flexWrap='nowrap'
+                                sx={{
+                                    width: '100%',
+                                    mt: 1,
+                                    mb: 5,
+                                    pb: 4,
+                                    scrollbarWidth: 'none',
+                                    flexDirection: 'column',
+                                    gap: 2,
+                                    overflowY: 'auto',
+                                    px: 0,
+                                    height: {
+                                        xs: 'calc(100vh - 310px)',
+                                        sm: 'calc(100vh - 290px)',
+                                        md: 'calc(100vh - 230px)',
+                                    },
+                                }}>
+                                {isFetching && !isFetchingNextPage && (
+                                    <CardSkeleton />
+                                )}
+
+                                {items.length === 0 && !isFetching && (
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                            height: '100%',
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <EmptyList error={error?.message} />
+                                    </Box>
+                                )}
+
+                                {items.map((item: any, i: number) => {
+                                    const isLast = i === items.length - 1;
+
+                                    return (
+                                        <Grid sx={{ width: '100%', mx: 'auto' }} key={i} size={12}>
+                                            {CartComponent && <CartComponent data={item} />}
+
+                                            {isLast && (
+                                                <>
+                                                    <div ref={ref} />
+                                                    {isFetchingNextPage && <LinearProgress />}
+                                                </>
+                                            )}
+                                        </Grid>
+                                    );
+                                })}
+                            </Grid>
                         </div>
-                        {/* content */}
-                        <Grid
-                            id='content'
-                            container
-                            flexWrap='nowrap'
-                            sx={{
-                                width: 1,
-                                mt: 1,
-                                mb: 5,
-                                pb: 4,
-                                scrollbarWidth: "none",
-                                // mr: { xs: 0, md: totalData! > 2 || isFetching ? -1.2 : 0 },
-                                flexDirection: 'column',
-                                gap: 2,
-                                overflowY: 'auto',
-                                px: { xs: 0, sm: 0 },
-                                mx: { xs: 0, sm: 'auto' },
-                                height: {
-                                    xs: 'calc(100vh - 310px)',
-                                    sm: 'calc(100vh - 290px)',
-                                    md: 'calc(100vh - 230px)',
-                                },
-                            }}>
-                            {isFetching && !isFetchingNextPage && (
-                                <CardSkeleton />
-                            )}
-
-
-                            {items.length === 0 && !isFetching && (
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        flexDirection: 'column',
-                                        alignItems: 'center',
-                                        height: '100%',
-                                        width: '100%',
-                                    }}
-                                >
-                                    <EmptyList error={error?.message} />
-
-                                </Box>
-                            )}
-
-                            {items.map((item: any, i: number) => {
-                                const isLast = i === items.length - 1;
-
-                                return (
-                                    <Grid sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} key={i} size={{ xs: 12, md: 10, xl: 9 }}>
-                                        {CartComponent && <CartComponent data={item} />}
-
-                                        {isLast && (
-                                            <>
-                                                <div ref={ref} />
-                                                {isFetchingNextPage && <LinearProgress />}
-                                            </>
-                                        )}
-                                    </Grid>
-                                );
-                            })}
-                        </Grid>
                     </Grid>
                     <BottomSheet open={isFilterOpen} onClose={() => setIsFilterOpen(false)}>
                         <Grid>{filterComponent}</Grid>

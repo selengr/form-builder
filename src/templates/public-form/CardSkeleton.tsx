@@ -41,7 +41,7 @@ const FormCardSkeleton = () => {
   return (
     <>
       {Array.from({ length: 5 }).map((_, i) => (
-        <Grid2 sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} key={i} size={{ xs: 12, md: 10, xl: 9 }}>
+        <Grid2 sx={{ width: '100%', mx: 'auto' }} key={i} size={12}>
           <PublicFormCardSkeletonItem />
         </Grid2>
       ))}

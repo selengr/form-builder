@@ -10,6 +10,7 @@ import usePreview from '@/hooks/usePreview';
 import PreviewQuestion from '@/templates/preview/PreviewQuestion';
 import PreviewProgress from '@/templates/preview/PreviewProgress';
 import { ParticipateLoadingSkeleton } from '@/app/(participate)/form/[slug]/components/participateSkeleton';
+import BuilderLoadErrorState from '@/components/builder/BuilderLoadErrorState';
 
 export default function PreviewPage() {
   const router = useRouter();
@@ -59,21 +60,18 @@ export default function PreviewPage() {
 
   if (status === 'error') {
     return (
-      <div className='w-full h-screen flex justify-center items-center px-4'>
-        <div className='max-w-md w-full bg-white rounded-xl shadow p-6 text-center'>
-          <h2 className='text-xl font-bold text-red-600 mb-4'>خطا در بارگذاری پیش‌نمایش</h2>
-          <p className='text-gray-600 mb-6 text-sm leading-relaxed'>{errorMessage}</p>
-          <Button
-            variant='contained'
-            onClick={handleBack}
-            sx={{
-              backgroundColor: '#1758BA',
-              '&:hover': { backgroundColor: '#216ee1' },
-            }}>
-            بازگشت
-          </Button>
-        </div>
-      </div>
+      <BuilderLoadErrorState
+        message={errorMessage}
+        backHref={
+          from === 'data-collection'
+            ? '/data-collection'
+            : admin
+              ? `/user-reports/${paramId}`
+              : `/builder/${paramId}`
+        }
+        backLabel="بازگشت"
+        className="h-[calc(100dvh-76px)] md:h-screen"
+      />
     );
   }
 

@@ -105,8 +105,8 @@ export const getCondition = (type: string, operator: string, values: any) => {
     case 'TEXT_FIELD_VALUE':
       return [
         { value: '#lenEqualText', label: 'طول متن برابر با' },
-        { value: '#lenGraterThanText', label: 'طول متن بیشتر از' },
-        { value: '!#lenGraterThanText', label: 'طول متن کمتر از' },
+        { value: '#lenGreaterThanText', label: 'طول متن بیشتر از' },
+        { value: '!#lenGreaterThanText', label: 'طول متن کمتر از' },
       ];
 
     case 'SPECTRAL_VALUE':
@@ -266,8 +266,8 @@ export const getInput = (
       return <TextFieldController name={field.name} type='string' sx={{ width: '100%' }} />;
 
     case 'TEXT_FIELD_VALUE_#lenEqualText':
-    case 'TEXT_FIELD_VALUE_#lenGraterThanText':
-    case 'TEXT_FIELD_VALUE_!#lenGraterThanText':
+    case 'TEXT_FIELD_VALUE_#lenGreaterThanText':
+    case 'TEXT_FIELD_VALUE_!#lenGreaterThanText':
       return <TextFieldController name={field.name} type='number' sx={{ width: '100%' }} />;
 
     case 'SPECTRAL_VALUE_#greaterThanSpectral':

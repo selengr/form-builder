@@ -106,7 +106,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
                   }
                 } else if (conditionType === '!#containAnyText' || conditionType === '#containAnyText') {
                   formattedValue = `{${formatContainText(value as string)}}`;
-                } else if (conditionType === '#lenEqualText' || conditionType === '#lenGraterThanText' || conditionType === '!#lenGraterThanText') {
+                } else if (conditionType === '#lenEqualText' || conditionType === '#lenGreaterThanText' || conditionType === '!#lenGreaterThanText') {
                   formattedValue = `{#v_${value}}`;
                 } else {
                   formattedValue = value as string;

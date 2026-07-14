@@ -1,9 +1,8 @@
 'use client';
 
 import { toast } from 'react-hot-toast';
-import { notFound, useParams, useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { createContext, Dispatch, ReactNode, useEffect, useReducer } from 'react';
-// actions
 import { getPreviewFormData } from '../../actions/preview/getPreviewFormAction';
 
 type IInitialState = {
@@ -13,35 +12,45 @@ type IInitialState = {
   index: number;
   answer: string | null;
   numQuestions: number | null;
+  errorMessage: string;
   dispatch: Dispatch<any>;
 };
 
 const PreviewContext = createContext<IInitialState | null>(null);
 export default PreviewContext;
 
-const initialState: IInitialState = {
+const initialState: Omit<IInitialState, 'dispatch'> = {
   questions: [],
   title: '',
-  // 'loading', 'error', 'ready', "notExist"
   status: 'loading',
   index: 0,
   answer: null,
   numQuestions: null,
-  dispatch: () => { },
+  errorMessage: '',
 };
 
-function reducer(state: IInitialState, action: any) {
+function reducer(state: Omit<IInitialState, 'dispatch'>, action: any) {
   switch (action.type) {
     case 'dataReceived':
       return {
         ...state,
         questions: action.payload.questions,
         title: action.payload.title,
-        index: action.payload.index !== null && action.payload.index <= action.payload.questions.length && action.payload.index >= 0 ? Number(action.payload.index) : 0,
+        index:
+          action.payload.index !== null &&
+          action.payload.index <= action.payload.questions.length &&
+          action.payload.index >= 0
+            ? Number(action.payload.index)
+            : 0,
         status: 'ready',
+        errorMessage: '',
       };
     case 'dataFailed':
-      notFound();
+      return {
+        ...state,
+        status: 'error',
+        errorMessage: action.payload?.error || 'انجام عملیات با خطا مواجه شد',
+      };
     case 'nextQuestion':
       return { ...state, index: state.index + 1, answer: null };
     case 'pervQuestion':
@@ -56,10 +65,13 @@ function reducer(state: IInitialState, action: any) {
 export function PreviewProvider({ children }: { children: ReactNode }) {
   const { id } = useParams();
   const searchParams = useSearchParams();
-  const [{ questions, status, index, answer, title }, dispatch] = useReducer(reducer, initialState);
+  const [{ questions, status, index, answer, title, errorMessage }, dispatch] = useReducer(
+    reducer,
+    initialState,
+  );
   const numQuestions: number = questions.length;
   const currentIndex = searchParams?.get('question');
-  const search = searchParams.get('rep  ');
+  const search = searchParams.get('rep');
   const admin = search === 'list';
 
   useEffect(() => {
@@ -69,11 +81,12 @@ export function PreviewProvider({ children }: { children: ReactNode }) {
 
         if (!result.success) {
           if (result.type === 'noQuestionExist') {
-            dispatch({
-              type: 'noQuestionExist',
-            });
+            dispatch({ type: 'noQuestionExist' });
           } else {
-            dispatch({ type: 'dataFailed' });
+            dispatch({
+              type: 'dataFailed',
+              payload: { error: result.error },
+            });
             toast.error(result.error || 'خطا در دریافت اطلاعات');
           }
         } else {
@@ -86,47 +99,17 @@ export function PreviewProvider({ children }: { children: ReactNode }) {
             },
           });
         }
-      } catch (error:any) {
-        dispatch({ type: 'dataFailed' });
-        toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+      } catch (error: any) {
+        dispatch({
+          type: 'dataFailed',
+          payload: { error: error?.message || 'انجام عملیات با خطا مواجه شد' },
+        });
+        toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     }
 
     fetchData();
-  }, []);
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     try {
-  //       const {
-  //         data,
-  //       }: {
-  //         data: formResDataTypes;
-  //       } = await AxiosApi.get(admin ? `/admin/form/${id}` : `/user/form/${id}`);
-
-  //       const allQuestions = data?.questionGroups?.map((group: any) => group?.questions).flat();
-
-  //       if (!allQuestions.length) {
-  //         dispatch({
-  //           type: 'noQuestionExist',
-  //         });
-  //       } else {
-  //         dispatch({
-  //           type: 'dataReceived',
-  //           payload: {
-  //             questions: allQuestions as FormElementInstance[],
-  //             index: currentIndex,
-  //             title: data.name,
-  //           },
-  //         });
-  //       }
-  //     } catch (error) {
-  //       dispatch({ type: 'dataFailed' });
-  //       toast.error('خطا در دریافت اطلاعات');
-  //     }
-  //   }
-
-  //   fetchData();
-  // }, []);
+  }, [admin, currentIndex, id]);
 
   return (
     <PreviewContext.Provider
@@ -137,7 +120,7 @@ export function PreviewProvider({ children }: { children: ReactNode }) {
         answer,
         numQuestions,
         title,
-
+        errorMessage,
         dispatch,
       }}>
       {children}

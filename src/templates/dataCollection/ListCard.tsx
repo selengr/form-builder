@@ -66,7 +66,7 @@ const ListCard: React.FC<IListCardProps> = ({
       from: 'TESTING',
     });
     if (data.status === 'CREATE') {
-      router.push(`/preview/${data.id}?rep=list`)
+      router.push(`/preview/${data.id}?rep=list&from=data-collection`);
     } else {
       router.push(`form/${data.id}?${params.toString()}`);
     }

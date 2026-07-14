@@ -14,10 +14,23 @@ import { ParticipateLoadingSkeleton } from '@/app/(participate)/form/[slug]/comp
 export default function PreviewPage() {
   const router = useRouter();
   const { id: paramId } = useParams();
-  const { status, title } = usePreview();
+  const { status, title, errorMessage } = usePreview();
   const searchParams = useSearchParams();
   const search = searchParams.get('rep');
+  const from = searchParams.get('from');
   const admin = search === 'list';
+
+  const handleBack = () => {
+    if (from === 'data-collection') {
+      router.push('/data-collection');
+      return;
+    }
+    if (admin) {
+      router.push(`/user-reports/${paramId}`);
+      return;
+    }
+    router.push(`/builder/${paramId}`);
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -44,13 +57,33 @@ export default function PreviewPage() {
     );
   }
 
+  if (status === 'error') {
+    return (
+      <div className='w-full h-screen flex justify-center items-center px-4'>
+        <div className='max-w-md w-full bg-white rounded-xl shadow p-6 text-center'>
+          <h2 className='text-xl font-bold text-red-600 mb-4'>خطا در بارگذاری پیش‌نمایش</h2>
+          <p className='text-gray-600 mb-6 text-sm leading-relaxed'>{errorMessage}</p>
+          <Button
+            variant='contained'
+            onClick={handleBack}
+            sx={{
+              backgroundColor: '#1758BA',
+              '&:hover': { backgroundColor: '#216ee1' },
+            }}>
+            بازگشت
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`w-full flex flex-col overflow-hidden h-[calc(100dvh-76px)] md:h-screen p-2 sm:p-3`}>
 
       <div className={`flex flex-col bg-white rounded-xl overflow-hidden h-full`}>
 
         <div className='shrink-0 m-2 p-4 z-10 w-[calc(100%-16px)]  h-[52px] flex items-center justify-center rounded-lg bg-[#F7F7FF] mb-4 relative'>
-          <IconButton sx={{ position: 'absolute', left: { xs: '2px', sm: '8px' } }} onClick={() => router.push(admin ? `/user-reports/${paramId}` : `/builder/${paramId}`)}>
+          <IconButton sx={{ position: 'absolute', left: { xs: '2px', sm: '8px' } }} onClick={handleBack}>
             <MdOutlineKeyboardArrowRight color='#292D32' />
           </IconButton>
           <p

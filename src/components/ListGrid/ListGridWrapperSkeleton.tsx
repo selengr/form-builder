@@ -207,7 +207,16 @@ export default function ListGridWrapperSkeleton({ name, headerName, SkeletonComp
                 >
                     <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
                         {renderHeaderSkeleton()}
-                        <div className="w-full max-w-[470px] mx-auto flex flex-col gap-2">
+                        <Grid
+                            container
+                            size={{ xs: 12, md: 10, xl: 9 }}
+                            sx={{
+                                width: '100%',
+                                mx: 'auto',
+                                maxWidth: '470px',
+                                flexDirection: 'column',
+                                gap: 2,
+                            }}>
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -257,7 +266,7 @@ export default function ListGridWrapperSkeleton({ name, headerName, SkeletonComp
                                 }}>
                                 {renderCardSkeletons()}
                             </Grid>
-                        </div>
+                        </Grid>
                     </Grid>
 
                 </Grid>

@@ -320,7 +320,16 @@ const ListGrid: React.FC<Props> = ({
 
           <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
             {renderHeader()}
-            <div className="w-full max-w-[470px] mx-auto flex flex-col gap-2">
+            <Grid
+              container
+              size={{ xs: 12, md: 10, xl: 9 }}
+              sx={{
+                width: '100%',
+                mx: 'auto',
+                maxWidth: '470px',
+                flexDirection: 'column',
+                gap: 2,
+              }}>
               <Box
                 sx={{
                   display: 'flex',
@@ -372,7 +381,7 @@ const ListGrid: React.FC<Props> = ({
                 }}>
                 {renderContent()}
               </Grid>
-            </div>
+            </Grid>
           </Grid>
           <BottomSheet open={isFilterOpen} onClose={() => setIsFilterOpen(false)}>
             <Grid>{filterComponent}</Grid>

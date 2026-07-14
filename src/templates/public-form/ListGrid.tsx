@@ -173,16 +173,14 @@ const ListGrid: React.FC<IProps> = ({
 
     const renderSearchAndFilter = useCallback(
         () => (
-            <Grid
-                display='flex'
+            <Box
                 sx={{
+                    display: 'flex',
                     width: '100%',
-                    maxWidth: '560px',
                     justifyContent: 'center',
-                    mt: 1,
                     gap: 2,
                 }}>
-                <Grid size={{ xs: 12, sm: 10 }} sx={{ display: 'flex', alignItems: 'center', gap: '12px', mx: 'auto' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%' }}>
                     <ImmediateSearchInput onSearch={setQuery} />
                     {!disableFilter && (
                         <IconButton
@@ -199,8 +197,8 @@ const ListGrid: React.FC<IProps> = ({
                             <Image src={Filter} width={35} height={35} alt='Filter' draggable={false} />
                         </IconButton>
                     )}
-                </Grid>
-            </Grid>
+                </Box>
+            </Box>
         ),
         [disableFilter, openFilter],
     );
@@ -244,8 +242,8 @@ const ListGrid: React.FC<IProps> = ({
                             <p className="font-bold text-sm sm:text-base truncate px-8">{title}</p>
                         </div>
 
-                        {/* total - fixed for mobile */}
-                        <Grid sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} size={{ xs: 12, md: 10, xl: 9 }}>
+                        {/* total + search */}
+                        <div className="w-full max-w-[470px] mx-auto flex flex-col gap-2">
                             <div className='flex justify-between gap-2 bg-[#ECFAFF] rounded-2xl px-[10px] py-4 w-full'>
                                 <div className='flex items-center gap-[6px] sm:gap-[10px] flex-shrink-0'>
                                     <Image src={TotalGrid} width={18} height={18} className='sm:w-5 sm:h-5 select-none' alt='total' draggable={false} />
@@ -261,14 +259,9 @@ const ListGrid: React.FC<IProps> = ({
                                     </p>
                                 )}
                             </div>
-                        </Grid>
 
-                        {/* search row */}
-                        {/* <div className={`w-full mt-2 max-w-[470px]`}>
-                            <ImmediateSearchInput onSearch={setQuery} />
-                        </div> */}
-
-                        {renderSearchAndFilter()}
+                            {renderSearchAndFilter()}
+                        </div>
                         {/* content */}
                         <Grid
                             id='content'

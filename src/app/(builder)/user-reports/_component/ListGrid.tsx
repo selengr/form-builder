@@ -261,7 +261,7 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
               overflowY: 'hidden',
               height: '100%',
             }}>
-            <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
+            <Grid container flexDirection="column" alignItems="center" sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
               {renderHeader()}
 
               <Grid

@@ -203,16 +203,14 @@ const ListGrid: React.FC<Props> = ({
 
   const renderSearchAndFilter = useCallback(
     () => (
-      <Grid
-        display='flex'
+      <Box
         sx={{
+          display: 'flex',
           width: '100%',
-          maxWidth: '560px',
           justifyContent: 'center',
-          mt: 1,
           gap: 2,
         }}>
-        <Grid size={{ xs: 12, sm: 10 }} sx={{ display: 'flex', alignItems: 'center', gap: '12px', mx: 'auto' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%' }}>
           <ImmediateSearchInput onSearch={setQuery} />
           {!disableFilter && (
             <IconButton
@@ -229,8 +227,8 @@ const ListGrid: React.FC<Props> = ({
               <Image src={Filter} width={35} height={35} alt='Filter' draggable={false} />
             </IconButton>
           )}
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     ),
     [disableFilter, openFilter],
   );
@@ -322,14 +320,14 @@ const ListGrid: React.FC<Props> = ({
 
           <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
             {renderHeader()}
-            <Grid sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} size={{ xs: 12, md: 10, xl: 9 }}>
+            <div className="w-full max-w-[470px] mx-auto flex flex-col gap-2">
               <Box
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
                   gap: '12px',
-                  width: "100%",
+                  width: '100%',
                   flexWrap: { xs: 'nowrap', sm: 'nowrap' },
                 }}>
                 {renderTotalCount()}
@@ -351,8 +349,8 @@ const ListGrid: React.FC<Props> = ({
                 )}
                 {CreateButton && CreateButton()}
               </Box>
-            </Grid>
-            {renderSearchAndFilter()}
+              {renderSearchAndFilter()}
+            </div>
             <Grid
               id='content'
               container

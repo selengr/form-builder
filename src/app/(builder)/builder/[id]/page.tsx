@@ -20,5 +20,5 @@ export default async function BuilderPage({ params }: { params: { id: string } }
   // }
 
   // return <FormBuilderWapper data={response.data} />;
-  return <FormBuilderWapper data={fake_data_one} />;
+  return <FormBuilderWapper data={fake_data_two} />;
 }

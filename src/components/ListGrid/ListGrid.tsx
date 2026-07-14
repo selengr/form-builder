@@ -255,7 +255,7 @@ const ListGrid: React.FC<Props> = ({
         const isLastItem = pageIndex === pages.pages.length - 1 && index === page.data.length - 1;
 
         return (
-          <Grid sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} key={key} size={{ xs: 12, md: 10, xl: 9 }}>
+          <Grid sx={{ width: '100%', mx: 'auto' }} key={key} size={12}>
             {CartComponent && <CartComponent onCheck={onCheck} data={data} refreshGrid={handleRefreshGrid} />}
             {isLastItem && (
               <>
@@ -350,31 +350,29 @@ const ListGrid: React.FC<Props> = ({
                 {CreateButton && CreateButton()}
               </Box>
               {renderSearchAndFilter()}
+              <Grid
+                id='content'
+                container
+                flexWrap='nowrap'
+                sx={{
+                  width: '100%',
+                  mt: 1,
+                  mb: 5,
+                  pb: 4,
+                  flexDirection: 'column',
+                  gap: 2,
+                  overflowY: 'auto',
+                  px: 0,
+                  height: {
+                    xs: 'calc(100vh - 310px)',
+                    sm: 'calc(100vh - 290px)',
+                    md: 'calc(100vh - 230px)',
+                  },
+                  scrollbarWidth: 'none',
+                }}>
+                {renderContent()}
+              </Grid>
             </div>
-            <Grid
-              id='content'
-              container
-              flexWrap='nowrap'
-              sx={{
-                width: 1,
-                mt: 1,
-                mb: 5,
-                pb: 4,
-                // mr: { xs: 0, md: totalData! > 2 || isFetching ? -1.2 : 0 },
-                flexDirection: 'column',
-                gap: 2,
-                overflowY: 'auto',
-                px: { xs: 0, sm: 0 },
-                mx: { xs: 0, sm: 'auto' },
-                height: {
-                  xs: 'calc(100vh - 310px)',
-                  sm: 'calc(100vh - 290px)',
-                  md: 'calc(100vh - 230px)',
-                },
-                scrollbarWidth: "none"
-              }}>
-              {renderContent()}
-            </Grid>
           </Grid>
           <BottomSheet open={isFilterOpen} onClose={() => setIsFilterOpen(false)}>
             <Grid>{filterComponent}</Grid>

@@ -93,7 +93,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
               } else if (
                 conditionType === '#lenEqualText' ||
                 conditionType === '#lenGreaterThanText' ||
-                conditionType === '!#lenGreaterThanText'
+                conditionType === '#lenLessThanText'
               ) {
                 formattedValue = `{#v_${value}}`;
               } else {

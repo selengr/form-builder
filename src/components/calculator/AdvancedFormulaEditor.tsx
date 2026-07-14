@@ -10,20 +10,19 @@ import { htmlToFormula } from '@/lib/htmlToFormula';
 import { Element, FnFxItem } from '@/types/formulaEditor';
 import { IAdvancedFormulaEditorProps } from '@/types/calculator';
 // components
-import BottomSheet from '@/components/BottomSheet/BottomSheet';
 import { replaceNestedParentheses } from './parentheses-replacer';
 import FormulaInput from '@/components/formula-editor/FormulaInput';
 import FormulaKeypad from '@/components/formula-editor/FormulaKeypad';
 import FormulaControls from '@/components/formula-editor/FormulaControls';
+import { invalidateLogicListQueries } from '@/templates/builder/logic/useLogicItems';
 // action
 import {
   createCalculationAction,
   updateCalculationAction,
 } from '../../../actions/calculator/calculation';
-import { invalidateLogicListQueries } from '@/templates/builder/logic/useLogicItems';
 
 const OPERATOR_TYPES = ['-', '+', '*', '/'];
-const FN_FX_OPTIONS = [{ fnValue: 'avg', fnCaption: 'میانگین()' }];
+const FN_FX_OPTIONS = [{ fnValue: 'avg', fnCaption: 'میانگین' }];
 const PERSIAN_CHARS_REGEX = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/;
 
 const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
@@ -818,7 +817,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
         <div className="w-full flex flex-col md:flex-row-reverse lg:flex-row gap-4 items-start">
           <div className="flex-1 w-full min-w-0 flex flex-col order-2 lg:order-1">
             <label className="block text-[13px] md:text-sm font-medium text-[#161616] mb-1.5">اسکریپت:</label>
-            <div className="relative w-full rounded-[20px] border border-[#DDE1E6] bg-[#F8FAFC] p-3 h-[250px] max-h-[250px] mb-2 overflow-y-scroll">
+            <div className="relative w-full rounded-[20px] border border-[#DDE1E6] bg-[#F8FAFC] p-3 h-[250px] max-h-[250px] mb-2 overflow-y-auto">
               <FormulaInput
                 elements={elements}
                 questionList={questionList}

@@ -113,7 +113,7 @@ const QuestionMenu = memo(function QuestionMenu({ questionID, position, index }:
       <button
           type="button"
           onClick={handleClick}
-          className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-9 h-9 rounded-[10px] hover:bg-[#F7F7FF] transition-colors" z-50
+          className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-9 h-9 rounded-[10px] hover:bg-[#F7F7FF] transition-colors z-50"
           aria-label="منو"
         >
           <PhDotsThreeVerticalBold color="#9EA3AC" fontSize="2rem" />
@@ -146,7 +146,7 @@ const QuestionMenu = memo(function QuestionMenu({ questionID, position, index }:
               display: 'flex',
               justifyContent: 'space-between',
               color: '#222',
-              paddingX: '10px'
+              paddingX: '10px',
             }}
             onClick={async (e) => {
               e.stopPropagation();
@@ -180,7 +180,7 @@ const QuestionMenu = memo(function QuestionMenu({ questionID, position, index }:
               paddingX: '10px',
               display: 'flex',
               justifyContent: 'space-between',
-              color: '#1758BA'
+              color: '#1758BA',
             }}
             fullWidth
             onClick={getQuestionData}>

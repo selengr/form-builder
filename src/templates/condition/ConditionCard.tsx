@@ -81,7 +81,7 @@ export function ConditionCard({
             type="button"
             onClick={handleOpenMenu}
             disabled={disabled}
-            className="flex items-center absolute left-3 justify-center w-9 h-9 rounded-[10px] hover:bg-[#F7F7FF] transition-colors"
+            className="flex z-50 items-center absolute left-3 justify-center w-9 h-9 rounded-[10px] hover:bg-[#F7F7FF] transition-colors"
             aria-label="منو"
           >
             <PhDotsThreeVerticalBold color="#9EA3AC" fontWeight="bold" fontSize="2rem" />

@@ -73,7 +73,6 @@ export default function SubConditionDivider({
                 onChange={() => field.onChange('||')}
                 value="||"
                 size="small"
-                disabled
                 sx={{
                   p: 0.25,
                   color: '#DDE1E6',

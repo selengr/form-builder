@@ -1,4 +1,5 @@
 // this is not server action
+'use server' // temprarly
 import { serverApi } from '@/services/axios/serverApi';
 
 export async function getConditionListAction(formId: string) {

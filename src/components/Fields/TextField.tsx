@@ -185,15 +185,12 @@ const DesignerComponent = memo(function DesignerComponent({ elementInstance }: {
     : designerBtnLabel;
 
   return (
-    <div className="flex items-start flex-col overflow-hidden min-w-0 w-full" dir="rtl">
-      <p
-        dir="rtl"
-        className="text-[15px] overflow-hidden text-ellipsis w-full text-[#2A2A2A]"
-        style={{ textWrap: 'nowrap', fontWeight: '700' }}
-      >
+  <div className="flex items-start flex-col overflow-hidden min-w-0 w-full max-w-[90%]" dir="rtl">
+      <p dir="rtl" className="text-[13px] overflow-hidden text-ellipsis w-full line-clamp-1 text-[#161616] max-w-[calc(100%-75px)]">
+       
         {labelText}
       </p>
-      <p className="text-xs text-[#888]">#{tagLabel}</p>
+      <p className="text-[11px] text-[#6F6F6F]">#{tagLabel}</p>
     </div>
   );
 });

@@ -312,12 +312,16 @@ export const useParticipateForm = () => {
         return;
       }
 
+      const q = res.data?.questionModel;
+      if (q?.isFirstQuestion) {
+        setFirstQuestionId(q.questionId);
+      }
       setTakePartId(res.data.takePart);
       setFormName(res.data?.formName);
-      if (res.data.questionModel.questionId) {
-        initializeQuestion(res.data.questionModel, res.data.questionModel.oldAnswers ?? []);
+      if (q.questionId) {
+        initializeQuestion(q, q.oldAnswers ?? []);
       } else {
-        initializeQuestion(res.data.questionModel, res.data.userAnswerModel?.answersModel ?? []);
+        initializeQuestion(q, res.data.userAnswerModel?.answersModel ?? []);
       }
     } catch (error: any) {
       toast.error(error?.response?.data?.message?.[0]?.title || 'انجام عملیات با خطا مواجه شد');
@@ -501,8 +505,14 @@ export const useParticipateForm = () => {
 
       const q = res.data.questionModel;
       const a = res.data.oldAnswers?.answersModel ?? [];
+
       initializeQuestion(q, a);
-      setIsValid(true);
+      if (q?.isFirstQuestion) {
+        setFirstQuestionId(q.questionId);
+        setIsValid(true);
+      } else {
+        setIsValid(true);
+      }
     } catch (error: any) {
       toast.error(error?.message || 'خطا در بازگشت به سوال قبلی', {
         className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,

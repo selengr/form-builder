@@ -38,11 +38,11 @@ const DesignerComponent = memo(function DesignerComponent({ elementInstance }: {
   const startPageMsg = elementInstance?.startPageMsg;
 
   return (
-    <div className="flex items-start flex-col overflow-hidden min-w-0 w-full" dir="rtl">
-      <p dir='rtl' className='text-base overflow-hidden text-ellipsis w-full' style={{ textWrap: 'nowrap', fontWeight: '700' }}>
-        {startPageMsg}
+     <div className="flex items-start flex-col overflow-hidden min-w-0 w-full max-w-[90%]" dir="rtl">
+      <p dir="rtl" className="text-[13px] overflow-hidden text-ellipsis w-full line-clamp-1 text-[#161616] max-w-[calc(100%-75px)]">
+         {startPageMsg}
       </p>
-      <p className='text-xs'>#{label}</p>
+      <p className='text-[11px]  text-[#6F6F6F]'>#{label}</p>
     </div>
   );
 });

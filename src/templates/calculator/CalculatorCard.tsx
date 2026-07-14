@@ -125,7 +125,7 @@ export function CalculatorCard({
           type="button"
           onClick={openMenu}
           disabled={disabled}
-          className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-9 h-9 rounded-[10px] hover:bg-[#F7F7FF] transition-colors"
+          className="absolute left-3 z-50 top-1/2 -translate-y-1/2 flex items-center justify-center w-9 h-9 rounded-[10px] hover:bg-[#F7F7FF] transition-colors"
           aria-label="منو"
         >
           <PhDotsThreeVerticalBold color="#9EA3AC" fontSize="2rem" />

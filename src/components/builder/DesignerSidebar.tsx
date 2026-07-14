@@ -62,16 +62,16 @@ const DesignerSidebar = memo(function DesignerSidebar({
             <SidebarBtnLogic
               title="محاسبه‌گر جدید"
               icon="/images/calc/ic_calculator.svg"
+              onClick={onCreateCalculator}
               logicType="calculator"
               disabled={disabled}
-              onClick={onCreateCalculator}
             />
             <SidebarBtnLogic
               title="شرط جدید"
               icon="/images/calc/ic_condition.svg"
+              onClick={onCreateCondition}
               logicType="condition"
               disabled={disabled}
-              onClick={onCreateCondition}
             />
           </>
         )}

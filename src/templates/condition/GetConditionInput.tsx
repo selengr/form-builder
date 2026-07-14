@@ -82,7 +82,7 @@ export const getCondition = (type: string, operator: string, values: any) => {
       return [
         { value: '#equalMultiChoiceSingle', label: 'برابر با' },
         { value: '!#equalMultiChoiceSingle', label: 'نابرابر با' },
-        { value: '!#lessThanMultiChoiceSingle', label: 'بزرگتر از' },
+        { value: '#greaterThanMultiChoiceSingle', label: 'بزرگتر از' },
         { value: '#lessThanMultiChoiceSingle', label: 'کوچکتر از' },
       ];
 
@@ -190,25 +190,25 @@ export const getInput = (
     case 'MULTIPLE_CHOICE_VALUE_#equalMultiChoiceSingle':
     case 'MULTIPLE_CHOICE_VALUE_!#equalMultiChoiceSingle':
     case 'MULTIPLE_CHOICE_VALUE_#lessThanMultiChoiceSingle':
-    case 'MULTIPLE_CHOICE_VALUE_!#lessThanMultiChoiceSingle':
+    case 'MULTIPLE_CHOICE_VALUE_#greaterThanMultiChoiceSingle':
       return <TextFieldController name={field.name} type='number' sx={{ width: '100%' }} />;
 
     case 'MULTIPLE_CHOICE_QUESTION_#equalMultiChoiceSingle':
     case 'MULTIPLE_CHOICE_QUESTION_!#equalMultiChoiceSingle':
     case 'MULTIPLE_CHOICE_QUESTION_#lessThanMultiChoiceSingle':
-    case 'MULTIPLE_CHOICE_QUESTION_!#lessThanMultiChoiceSingle':
+    case 'MULTIPLE_CHOICE_QUESTION_#greaterThanMultiChoiceSingle':
       return <SelectController name={field.name} options={onlySomeQuestionsOptions} isLoading={isFetchingOnlyAllQuestions} placeholder="مقدار" sx={{ minWidth: 215, width: '100%' }} />;
 
     case 'MULTIPLE_CHOICE_CALCULATION_#equalMultiChoiceSingle':
     case 'MULTIPLE_CHOICE_CALCULATION_!#equalMultiChoiceSingle':
     case 'MULTIPLE_CHOICE_CALCULATION_#lessThanMultiChoiceSingle':
-    case 'MULTIPLE_CHOICE_CALCULATION_!#lessThanMultiChoiceSingle':
+    case 'MULTIPLE_CHOICE_CALCULATION_#greaterThanMultiChoiceSingle':
       return <SelectController name={field.name} options={onlyAllCalculationOptions} isLoading={isFetchingOnlyAllCalculation} placeholder="مقدار" sx={{ minWidth: 215, width: '100%' }} />;
 
     case 'MULTIPLE_CHOICE_OPTION_#equalMultiChoiceSingle':
     case 'MULTIPLE_CHOICE_OPTION_!#equalMultiChoiceSingle':
     case 'MULTIPLE_CHOICE_OPTION_#lessThanMultiChoiceSingle':
-    case 'MULTIPLE_CHOICE_OPTION_!#lessThanMultiChoiceSingle': {
+    case 'MULTIPLE_CHOICE_OPTION_#greaterThanMultiChoiceSingle': {
       const typeParts = type.split('*');
 
       const targetUnicName = typeParts[1]?.split('@')[0];

@@ -1,6 +1,10 @@
 'use client';
 
+import Image from 'next/image';
 import { useCallback, useState } from 'react';
+import { IconButton } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 import {
   UnifiedListGridPage,
   createServerActionFetcher,
@@ -25,6 +29,7 @@ const packagingRequestFetcher = createServerActionFetcher<PackagingRequestListIt
 });
 
 export default function PackagingRequestListGridWrapper() {
+  const router = useRouter();
   const [draftFilter, setDraftFilter] = useState<SearchQueryFilter>(DEFAULT_FILTER);
   const [appliedFilter, setAppliedFilter] = useState<SearchQueryFilter>(DEFAULT_FILTER);
 
@@ -99,11 +104,26 @@ export default function PackagingRequestListGridWrapper() {
         CardComponent: PackagingRequestListCard,
         SkeletonComponent: PackagingRequestListCardSkeleton,
         FilterComponent: FilterSlot,
+        CreateButton: (
+          <div className="min-w-[50px] w-[50px] h-full">
+            <IconButton
+              onClick={() => router.push('/user-packaging-request/create')}
+              sx={{
+                width: '50px',
+                height: '50px',
+                borderRadius: '16px',
+                border: '1px solid #1758BA',
+              }}>
+              <Image src={PlusIcon} alt="" width={22} height={22} />
+            </IconButton>
+          </div>
+        ),
       }}
       fetcher={packagingRequestFetcher}
       searchBoxList={createDefaultSearchBoxList('name')}
       searchQueryFilter={appliedFilter}
       skeletonHeaderName="تعداد کل درخواست‌ها"
+      loadingHasCreateBtn
     />
   );
 }

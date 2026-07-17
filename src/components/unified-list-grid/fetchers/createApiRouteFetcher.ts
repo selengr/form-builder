@@ -5,12 +5,12 @@ import {
 import { buildFilterRestrictions } from '../utils/filterRestrictions';
 import { applySearchValue } from '../utils/searchBoxList';
 
-export function createApiRouteFetcher(
+export function createApiRouteFetcher<TItem = unknown>(
   apiPath: string,
   options?: {
     filterFieldMappings?: Parameters<typeof buildFilterRestrictions>[1];
   },
-): UnifiedListGridFetcher {
+): UnifiedListGridFetcher<TItem> {
   return async ({
     pageParam,
     searchValue,
@@ -78,7 +78,7 @@ export function createApiRouteFetcher(
 
     return {
       success: true,
-      data: payload.data,
+      data: payload.data as TItem[],
       total: payload.total,
     };
   };

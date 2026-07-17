@@ -19,7 +19,7 @@ const DEFAULT_FILTER: SearchQueryFilter = {
   fieldOperation: 'DSC',
 };
 
-const testFetcher = createApiRouteFetcher('/api/test-list-grid', {
+const testFetcher = createApiRouteFetcher<TestListGridItem>('/api/test-list-grid', {
   filterFieldMappings: [
     { stateKey: 'type', fieldName: 'typeEnum' },
     { stateKey: 'status', fieldName: 'status' },

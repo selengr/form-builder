@@ -20,7 +20,7 @@ const DEFAULT_FILTER: SearchQueryFilter = {
   fieldOperation: 'DSC',
 };
 
-const packagingRequestFetcher = createServerActionFetcher(API_URL, {
+const packagingRequestFetcher = createServerActionFetcher<PackagingRequestListItem>(API_URL, {
   filterFieldMappings: [{ stateKey: 'status', fieldName: 'status' }],
 });
 

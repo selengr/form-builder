@@ -6,12 +6,12 @@ import {
 import { buildFilterRestrictions } from '../utils/filterRestrictions';
 import { applySearchValue } from '../utils/searchBoxList';
 
-export function createServerActionFetcher(
+export function createServerActionFetcher<TItem = unknown>(
   url: string,
   options?: {
     filterFieldMappings?: Parameters<typeof buildFilterRestrictions>[1];
   },
-): UnifiedListGridFetcher {
+): UnifiedListGridFetcher<TItem> {
   return async ({
     pageParam,
     searchValue,
@@ -54,7 +54,7 @@ export function createServerActionFetcher(
 
     return {
       success: true,
-      data: result.data,
+      data: result.data as TItem[],
       total: result.total,
     };
   };

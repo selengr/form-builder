@@ -56,6 +56,7 @@ const QuestionGroup = memo(function QuestionGroup({
 
   return (
     <div
+      dir="rtl"
       ref={droppable.setNodeRef}
       className={`flex flex-col w-full h-full min-h-0 rounded-2xl border border-[#DDE1E6] bg-[#F8FAFC] overflow-hidden ${
         disabled ? 'opacity-50 pointer-events-none' : ''

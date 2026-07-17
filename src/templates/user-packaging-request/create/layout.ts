@@ -1,0 +1,1 @@
+export const CREATE_PAGE_CONTENT_MAX_WIDTH = '470px';

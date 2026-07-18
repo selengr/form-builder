@@ -227,7 +227,12 @@ export default function CreatePackagingRequestForm() {
               <Typography variant="subtitle2" fontWeight={700}>
                 توضیحات (اختیاری):
               </Typography>
-              <RHFTextField multiline rows={3} name="newComment" />
+              <RHFTextField multiline rows={3} name="newComment" 
+                  sx={{
+                    '& .MuiInputBase-root': {
+                      borderRadius: '10px',
+                    },
+                  }} />
             </Stack>
           </Box>
         </Box>
@@ -237,11 +242,10 @@ export default function CreatePackagingRequestForm() {
             flexShrink: 0,
             width: '100%',
             bgcolor: 'white',
-            borderTop: '1px solid #E5E7EB',
             pt: 2,
             pb: { xs: 2, sm: 2.5 },
           }}>
-          <Box sx={{ ...centeredContentSx, display: 'flex', gap: 2 }}>
+          <Box sx={{ ...centeredContentSx, maxWidth : "450px", display: 'flex', gap: 2 }}>
             <Button
               type="submit"
               fullWidth

@@ -120,6 +120,7 @@ export default function CreatePackagingRequestForm() {
           minHeight: 0,
           width: '100%',
           overflow: 'hidden',
+          marginTop : 4
         }}>
         <Box
           sx={{
@@ -140,7 +141,7 @@ export default function CreatePackagingRequestForm() {
             }}>
             <Stack spacing={1}>
               <Typography variant="subtitle2" fontWeight={600} fontSize="15px">
-                نام درخواست:
+                عنوان:
               </Typography>
               <RHFTextField
                 name="name"
@@ -154,7 +155,7 @@ export default function CreatePackagingRequestForm() {
               />
             </Stack>
 
-            <Box display="flex" flexDirection="column" gap="6px" width="100%">
+            <Box display="flex" flexDirection="column" gap="6px" width="100%" mb={2} mt={2}>
               <Typography variant="subtitle2" fontWeight={700}>
                 جامعه هدف:
               </Typography>
@@ -173,15 +174,25 @@ export default function CreatePackagingRequestForm() {
               </RHFSelect>
             </Box>
 
-            <Box display="flex" flexDirection="column" gap="6px" width="100%">
+            <DocumentListField
+              control={control}
+              register={register}
+              setValue={setValue}
+              clearErrors={clearErrors}
+              errors={errors}
+            />
+
+
+<Box display="flex" flexDirection="column" gap="6px" width="100%">
               <Typography variant="subtitle2" fontWeight={700}>
-                دسته بند‌ی‌ها:
+                دسته بند‌ی‌ها (اختیاری):
               </Typography>
               <RHFMultiSelectV0
                 sx={{
                   '& .MuiInputBase-root': {
                     bgcolor: '#fff',
                     paddingY: '8px',
+                    borderRadius: '10px',
                   },
                 }}
                 chip
@@ -199,6 +210,7 @@ export default function CreatePackagingRequestForm() {
                   '& .MuiInputBase-root': {
                     bgcolor: '#fff',
                     paddingY: '8px',
+                    borderRadius: '10px',
                   },
                 }}
                 chip
@@ -211,15 +223,7 @@ export default function CreatePackagingRequestForm() {
               />
             </Box>
 
-            <DocumentListField
-              control={control}
-              register={register}
-              setValue={setValue}
-              clearErrors={clearErrors}
-              errors={errors}
-            />
-
-            <Stack spacing={1}>
+            <Stack spacing={1} mt={2} mb={3}>
               <Typography variant="subtitle2" fontWeight={700}>
                 توضیحات (اختیاری):
               </Typography>

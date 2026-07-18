@@ -78,6 +78,23 @@ export default function DocumentListField({
               border="1px dashed #1758BA"
               borderRadius="10px"
               p={1.5}>
+                              <Box>
+                <RHFTextField
+                  name={`documentList.${index}.title`}
+                  placeholder="عنوان مدرک را وارد کنید"
+                  sx={{
+                    '& .MuiInputBase-root': {
+                      borderRadius: '10px',
+                      height: 40
+                    },
+                  }}
+                />
+                {/* {titleError && (
+                  <Typography color="error" fontSize={12} mt={0.5}>
+                    {titleError}
+                  </Typography>
+                )} */}
+              </Box>
               <Box display="flex" alignItems="flex-start" justifyContent="space-between" gap={2}>
                 <Box flex={1}>
                   <UppyUploader
@@ -93,6 +110,7 @@ export default function DocumentListField({
                   )}
                 </Box>
 
+                  {fields.length > 1 &&
                 <IconButton
                   aria-label="حذف مدرک"
                   disabled={fields.length <= 1}
@@ -100,31 +118,13 @@ export default function DocumentListField({
                   sx={{
                     borderRadius: '10px',
                     border: '1px solid #FA4D56',
-                    color: '#FA4D56',
+                    color: '#FA4D56' 
                   }}>
                   <HiOutlineTrash size="1.5rem" color="#FA4D56" />
                 </IconButton>
+                }
               </Box>
 
-              <Box>
-                <Typography variant="subtitle2" fontWeight={600} fontSize={14} mb={0.5}>
-                  نام مدرک:
-                </Typography>
-                <RHFTextField
-                  name={`documentList.${index}.title`}
-                  placeholder="عنوان مدرک را وارد کنید"
-                  sx={{
-                    '& .MuiInputBase-root': {
-                      borderRadius: '10px',
-                    },
-                  }}
-                />
-                {titleError && (
-                  <Typography color="error" fontSize={12} mt={0.5}>
-                    {titleError}
-                  </Typography>
-                )}
-              </Box>
             </Box>
           );
         })}

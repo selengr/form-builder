@@ -21,7 +21,7 @@ export async function getUserPackagingRequestTargetLabelAction() {
   };
 
   const url =
-    `/admin/packaging/target-label/custom-combo?customComboFilterModel=${encodeURIComponent(
+    `/user/packaging-request/target-label-custom-combo?customComboFilterModel=${encodeURIComponent(
       JSON.stringify(customComboFilterModel),
     )}`;
 

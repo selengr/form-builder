@@ -6,7 +6,7 @@ export interface CreatePackagingRequestPayload {
   name: string;
   targetLabelEnum: string;
   documentList: Array<{ title: string; uuid: string }>;
-  formCategorysModel: {
+  formCategorysModel?: {
     categoryId: number[];
   };
   newComment?: string;

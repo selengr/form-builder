@@ -3,14 +3,14 @@ export type PackagingRequestStatus =
   | 'ACCEPTED'
   | 'REJECTED'
   | 'REVISION'
-  | 'PUBLISH';
+  // | 'PUBLISH';
 
 export const packagingRequestStatusLabels: Record<PackagingRequestStatus, string> = {
   WAITING_FOR_PROCESS: 'در انتظار بررسی',
   ACCEPTED: 'تایید شده',
   REJECTED: 'رد شده',
   REVISION: 'نیاز به اصلاح',
-  PUBLISH: 'منتشر شده',
+  // PUBLISH: 'منتشر شده',
 };
 
 export function getPackagingRequestStatusLabel(status?: string) {

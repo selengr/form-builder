@@ -85,9 +85,9 @@ export default function CreatePackagingRequestForm() {
       name: data.name,
       targetLabelEnum: data.targetLabelEnum,
       documentList: data.documentList.map(({ title, uuid }) => ({ title, uuid })),
-      formCategorysModel: {
-        categoryId: allCategoryIds,
-      },
+      ...(allCategoryIds.length > 0
+        ? { formCategorysModel: { categoryId: allCategoryIds } }
+        : {}),
       ...(data.newComment?.trim() ? { newComment: data.newComment.trim() } : {}),
     };
 

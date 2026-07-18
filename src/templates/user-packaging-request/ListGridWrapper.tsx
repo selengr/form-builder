@@ -92,7 +92,7 @@ export default function PackagingRequestListGridWrapper() {
   return (
     <UnifiedListGridPage<PackagingRequestListItem>
       config={{
-        title: 'درخواست‌های بسته ارزیابی',
+        title: 'توسعه آزمون شما',
         queryKey: 'user_packaging_request_list',
         textTotal: ['تعداد کل درخواست‌ها', 'عدد'],
         searchField: 'name',

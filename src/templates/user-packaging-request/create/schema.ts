@@ -17,10 +17,8 @@ export const createPackagingRequestSchema = z.object({
         .max(50, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' }),
     ),
   targetLabelEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
-  categoryIds: z.array(z.string()).min(1, { message: 'لطفا حداقل یک دسته بندی را انتخاب کنید' }),
-  subCategoryIds: z
-    .array(z.string())
-    .min(1, { message: 'لطفا حداقل یک زیردسته را انتخاب کنید' }),
+  categoryIds: z.array(z.string()),
+  subCategoryIds: z.array(z.string()),
   documentList: z
     .array(documentItemSchema)
     .min(1, { message: 'حداقل یک مدرک باید بارگذاری شود' })

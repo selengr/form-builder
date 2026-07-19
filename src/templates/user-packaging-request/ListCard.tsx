@@ -2,10 +2,11 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { IconButton } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import { InfoRow } from '@/components/common/infoRow';
 import { UnifiedListGridCardProps } from '@/components/unified-list-grid';
 import EditIcon from '@/../public/images/home-page/edit-2.svg';
+import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
 import {
   getPackagingRequestStatusLabel,
   getPackagingRequestStatusStyle,
@@ -17,15 +18,35 @@ export default function PackagingRequestListCard({
 }: UnifiedListGridCardProps<PackagingRequestListItem>) {
   const router = useRouter();
   const statusStyle = getPackagingRequestStatusStyle(data.status);
+  const canEdit = data.status === 'REVISION';
 
   return (
     <div className="relative flex flex-col gap-3 rounded-2xl border border-[#DDE1E6] p-5 shadow-sm w-full">
-      <IconButton
-        color="primary"
-        onClick={() => router.push(`/user-packaging-request/${data.id}/edit`)}
-        sx={{ position: 'absolute', top: 12, right: 12, padding: 0 }}>
-        <Image src={EditIcon} alt="edit" width={24} height={24} />
-      </IconButton>
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 12,
+          right: 12,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 0.5,
+        }}>
+        <IconButton
+          color="primary"
+          onClick={() => router.push(`/user-packaging-request/${data.id}/view`)}
+          sx={{ padding: 0 }}>
+          <CodiconEye style={{ width: 24, height: 24 }} />
+        </IconButton>
+
+        {canEdit && (
+          <IconButton
+            color="primary"
+            onClick={() => router.push(`/user-packaging-request/${data.id}/edit`)}
+            sx={{ padding: 0 }}>
+            <Image src={EditIcon} alt="edit" width={24} height={24} />
+          </IconButton>
+        )}
+      </Box>
 
       <InfoRow label="نام" value={data.name} bold />
       <InfoRow

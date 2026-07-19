@@ -3,9 +3,15 @@
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import { Box, IconButton, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import CreatePackagingRequestForm from '@/templates/user-packaging-request/create/CreatePackagingRequestForm';
+import ViewPackagingRequestForm from './ViewPackagingRequestForm';
 
-export default function CreatePackagingRequestPageContent() {
+interface ViewPackagingRequestPageContentProps {
+  requestId: number;
+}
+
+export default function ViewPackagingRequestPageContent({
+  requestId,
+}: ViewPackagingRequestPageContentProps) {
   const router = useRouter();
 
   return (
@@ -38,13 +44,13 @@ export default function CreatePackagingRequestPageContent() {
             <MdOutlineKeyboardArrowRight color="#292D32" />
           </IconButton>
           <Typography fontSize={16} fontWeight={700} color="#161616">
-             درخواست آنلاین سازی آزمون جدید
+            مشاهده درخواست آنلاین سازی آزمون
           </Typography>
         </Box>
       </Box>
 
       <Box sx={{ flex: 1, minHeight: 0, width: '100%', display: 'flex', flexDirection: 'column' }}>
-        <CreatePackagingRequestForm />
+        <ViewPackagingRequestForm requestId={requestId} />
       </Box>
     </Box>
   );

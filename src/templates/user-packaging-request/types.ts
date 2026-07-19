@@ -15,7 +15,7 @@ export interface PackagingRequestDocument {
 
 export interface PackagingRequestComment {
   isAdmin: boolean;
-  comment: string;
+  msg: string;
 }
 
 export interface PackagingRequestDetail {

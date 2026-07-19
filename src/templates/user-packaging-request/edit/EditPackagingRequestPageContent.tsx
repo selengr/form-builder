@@ -22,7 +22,7 @@ export default function EditPackagingRequestPageContent({
         bgcolor: 'white',
         borderRadius: '16px',
         mx: { xs: 0, sm: 1 },
-        my: { xs: 0, sm: 2 },
+        my: { xs: 0, sm: 1 },
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',

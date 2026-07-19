@@ -45,7 +45,7 @@ export default function CommentChatList({ comments }: CommentChatListProps) {
 
           return (
             <Box
-              key={`${index}-${item.comment.slice(0, 12)}`}
+              key={`${index}-${item.msg.slice(0, 12)}`}
               sx={{
                 display: 'flex',
                 justifyContent: isAdmin ? 'flex-start' : 'flex-end',
@@ -64,7 +64,7 @@ export default function CommentChatList({ comments }: CommentChatListProps) {
                   {isAdmin ? 'ادمین' : 'شما'}
                 </Typography>
                 <Typography fontSize={14} color="#161616" sx={{ whiteSpace: 'pre-wrap' }}>
-                  {item.comment}
+                  {item.msg}
                 </Typography>
               </Box>
             </Box>

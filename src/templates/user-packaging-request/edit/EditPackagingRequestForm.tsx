@@ -19,7 +19,10 @@ import {
 import { useGetUserPackagingRequestById } from '../hooks/useGetUserPackagingRequestById';
 import { useUpdateUserPackagingRequest } from '../hooks/useUpdateUserPackagingRequest';
 import { useGetUserPackagingRequestTargetLabel } from '../hooks/useGetUserPackagingRequestTargetLabel';
-import { useGetUserPackagingRequestParentCategory } from '../hooks/useGetUserPackagingRequestParentCategory';
+import {
+  useGetUserPackagingRequestParentCategory,
+  UserPackagingRequestCategorySelectOption,
+} from '../hooks/useGetUserPackagingRequestParentCategory';
 import { useGetUserPackagingRequestSubCategory } from '../hooks/useGetUserPackagingRequestSubCategory';
 
 const LIST_PAGE_PATH = '/user-packaging-request';
@@ -37,7 +40,7 @@ interface EditPackagingRequestFormProps {
 
 export default function EditPackagingRequestForm({ requestId }: EditPackagingRequestFormProps) {
   const router = useRouter();
-  const categoriesInitializedRef = useRef(false);
+  const categoriesInitializedRef = useRef('');
   const { data, isLoading, isError, error } = useGetUserPackagingRequestById(requestId);
   const { mutate, isPending } = useUpdateUserPackagingRequest({ push: router.push });
   const { targetLabels } = useGetUserPackagingRequestTargetLabel(Boolean(data));
@@ -62,20 +65,35 @@ export default function EditPackagingRequestForm({ requestId }: EditPackagingReq
     setValue,
     clearErrors,
     reset,
+    watch,
     formState: { isSubmitting, errors },
   } = methods;
 
+  const watchCategoryIds = watch('categoryIds');
+  const watchSubCategoryIds = watch('subCategoryIds');
+
   useEffect(() => {
-    categoriesInitializedRef.current = false;
+    categoriesInitializedRef.current = '';
   }, [requestId]);
 
   useEffect(() => {
     if (!data) return;
 
+    const allIds = data.formCategorysModel?.categoryId?.map(String) ?? [];
+    let categoryIds: string[] = [];
+    let subCategoryIds: string[] = allIds;
+
+    if (allIds.length && categories?.length) {
+      categoryIds = allIds.filter((id) =>
+        categories.some((category: UserPackagingRequestCategorySelectOption) => category.value === id),
+      );
+      subCategoryIds = allIds.filter((id) => !categoryIds.includes(id));
+    }
+
     reset({
       name: data.name,
-      categoryIds: [],
-      subCategoryIds: [],
+      categoryIds,
+      subCategoryIds,
       documentList: data.documentList.length
         ? data.documentList.map((document) => ({
             id: document.id,
@@ -86,34 +104,25 @@ export default function EditPackagingRequestForm({ requestId }: EditPackagingReq
         : [{ title: '', uuid: '' }],
       newComment: '',
     });
-  }, [data, reset]);
+  }, [data, categories, reset]);
 
   useEffect(() => {
-    if (!data || !categories?.length || categoriesInitializedRef.current) return;
+    if (!data || !categories?.length) return;
 
     const allIds = data.formCategorysModel?.categoryId?.map(String) ?? [];
-    if (!allIds.length) {
-      categoriesInitializedRef.current = true;
-      return;
-    }
+    if (!allIds.length) return;
 
-    const parentIds = allIds.filter((id) => categories.some((category) => category.value === id));
+    const parentIds = allIds.filter((id) =>
+      categories.some((category: UserPackagingRequestCategorySelectOption) => category.value === id),
+    );
+    if (!parentIds.length) return;
 
-    if (!parentIds.length) {
-      setValue('subCategoryIds', allIds);
-      categoriesInitializedRef.current = true;
-      return;
-    }
+    const fetchKey = parentIds.join(',');
+    if (categoriesInitializedRef.current === fetchKey) return;
 
-    setValue('categoryIds', parentIds);
-
-    mutation.mutate(parentIds, {
-      onSuccess: () => {
-        setValue('subCategoryIds', allIds.filter((id) => !parentIds.includes(id)));
-        categoriesInitializedRef.current = true;
-      },
-    });
-  }, [data, categories, mutation, setValue]);
+    categoriesInitializedRef.current = fetchKey;
+    mutation.mutate(parentIds);
+  }, [data, categories, mutation]);
 
   const targetLabelCaption = useMemo(() => {
     if (!data?.targetLabelEnum) return '—';
@@ -232,6 +241,8 @@ export default function EditPackagingRequestForm({ requestId }: EditPackagingReq
               />
 
               <ReadOnlyCategoryFields
+                categoryIds={watchCategoryIds}
+                subCategoryIds={watchSubCategoryIds}
                 categories={categories ?? []}
                 subCategories={subCategories ?? []}
                 isFetchingCategory={isFetchingCategory}

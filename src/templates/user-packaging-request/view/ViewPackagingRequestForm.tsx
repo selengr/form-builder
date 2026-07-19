@@ -80,38 +80,56 @@ export default function ViewPackagingRequestForm({ requestId }: ViewPackagingReq
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
-        marginTop: 4,
+        '& > form': {
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+          minHeight: 0,
+          overflow: 'hidden',
+          width: '100%',
+        },
       }}>
       <FormProvider methods={methods}>
         <Box
           sx={{
+            display: 'flex',
+            flexDirection: 'column',
             flex: 1,
             minHeight: 0,
-            overflowY: 'auto',
             width: '100%',
-            pb: 3,
+            overflow: 'hidden',
+            marginTop: 4,
           }}>
           <Box
             sx={{
-              ...centeredContentSx,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 2,
-              direction: 'ltr',
-              py: 1,
+              flex: 1,
+              minHeight: 0,
+              overflowY: 'auto',
+              width: '100%',
+              pb: 3,
             }}>
-            <ReadOnlyFormField label="عنوان:" value={data.name} />
-            <ReadOnlyFormField label="جامعه هدف:" value={targetLabelCaption} />
-            <DocumentListView documents={data.documentList} />
-            <ReadOnlyCategoryFields
-              categoryIds={watchCategoryIds}
-              subCategoryIds={watchSubCategoryIds}
-              categories={categories ?? []}
-              subCategories={subCategories ?? []}
-              isFetchingCategory={isFetchingCategory}
-              isFetchingSubCategory={isFetchingSubCategory}
-            />
-            <CommentChatList comments={data.commentList ?? []} />
+            <Box
+              sx={{
+                ...centeredContentSx,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2,
+                direction: 'ltr',
+                py: 1,
+              }}>
+              <ReadOnlyFormField label="عنوان:" value={data.name} />
+              <ReadOnlyFormField label="جامعه هدف:" value={targetLabelCaption} />
+              <DocumentListView documents={data.documentList} />
+              <ReadOnlyCategoryFields
+                categoryIds={watchCategoryIds}
+                subCategoryIds={watchSubCategoryIds}
+                categories={categories ?? []}
+                subCategories={subCategories ?? []}
+                isFetchingCategory={isFetchingCategory}
+                isFetchingSubCategory={isFetchingSubCategory}
+              />
+              <CommentChatList comments={data.commentList ?? []} />
+            </Box>
           </Box>
         </Box>
       </FormProvider>

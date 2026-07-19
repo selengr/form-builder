@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import FormProvider from '@/components/hook-form/FormProvider';
 import { CREATE_PAGE_CONTENT_MAX_WIDTH } from '../create/layout';
@@ -13,7 +12,7 @@ import DocumentListView from './DocumentListView';
 import { useGetUserPackagingRequestById } from '../hooks/useGetUserPackagingRequestById';
 import { useGetUserPackagingRequestTargetLabel } from '../hooks/useGetUserPackagingRequestTargetLabel';
 import { useGetUserPackagingRequestParentCategory } from '../hooks/useGetUserPackagingRequestParentCategory';
-import { useGetUserPackagingRequestSubCategory } from '../hooks/useGetUserPackagingRequestSubCategory';
+import { usePackagingRequestCategoryForm } from '../hooks/usePackagingRequestCategoryForm';
 
 const LIST_PAGE_PATH = '/user-packaging-request';
 
@@ -28,64 +27,18 @@ interface ViewPackagingRequestFormProps {
   requestId: number;
 }
 
-type ViewCategoryFormValues = {
-  categoryIds: string[];
-  subCategoryIds: string[];
-};
-
 export default function ViewPackagingRequestForm({ requestId }: ViewPackagingRequestFormProps) {
   const router = useRouter();
-  const categoriesInitializedRef = useRef('');
   const { data, isLoading, isError, error } = useGetUserPackagingRequestById(requestId);
   const { targetLabels } = useGetUserPackagingRequestTargetLabel(Boolean(data));
   const { categories, isFetchingCategory } = useGetUserPackagingRequestParentCategory();
-  const { mutation, subCategories } = useGetUserPackagingRequestSubCategory();
-
-  const methods = useForm<ViewCategoryFormValues>({
-    defaultValues: {
-      categoryIds: [],
-      subCategoryIds: [],
-    },
-  });
-
-  const { reset, watch } = methods;
-  const watchCategoryIds = watch('categoryIds');
-  const watchSubCategoryIds = watch('subCategoryIds');
-
-  useEffect(() => {
-    categoriesInitializedRef.current = '';
-  }, [requestId]);
-
-  useEffect(() => {
-    if (!data) return;
-
-    const allIds = data.formCategorysModel?.categoryId?.map(String) ?? [];
-    let categoryIds: string[] = [];
-    let subCategoryIds: string[] = allIds;
-
-    if (allIds.length && categories?.length) {
-      categoryIds = allIds.filter((id) => categories.some((category) => category.value === id));
-      subCategoryIds = allIds.filter((id) => !categoryIds.includes(id));
-    }
-
-    reset({ categoryIds, subCategoryIds });
-  }, [data, categories, reset]);
-
-  useEffect(() => {
-    if (!data || !categories?.length) return;
-
-    const allIds = data.formCategorysModel?.categoryId?.map(String) ?? [];
-    if (!allIds.length) return;
-
-    const parentIds = allIds.filter((id) => categories.some((category) => category.value === id));
-    if (!parentIds.length) return;
-
-    const fetchKey = parentIds.join(',');
-    if (categoriesInitializedRef.current === fetchKey) return;
-
-    categoriesInitializedRef.current = fetchKey;
-    mutation.mutate(parentIds);
-  }, [data, categories, mutation]);
+  const {
+    methods,
+    watchCategoryIds,
+    watchSubCategoryIds,
+    subCategories,
+    isFetchingSubCategory,
+  } = usePackagingRequestCategoryForm(requestId, data, categories);
 
   const targetLabelCaption = useMemo(() => {
     if (!data?.targetLabelEnum) return '—';
@@ -156,7 +109,7 @@ export default function ViewPackagingRequestForm({ requestId }: ViewPackagingReq
               categories={categories ?? []}
               subCategories={subCategories ?? []}
               isFetchingCategory={isFetchingCategory}
-              isFetchingSubCategory={mutation.isPending}
+              isFetchingSubCategory={isFetchingSubCategory}
             />
             <CommentChatList comments={data.commentList ?? []} />
           </Box>

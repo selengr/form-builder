@@ -1,8 +1,12 @@
 'use client';
 
+import { useMemo } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { getUserPackagingRequestSubCategoryAction } from '@actions/user-packaging-request/getUserPackagingRequestSubCategoryAction';
-import { UserPackagingRequestCategoryOption } from './useGetUserPackagingRequestParentCategory';
+import {
+  UserPackagingRequestCategoryOption,
+  UserPackagingRequestCategorySelectOption,
+} from './useGetUserPackagingRequestParentCategory';
 
 export function useGetUserPackagingRequestSubCategory() {
   const mutation = useMutation({
@@ -17,14 +21,17 @@ export function useGetUserPackagingRequestSubCategory() {
     },
   });
 
-  const mapSubCategories = (data: { dataList?: UserPackagingRequestCategoryOption[] } | undefined) =>
-    data?.dataList?.map((item) => ({
-      value: item.value,
-      label: item.caption,
-    }));
+  const subCategories = useMemo<UserPackagingRequestCategorySelectOption[] | undefined>(
+    () =>
+      mutation.data?.dataList?.map((item: UserPackagingRequestCategoryOption) => ({
+        value: item.value,
+        label: item.caption,
+      })),
+    [mutation.data?.dataList],
+  );
 
   return {
     mutation,
-    subCategories: mapSubCategories(mutation.data),
+    subCategories,
   };
 }

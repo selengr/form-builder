@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getUserPackagingRequestParentCategoryAction } from '@actions/user-packaging-request/getUserPackagingRequestParentCategoryAction';
 
@@ -38,11 +39,14 @@ export function useGetUserPackagingRequestParentCategory(): {
     retry: 3,
   });
 
-  const categories: UserPackagingRequestCategorySelectOption[] | undefined =
-    data?.dataList?.map((item: UserPackagingRequestCategoryOption) => ({
-      value: item.value,
-      label: item.caption,
-    }));
+  const categories = useMemo<UserPackagingRequestCategorySelectOption[] | undefined>(
+    () =>
+      data?.dataList?.map((item: UserPackagingRequestCategoryOption) => ({
+        value: item.value,
+        label: item.caption,
+      })),
+    [data?.dataList],
+  );
 
   return {
     isFetchingCategory: isFetching,

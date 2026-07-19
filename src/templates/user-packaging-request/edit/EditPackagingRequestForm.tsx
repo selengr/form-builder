@@ -40,12 +40,16 @@ interface EditPackagingRequestFormProps {
 
 export default function EditPackagingRequestForm({ requestId }: EditPackagingRequestFormProps) {
   const router = useRouter();
-  const categoriesInitializedRef = useRef('');
+  const formInitializedRef = useRef('');
+  const subCategoriesFetchedRef = useRef('');
   const { data, isLoading, isError, error } = useGetUserPackagingRequestById(requestId);
   const { mutate, isPending } = useUpdateUserPackagingRequest({ push: router.push });
   const { targetLabels } = useGetUserPackagingRequestTargetLabel(Boolean(data));
   const { categories, isFetchingCategory } = useGetUserPackagingRequestParentCategory();
   const { mutation, subCategories } = useGetUserPackagingRequestSubCategory();
+
+  const savedCategoryIdsKey = data?.formCategorysModel?.categoryId?.join(',') ?? '';
+  const categoriesKey = categories?.map((category) => category.value).join(',') ?? '';
 
   const methods = useForm<EditPackagingRequestFormValues>({
     resolver: zodResolver(editPackagingRequestSchema),
@@ -73,7 +77,8 @@ export default function EditPackagingRequestForm({ requestId }: EditPackagingReq
   const watchSubCategoryIds = watch('subCategoryIds');
 
   useEffect(() => {
-    categoriesInitializedRef.current = '';
+    formInitializedRef.current = '';
+    subCategoriesFetchedRef.current = '';
   }, [requestId]);
 
   useEffect(() => {
@@ -90,6 +95,10 @@ export default function EditPackagingRequestForm({ requestId }: EditPackagingReq
       subCategoryIds = allIds.filter((id) => !categoryIds.includes(id));
     }
 
+    const initKey = `${data.id}:${data.name}:${JSON.stringify(data.documentList)}:${savedCategoryIdsKey}:${categoriesKey}`;
+    if (formInitializedRef.current === initKey) return;
+    formInitializedRef.current = initKey;
+
     reset({
       name: data.name,
       categoryIds,
@@ -104,25 +113,23 @@ export default function EditPackagingRequestForm({ requestId }: EditPackagingReq
         : [{ title: '', uuid: '' }],
       newComment: '',
     });
-  }, [data, categories, reset]);
+  }, [data, savedCategoryIdsKey, categoriesKey, categories, reset]);
 
   useEffect(() => {
-    if (!data || !categories?.length) return;
+    if (!data || !categories?.length || !savedCategoryIdsKey) return;
 
-    const allIds = data.formCategorysModel?.categoryId?.map(String) ?? [];
-    if (!allIds.length) return;
-
+    const allIds = savedCategoryIdsKey.split(',');
     const parentIds = allIds.filter((id) =>
       categories.some((category: UserPackagingRequestCategorySelectOption) => category.value === id),
     );
     if (!parentIds.length) return;
 
     const fetchKey = parentIds.join(',');
-    if (categoriesInitializedRef.current === fetchKey) return;
+    if (subCategoriesFetchedRef.current === fetchKey) return;
 
-    categoriesInitializedRef.current = fetchKey;
+    subCategoriesFetchedRef.current = fetchKey;
     mutation.mutate(parentIds);
-  }, [data, categories, mutation]);
+  }, [data, savedCategoryIdsKey, categoriesKey, categories, mutation.mutate]);
 
   const targetLabelCaption = useMemo(() => {
     if (!data?.targetLabelEnum) return '—';

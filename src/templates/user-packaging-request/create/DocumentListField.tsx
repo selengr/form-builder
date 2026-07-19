@@ -49,6 +49,12 @@ function isImageLink(link?: string) {
   return /\.(jpeg|jpg|png|gif|webp)$/i.test(link);
 }
 
+function hasExistingDocumentFile(document?: DocumentFormItem, isEditMode?: boolean) {
+  if (!isEditMode || !document) return false;
+
+  return Boolean(document.uuid?.trim() && document.link?.trim());
+}
+
 export default function DocumentListField({
   mode = 'create',
   control,
@@ -109,10 +115,13 @@ export default function DocumentListField({
       <Box display="flex" flexDirection="column" gap={1.5}>
         {fields.map((field, index) => {
           const uuidError = errors.documentList?.[index]?.uuid?.message;
-          const currentDocument = documentList?.[index];
-          const hasExistingFile =
-            mode === 'edit' &&
-            Boolean(currentDocument?.link?.includes('/download/') && currentDocument?.uuid);
+          const watchedDocument = documentList?.[index];
+          const fieldDocument = field as unknown as DocumentFormItem;
+          const currentDocument: DocumentFormItem = {
+            ...fieldDocument,
+            ...(watchedDocument ?? {}),
+          };
+          const hasExistingFile = hasExistingDocumentFile(currentDocument, mode === 'edit');
 
           return (
             <Box
@@ -123,6 +132,12 @@ export default function DocumentListField({
               border="1px dashed #1758BA"
               borderRadius="10px"
               p={1.5}>
+              {mode === 'edit' && (
+                <>
+                  <input type="hidden" {...register(`documentList.${index}.id`)} />
+                  <input type="hidden" {...register(`documentList.${index}.link`)} />
+                </>
+              )}
               <Box>
                 <RHFTextField
                   name={`documentList.${index}.title`}
@@ -140,7 +155,7 @@ export default function DocumentListField({
                 <Box flex={1}>
                   {hasExistingFile ? (
                     <Box display="flex" flexDirection="column" gap={1.5}>
-                      {isImageLink(currentDocument?.link) ? (
+                      {isImageLink(currentDocument.link) ? (
                         <Image
                           width={100}
                           height={100}
@@ -152,7 +167,7 @@ export default function DocumentListField({
                             borderRadius: '12px',
                             objectFit: 'cover',
                           }}
-                          src={getDownloadUrl(currentDocument?.link)}
+                          src={getDownloadUrl(currentDocument.link)}
                         />
                       ) : (
                         <Typography fontSize={13} color="#393939">
@@ -164,7 +179,7 @@ export default function DocumentListField({
                         <Button
                           type="button"
                           variant="outlined"
-                          onClick={() => handleDownload(currentDocument?.link)}
+                          onClick={() => handleDownload(currentDocument.link)}
                           sx={{
                             borderRadius: '8px',
                             borderColor: '#1758BA',

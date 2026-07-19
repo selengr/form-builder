@@ -18,6 +18,8 @@ export const editPackagingRequestSchema = z.object({
         .min(2, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' })
         .max(50, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' }),
     ),
+  categoryIds: z.array(z.string()),
+  subCategoryIds: z.array(z.string()),
   documentList: z
     .array(packagingRequestDocumentSchema)
     .min(1, { message: 'حداقل یک مدرک باید بارگذاری شود' })

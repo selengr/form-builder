@@ -39,6 +39,8 @@ const centeredContentSx = {
   px: { xs: 1.5, sm: 2 },
 };
 
+const LIST_PAGE_PATH = '/user-packaging-request';
+
 export default function CreatePackagingRequestForm() {
   const router = useRouter();
   const { mutate, isPending } = useCreateUserPackagingRequest({ push: router.push });
@@ -175,11 +177,11 @@ export default function CreatePackagingRequestForm() {
             </Box>
 
             <DocumentListField
-              control={control}
-              register={register}
-              setValue={setValue}
-              clearErrors={clearErrors}
-              errors={errors}
+              control={control as never}
+              register={register as never}
+              setValue={setValue as never}
+              clearErrors={clearErrors as never}
+              errors={errors as never}
             />
 
 
@@ -251,6 +253,7 @@ export default function CreatePackagingRequestForm() {
               fullWidth
               disableElevation
               variant="contained"
+              loading={isSubmitting || isPending}
               disabled={isSubmitting || isPending}
               sx={{
                 bgcolor: '#1758BA',
@@ -268,7 +271,7 @@ export default function CreatePackagingRequestForm() {
               variant="outlined"
               fullWidth
               disabled={isSubmitting || isPending}
-              onClick={() => router.push('/user-packaging-request')}
+                onClick={() => router.push(LIST_PAGE_PATH)}
               sx={{
                 bgcolor: 'white',
                 height: '50px',

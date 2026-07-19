@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -11,6 +11,7 @@ import DocumentListField from '../create/DocumentListField';
 import { CREATE_PAGE_CONTENT_MAX_WIDTH } from '../create/layout';
 import CommentChatList from './CommentChatList';
 import ReadOnlyFormField from './ReadOnlyFormField';
+import ReadOnlyCategoryFields from './ReadOnlyCategoryFields';
 import {
   editPackagingRequestSchema,
   EditPackagingRequestFormValues,
@@ -20,7 +21,8 @@ import { useUpdateUserPackagingRequest } from '../hooks/useUpdateUserPackagingRe
 import { useGetUserPackagingRequestTargetLabel } from '../hooks/useGetUserPackagingRequestTargetLabel';
 import { useGetUserPackagingRequestParentCategory } from '../hooks/useGetUserPackagingRequestParentCategory';
 import { useGetUserPackagingRequestSubCategory } from '../hooks/useGetUserPackagingRequestSubCategory';
-import { getPackagingRequestStatusLabel } from '../constants';
+
+const LIST_PAGE_PATH = '/user-packaging-request';
 
 const centeredContentSx = {
   width: '100%',
@@ -35,16 +37,19 @@ interface EditPackagingRequestFormProps {
 
 export default function EditPackagingRequestForm({ requestId }: EditPackagingRequestFormProps) {
   const router = useRouter();
+  const categoriesInitializedRef = useRef(false);
   const { data, isLoading, isError, error } = useGetUserPackagingRequestById(requestId);
   const { mutate, isPending } = useUpdateUserPackagingRequest({ push: router.push });
   const { targetLabels } = useGetUserPackagingRequestTargetLabel(Boolean(data));
-  const { categories } = useGetUserPackagingRequestParentCategory();
+  const { categories, isFetchingCategory } = useGetUserPackagingRequestParentCategory();
   const { mutation, subCategories } = useGetUserPackagingRequestSubCategory();
 
   const methods = useForm<EditPackagingRequestFormValues>({
     resolver: zodResolver(editPackagingRequestSchema),
     defaultValues: {
       name: '',
+      categoryIds: [],
+      subCategoryIds: [],
       documentList: [{ title: '', uuid: '' }],
       newComment: '',
     },
@@ -61,10 +66,16 @@ export default function EditPackagingRequestForm({ requestId }: EditPackagingReq
   } = methods;
 
   useEffect(() => {
+    categoriesInitializedRef.current = false;
+  }, [requestId]);
+
+  useEffect(() => {
     if (!data) return;
 
     reset({
       name: data.name,
+      categoryIds: [],
+      subCategoryIds: [],
       documentList: data.documentList.length
         ? data.documentList.map((document) => ({
             id: document.id,
@@ -75,11 +86,34 @@ export default function EditPackagingRequestForm({ requestId }: EditPackagingReq
         : [{ title: '', uuid: '' }],
       newComment: '',
     });
+  }, [data, reset]);
 
-    if (data.formCategorysModel?.categoryId?.length) {
-      mutation.mutate(data.formCategorysModel.categoryId.map(String));
+  useEffect(() => {
+    if (!data || !categories?.length || categoriesInitializedRef.current) return;
+
+    const allIds = data.formCategorysModel?.categoryId?.map(String) ?? [];
+    if (!allIds.length) {
+      categoriesInitializedRef.current = true;
+      return;
     }
-  }, [data, reset, mutation]);
+
+    const parentIds = allIds.filter((id) => categories.some((category) => category.value === id));
+
+    if (!parentIds.length) {
+      setValue('subCategoryIds', allIds);
+      categoriesInitializedRef.current = true;
+      return;
+    }
+
+    setValue('categoryIds', parentIds);
+
+    mutation.mutate(parentIds, {
+      onSuccess: () => {
+        setValue('subCategoryIds', allIds.filter((id) => !parentIds.includes(id)));
+        categoriesInitializedRef.current = true;
+      },
+    });
+  }, [data, categories, mutation, setValue]);
 
   const targetLabelCaption = useMemo(() => {
     if (!data?.targetLabelEnum) return '—';
@@ -88,18 +122,6 @@ export default function EditPackagingRequestForm({ requestId }: EditPackagingReq
       data.targetLabelEnum
     );
   }, [data?.targetLabelEnum, targetLabels]);
-
-  const categoryCaption = useMemo(() => {
-    const ids = data?.formCategorysModel?.categoryId ?? [];
-    if (!ids.length) return '—';
-
-    const allOptions = [...(categories ?? []), ...(subCategories ?? [])];
-    const labels = ids
-      .map((id) => allOptions.find((option) => Number(option.value) === id)?.label ?? String(id))
-      .filter(Boolean);
-
-    return labels.length ? labels.join('، ') : ids.join('، ');
-  }, [data?.formCategorysModel?.categoryId, categories, subCategories]);
 
   const onSubmit = (formData: EditPackagingRequestFormValues) => {
     mutate({
@@ -128,6 +150,11 @@ export default function EditPackagingRequestForm({ requestId }: EditPackagingReq
         <Typography color="error" textAlign="center">
           {error?.message || 'خطا در بارگذاری درخواست'}
         </Typography>
+        <Box mt={2} display="flex" justifyContent="center">
+          <Button variant="outlined" onClick={() => router.push(LIST_PAGE_PATH)}>
+            بازگشت به لیست
+          </Button>
+        </Box>
       </Box>
     );
   }
@@ -177,11 +204,6 @@ export default function EditPackagingRequestForm({ requestId }: EditPackagingReq
                 direction: 'ltr',
                 py: 1,
               }}>
-              <ReadOnlyFormField
-                label="وضعیت:"
-                value={getPackagingRequestStatusLabel(data.status)}
-              />
-
               <Stack spacing={1}>
                 <Typography variant="subtitle2" fontWeight={600} fontSize="15px">
                   عنوان:
@@ -202,14 +224,19 @@ export default function EditPackagingRequestForm({ requestId }: EditPackagingReq
 
               <DocumentListField
                 mode="edit"
-                control={control}
-                register={register}
-                setValue={setValue}
-                clearErrors={clearErrors}
-                errors={errors}
+                control={control as never}
+                register={register as never}
+                setValue={setValue as never}
+                clearErrors={clearErrors as never}
+                errors={errors as never}
               />
 
-              <ReadOnlyFormField label="دسته بند‌ی‌ها:" value={categoryCaption} />
+              <ReadOnlyCategoryFields
+                categories={categories ?? []}
+                subCategories={subCategories ?? []}
+                isFetchingCategory={isFetchingCategory}
+                isFetchingSubCategory={mutation.isPending}
+              />
 
               <CommentChatList comments={data.commentList ?? []} />
 
@@ -245,6 +272,7 @@ export default function EditPackagingRequestForm({ requestId }: EditPackagingReq
                 fullWidth
                 disableElevation
                 variant="contained"
+                loading={isSubmitting || isPending}
                 disabled={isSubmitting || isPending}
                 sx={{
                   bgcolor: '#1758BA',
@@ -262,7 +290,7 @@ export default function EditPackagingRequestForm({ requestId }: EditPackagingReq
                 variant="outlined"
                 fullWidth
                 disabled={isSubmitting || isPending}
-                onClick={() => router.push('/user-packaging-request')}
+                onClick={() => router.push(LIST_PAGE_PATH)}
                 sx={{
                   bgcolor: 'white',
                   height: '50px',

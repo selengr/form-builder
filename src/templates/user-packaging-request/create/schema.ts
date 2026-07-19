@@ -1,8 +1,10 @@
 import { z } from 'zod';
 
 const documentItemSchema = z.object({
+  id: z.number().optional(),
   title: z.string().trim().min(1, { message: 'نام مدرک الزامی است' }),
   uuid: z.string().trim().min(1, { message: 'بارگذاری فایل الزامی است' }),
+  link: z.string().optional(),
 });
 
 export const createPackagingRequestSchema = z.object({

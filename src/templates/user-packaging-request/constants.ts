@@ -3,14 +3,14 @@ export type PackagingRequestStatus =
   | 'ACCEPTED'
   | 'REJECTED'
   | 'REVISION'
-  | 'PUBLISH';
+  // | 'PUBLISH';
 
 export const packagingRequestStatusLabels: Record<PackagingRequestStatus, string> = {
   WAITING_FOR_PROCESS: 'در انتظار بررسی',
   ACCEPTED: 'تایید شده',
   REJECTED: 'رد شده',
   REVISION: 'نیاز به اصلاح',
-  PUBLISH: 'منتشر شده',
+  // PUBLISH: 'منتشر شده',
 };
 
 export const packagingRequestStatusStyles: Record<
@@ -21,7 +21,7 @@ export const packagingRequestStatusStyles: Record<
   ACCEPTED: { backgroundColor: '#E8FAF0', color: '#15803D' },
   REJECTED: { backgroundColor: '#FEE2E2', color: '#B91C1C' },
   REVISION: { backgroundColor: '#FCE7F3', color: '#BE185D' },
-  PUBLISH: { backgroundColor: '#ECFAFF', color: '#1758BA' },
+  // PUBLISH: { backgroundColor: '#ECFAFF', color: '#1758BA' },
 };
 
 const defaultStatusStyle = { backgroundColor: '#F7F7FF', color: '#393939' };

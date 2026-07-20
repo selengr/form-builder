@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -73,6 +74,12 @@ export default function CreatePackagingRequestForm() {
 
   const watchCategoryIds = watch('categoryIds');
 
+  useEffect(() => {
+    if (watchCategoryIds.length === 0) {
+      setValue('subCategoryIds', []);
+    }
+  }, [watchCategoryIds, setValue]);
+
   const handleFetchSubcategories = () => {
     const selectedCategoryIds = getValues('categoryIds');
     if (selectedCategoryIds.length > 0) {
@@ -81,15 +88,17 @@ export default function CreatePackagingRequestForm() {
   };
 
   const onSubmit = (data: CreatePackagingRequestFormValues) => {
-    const allCategoryIds = [...data.categoryIds, ...data.subCategoryIds].map(Number);
+    const categoryIds = (data.categoryIds ?? []).filter(Boolean);
+    const subCategoryIds = (data.subCategoryIds ?? []).filter(Boolean);
+    const allCategoryIds = [...categoryIds, ...subCategoryIds]
+      .map(Number)
+      .filter((id) => Number.isFinite(id) && id > 0);
 
     const payload = {
       name: data.name,
       targetLabelEnum: data.targetLabelEnum,
       documentList: data.documentList.map(({ title, uuid }) => ({ title, uuid })),
-      ...(allCategoryIds.length > 0
-        ? { formCategorysModel: { categoryId: allCategoryIds } }
-        : {}),
+      formCategorysModel: allCategoryIds.length > 0 ? { categoryId: allCategoryIds } : null,
       ...(data.newComment?.trim() ? { newComment: data.newComment.trim() } : {}),
     };
 

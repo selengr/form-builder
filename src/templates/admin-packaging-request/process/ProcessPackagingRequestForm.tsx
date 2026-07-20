@@ -14,13 +14,7 @@ import DocumentListView from '@/templates/user-packaging-request/view/DocumentLi
 import { useGetUserPackagingRequestTargetLabel } from '@/templates/user-packaging-request/hooks/useGetUserPackagingRequestTargetLabel';
 import { useGetUserPackagingRequestParentCategory } from '@/templates/user-packaging-request/hooks/useGetUserPackagingRequestParentCategory';
 import { usePackagingRequestCategoryForm } from '@/templates/user-packaging-request/hooks/usePackagingRequestCategoryForm';
-import { PackagingRequestStatus } from '@/templates/user-packaging-request/constants';
-import {
-  buttonStyles,
-  buttonStylesAlert,
-  buttonStylesError,
-  buttonStylesSuccess,
-} from '@/templates/calculator/CalculatorCard';
+import { PackagingRequestStatus, packagingRequestStatusStyles } from '@/templates/user-packaging-request/constants';
 import { useGetAdminPackagingRequestById } from '../hooks/useGetAdminPackagingRequestById';
 import { useProcessAdminPackagingRequest } from '../hooks/useProcessAdminPackagingRequest';
 import { ADMIN_LIST_PAGE_PATH, ADMIN_PAGE_CONTENT_MAX_WIDTH } from '../layout';
@@ -39,23 +33,10 @@ const centeredContentSx = {
 const PROCESS_STATUSES: Array<{
   status: Extract<PackagingRequestStatus, 'ACCEPTED' | 'REJECTED' | 'REVISION'>;
   label: string;
-  buttonStyle: typeof buttonStylesAlert;
 }> = [
-  {
-    status: 'ACCEPTED',
-    label: 'تایید',
-    buttonStyle: buttonStylesSuccess,
-  },
-  {
-    status: 'REJECTED',
-    label: 'رد',
-    buttonStyle: buttonStylesError,
-  },
-  {
-    status: 'REVISION',
-    label: 'نیاز به اصلاح',
-    buttonStyle: buttonStylesAlert,
-  },
+  { status: 'ACCEPTED', label: 'تایید' },
+  { status: 'REJECTED', label: 'رد' },
+  { status: 'REVISION', label: 'نیاز به اصلاح' },
 ];
 
 interface ProcessPackagingRequestFormProps {
@@ -168,29 +149,37 @@ export default function ProcessPackagingRequestForm({
               ...centeredContentSx,
               display: 'flex',
               flexDirection: 'column',
-              gap: 2,
+              gap: 3,
               direction: 'ltr',
               py: 1,
             }}>
             <FormProvider methods={categoryMethods}>
-              <ReadOnlyFormField label="عنوان:" value={data.name} />
-              <ReadOnlyFormField label="جامعه هدف:" value={targetLabelCaption} />
-              <DocumentListView documents={data.documentList} />
-              <ReadOnlyCategoryFields
-                categoryIds={watchCategoryIds}
-                subCategoryIds={watchSubCategoryIds}
-                categories={categories ?? []}
-                subCategories={subCategories ?? []}
-                isFetchingCategory={isFetchingCategory}
-                isFetchingSubCategory={isFetchingSubCategory}
-              />
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 3,
+                  width: '100%',
+                }}>
+                <ReadOnlyFormField label="عنوان:" value={data.name} />
+                <ReadOnlyFormField label="جامعه هدف:" value={targetLabelCaption} />
+                <DocumentListView documents={data.documentList} />
+                <ReadOnlyCategoryFields
+                  categoryIds={watchCategoryIds}
+                  subCategoryIds={watchSubCategoryIds}
+                  categories={categories ?? []}
+                  subCategories={subCategories ?? []}
+                  isFetchingCategory={isFetchingCategory}
+                  isFetchingSubCategory={isFetchingSubCategory}
+                />
+              </Box>
             </FormProvider>
 
             <CommentChatList comments={data.commentList ?? []} userLabel="کاربر" />
 
             {!isViewMode && (
               <FormProvider methods={commentMethods}>
-                <Stack spacing={1} mt={1} mb={2}>
+                <Stack spacing={1} mt={2} mb={3}>
                   <Typography variant="subtitle2" fontWeight={700}>
                     توضیحات (اختیاری):
                   </Typography>
@@ -226,27 +215,36 @@ export default function ProcessPackagingRequestForm({
                 flexDirection: { xs: 'column', sm: 'row' },
                 gap: 1.5,
               }}>
-              {PROCESS_STATUSES.map(({ status, label, buttonStyle }) => (
-                <Button
-                  key={status}
-                  type="button"
-                  fullWidth
-                  disableElevation
-                  variant="contained"
-                  disabled={isPending}
-                  loading={isPending}
-                  onClick={() => handleProcess(status)}
-                  sx={{
-                    ...buttonStyles,
-                    ...buttonStyle,
-                    height: '50px',
-                    borderRadius: '10px',
-                    fontWeight: 700,
-                    fontSize: '15px',
-                  }}>
-                  {label}
-                </Button>
-              ))}
+              {PROCESS_STATUSES.map(({ status, label }) => {
+                const statusStyle = packagingRequestStatusStyles[status];
+
+                return (
+                  <Button
+                    key={status}
+                    type="button"
+                    fullWidth
+                    disableElevation
+                    variant="contained"
+                    disabled={isPending}
+                    loading={isPending}
+                    onClick={() => handleProcess(status)}
+                    sx={{
+                      height: '50px',
+                      borderRadius: '10px',
+                      fontWeight: 700,
+                      fontSize: '15px',
+                      bgcolor: statusStyle.color,
+                      color: '#fff',
+                      boxShadow: 'none',
+                      '&.MuiButtonBase-root:hover': {
+                        bgcolor: statusStyle.color,
+                        opacity: 0.9,
+                      },
+                    }}>
+                    {label}
+                  </Button>
+                );
+              })}
             </Box>
           </Box>
         )}

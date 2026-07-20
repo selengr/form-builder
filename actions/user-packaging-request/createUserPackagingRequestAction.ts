@@ -8,7 +8,7 @@ export interface CreatePackagingRequestPayload {
   documentList: Array<{ title: string; uuid: string }>;
   formCategorysModel?: {
     categoryId: number[];
-  };
+  } | null;
   newComment?: string;
 }
 

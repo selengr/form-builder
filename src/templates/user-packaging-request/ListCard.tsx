@@ -25,11 +25,11 @@ export default function PackagingRequestListCard({
       <Box
         sx={{
           position: 'absolute',
-          top: 12,
-          right: 12,
+          top: 18,
+          right: 20,
           display: 'flex',
           alignItems: 'center',
-          gap: 0.5,
+          gap: 1.5,
         }}>
         <IconButton
           color="primary"

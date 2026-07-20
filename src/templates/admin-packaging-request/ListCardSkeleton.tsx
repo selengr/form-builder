@@ -8,7 +8,7 @@ export default function AdminPackagingRequestListCardSkeleton() {
       {Array.from({ length: 5 }).map((_, index) => (
         <Grid2 key={index} sx={{ width: 1, mx: 'auto', maxWidth: '470px' }} size={12}>
           <div className="relative flex flex-col gap-3 rounded-2xl border border-[#DDE1E6] p-5 shadow-sm">
-            <div className="absolute top-3 right-3">
+            <div className="absolute top-[18px] right-5">
               <Skeleton variant="circular" width={24} height={24} animation="wave" />
             </div>
 

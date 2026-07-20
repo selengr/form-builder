@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { PackagingRequestComment } from '../types';
 
@@ -8,7 +9,9 @@ interface CommentChatListProps {
 }
 
 export default function CommentChatList({ comments }: CommentChatListProps) {
-  if (!comments.length) {
+  const orderedComments = useMemo(() => [...comments].reverse(), [comments]);
+
+  if (!orderedComments.length) {
     return (
       <Box
         sx={{
@@ -38,7 +41,7 @@ export default function CommentChatList({ comments }: CommentChatListProps) {
           gap: 1.5,
           px: 0.5,
         }}>
-        {comments.map((item, index) => {
+        {orderedComments.map((item, index) => {
           const isAdmin = item.isAdmin;
 
           return (

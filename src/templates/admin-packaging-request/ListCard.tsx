@@ -1,9 +1,10 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Button } from '@mui/material';
+import { Box, Button, IconButton } from '@mui/material';
 import { InfoRow } from '@/components/common/infoRow';
 import { UnifiedListGridCardProps } from '@/components/unified-list-grid';
+import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
 import {
   getPackagingRequestStatusLabel,
   getPackagingRequestStatusStyle,
@@ -18,7 +19,18 @@ export default function AdminPackagingRequestListCard({
   const canProcess = data.status === 'WAITING_FOR_PROCESS';
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border border-[#DDE1E6] p-5 shadow-sm w-full">
+    <div className="relative flex flex-col gap-3 rounded-2xl border border-[#DDE1E6] p-5 shadow-sm w-full">
+      {!canProcess && (
+        <Box sx={{ position: 'absolute', top: 12, right: 12 }}>
+          <IconButton
+            color="primary"
+            onClick={() => router.push(`/admin-packaging-request/${data.id}/view`)}
+            sx={{ padding: 0 }}>
+            <CodiconEye style={{ width: 24, height: 24 }} />
+          </IconButton>
+        </Box>
+      )}
+
       <InfoRow label="نام" value={data.name} bold />
       <InfoRow
         label="وضعیت"

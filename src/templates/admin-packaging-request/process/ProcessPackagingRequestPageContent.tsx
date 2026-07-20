@@ -8,10 +8,12 @@ import { ADMIN_LIST_PAGE_PATH } from '../layout';
 
 interface ProcessPackagingRequestPageContentProps {
   requestId: number;
+  mode?: 'process' | 'view';
 }
 
 export default function ProcessPackagingRequestPageContent({
   requestId,
+  mode = 'process',
 }: ProcessPackagingRequestPageContentProps) {
   const router = useRouter();
 
@@ -45,13 +47,15 @@ export default function ProcessPackagingRequestPageContent({
             <MdOutlineKeyboardArrowRight color="#292D32" />
           </IconButton>
           <Typography fontSize={16} fontWeight={700} color="#161616">
-            رسیدگی به درخواست آنلاین سازی آزمون
+            {mode === 'view'
+              ? 'مشاهده درخواست آنلاین سازی آزمون'
+              : 'رسیدگی به درخواست آنلاین سازی آزمون'}
           </Typography>
         </Box>
       </Box>
 
       <Box sx={{ flex: 1, minHeight: 0, width: '100%', display: 'flex', flexDirection: 'column' }}>
-        <ProcessPackagingRequestForm requestId={requestId} />
+        <ProcessPackagingRequestForm requestId={requestId} mode={mode} />
       </Box>
     </Box>
   );

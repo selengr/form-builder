@@ -15,6 +15,12 @@ import { useGetUserPackagingRequestTargetLabel } from '@/templates/user-packagin
 import { useGetUserPackagingRequestParentCategory } from '@/templates/user-packaging-request/hooks/useGetUserPackagingRequestParentCategory';
 import { usePackagingRequestCategoryForm } from '@/templates/user-packaging-request/hooks/usePackagingRequestCategoryForm';
 import { PackagingRequestStatus } from '@/templates/user-packaging-request/constants';
+import {
+  buttonStyles,
+  buttonStylesAlert,
+  buttonStylesError,
+  buttonStylesSuccess,
+} from '@/templates/calculator/CalculatorCard';
 import { useGetAdminPackagingRequestById } from '../hooks/useGetAdminPackagingRequestById';
 import { useProcessAdminPackagingRequest } from '../hooks/useProcessAdminPackagingRequest';
 import { ADMIN_LIST_PAGE_PATH, ADMIN_PAGE_CONTENT_MAX_WIDTH } from '../layout';
@@ -33,36 +39,34 @@ const centeredContentSx = {
 const PROCESS_STATUSES: Array<{
   status: Extract<PackagingRequestStatus, 'ACCEPTED' | 'REJECTED' | 'REVISION'>;
   label: string;
-  bgcolor: string;
-  hoverBgcolor: string;
-  color?: string;
-  borderColor?: string;
+  buttonStyle: typeof buttonStylesAlert;
 }> = [
   {
     status: 'ACCEPTED',
     label: 'تایید',
-    bgcolor: '#15803D',
-    hoverBgcolor: '#15803D',
+    buttonStyle: buttonStylesSuccess,
   },
   {
     status: 'REJECTED',
     label: 'رد',
-    bgcolor: '#B91C1C',
-    hoverBgcolor: '#B91C1C',
+    buttonStyle: buttonStylesError,
   },
   {
     status: 'REVISION',
     label: 'نیاز به اصلاح',
-    bgcolor: '#BE185D',
-    hoverBgcolor: '#BE185D',
+    buttonStyle: buttonStylesAlert,
   },
 ];
 
 interface ProcessPackagingRequestFormProps {
   requestId: number;
+  mode?: 'process' | 'view';
 }
 
-export default function ProcessPackagingRequestForm({ requestId }: ProcessPackagingRequestFormProps) {
+export default function ProcessPackagingRequestForm({
+  requestId,
+  mode = 'process',
+}: ProcessPackagingRequestFormProps) {
   const router = useRouter();
   const { data, isLoading, isError, error } = useGetAdminPackagingRequestById(requestId);
   const { mutate, isPending } = useProcessAdminPackagingRequest({ push: router.push });
@@ -84,6 +88,7 @@ export default function ProcessPackagingRequestForm({ requestId }: ProcessPackag
   });
 
   const { handleSubmit } = commentMethods;
+  const isViewMode = mode === 'view';
 
   const targetLabelCaption = useMemo(() => {
     if (!data?.targetLabelEnum) return '—';
@@ -92,11 +97,6 @@ export default function ProcessPackagingRequestForm({ requestId }: ProcessPackag
       data.targetLabelEnum
     );
   }, [data?.targetLabelEnum, targetLabels]);
-
-  const orderedComments = useMemo(
-    () => [...(data?.commentList ?? [])].reverse(),
-    [data?.commentList],
-  );
 
   const handleProcess = (
     status: Extract<PackagingRequestStatus, 'ACCEPTED' | 'REJECTED' | 'REVISION'>,
@@ -161,7 +161,7 @@ export default function ProcessPackagingRequestForm({ requestId }: ProcessPackag
             minHeight: 0,
             overflowY: 'auto',
             width: '100%',
-            pb: 2,
+            pb: isViewMode ? 3 : 2,
           }}>
           <Box
             sx={{
@@ -186,66 +186,70 @@ export default function ProcessPackagingRequestForm({ requestId }: ProcessPackag
               />
             </FormProvider>
 
-            <CommentChatList comments={orderedComments} />
+            <CommentChatList comments={data.commentList ?? []} />
 
-            <FormProvider methods={commentMethods}>
-              <Stack spacing={1} mt={1} mb={2}>
-                <Typography variant="subtitle2" fontWeight={700}>
-                  توضیحات (اختیاری):
-                </Typography>
-                <RHFTextField
-                  multiline
-                  rows={3}
-                  name="newComment"
-                  sx={{
-                    '& .MuiInputBase-root': {
-                      borderRadius: '10px',
-                    },
-                  }}
-                />
-              </Stack>
-            </FormProvider>
+            {!isViewMode && (
+              <FormProvider methods={commentMethods}>
+                <Stack spacing={1} mt={1} mb={2}>
+                  <Typography variant="subtitle2" fontWeight={700}>
+                    توضیحات (اختیاری):
+                  </Typography>
+                  <RHFTextField
+                    multiline
+                    rows={3}
+                    name="newComment"
+                    sx={{
+                      '& .MuiInputBase-root': {
+                        borderRadius: '10px',
+                      },
+                    }}
+                  />
+                </Stack>
+              </FormProvider>
+            )}
           </Box>
         </Box>
 
-        <Box
-          sx={{
-            flexShrink: 0,
-            width: '100%',
-            bgcolor: 'white',
-            pt: 2,
-            pb: { xs: 2, sm: 2.5 },
-          }}>
+        {!isViewMode && (
           <Box
             sx={{
-              ...centeredContentSx,
-              display: 'flex',
-              flexDirection: { xs: 'column', sm: 'row' },
-              gap: 1.5,
+              flexShrink: 0,
+              width: '100%',
+              bgcolor: 'white',
+              pt: 2,
+              pb: { xs: 2, sm: 2.5 },
             }}>
-            {PROCESS_STATUSES.map(({ status, label, bgcolor, hoverBgcolor }) => (
-              <Button
-                key={status}
-                type="button"
-                fullWidth
-                disableElevation
-                variant="contained"
-                disabled={isPending}
-                loading={isPending}
-                onClick={() => handleProcess(status)}
-                sx={{
-                  height: '50px',
-                  borderRadius: '10px',
-                  bgcolor,
-                  fontWeight: 700,
-                  fontSize: '15px',
-                  '&.MuiButtonBase-root:hover': { bgcolor: hoverBgcolor },
-                }}>
-                {label}
-              </Button>
-            ))}
+            <Box
+              sx={{
+                ...centeredContentSx,
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
+                gap: 1.5,
+              }}>
+              {PROCESS_STATUSES.map(({ status, label, buttonStyle }) => (
+                <Button
+                  key={status}
+                  type="button"
+                  fullWidth
+                  disableElevation
+                  variant="contained"
+                  disabled={isPending}
+                  loading={isPending}
+                  onClick={() => handleProcess(status)}
+                  sx={{
+                    ...buttonStyles,
+                    ...buttonStyle,
+                    height: '50px',
+                    borderRadius: '10px',
+                    fontWeight: 700,
+                    fontSize: '15px',
+                  }}>
+                  {label}
+                </Button>
+              ))}
+            </Box>
           </Box>
-        </Box>
+        )}
       </Box>
     </Box>
   );

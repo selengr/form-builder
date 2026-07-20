@@ -45,6 +45,14 @@ export const buttonStylesError = {
   '&:active': { bgcolor: '#A32A3A' },
 };
 
+export const buttonStylesSuccess = {
+  bgcolor: '#2CDFC9',
+  borderColor: '#2CDFC9',
+  color: '#161616',
+  '&:hover': { bgcolor: '#25B5A7' },
+  '&:active': { bgcolor: '#1E9990' },
+};
+
 export function CalculatorCard({
   calculator,
   index: _index,

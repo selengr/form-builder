@@ -6,9 +6,13 @@ import { PackagingRequestComment } from '../types';
 
 interface CommentChatListProps {
   comments: PackagingRequestComment[];
+  userLabel?: string;
 }
 
-export default function CommentChatList({ comments }: CommentChatListProps) {
+export default function CommentChatList({
+  comments,
+  userLabel = 'شما',
+}: CommentChatListProps) {
   const orderedComments = useMemo(() => [...comments].reverse(), [comments]);
 
   if (!orderedComments.length) {
@@ -62,7 +66,7 @@ export default function CommentChatList({ comments }: CommentChatListProps) {
                   border: `1px solid ${isAdmin ? '#DDE1E6' : '#B8E8FF'}`,
                 }}>
                 <Typography fontSize={12} fontWeight={700} color="#393939" mb={0.5}>
-                  {isAdmin ? 'ادمین' : 'شما'}
+                  {isAdmin ? 'ادمین' : userLabel}
                 </Typography>
                 <Typography fontSize={14} color="#161616" sx={{ whiteSpace: 'pre-wrap' }}>
                   {item.msg}

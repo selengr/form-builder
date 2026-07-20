@@ -186,7 +186,7 @@ export default function ProcessPackagingRequestForm({
               />
             </FormProvider>
 
-            <CommentChatList comments={data.commentList ?? []} />
+            <CommentChatList comments={data.commentList ?? []} userLabel="کاربر" />
 
             {!isViewMode && (
               <FormProvider methods={commentMethods}>

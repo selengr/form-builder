@@ -16,7 +16,7 @@ import AdminPackagingRequestListCardSkeleton from './ListCardSkeleton';
 const API_URL = '/admin/packaging-request/main-list';
 
 const DEFAULT_FILTER: SearchQueryFilter = {
-  status: 'ALL',
+  status: 'WAITING_FOR_PROCESS',
   fieldOperation: 'DSC',
 };
 

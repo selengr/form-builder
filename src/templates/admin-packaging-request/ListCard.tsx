@@ -15,6 +15,7 @@ export default function AdminPackagingRequestListCard({
 }: UnifiedListGridCardProps<PackagingRequestListItem>) {
   const router = useRouter();
   const statusStyle = getPackagingRequestStatusStyle(data.status);
+  const canProcess = data.status === 'WAITING_FOR_PROCESS';
 
   return (
     <div className="flex flex-col gap-3 rounded-2xl border border-[#DDE1E6] p-5 shadow-sm w-full">
@@ -33,22 +34,24 @@ export default function AdminPackagingRequestListCard({
         }
       />
 
-      <Button
-        type="button"
-        variant="contained"
-        disableElevation
-        onClick={() => router.push(`/admin-packaging-request/${data.id}/process`)}
-        sx={{
-          mt: 0.5,
-          height: '44px',
-          borderRadius: '10px',
-          bgcolor: '#1758BA',
-          fontWeight: 700,
-          fontSize: '14px',
-          '&.MuiButtonBase-root:hover': { bgcolor: '#1758BA' },
-        }}>
-        رسیدگی به درخواست
-      </Button>
+      {canProcess && (
+        <Button
+          type="button"
+          variant="contained"
+          disableElevation
+          onClick={() => router.push(`/admin-packaging-request/${data.id}/process`)}
+          sx={{
+            mt: 0.5,
+            height: '44px',
+            borderRadius: '10px',
+            bgcolor: '#1758BA',
+            fontWeight: 700,
+            fontSize: '14px',
+            '&.MuiButtonBase-root:hover': { bgcolor: '#1758BA' },
+          }}>
+          رسیدگی به درخواست
+        </Button>
+      )}
     </div>
   );
 }

@@ -93,6 +93,11 @@ export default function ProcessPackagingRequestForm({ requestId }: ProcessPackag
     );
   }, [data?.targetLabelEnum, targetLabels]);
 
+  const orderedComments = useMemo(
+    () => [...(data?.commentList ?? [])].reverse(),
+    [data?.commentList],
+  );
+
   const handleProcess = (
     status: Extract<PackagingRequestStatus, 'ACCEPTED' | 'REJECTED' | 'REVISION'>,
   ) => {
@@ -181,7 +186,7 @@ export default function ProcessPackagingRequestForm({ requestId }: ProcessPackag
               />
             </FormProvider>
 
-            <CommentChatList comments={data.commentList ?? []} />
+            <CommentChatList comments={orderedComments} />
 
             <FormProvider methods={commentMethods}>
               <Stack spacing={1} mt={1} mb={2}>

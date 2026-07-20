@@ -36,8 +36,6 @@ export default function CommentChatList({ comments }: CommentChatListProps) {
           display: 'flex',
           flexDirection: 'column',
           gap: 1.5,
-          maxHeight: 280,
-          overflowY: 'auto',
           px: 0.5,
         }}>
         {comments.map((item, index) => {

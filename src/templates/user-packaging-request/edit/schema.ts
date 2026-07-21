@@ -11,6 +11,7 @@ export const packagingRequestDocumentSchema = z.object({
   title: z.string().trim().min(1, { message: 'نام مدرک الزامی است' }),
   uuid: z.string().trim().min(1, { message: 'بارگذاری فایل الزامی است' }),
   link: z.string().optional(),
+  isNew: z.boolean().optional(),
 });
 
 export const editPackagingRequestSchema = z.object({

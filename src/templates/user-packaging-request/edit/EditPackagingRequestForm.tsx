@@ -109,6 +109,7 @@ export default function EditPackagingRequestForm({ requestId }: EditPackagingReq
             title: document.title,
             uuid: document.uuid,
             link: document.link,
+            isNew: false,
           }))
         : [{ title: '', uuid: '' }],
       newComment: '',
@@ -143,8 +144,8 @@ export default function EditPackagingRequestForm({ requestId }: EditPackagingReq
     mutate({
       id: requestId,
       name: formData.name,
-      documentList: formData.documentList.map(({ id, title, uuid }) => ({
-        ...(typeof id === 'number' && Number.isFinite(id) ? { id } : {}),
+      documentList: formData.documentList.map(({ id, title, uuid, isNew }) => ({
+        ...(typeof id === 'number' && Number.isFinite(id) && !isNew ? { id } : {}),
         title,
         uuid,
       })),

@@ -12,6 +12,7 @@ import {
   UseFormRegister,
   UseFormSetValue,
   useFieldArray,
+  useFormContext,
   useWatch,
 } from 'react-hook-form';
 import { UppyUploader } from '@/components/uploader/UppyUploader';
@@ -23,6 +24,7 @@ type DocumentFormItem = {
   title: string;
   uuid: string;
   link?: string;
+  isNew?: boolean;
 };
 
 type DocumentFormValues = {
@@ -55,6 +57,20 @@ function hasExistingDocumentFile(document?: DocumentFormItem, isEditMode?: boole
   return Boolean(document.uuid?.trim() && document.link?.trim());
 }
 
+function sanitizeDocumentListItem(doc: DocumentFormItem): DocumentFormItem {
+  if (doc.isNew) {
+    return { title: doc.title, uuid: doc.uuid, isNew: true };
+  }
+
+  return {
+    id: doc.id,
+    title: doc.title,
+    uuid: doc.uuid,
+    link: doc.link,
+    isNew: false,
+  };
+}
+
 export default function DocumentListField({
   mode = 'create',
   control,
@@ -63,7 +79,8 @@ export default function DocumentListField({
   clearErrors,
   errors,
 }: DocumentListFieldProps) {
-  const { fields, append, remove } = useFieldArray({
+  const { getValues } = useFormContext<DocumentFormValues>();
+  const { fields, append, replace } = useFieldArray({
     control,
     name: 'documentList',
   });
@@ -95,7 +112,11 @@ export default function DocumentListField({
 
   const handleAddDocument = () => {
     if (fields.length >= 10) return;
-    append({ title: '', uuid: '' });
+    append(
+      mode === 'edit'
+        ? { title: '', uuid: '', isNew: true }
+        : { title: '', uuid: '' },
+    );
     if (fields.length === 0) {
       clearErrors('documentList');
     }
@@ -103,7 +124,14 @@ export default function DocumentListField({
 
   const handleRemoveDocument = (index: number) => {
     if (fields.length <= 1) return;
-    remove(index);
+
+    const currentList = getValues('documentList') ?? [];
+    const updatedList = currentList
+      .filter((_, itemIndex) => itemIndex !== index)
+      .map((document) => sanitizeDocumentListItem(document));
+
+    replace(updatedList);
+    clearErrors('documentList');
   };
 
   return (
@@ -116,13 +144,15 @@ export default function DocumentListField({
         {fields.map((field, index) => {
           const uuidError = errors.documentList?.[index]?.uuid?.message;
           const watchedDocument = documentList?.[index];
-          const documentId = watchedDocument?.id;
+          const isNewDocument = Boolean(watchedDocument?.isNew);
+          const documentId = isNewDocument ? undefined : watchedDocument?.id;
           const fieldDocument = field as unknown as DocumentFormItem;
           const currentDocument: DocumentFormItem = {
             ...fieldDocument,
             ...(watchedDocument ?? {}),
           };
-          const hasExistingFile = hasExistingDocumentFile(currentDocument, mode === 'edit');
+          const hasExistingFile =
+            !isNewDocument && hasExistingDocumentFile(currentDocument, mode === 'edit');
 
           return (
             <Box

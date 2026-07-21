@@ -328,14 +328,14 @@ const ListGrid: React.FC<Props> = ({
                 mx: 'auto',
                 maxWidth: '470px',
                 flexDirection: 'column',
-                gap: 2,
+                gap: 1,
               }}>
               <Box
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  gap: '12px',
+                  gap: '6px',
                   width: '100%',
                   flexWrap: { xs: 'nowrap', sm: 'nowrap' },
                 }}>
@@ -365,7 +365,7 @@ const ListGrid: React.FC<Props> = ({
                 flexWrap='nowrap'
                 sx={{
                   width: '100%',
-                  mt: 1,
+                  // mt: 1,
                   mb: 5,
                   pb: 4,
                   flexDirection: 'column',

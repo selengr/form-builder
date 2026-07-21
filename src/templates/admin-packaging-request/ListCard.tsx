@@ -20,18 +20,18 @@ export default function AdminPackagingRequestListCard({
 
   return (
     <div className="relative flex flex-col gap-3 rounded-2xl border border-[#DDE1E6] p-5 shadow-sm w-full">
-      {!canProcess && (
-        <Box sx={{ position: 'absolute', top: 12, right: 12 }}>
+      {/* {!canProcess && ( */}
+        <Box sx={{ position: 'absolute', top: 11, right: 13 }}>
           <IconButton
             color="primary"
             onClick={() => router.push(`/admin-packaging-request/${data.id}/view`)}
-            sx={{ padding: 0 }}>
-            <CodiconEye style={{ width: 24, height: 24 }} />
+            sx={{ padding: 1 }}>
+            <CodiconEye style={{ width: 28, height: 28 }} />
           </IconButton>
         </Box>
-      )}
+      {/* )} */}
 
-      <InfoRow label="نام" value={data.name} bold />
+      <InfoRow label="عنوان" value={data.name} bold className='max-w-[90%]'/>
       <InfoRow
         label="وضعیت"
         value={
@@ -54,8 +54,8 @@ export default function AdminPackagingRequestListCard({
           onClick={() => router.push(`/admin-packaging-request/${data.id}/process`)}
           sx={{
             mt: 0.5,
-            height: '44px',
-            borderRadius: '10px',
+            height: '40px',
+            borderRadius: '12px',
             bgcolor: '#1758BA',
             fontWeight: 700,
             fontSize: '14px',

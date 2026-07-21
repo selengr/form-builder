@@ -25,30 +25,32 @@ export default function PackagingRequestListCard({
       <Box
         sx={{
           position: 'absolute',
-          top: 18,
-          right: 20,
+          top: 11,
+          right: 15,
           display: 'flex',
           alignItems: 'center',
-          gap: 1.5,
+          gap: .5,
         }}>
-        <IconButton
-          color="primary"
-          onClick={() => router.push(`/user-packaging-request/${data.id}/view`)}
-          sx={{ padding: 0 }}>
-          <CodiconEye style={{ width: 24, height: 24 }} />
-        </IconButton>
-
-        {canEdit && (
+             {canEdit && (
           <IconButton
             color="primary"
             onClick={() => router.push(`/user-packaging-request/${data.id}/edit`)}
-            sx={{ padding: 0 }}>
+            sx={{ padding: 1 }}>
             <Image src={EditIcon} alt="edit" width={24} height={24} />
           </IconButton>
         )}
+
+        <IconButton
+          color="primary"
+          onClick={() => router.push(`/user-packaging-request/${data.id}/view`)}
+          sx={{ padding: 1 }}>
+          <CodiconEye style={{ width: 28, height: 28 }} />
+        </IconButton>
+
+     
       </Box>
 
-      <InfoRow label="نام" value={data.name} bold />
+      <InfoRow label="نام" value={data.name} bold className='max-w-[90%]'/>
       <InfoRow
         label="وضعیت"
         value={

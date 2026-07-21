@@ -51,7 +51,7 @@ export function createServerActionFetcher<TItem = unknown>(
     if (!result.success) {
       return { success: false, message: result.message };
     }
-
+console.log('result.data-----------', JSON.stringify(result.data))
     return {
       success: true,
       data: result.data as TItem[],

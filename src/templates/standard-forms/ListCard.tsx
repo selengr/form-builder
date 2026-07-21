@@ -11,6 +11,7 @@ import { clonePackageAction } from '../../../actions/standard-forms/clone';
 export interface IPackagingItem {
   id: number;
   name: string;
+  sellCount: number;
   formId: number;
 }
 interface ListCardProps {
@@ -18,7 +19,7 @@ interface ListCardProps {
 }
 // ---------------------------------------------------------------------
 const ListCard: React.FC<ListCardProps> = ({
-  data: { name, id }
+  data: { name, id, sellCount }
 }) => {
   const { push } = useRouter()
   const [loading, setLoading] = useState<boolean>(false);
@@ -73,8 +74,10 @@ const ListCard: React.FC<ListCardProps> = ({
       "
     >
       <div className="flex flex-wrap gap-2 w-full items-center justify-between">
-        <InfoRow label="نام بسته" value={name} bold />
-
+       <div>
+           <InfoRow label="نام بسته" value={name} bold />
+        <InfoRow label="تعداد فروش" value={sellCount} bold />
+       </div>
         <button
           className="
             bg-[#1758BA] text-white 

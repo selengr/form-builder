@@ -55,8 +55,8 @@ const QuestionGroup = memo(function QuestionGroup({
   const isEmpty = safeQuestions.length === 0;
 
   return (
-    <div
-      dir="rtl"
+     <div
+     dir='rtl'
       ref={droppable.setNodeRef}
       className={`flex flex-col w-full h-full min-h-0 rounded-2xl border border-[#DDE1E6] bg-[#F8FAFC] overflow-hidden ${
         disabled ? 'opacity-50 pointer-events-none' : ''
@@ -77,7 +77,7 @@ const QuestionGroup = memo(function QuestionGroup({
       )}
 
       {safeQuestions.length > 0 && (
-        <div
+         <div
           className="flex flex-col w-full flex-1 min-h-0 overflow-y-auto px-3 pt-3 gap-2"
           style={{ scrollbarWidth: 'thin' }}
         >
@@ -91,7 +91,7 @@ const QuestionGroup = memo(function QuestionGroup({
 
       {(isMobile || safeQuestions.length > 0) && (
         <div
-          className={`shrink-0 mx-3 mb-3 mt-2 flex items-center justify-center rounded-xl border border-dashed border-[#DDE1E6] bg-transparent min-h-[56px] ${
+          className={`mx-3 mb-3 mt-2 flex items-center justify-center rounded-xl border border-dashed border-[#DDE1E6] bg-transparent min-h-[56px] ${
             isMobile && !disabled ? 'cursor-pointer' : ''
           }`}
           onClick={isMobile ? handleAddQuestion : undefined}

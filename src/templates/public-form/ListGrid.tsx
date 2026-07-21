@@ -243,7 +243,7 @@ const ListGrid: React.FC<IProps> = ({
                         </div>
 
                         {/* total + search */}
-                        <div className="w-full max-w-[470px] mx-auto flex flex-col gap-2">
+                        <div className="w-full max-w-[450px] mx-auto flex flex-col gap-2">
                             <div className='flex justify-between gap-2 bg-[#ECFAFF] rounded-2xl px-[10px] py-4 w-full'>
                                 <div className='flex items-center gap-[6px] sm:gap-[10px] flex-shrink-0'>
                                     <Image src={TotalGrid} width={18} height={18} className='sm:w-5 sm:h-5 select-none' alt='total' draggable={false} />
@@ -267,7 +267,6 @@ const ListGrid: React.FC<IProps> = ({
                                 flexWrap='nowrap'
                                 sx={{
                                     width: '100%',
-                                    mt: 1,
                                     mb: 5,
                                     pb: 4,
                                     scrollbarWidth: 'none',

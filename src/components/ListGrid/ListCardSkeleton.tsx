@@ -8,7 +8,7 @@ export default function ListCardSkeleton() {
       {Array.from({ length: 5 }).map((_, i) => (
         <Grid2
           key={i}
-          sx={{ width: '100%', mx: 'auto' }}
+                sx={{ width: '100%', mx: 'auto' }}
           size={12}
         >
 

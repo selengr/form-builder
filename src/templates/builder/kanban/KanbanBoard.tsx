@@ -281,7 +281,7 @@ const KanbanBoard = memo(function KanbanBoard() {
 
   return (
     <Fragment>
-      <div className='flex h-full min-h-0 flex-col w-full gap-4 box-border'>
+       <div className='flex h-full min-h-0 flex-col w-full gap-4 box-border'>
         {questionGroups?.map((group: any) => (
           <QuestionGroup key={group} group={group} questions={itemsByGroup[group]} disabled={formSetting.formStatus !== 'CREATE'} />
         ))}

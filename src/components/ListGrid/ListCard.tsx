@@ -188,10 +188,11 @@ export default function ListCard({ data }: ListCardProps) {
           </button>
 
           <div className='flex gap-2 flex-wrap items-center justify-end'>
+           {data.status !== 'PUBLISH' &&
             <IconButton onClick={() => setOpenConfirmDialog(true)} disabled={loading} color='error'>
               <Image src={TrashIcon} alt='delete' width={24} height={24} />
             </IconButton>
-
+            }
             {(data.type === "PACKAGING" || data.status === 'READY_TO_PUBLISH' || data.status === 'PUBLISH') && <PublishSettingsDialog formData={data} formId={data.id} />}
 
             {data.type !== "PACKAGING" && (

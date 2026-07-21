@@ -2,10 +2,10 @@
 
 import Image from 'next/image';
 import { toast } from 'sonner';
-import { IconButton } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
-import { LuClipboardCheck } from 'react-icons/lu';
+import { LuHammer } from 'react-icons/lu';
 import { ActionButton } from '@/templates/reports/ListCard';
 import { InfoRow } from '@/components/common/infoRow';
 import { SwitchButton } from '@/components/Switch/SwitchButton';
@@ -131,13 +131,26 @@ export default function PackagingListCard({
           <div className="flex gap-2 flex-wrap items-center justify-end">
             <PackagingSettingsDialog packageId={data.id} />
             {isWaitForCreate && (
-              <IconButton
-                color="primary"
-                aria-label="شروع ساخت"
-                sx={{ padding: 0 }}
-                onClick={() => setPickUpDialogOpen(true)}>
-                <LuClipboardCheck size={24} color="#1758BA" />
-              </IconButton>
+              <Tooltip title="شروع ساخت" arrow placement="top">
+                <IconButton
+                  aria-label="شروع ساخت"
+                  onClick={() => setPickUpDialogOpen(true)}
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: '10px',
+                    border: '1px solid #F59E0B',
+                    bgcolor: '#FFF4E5',
+                    color: '#B45309',
+                    transition: 'background-color 0.2s, border-color 0.2s',
+                    '&:hover': {
+                      bgcolor: '#FEF3C7',
+                      borderColor: '#D97706',
+                    },
+                  }}>
+                  <LuHammer size={20} strokeWidth={2.25} />
+                </IconButton>
+              </Tooltip>
             )}
             {isCreateStatus && (
               <div onClick={handleEditClick}>

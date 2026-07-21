@@ -1,7 +1,7 @@
 'use client';
 
 import { CgClose } from 'react-icons/cg';
-import { LuClipboardCheck } from 'react-icons/lu';
+import { LuHammer } from 'react-icons/lu';
 import {
   Box,
   Button,
@@ -97,7 +97,7 @@ export default function PickUpPackagingRequestDialog({
             justifyContent: 'center',
             mb: 2,
           }}>
-          <LuClipboardCheck size={36} color="#B45309" />
+          <LuHammer size={34} color="#B45309" strokeWidth={2.25} />
         </Box>
 
         <Typography fontSize="18px" fontWeight={700} color="#161616" mb={0.5}>

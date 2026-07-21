@@ -116,6 +116,7 @@ export default function DocumentListField({
         {fields.map((field, index) => {
           const uuidError = errors.documentList?.[index]?.uuid?.message;
           const watchedDocument = documentList?.[index];
+          const documentId = watchedDocument?.id;
           const fieldDocument = field as unknown as DocumentFormItem;
           const currentDocument: DocumentFormItem = {
             ...fieldDocument,
@@ -132,11 +133,14 @@ export default function DocumentListField({
               border="1px dashed #1758BA"
               borderRadius="10px"
               p={1.5}>
-              {mode === 'edit' && (
-                <>
-                  <input type="hidden" {...register(`documentList.${index}.id`)} />
-                  <input type="hidden" {...register(`documentList.${index}.link`)} />
-                </>
+              {mode === 'edit' && typeof documentId === 'number' && (
+                <input
+                  type="hidden"
+                  {...register(`documentList.${index}.id`, { valueAsNumber: true })}
+                />
+              )}
+              {mode === 'edit' && Boolean(currentDocument.link?.trim()) && (
+                <input type="hidden" {...register(`documentList.${index}.link`)} />
               )}
               <Box>
                 <RHFTextField
@@ -219,6 +223,7 @@ export default function DocumentListField({
 
                 {fields.length > 1 && (
                   <IconButton
+                    type="button"
                     aria-label="حذف مدرک"
                     onClick={() => handleRemoveDocument(index)}
                     sx={{
@@ -243,6 +248,7 @@ export default function DocumentListField({
 
       <Box display="flex" justifyContent="flex-end" mt={1.5}>
         <IconButton
+          type="button"
           disabled={fields.length >= 10}
           onClick={handleAddDocument}
           sx={{

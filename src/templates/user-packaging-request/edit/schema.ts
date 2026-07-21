@@ -1,7 +1,13 @@
 import { z } from 'zod';
 
+const optionalDocumentIdSchema = z.preprocess((value) => {
+  if (value === '' || value === null || value === undefined) return undefined;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
+}, z.number().optional());
+
 export const packagingRequestDocumentSchema = z.object({
-  id: z.number().optional(),
+  id: optionalDocumentIdSchema,
   title: z.string().trim().min(1, { message: 'نام مدرک الزامی است' }),
   uuid: z.string().trim().min(1, { message: 'بارگذاری فایل الزامی است' }),
   link: z.string().optional(),

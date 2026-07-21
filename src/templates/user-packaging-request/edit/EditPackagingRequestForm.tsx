@@ -144,7 +144,7 @@ export default function EditPackagingRequestForm({ requestId }: EditPackagingReq
       id: requestId,
       name: formData.name,
       documentList: formData.documentList.map(({ id, title, uuid }) => ({
-        ...(id ? { id } : {}),
+        ...(typeof id === 'number' && Number.isFinite(id) ? { id } : {}),
         title,
         uuid,
       })),

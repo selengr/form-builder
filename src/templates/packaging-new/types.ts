@@ -1,3 +1,5 @@
+import { PackagingListType, PackagingStatus } from './constants';
+
 export interface PackagingListItem {
   id: number;
   name: string;
@@ -5,6 +7,7 @@ export interface PackagingListItem {
   invalid: boolean;
   formCategorysModel: null;
   isCreatedSoloReport: boolean;
-  packagingStausEnum: 'CREATE' | string;
+  packagingStausEnum: PackagingStatus;
   targetLabelEnum: 'DEFAULT' | string;
+  type?: PackagingListType;
 }

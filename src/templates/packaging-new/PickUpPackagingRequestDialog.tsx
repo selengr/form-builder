@@ -118,7 +118,7 @@ export default function PickUpPackagingRequestDialog({
             px: 2.5,
             py: 2,
             mb: 3,
-            textAlign: 'right',
+            textAlign: 'left',
           }}>
           <Typography fontSize="14px" fontWeight={700} color="#161616" mb={1}>
             توجه

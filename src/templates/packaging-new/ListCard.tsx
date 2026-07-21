@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { IconButton, Tooltip } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
-import { LuHammer } from 'react-icons/lu';
+import { LuClapperboard, LuClipboardCheck, LuHammer } from 'react-icons/lu';
 import { ActionButton } from '@/templates/reports/ListCard';
 import { InfoRow } from '@/components/common/infoRow';
 import { SwitchButton } from '@/components/Switch/SwitchButton';
@@ -83,9 +83,8 @@ export default function PackagingListCard({
   return (
     <>
       <div
-        className={`border p-4 rounded-2xl flex flex-col gap-3 w-full max-w-full relative shadow-sm ${
-          isPackagingRequest ? 'border-amber-300' : 'border-[#DDE1E6]'
-        }`}>
+        className={`border p-4 rounded-2xl flex flex-col gap-3 w-full max-w-full relative shadow-sm ${isPackagingRequest ? 'border-amber-300' : 'border-[#DDE1E6]'
+          }`}>
         <InfoRow label="نام بسته" value={data.name} bold />
         <SwitchButton
           sx={{ position: 'absolute', top: 15, right: 15 }}
@@ -139,22 +138,31 @@ export default function PackagingListCard({
                     width: 40,
                     height: 40,
                     borderRadius: '10px',
-                    border: '1px solid #F59E0B',
-                    bgcolor: '#FFF4E5',
+                    // border: '1px solid #F59E0B',
+                    // bgcolor: '#FFF4E5',
                     color: '#B45309',
                     transition: 'background-color 0.2s, border-color 0.2s',
-                    '&:hover': {
-                      bgcolor: '#FEF3C7',
-                      borderColor: '#D97706',
-                    },
+                    // '&:hover': {
+                    //   bgcolor: '#FEF3C7',
+                    //   borderColor: '#D97706',
+                    // },
                   }}>
-                  <LuHammer size={20} strokeWidth={2.25} />
+                  <LuClipboardCheck size={24} strokeWidth={2.25} />
                 </IconButton>
               </Tooltip>
             )}
             {isCreateStatus && (
               <div onClick={handleEditClick}>
-                <IconButton color="primary" sx={{ padding: 0 }}>
+                <IconButton color="primary"
+                  sx={{
+                    padding: 0,
+                    height: '40px',
+                    width: '40px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
                   <Image src={EditIcon} alt="edit" width={24} height={24} />
                 </IconButton>
               </div>

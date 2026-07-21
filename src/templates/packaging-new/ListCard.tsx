@@ -85,7 +85,7 @@ export default function PackagingListCard({
   };
 
   const handleViewPackagingRequest = () => {
-    router.push(`/admin-packaging-request/${requestViewId}/view`);
+    window.open(`/admin-packaging-request/${requestViewId}/view`, '_blank', 'noopener,noreferrer');
   };
 
   return (

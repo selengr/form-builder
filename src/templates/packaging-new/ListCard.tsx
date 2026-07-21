@@ -153,6 +153,7 @@ export default function PackagingListCard({
       <PickUpPackagingRequestDialog
         open={pickUpDialogOpen}
         packageId={data.id}
+        packageName={data.name}
         onClose={() => setPickUpDialogOpen(false)}
         onSuccess={refreshGrid}
       />

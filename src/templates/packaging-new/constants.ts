@@ -21,6 +21,13 @@ export function isPackagingRequestItem(type?: string) {
   return type === PACKAGING_REQUEST_TYPE || type === 'PACKAGING_REQUEST';
 }
 
+export function getPackagingRequestViewId(item: {
+  id: number;
+  packagingRequestId?: number;
+}) {
+  return item.packagingRequestId ?? item.id;
+}
+
 export function getPackagingStatusLabel(status?: string) {
   if (!status) return '—';
   if (status === 'WAIT_FOR_CREATE') return packagingStatusLabels.WAIT_FOR_CREATE;

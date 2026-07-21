@@ -10,4 +10,5 @@ export interface PackagingListItem {
   packagingStausEnum: PackagingStatus;
   targetLabelEnum: 'DEFAULT' | string;
   type?: PackagingListType;
+  packagingRequestId?: number;
 }

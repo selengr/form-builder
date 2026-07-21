@@ -5,18 +5,20 @@ import { toast } from 'sonner';
 import { IconButton, Tooltip } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
-import { LuClapperboard, LuClipboardCheck, LuHammer } from 'react-icons/lu';
+import { LuClipboardCheck } from 'react-icons/lu';
 import { ActionButton } from '@/templates/reports/ListCard';
 import { InfoRow } from '@/components/common/infoRow';
 import { SwitchButton } from '@/components/Switch/SwitchButton';
 import { UnifiedListGridCardProps } from '@/components/unified-list-grid';
 import EditIcon from '@/../public/images/home-page/edit-2.svg';
+import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
 import PackagingSettingsDialog from '@/templates/packaging/PackagingSettingsDialog';
 import { updatePackagingValidity } from '@actions/packaging/packageSetting';
 import PickUpPackagingRequestDialog from './PickUpPackagingRequestDialog';
 import {
   getPackagingStatusLabel,
   getPackagingStatusStyle,
+  getPackagingRequestViewId,
   isPackagingRequestItem,
 } from './constants';
 import { PackagingListItem } from './types';
@@ -39,6 +41,8 @@ export default function PackagingListCard({
   const statusStyle = getPackagingStatusStyle(data.packagingStausEnum);
   const isWaitForCreate = data.packagingStausEnum === 'WAIT_FOR_CREATE';
   const isCreateStatus = data.packagingStausEnum === 'CREATE';
+  const showRequestViewAction = isPackagingRequest && isCreateStatus;
+  const requestViewId = getPackagingRequestViewId(data);
 
   const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.checked;
@@ -78,6 +82,10 @@ export default function PackagingListCard({
   const handleNavigateToReport = () => {
     localStorage.setItem(REPORT_BACK_KEY, LIST_PAGE_PATH);
     router.push(`/reports/create-solo/${data.formId}`);
+  };
+
+  const handleViewPackagingRequest = () => {
+    router.push(`/admin-packaging-request/${requestViewId}/view`);
   };
 
   return (
@@ -151,9 +159,12 @@ export default function PackagingListCard({
                 </IconButton>
               </Tooltip>
             )}
-            {isCreateStatus && (
-              <div onClick={handleEditClick}>
-                <IconButton color="primary"
+            {showRequestViewAction && (
+              <Tooltip title="مشاهده درخواست" arrow placement="top">
+                <IconButton
+                  color="primary"
+                  aria-label="مشاهده درخواست"
+                  onClick={handleViewPackagingRequest}
                   sx={{
                     padding: 0,
                     height: '40px',
@@ -161,11 +172,28 @@ export default function PackagingListCard({
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                  }}
-                >
+                  }}>
+                  <CodiconEye style={{ width: 28, height: 28 }} />
+                </IconButton>
+              </Tooltip>
+            )}
+            {isCreateStatus && (
+              <Tooltip title="ویرایش بسته" arrow placement="top">
+                <IconButton
+                  color="primary"
+                  aria-label="ویرایش بسته"
+                  onClick={handleEditClick}
+                  sx={{
+                    padding: 0,
+                    height: '40px',
+                    width: '40px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
                   <Image src={EditIcon} alt="edit" width={24} height={24} />
                 </IconButton>
-              </div>
+              </Tooltip>
             )}
           </div>
         </div>

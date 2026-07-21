@@ -67,6 +67,10 @@ export interface UnifiedListGridConfig {
   sortField?: string;
   filterFieldMappings?: FilterFieldMapping[];
   onMobileFilterOpen?: () => void;
+  /** Poll interval in ms (e.g. status lists). Default: disabled. */
+  refetchInterval?: number | false;
+  refetchOnWindowFocus?: boolean;
+  refetchOnReconnect?: boolean;
 }
 
 export interface UnifiedListGridSlots<TItem = unknown> {

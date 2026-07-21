@@ -9,6 +9,7 @@ import {
   UnifiedListGridFilterSlotProps,
 } from '@/components/unified-list-grid';
 import PackagingRequestFilter from '@/templates/user-packaging-request/PackagingRequestFilter';
+import { PACKAGING_REQUEST_LIST_REFETCH_OPTIONS } from '@/templates/user-packaging-request/constants';
 import { PackagingRequestListItem } from '@/templates/user-packaging-request/types';
 import AdminPackagingRequestListCard from './ListCard';
 import AdminPackagingRequestListCardSkeleton from './ListCardSkeleton';
@@ -97,6 +98,7 @@ export default function AdminPackagingRequestListGridWrapper() {
         hasSidebarFilter: true,
         backHref: '/',
         onMobileFilterOpen: syncDraftFromApplied,
+        ...PACKAGING_REQUEST_LIST_REFETCH_OPTIONS,
       }}
       slots={{
         CardComponent: AdminPackagingRequestListCard,

@@ -39,3 +39,10 @@ export function getPackagingRequestStatusStyle(status?: string) {
     packagingRequestStatusStyles[status as PackagingRequestStatus] ?? defaultStatusStyle
   );
 }
+
+/** Keep user/admin packaging request lists in sync when status changes elsewhere. */
+export const PACKAGING_REQUEST_LIST_REFETCH_OPTIONS = {
+  refetchInterval: 5 * 60 * 1000,
+  refetchOnWindowFocus: true,
+  refetchOnReconnect: true,
+} as const;

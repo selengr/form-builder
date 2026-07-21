@@ -49,6 +49,9 @@ const UnifiedListGrid = <TItem,>({
     searchMode = 'debounced',
     searchDebounceMs = 500,
     onMobileFilterOpen,
+    refetchInterval = false,
+    refetchOnWindowFocus = false,
+    refetchOnReconnect = false,
   } = config;
 
   const { CardComponent, SkeletonComponent, FilterComponent, CreateButton, EmptyComponent } =
@@ -132,7 +135,9 @@ const UnifiedListGrid = <TItem,>({
         ? allPages.length
         : undefined;
     },
-    refetchOnWindowFocus: false,
+    refetchInterval,
+    refetchOnWindowFocus,
+    refetchOnReconnect,
   });
 
   const handleRefreshGrid = useCallback(() => {

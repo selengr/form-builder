@@ -15,6 +15,7 @@ import {
 import PackagingRequestListCard from './ListCard';
 import PackagingRequestListCardSkeleton from './ListCardSkeleton';
 import PackagingRequestFilter from './PackagingRequestFilter';
+import { PACKAGING_REQUEST_LIST_REFETCH_OPTIONS } from './constants';
 import { PackagingRequestListItem } from './types';
 
 const API_URL = '/user/packaging-request/main-list';
@@ -99,6 +100,7 @@ export default function PackagingRequestListGridWrapper() {
         hasSidebarFilter: true,
         backHref: '/',
         onMobileFilterOpen: syncDraftFromApplied,
+        ...PACKAGING_REQUEST_LIST_REFETCH_OPTIONS,
       }}
       slots={{
         CardComponent: PackagingRequestListCard,

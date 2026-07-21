@@ -13,8 +13,8 @@ const defaultStatusStyle = { backgroundColor: '#F7F7FF', color: '#393939' };
 
 export const packagingStatusStyles: Record<string, { backgroundColor: string; color: string }> = {
   WAIT_FOR_CREATE: { backgroundColor: '#FFF4E5', color: '#B45309' },
-  CREATE: { backgroundColor: '#E8FAF0', color: '#15803D' },
-  FINAL: { backgroundColor: '#ECFAFF', color: '#1758BA' },
+  CREATE: { backgroundColor: '#F7F7FF', color: '#393939' },
+  FINAL: { backgroundColor: '#F7F7FF', color: '#393939' }
 };
 
 export function isPackagingRequestItem(type?: string) {

@@ -18,11 +18,10 @@ export default function PackagingListCardSkeleton() {
 
             <div className="flex items-start gap-1">
               <Skeleton variant="text" width={56} height={20} animation="wave" />
-              <Skeleton variant="text" width="48%" height={20} animation="wave" sx={{ flex: 1 }} />
+              <Skeleton variant="text" width="48%" height={20} animation="wave" />
             </div>
 
             <div className="flex items-center gap-1">
-              <Skeleton variant="text" width={44} height={20} animation="wave" />
               <Skeleton
                 variant="rounded"
                 width={92}

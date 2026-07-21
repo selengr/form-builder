@@ -27,46 +27,60 @@ export default function PackagingNewListGridWrapper() {
   const [draftFilter, setDraftFilter] = useState<SearchQueryFilter>(DEFAULT_FILTER);
   const [appliedFilter, setAppliedFilter] = useState<SearchQueryFilter>(DEFAULT_FILTER);
 
+  const syncDraftFromApplied = useCallback(() => {
+    setDraftFilter(appliedFilter);
+  }, [appliedFilter]);
+
   const FilterSlot = useCallback(
     ({ mode, closeMobileFilter, refreshList }: UnifiedListGridFilterSlotProps) => {
       const isMobile = mode === 'mobile';
+      const filter = isMobile ? draftFilter : appliedFilter;
 
       const handleChange: React.Dispatch<React.SetStateAction<SearchQueryFilter>> = (
         updater,
       ) => {
-        setDraftFilter((prev) =>
+        if (isMobile) {
+          setDraftFilter(updater);
+          return;
+        }
+
+        setAppliedFilter((prev) =>
           typeof updater === 'function' ? updater(prev) : updater,
         );
       };
 
       const handleApply = () => {
-        setAppliedFilter(draftFilter);
-        refreshList();
         if (isMobile) {
+          setAppliedFilter(draftFilter);
           closeMobileFilter();
+          return;
         }
+
+        setAppliedFilter(filter);
+        refreshList();
       };
 
       const handleReset = () => {
         setDraftFilter(DEFAULT_FILTER);
         setAppliedFilter(DEFAULT_FILTER);
-        refreshList();
         if (isMobile) {
           closeMobileFilter();
+          return;
         }
+        refreshList();
       };
 
       return (
         <PackagingFilter
           mode={mode}
-          filter={draftFilter}
+          filter={filter}
           onChange={handleChange}
           onApply={handleApply}
           onReset={handleReset}
         />
       );
     },
-    [draftFilter],
+    [appliedFilter, draftFilter],
   );
 
   return (
@@ -77,9 +91,9 @@ export default function PackagingNewListGridWrapper() {
           queryKey: 'packaging_new_list',
           textTotal: ['تعداد کل بسته ها', 'عدد'],
           searchField: 'name',
-          searchMode: 'url',
           hasSidebarFilter: true,
           backHref: '/',
+          onMobileFilterOpen: syncDraftFromApplied,
         }}
         slots={{
           CardComponent: PackagingListCard,

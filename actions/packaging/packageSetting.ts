@@ -8,7 +8,11 @@ export async function getPackageSettingAction(id: number) {
 
 export async function putPackageSettingAction(
   id: number,
-  payload: { name: string; ratio: number }
+  payload: {
+    name: string;
+    ratio: number;
+    formCategorysModel?: { categoryId: number[] } | null;
+  },
 ) {
   return api.put(`/admin/packaging/${id}`, payload);
 }

@@ -6,11 +6,15 @@ import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import { IoSettingsOutline } from 'react-icons/io5';
 import { zodResolver } from '@hookform/resolvers/zod';
-import FormProvider, { RHFTextField } from '@/components/hook-form';
+import FormProvider, { RHFMultiSelectV0, RHFTextField } from '@/components/hook-form';
 import { Box, Button, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
-// action
 import { getPackageSettingAction, putPackageSettingAction } from '../../../actions/packaging/packageSetting';
 import { useQueryClient } from '@tanstack/react-query';
+import {
+  useGetUserPackagingRequestParentCategory,
+  UserPackagingRequestCategorySelectOption,
+} from '@/templates/user-packaging-request/hooks/useGetUserPackagingRequestParentCategory';
+import { useGetUserPackagingRequestSubCategory } from '@/templates/user-packaging-request/hooks/useGetUserPackagingRequestSubCategory';
 
 const nameSchema = z
   .string()
@@ -20,18 +24,24 @@ const nameSchema = z
 
 const propertiesSchema = z.object({
   name: nameSchema,
-  ratio: z
-    .preprocess(
-      (val) => (val === '' ? undefined : Number(val)),
-      z
-        .number({ invalid_type_error: 'عدد معتبر وارد کنید' })
-        .min(1, { message: 'ضریب باید حداقل ۱ باشد' })
-    ),
+  ratio: z.preprocess(
+    (val) => (val === '' ? undefined : Number(val)),
+    z
+      .number({ invalid_type_error: 'عدد معتبر وارد کنید' })
+      .min(1, { message: 'ضریب باید حداقل ۱ باشد' }),
+  ),
+  categoryIds: z.preprocess(
+    (value) => (Array.isArray(value) ? value.filter(Boolean) : []),
+    z.array(z.string()),
+  ),
+  subCategoryIds: z.preprocess(
+    (value) => (Array.isArray(value) ? value.filter(Boolean) : []),
+    z.array(z.string()),
+  ),
 });
 
-type packageSettingSchemaType = z.infer<typeof propertiesSchema>;
+type PackageSettingSchemaType = z.infer<typeof propertiesSchema>;
 
-// ------------------- Styles -------------------
 const textFieldCommonSx = {
   '& .MuiInputBase-root': {
     bgcolor: '#fff',
@@ -48,34 +58,66 @@ const inputFieldContainerSx = {
   paddingX: 0.5,
 };
 
-// ------------------- Component -------------------
+function splitSavedCategoryIds(
+  allIds: string[],
+  categories?: UserPackagingRequestCategorySelectOption[],
+) {
+  if (!allIds.length || !categories?.length) {
+    return { categoryIds: [] as string[], subCategoryIds: allIds };
+  }
+
+  const categoryIds = allIds.filter((id) =>
+    categories.some((category) => category.value === id),
+  );
+  const subCategoryIds = allIds.filter((id) => !categoryIds.includes(id));
+
+  return { categoryIds, subCategoryIds };
+}
+
 export default function PackagingSettingsDialog({ packageId }: { packageId: number }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
 
   const queryClient = useQueryClient();
+  const { categories, isFetchingCategory } = useGetUserPackagingRequestParentCategory();
+  const { mutation, subCategories } = useGetUserPackagingRequestSubCategory();
 
   const handleOpen = () => {
     setOpenDialog((prev) => !prev);
-  }
+  };
 
-  const methods = useForm<packageSettingSchemaType>({
+  const methods = useForm<PackageSettingSchemaType>({
     resolver: zodResolver(propertiesSchema),
     mode: 'onChange',
     defaultValues: {
       name: '',
       ratio: 1,
+      categoryIds: [],
+      subCategoryIds: [],
     },
   });
 
   const {
+    watch,
+    getValues,
     handleSubmit,
     reset,
-    formState: { isSubmitting, isValid },
+    setValue,
+    formState: { isSubmitting },
   } = methods;
 
+  const watchCategoryIds = watch('categoryIds');
+
   useEffect(() => {
-    if (!openDialog) return;
+    if (watchCategoryIds.length === 0) {
+      setValue('subCategoryIds', []);
+    }
+  }, [watchCategoryIds, setValue]);
+
+  useEffect(() => {
+    if (!openDialog || isFetchingCategory) return;
+
+    let cancelled = false;
 
     async function loadData() {
       setLoading(true);
@@ -87,41 +129,75 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
           return;
         }
 
-       const data = res.data;
+        if (cancelled) return;
+
+        const data = res.data;
+        const allIds = data.formCategorysModel?.categoryId?.map(String) ?? [];
+        const { categoryIds, subCategoryIds } = splitSavedCategoryIds(allIds, categories);
 
         reset({
-          name: data.name || "",
-          ratio: data.ratio || 1
+          name: data.name || '',
+          ratio: data.ratio || 1,
+          categoryIds,
+          subCategoryIds,
         });
-      } catch (error: any) {
-        toast.error(error?.message);
+
+        if (categoryIds.length > 0) {
+          mutation.mutate(categoryIds);
+        }
+      } catch (error: unknown) {
+        toast.error(error instanceof Error ? error.message : 'خطا در دریافت تنظیمات پکیج');
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     }
 
     loadData();
-  }, [openDialog, reset]);
 
+    return () => {
+      cancelled = true;
+    };
+  }, [openDialog, packageId, categories, isFetchingCategory, reset, mutation.mutate]);
 
-  const onSubmit = async (formData: packageSettingSchemaType) => {
+  const handleFetchSubcategories = () => {
+    const selectedCategoryIds = getValues('categoryIds');
+    if (selectedCategoryIds.length > 0) {
+      mutation.mutate(selectedCategoryIds);
+    }
+  };
+
+  const onSubmit = async (formData: PackageSettingSchemaType) => {
     try {
+      const categoryIds = (formData.categoryIds ?? []).filter(Boolean);
+      const subCategoryIds = (formData.subCategoryIds ?? []).filter(Boolean);
+      const allCategoryIds = [...categoryIds, ...subCategoryIds]
+        .map(Number)
+        .filter((id) => Number.isFinite(id) && id > 0);
+
       const res = await putPackageSettingAction(packageId, {
         name: formData.name,
         ratio: formData.ratio,
+        formCategorysModel:
+          allCategoryIds.length > 0 ? { categoryId: allCategoryIds } : null,
       });
 
       if (!res.success) {
-        toast.error(res.message || 'خطا در دریافت تنظیمات پکیج');
+        toast.error(res.message || 'خطا در ثبت تنظیمات پکیج');
         return;
       }
+
       toast.success('عملیات با موفقیت انجام شد');
       queryClient.invalidateQueries({
         queryKey: ['datas_builder_query'],
       });
+      queryClient.invalidateQueries({
+        queryKey: ['packaging_new_list'],
+      });
       handleOpen();
-    } catch (error: any) {
-      toast.error(error?.message);
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : 'خطا در ثبت تنظیمات پکیج');
     }
   };
 
@@ -130,20 +206,20 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
       <IconButton
         onClick={handleOpen}
         sx={{
-          padding : 0,
+          padding: 0,
           height: '40px',
           width: '40px',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
         }}
-        aria-label='تنظیمات بسته'>
-        <IoSettingsOutline color='#2A2A2A' />
+        aria-label="تنظیمات بسته">
+        <IoSettingsOutline color="#2A2A2A" />
       </IconButton>
       <Dialog
         open={openDialog}
         onClose={handleOpen}
-        dir='ltr'
+        dir="ltr"
         sx={{
           overflow: 'hidden',
           scrollbarWidth: 'none',
@@ -158,13 +234,13 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
             backgroundColor: 'hsl(0deg 0% 100% / 50%)',
           },
         }}>
-        <Box className='flex items-center justify-start' sx={{ p: 2, pb: 0 }}>
-          <IconButton onClick={handleOpen} aria-label='بستن'>
-            <CgClose color='#404040' size='1.5rem' />
+        <Box className="flex items-center justify-start" sx={{ p: 2, pb: 0 }}>
+          <IconButton onClick={handleOpen} aria-label="بستن">
+            <CgClose color="#404040" size="1.5rem" />
           </IconButton>
         </Box>
         <DialogContent
-          dir='rtl'
+          dir="rtl"
           sx={{
             maxHeight: '75vh',
             scrollbarWidth: 'thin',
@@ -174,12 +250,11 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
             display: 'flex',
             flexDirection: 'column',
           }}>
-          <Box className='flex justify-center items-baseline' sx={{ mb: 2 }}>
-            <Typography variant='h6' component='p' fontWeight='bold' textAlign='center'>
+          <Box className="flex justify-center items-baseline" sx={{ mb: 2 }}>
+            <Typography variant="h6" component="p" fontWeight="bold" textAlign="center">
               تنظیمات بسته
             </Typography>
           </Box>
-
 
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Box
@@ -195,28 +270,69 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
                 gap: 1,
                 direction: 'ltr',
               }}>
-              <Box display='flex' gap={1} width='100%'>
+              <Box display="flex" gap={1} width="100%">
                 <Box sx={inputFieldContainerSx}>
-                  <Typography variant='subtitle2' fontWeight='700'>
+                  <Typography variant="subtitle2" fontWeight="700">
                     نام بسته:
                   </Typography>
-                  <RHFTextField disabled={loading} sx={textFieldCommonSx} name='name' fullWidth />
+                  <RHFTextField disabled={loading} sx={textFieldCommonSx} name="name" fullWidth />
                 </Box>
 
                 <Box sx={inputFieldContainerSx}>
-                  <Typography variant='subtitle2' fontWeight='700'>
+                  <Typography variant="subtitle2" fontWeight="700">
                     ضریب قیمت:
                   </Typography>
                   <RHFTextField
                     sx={textFieldCommonSx}
                     disabled={loading}
-                    name='ratio'
+                    name="ratio"
                     fullWidth
-                    type='number'
+                    type="number"
                     inputProps={{ step: '0.1', min: '1' }}
                   />
                 </Box>
               </Box>
+
+              <Box display="flex" flexDirection="column" gap="6px" width="100%" mt={1}>
+                <Typography variant="subtitle2" fontWeight={700}>
+                  دسته بند‌ی‌ها (اختیاری):
+                </Typography>
+                <RHFMultiSelectV0
+                  sx={{
+                    '& .MuiInputBase-root': {
+                      bgcolor: '#fff',
+                      paddingY: '8px',
+                      borderRadius: '10px',
+                    },
+                  }}
+                  chip
+                  checkbox
+                  fullWidth
+                  name="categoryIds"
+                  options={categories ?? []}
+                  isLoading={isFetchingCategory || loading}
+                  disabled={isFetchingCategory || loading}
+                  onClose={handleFetchSubcategories}
+                />
+
+                <RHFMultiSelectV0
+                  sx={{
+                    '& .MuiInputBase-root': {
+                      bgcolor: '#fff',
+                      paddingY: '8px',
+                      borderRadius: '10px',
+                    },
+                  }}
+                  chip
+                  checkbox
+                  fullWidth
+                  name="subCategoryIds"
+                  options={subCategories ?? []}
+                  isLoading={mutation.isPending}
+                  disabled={watchCategoryIds.length === 0 || mutation.isPending || loading}
+                />
+              </Box>
+
               {loading && (
                 <Typography variant="caption" color="text.secondary" sx={{ textAlign: 'center' }}>
                   در حال بارگذاری اطلاعات...
@@ -231,7 +347,7 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
                 background: '#FFF',
                 py: '10px',
                 px: 2,
-                my: 3
+                my: 3,
               }}>
               <Box
                 sx={{
@@ -241,9 +357,9 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
                   gap: 2,
                 }}>
                 <Button
-                  type='submit'
+                  type="submit"
                   fullWidth
-                  variant='contained'
+                  variant="contained"
                   disabled={isSubmitting || loading}
                   sx={{
                     bgcolor: '#1758BA',
@@ -255,13 +371,13 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
                     boxShadow: 'none',
                     '&:hover': { bgcolor: '#1758BA' },
                   }}>
-                  {loading ? "در حال ثبت..." : "ثبت"}
+                  {loading ? 'در حال ثبت...' : 'ثبت'}
                 </Button>
                 <Button
                   disabled={isSubmitting || loading}
                   fullWidth
-                  type='button'
-                  variant='outlined'
+                  type="button"
+                  variant="outlined"
                   onClick={() => {
                     handleOpen();
                     reset();
@@ -278,13 +394,9 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
                   }}>
                   بستن
                 </Button>
-
-
               </Box>
             </Box>
           </FormProvider>
-
-
         </DialogContent>
       </Dialog>
     </>

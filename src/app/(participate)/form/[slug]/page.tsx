@@ -1,0 +1,110 @@
+'use client';
+
+import React, { useState } from 'react';
+import FormLimitation from '@/templates/form/FormLimitation';
+import { useParticipateForm } from '@/hooks/useParticipateForm';
+import ResponsiveContainer from '@/templates/form/ContentWrapper';
+import { ErrorStep, FinishStep, QuestionStep } from './components';
+import { ParticipateLoadingSkeleton } from './components/participateSkeleton';
+import StartFromContinueDialog from './components/StartFromContinueDialog';
+import Header from './components/header';
+
+export default function ParticipateFormPage({ params }: { params: { slug: string } }) {
+  const [limitationStepPassed, setLimitationStepPassed] = useState(false);
+
+  const {
+    firstLoading,
+    questionLoading,
+    finishPage,
+    limitation,
+    question,
+    formData,
+    formName,
+    setFormName,
+    ValidatedInput,
+    handleValidationUpdate,
+    handleNext,
+    handlePrev,
+    replace,
+    setLimitation,
+    setQuestion,
+    initializeQuestion,
+    realFormID,
+    hasError,
+    takePartId,
+    setTakePartId,
+    isCurrentFirstQuestion,
+    showReportForResponder,
+    
+    takePart,
+    startFromContinue,
+    checkAnswerBefore,
+    setStartFromContinue
+  } = useParticipateForm();
+
+  if (firstLoading) return <ParticipateLoadingSkeleton />;
+
+  if (limitation.isLimited && !limitationStepPassed) {
+    return (
+      <ResponsiveContainer>
+        <FormLimitation
+          type={limitation.limitationType}
+          setLimitation={setLimitation}
+          setQuestion={setQuestion}
+          addQuestion={(data) => {
+            setFormName(data.formName)
+            setTakePartId(data.takePart)
+            initializeQuestion(data.questionModel, data.questionModel.oldAnswers ?? []);
+            setLimitationStepPassed(true);
+          }}
+           setStartFromContinue={setStartFromContinue}
+        />
+      </ResponsiveContainer>
+    );
+  }
+
+  if (startFromContinue.status) {
+    return (
+        <StartFromContinueDialog
+          takePart={takePart}
+          setLimitation={setLimitation}
+          checkAnswerBefore={checkAnswerBefore}
+          startFromContinue={startFromContinue}
+          setStartFromContinue={setStartFromContinue}
+        />  
+    );
+  }
+
+  if (finishPage) {
+    return (
+      <FinishStep
+        question={question}
+        showReportForResponder={showReportForResponder}
+        takePartId={takePartId}
+        formName={formName}
+        replace={replace}
+        formId={realFormID}
+      />
+    );
+  }
+
+  if (hasError.status) {
+    return <ErrorStep message={hasError.message} replace={replace} />;
+  }
+
+  return (
+      <QuestionStep
+        question={question}
+        formName={formName}
+        formData={formData}
+        ValidatedInput={ValidatedInput}
+        handleValidationUpdate={handleValidationUpdate}
+        handleNext={handleNext}
+        handlePrev={handlePrev}
+        prevBlock={isCurrentFirstQuestion}
+        questionLoading={questionLoading}
+        formId={realFormID}
+        replace={replace}
+      />
+  );
+}

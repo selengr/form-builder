@@ -1,0 +1,118 @@
+@import "../../public/fonts/font.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html body * {
+  font-family: IranSans, serif !important;
+  -moz-font-feature-settings: "ss02";
+  -webkit-font-feature-settings: "ss02";
+  font-feature-settings: "ss02";
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  background-color: #F2F4F8 !important;
+  background-image: url("/images/home-page/bg-pattern.svg");
+  background-repeat: repeat;
+}
+
+.scroll-hide::-webkit-scrollbar {
+  display: none !important;
+}
+
+.heroTitle{
+  line-height: 4rem !important;
+}
+
+@keyframes float {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(10px, -10px) rotate(3deg); }
+  66% { transform: translate(-10px, 10px) rotate(-3deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes float-1 {
+  0% { transform: translate(0, 0) rotate(-3deg); }
+  33% { transform: translate(-5px, 5px) rotate(-6deg); }
+  66% { transform: translate(5px, -5px) rotate(0deg); }
+  100% { transform: translate(0, 0) rotate(-3deg); }
+}
+
+@keyframes float-2 {
+  0% { transform: translate(0, 0) rotate(6deg); }
+  33% { transform: translate(8px, -8px) rotate(3deg); }
+  66% { transform: translate(-8px, 8px) rotate(9deg); }
+  100% { transform: translate(0, 0) rotate(6deg); }
+}
+
+@keyframes float-3 {
+  0% { transform: translate(0, 0); }
+  33% { transform: translate(-3px, -3px); }
+  66% { transform: translate(3px, 3px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes float-4 {
+  0% { transform: translate(0, 0) rotate(3deg); }
+  33% { transform: translate(4px, 4px) rotate(0deg); }
+  66% { transform: translate(-4px, -4px) rotate(6deg); }
+  100% { transform: translate(0, 0) rotate(3deg); }
+}
+
+.floating-3d {
+  animation: float 6s ease-in-out infinite;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.floating-3d-1 {
+  animation: float-1 7s ease-in-out infinite;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.floating-3d-2 {
+  animation: float-2 8s ease-in-out infinite;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.floating-3d-3 {
+  animation: float-3 5s ease-in-out infinite;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.floating-3d-4 {
+  animation: float-4 6.5s ease-in-out infinite;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+@keyframes rotate-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-rotate-slow {
+  animation: rotate-slow 120s linear infinite reverse;
+  will-change: transform;
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 4s ease-in-out infinite;
+}
+

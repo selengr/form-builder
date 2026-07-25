@@ -1,0 +1,184 @@
+'use client';
+
+import { ElementsType, FormElement, FormElementInstance } from '@/types/FormElements';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import useDesigner from '@/hooks/useDesigner';
+import Box from '@mui/material/Box';
+import FormProvider from '../../components/hook-form/FormProvider';
+import { FIELD_PROPERTIES_FORM_ID } from '@/constants/fieldDialog';
+import RHFTextField from '../../components/hook-form/RHFTextField';
+import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
+import { IFormElementConstructor } from '@/types/bulider';
+import { useParams } from 'next/navigation';
+import useActionOpenDialog from '@/hooks/useActionOpenDialog';
+import useActionSelectedElement from '@/hooks/useActionSelectedElement';
+import useSelectedElement from '@/hooks/useSelectedElement';
+import useActionDesigner from '@/hooks/useActionDesigner';
+import { toast } from 'sonner';
+import { memo } from 'react';
+import Image from 'next/image';
+import finishIcon from '@/../public/images/home-page/finish.svg';
+// action
+import { createEndPageAction, updateEndPageAction } from '../../../actions/builder/formEndPage';
+
+const questionType: ElementsType = 'TitleFieldFinish';
+
+const propertiesSchema = z.object({
+  description: z
+    .string({ message: 'حداقل باید 1 و حداکثر 250 کاراکتر باشد' })
+    .trim()
+    .transform((value) => value.replace(/\s+/g, ' '))
+    .pipe(
+      z.string({ message: 'حداقل باید 1 و حداکثر 250 کاراکتر باشد' }).min(1, { message: 'حداقل باید 1 و حداکثر 250 کاراکتر باشد' }).max(250, { message: 'حداقل باید 1 و حداکثر 250 کاراکتر باشد' }),
+    ),
+});
+
+const DesignerComponent = memo(function DesignerComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
+  const { label } = TitleFieldFinishFormElement.designerBtnElement;
+  const description = elementInstance?.description;
+
+  return (
+    <div className="flex items-start flex-col overflow-hidden min-w-0 w-full" dir="rtl">
+      <p dir='rtl' className='text-base overflow-hidden text-ellipsis w-full' style={{ textWrap: 'nowrap', fontWeight: '700' }}>
+        {description}
+      </p>
+      <p className='text-xs'>#{label}</p>
+    </div>
+  );
+});
+
+export const TitleFieldFinishFormElement: FormElement = {
+  questionType,
+  construct: ({ questionId, description }: IFormElementConstructor) => ({
+    questionId,
+    description,
+    questionType,
+  }),
+  designerBtnElement: {
+    label: 'صفحه پایان',
+  },
+  designerComponent: DesignerComponent,
+  formComponent: FormComponent,
+  propertiesComponent: PropertiesComponent,
+
+  validate: () => true,
+};
+
+function FormComponent({ elementInstance }: { elementInstance?: FormElementInstance }) {
+  return (
+    <div className='flex flex-col gap-4 items-center justify-center w-full'>
+      <Image src={finishIcon} alt='' width={200} height={300} className='h-[300px] w-full' />
+      {elementInstance && <p className='text-[15px] font-bold text-[#161616] text-justify mb-6'>{elementInstance as any}</p>}
+      <button disabled className='h-[52px] rounded-lg border-[1px] border-[#1758BA] text-[#1758BA] w-full max-w-[240px]'>
+        ثبت و ارسال
+      </button>
+    </div>
+  );
+}
+
+type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
+
+function PropertiesComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
+  const { id } = useParams();
+  const element = elementInstance;
+  const setOpenDialog = useActionOpenDialog();
+  const setSelectedElement = useActionSelectedElement();
+  const selectedElement = useSelectedElement();
+  const { updateFinishPage, addFinishPage } = useActionDesigner();
+  const { finishPage } = useDesigner();
+
+  const methods = useForm<propertiesFormSchemaType>({
+    resolver: zodResolver(propertiesSchema),
+    mode: 'onSubmit',
+    defaultValues: {
+      description: element.description,
+    },
+  });
+
+  const {
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = methods;
+
+  async function applyChanges(values: propertiesFormSchemaType) {
+    const { description } = values;
+
+    const data = {
+      formId: id,
+      description: description,
+      endPageId: element.questionId,
+    };
+
+    if (!finishPage) {
+      try {
+        const res = await createEndPageAction(data as any);
+        if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
+        addFinishPage({
+          ...selectedElement?.fieldElement,
+          questionId: res?.data?.endPageId,
+          description: res?.data?.description,
+        } as FormElementInstance);
+        toast.success('صفحه پایان با موفقیت افزوده شد');
+        setOpenDialog(false);
+        setSelectedElement(null);
+        reset();
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      try {
+        const res = await updateEndPageAction(data as any);
+        if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
+        updateFinishPage({
+          ...element,
+          description: res?.data?.description,
+        });
+        setOpenDialog(false);
+        setSelectedElement(null);
+        reset();
+      } catch (error) {
+        console.error(error);
+        toast.error('انجام عملیات با خطا مواجه شد');
+      }
+    }
+  }
+
+  return (
+    <FormProvider methods={methods} onSubmit={handleSubmit(applyChanges)} formId={FIELD_PROPERTIES_FORM_ID}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          direction: 'ltr',
+          width: '100%',
+          paddingX: 1.5,
+        }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            direction: 'ltr',
+            width: '100%',
+            paddingX: 1.5,
+            '& .MuiFormControl-root, & .MuiInputBase-root': {
+              borderRadius: '10px',
+            },
+          }}>
+          <RHFTextField multiline rows={5} name='description' />
+        </Box>
+        <FieldDialogActionBottomButtons status={isSubmitting} />
+      </Box>
+    </FormProvider>
+  );
+}

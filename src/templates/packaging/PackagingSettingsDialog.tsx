@@ -103,14 +103,14 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
     handleSubmit,
     reset,
     setValue,
-    formState: { isSubmitting },
+    formState: { isSubmitting, dirtyFields },
   } = methods;
 
   const watchCategoryIds = watch('categoryIds');
 
   useEffect(() => {
     if (watchCategoryIds.length === 0) {
-      setValue('subCategoryIds', []);
+      setValue('subCategoryIds', [], { shouldDirty: false });
     }
   }, [watchCategoryIds, setValue]);
 
@@ -135,12 +135,15 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
         const allIds = data.formCategorysModel?.categoryId?.map(String) ?? [];
         const { categoryIds, subCategoryIds } = splitSavedCategoryIds(allIds, categories);
 
-        reset({
-          name: data.name || '',
-          ratio: data.ratio || 1,
-          categoryIds,
-          subCategoryIds,
-        });
+        reset(
+          {
+            name: data.name || '',
+            ratio: data.ratio || 1,
+            categoryIds,
+            subCategoryIds,
+          },
+          { keepDirty: false },
+        );
 
         if (categoryIds.length > 0) {
           mutation.mutate(categoryIds);
@@ -170,17 +173,26 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
 
   const onSubmit = async (formData: PackageSettingSchemaType) => {
     try {
-      const categoryIds = (formData.categoryIds ?? []).filter(Boolean);
-      const subCategoryIds = (formData.subCategoryIds ?? []).filter(Boolean);
-      const allCategoryIds = [...categoryIds, ...subCategoryIds]
-        .map(Number)
-        .filter((id) => Number.isFinite(id) && id > 0);
+      const categoriesChanged =
+        Boolean(dirtyFields.categoryIds) || Boolean(dirtyFields.subCategoryIds);
+
+      let formCategorysModel: { categoryId: number[] } | null = null;
+
+      if (categoriesChanged) {
+        const categoryIds = (formData.categoryIds ?? []).filter(Boolean);
+        const subCategoryIds = (formData.subCategoryIds ?? []).filter(Boolean);
+        const allCategoryIds = [...categoryIds, ...subCategoryIds]
+          .map(Number)
+          .filter((id) => Number.isFinite(id) && id > 0);
+
+        formCategorysModel =
+          allCategoryIds.length > 0 ? { categoryId: allCategoryIds } : null;
+      }
 
       const res = await putPackageSettingAction(packageId, {
         name: formData.name,
         ratio: formData.ratio,
-        formCategorysModel:
-          allCategoryIds.length > 0 ? { categoryId: allCategoryIds } : null,
+        formCategorysModel,
       });
 
       if (!res.success) {

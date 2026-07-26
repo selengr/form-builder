@@ -1,182 +1,227 @@
 'use client';
 
-import { memo } from 'react';
-import Dialog from '@mui/material/Dialog';
+import { memo, Dispatch, SetStateAction, useState } from 'react';
 import { CgClose } from 'react-icons/cg';
-import Button from '@mui/material/Button';
-import { useRouter } from 'next/navigation';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import { Dispatch, SetStateAction, useState } from 'react';
-// context
-import { useUserInfoContext } from '@/context/UserInfoContext';
-// hook
-import { ILimitation, IStartFromContinu } from '@/hooks/useParticipateForm';
-import { DialogTitle } from '@mui/material';
 import { FiClock } from 'react-icons/fi';
+import { useRouter } from 'next/navigation';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  IconButton,
+  Typography,
+} from '@mui/material';
+import { useUserInfoContext } from '@/context/UserInfoContext';
+import { ILimitation, IStartFromContinu } from '@/hooks/useParticipateForm';
 
 interface StartFromContinueDialogProps {
-    startFromContinue: IStartFromContinu,
-    takePart: (username: string | null) => Promise<void>;
-    setLimitation: Dispatch<SetStateAction<ILimitation>>;
-    checkAnswerBefore: (username: string | null) => Promise<void>;
-    setStartFromContinue: Dispatch<SetStateAction<IStartFromContinu>>;
+  startFromContinue: IStartFromContinu;
+  takePart: (username: string | null) => Promise<void>;
+  setLimitation: Dispatch<SetStateAction<ILimitation>>;
+  checkAnswerBefore: (username: string | null) => Promise<void>;
+  setStartFromContinue: Dispatch<SetStateAction<IStartFromContinu>>;
 }
 
+const CONTINUE_INFO_TEXT = `می‌توانید فرم را نیمه‌کاره رها کنید و دوباره به آن برگردید!
+این فرم به شما امکان می‌دهد در صورت وقفه، بعداً از همانجایی که آن را رها کرده‌اید ادامه دهید.
+• اگر اولین بار است که این فرم را تکمیل می‌کنید، با وارد کردن شماره همراه، پاسخ‌های شما ذخیره می‌شود تا بعداً بتوانید ادامه دهید.
+• اگر قبلاً این فرم را آغاز کرده‌اید، پاسخ‌های قبلی شما بازیابی خواهد شد.
+وارد کردن شماره همراه اختیاری است، اما اگر احتمال می‌دهید کارتان نیمه‌تمام بماند، توصیه می‌کنیم شماره همراه خود را وارد کنید.`;
+
+const PHONE_LIMITATION_TEXT =
+  'برای پاسخ دادن به این فرم لازم است که شماره همراه خود را وارد کنید! برای جلوگیری از ثبت پاسخ تکراری لازم است شماره همراه شما ثبت شود. اگر قبلاً این فرم را تکمیل کرده باشید، امکان دسترسی مجدد نخواهید داشت.';
+
 const StartFromContinueDialog = memo(function StartFromContinueDialog({
-    takePart,
-    setLimitation,
-    startFromContinue,
-    checkAnswerBefore,
-    setStartFromContinue
-
+  takePart,
+  setLimitation,
+  startFromContinue,
+  checkAnswerBefore,
+  setStartFromContinue,
 }: StartFromContinueDialogProps) {
-    const [isDialogOpen, setIsDialogOpen] = useState(startFromContinue.status);
-    const router = useRouter()
-    const { username } = useUserInfoContext();
+  const [isDialogOpen, setIsDialogOpen] = useState(startFromContinue.status);
+  const router = useRouter();
+  const { username } = useUserInfoContext();
 
-    const onStartFromContinue = async () => {
+  const isPhoneLimitation = Boolean(startFromContinue.data?.responseLimitation);
 
-        if (startFromContinue?.data?.loggedInStatus === false) {
-            setLimitation({
-                isLimited: true,
-                limitationType: "PHONE_NUMBER",
-            });
-        } else {
-            await checkAnswerBefore(username);
-            setStartFromContinue({
-                status: false,
-                data: null
-            })
-            setIsDialogOpen(false)
-        }
+  const onStartFromContinue = async () => {
+    if (startFromContinue?.data?.loggedInStatus === false) {
+      setLimitation({
+        isLimited: true,
+        limitationType: 'PHONE_NUMBER',
+      });
+    } else {
+      await checkAnswerBefore(username);
+      setStartFromContinue({
+        status: false,
+        data: null,
+      });
+      setIsDialogOpen(false);
     }
+  };
 
-    const onStartNew = async () => {
+  const onStartNew = async () => {
+    await takePart(username);
+    setStartFromContinue({
+      status: false,
+      data: null,
+    });
+    setIsDialogOpen(false);
+  };
 
-        await takePart(username);
-        setStartFromContinue({
-            status: false,
-            data: null
-        })
-        setIsDialogOpen(false)
+  const onClose = () => {
+    setIsDialogOpen(false);
+    router.back();
+  };
 
-    }
+  return (
+    <Dialog
+      open={isDialogOpen}
+      onClose={onClose}
+      dir="ltr"
+      sx={{
+        overflow: 'hidden',
+        scrollbarWidth: 'none',
+        '& .MuiPaper-root': {
+          borderRadius: '24px',
+          margin: '10px',
+          width: '100%',
+          maxWidth: '480px',
+          overflow: 'hidden',
+        },
+        '& .MuiDialog-container': {
+          backdropFilter: 'blur(4px)',
+          backgroundColor: 'hsl(0deg 0% 100% / 50%)',
+        },
+      }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+        <IconButton aria-label="بستن" onClick={onClose} sx={{ m: 1, mt: 1.5 }}>
+          <CgClose color="#404040" size="1.5rem" />
+        </IconButton>
+      </Box>
 
-    const onClose = () => {
-        setIsDialogOpen(false)
-        router.back()
-    }
+      <DialogContent
+        dir="rtl"
+        sx={{
+          px: 3,
+          pt: 0,
+          pb: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          textAlign: 'center',
+        }}>
+        <Box
+          sx={{
+            width: 72,
+            height: 72,
+            borderRadius: '20px',
+            bgcolor: '#EEF4FF',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            mb: 2,
+          }}>
+          <FiClock size={34} color="#1758BA" strokeWidth={2.25} />
+        </Box>
 
-    return (
-        <Dialog
-            open={isDialogOpen}
-            dir='rtl'
+        <Typography fontSize="18px" fontWeight={700} color="#161616" mb={2}>
+          شروع از ادامه
+        </Typography>
+
+        <Box
+          sx={{
+            width: '100%',
+            bgcolor: '#F7F7FF',
+            borderRadius: '16px',
+            px: 2.5,
+            py: 2,
+            mb: 3,
+            textAlign: 'left',
+          }}>
+          <Typography fontSize="14px" fontWeight={700} color="#161616" mb={1}>
+            توجه
+          </Typography>
+          <Typography fontSize="14px" fontWeight={500} color="#393939" lineHeight={1.9} whiteSpace="pre-line">
+            {isPhoneLimitation ? PHONE_LIMITATION_TEXT : CONTINUE_INFO_TEXT}
+          </Typography>
+          <Box
             sx={{
-                overflow: 'hidden',
-                scrollbarWidth: 'none',
-                '& .MuiPaper-root': {
-                    borderRadius: '24px',
-                    margin: '10px',
-                },
-                '& .MuiDialog-container': {
-                    backdropFilter: 'blur(4px)',
-                    backgroundColor: 'hsl(0deg 0% 100% / 50%)',
-                },
+              mt: 1.5,
+              pt: 1.5,
+              borderTop: '1px dashed #DDE1E6',
             }}>
-            {isDialogOpen && (
-                <>
-                    <div className='flex items-center justify-end'>
-                        <button className='mx-4 mt-4 mb-0' onClick={onClose}>
-                            <CgClose color='#404040' width={25} height={25} size='1.5rem' />
-                        </button>
-                    </div>
-                    <DialogContent
-                        sx={{
-                            paddingX: 3,
-                            paddingBottom: 2,
-                            paddingTop: 1,
-                        }}>
-                        <div className='text-right'>
-                            <div className="flex items-center gap-2 justify-start mb-2">
-                                <FiClock className="text-gray-500" />
-                                <h3 className="text-lg font-bold text-gray-800">
-                                    شروع از ادامه
-                                </h3>
-                            </div>
+            <Typography fontSize="13px" fontWeight={600} color="#1758BA">
+              {isPhoneLimitation
+                ? 'آیا مایل به ادامه با ثبت شماره همراه هستید؟'
+                : 'چگونه می‌خواهید ادامه دهید؟'}
+            </Typography>
+          </Box>
+        </Box>
 
-                            <p className="text-gray-600 leading-relaxed">
+        <Box sx={{ display: 'flex', gap: 1.5, width: '100%' }}>
+          {!isPhoneLimitation ? (
+            <Button
+              type="button"
+              fullWidth
+              variant="outlined"
+              onClick={onStartNew}
+              sx={{
+                height: '50px',
+                fontWeight: 700,
+                fontSize: '15px',
+                borderRadius: '10px',
+                color: '#1758BA',
+                borderColor: '#1758BA',
+                bgcolor: 'white',
+                boxShadow: 'none',
+                '&:hover': { bgcolor: 'white', boxShadow: 'none' },
+              }}>
+              شروع فرم جدید
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              fullWidth
+              variant="outlined"
+              onClick={onClose}
+              sx={{
+                height: '50px',
+                fontWeight: 700,
+                fontSize: '15px',
+                borderRadius: '10px',
+                color: '#1758BA',
+                borderColor: '#1758BA',
+                bgcolor: 'white',
+                boxShadow: 'none',
+                '&:hover': { bgcolor: 'white', boxShadow: 'none' },
+              }}>
+              انصراف
+            </Button>
+          )}
 
-                                {
-                                    startFromContinue.data.responseLimitation ?
-                                        "در صورتی که ممکن است این فرم را نیمه‌کاره رها کنید و بخواهید بعد از بازگشت، از همان نقطه ادامه دهید؛ یا اینکه این همان فرمی است که قبلاً نیمه کاره رهایش کرده‌اید و می‌خواهید ادامه آن را تکمیل کنید، شماره تلفن همراه خود را در کادر زیر وارد کنید."
-                                        :
-                                        "اگر قبلاً این فرم را نیمه‌کاره رها کرده‌اید، می‌توانید ادامه آن را تکمیل کنید."
-                                }
-                            </p>
-                        </div>
-                    </DialogContent>
-                    <DialogActions
-                        sx={{
-                            padding: '16px 24px',
-                            gap: '4px',
-                            // borderTop: '1px solid #e5e5e5',
-                            display: "flex",
-                            //   maxWidth : "250px"
-                            justifyContent: "end"
-                        }}>
-                        {!startFromContinue.data.responseLimitation && (
-                            <Button
-                                onClick={onStartNew}
-                                type='button'
-                                fullWidth
-                                className='text-[16px] text-[#1758BA]'
-                                sx={{
-                                    height: '45px',
-                                    maxWidth: "130px",
-                                    borderRadius: '10px',
-                                    fontWeight: { xs: 500, md: 600 },
-                                    fontSize: { xs: '14px', md: '15px' },
-                                    color: '#1758BA',
-                                    borderColor: '#1758BA',
-                                    bgcolor: 'white',
-                                    '&.MuiButtonBase-root:hover': {
-                                        bgcolor: 'transparent',
-                                        boxShadow: 'none',
-                                        color: '#1758BA',
-                                    },
-                                }}
-                                variant='outlined'
-                            >
-                                شروع فرم جدید
-                            </Button>
-                        )}
-                        <Button
-                            onClick={onStartFromContinue}
-                            fullWidth
-                            variant='contained'
-                            sx={{
-                                maxWidth: "150px",
-                                bgcolor: '#1758BA',
-                                height: '45px',
-                                color: 'white',
-                                fontSize: { xs: '14px', md: '15px' },
-                                fontWeight: { xs: 500, md: 600 },
-                                borderRadius: '10px',
-                                boxShadow: 'none',
-                                '&.MuiButtonBase-root:hover, &.MuiButtonBase-root:active': {
-                                    bgcolor: '#1758BA',
-                                    boxShadow: 'none',
-                                },
-                            }}>
-                            {startFromContinue.data.responseLimitation ? "بله" : "ادامه فرم قبلی"}
-
-                        </Button>
-                    </DialogActions>
-                </>
-            )}
-        </Dialog>
-    );
+          <Button
+            type="button"
+            fullWidth
+            variant="contained"
+            disableElevation
+            onClick={onStartFromContinue}
+            sx={{
+              height: '50px',
+              fontWeight: 700,
+              fontSize: '15px',
+              borderRadius: '10px',
+              bgcolor: '#1758BA',
+              boxShadow: 'none',
+              '&:hover': { bgcolor: '#1758BA', opacity: 0.92, boxShadow: 'none' },
+            }}>
+            {isPhoneLimitation ? 'بله، ادامه' : 'ادامه فرم قبلی'}
+          </Button>
+        </Box>
+      </DialogContent>
+    </Dialog>
+  );
 });
 
 export default StartFromContinueDialog;

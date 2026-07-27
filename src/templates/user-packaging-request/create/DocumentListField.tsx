@@ -126,6 +126,7 @@ export default function DocumentListField({
     if (fields.length <= 1) return;
 
     const currentList = getValues('documentList') ?? [];
+    if (mode === 'edit' && !currentList[index]?.isNew) return;
     const updatedList = currentList
       .filter((_, itemIndex) => itemIndex !== index)
       .map((document) => sanitizeDocumentListItem(document));
@@ -153,6 +154,7 @@ export default function DocumentListField({
           };
           const hasExistingFile =
             !isNewDocument && hasExistingDocumentFile(currentDocument, mode === 'edit');
+          const isLockedDocument = mode === 'edit' && !isNewDocument;
 
           return (
             <Box
@@ -176,6 +178,7 @@ export default function DocumentListField({
                 <RHFTextField
                   name={`documentList.${index}.title`}
                   placeholder="عنوان مدرک را وارد کنید"
+                  disabled={isLockedDocument}
                   sx={{
                     '& .MuiInputBase-root': {
                       borderRadius: '10px',
@@ -221,19 +224,25 @@ export default function DocumentListField({
                           }}>
                           دانلود
                         </Button>
-                        <Button
-                          type="button"
-                          variant="outlined"
-                          onClick={() => handleReplaceFile(index)}
-                          sx={{
-                            borderRadius: '8px',
-                            borderColor: '#1758BA',
-                            color: '#1758BA',
-                          }}>
-                          تغییر فایل
-                        </Button>
+                        {!isLockedDocument && (
+                          <Button
+                            type="button"
+                            variant="outlined"
+                            onClick={() => handleReplaceFile(index)}
+                            sx={{
+                              borderRadius: '8px',
+                              borderColor: '#1758BA',
+                              color: '#1758BA',
+                            }}>
+                            تغییر فایل
+                          </Button>
+                        )}
                       </Box>
                     </Box>
+                  ) : isLockedDocument ? (
+                    <Typography fontSize={13} color="#393939">
+                      فایل بارگذاری شده
+                    </Typography>
                   ) : (
                     <>
                       <UppyUploader
@@ -251,7 +260,7 @@ export default function DocumentListField({
                   )}
                 </Box>
 
-                {fields.length > 1 && (
+                {fields.length > 1 && !isLockedDocument && (
                   <IconButton
                     type="button"
                     aria-label="حذف مدرک"

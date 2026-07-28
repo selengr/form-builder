@@ -19,6 +19,12 @@ export const createPackagingRequestSchema = z.object({
         .max(50, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' }),
     ),
   targetLabelEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
+  ownershipTypeEnum: z
+    .string()
+    .min(1, { message: 'لطفاً یک گزینه را انتخاب کنید' })
+    .refine((value) => value === 'OWNERSHIP_SINGLE' || value === 'OWNERSHIP_MULTI', {
+      message: 'لطفاً یک گزینه را انتخاب کنید',
+    }),
   categoryIds: z.preprocess(
     (value) => (Array.isArray(value) ? value.filter(Boolean) : []),
     z.array(z.string()),

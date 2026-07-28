@@ -15,6 +15,7 @@ import FormProvider from '@/components/hook-form/FormProvider';
 import { RHFMultiSelectV0, RHFSelect, RHFTextField } from '@/components/hook-form';
 import { SkeletonMenuItem } from '@/components/Fields/PackageInjectionField';
 import DocumentListField from './DocumentListField';
+import OwnershipTypeField from './OwnershipTypeField';
 import {
   createPackagingRequestSchema,
   CreatePackagingRequestFormValues,
@@ -54,6 +55,7 @@ export default function CreatePackagingRequestForm() {
     defaultValues: {
       name: '',
       targetLabelEnum: '',
+      ownershipTypeEnum: '',
       categoryIds: [],
       subCategoryIds: [],
       documentList: [{ title: '', uuid: '' }],
@@ -97,6 +99,7 @@ export default function CreatePackagingRequestForm() {
     const payload = {
       name: data.name,
       targetLabelEnum: data.targetLabelEnum,
+      ownershipTypeEnum: data.ownershipTypeEnum as 'OWNERSHIP_SINGLE' | 'OWNERSHIP_MULTI',
       documentList: data.documentList.map(({ title, uuid }) => ({ title, uuid })),
       formCategorysModel: allCategoryIds.length > 0 ? { categoryId: allCategoryIds } : null,
       ...(data.newComment?.trim() ? { newComment: data.newComment.trim() } : {}),
@@ -184,6 +187,8 @@ export default function CreatePackagingRequestForm() {
                 ))}
               </RHFSelect>
             </Box>
+
+            <OwnershipTypeField />
 
             <DocumentListField
               control={control as never}

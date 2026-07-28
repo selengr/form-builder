@@ -2,9 +2,15 @@
 
 import { Box, Button, Typography } from '@mui/material';
 
+const SAMPLE_FILE_PATH = '/sample-ownership.docx';
+const SAMPLE_FILE_NAME = 'نمونه-فایل-مالکیت.docx';
+
 export default function OwnershipSampleDownload() {
-  const handleTestClick = () => {
-    // Placeholder until the static Word sample file is provided.
+  const downloadSampleFile = () => {
+    const link = document.createElement('a');
+    link.href = SAMPLE_FILE_PATH;
+    link.download = SAMPLE_FILE_NAME;
+    link.click();
   };
 
   return (
@@ -26,15 +32,11 @@ export default function OwnershipSampleDownload() {
         بارگذاری نمایید.
       </Typography>
 
-      <Typography fontSize="13px" fontWeight={600} color="#1758BA">
-        this is for test
-      </Typography>
-
       <Button
         type="button"
         variant="contained"
         disableElevation
-        onClick={handleTestClick}
+        onClick={downloadSampleFile}
         sx={{
           fontSize: { xs: '12px', sm: '13px' },
           fontWeight: 600,

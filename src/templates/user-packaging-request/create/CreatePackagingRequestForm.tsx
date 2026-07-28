@@ -18,6 +18,7 @@ import DocumentListField from './DocumentListField';
 import OwnershipTypeField from './OwnershipTypeField';
 import {
   createPackagingRequestSchema,
+  CreatePackagingRequestFormInput,
   CreatePackagingRequestFormValues,
 } from './schema';
 import { CREATE_PAGE_CONTENT_MAX_WIDTH } from './layout';
@@ -50,7 +51,7 @@ export default function CreatePackagingRequestForm() {
   const { categories, isFetchingCategory } = useGetUserPackagingRequestParentCategory();
   const { mutation, subCategories } = useGetUserPackagingRequestSubCategory();
 
-  const methods = useForm<CreatePackagingRequestFormValues>({
+  const methods = useForm<CreatePackagingRequestFormInput>({
     resolver: zodResolver(createPackagingRequestSchema),
     defaultValues: {
       name: '',
@@ -99,7 +100,7 @@ export default function CreatePackagingRequestForm() {
     const payload = {
       name: data.name,
       targetLabelEnum: data.targetLabelEnum,
-      ownershipTypeEnum: data.ownershipTypeEnum as 'OWNERSHIP_SINGLE' | 'OWNERSHIP_MULTI',
+      ownershipTypeEnum: data.ownershipTypeEnum,
       documentList: data.documentList.map(({ title, uuid }) => ({ title, uuid })),
       formCategorysModel: allCategoryIds.length > 0 ? { categoryId: allCategoryIds } : null,
       ...(data.newComment?.trim() ? { newComment: data.newComment.trim() } : {}),

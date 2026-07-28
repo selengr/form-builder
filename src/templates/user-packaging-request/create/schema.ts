@@ -20,8 +20,7 @@ export const createPackagingRequestSchema = z.object({
     ),
   targetLabelEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
   ownershipTypeEnum: z
-    .string()
-    .min(1, { message: 'لطفاً یک گزینه را انتخاب کنید' })
+    .union([z.literal(''), z.literal('OWNERSHIP_SINGLE'), z.literal('OWNERSHIP_MULTI')])
     .refine((value) => value === 'OWNERSHIP_SINGLE' || value === 'OWNERSHIP_MULTI', {
       message: 'لطفاً یک گزینه را انتخاب کنید',
     }),
@@ -40,4 +39,5 @@ export const createPackagingRequestSchema = z.object({
   newComment: z.string().optional(),
 });
 
-export type CreatePackagingRequestFormValues = z.infer<typeof createPackagingRequestSchema>;
+export type CreatePackagingRequestFormInput = z.input<typeof createPackagingRequestSchema>;
+export type CreatePackagingRequestFormValues = z.output<typeof createPackagingRequestSchema>;

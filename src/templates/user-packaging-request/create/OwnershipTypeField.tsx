@@ -10,14 +10,14 @@ import {
   Typography,
 } from '@mui/material';
 import { Controller, useFormContext } from 'react-hook-form';
-import { CreatePackagingRequestFormValues } from './schema';
+import { CreatePackagingRequestFormInput } from './schema';
 import OwnershipSampleDownload from './OwnershipSampleDownload';
 
 export const OWNERSHIP_SINGLE = 'OWNERSHIP_SINGLE';
 export const OWNERSHIP_MULTI = 'OWNERSHIP_MULTI';
 
 export default function OwnershipTypeField() {
-  const { control, watch } = useFormContext<CreatePackagingRequestFormValues>();
+  const { control, watch } = useFormContext<CreatePackagingRequestFormInput>();
   const ownershipTypeEnum = watch('ownershipTypeEnum');
   const isMultiOwnership = ownershipTypeEnum === OWNERSHIP_MULTI;
 

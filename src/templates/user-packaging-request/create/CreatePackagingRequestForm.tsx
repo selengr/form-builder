@@ -185,6 +185,45 @@ export default function CreatePackagingRequestForm() {
               </RHFSelect>
             </Box>
 
+            <Box
+              sx={{
+                width: '100%',
+                bgcolor: '#F7F7FF',
+                borderRadius: '12px',
+                px: 2,
+                py: 1.5,
+                mb: 1,
+              }}>
+              <Typography
+                component="p"
+                fontSize="13px"
+                fontWeight={600}
+                color="#393939"
+                lineHeight={1.9}
+                sx={{ display: 'flex', gap: 0.75 }}>
+                <Box component="span" flexShrink={0}>
+                  •
+                </Box>
+                <span>آپلود اسناد زیر ضروری است:</span>
+              </Typography>
+              <Typography
+                component="p"
+                fontSize="13px"
+                fontWeight={500}
+                color="#393939"
+                lineHeight={1.9}
+                mt={0.75}
+                sx={{ display: 'flex', gap: 0.75 }}>
+                <Box component="span" flexShrink={0}>
+                  •
+                </Box>
+                <span>
+                  فایل سند انتشار قطعی ابزار (برای مثال مقاله علمی معتبر)؛ سند پرسشنامه با فرمت
+                  .docx؛ سند شیوه نمره‌گذاری، شروط و محاسبات
+                </span>
+              </Typography>
+            </Box>
+
             <DocumentListField
               control={control as never}
               register={register as never}

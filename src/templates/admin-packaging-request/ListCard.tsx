@@ -20,7 +20,7 @@ export default function AdminPackagingRequestListCard({
 
   return (
     <div className="relative flex flex-col gap-3 rounded-2xl border border-[#DDE1E6] p-5 shadow-sm w-full">
-      {/* {!canProcess && ( */}
+      {!canProcess && (
         <Box sx={{ position: 'absolute', top: 11, right: 13 }}>
           <IconButton
             color="primary"
@@ -29,7 +29,7 @@ export default function AdminPackagingRequestListCard({
             <CodiconEye style={{ width: 28, height: 28 }} />
           </IconButton>
         </Box>
-      {/* )} */}
+      )}
 
       <InfoRow label="عنوان" value={data.name} bold className='max-w-[90%]'/>
       <InfoRow

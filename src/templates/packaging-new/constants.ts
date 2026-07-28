@@ -1,12 +1,13 @@
 export type PackagingListType = 'PACKAGING' | 'PACKAGING_REQUESTE' | string;
 
-export type PackagingStatus = 'WAIT_FOR_CREATE' | 'CREATE' | string;
+export type PackagingStatus = 'WAIT_FOR_CREATE' | 'CREATE' | 'FINAL' | string;
 
 export const PACKAGING_REQUEST_TYPE = 'PACKAGING_REQUESTE';
 
 export const packagingStatusLabels: Record<string, string> = {
   WAIT_FOR_CREATE: 'در انتظار ساخت',
   CREATE: 'ایجاد شده',
+  FINAL: 'نهایی',
 };
 
 const defaultStatusStyle = { backgroundColor: '#F7F7FF', color: '#393939' };
@@ -30,9 +31,15 @@ export function getPackagingRequestViewId(item: {
 
 export function getPackagingStatusLabel(status?: string) {
   if (!status) return '—';
-  if (status === 'WAIT_FOR_CREATE') return packagingStatusLabels.WAIT_FOR_CREATE;
-  if (status === 'CREATE') return packagingStatusLabels.CREATE;
-  return 'نهایی';
+  return packagingStatusLabels[status] ?? 'نهایی';
+}
+
+export function isPackagingWaitForCreate(status?: string) {
+  return status === 'WAIT_FOR_CREATE';
+}
+
+export function isPackagingCreateStatus(status?: string) {
+  return status === 'CREATE';
 }
 
 export function getPackagingStatusStyle(status?: string) {

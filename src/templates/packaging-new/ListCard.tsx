@@ -20,6 +20,8 @@ import {
   getPackagingStatusStyle,
   getPackagingRequestViewId,
   isPackagingRequestItem,
+  isPackagingCreateStatus,
+  isPackagingWaitForCreate,
 } from './constants';
 import { PackagingListItem } from './types';
 
@@ -39,8 +41,8 @@ export default function PackagingListCard({
 
   const isPackagingRequest = isPackagingRequestItem(data.type);
   const statusStyle = getPackagingStatusStyle(data.packagingStausEnum);
-  const isWaitForCreate = data.packagingStausEnum === 'WAIT_FOR_CREATE';
-  const isCreateStatus = data.packagingStausEnum === 'CREATE';
+  const isWaitForCreate = isPackagingWaitForCreate(data.packagingStausEnum);
+  const isCreateStatus = isPackagingCreateStatus(data.packagingStausEnum);
   const showRequestViewAction = isPackagingRequest && isCreateStatus;
   const requestViewId = getPackagingRequestViewId(data);
 

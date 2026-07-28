@@ -24,6 +24,7 @@ export const packagingListFetcher: UnifiedListGridFetcher<PackagingListItem> = a
     filterBoxList,
     searchQueryFilter: {
       isCreatedSoloReport: searchQueryFilter.isCreatedSoloReport ?? 'ALL',
+      packagingStausEnum: searchQueryFilter.packagingStausEnum ?? 'ALL',
       fieldOperation: searchQueryFilter.fieldOperation ?? 'DSC',
     },
   });

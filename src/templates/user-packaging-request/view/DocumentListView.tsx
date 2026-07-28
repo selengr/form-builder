@@ -2,7 +2,18 @@
 
 import Image from 'next/image';
 import { Box, Button, Typography } from '@mui/material';
+import DocumentUploadTips from '../DocumentUploadTips';
 import { PackagingRequestDocument } from '../types';
+
+const documentCardSx = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 0.75,
+  border: '1px dashed #1758BA',
+  borderRadius: '10px',
+  p: 1,
+  minHeight: 118,
+};
 
 function getDownloadUrl(link?: string) {
   if (!link) return '';
@@ -26,96 +37,91 @@ export default function DocumentListView({ documents }: DocumentListViewProps) {
     window.open(url, '_blank');
   };
 
-  if (!documents.length) {
-    return (
-      <Box width="100%">
-        <Typography variant="subtitle2" fontWeight={700} mb={1}>
-          مدارک:
-        </Typography>
+  return (
+    <Box width="100%">
+      <Typography variant="subtitle2" fontWeight={700} mb={0.75}>
+        مدارک:
+      </Typography>
+
+      <DocumentUploadTips />
+
+      {!documents.length ? (
         <Box
           sx={{
             borderRadius: '10px',
             bgcolor: '#F7F7FF',
-            px: 2,
-            py: 2,
+            px: 1.5,
+            py: 1.5,
             textAlign: 'center',
           }}>
-          <Typography fontSize={14} color="#666">
+          <Typography fontSize={12} color="#666">
             مدرکی ثبت نشده است
           </Typography>
         </Box>
-      </Box>
-    );
-  }
-
-  return (
-    <Box width="100%">
-      <Typography variant="subtitle2" fontWeight={700} mb={1}>
-        مدارک:
-      </Typography>
-
-      <Box display="flex" flexDirection="column" gap={1.5}>
-        {documents.map((document) => (
-          <Box
-            key={document.id ?? document.uuid}
-            display="flex"
-            flexDirection="column"
-            gap={1.5}
-            border="1px dashed #1758BA"
-            borderRadius="10px"
-            p={1.5}>
-            <Box
-              sx={{
-                width: '100%',
-                minHeight: 40,
-                display: 'flex',
-                alignItems: 'center',
-                px: 2,
-                borderRadius: '10px',
-                bgcolor: '#F7F7FF',
-              }}>
-              <Typography fontSize={14} fontWeight={600} color="#393939">
-                {document.title?.trim() ? document.title : '—'}
-              </Typography>
-            </Box>
-
-            <Box display="flex" flexDirection="column" gap={1.5}>
-              {isImageLink(document.link) ? (
-                <Image
-                  width={100}
-                  height={100}
-                  draggable={false}
-                  alt=""
-                  style={{
-                    width: '100px',
-                    height: '100px',
-                    borderRadius: '12px',
-                    objectFit: 'cover',
-                  }}
-                  src={getDownloadUrl(document.link)}
-                />
-              ) : (
-                <Typography fontSize={13} color="#393939">
-                  فایل بارگذاری شده
-                </Typography>
-              )}
-
-              <Button
-                type="button"
-                variant="outlined"
-                onClick={() => handleDownload(document.link)}
+      ) : (
+        <Box
+          display="grid"
+          gridTemplateColumns={{ xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))' }}
+          gap={1.5}>
+          {documents.map((document) => (
+            <Box key={document.id ?? document.uuid} sx={documentCardSx}>
+              <Box
                 sx={{
-                  alignSelf: 'flex-start',
+                  width: '100%',
+                  minHeight: 36,
+                  display: 'flex',
+                  alignItems: 'center',
+                  px: 1.25,
                   borderRadius: '8px',
-                  borderColor: '#1758BA',
-                  color: '#1758BA',
+                  bgcolor: '#F7F7FF',
                 }}>
-                دانلود
-              </Button>
+                <Typography fontSize={13} fontWeight={600} color="#393939" noWrap>
+                  {document.title?.trim() ? document.title : '—'}
+                </Typography>
+              </Box>
+
+              <Box display="flex" flexDirection="column" gap={0.75} flex={1}>
+                {isImageLink(document.link) ? (
+                  <Image
+                    width={72}
+                    height={72}
+                    draggable={false}
+                    alt=""
+                    style={{
+                      width: '72px',
+                      height: '72px',
+                      borderRadius: '8px',
+                      objectFit: 'cover',
+                    }}
+                    src={getDownloadUrl(document.link)}
+                  />
+                ) : (
+                  <Typography fontSize={12} color="#393939">
+                    فایل بارگذاری شده
+                  </Typography>
+                )}
+
+                <Button
+                  type="button"
+                  size="small"
+                  variant="outlined"
+                  onClick={() => handleDownload(document.link)}
+                  sx={{
+                    alignSelf: 'flex-start',
+                    minHeight: 28,
+                    fontSize: '12px',
+                    borderRadius: '8px',
+                    borderColor: '#1758BA',
+                    color: '#1758BA',
+                    px: 1.25,
+                  }}>
+                  دانلود
+                </Button>
+              </Box>
             </Box>
-          </Box>
-        ))}
-      </Box>
+          ))}
+        </Box>
+      )}
     </Box>
   );
 }

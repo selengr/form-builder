@@ -188,7 +188,7 @@ export default function DocumentListField({
         مدارک:
       </Typography>
 
-      <Box display="flex" flexDirection="column" gap={1.5}>
+      <Box display="flex" flexDirection="column" gap={1}>
         {fields.map((field, index) => {
           const uuidError = errors.documentList?.[index]?.uuid?.message;
           const watchedDocument = documentList?.[index];

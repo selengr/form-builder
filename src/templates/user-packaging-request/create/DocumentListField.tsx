@@ -19,6 +19,53 @@ import { UppyUploader } from '@/components/uploader/UppyUploader';
 import { RHFTextField } from '@/components/hook-form';
 import { packagingRequestDocumentRestrictions } from './documentUploader.config';
 
+const compactUploaderSx = {
+  '& .uppy-Root': {
+    height: '84px',
+    maxHeight: '84px !important',
+  },
+  '& .uppy-Dashboard-inner': {
+    minHeight: '84px !important',
+  },
+  '& .uppy-Dashboard-AddFiles': {
+    height: '44px',
+  },
+  '& .uppy-Dashboard-AddFiles-title': {
+    fontSize: '13px',
+    lineHeight: 1.35,
+    margin: 0,
+  },
+};
+
+const documentCardSx = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 1,
+  border: '1px dashed #1758BA',
+  borderRadius: '10px',
+  p: 1,
+};
+
+const documentTitleFieldSx = {
+  '& .MuiInputBase-root': {
+    borderRadius: '10px',
+    height: 36,
+  },
+  '& .MuiInputBase-input': {
+    py: 0.75,
+    fontSize: '14px',
+  },
+};
+
+const removeDocumentButtonSx = {
+  borderRadius: '8px',
+  border: '1px solid #FA4D56',
+  color: '#FA4D56',
+  width: 36,
+  height: 36,
+  flexShrink: 0,
+};
+
 type DocumentFormItem = {
   id?: number;
   title: string;
@@ -157,14 +204,7 @@ export default function DocumentListField({
           const isLockedDocument = mode === 'edit' && !isNewDocument;
 
           return (
-            <Box
-              key={field.id}
-              display="flex"
-              flexDirection="column"
-              gap={1.5}
-              border="1px dashed #1758BA"
-              borderRadius="10px"
-              p={1.5}>
+            <Box key={field.id} sx={documentCardSx}>
               {mode === 'edit' && typeof documentId === 'number' && (
                 <input
                   type="hidden"
@@ -179,29 +219,24 @@ export default function DocumentListField({
                   name={`documentList.${index}.title`}
                   placeholder="عنوان مدرک را وارد کنید"
                   disabled={isLockedDocument}
-                  sx={{
-                    '& .MuiInputBase-root': {
-                      borderRadius: '10px',
-                      height: 40,
-                    },
-                  }}
+                  sx={documentTitleFieldSx}
                 />
               </Box>
 
-              <Box display="flex" alignItems="flex-start" justifyContent="space-between" gap={2}>
+              <Box display="flex" alignItems="center" justifyContent="space-between" gap={1}>
                 <Box flex={1}>
                   {hasExistingFile ? (
-                    <Box display="flex" flexDirection="column" gap={1.5}>
+                    <Box display="flex" flexDirection="column" gap={1}>
                       {isImageLink(currentDocument.link) ? (
                         <Image
-                          width={100}
-                          height={100}
+                          width={72}
+                          height={72}
                           draggable={false}
                           alt=""
                           style={{
-                            width: '100px',
-                            height: '100px',
-                            borderRadius: '12px',
+                            width: '72px',
+                            height: '72px',
+                            borderRadius: '10px',
                             objectFit: 'cover',
                           }}
                           src={getDownloadUrl(currentDocument.link)}
@@ -216,11 +251,14 @@ export default function DocumentListField({
                         <Button
                           type="button"
                           variant="outlined"
+                          size="small"
                           onClick={() => handleDownload(currentDocument.link)}
                           sx={{
                             borderRadius: '8px',
                             borderColor: '#1758BA',
                             color: '#1758BA',
+                            minHeight: 32,
+                            fontSize: '13px',
                           }}>
                           دانلود
                         </Button>
@@ -228,11 +266,14 @@ export default function DocumentListField({
                           <Button
                             type="button"
                             variant="outlined"
+                            size="small"
                             onClick={() => handleReplaceFile(index)}
                             sx={{
                               borderRadius: '8px',
                               borderColor: '#1758BA',
                               color: '#1758BA',
+                              minHeight: 32,
+                              fontSize: '13px',
                             }}>
                             تغییر فایل
                           </Button>
@@ -246,7 +287,7 @@ export default function DocumentListField({
                   ) : (
                     <>
                       <UppyUploader
-                        sx={{}}
+                        sx={compactUploaderSx}
                         register={register(`documentList.${index}.uuid`)}
                         getData={(data: string[]) => handleUpload(index, data)}
                         fileRestriction={packagingRequestDocumentRestrictions}
@@ -265,12 +306,8 @@ export default function DocumentListField({
                     type="button"
                     aria-label="حذف مدرک"
                     onClick={() => handleRemoveDocument(index)}
-                    sx={{
-                      borderRadius: '10px',
-                      border: '1px solid #FA4D56',
-                      color: '#FA4D56',
-                    }}>
-                    <HiOutlineTrash size="1.5rem" color="#FA4D56" />
+                    sx={removeDocumentButtonSx}>
+                    <HiOutlineTrash size="1.25rem" color="#FA4D56" />
                   </IconButton>
                 )}
               </Box>
@@ -285,17 +322,19 @@ export default function DocumentListField({
         </Typography>
       )}
 
-      <Box display="flex" justifyContent="flex-end" mt={1.5}>
+      <Box display="flex" justifyContent="flex-end" mt={1}>
         <IconButton
           type="button"
           disabled={fields.length >= 10}
           onClick={handleAddDocument}
           sx={{
-            borderRadius: '10px',
+            borderRadius: '8px',
             border: '1px solid #1758BA',
             color: '#1758BA',
+            width: 36,
+            height: 36,
           }}>
-          <FiPlusCircle size="1.5rem" color="#1758BA" />
+          <FiPlusCircle size="1.25rem" color="#1758BA" />
         </IconButton>
       </Box>
     </Box>

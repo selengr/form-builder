@@ -19,53 +19,6 @@ import { UppyUploader } from '@/components/uploader/UppyUploader';
 import { RHFTextField } from '@/components/hook-form';
 import { packagingRequestDocumentRestrictions } from './documentUploader.config';
 
-const compactUploaderSx = {
-  '& .uppy-Root': {
-    height: '84px',
-    maxHeight: '84px !important',
-  },
-  '& .uppy-Dashboard-inner': {
-    minHeight: '84px !important',
-  },
-  '& .uppy-Dashboard-AddFiles': {
-    height: '44px',
-  },
-  '& .uppy-Dashboard-AddFiles-title': {
-    fontSize: '13px',
-    lineHeight: 1.35,
-    margin: 0,
-  },
-};
-
-const documentCardSx = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 1,
-  border: '1px dashed #1758BA',
-  borderRadius: '10px',
-  p: 1,
-};
-
-const documentTitleFieldSx = {
-  '& .MuiInputBase-root': {
-    borderRadius: '10px',
-    height: 36,
-  },
-  '& .MuiInputBase-input': {
-    py: 0.75,
-    fontSize: '14px',
-  },
-};
-
-const removeDocumentButtonSx = {
-  borderRadius: '8px',
-  border: '1px solid #FA4D56',
-  color: '#FA4D56',
-  width: 36,
-  height: 36,
-  flexShrink: 0,
-};
-
 type DocumentFormItem = {
   id?: number;
   title: string;
@@ -86,6 +39,34 @@ interface DocumentListFieldProps {
   clearErrors: UseFormClearErrors<DocumentFormValues>;
   errors: FieldErrors<DocumentFormValues>;
 }
+
+const documentCardSx = {
+  position: 'relative',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 0.75,
+  border: '1px dashed #1758BA',
+  borderRadius: '10px',
+  p: 1,
+  minHeight: 118,
+};
+
+const compactUploaderSx = {
+  '& .uppy-Root': {
+    height: '72px',
+    maxHeight: '72px !important',
+  },
+  '& .uppy-Dashboard-inner': {
+    minHeight: '72px !important',
+  },
+  '& .uppy-Dashboard-AddFiles': {
+    height: '44px',
+  },
+  '& .uppy-Dashboard-AddFiles-title': {
+    fontSize: '11px',
+    lineHeight: 1.3,
+  },
+};
 
 function getDownloadUrl(link?: string) {
   if (!link) return '';
@@ -182,13 +163,18 @@ export default function DocumentListField({
     clearErrors('documentList');
   };
 
+  const canAddMore = fields.length < 10;
+
   return (
     <Box width="100%">
       <Typography variant="subtitle2" fontWeight={700} mb={1}>
         مدارک:
       </Typography>
 
-      <Box display="flex" flexDirection="column" gap={1}>
+      <Box
+        display="grid"
+        gridTemplateColumns={{ xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))' }}
+        gap={1.5}>
         {fields.map((field, index) => {
           const uuidError = errors.documentList?.[index]?.uuid?.message;
           const watchedDocument = documentList?.[index];
@@ -202,6 +188,7 @@ export default function DocumentListField({
           const hasExistingFile =
             !isNewDocument && hasExistingDocumentFile(currentDocument, mode === 'edit');
           const isLockedDocument = mode === 'edit' && !isNewDocument;
+          const showRemoveButton = fields.length > 1 && !isLockedDocument;
 
           return (
             <Box key={field.id} sx={documentCardSx}>
@@ -214,106 +201,144 @@ export default function DocumentListField({
               {mode === 'edit' && Boolean(currentDocument.link?.trim()) && (
                 <input type="hidden" {...register(`documentList.${index}.link`)} />
               )}
-              <Box>
-                <RHFTextField
-                  name={`documentList.${index}.title`}
-                  placeholder="عنوان مدرک را وارد کنید"
-                  disabled={isLockedDocument}
-                  sx={documentTitleFieldSx}
-                />
-              </Box>
 
-              <Box display="flex" alignItems="center" justifyContent="space-between" gap={1}>
-                <Box flex={1}>
-                  {hasExistingFile ? (
-                    <Box display="flex" flexDirection="column" gap={1}>
-                      {isImageLink(currentDocument.link) ? (
-                        <Image
-                          width={72}
-                          height={72}
-                          draggable={false}
-                          alt=""
-                          style={{
-                            width: '72px',
-                            height: '72px',
-                            borderRadius: '10px',
-                            objectFit: 'cover',
-                          }}
-                          src={getDownloadUrl(currentDocument.link)}
-                        />
-                      ) : (
-                        <Typography fontSize={13} color="#393939">
-                          فایل بارگذاری شده
-                        </Typography>
-                      )}
-
-                      <Box display="flex" flexWrap="wrap" gap={1}>
-                        <Button
-                          type="button"
-                          variant="outlined"
-                          size="small"
-                          onClick={() => handleDownload(currentDocument.link)}
-                          sx={{
-                            borderRadius: '8px',
-                            borderColor: '#1758BA',
-                            color: '#1758BA',
-                            minHeight: 32,
-                            fontSize: '13px',
-                          }}>
-                          دانلود
-                        </Button>
-                        {!isLockedDocument && (
-                          <Button
-                            type="button"
-                            variant="outlined"
-                            size="small"
-                            onClick={() => handleReplaceFile(index)}
-                            sx={{
-                              borderRadius: '8px',
-                              borderColor: '#1758BA',
-                              color: '#1758BA',
-                              minHeight: 32,
-                              fontSize: '13px',
-                            }}>
-                            تغییر فایل
-                          </Button>
-                        )}
-                      </Box>
-                    </Box>
-                  ) : isLockedDocument ? (
-                    <Typography fontSize={13} color="#393939">
-                      فایل بارگذاری شده
-                    </Typography>
-                  ) : (
-                    <>
-                      <UppyUploader
-                        sx={compactUploaderSx}
-                        register={register(`documentList.${index}.uuid`)}
-                        getData={(data: string[]) => handleUpload(index, data)}
-                        fileRestriction={packagingRequestDocumentRestrictions}
-                      />
-                      {uuidError && (
-                        <Typography color="error" fontSize={12} mt={0.5}>
-                          {uuidError}
-                        </Typography>
-                      )}
-                    </>
-                  )}
+              <Box display="flex" alignItems="flex-start" gap={0.5}>
+                <Box flex={1} minWidth={0}>
+                  <RHFTextField
+                    name={`documentList.${index}.title`}
+                    placeholder="عنوان مدرک"
+                    disabled={isLockedDocument}
+                    sx={{
+                      '& .MuiInputBase-root': {
+                        borderRadius: '8px',
+                        height: 36,
+                        fontSize: '13px',
+                      },
+                    }}
+                  />
                 </Box>
 
-                {fields.length > 1 && !isLockedDocument && (
+                {showRemoveButton && (
                   <IconButton
                     type="button"
                     aria-label="حذف مدرک"
                     onClick={() => handleRemoveDocument(index)}
-                    sx={removeDocumentButtonSx}>
-                    <HiOutlineTrash size="1.25rem" color="#FA4D56" />
+                    sx={{
+                      flexShrink: 0,
+                      width: 32,
+                      height: 32,
+                      borderRadius: '8px',
+                      border: '1px solid #FA4D56',
+                      color: '#FA4D56',
+                    }}>
+                    <HiOutlineTrash size="1.1rem" color="#FA4D56" />
                   </IconButton>
+                )}
+              </Box>
+
+              <Box flex={1} minHeight={0}>
+                {hasExistingFile ? (
+                  <Box display="flex" flexDirection="column" gap={0.75}>
+                    {isImageLink(currentDocument.link) ? (
+                      <Image
+                        width={72}
+                        height={72}
+                        draggable={false}
+                        alt=""
+                        style={{
+                          width: '72px',
+                          height: '72px',
+                          borderRadius: '8px',
+                          objectFit: 'cover',
+                        }}
+                        src={getDownloadUrl(currentDocument.link)}
+                      />
+                    ) : (
+                      <Typography fontSize={12} color="#393939">
+                        فایل بارگذاری شده
+                      </Typography>
+                    )}
+
+                    <Box display="flex" flexWrap="wrap" gap={0.75}>
+                      <Button
+                        type="button"
+                        size="small"
+                        variant="outlined"
+                        onClick={() => handleDownload(currentDocument.link)}
+                        sx={{
+                          minHeight: 28,
+                          fontSize: '12px',
+                          borderRadius: '8px',
+                          borderColor: '#1758BA',
+                          color: '#1758BA',
+                          px: 1.25,
+                        }}>
+                        دانلود
+                      </Button>
+                      {!isLockedDocument && (
+                        <Button
+                          type="button"
+                          size="small"
+                          variant="outlined"
+                          onClick={() => handleReplaceFile(index)}
+                          sx={{
+                            minHeight: 28,
+                            fontSize: '12px',
+                            borderRadius: '8px',
+                            borderColor: '#1758BA',
+                            color: '#1758BA',
+                            px: 1.25,
+                          }}>
+                          تغییر فایل
+                        </Button>
+                      )}
+                    </Box>
+                  </Box>
+                ) : isLockedDocument ? (
+                  <Typography fontSize={12} color="#393939">
+                    فایل بارگذاری شده
+                  </Typography>
+                ) : (
+                  <>
+                    <UppyUploader
+                      sx={compactUploaderSx}
+                      register={register(`documentList.${index}.uuid`)}
+                      getData={(data: string[]) => handleUpload(index, data)}
+                      fileRestriction={packagingRequestDocumentRestrictions}
+                    />
+                    {uuidError && (
+                      <Typography color="error" fontSize={11} mt={0.25}>
+                        {uuidError}
+                      </Typography>
+                    )}
+                  </>
                 )}
               </Box>
             </Box>
           );
         })}
+
+        {canAddMore && (
+          <Box
+            component="button"
+            type="button"
+            aria-label="افزودن مدرک"
+            onClick={handleAddDocument}
+            sx={{
+              ...documentCardSx,
+              cursor: 'pointer',
+              bgcolor: 'transparent',
+              alignItems: 'center',
+              justifyContent: 'center',
+              minHeight: 118,
+              transition: 'background-color 0.2s',
+              '&:hover': {
+                bgcolor: '#F7F7FF',
+              },
+            }}>
+            <FiPlusCircle size="1.75rem" color="#1758BA" />
+          </Box>
+        )}
       </Box>
 
       {(errors.documentList?.message || errors.documentList?.root?.message) && (
@@ -321,22 +346,6 @@ export default function DocumentListField({
           {errors.documentList?.message || errors.documentList?.root?.message}
         </Typography>
       )}
-
-      <Box display="flex" justifyContent="flex-end" mt={1}>
-        <IconButton
-          type="button"
-          disabled={fields.length >= 10}
-          onClick={handleAddDocument}
-          sx={{
-            borderRadius: '8px',
-            border: '1px solid #1758BA',
-            color: '#1758BA',
-            width: 36,
-            height: 36,
-          }}>
-          <FiPlusCircle size="1.25rem" color="#1758BA" />
-        </IconButton>
-      </Box>
     </Box>
   );
-}
+};

@@ -19,11 +19,7 @@ export const createPackagingRequestSchema = z.object({
         .max(50, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' }),
     ),
   targetLabelEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
-  ownershipTypeEnum: z
-    .union([z.literal(''), z.literal('OWNERSHIP_SINGLE'), z.literal('OWNERSHIP_MULTI')])
-    .refine((value) => value === 'OWNERSHIP_SINGLE' || value === 'OWNERSHIP_MULTI', {
-      message: 'لطفاً یک گزینه را انتخاب کنید',
-    }),
+  ownershipTypeEnum: z.enum(['OWNERSHIP_SINGLE', 'OWNERSHIP_MULTI']).optional(),
   categoryIds: z.preprocess(
     (value) => (Array.isArray(value) ? value.filter(Boolean) : []),
     z.array(z.string()),
@@ -37,7 +33,14 @@ export const createPackagingRequestSchema = z.object({
     .min(1, { message: 'حداقل یک مدرک باید بارگذاری شود' })
     .max(10, { message: 'حداکثر 10 مدرک مجاز است' }),
   newComment: z.string().optional(),
+}).superRefine((data, ctx) => {
+  if (!data.ownershipTypeEnum) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'لطفاً یک گزینه را انتخاب کنید',
+      path: ['ownershipTypeEnum'],
+    });
+  }
 });
 
-export type CreatePackagingRequestFormInput = z.input<typeof createPackagingRequestSchema>;
-export type CreatePackagingRequestFormValues = z.output<typeof createPackagingRequestSchema>;
+export type CreatePackagingRequestFormValues = z.infer<typeof createPackagingRequestSchema>;

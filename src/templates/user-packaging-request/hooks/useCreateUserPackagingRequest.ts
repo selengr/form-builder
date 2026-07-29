@@ -9,8 +9,10 @@ import {
 
 export function useCreateUserPackagingRequest({
   push,
+  listPath = '/user-packaging-request',
 }: {
   push: (href: string) => void;
+  listPath?: string;
 }) {
   return useMutation({
     mutationFn: async (data: CreatePackagingRequestPayload) => {
@@ -24,7 +26,7 @@ export function useCreateUserPackagingRequest({
     },
     onSuccess: () => {
       toast.success('درخواست با موفقیت ثبت شد');
-      push('/user-packaging-request');
+      push(listPath);
     },
     onError: (error: Error) => {
       toast.error(error.message || 'خطا در ثبت درخواست');

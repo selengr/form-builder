@@ -47,7 +47,10 @@ const LIST_PAGE_PATH = '/user-packaging-request';
 export default function CreatePackagingRequestForm() {
   const router = useRouter();
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const { mutate, isPending } = useCreateUserPackagingRequest({ push: router.push });
+  const { mutate, isPending } = useCreateUserPackagingRequest({
+    push: router.push,
+    listPath: LIST_PAGE_PATH,
+  });
   const { targetLabels, isFetchingTargetLabel } = useGetUserPackagingRequestTargetLabel();
   const { categories, isFetchingCategory } = useGetUserPackagingRequestParentCategory();
   const { mutation, subCategories } = useGetUserPackagingRequestSubCategory();
@@ -109,8 +112,11 @@ export default function CreatePackagingRequestForm() {
       ...(data.newComment?.trim() ? { newComment: data.newComment.trim() } : {}),
     };
 
-    mutate(payload);
-    setConfirmDialogOpen(false);
+    mutate(payload, {
+      onSuccess: () => {
+        setConfirmDialogOpen(false);
+      },
+    });
   };
 
   const handleOpenConfirmDialog = handleSubmit(() => {

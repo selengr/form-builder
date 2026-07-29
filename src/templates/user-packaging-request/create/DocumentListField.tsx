@@ -310,7 +310,7 @@ export default function DocumentListField({
                       fileRestriction={packagingRequestDocumentRestrictions}
                     />
                     {uuidError && (
-                      <Typography color="error" fontSize={11} mt={0.25}>
+                      <Typography color="error" fontSize={11} mt={"-8px"}>
                         {uuidError}
                       </Typography>
                     )}

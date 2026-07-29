@@ -38,13 +38,13 @@ export default function OwnershipTypeField() {
   const isMultiOwnership = ownershipTypeEnum === OWNERSHIP_MULTI;
 
   return (
-    <Box display="flex" flexDirection="column" gap="6px" width="100%">
+    <Box display="flex" flexDirection="column" gap="6px" width="100%" mt={3} mb={1}>
       <Typography
         variant="subtitle2"
-        fontWeight={700}
+        fontWeight={600}
         fontSize="15px"
         lineHeight={1.75}
-        sx={{ width: '100%', textAlign: 'right' }}>
+        sx={{ width: '100%', textAlign: 'left' }}>
         آیا کلیه حقوق مادی و معنوی این اثر متعلق به شخص شما است یا افراد دیگری نیز در آن دخیل
         بوده‌اند؟
       </Typography>
@@ -61,12 +61,11 @@ export default function OwnershipTypeField() {
           name="ownershipTypeEnum"
           control={control}
           render={({ field, fieldState: { error } }) => (
-            <FormControl error={Boolean(error)} fullWidth>
+            <FormControl error={Boolean(error)} fullWidth >
               <RadioGroup
                 {...field}
                 value={field.value ?? ''}
                 sx={{
-                  direction: 'rtl',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: 0.25,

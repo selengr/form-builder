@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -16,6 +16,7 @@ import { RHFMultiSelectV0, RHFSelect, RHFTextField } from '@/components/hook-for
 import { SkeletonMenuItem } from '@/components/Fields/PackageInjectionField';
 import DocumentListField from './DocumentListField';
 import OwnershipTypeField from './OwnershipTypeField';
+import CreatePackagingRequestConfirmDialog from './CreatePackagingRequestConfirmDialog';
 import {
   createPackagingRequestSchema,
   CreatePackagingRequestFormValues,
@@ -45,6 +46,7 @@ const LIST_PAGE_PATH = '/user-packaging-request';
 
 export default function CreatePackagingRequestForm() {
   const router = useRouter();
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const { mutate, isPending } = useCreateUserPackagingRequest({ push: router.push });
   const { targetLabels, isFetchingTargetLabel } = useGetUserPackagingRequestTargetLabel();
   const { categories, isFetchingCategory } = useGetUserPackagingRequestParentCategory();
@@ -108,6 +110,15 @@ export default function CreatePackagingRequestForm() {
     };
 
     mutate(payload);
+    setConfirmDialogOpen(false);
+  };
+
+  const handleOpenConfirmDialog = handleSubmit(() => {
+    setConfirmDialogOpen(true);
+  });
+
+  const handleConfirmSubmit = () => {
+    handleSubmit(onSubmit)();
   };
 
   return (
@@ -265,12 +276,13 @@ export default function CreatePackagingRequestForm() {
           }}>
           <Box sx={{ ...centeredContentSx, maxWidth : "450px", display: 'flex', gap: 2 }}>
             <Button
-              type="submit"
+              type="button"
               fullWidth
               disableElevation
               variant="contained"
               loading={isSubmitting || isPending}
               disabled={isSubmitting || isPending}
+              onClick={handleOpenConfirmDialog}
               sx={{
                 bgcolor: '#1758BA',
                 fontWeight: '600',
@@ -304,6 +316,13 @@ export default function CreatePackagingRequestForm() {
         </Box>
       </Box>
     </FormProvider>
+
+      <CreatePackagingRequestConfirmDialog
+        open={confirmDialogOpen}
+        loading={isSubmitting || isPending}
+        onClose={() => setConfirmDialogOpen(false)}
+        onConfirm={handleConfirmSubmit}
+      />
     </Box>
   );
 }

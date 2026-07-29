@@ -148,6 +148,30 @@ function OwnershipTypeFieldLayout({
   );
 }
 
+function OwnershipTypeFieldForm({
+  showSampleDownload,
+}: {
+  showSampleDownload: boolean;
+}) {
+  const { control, watch } = useFormContext<CreatePackagingRequestFormValues>();
+  const ownershipTypeEnum = watch('ownershipTypeEnum');
+
+  return (
+    <Controller
+      name="ownershipTypeEnum"
+      control={control}
+      render={({ field, fieldState: { error } }) => (
+        <OwnershipTypeFieldLayout
+          value={field.value ?? ownershipTypeEnum}
+          error={error?.message}
+          onChange={field.onChange}
+          showSampleDownload={showSampleDownload}
+        />
+      )}
+    />
+  );
+}
+
 export default function OwnershipTypeField({
   readOnly = false,
   showSampleDownload,
@@ -165,21 +189,5 @@ export default function OwnershipTypeField({
     );
   }
 
-  const { control, watch } = useFormContext<CreatePackagingRequestFormValues>();
-  const ownershipTypeEnum = watch('ownershipTypeEnum');
-
-  return (
-    <Controller
-      name="ownershipTypeEnum"
-      control={control}
-      render={({ field, fieldState: { error } }) => (
-        <OwnershipTypeFieldLayout
-          value={field.value ?? ownershipTypeEnum}
-          error={error?.message}
-          onChange={field.onChange}
-          showSampleDownload={shouldShowSampleDownload}
-        />
-      )}
-    />
-  );
+  return <OwnershipTypeFieldForm showSampleDownload={shouldShowSampleDownload} />;
 }

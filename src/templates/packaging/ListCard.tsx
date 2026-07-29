@@ -71,7 +71,7 @@ const ListCard: React.FC<ListCardProps> = ({
   };
 
   const handleEditClick = () => {
-    router.push(`/builder/${data.formId}?admin=packaging&pid=${data.id}`);
+    router.push(`/builder/${data.formId}?admin=PACKAGING&pid=${data.id}`);
   };
 
   // const handlePreview = () => {

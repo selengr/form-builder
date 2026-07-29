@@ -19,9 +19,8 @@ export function useBuilderPublish(data?: { typeEnum?: string }) {
   const { formSetting } = useDesigner();
 
   const IsSurvey = data?.typeEnum === 'SURVEY';
-  const IsPackaging = data?.typeEnum === 'PACKAGING';
+  const IsPackaging = data?.typeEnum === 'PACKAGING' || data?.typeEnum === "PACKAGING_REQUEST";
   const IsDataCollection = data?.typeEnum === 'DATA_COLLECTION';
-
   const formIdToUse = IsPackaging && pid ? pid : id;
 
   const publishMutation = usePublishForm({

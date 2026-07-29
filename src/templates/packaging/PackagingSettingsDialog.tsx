@@ -305,7 +305,7 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
                 </Box>
               </Box>
 
-              <Box display="flex" flexDirection="column" gap="6px" width="100%" mt={1}>
+              <Box display="flex" flexDirection="column" gap="6px" width="100%" mt={3}>
                 <Typography variant="subtitle2" fontWeight={700}>
                   دسته بند‌ی‌ها (اختیاری):
                 </Typography>

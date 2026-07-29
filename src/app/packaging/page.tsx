@@ -1,7 +1,7 @@
-import ListGridWrapper from '@/templates/packaging/ListGridWrapper';
+import PackagingNewListGridWrapper from '@/templates/packaging-new/ListGridWrapper';
 
 export const dynamic = 'force-dynamic';
 
-export default function PackagingPage() {
-  return <ListGridWrapper />
+export default function PackagingNewPage() {
+  return <PackagingNewListGridWrapper />;
 }

@@ -39,15 +39,14 @@ export default function PackagingRequestListCard({
             <Image src={EditIcon} alt="edit" width={24} height={24} />
           </IconButton>
         )}
-
-    {!canEdit && (
+      {!canEdit && (
         <IconButton
           color="primary"
           onClick={() => router.push(`/user-packaging-request/${data.id}/view`)}
           sx={{ padding: 1 }}>
           <CodiconEye style={{ width: 28, height: 28 }} />
         </IconButton>
-      )}
+        )}
      
       </Box>
 

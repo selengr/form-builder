@@ -138,7 +138,7 @@ export default function PackagingListCard({
           </div>
 
           <div className="flex gap-2 flex-wrap items-center justify-end">
-            <PackagingSettingsDialog packageId={data.id} />
+            {!isWaitForCreate && <PackagingSettingsDialog packageId={data.id} /> }
             {isWaitForCreate && (
               <Tooltip title="شروع ساخت" arrow placement="top">
                 <IconButton

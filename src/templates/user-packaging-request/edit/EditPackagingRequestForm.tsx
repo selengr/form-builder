@@ -227,6 +227,7 @@ export default function EditPackagingRequestForm({ requestId }: EditPackagingReq
                 </Typography>
                 <RHFTextField
                   name="name"
+                  disabled
                   sx={{
                     height: '48px',
                     '& .MuiInputBase-root': {

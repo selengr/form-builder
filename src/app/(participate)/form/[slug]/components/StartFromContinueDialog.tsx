@@ -144,7 +144,7 @@ const StartFromContinueDialog = memo(function StartFromContinueDialog({
             توجه
           </Typography>
           <Typography fontSize="14px" fontWeight={500} color="#393939" lineHeight={1.9} whiteSpace="pre-line">
-            {isPhoneLimitation ? PHONE_LIMITATION_TEXT : CONTINUE_INFO_TEXT}
+            {isPhoneLimitation  && startFromContinue?.data?.loggedInStatus !== false ? PHONE_LIMITATION_TEXT : CONTINUE_INFO_TEXT}
           </Typography>
           <Box
             sx={{
@@ -153,8 +153,8 @@ const StartFromContinueDialog = memo(function StartFromContinueDialog({
               borderTop: '1px dashed #DDE1E6',
             }}>
             <Typography fontSize="13px" fontWeight={600} color="#1758BA">
-              {isPhoneLimitation
-                ? 'آیا مایل به ادامه با ثبت شماره همراه هستید؟'
+              {isPhoneLimitation && startFromContinue?.data?.loggedInStatus === false
+                ? 'آیا مایل به ادامه با ثبت شماره همراه هستید؟' 
                 : 'چگونه می‌خواهید ادامه دهید؟'}
             </Typography>
           </Box>

@@ -63,7 +63,7 @@ export async function getPackagingListAction({
     searchQueryFilter.packagingStatusEnum !== 'ALL'
   ) {
     filterRestrictions.push({
-      fieldName: 'packagingStatusEnum.filter',
+      fieldName: 'packagingStatusEnum',
       fieldOperation: 'EQUAL',
       fieldValue: searchQueryFilter.packagingStatusEnum,
       nextConditionOperator: 'AND',

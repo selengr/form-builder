@@ -68,7 +68,6 @@ function OwnershipTypeRadios({
         value={value ?? ''}
         onChange={readOnly ? undefined : (event) => onChange?.(event.target.value)}
         sx={{
-          direction: 'rtl',
           display: 'flex',
           flexDirection: 'column',
           gap: 0,
@@ -112,13 +111,13 @@ function OwnershipTypeFieldLayout({
   const isMultiOwnership = value === OWNERSHIP_MULTI;
 
   return (
-    <Box display="flex" flexDirection="column" gap="6px" width="100%">
+    <Box display="flex" flexDirection="column" gap="6px" width="100%" mt={3} mb={1}>
       <Typography
         variant="subtitle2"
-        fontWeight={700}
+        fontWeight={600}
         fontSize="15px"
         lineHeight={1.75}
-        sx={{ width: '100%', textAlign: 'right' }}>
+        sx={{ width: '100%', textAlign: 'left' }}>
         آیا کلیه حقوق مادی و معنوی این اثر متعلق به شخص شما است یا افراد دیگری نیز در آن دخیل
         بوده‌اند؟
       </Typography>

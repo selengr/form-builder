@@ -16,47 +16,90 @@ import OwnershipSampleDownload from './OwnershipSampleDownload';
 export const OWNERSHIP_SINGLE = 'OWNERSHIP_SINGLE';
 export const OWNERSHIP_MULTI = 'OWNERSHIP_MULTI';
 
+const radioLabelSx = {
+  mr: 0,
+  ml: 0,
+  py: 0.25,
+  alignItems: 'center',
+  '& .MuiFormControlLabel-label': {
+    fontSize: '14px',
+    fontWeight: 600,
+    color: '#393939',
+  },
+  '& .MuiRadio-root': {
+    color: '#1758BA',
+    '&.Mui-checked': { color: '#1758BA' },
+  },
+};
+
 export default function OwnershipTypeField() {
   const { control, watch } = useFormContext<CreatePackagingRequestFormValues>();
   const ownershipTypeEnum = watch('ownershipTypeEnum');
   const isMultiOwnership = ownershipTypeEnum === OWNERSHIP_MULTI;
 
   return (
-    <Box display="flex" flexDirection="column" gap={1.5} width="100%">
-      <Typography variant="subtitle2" fontWeight={700} fontSize="15px" lineHeight={1.7}>
+    <Box display="flex" flexDirection="column" gap="6px" width="100%">
+      <Typography
+        variant="subtitle2"
+        fontWeight={700}
+        fontSize="15px"
+        lineHeight={1.75}
+        sx={{ width: '100%', textAlign: 'right' }}>
         آیا کلیه حقوق مادی و معنوی این اثر متعلق به شخص شما است یا افراد دیگری نیز در آن دخیل
         بوده‌اند؟
       </Typography>
 
-      <Controller
-        name="ownershipTypeEnum"
-        control={control}
-        render={({ field, fieldState: { error } }) => (
-          <FormControl error={Boolean(error)} fullWidth>
-            <RadioGroup {...field} value={field.value ?? ''}>
-              <FormControlLabel
-                value={OWNERSHIP_SINGLE}
-                control={<Radio size="small" />}
-                label="بله، فقط خودم"
+      <Box
+        sx={{
+          width: '100%',
+          bgcolor: '#F7F7FF',
+          borderRadius: '10px',
+          px: { xs: 1.5, sm: 2 },
+          py: { xs: 1.25, sm: 1.5 },
+        }}>
+        <Controller
+          name="ownershipTypeEnum"
+          control={control}
+          render={({ field, fieldState: { error } }) => (
+            <FormControl error={Boolean(error)} fullWidth>
+              <RadioGroup
+                {...field}
+                value={field.value ?? ''}
                 sx={{
-                  '& .MuiFormControlLabel-label': { fontSize: '14px', fontWeight: 500 },
-                }}
-              />
-              <FormControlLabel
-                value={OWNERSHIP_MULTI}
-                control={<Radio size="small" />}
-                label="خیر"
-                sx={{
-                  '& .MuiFormControlLabel-label': { fontSize: '14px', fontWeight: 500 },
-                }}
-              />
-            </RadioGroup>
-            {error?.message && <FormHelperText>{error.message}</FormHelperText>}
-          </FormControl>
-        )}
-      />
+                  direction: 'rtl',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 0.25,
+                  width: '100%',
+                }}>
+                <FormControlLabel
+                  value={OWNERSHIP_SINGLE}
+                  control={<Radio size="small" />}
+                  label="بله، فقط خودم"
+                  sx={radioLabelSx}
+                />
+                <FormControlLabel
+                  value={OWNERSHIP_MULTI}
+                  control={<Radio size="small" />}
+                  label="خیر"
+                  sx={radioLabelSx}
+                />
+              </RadioGroup>
+              {error?.message && (
+                <FormHelperText sx={{ textAlign: 'right', mx: 0, mt: 0.5 }}>
+                  {error.message}
+                </FormHelperText>
+              )}
+            </FormControl>
+          )}
+        />
 
-      {isMultiOwnership && <OwnershipSampleDownload />}
+        {isMultiOwnership && (
+          <Box mt={1.5}>
+            <OwnershipSampleDownload />
+          </Box>
+        )}
+      </Box>
     </Box>
   );
 }

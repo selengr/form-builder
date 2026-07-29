@@ -19,7 +19,7 @@ import { PackagingListItem } from './types';
 
 const DEFAULT_FILTER: SearchQueryFilter = {
   isCreatedSoloReport: 'ALL',
-  packagingStausEnum: 'ALL',
+  packagingStatusEnum: 'ALL',
   fieldOperation: 'DSC',
 };
 

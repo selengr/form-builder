@@ -48,9 +48,9 @@ export default function PackagingFilter({
                 بر اساس وضعیت
             </FormLabel>
             <RadioGroup
-              value={filter.packagingStausEnum ?? 'ALL'}
+              value={filter.packagingStatusEnum ?? 'ALL'}
               onChange={(event) =>
-                onChange((prev) => ({ ...prev, packagingStausEnum: event.target.value }))
+                onChange((prev) => ({ ...prev, packagingStatusEnum: event.target.value }))
               }>
               <FormControlLabel value="ALL" control={<Radio />} label="همه" />
               <FormControlLabel

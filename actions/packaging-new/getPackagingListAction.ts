@@ -13,7 +13,7 @@ interface SearchBoxItem {
 
 export interface PackagingListSearchQueryFilter {
   isCreatedSoloReport: string;
-  packagingStausEnum: string;
+  packagingStatusEnum: string;
   fieldOperation: string;
 }
 
@@ -59,13 +59,13 @@ export async function getPackagingListAction({
   }
 
   if (
-    searchQueryFilter.packagingStausEnum &&
-    searchQueryFilter.packagingStausEnum !== 'ALL'
+    searchQueryFilter.packagingStatusEnum &&
+    searchQueryFilter.packagingStatusEnum !== 'ALL'
   ) {
     filterRestrictions.push({
-      fieldName: 'packagingStausEnum.filter',
+      fieldName: 'packagingStatusEnum.filter',
       fieldOperation: 'EQUAL',
-      fieldValue: searchQueryFilter.packagingStausEnum,
+      fieldValue: searchQueryFilter.packagingStatusEnum,
       nextConditionOperator: 'AND',
     });
   }

@@ -40,9 +40,9 @@ export default function PackagingListCard({
   const [pickUpDialogOpen, setPickUpDialogOpen] = useState(false);
 
   const isPackagingRequest = isPackagingRequestItem(data.type);
-  const statusStyle = getPackagingStatusStyle(data.packagingStausEnum);
-  const isWaitForCreate = isPackagingWaitForCreate(data.packagingStausEnum);
-  const isCreateStatus = isPackagingCreateStatus(data.packagingStausEnum);
+  const statusStyle = getPackagingStatusStyle(data.packagingStatusEnum);
+  const isWaitForCreate = isPackagingWaitForCreate(data.packagingStatusEnum);
+  const isCreateStatus = isPackagingCreateStatus(data.packagingStatusEnum);
   const showRequestViewAction = isPackagingRequest && isCreateStatus;
   const requestViewId = getPackagingRequestViewId(data);
 
@@ -111,7 +111,7 @@ export default function PackagingListCard({
                 backgroundColor: statusStyle.backgroundColor,
                 color: statusStyle.color,
               }}>
-              {getPackagingStatusLabel(data.packagingStausEnum)}
+              {getPackagingStatusLabel(data.packagingStatusEnum)}
             </span>
           }
           bold

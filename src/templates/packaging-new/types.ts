@@ -7,7 +7,7 @@ export interface PackagingListItem {
   invalid: boolean;
   formCategorysModel: null;
   isCreatedSoloReport: boolean;
-  packagingStausEnum: PackagingStatus;
+  packagingStatusEnum: PackagingStatus;
   targetLabelEnum: 'DEFAULT' | string;
   type?: PackagingListType;
   packagingRequestId?: number;

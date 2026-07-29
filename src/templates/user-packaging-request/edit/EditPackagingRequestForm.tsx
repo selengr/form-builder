@@ -8,7 +8,7 @@ import { Box, Button, CircularProgress, Stack, Typography } from '@mui/material'
 import FormProvider from '@/components/hook-form/FormProvider';
 import { RHFTextField } from '@/components/hook-form';
 import DocumentListField from '../create/DocumentListField';
-import OwnershipTypeField from '../create/OwnershipTypeField';
+import OwnershipTypeReadOnlyField from '../create/OwnershipTypeReadOnlyField';
 import { CREATE_PAGE_CONTENT_MAX_WIDTH } from '../create/layout';
 import CommentChatList from './CommentChatList';
 import ReadOnlyFormField from './ReadOnlyFormField';
@@ -241,11 +241,7 @@ export default function EditPackagingRequestForm({ requestId }: EditPackagingReq
 
               <ReadOnlyFormField label="جامعه هدف:" value={targetLabelCaption} />
 
-              <OwnershipTypeField
-                readOnly
-                value={data.ownershipTypeEnum}
-                showSampleDownload={false}
-              />
+              <OwnershipTypeReadOnlyField value={data.ownershipTypeEnum} />
 
               <DocumentListField
                 mode="edit"

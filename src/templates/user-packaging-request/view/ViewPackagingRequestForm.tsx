@@ -9,7 +9,7 @@ import CommentChatList from '../edit/CommentChatList';
 import ReadOnlyCategoryFields from '../edit/ReadOnlyCategoryFields';
 import ReadOnlyFormField from '../edit/ReadOnlyFormField';
 import DocumentListView from './DocumentListView';
-import OwnershipTypeField from '../create/OwnershipTypeField';
+import OwnershipTypeReadOnlyField from '../create/OwnershipTypeReadOnlyField';
 import { useGetUserPackagingRequestById } from '../hooks/useGetUserPackagingRequestById';
 import { useGetUserPackagingRequestTargetLabel } from '../hooks/useGetUserPackagingRequestTargetLabel';
 import { useGetUserPackagingRequestParentCategory } from '../hooks/useGetUserPackagingRequestParentCategory';
@@ -120,11 +120,7 @@ export default function ViewPackagingRequestForm({ requestId }: ViewPackagingReq
               }}>
               <ReadOnlyFormField label="عنوان:" value={data.name} />
               <ReadOnlyFormField label="جامعه هدف:" value={targetLabelCaption} />
-              <OwnershipTypeField
-                readOnly
-                value={data.ownershipTypeEnum}
-                showSampleDownload={false}
-              />
+              <OwnershipTypeReadOnlyField value={data.ownershipTypeEnum} />
               <DocumentListView documents={data.documentList} />
               <ReadOnlyCategoryFields
                 categoryIds={watchCategoryIds}

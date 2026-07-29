@@ -11,7 +11,7 @@ import CommentChatList from '@/templates/user-packaging-request/edit/CommentChat
 import ReadOnlyCategoryFields from '@/templates/user-packaging-request/edit/ReadOnlyCategoryFields';
 import ReadOnlyFormField from '@/templates/user-packaging-request/edit/ReadOnlyFormField';
 import DocumentListView from '@/templates/user-packaging-request/view/DocumentListView';
-import OwnershipTypeField from '@/templates/user-packaging-request/create/OwnershipTypeField';
+import OwnershipTypeReadOnlyField from '@/templates/user-packaging-request/create/OwnershipTypeReadOnlyField';
 import { useGetUserPackagingRequestTargetLabel } from '@/templates/user-packaging-request/hooks/useGetUserPackagingRequestTargetLabel';
 import { useGetUserPackagingRequestParentCategory } from '@/templates/user-packaging-request/hooks/useGetUserPackagingRequestParentCategory';
 import { usePackagingRequestCategoryForm } from '@/templates/user-packaging-request/hooks/usePackagingRequestCategoryForm';
@@ -164,11 +164,7 @@ export default function ProcessPackagingRequestForm({
                 }}>
                 <ReadOnlyFormField label="عنوان:" value={data.name} />
                 <ReadOnlyFormField label="جامعه هدف:" value={targetLabelCaption} />
-                <OwnershipTypeField
-                  readOnly
-                  value={data.ownershipTypeEnum}
-                  showSampleDownload={false}
-                />
+                <OwnershipTypeReadOnlyField value={data.ownershipTypeEnum} />
                 <DocumentListView documents={data.documentList} />
                 <ReadOnlyCategoryFields
                   categoryIds={watchCategoryIds}

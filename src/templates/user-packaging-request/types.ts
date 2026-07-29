@@ -23,6 +23,7 @@ export interface PackagingRequestDetail {
   formId: number | null;
   name: string;
   targetLabelEnum: string;
+  ownershipTypeEnum?: 'OWNERSHIP_SINGLE' | 'OWNERSHIP_MULTI' | string;
   status: PackagingRequestStatus | string;
   documentList: PackagingRequestDocument[];
   formCategorysModel: { categoryId: number[] } | null;

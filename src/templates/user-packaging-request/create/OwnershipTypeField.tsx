@@ -16,6 +16,14 @@ import OwnershipSampleDownload from './OwnershipSampleDownload';
 export const OWNERSHIP_SINGLE = 'OWNERSHIP_SINGLE';
 export const OWNERSHIP_MULTI = 'OWNERSHIP_MULTI';
 
+export type OwnershipTypeEnum = typeof OWNERSHIP_SINGLE | typeof OWNERSHIP_MULTI;
+
+interface OwnershipTypeFieldProps {
+  readOnly?: boolean;
+  showSampleDownload?: boolean;
+  value?: OwnershipTypeEnum | string;
+}
+
 const radioLabelSx = {
   mr: 0,
   ml: 0,
@@ -32,19 +40,85 @@ const radioLabelSx = {
   },
 };
 
-export default function OwnershipTypeField() {
-  const { control, watch } = useFormContext<CreatePackagingRequestFormValues>();
-  const ownershipTypeEnum = watch('ownershipTypeEnum');
-  const isMultiOwnership = ownershipTypeEnum === OWNERSHIP_MULTI;
+const disabledRadioLabelSx = {
+  ...radioLabelSx,
+  '& .MuiFormControlLabel-label': {
+    ...radioLabelSx['& .MuiFormControlLabel-label'],
+    color: '#666',
+  },
+  '& .Mui-disabled': {
+    color: '#1758BA !important',
+  },
+};
+
+function OwnershipTypeRadios({
+  value,
+  readOnly,
+  error,
+  onChange,
+}: {
+  value?: string;
+  readOnly?: boolean;
+  error?: string;
+  onChange?: (value: string) => void;
+}) {
+  return (
+    <FormControl error={Boolean(error)} fullWidth disabled={readOnly}>
+      <RadioGroup
+        value={value ?? ''}
+        onChange={readOnly ? undefined : (event) => onChange?.(event.target.value)}
+        sx={{
+          direction: 'rtl',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 0,
+          width: '100%',
+        }}>
+        <FormControlLabel
+          value={OWNERSHIP_SINGLE}
+          control={<Radio size="small" />}
+          label="بله، فقط خودم"
+          disabled={readOnly}
+          sx={readOnly ? disabledRadioLabelSx : radioLabelSx}
+        />
+        <FormControlLabel
+          value={OWNERSHIP_MULTI}
+          control={<Radio size="small" />}
+          label="خیر"
+          disabled={readOnly}
+          sx={readOnly ? disabledRadioLabelSx : radioLabelSx}
+        />
+      </RadioGroup>
+      {error && (
+        <FormHelperText sx={{ textAlign: 'left', mx: 0, mt: 0.25 }}>{error}</FormHelperText>
+      )}
+    </FormControl>
+  );
+}
+
+function OwnershipTypeFieldLayout({
+  value,
+  readOnly,
+  error,
+  onChange,
+  showSampleDownload,
+}: {
+  value?: string;
+  readOnly?: boolean;
+  error?: string;
+  onChange?: (value: string) => void;
+  showSampleDownload: boolean;
+}) {
+  const isMultiOwnership = value === OWNERSHIP_MULTI;
 
   return (
-    <Box display="flex" flexDirection="column" gap="6px" width="100%" mt={3} mb={1}>
+    <Box display="flex" flexDirection="column" gap="6px" width="100%">
       <Typography
         variant="subtitle2"
-        fontWeight={600}
+        fontWeight={700}
         fontSize="15px"
         lineHeight={1.75}
-        sx={{ width: '100%', textAlign: 'left' }}>
+        sx={{ width: '100%', textAlign: 'right' }}>
         آیا کلیه حقوق مادی و معنوی این اثر متعلق به شخص شما است یا افراد دیگری نیز در آن دخیل
         بوده‌اند؟
       </Typography>
@@ -56,49 +130,57 @@ export default function OwnershipTypeField() {
           borderRadius: '10px',
           px: { xs: 1.5, sm: 2 },
           py: { xs: 1.25, sm: 1.5 },
+          ...(readOnly && { opacity: 0.95 }),
         }}>
-        <Controller
-          name="ownershipTypeEnum"
-          control={control}
-          render={({ field, fieldState: { error } }) => (
-            <FormControl error={Boolean(error)} fullWidth >
-              <RadioGroup
-                {...field}
-                value={field.value ?? ''}
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 0.25,
-                  width: '100%',
-                }}>
-                <FormControlLabel
-                  value={OWNERSHIP_SINGLE}
-                  control={<Radio size="small" />}
-                  label="بله، فقط خودم"
-                  sx={radioLabelSx}
-                />
-                <FormControlLabel
-                  value={OWNERSHIP_MULTI}
-                  control={<Radio size="small" />}
-                  label="خیر"
-                  sx={radioLabelSx}
-                />
-              </RadioGroup>
-              {error?.message && (
-                <FormHelperText sx={{ textAlign: 'right', mx: 0, mt: 0.5 }}>
-                  {error.message}
-                </FormHelperText>
-              )}
-            </FormControl>
-          )}
+        <OwnershipTypeRadios
+          value={value}
+          readOnly={readOnly}
+          error={error}
+          onChange={onChange}
         />
 
-        {isMultiOwnership && (
+        {showSampleDownload && isMultiOwnership && (
           <Box mt={1.5}>
             <OwnershipSampleDownload />
           </Box>
         )}
       </Box>
     </Box>
+  );
+}
+
+export default function OwnershipTypeField({
+  readOnly = false,
+  showSampleDownload,
+  value: valueProp,
+}: OwnershipTypeFieldProps = {}) {
+  const shouldShowSampleDownload = showSampleDownload ?? !readOnly;
+
+  if (readOnly || valueProp !== undefined) {
+    return (
+      <OwnershipTypeFieldLayout
+        value={valueProp}
+        readOnly
+        showSampleDownload={shouldShowSampleDownload}
+      />
+    );
+  }
+
+  const { control, watch } = useFormContext<CreatePackagingRequestFormValues>();
+  const ownershipTypeEnum = watch('ownershipTypeEnum');
+
+  return (
+    <Controller
+      name="ownershipTypeEnum"
+      control={control}
+      render={({ field, fieldState: { error } }) => (
+        <OwnershipTypeFieldLayout
+          value={field.value ?? ownershipTypeEnum}
+          error={error?.message}
+          onChange={field.onChange}
+          showSampleDownload={shouldShowSampleDownload}
+        />
+      )}
+    />
   );
 }

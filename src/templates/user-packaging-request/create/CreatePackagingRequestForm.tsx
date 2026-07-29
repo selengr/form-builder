@@ -171,7 +171,7 @@ export default function CreatePackagingRequestForm() {
               />
             </Stack>
 
-            <Box display="flex" flexDirection="column" gap="6px" width="100%">
+            <Box display="flex" flexDirection="column" gap="6px" width="100%" mt={1}>
               <Typography variant="subtitle2" fontWeight={700}>
                 جامعه هدف:
               </Typography>

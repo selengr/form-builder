@@ -33,7 +33,7 @@ export default function OwnershipSampleDownload() {
         color="#393939"
         lineHeight={1.8}
         fontWeight={500}
-        sx={{ width: '100%', textAlign: 'right' }}>
+        sx={{ width: '100%', textAlign: 'left' }}>
         در صورت مشارکت دیگران، لطفاً فایل نمونه را دانلود کرده، تکمیل کنید و در بخش مدارک
         بارگذاری نمایید.
       </Typography>
@@ -60,7 +60,7 @@ export default function OwnershipSampleDownload() {
           </svg>
         }
         sx={{
-          alignSelf: { xs: 'stretch', sm: 'flex-start' },
+          alignSelf: { xs: 'stretch', sm: 'center' },
           fontSize: { xs: '12px', sm: '13px' },
           fontWeight: 700,
           borderRadius: '8px',

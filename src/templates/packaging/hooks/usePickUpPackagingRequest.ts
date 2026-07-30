@@ -2,7 +2,7 @@
 
 import { toast } from 'sonner';
 import { useMutation } from '@tanstack/react-query';
-import { pickUpPackagingRequestAction } from '@actions/packaging-new/pickUpPackagingRequestAction';
+import { pickUpPackagingRequestAction } from '@actions/packaging/pickUpPackagingRequestAction';
 
 export function usePickUpPackagingRequest({
   onSuccess,

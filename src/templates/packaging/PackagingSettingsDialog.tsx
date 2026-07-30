@@ -210,7 +210,7 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
         queryKey: ['datas_builder_query'],
       });
       queryClient.invalidateQueries({
-        queryKey: ['packaging_new_list'],
+        queryKey: ['packaging_list'],
       });
       handleOpen();
     } catch (error: unknown) {

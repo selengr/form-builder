@@ -1,4 +1,4 @@
-import { getPackagingListAction } from '@actions/packaging-new/getPackagingListAction';
+import { getPackagingListAction } from '@actions/packaging/getPackagingListAction';
 import {
   UnifiedListGridFetcher,
   UnifiedListGridFetchParams,

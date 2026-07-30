@@ -1,108 +1,131 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { IconButton } from '@mui/material';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-// componenst
-import ListCard from './ListCard';
-import ListGrid from './ListGrid';
-import PackagingFilter from './PackagingFilter';
-import CreatePackagingModal from './CreatePackagingModal';
-// images
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
-interface IFormTypeState {
-  isCreatedSoloReport: 'ALL' | 'true' | 'false';
-  fieldOperation: 'DSC' | 'ASC';
-}
+import {
+  UnifiedListGridPage,
+  createDefaultSearchBoxList,
+  SearchQueryFilter,
+  UnifiedListGridFilterSlotProps,
+} from '@/components/unified-list-grid';
+import CreatePackagingModal from './CreatePackagingModal';
+import PackagingListCard from './ListCard';
+import PackagingListCardSkeleton from './ListCardSkeleton';
+import PackagingFilter from './PackagingFilter';
+import { packagingListFetcher } from './packagingListFetcher';
+import { PackagingListItem } from './types';
 
-const apiAddress = '/admin/packaging/main-list'
-// --------------------------------------------------------
-export default function ListGridWrapper() {
-  const { push } = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+const DEFAULT_FILTER: SearchQueryFilter = {
+  isCreatedSoloReport: 'ALL',
+  packagingStatusEnum: 'ALL',
+  fieldOperation: 'DSC',
+};
 
-  const [refreshGrid, setRefreshGrid] = useState<boolean>(false);
-  const [openMyCreateModal, setOpenMyCreateModal] = useState<boolean>(false);
-  const [formType, setFormType] = useState<IFormTypeState>({
-    isCreatedSoloReport: 'ALL',
-    fieldOperation: "DSC"
-  });
-  const filterBoxList: any = [];
-      const searchBoxList: any = [
-        {
-          fieldName: 'name',
-          fieldOperation: 'MATCH',
-          fieldValue: '',
-          nextConditionOperator: 'AND',
-        },
-      ];
+export default function PackagingListGridWrapper() {
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [draftFilter, setDraftFilter] = useState<SearchQueryFilter>(DEFAULT_FILTER);
+  const [appliedFilter, setAppliedFilter] = useState<SearchQueryFilter>(DEFAULT_FILTER);
 
-   const applyFilter = () => {
-    const params = new URLSearchParams(searchParams);
-    if (params.size) params.delete('query');
-    push(`${pathname}?${params.toString()}`);
-    setRefreshGrid((prev) => !prev);
-  };
+  const syncDraftFromApplied = useCallback(() => {
+    setDraftFilter(appliedFilter);
+  }, [appliedFilter]);
 
-  const clearFilter = () => {
-    const params = new URLSearchParams(searchParams);
-    if (params.size) params.delete('query');
+  const FilterSlot = useCallback(
+    ({ mode, closeMobileFilter, refreshList }: UnifiedListGridFilterSlotProps) => {
+      const isMobile = mode === 'mobile';
+      const filter = isMobile ? draftFilter : appliedFilter;
 
-    push(`${pathname}?${params.toString()}`);
-    setFormType({ isCreatedSoloReport: 'ALL', fieldOperation: "DSC" });
-    setRefreshGrid((prev) => !prev);
-  };
+      const handleChange: React.Dispatch<React.SetStateAction<SearchQueryFilter>> = (
+        updater,
+      ) => {
+        if (isMobile) {
+          setDraftFilter(updater);
+          return;
+        }
 
-  const CreateButton = () => {
-    return (
-      <div className='min-w-[50px] w-[50px] h-full'>
-        <IconButton
-          onClick={() => setOpenMyCreateModal(true)}
-          sx={{
-            width: '50px',
-            height: '50px',
-            borderRadius: '16px',
-            border: '1px solid #1758BA',
-          }}>
-          <Image src={PlusIcon} alt='' width={22} height={22} />
-        </IconButton>
-      </div>
-    )
-  }
+        setAppliedFilter((prev) =>
+          typeof updater === 'function' ? updater(prev) : updater,
+        );
+      };
 
-  const handleCloseDialog = () => {
-    setOpenMyCreateModal((prev) => !prev)
-  }
+      const handleApply = () => {
+        if (isMobile) {
+          setAppliedFilter(draftFilter);
+          closeMobileFilter();
+          return;
+        }
+
+        setAppliedFilter(filter);
+        refreshList();
+      };
+
+      const handleReset = () => {
+        setDraftFilter(DEFAULT_FILTER);
+        setAppliedFilter(DEFAULT_FILTER);
+        if (isMobile) {
+          closeMobileFilter();
+          return;
+        }
+        refreshList();
+      };
+
+      return (
+        <PackagingFilter
+          mode={mode}
+          filter={filter}
+          onChange={handleChange}
+          onApply={handleApply}
+          onReset={handleReset}
+        />
+      );
+    },
+    [appliedFilter, draftFilter],
+  );
 
   return (
     <>
-      <ListGrid
-        url={apiAddress}
-        title='بسته های ارزیابی'
-        textTotal={['تعداد کل بسته ها', 'عدد']}
-        searchBoxList={searchBoxList}
-        filterBoxList={filterBoxList}
-         filterComponent={
-          <PackagingFilter
-            formType={formType}
-            setFormType={setFormType}
-            applyFilter={applyFilter}
-            clearFilter={clearFilter}
-          />
-        }
-        CartComponent={(item: any) => <ListCard {...item} />}
-        disableFilter={false}
-        showCreateButton={false}
-        CreateButton={CreateButton}
-        refreshGrid={refreshGrid}
-        searchQueryFilter={formType}
+      <UnifiedListGridPage<PackagingListItem>
+        config={{
+          title: 'بسته های ارزیابی',
+          queryKey: 'packaging_list',
+          textTotal: ['تعداد کل بسته ها', 'عدد'],
+          searchField: 'name',
+          hasSidebarFilter: true,
+          backHref: '/',
+          onMobileFilterOpen: syncDraftFromApplied,
+        }}
+        slots={{
+          CardComponent: PackagingListCard,
+          SkeletonComponent: PackagingListCardSkeleton,
+          FilterComponent: FilterSlot,
+          CreateButton: (
+            <div className="min-w-[50px] w-[50px] h-full">
+              <IconButton
+                onClick={() => setOpenCreateModal(true)}
+                sx={{
+                  width: '50px',
+                  height: '50px',
+                  borderRadius: '16px',
+                  border: '1px solid #1758BA',
+                }}>
+                <Image src={PlusIcon} alt="" width={22} height={22} />
+              </IconButton>
+            </div>
+          ),
+        }}
+        fetcher={packagingListFetcher}
+        searchBoxList={createDefaultSearchBoxList('name')}
+        searchQueryFilter={appliedFilter}
+        skeletonHeaderName="تعداد کل بسته ها"
+        loadingHasCreateBtn
       />
+
       <CreatePackagingModal
-         open={openMyCreateModal}
-         onClose={handleCloseDialog}
-       />
+        open={openCreateModal}
+        onClose={() => setOpenCreateModal(false)}
+      />
     </>
   );
 }

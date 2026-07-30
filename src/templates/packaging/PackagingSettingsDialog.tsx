@@ -136,7 +136,7 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
         const allIds = data.formCategorysModel?.categoryId?.map(String) ?? [];
         savedCategoryIdsRef.current = (data.formCategorysModel?.categoryId ?? [])
           .map(Number)
-          .filter((id) => Number.isFinite(id) && id > 0);
+          .filter((id: number) => Number.isFinite(id) && id > 0);
         const { categoryIds, subCategoryIds } = splitSavedCategoryIds(allIds, categories);
 
         reset(
@@ -189,7 +189,7 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
         const subCategoryIds = (formData.subCategoryIds ?? []).filter(Boolean);
         const allCategoryIds = [...categoryIds, ...subCategoryIds]
           .map(Number)
-          .filter((id) => Number.isFinite(id) && id > 0);
+          .filter((id: number) => Number.isFinite(id) && id > 0);
 
         formCategorysModel = { categoryId: allCategoryIds };
       }

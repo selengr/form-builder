@@ -11,7 +11,7 @@ export async function putPackageSettingAction(
   payload: {
     name: string;
     ratio: number;
-    formCategorysModel?: { categoryId: number[] } | null;
+    formCategorysModel?: { categoryId: number[] };
   },
 ) {
   return api.put(`/admin/packaging/${id}`, payload);

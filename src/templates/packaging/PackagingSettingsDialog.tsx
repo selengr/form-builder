@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { toast } from 'sonner';
 import { CgClose } from 'react-icons/cg';
 import { useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { IoSettingsOutline } from 'react-icons/io5';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormProvider, { RHFMultiSelectV0, RHFTextField } from '@/components/hook-form';
@@ -77,6 +77,7 @@ function splitSavedCategoryIds(
 export default function PackagingSettingsDialog({ packageId }: { packageId: number }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const savedCategoryIdsRef = useRef<number[]>([]);
 
   const queryClient = useQueryClient();
   const { categories, isFetchingCategory } = useGetUserPackagingRequestParentCategory();

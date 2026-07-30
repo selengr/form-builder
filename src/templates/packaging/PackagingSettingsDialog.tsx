@@ -134,6 +134,9 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
 
         const data = res.data;
         const allIds = data.formCategorysModel?.categoryId?.map(String) ?? [];
+        savedCategoryIdsRef.current = (data.formCategorysModel?.categoryId ?? [])
+          .map(Number)
+          .filter((id) => Number.isFinite(id) && id > 0);
         const { categoryIds, subCategoryIds } = splitSavedCategoryIds(allIds, categories);
 
         reset(
@@ -177,17 +180,18 @@ export default function PackagingSettingsDialog({ packageId }: { packageId: numb
       const categoriesChanged =
         Boolean(dirtyFields.categoryIds) || Boolean(dirtyFields.subCategoryIds);
 
-      let formCategorysModel: { categoryId: number[] } | null = null;
+      let formCategorysModel: { categoryId: number[] };
 
-      if (categoriesChanged) {
+      if (!categoriesChanged) {
+        formCategorysModel = { categoryId: [...savedCategoryIdsRef.current] };
+      } else {
         const categoryIds = (formData.categoryIds ?? []).filter(Boolean);
         const subCategoryIds = (formData.subCategoryIds ?? []).filter(Boolean);
         const allCategoryIds = [...categoryIds, ...subCategoryIds]
           .map(Number)
           .filter((id) => Number.isFinite(id) && id > 0);
 
-        formCategorysModel =
-          allCategoryIds.length > 0 ? { categoryId: allCategoryIds } : null;
+        formCategorysModel = { categoryId: allCategoryIds };
       }
 
       const res = await putPackageSettingAction(packageId, {

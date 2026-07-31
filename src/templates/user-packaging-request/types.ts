@@ -4,6 +4,7 @@ export interface PackagingRequestListItem {
   id: number;
   name: string;
   status: PackagingRequestStatus | string;
+  sellCount?: number;
 }
 
 export interface PackagingRequestDocument {

@@ -19,6 +19,8 @@ export default function PackagingRequestListCard({
   const router = useRouter();
   const statusStyle = getPackagingRequestStatusStyle(data.status);
   const canEdit = data.status === 'REVISION';
+  const isPublished = data.status === 'PUBLISH';
+  const sellCount = data.sellCount ?? 0;
 
   return (
     <div className="relative flex flex-col gap-3 rounded-2xl border border-[#DDE1E6] p-5 shadow-sm w-full">
@@ -50,7 +52,16 @@ export default function PackagingRequestListCard({
      
       </Box>
 
-      <InfoRow label="نام" value={data.name} bold className='max-w-[90%]'/>
+      {isPublished && (
+        <div
+          className="flex w-fit items-center gap-2 rounded-xl border border-[#B8E6F5] bg-[#ECFAFF] px-3 py-1.5"
+          aria-label={`تعداد فروش: ${sellCount}`}>
+          <span className="text-xs text-[#1758BA]">تعداد فروش</span>
+          <span className="text-sm font-bold text-[#1758BA]">{sellCount}</span>
+        </div>
+      )}
+
+      <InfoRow label="نام" value={data.name} bold className="max-w-[90%]" />
       <InfoRow
         label="وضعیت"
         value={
@@ -64,6 +75,26 @@ export default function PackagingRequestListCard({
           </span>
         }
       />
+
+      {/* Alternative UI: keep name on its own row; show status + sell count side-by-side when published
+      <InfoRow label="نام" value={data.name} bold className="max-w-[90%]" />
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <InfoRow
+          label="وضعیت"
+          value={
+            <span
+              className="inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-bold"
+              style={{
+                backgroundColor: statusStyle.backgroundColor,
+                color: statusStyle.color,
+              }}>
+              {getPackagingRequestStatusLabel(data.status)}
+            </span>
+          }
+        />
+        {isPublished && <InfoRow label="تعداد فروش" value={sellCount} bold />}
+      </div>
+      */}
     </div>
   );
 }

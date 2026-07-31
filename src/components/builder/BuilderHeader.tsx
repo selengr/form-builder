@@ -48,7 +48,7 @@ export default function BuilderHeader({
   const actionButtons = (
     <div className="flex items-center gap-2">
      
-        <Link href={`/preview/${id}`}>
+        <Link href={`/form/${id}?from=TESTING`}>
         <IconButton
           sx={{
             height: 32,

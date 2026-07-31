@@ -76,7 +76,7 @@ export default function PackagingRequestListCard({
         }
       />
 
-      {/* Alternative UI: keep name on its own row; show status + sell count side-by-side when published
+      {/*
       <InfoRow label="نام" value={data.name} bold className="max-w-[90%]" />
       <div className="flex flex-wrap items-center justify-between gap-2">
         <InfoRow

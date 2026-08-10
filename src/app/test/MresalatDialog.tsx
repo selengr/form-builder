@@ -85,7 +85,7 @@ export default function MresalatDialog({
           }}
         >
           <Image
-            src="/images/mresalat-banner.png"
+            src="/images/home-page/mresalat-banner.png"
             alt="وام قرض الحسنه بدون کارمزد امرسالت"
             fill
             priority

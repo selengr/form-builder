@@ -60,7 +60,7 @@ export default function MresalatDialog({
           sx={{
             position: 'absolute',
             top: { xs: 12, sm: 20 },
-            left: { xs: 12, sm: 20 },
+            right: { xs: 12, sm: 20 },
             zIndex: 10,
 
             width: { xs: 38, sm: 44 },

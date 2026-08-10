@@ -17,6 +17,7 @@ import BuilderLoading from '@/app/(builder)/builder/[id]/loading';
 import { useReportFlow } from '@/hooks/useReportFlow';
 import { useShowResultUser } from '../show-result/hooks/useShowResultUser';
 import { useIframeDetector } from '@/hooks/useIframeDetector';
+import { useUserInfoContext } from '@/context/UserInfoContext';
 
 interface FinishStepProps {
   question: any;
@@ -29,6 +30,7 @@ interface FinishStepProps {
 
 export function FinishStep({ question, showReportForResponder, takePartId, formName, replace, formId }: FinishStepProps) {
   const { isInIframe, modalSize } = useIframeDetector();
+  const { isAuthenticated } = useUserInfoContext();
   const { mutate, isPending } = useShowResultUser();
   const {
     dialogState,

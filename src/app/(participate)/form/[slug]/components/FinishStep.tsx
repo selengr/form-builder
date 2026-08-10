@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { Button } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+// import { usePathname, useSearchParams } from 'next/navigation';
 
 // templates
 import AnimatedBox from '@/templates/form/AnimatedBox';

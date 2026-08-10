@@ -38,7 +38,7 @@ export default function MresalatDialog({
 
         '& .MuiPaper-root': {
           width: '100%',
-          maxWidth: '575px',
+          maxWidth: '525px',
           margin: 0,
           borderRadius: '28px',
           overflow: 'hidden',
@@ -60,7 +60,7 @@ export default function MresalatDialog({
           sx={{
             position: 'absolute',
             top: { xs: 12, sm: 20 },
-            right: { xs: 12, sm: 20 },
+            right: { xs: 8, sm: 16 },
             zIndex: 10,
 
             width: { xs: 38, sm: 44 },

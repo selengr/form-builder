@@ -1,3 +1,14 @@
-import { NEXT_FONT_MANIFEST } from "next/dist/shared/lib/constants";
 
-NEXT_FONT_MANIFEST
+export default function Home() {
+  return(
+    <Button onClick={() => setOpen(true)}>
+  نمایش امرسالت
+</Button>
+
+<MresalatDialog
+  open={open}
+  onClose={() => setOpen(false)}
+/>
+
+  )
+}

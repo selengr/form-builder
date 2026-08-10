@@ -1,14 +1,22 @@
+'use client';
 
-export default function Home() {
-  return(
-    <Button onClick={() => setOpen(true)}>
-  نمایش امرسالت
-</Button>
+import { useState } from 'react';
+import { Button } from '@mui/material';
+import MresalatDialog from './MresalatDialog';
 
-<MresalatDialog
-  open={open}
-  onClose={() => setOpen(false)}
-/>
+export default function Example() {
+  const [open, setOpen] = useState(false);
 
-  )
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>
+        نمایش امرسالت
+      </Button>
+
+      <MresalatDialog
+        open={open}
+        onClose={() => setOpen(false)}
+      />
+    </>
+  );
 }

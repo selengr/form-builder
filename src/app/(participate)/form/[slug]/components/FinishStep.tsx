@@ -18,6 +18,7 @@ import { useReportFlow } from '@/hooks/useReportFlow';
 import { useShowResultUser } from '../show-result/hooks/useShowResultUser';
 import { useIframeDetector } from '@/hooks/useIframeDetector';
 import { useUserInfoContext } from '@/context/UserInfoContext';
+import MresalatDialog from '../components/MresalatDialog';
 
 interface FinishStepProps {
   question: any;
@@ -46,15 +47,15 @@ export function FinishStep({ question, showReportForResponder, takePartId, formN
   } = useReportFlow();
 
 
-useEffect(() => {
-  if (isAuthenticated) return;
+  useEffect(() => {
+    if (isAuthenticated) return;
 
-  const timer = setTimeout(() => {
-    setShowMresalatDialog(true);
-  }, 10000);
+    const timer = setTimeout(() => {
+      setShowMresalatDialog(true);
+    }, 10000);
 
-  return () => clearTimeout(timer);
-}, [isAuthenticated]);
+    return () => clearTimeout(timer);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (showReportForResponder) {
@@ -133,6 +134,11 @@ useEffect(() => {
           typeOfReport={'FORM'}
         />
       )}
+
+      <MresalatDialog
+        open={showMresalatDialog}
+        onClose={() => setShowMresalatDialog(false)}
+      />
     </div>
   );
 }

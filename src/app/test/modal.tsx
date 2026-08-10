@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { CgClose } from 'react-icons/cg';
 import {
   Box,
@@ -28,7 +29,6 @@ export default function MresalatDialog({
       open={open}
       onClose={onClose}
       dir="rtl"
-      aria-labelledby="mresalat-dialog-title"
       sx={{
         '& .MuiDialog-container': {
           backdropFilter: 'blur(4px)',
@@ -53,87 +53,66 @@ export default function MresalatDialog({
           width: '100%',
         }}
       >
-        {/* Close button */}
+        {/* Close */}
         <IconButton
           onClick={onClose}
           aria-label="بستن"
           sx={{
             position: 'absolute',
-            top: {
-              xs: 14,
-              sm: 24,
-            },
-            left: {
-              xs: 14,
-              sm: 24,
-            },
+            top: { xs: 12, sm: 20 },
+            left: { xs: 12, sm: 20 },
             zIndex: 10,
 
-            width: {
-              xs: 36,
-              sm: 42,
-            },
-            height: {
-              xs: 36,
-              sm: 42,
-            },
+            width: { xs: 38, sm: 44 },
+            height: { xs: 38, sm: 44 },
 
-            color: '#242424',
-            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+            color: '#292929',
 
             '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.15)',
+              backgroundColor: 'rgba(255,255,255,0.2)',
             },
           }}
         >
-          <CgClose size={28} />
+          <CgClose size={30} />
         </IconButton>
 
-        {/* Promotional image */}
+        {/* Banner */}
         <Box
-          component="img"
-          src="/images/mresalat-banner.png"
-          alt="وام قرض الحسنه بدون کارمزد امرسالت"
           sx={{
-            display: 'block',
+            position: 'relative',
             width: '100%',
-            height: 'auto',
             aspectRatio: '1 / 1',
-            objectFit: 'cover',
           }}
-        />
+        >
+          <Image
+            src="/images/mresalat-banner.png"
+            alt="وام قرض الحسنه بدون کارمزد امرسالت"
+            fill
+            priority
+            sizes="(max-width: 600px) 100vw, 575px"
+            style={{
+              objectFit: 'cover',
+            }}
+          />
+        </Box>
 
-        {/* Bottom footer */}
+        {/* Footer */}
         <Box
           sx={{
-            width: '100%',
             backgroundColor: '#fff',
-
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-
-            px: {
-              xs: 2,
-              sm: 4,
-            },
-
-            py: {
-              xs: 3,
-              sm: 4,
-            },
+            px: { xs: 2, sm: 4 },
+            py: { xs: 2.5, sm: 3.5 },
           }}
         >
-          {/* URL + button */}
           <Box
             dir="ltr"
             sx={{
               width: '100%',
               maxWidth: '355px',
-              height: {
-                xs: 58,
-                sm: 72,
-              },
+              height: { xs: 58, sm: 70 },
 
               border: '2px solid #202020',
               borderRadius: '999px',
@@ -142,7 +121,6 @@ export default function MresalatDialog({
               alignItems: 'center',
 
               p: '4px',
-
               backgroundColor: '#fff',
             }}
           >
@@ -152,12 +130,11 @@ export default function MresalatDialog({
               sx={{
                 flex: 1,
                 minWidth: 0,
-
                 textAlign: 'center',
 
                 fontSize: {
-                  xs: '13px',
-                  sm: '16px',
+                  xs: '12px',
+                  sm: '15px',
                 },
 
                 fontWeight: 500,
@@ -169,7 +146,7 @@ export default function MresalatDialog({
               https://mresalat.ir
             </Typography>
 
-            {/* Enter button */}
+            {/* Button */}
             <Box
               component="button"
               type="button"
@@ -177,27 +154,21 @@ export default function MresalatDialog({
               sx={{
                 border: 0,
                 outline: 0,
-
                 flexShrink: 0,
 
                 height: '100%',
-
-                px: {
-                  xs: 2,
-                  sm: 3,
-                },
+                px: { xs: 2, sm: 3 },
 
                 borderRadius: '999px',
 
                 background:
-                  'linear-gradient(135deg, #49e1d2 0%, #22bcb2 100%)',
+                  'linear-gradient(135deg, #4CE0D1 0%, #20B9AF 100%)',
 
                 color: '#fff',
-
                 fontFamily: 'inherit',
 
                 fontSize: {
-                  xs: '14px',
+                  xs: '13px',
                   sm: '16px',
                 },
 
@@ -205,18 +176,13 @@ export default function MresalatDialog({
 
                 cursor: 'pointer',
 
-                boxShadow:
-                  'inset 0 1px 1px rgba(255,255,255,0.35), 0 2px 5px rgba(0,0,0,0.08)',
-
                 transition: 'all 0.2s ease',
 
                 whiteSpace: 'nowrap',
 
                 '&:hover': {
+                  filter: 'brightness(0.96)',
                   transform: 'translateY(-1px)',
-                  filter: 'brightness(0.97)',
-                  boxShadow:
-                    'inset 0 1px 1px rgba(255,255,255,0.35), 0 4px 10px rgba(0,0,0,0.12)',
                 },
 
                 '&:active': {

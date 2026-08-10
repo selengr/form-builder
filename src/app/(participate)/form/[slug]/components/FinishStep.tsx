@@ -4,21 +4,25 @@ import Image from 'next/image';
 import { Button } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
+
 // templates
 import AnimatedBox from '@/templates/form/AnimatedBox';
+
 // images
 import finalStep from '@/../public/images/home-page/finalStep.svg';
+
 // components
 import Header from './header';
 import LoginWithPhone from '@/components/common/loginWithPhone';
 import ReportDialog from '@/components/ReportDialog/ReportDialog';
 import BuilderLoading from '@/app/(builder)/builder/[id]/loading';
+import MresalatDialog from '../components/MresalatDialog';
+
 // hooks
 import { useReportFlow } from '@/hooks/useReportFlow';
 import { useShowResultUser } from '../show-result/hooks/useShowResultUser';
 import { useIframeDetector } from '@/hooks/useIframeDetector';
 import { useUserInfoContext } from '@/context/UserInfoContext';
-import MresalatDialog from '../components/MresalatDialog';
 
 interface FinishStepProps {
   question: any;
@@ -29,11 +33,20 @@ interface FinishStepProps {
   formId: any;
 }
 
-export function FinishStep({ question, showReportForResponder, takePartId, formName, replace, formId }: FinishStepProps) {
+export function FinishStep({
+  question,
+  showReportForResponder,
+  takePartId,
+  formName,
+  replace,
+  formId,
+}: FinishStepProps) {
   const { isInIframe, modalSize } = useIframeDetector();
   const { isAuthenticated } = useUserInfoContext();
-  const [showMresalatDialog, setShowMresalatDialog] = useState(false);
   const { mutate, isPending } = useShowResultUser();
+
+  const [showMresalatDialog, setShowMresalatDialog] = useState(false);
+
   const {
     dialogState,
     formValue,
@@ -46,17 +59,6 @@ export function FinishStep({ question, showReportForResponder, takePartId, formN
     setDialogState,
   } = useReportFlow();
 
-
-  useEffect(() => {
-    if (isAuthenticated) return;
-
-    const timer = setTimeout(() => {
-      setShowMresalatDialog(true);
-    }, 10000);
-
-    return () => clearTimeout(timer);
-  }, [isAuthenticated]);
-
   useEffect(() => {
     if (showReportForResponder) {
       mutate({
@@ -64,28 +66,75 @@ export function FinishStep({ question, showReportForResponder, takePartId, formN
         name: formName,
       });
     }
-  }, [question.formId, takePartId])
+  }, [question.formId, takePartId]);
 
-  if (showReportForResponder) return null
+  useEffect(() => {
+    if (isAuthenticated) return;
+
+    const timer = setTimeout(() => {
+      setShowMresalatDialog(true);
+    }, 4000);
+
+    return () => clearTimeout(timer);
+  }, [isAuthenticated]);
+
+  if (showReportForResponder) return null;
 
   return (
-    <div className={`w-full flex flex-col overflow-hidden ${isInIframe ? "p-0" : "p-4"}`}>
-      <div className='flex flex-col bg-white rounded-xl h-full'>
-        <Header surveyParam={isInIframe} handleOpenReportDialog={handleReportDialog} replace={replace} formName={'پایان'} />
+    <div
+      className={`w-full flex flex-col overflow-hidden ${
+        isInIframe ? 'p-0' : 'p-4'
+      }`}
+    >
+      <div className="flex flex-col bg-white rounded-xl h-full">
+        <Header
+          surveyParam={isInIframe}
+          handleOpenReportDialog={handleReportDialog}
+          replace={replace}
+          formName={'پایان'}
+        />
 
-        <div className='flex-1 flex items-center justify-center overflow-y-auto px-4'>
-          <div className='w-full max-w-3xl'>
+        <div className="flex-1 flex items-center justify-center overflow-y-auto px-4">
+          <div className="w-full max-w-3xl">
             <AnimatedBox>
-              <div className='w-full flex flex-col items-center justify-center gap-4 text-center'>
-                <p className={`font-semibold leading-relaxed ${isInIframe ? modalSize === "small" ? "text-sm" : "text-base" : "text-lg"}`}>
-                  پاسخ‌های شما به <span className={`font-bold ${isInIframe ? modalSize === "small" ? "text-base" : "text-lg" : "text-xl"}`}>«{formName}»</span> با موفقیت ثبت شد.
+              <div className="w-full flex flex-col items-center justify-center gap-4 text-center">
+                <p
+                  className={`font-semibold leading-relaxed ${
+                    isInIframe
+                      ? modalSize === 'small'
+                        ? 'text-sm'
+                        : 'text-base'
+                      : 'text-lg'
+                  }`}
+                >
+                  پاسخ‌های شما به{' '}
+                  <span
+                    className={`font-bold ${
+                      isInIframe
+                        ? modalSize === 'small'
+                          ? 'text-base'
+                          : 'text-lg'
+                        : 'text-xl'
+                    }`}
+                  >
+                    «{formName}»
+                  </span>{' '}
+                  با موفقیت ثبت شد.
                 </p>
 
-                <div className='w-full max-w-xs sm:max-w-md'>
-                  <Image src={finalStep} alt='نتیجه' width={400} height={400} priority className='w-full h-auto max-h-[400px] object-contain' draggable={false} />
+                <div className="w-full max-w-xs sm:max-w-md">
+                  <Image
+                    src={finalStep}
+                    alt="نتیجه"
+                    width={400}
+                    height={400}
+                    priority
+                    className="w-full h-auto max-h-[400px] object-contain"
+                    draggable={false}
+                  />
                 </div>
 
-                {!isInIframe &&
+                {!isInIframe && (
                   <Button
                     sx={{
                       width: '150px',
@@ -98,11 +147,12 @@ export function FinishStep({ question, showReportForResponder, takePartId, formN
                         boxShadow: 'none',
                       },
                     }}
-                    variant='contained'
-                    onClick={() => replace('/')}>
+                    variant="contained"
+                    onClick={() => replace('/')}
+                  >
                     بازگشت
                   </Button>
-                }
+                )}
               </div>
             </AnimatedBox>
           </div>

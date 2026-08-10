@@ -22,6 +22,7 @@ export default function MresalatDialog({
 }: MresalatDialogProps) {
   const handleOpenMresalat = () => {
     window.open(MRESALAT_URL, '_blank', 'noopener,noreferrer');
+    onClose();
   };
 
   return (

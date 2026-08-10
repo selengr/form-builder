@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { Button } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 // templates
 import AnimatedBox from '@/templates/form/AnimatedBox';
@@ -31,6 +31,7 @@ interface FinishStepProps {
 export function FinishStep({ question, showReportForResponder, takePartId, formName, replace, formId }: FinishStepProps) {
   const { isInIframe, modalSize } = useIframeDetector();
   const { isAuthenticated } = useUserInfoContext();
+  const [showMresalatDialog, setShowMresalatDialog] = useState(false);
   const { mutate, isPending } = useShowResultUser();
   const {
     dialogState,
@@ -43,6 +44,17 @@ export function FinishStep({ question, showReportForResponder, takePartId, formN
     handleCloseReport,
     setDialogState,
   } = useReportFlow();
+
+
+useEffect(() => {
+  if (isAuthenticated) return;
+
+  const timer = setTimeout(() => {
+    setShowMresalatDialog(true);
+  }, 10000);
+
+  return () => clearTimeout(timer);
+}, [isAuthenticated]);
 
   useEffect(() => {
     if (showReportForResponder) {

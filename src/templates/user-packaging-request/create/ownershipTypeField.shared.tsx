@@ -75,7 +75,7 @@ function OwnershipTypeRadios({
         <FormControlLabel
           value={OWNERSHIP_MULTI}
           control={<Radio size="small" />}
-          label="خیر"
+          label="خیر، من و همکارانم"
           disabled={readOnly}
           sx={readOnly ? disabledRadioLabelSx : radioLabelSx}
         />

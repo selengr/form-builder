@@ -5,10 +5,18 @@ import { MyRangeSlider } from '@/components/Slider/RangeSlider';
 import { BarChart } from '@mui/x-charts';
 import CountUp from 'react-countup';
 import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
+import { useUserInfoContext } from '@/context/UserInfoContext';
 
 export default function HomePageX() {
   const router = useRouter();
-  const handleClick = () => {
+  const { isAuthenticated } = useUserInfoContext();
+
+  const handleClick = async () => {
+    if (!isAuthenticated) {
+      await signIn('authorize', { callbackUrl: '/builder?new' });
+      return;
+    }
     router.push('/builder?new');
   };
   const [sliderValue, setSliderValue] = useState(8.3);

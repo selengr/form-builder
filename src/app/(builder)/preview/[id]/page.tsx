@@ -26,6 +26,10 @@ export default function PreviewPage() {
       router.push('/data-collection');
       return;
     }
+    if (from === 'data-collection-new') {
+      router.push('/data-collection-new');
+      return;
+    }
     if (admin) {
       router.push(`/user-reports/${paramId}`);
       return;
@@ -65,9 +69,11 @@ export default function PreviewPage() {
         backHref={
           from === 'data-collection'
             ? '/data-collection'
-            : admin
-              ? `/user-reports/${paramId}`
-              : `/builder/${paramId}`
+            : from === 'data-collection-new'
+              ? '/data-collection-new'
+              : admin
+                ? `/user-reports/${paramId}`
+                : `/builder/${paramId}`
         }
         backLabel="بازگشت"
         className="h-[calc(100dvh-76px)] md:h-screen"

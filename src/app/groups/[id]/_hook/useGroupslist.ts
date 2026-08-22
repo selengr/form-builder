@@ -28,18 +28,22 @@ export const useGroupsList = (query: string) => {
       JSON.stringify(defaultSearchFilterModel)
     );
 
-    const data = await getGroupsAction(encoded);
+    const res = await getGroupsAction(encoded);
+
+    if (!res.success) {
+      throw new Error(res.message || 'خطا در دریافت لیست گروه‌ها');
+    }
 
     return {
-      groups: data.content.map((item) => ({
+      groups: res.data.content.map((item) => ({
         id: item.groupId,
         name: item.groupName,
         description: '',
         userCount: item.groupMemberCount,
         invalid: item.invalid,
       })) as IGroup[],
-      total: data.totalElements,
-      nextPage: data.content.length > 0 ? pageParam + 1 : null,
+      total: res.data.totalElements,
+      nextPage: res.data.content.length > 0 ? pageParam + 1 : null,
     };
   };
 

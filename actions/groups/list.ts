@@ -1,6 +1,6 @@
 'use server';
 
-import { serverApi } from '@/services/axios/serverApi';
+import { api } from '@/services/axios/actionWapper';
 
 export interface GroupItemAPI {
   groupName: string;
@@ -16,8 +16,5 @@ export interface GroupListResponse {
 
 export async function getGroupsAction(searchFilterModel: string) {
   const url = `/user-group/introducer/group-listgrid?searchFilterModel=${searchFilterModel}`;
-
-  const res = await serverApi.get(url);
-
-  return res.data as GroupListResponse;
+  return api.get<GroupListResponse>(url);
 }

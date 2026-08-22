@@ -115,12 +115,13 @@ const GroupsPage: React.FC = () => {
         rememberAllocation: rememberAllocation ?? false,
       });
 
-      if (res.ok) {
-        toast.success('عملیات با موفقیت انجام شد');
-        await queryClient.invalidateQueries({ queryKey: ['groups'] });
-        setOnenConfirmationDialog(false);
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');
       }
 
+      toast.success('عملیات با موفقیت انجام شد');
+      await queryClient.invalidateQueries({ queryKey: ['groups'] });
+      setOnenConfirmationDialog(false);
     } catch (error: any) {
       toast.error(error?.message);
     } finally {

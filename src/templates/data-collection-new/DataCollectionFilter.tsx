@@ -29,7 +29,7 @@ export default function DataCollectionFilter({
   onReset,
 }: DataCollectionFilterProps) {
   const isMobile = mode === 'mobile';
-  const { TargetPlatform, isFetchingTargetPlatform } = useGetTargetPlatform();
+  const { TargetPlatform, isFetchingTargetPlatform } = useGetTargetPlatform(true);
 
   return (
     <div

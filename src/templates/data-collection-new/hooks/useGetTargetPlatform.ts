@@ -10,7 +10,7 @@ export function useGetTargetPlatform(open?: boolean) {
     queryKey: TARGET_PLATFORM_QUERY_KEY,
     queryFn: () => getTargetPlatformAction(),
     staleTime: 5 * 60 * 1000,
-    enabled: open,
+    enabled: open ?? true,
   });
 
   return {

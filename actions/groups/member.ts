@@ -1,6 +1,6 @@
 'use server';
 
-import { serverApi } from '@/services/axios/serverApi';
+import { api } from '@/services/axios/actionWapper';
 
 export async function changeMemberStatusAction(input: {
   groupId: number | null;
@@ -8,18 +8,5 @@ export async function changeMemberStatusAction(input: {
   invalid: boolean;
   rememberAllocation: boolean;
 }) {
-  // try {
-    const res = await serverApi.post(
-      '/user-group/introducer/change-status-member',
-      input
-    );
-    return { ok: res.status === 200 };
-  // } catch (error: any) {
-  //   const message =
-  //     error?.response?.data?.message?.[0]?.title ||
-  //     error?.response?.data?.message ||
-  //     'انجام عملیات با خطا مواجه شد';
-
-  //   throw new Error(message);
-  // }
+  return api.post('/user-group/introducer/change-status-member', input);
 }

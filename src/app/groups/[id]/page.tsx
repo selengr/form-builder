@@ -109,15 +109,16 @@ export default function GroupDetailsPage() {
         rememberAllocation: rememberAllocation ?? false,
       });
 
-      if (res.ok) {
-        toast.success('عملیات با موفقیت انجام شد');
-        setOnenConfirmationDialog(false);
-        await queryClient.invalidateQueries({
-          queryKey: ['members-setting', groupId],
-          exact: false,
-        });
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');
       }
 
+      toast.success('عملیات با موفقیت انجام شد');
+      setOnenConfirmationDialog(false);
+      await queryClient.invalidateQueries({
+        queryKey: ['members-setting', groupId],
+        exact: false,
+      });
     } catch (error: any) {
       toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
     } finally {

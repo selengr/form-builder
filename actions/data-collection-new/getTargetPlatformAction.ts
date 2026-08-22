@@ -1,6 +1,6 @@
 'use server';
 
-import { serverApi } from '@/services/axios/serverApi';
+import { api } from '@/services/axios/actionWapper';
 
 export interface IGetTargetPlatform {
   value: string;
@@ -11,7 +11,7 @@ type TargetPlatformResponse = {
   dataList: IGetTargetPlatform[];
 };
 
-export async function getTargetPlatformAction(): Promise<TargetPlatformResponse> {
+export async function getTargetPlatformAction() {
   const customComboFilterModel = {
     type: 'COMBO',
     entity: 'PROJECTS',
@@ -20,9 +20,9 @@ export async function getTargetPlatformAction(): Promise<TargetPlatformResponse>
     rows: 1000,
   };
 
-  const baseUrl = `/admin/form/survey/target-platform/custom-combo`;
-  const queryString = `?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`;
+  const url =
+    `/admin/form/survey/target-platform/custom-combo?customComboFilterModel=` +
+    encodeURIComponent(JSON.stringify(customComboFilterModel));
 
-  const { data } = await serverApi.get<TargetPlatformResponse>(baseUrl + queryString);
-  return data;
+  return api.get<TargetPlatformResponse>(url);
 }

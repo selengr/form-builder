@@ -2,7 +2,7 @@ import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 // actions
-import { getStatsDataAction } from '../../../../actions/dataCollection/stats';
+import { getStatsDataAction } from '@actions/data-collection-new/stats';
 
 // --------------------------------------------------------
 export const useStatsViewModel = () => {

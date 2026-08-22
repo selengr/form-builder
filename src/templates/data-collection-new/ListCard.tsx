@@ -23,10 +23,10 @@ export default function DataCollectionListCard({
   const handleNavigation = () => {
     if (typeof window !== 'undefined') {
       try {
-        localStorage.setItem('stats', '/data-collection');
+        localStorage.setItem('stats', '/data-collection-new');
       } catch {}
     }
-    router.push(`/data-collection/${data.id}?name=${data.name}`);
+    router.push(`/data-collection-new/${data.id}?name=${data.name}`);
   };
 
   const handlePreview = () => {
@@ -35,7 +35,7 @@ export default function DataCollectionListCard({
       from: 'TESTING',
     });
     if (data.status === 'CREATE') {
-      router.push(`/preview/${data.id}?rep=list&from=data-collection`);
+      router.push(`/preview/${data.id}?rep=list&from=data-collection-new`);
     } else {
       router.push(`form/${data.id}?${params.toString()}`);
     }
@@ -68,7 +68,7 @@ type TActionButtonsProps = {
 const ActionButtons: React.FC<TActionButtonsProps> = ({ id, onViewList }) => {
   return (
     <div className="flex gap-2 flex-wrap items-center justify-end">
-      <Link href={`/builder/${id}?admin=data-collection`}>
+      <Link href={`/builder/${id}?admin=data-collection-new`}>
         <IconButton color="primary">
           <Image src={EditIcon} alt="edit" width={24} height={24} />
         </IconButton>

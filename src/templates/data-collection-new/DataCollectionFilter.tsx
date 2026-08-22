@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
 import { SearchQueryFilter, UnifiedListGridFilterMode } from '@/components/unified-list-grid';
-import { useGetTargetPlatform } from '@/templates/dataCollection/hooks/useGetTargetPlatform';
+import { useGetTargetPlatform } from './hooks/useGetTargetPlatform';
 
 interface DataCollectionFilterProps {
   mode: UnifiedListGridFilterMode;

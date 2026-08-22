@@ -10,7 +10,7 @@ import {
   SearchQueryFilter,
   UnifiedListGridFilterSlotProps,
 } from '@/components/unified-list-grid';
-import CreateDataCollectionBtn from '@/templates/dataCollection/CreateDataCollectionBtn';
+import CreateDataCollectionBtn from './CreateDataCollectionBtn';
 import DataCollectionListCard from './ListCard';
 import DataCollectionListCardSkeleton from './ListCardSkeleton';
 import DataCollectionFilter from './DataCollectionFilter';

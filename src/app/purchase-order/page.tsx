@@ -191,7 +191,7 @@ export default function ShoppingCartPage() {
         content={
           <>
             <div className='flex flex-row items-center'>
-              <Image src={TrashIcon} alt='delete' width={20} height={20} />
+              <Image src={TrashIcon} alt='delete' width={20} height={20} unoptimized/>
               <span className='text-xs'>{deleteDescription}</span>
             </div>
             <br />

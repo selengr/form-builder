@@ -177,7 +177,7 @@ const ListGrid: React.FC<Props> = ({
     () => (
       <div className='flex justify-between gap-2 bg-[#ECFAFF] rounded-2xl px-[10px] py-4 w-full max-w-[400px]'>
         <div className='flex items-center gap-[10px]'>
-          <Image src={TotalGrid} width={20} height={20} alt='filter' draggable={false} />
+          <Image src={TotalGrid} width={20} height={20} alt='filter' draggable={false} unoptimized/>
           <p className='text-sm text-[#393939]'>{textTotal[0]}:</p>
         </div>
         <p className='flex items-center text-sm text-[#393939] font-bold'>
@@ -213,7 +213,7 @@ const ListGrid: React.FC<Props> = ({
                 width: 51,
                 height: 51,
               }}>
-              <Image src={Filter} width={35} height={35} alt='Filter' draggable={false} />
+              <Image src={Filter} width={35} height={35} alt='Filter' draggable={false} unoptimized/>
             </IconButton>
           )}
         </Grid>

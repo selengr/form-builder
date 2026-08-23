@@ -77,19 +77,19 @@ export default function HomePage() {
       <div className='absolute inset-0 -z-10 pointer-events-none bg-[#fcfcfe]'></div>
 
       <div className='absolute inset-0 -z-10 -top-[2%] -left-[70%] opacity-10'>
-        <Image alt={''} src={`/api/images?folder=faq&file=curvy.svg`} width={100} height={100} className={'w-full h-full '} draggable={false} />
+        <Image alt={''} src={`/api/images?folder=faq&file=curvy.svg`} width={100} height={100} className={'w-full h-full '} draggable={false} unoptimized/>
       </div>
       <div className='absolute inset-0 -z-10 '>
-        <Image alt={''} src={`/api/images?folder=faq&file=gr.svg`} width={100} height={100} className={'w-screen h-screen floating-3d-f'} draggable={false} />
+        <Image alt={''} src={`/api/images?folder=faq&file=gr.svg`} width={100} height={100} className={'w-screen h-screen floating-3d-f'} draggable={false} unoptimized/>
       </div>
 
       <div className='flex flex-col w-full items-center justify-center h-full z-20'>
         <div className='relative flex items-center justify-center h-screen'>
           <div className='absolute inset-0 -z-10 flex items-center justify-center blur-[3px] opacity-85'>
-            <Image alt='' src='/api/images?folder=faq&file=terms.svg' className={'animate-pulse floating-3d opacity-75'} width={500} height={500} draggable={false} />
+            <Image alt='' src='/api/images?folder=faq&file=terms.svg' className={'animate-pulse floating-3d opacity-75'} width={500} height={500} draggable={false} unoptimized />
           </div>
           <div className='absolute inset-0 -z-10 flex items-center justify-center opacity-35 top-[380px]'>
-            <Image alt={''} src={`/api/images?folder=faq&file=circle-bg.svg`} width={500} height={500} draggable={false} />
+            <Image alt={''} src={`/api/images?folder=faq&file=circle-bg.svg`} width={500} height={500} draggable={false} unoptimized/>
           </div>
           <h1 className='xs:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 font-d7'>قوانین و مقررات</h1>
         </div>

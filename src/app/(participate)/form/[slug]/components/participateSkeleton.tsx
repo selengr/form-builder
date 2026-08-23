@@ -36,6 +36,7 @@ export const ParticipateLoadingSkeleton = ({ firstload, isPreview }: { firstload
                                         src={BugIcon}
                                         fill
                                         className="object-contain"
+                                        unoptimized
                                     />
                                 </div>
                             }

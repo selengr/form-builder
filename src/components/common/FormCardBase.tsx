@@ -107,7 +107,7 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
           onClick={handleReport}
           size="medium"
           className="rounded-full min-w-[70px]"
-          endIcon={<Image alt="report" src={BugIcon} height={20} width={20} />}
+          endIcon={<Image alt="report" src={BugIcon} height={20} width={20} unoptimized/>}
         >
           <span className="text-xs whitespace-nowrap">گزارش</span>
         </Button>

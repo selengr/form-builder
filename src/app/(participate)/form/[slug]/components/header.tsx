@@ -36,6 +36,7 @@ function Header({ handleOpenReportDialog, replace, formName, surveyParam }: Head
               src={BugIcon}
               fill
               className="object-contain"
+              unoptimized
             />
           </div>
         }

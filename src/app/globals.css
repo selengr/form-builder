@@ -5,9 +5,9 @@
 
 html body * {
   font-family: IranSans, serif !important;
-  -moz-font-feature-settings: "ss02";
-  -webkit-font-feature-settings: "ss02";
-  font-feature-settings: "ss02";
+  -moz-font-feature-settings: "ss02" 1;
+  -webkit-font-feature-settings: "ss02" 1;
+  font-feature-settings: "ss02" 1;
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

@@ -24,7 +24,9 @@ export default function PaymentFailedPage() {
               <div className="relative w-28 h-28  rounded-full mx-auto flex items-center justify-center">
                 <Image src={FailedIcon} alt='success'
                   width={80} height={80}
-                  className='w-28 h-28' />
+                  className='w-28 h-28'
+                       unoptimized
+                />
               </div>
             </div>
 

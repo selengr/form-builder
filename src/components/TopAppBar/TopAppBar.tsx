@@ -58,7 +58,7 @@ const TopAppBar = ({ customActions, appBarSx, toolbarSx, imageSx }: any) => {
 
     return (
       <Button onClick={handleAuth} sx={{ gap: 1 }}>
-        <Image src='/images/home-page/login.svg' alt='ورود' width={24} height={24} />
+        <Image src='/images/home-page/login.svg' alt='ورود' width={24} height={24} unoptimized/>
         {customActions ?? <Typography color='#424242'>ورود</Typography>}
       </Button>
     );
@@ -78,18 +78,18 @@ const TopAppBar = ({ customActions, appBarSx, toolbarSx, imageSx }: any) => {
 
         <Box className='flex items-center gap-2'>
           <IconButton size='small' onClick={() => router.push('#')}>
-            <Image src='/images/home-page/search.svg' alt='search' width={24} height={24} draggable={false} />
+            <Image src='/images/home-page/search.svg' alt='search' width={24} height={24} draggable={false} unoptimized/>
           </IconButton>
 
           <IconButton size='small'>
-            <Image src='/images/home-page/notification.svg' alt='notification' width={24} height={24} draggable={false} />
+            <Image src='/images/home-page/notification.svg' alt='notification' width={24} height={24} draggable={false} unoptimized/>
           </IconButton>
           {userInfo && (
             <IconButton onClick={handleAuth}>
               {loading ? (
                 <Skeleton variant='circular' width={24} height={24} />
               ) : (
-                <Image className={userInfo ? 'rotate-180' : ''} src={'/images/home-page/logout.svg'} alt={'خروج'} width={24} height={24} />
+                <Image className={userInfo ? 'rotate-180' : ''} src={'/images/home-page/logout.svg'} alt={'خروج'} width={24} height={24} unoptimized/>
               )}
             </IconButton>
           )}

@@ -4,7 +4,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Logo from "/public/images/logo/logo2.svg";
+import Logo from "@/../public/images/logo/logo2.svg";
 import MobileMenu from "@/components/MiddleSidebar/mobile/MobileMenu";
 
 export default function LayoutWrapper({
@@ -36,6 +36,7 @@ export default function LayoutWrapper({
               height={40}
               priority
               draggable={false}
+              unoptimized
             />
           </Link>
         </div>

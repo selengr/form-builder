@@ -1,32 +1,91 @@
 @font-face {
-    font-family: 'IranSans';
-    src: url('IRANSansXV.woff') format('woff2-variations'),
-    url('IRANSansXV.woff') format('woff'),
-    url('IRANSansXV.woff2') format('woff2');
-    font-display: fallback;
+  font-family: 'IranSans';
+  src:
+    url('IRANSansXVF.woff2') format('woff2-variations'),
+    url('IRANSansXVF.woff') format('woff');
+  font-weight: 100 1000;
+  font-style: auto;
+  font-display: swap;
 }
 
+.font-iran-sans {
+  font-family: "iranSans", sans-serif !important;
+}
+
+.font-d2 {
+  font-family: "iranSans", sans-serif !important;
+  font-variation-settings: "DOTS" 2 !important;
+}
+
+.font-d3 {
+  font-family: "iranSans", sans-serif !important;
+  font-variation-settings: "DOTS" 3 !important;
+}
+
+.font-d4 {
+  font-family: "iranSans", sans-serif !important;
+  font-variation-settings: "DOTS" 4 !important;
+}
+
+.font-d5 {
+  font-family: "iranSans", sans-serif !important;
+  font-variation-settings: "DOTS" 5 !important;
+}
+
+.font-d6 {
+  font-family: "iranSans", sans-serif !important;
+  font-variation-settings: "DOTS" 6 !important;
+}
+
+.font-d7 {
+  font-family: "iranSans", sans-serif !important;
+  font-variation-settings: "DOTS" 7 !important;
+}
+
+.font-d8 {
+  font-family: "iranSans", sans-serif !important;
+  font-variation-settings: "DOTS" 8 !important;
+}
+
+
 .ss01 {
-    -moz-font-feature-settings: "ss01";
-    -webkit-font-feature-settings: "ss01";
-    font-feature-settings: "ss01";
+  -moz-font-feature-settings: 'ss01' 1 !important;
+  -webkit-font-feature-settings: 'ss01' 1 !important;
+  font-feature-settings: 'ss01' 1 !important;
 }
 
 .ss02 {
-    -moz-font-feature-settings: "ss02";
-    -webkit-font-feature-settings: "ss02";
-    font-feature-settings: "ss02";
+  -moz-font-feature-settings: "ss02" 1 !important;
+  -webkit-font-feature-settings: "ss02" 1 !important;
+  font-feature-settings: "ss02" 1 !important;
 }
 
 .ss03 {
-    -moz-font-feature-settings: "ss03";
-    -webkit-font-feature-settings: "ss03";
-    font-feature-settings: "ss03";
+  -moz-font-feature-settings: 'ss03' 1 !important;
+  -webkit-font-feature-settings: 'ss03' 1 !important;
+  font-feature-settings: 'ss03' 1 !important;
 }
 
 .ss04 {
-    -moz-font-feature-settings: "ss04";
-    -webkit-font-feature-settings: "ss04";
-    font-feature-settings: "ss04";
+  -moz-font-feature-settings: 'ss04' 1 !important;
+  -webkit-font-feature-settings: 'ss04' 1 !important;
+  font-feature-settings: 'ss04' 1 !important;
 }
 
+.ss05 {
+  -moz-font-feature-settings: 'ss05' 1 !important;
+  -webkit-font-feature-settings: 'ss05' 1 !important;
+  font-feature-settings: 'ss05' 1 !important;
+}
+
+.ss06 {
+  -moz-font-feature-settings: 'ss06' 1 !important;
+  -webkit-font-feature-settings: 'ss06' 1 !important;
+  font-feature-settings: 'ss06' 1 !important;
+}
+
+.ss07 {
+  -moz-font-feature-settings: 'ss07' 1 !important;
+  -webkit-font-feature-settings: 'ss07' 1 !important;
+  font-feature-settings: 'ss07' 1 !important;
+}

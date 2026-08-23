@@ -9,7 +9,7 @@ import { ParticipateLoadingSkeleton } from './components/participateSkeleton';
 import StartFromContinueDialog from './components/StartFromContinueDialog';
 import Header from './components/header';
 
-export default function ParticipateFormPage({ params }: { params: { slug: string } }) {
+export default function ParticipateFormPage() {
   const [limitationStepPassed, setLimitationStepPassed] = useState(false);
 
   const {

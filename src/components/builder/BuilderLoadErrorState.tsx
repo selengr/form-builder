@@ -60,6 +60,7 @@ export default function BuilderLoadErrorState({
           className="shrink-0 opacity-100 w-[140px] h-auto md:w-[220px]"
           draggable={false}
           priority
+          unoptimized
         />
 
       </div>

@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import clsx from "clsx";
 
@@ -24,6 +25,7 @@ export const MenuIcon = ({
       size && `w-[${size}px] h-[${size}px]`,
       className
     )}
+    unoptimized
   />
 );
 
@@ -44,5 +46,6 @@ export const SubMenuIcon = ({
       size && `w-[${size}px] h-[${size}px]`,
       className
     )}
+    unoptimized
   />
 );

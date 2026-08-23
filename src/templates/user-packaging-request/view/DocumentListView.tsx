@@ -94,6 +94,7 @@ export default function DocumentListView({ documents }: DocumentListViewProps) {
                       objectFit: 'cover',
                     }}
                     src={getDownloadUrl(document.link)}
+                    unoptimized
                   />
                 ) : (
                   <Typography fontSize={12} color="#393939">

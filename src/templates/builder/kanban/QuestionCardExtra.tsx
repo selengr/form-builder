@@ -35,7 +35,7 @@ const QuestionCardExtra = memo(function QuestionCardExtra({
           href={`/preview/${id}?question=${questionCurrentIndex}`}
           onClick={e => e.stopPropagation()}
         >
-          <Image src="/images/home-page/ic_view-eye.svg" alt="view" height={20} width={20} />
+          <Image src="/images/home-page/ic_view-eye.svg" alt="view" height={20} width={20} unoptimized/>
         </Link>
       </button>
       <div onClick={e => e.stopPropagation()}>

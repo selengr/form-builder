@@ -3,15 +3,16 @@ import ViewPackagingRequestPageContent from '@/templates/user-packaging-request/
 export const dynamic = 'force-dynamic';
 
 interface UserPackagingRequestViewPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default function UserPackagingRequestViewPage({
+export default async function UserPackagingRequestViewPage({
   params,
 }: UserPackagingRequestViewPageProps) {
-  const requestId = Number(params.id);
+  const { id } = await params;
+  const requestId = Number(id);
 
   return <ViewPackagingRequestPageContent requestId={requestId} />;
 }

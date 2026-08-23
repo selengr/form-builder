@@ -32,7 +32,7 @@ export default function ImmediateSearchInput({ onSearch }: ImmediateSearchInputP
         onChange={handleChange}
       />
       <div className='p-2.5 hover:bg-neutral-100 rounded-full transition' aria-label='کاوش'>
-        <Image src={SearchIcon} alt='search' draggable={false} priority />
+        <Image src={SearchIcon} alt='search' draggable={false} priority unoptimized/>
       </div>
     </div>
   );

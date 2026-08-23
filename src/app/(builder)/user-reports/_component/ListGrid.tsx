@@ -151,7 +151,7 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
               position: 'absolute',
               right: 10,
             }}>
-            <Image src={Filter} width={35} height={35} alt='Filter' draggable={false} />
+            <Image src={Filter} width={35} height={35} alt='Filter' draggable={false} unoptimized/>
           </IconButton>
         )}
       </div>
@@ -180,7 +180,7 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
             height: '60vh',
             width: '100%',
           }}>
-          <Image src={formListEmpty} alt='No forms found' height={256} priority draggable={false} />
+          <Image src={formListEmpty} alt='No forms found' height={256} priority draggable={false} unoptimized/>
           <Typography sx={{ fontSize: '18px', color: '#999' }}>موردی یافت نشد</Typography>
         </Box>
       );

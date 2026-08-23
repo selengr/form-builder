@@ -1,143 +1,172 @@
+'use client';
 import Image from 'next/image';
-import Link from 'next/link';
-import { Button } from '@mui/material';
-import { ArrowLeft } from '@/../public/images/home-page/ArrowLeft';
+import { useEffect, useState } from 'react';
+import { MyRangeSlider } from '@/components/Slider/RangeSlider';
+import { BarChart } from '@mui/x-charts';
+import CountUp from 'react-countup';
+import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
+import { useUserInfoContext } from '@/context/UserInfoContext';
 
-// Image Imports
-import Logo from '@/../public/images/logo/logo2.svg';
-import CircleBg from '@/../public/images/home-page/circle-bg.svg';
-import Oval1 from '@/../public/images/home-page/Oval1.svg';
-import Oval2 from '@/../public/images/home-page/Oval2.svg';
-import Oval3 from '@/../public/images/home-page/Oval3.svg';
-import Oval4 from '@/../public/images/home-page/Oval4.svg';
-import BannerBg2 from '@/../public/images/home-page/banner-bg2.svg';
-// import MobileMenu from "@/components/MiddleSidebar/mobile/MobileMenu";
+export default function HomePageX() {
+  const router = useRouter();
+  const { isAuthenticated } = useUserInfoContext();
 
-export default function HomePage() {
+  const handleClick = async () => {
+    if (!isAuthenticated) {
+      await signIn('authorize', { callbackUrl: '/builder?new' });
+      return;
+    }
+    router.push('/builder?new');
+  };
+  const [sliderValue, setSliderValue] = useState(8.3);
+  const [data, setData] = useState<number[]>([10, 30, 20, 20, 40]);
+  // const statistics = [
+  //   { label: 'فرم', value: 413091 },
+  //   { label: 'ارزیابی', value: 401680 },
+  //   { label: 'عضو', value: 800000 },
+  // ];
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const newData = Array.from({ length: data.length }, () => Math.floor(Math.random() * (40 - 10 + 1)) + 10);
+      setData(newData);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [data.length]);
+
   return (
-    <main className='h-screen w-full bg-white text-right lg:pr-4 lg:pl-0 overflow-x-hidden overflow-y-auto -mt-[60px] md:mt-0' dir='rtl'>
-      <div className='mx-auto px-4 pb-6 flex justify-center md:hidden'>
-        {/*<div className="absolute right-8">*/}
-        {/*  <MobileMenu />*/}
-        {/*</div>*/}
-        {/*<Image*/}
-        {/*  src={Logo}*/}
-        {/*  alt="سایا لوگو"*/}
-        {/*  width={120}*/}
-        {/*  height={40}*/}
-        {/*  priority*/}
-        {/*  unselectable={"on"}*/}
-        {/*  draggable={false}*/}
-        {/*/>*/}
-      </div>
-
-      <div className='flex flex-col lg:flex-row justify-center items-center md:pt-20'>
-        <section className='px-4 text-center lg:text-right relative z-50'>
-          <div className='absolute -top-12 -right-4 w-52 h-64 bg-[#0066FF] rounded-full opacity-[8%] blur-xl' aria-hidden='true' />
-
-          <h1 className='text-3xl font-bold mb-2 text-[#4A4A4A]'>دستیار هوشمند شناخت</h1>
-          <div className='flex flex-col justify-center lg:flex-row items-center'>
-            <div className='h-[2px] w-10 lg:w-9 rounded-full bg-[#2CDFC9] mx-auto my-3 lg:mb-5 lg:mx-2' aria-hidden='true'></div>
-            <h2 className='text-[22px] font-semibold text-[#FA4D56] mb-2'>چه کاری انجام می‌دهیم!</h2>
+      <div
+          className="min-h-[100dvh] w-full overflow-x-hidden -mt-[60px] lg:mt-0"
+          // className='h-screen w-full overflow-y-scroll -mt-[60px] lg:mt-0 pb-48 overflow-x-hidden z-0'
+          style={{
+            background: 'linear-gradient(to bottom, #ffffff, #eff6ff, #eff6ff)',
+            userSelect: 'none',
+          }}>
+        <main className='relative flex flex-col lg:flex-row items-center justify-between pt-20 pb-12 px-4 lg:px-8 w-full max-w-[1440px] mx-auto'>
+          {/* دایره چرخشی بک‌گراند */}
+          <div className='absolute top-0 right-0 w-[40vw] h-[40vw] max-w-[600px] opacity-20 md:opacity-30 -z-0 translate-x-1/4 -translate-y-1/4 pointer-events-none'>
+            <Image src='/api/images?folder=home&file=circles.svg' alt='circles decoration' fill className='object-contain animate-rotate-slow' priority unoptimized/>
           </div>
-          <p className='text-[14px] text-[#4A4A4A] mx-auto lg:mx-0 text-justify leading-relaxed mb-4 px-[20px] lg:px-0  xs:max-w-5xl lg:max-w-72'>
-            سایا سکویی برای ساخت، اجرا و تحلیل آزمون‌های روان‌شناختی است. این سکو با رابط کاربری ساده و یکپارچه، امکان ایجاد فرم‌های برخط و گزارش‌های شخصی‌سازی شده را فراهم می‌کند.
-          </p>
-        </section>
 
-        <section className='relative w-full mt-10 lg:mt-0 px-4 lg:px-0 lg:w-[50%] h-full min-h-[250px] max-w-[500px] flex justify-center items-center'>
-          <div className='absolute top-0 left-0 w-24 h-24 bg-blue-600 rounded-full opacity-20 blur-lg' aria-hidden='true' />
-          <div className='absolute bottom-0 right-0 w-16 h-16 bg-purple-600 rounded-full opacity-20 blur-lg' aria-hidden='true' />
-          <div className='absolute top-1/2 right-1/4 w-12 h-12 bg-pink-500 rounded-full opacity-20 blur-lg' aria-hidden='true' />
+          {/* متن سمت راست */}
+          <section className='z-50 text-center lg:text-right lg:w-1/2 mb-16 lg:mb-0'>
+            <h1 className='text-4xl sm:text-5xl lg:text-[3rem] text-[#183B56] font-extrabold leading-tight mb-6 font-d7'>
+            <span className='relative inline-block'>
+              <span className='relative z-10'>سایا</span>
+              <span className='absolute bottom-0 left-0 w-full h-[50%] bg-[#2cdfc9] z-0 rounded-sm skew-x-4 -skew-y-6'></span>
+            </span>
+              <span>, دستیار</span>
+              <span className='block'>هوشمند شناخت</span>
+            </h1>
+            <p className='text-lg sm:text-lgl text-gray-700 text-justify mb-8 leading-relaxed font-d7 max-w-lg mx-auto lg:mx-0 ss05'>
+              سایا سکویی نوین برای طراحی، اجرا و تحلیل آزمون‌های روان‌شناختی است. این سامانه با رابط کاربری ساده، روان و یکپارچه، امکان ساخت فرم‌های آنلاین تعاملی و تولید گزارش‌های دقیق و شخصی‌سازی‌شده
+              را فراهم می‌کند.
+            </p>
+            <div className='flex justify-center items-center h-full'>
+              <button
+                  onClick={handleClick}
+                  className='bg-[conic-gradient(at_bottom_left,_var(--tw-gradient-stops))] from-blue-500 via-[#1758BA] to-[#1758BA] hover:scale-x-95 hover:scale-y-90 hover:skew-x-1 transition-all duration-500 text-white font-bold py-4 px-10 rounded-3xl text-lg shadow-xl shadow-blue-700/30'>
+                ایجاد فرم
+              </button>
+            </div>
+          </section>
 
-          <Image
-            src={CircleBg}
-            alt='سایا لوگو'
-            width={100}
-            height={100}
-            priority
-            unselectable={'on'}
-            draggable={false}
-            className='w-full h-full absolute lg:-top-6 -left-[35px] xs:-left-[30%] lg:-left-36'
-          />
-          <Image src={Oval2} alt='object' width={50} height={28} priority unselectable={'on'} draggable={false} className='w-[60%] h-[60%] absolute -top-7 left-32' />
-          <Image
-            src={Oval1}
-            alt='object'
-            width={50}
-            height={28}
-            priority
-            unselectable={'on'}
-            draggable={false}
-            className='w-[40%] h-[40%] lg:w-[50%] lg:h-[50%] absolute -top-[65px] -left-[35px] xs:-left-[15%] lg:-left-[155px]'
-          />
-          <Image
-            src={Oval3}
-            alt='object'
-            width={50}
-            height={28}
-            priority
-            unselectable={'on'}
-            draggable={false}
-            className='w-[60%] h-[60%] absolute -bottom-[65px] -left-[35px] xs:-left-[15%] lg:-left-[105px]'
-          />
-          <Image src={Oval4} alt='object' width={50} height={28} priority unselectable={'on'} draggable={false} className='w-[60%] h-[60%] absolute -bottom-[100px] -right-[95px] lg:-right-[135px]' />
-          <div className='flex flex-row gap-4 xs:gap-6 md:gap-12 justify-center items-center w-full h-full p-2 xs:p-6 bg-[#FAFAFA] rounded-[60px]'>
-            <FormBuilderCard />
-            <PublicFormsCard />
-          </div>
-        </section>
+          {/* تصویر سمت چپ */}
+          <section className='z-10 w-full lg:w-1/2 flex justify-center items-center'>
+            <div className='relative w-full max-w-[500px] aspect-[9/16] lg:aspect-auto lg:h-[590px]'>
+              <div className="absolute inset-0 -z-20 pointer-events-none">
+                <div className="relative w-full h-full transform-gpu will-change-transform">
+                  <Image
+                      src="/api/images?folder=home&file=curvyBG.svg"
+                      alt="Decorative background shape"
+                      fill
+                      // className="object-contain animate-rotate-slow"
+                      priority
+                      draggable={false}
+                      unoptimized
+                  />
+                </div>
+              </div>
+
+              {/* گوشی موبایل */}
+              <div className='absolute inset-0 w-[70%] lg:w-[90%] mx-auto aspect-[9/16] -z-10'>
+                <Image src='/api/images?folder=home&file=phone.svg' alt='phone mockup' fill className='object-contain' priority draggable={false} unoptimized />
+
+                {/* باکس کشویی */}
+                <div className='absolute top-[35%] left-[15%] w-[70%] floating-3d px-2 py-1'>
+                  <Image src='/api/images?folder=home&file=dragable.svg' alt='draggable content' width={300} height={100} className='w-full h-auto' priority unoptimized/>
+                </div>
+              </div>
+
+              {/* باکس سوال */}
+              <div className='absolute top-[3%] -right-[0%] lg:-right-[20%] bg-white p-2 lg:p-3 rounded-2xl shadow-xl flex flex-col items-center gap-1.5 lg:gap-2 text-xs lg:text-sm text-gray-700 max-w-[180px] lg:max-w-[260px] floating-3d-1 -rotate-3 scale-[0.7] lg:scale-100 origin-top-right'>
+                <div className='text-center'>
+                  <div className='text-yellow-500 text-xl lg:text-2xl mb-0.5 lg:mb-1'>⭐</div>
+                  <p className='font-medium text-gray-800 text-xs lg:text-sm leading-snug'>ارزیابی شما از کیفیت خدمات سایا چقدر است؟</p>
+                </div>
+
+                <div className='w-full  px-3 pt-1.5 lg:pt-2'>
+                  <MyRangeSlider value={sliderValue} onChange={(e, v) => typeof v === 'number' && setSliderValue(v)} min={1} max={10} step={0.1} valueLabelDisplay='auto' size='small' />
+                </div>
+              </div>
+
+              {/* چارت پایین چپ */}
+              <div className='absolute bottom-[30%] lg:bottom-[5%] left-0 bg-[conic-gradient(at_bottom_left,_var(--tw-gradient-stops))] from-blue-500 via-[#1758BA] to-[#1758BA] p-2 pl-0 rounded-2xl shadow-xl floating-3d-2 max-w-[260px] text-white'>
+              <span className='text-xl'>
+                <BarChart
+                    grid={{ horizontal: false, vertical: false }}
+                    series={[{ data, type: 'bar' }]}
+                    borderRadius={300}
+                    sx={{
+                      '& .MuiChartsAxis-left .MuiChartsAxis-tickLabel': {
+                        fill: '#ffffff',
+                      },
+                    }}
+                    xAxis={[
+                      {
+                        data: [new Date(2020, 1, 1), new Date(2021, 1, 1), new Date(2022, 1, 1), new Date(2023, 1, 1), new Date(2024, 1, 1)],
+                        colorMap: {
+                          type: 'continuous',
+                          min: new Date(2019, 1, 1),
+                          max: new Date(2024, 1, 1),
+                          color: ['#fff', '#ffffff77'],
+                        },
+                        categoryGapRatio: 0.5,
+                        barGapRatio: 0.2,
+                        disableTicks: true,
+                        disableLine: true,
+                        tickLabelMinGap: 100,
+                        tickLabelPlacement: 'middle',
+                        tickPlacement: 'middle',
+                        position: 'none',
+                      },
+                    ]}
+                    yAxis={[
+                      {
+                        disableTicks: true,
+                        disableLine: true,
+                      },
+                    ]}
+                    width={250}
+                    height={120}
+                />
+              </span>
+              </div>
+
+              {/* نمره */}
+              <div className='absolute top-[20%] left-0 bg-white p-2 rounded-xl shadow-xl text-sm text-gray-800 floating-3d-4 rotate-3'>
+                <span className='font-medium'>میانگین نمره:</span>
+                <span className='text-yellow-500 font-bold mr-1'>
+                <CountUp end={7.84} decimals={2} duration={5} smartEasingAmount={0} />~
+              </span>
+              </div>
+            </div>
+            <div className='absolute inset-0 -z-50 '>
+              <Image alt={''} src={`/api/images?folder=faq&file=gr.svg`} width={100} height={100} className={'w-screen h-screen animate-bounce-slow'} draggable={false} unoptimized/>
+            </div>
+          </section>
+        </main>
       </div>
-
-      <div className='flex flex-col items-center justify-center pl-4 py-12 text-center relative -mt-28'>
-        <div className='absolute flex flex-col items-center justify-center mr-14'>
-          <Image src={Logo} alt='سایا لوگو' width={120} height={40} priority unselectable={'on'} draggable={false} className='hidden md:block' />
-          <span className='lg:text-lg md:text-md sm:text-sm font-semibold font-d8 ss02'>به آموزش بیشتری نیاز دارید؟</span>
-        </div>
-
-        <Image
-          src={BannerBg2}
-          alt='picture'
-          width={480}
-          height={480}
-          priority
-          unselectable={'on'}
-          draggable={false}
-          className='w-full h-full lg:h-[550px] max-h-[550px] items-center justify-center flex flex-col'
-        />
-      </div>
-    </main>
   );
 }
-
-const FormBuilderCard = () => {
-  return (
-    <div className='bg-[linear-gradient(233.47deg,_#2CDFC9_-51.3%,_#1758BA_86.56%)] text-white relative rounded-[45px] h-[190px] shadow-xl pt-8 pr-4 w-full xs:w-[170px]'>
-      <h3 className='text-md font-bold mb-4'>فرم ساز</h3>
-      <p className='mb-6 text-xs'>ساخت حرفه‌ای فرم با قابلیت درگ اند دراپ</p>
-      <Button className='w-full justify-center absolute -bottom-2 left-0 text-white'>
-        <span className='text-white text-[10px]'>ورود به فرم ساز</span>
-        <Link href='/builder' className='bg-[#fff] z-50 rounded-[8px] md:rounded-[12px] w-[26px] md:w-[30px] h-[26px] md:h-[30px] flex items-center justify-center mr-2'>
-          <ArrowLeft />
-        </Link>
-      </Button>
-    </div>
-  );
-};
-
-const PublicFormsCard = () => {
-  return (
-    <div className='bg-white rounded-[45px] shadow-2xl pt-8 w-full xs:w-[170px] h-[190px] relative shadow-[0px 73px 90px -38px rgba(0, 0, 0, 0.1895)]'>
-      <h3 className='text-md font-bold text-[#1758BA] pr-4 mb-2'>فرم‌های عمومی</h3>
-      <p className='text-[#2A2A2A] mb-6 text-xs pr-3 pl-4'>مجموعه‌ای از فرم‌های منتشر شده عمومی در سامانه امرسالت</p>
-      <div className='w-full z-10 justify-center absolute bottom-4 left-6 text-[#1758BA]'>
-        <Link href='/public-form' className='text-[11px] flex flex-row items-center justify-end'>
-          <span className='text-[#2A2A2A] text-[10px]'>مشاهده</span>
-          <div className='bg-[#1758BA] cursor-pointer rounded-[8px] md:rounded-[12px] w-[26px] md:w-[30px] h-[26px] md:h-[30px] flex items-center justify-center mr-2'>
-            <ArrowLeft className='text-[#fff]' fill='#fff' stroke='#fff' />
-          </div>
-        </Link>
-      </div>
-    </div>
-  );
-};

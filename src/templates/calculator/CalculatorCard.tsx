@@ -141,7 +141,7 @@ export function CalculatorCard({
 
   <div className="flex items-start justify-between pr-2 pl-3">
         <span className="bg-[#F7F7FF] rounded-[10px] h-9 w-9 flex justify-center items-center shrink-0">
-          <Image src="/images/calc/ic_calculator.svg" width={22} height={22} alt="" />
+          <Image src="/images/calc/ic_calculator.svg" width={22} height={22} alt="" unoptimized/>
         </span>
         </div>
         <p className="flex-1 min-w-0 text-[14px] font-medium text-[#161616] text-right leading-snug break-words">

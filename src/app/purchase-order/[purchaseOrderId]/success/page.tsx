@@ -27,7 +27,7 @@ export default function PaymentSuccessPage() {
 
             <div className="relative mb-6 mt-2">
               <div className="relative w-28 h-28 bg-green-100 rounded-full mx-auto flex items-center justify-center">
-                <Image src={SuccessIcon} alt='success'
+                <Image src={SuccessIcon} alt='success' unoptimized
                   width={80} height={80}
                   className='w-24 h-24 absolute -right-3 -top-1' />
                 <div className="absolute bottom-11 -right-1 w-2 h-2 bg-[#FFB800] rounded-full"></div>

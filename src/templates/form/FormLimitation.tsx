@@ -159,5 +159,5 @@ export default function FormLimitation({ type, setLimitation, setQuestion, addQu
         </>
       )}
     </Box>
-  )
+  );
 }

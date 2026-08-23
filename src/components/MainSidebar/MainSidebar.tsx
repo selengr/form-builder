@@ -21,7 +21,7 @@ const SidebarButton = ({
   label,
   onClick,
 }: {
-  icon: JSX.Element;
+  icon: any;
   label: string;
   onClick?: () => void;
 }) => (
@@ -69,6 +69,7 @@ export default function MainSidebar() {
               height={15}
               priority
               draggable={false}
+              unoptimized
             />
           </Link>
 
@@ -89,6 +90,7 @@ export default function MainSidebar() {
             className='object-cover z-0'
             priority
             draggable={false}
+            unoptimized
           />
           <div className='relative z-10'>
             <MenuSidebar />

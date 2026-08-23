@@ -136,7 +136,7 @@ const ActionButtons: React.FC<TActionButtonsProps> = ({
 
       <Link href={`/builder/${id}?admin=data-collection`}>
         <IconButton color="primary">
-          <Image src={EditIcon} alt="edit" width={24} height={24} />
+          <Image src={EditIcon} alt="edit" width={24} height={24} unoptimized/>
         </IconButton>
       </Link>
 

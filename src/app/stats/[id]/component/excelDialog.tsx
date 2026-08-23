@@ -47,7 +47,7 @@ export function ExcelDialog({ open, onClose, savedUsers, onDeleteUser, onDownloa
                 key={user.takePartId}
                 secondaryAction={
                   <IconButton edge='end' onClick={() => onDeleteUser(user.takePartId)} color='error'>
-                    <Image src={TrashIcon} alt='delete' width={24} height={24} />
+                    <Image src={TrashIcon} alt='delete' width={24} height={24} unoptimized/>
                   </IconButton>
                 }>
                 <ListItemText primary={`${idx + 1}. ${user.name}`} />

@@ -22,7 +22,7 @@ export function ErrorStep({ message, replace }: ErrorStepProps) {
                 <p className='text-xl font-bold text-red-400 mb-4'>{message}</p>
 
                 <div className='w-full max-w-xs sm:max-w-md'>
-                  <Image src={errorStep} alt='خطا' width={400} height={400} priority className='w-full h-auto max-h-[400px] object-contain' draggable={false} />
+                  <Image src={errorStep} alt='خطا' width={400} height={400} priority className='w-full h-auto max-h-[400px] object-contain' draggable={false} unoptimized/>
                 </div>
 
                 <Button

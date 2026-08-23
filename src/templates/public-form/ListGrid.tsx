@@ -194,7 +194,7 @@ const ListGrid: React.FC<IProps> = ({
                                 width: 51,
                                 height: 51,
                             }}>
-                            <Image src={Filter} width={35} height={35} alt='Filter' draggable={false} />
+                            <Image src={Filter} width={35} height={35} alt='Filter' draggable={false} unoptimized/>
                         </IconButton>
                     )}
                 </Box>
@@ -246,7 +246,7 @@ const ListGrid: React.FC<IProps> = ({
                         <div className="w-full max-w-[450px] mx-auto flex flex-col gap-2">
                             <div className='flex justify-between gap-2 bg-[#ECFAFF] rounded-2xl px-[10px] py-4 w-full'>
                                 <div className='flex items-center gap-[6px] sm:gap-[10px] flex-shrink-0'>
-                                    <Image src={TotalGrid} width={18} height={18} className='sm:w-5 sm:h-5 select-none' alt='total' draggable={false} />
+                                    <Image src={TotalGrid} width={18} height={18} className='sm:w-5 sm:h-5 select-none' alt='total' draggable={false} unoptimized/>
                                     <p className='text-xs sm:text-sm text-[#393939] whitespace-nowrap'>{textTotal[0]}:</p>
                                 </div>
 

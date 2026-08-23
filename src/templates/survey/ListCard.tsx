@@ -108,17 +108,17 @@ const ListCard: React.FC<ListCardProps> = ({
 
         <div className='flex gap-2 flex-wrap items-center justify-start'>
           <IconButton onClick={() => setOpenConfirmDialog(true)} disabled={loading} color='error'>
-            <Image src={TrashIcon} alt='delete' width={24} height={24} />
+            <Image src={TrashIcon} alt='delete' width={24} height={24} unoptimized/>
           </IconButton>
 
           <IconButton disabled={loading}>
-            <Image src={CopyIcon} alt='copy' width={24} height={24} />
+            <Image src={CopyIcon} alt='copy' width={24} height={24} unoptimized/>
           </IconButton>
 
           {data.status === 'CREATE' && (
             <Link href={`/builder/${data.id}?admin=survey`}>
               <IconButton disabled={loading} color='primary'>
-                <Image src={EditIcon} alt='edit' width={24} height={24} />
+                <Image src={EditIcon} alt='edit' width={24} height={24} unoptimized/>
               </IconButton>
             </Link>
           )}

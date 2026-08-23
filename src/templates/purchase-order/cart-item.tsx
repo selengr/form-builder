@@ -45,7 +45,7 @@ function CartItem({ detail, onSelect, toggleConfirm, index, setDeleteId, setDesc
           onClick={handleRemoveClick}
           className='flex-shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center text-gray-500 hover:bg-red-100 hover:text-red-700 transition-colors'
           aria-label='حذف آیتم'>
-          <Image src={TrashIcon} alt='delete' width={24} height={24} />
+          <Image src={TrashIcon} alt='delete' width={24} height={24} unoptimized/>
         </button>
       </div>
     </>

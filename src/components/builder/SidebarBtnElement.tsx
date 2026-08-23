@@ -73,7 +73,7 @@ function SidebarBtnElement({ formElement, disabled = false }: SidebarBtnElementP
     >
       {icon && (
         <span className="bg-white rounded-[10px] h-9 w-9 flex justify-center items-center shrink-0">
-          <Image src={icon} width={22} height={22} alt="" />
+          <Image src={icon} width={22} height={22} alt="" unoptimized/>
         </span>
       )}
       <p className="text-right pr-1 text-[#161616] text-[13px] md:text-sm font-normal flex-1">{label}</p>
@@ -92,7 +92,7 @@ export function SidebarBtnElementDragOverlay({ formElement }: { formElement: For
     >
       {icon && (
         <span className="bg-white rounded-[10px] h-9 w-9 flex justify-center items-center shrink-0">
-          <Image src={icon} width={22} height={22} alt="" />
+          <Image src={icon} width={22} height={22} alt="" unoptimized/>
         </span>
       )}
       <p className="text-right pr-1 text-[#161616] text-[13px] md:text-sm font-normal flex-1">{label}</p>

@@ -58,7 +58,7 @@ export default function MyAssessmentsFilter({
         <div className='flex h-[calc(100vh-60px)] w-full flex-col items-center justify-between'>
             <div className='w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4'>
                 <div className='flex items-center w-full justify-center gap-2'>
-                    <Image src={FilterIcon} width={30} height={30} alt='filter' />
+                    <Image src={FilterIcon} width={30} height={30} alt='filter' unoptimized/>
                     <p className='text-[16px] text-center font-bold text-[#161616]'>فیلتر</p>
                 </div>
             </div>

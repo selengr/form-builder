@@ -12,6 +12,7 @@ const EmptyCart = () => {
         priority={true}
         draggable={false}
         className='max-w-[400px] w-full h-auto object-contain'
+        unoptimized
       />
 
       <div className="space-y-4">

@@ -39,7 +39,7 @@ export default function ListGridWrapper() {
         {/* هدر فیلتر */}
         <div className='w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4'>
           <div className='flex items-center w-full justify-center gap-2'>
-            <Image src={FilterIcon} width={30} height={30} alt='filter' draggable={false} />
+            <Image src={FilterIcon} width={30} height={30} alt='filter' draggable={false} unoptimized/>
             <p className='text-[16px] text-center font-bold text-[#161616]'>فیلتر</p>
           </div>
         </div>

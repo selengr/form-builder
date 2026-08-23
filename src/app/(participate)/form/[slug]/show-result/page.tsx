@@ -139,6 +139,7 @@ const ResultsPage = () => {
                   src={BugIcon}
                   fill
                   className="object-contain"
+                  unoptimized
                 />
               </div>
             }

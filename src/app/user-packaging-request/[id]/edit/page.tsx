@@ -3,15 +3,16 @@ import EditPackagingRequestPageContent from '@/templates/user-packaging-request/
 export const dynamic = 'force-dynamic';
 
 interface UserPackagingRequestEditPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default function UserPackagingRequestEditPage({
+export default async function UserPackagingRequestEditPage({
   params,
 }: UserPackagingRequestEditPageProps) {
-  const requestId = Number(params.id);
+  const { id } = await params;
+  const requestId = Number(id);
 
   return <EditPackagingRequestPageContent requestId={requestId} />;
 }

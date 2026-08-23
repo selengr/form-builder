@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useMemo } from 'react';
 // types
-import Logo from "/public/images/logo/logo2.svg";
+import Logo from "@/../public/images/logo/logo2.svg";
 // components
 import MenuList from './menuList/MenuList';
 import { IUserInfoResponse } from '@actions/auth';
@@ -38,6 +38,7 @@ export default function MiddleSidebar({ userInfo }: IProps) {
             height={40}
             priority
             draggable={false}
+            unoptimized
           />
         </Link>
       </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Button, Typography } from '@mui/material';
-// test
+
 const SAMPLE_FILE_PATH = '/sample-ownership.docx';
 const SAMPLE_FILE_NAME = 'فرم_اظهار_و_رضایتنامه_انتشار_ابزار_سایا.docx';
 

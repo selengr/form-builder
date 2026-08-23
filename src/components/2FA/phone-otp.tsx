@@ -83,7 +83,7 @@ export default function PhoneOtpPage({
   return (
     <Box width="100%">
       <Box display="flex" alignItems="center" mb={2}>
-        <Image src={TwoFAIcon} alt="احراز هویت" />
+        <Image src={TwoFAIcon} alt="احراز هویت" unoptimized/>
         <Typography ml={1} variant="body1" fontWeight="bold">
           تایید شماره موبایل
         </Typography>

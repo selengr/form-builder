@@ -111,7 +111,7 @@ export default function TwoFABottomSheet<T>({ open, sendOtpInfo, resendOtpInfo, 
       <BottomSheet
         title={
           <Box display='flex' alignItems='center' marginRight='1rem'>
-            <Image src={NationalCardIcon} alt='کدملی' />
+            <Image src={NationalCardIcon} alt='کدملی' unoptimized/>
             <Typography marginLeft='0.4rem' variant='body2' fontWeight='bold'>
               افزودن کدملی
             </Typography>
@@ -156,7 +156,7 @@ export default function TwoFABottomSheet<T>({ open, sendOtpInfo, resendOtpInfo, 
       <BottomSheet
         title={
           <Box display='flex' alignItems='center' marginRight='1rem'>
-            <Image src={TwoFAIcon} alt='احراز هویت' />
+            <Image src={TwoFAIcon} alt='احراز هویت' unoptimized/>
             <Typography marginLeft='0.4rem' variant='body2' fontWeight='bold'>
               احراز هویت
             </Typography>

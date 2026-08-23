@@ -80,6 +80,7 @@ export default async function FAQPage() {
           height={100}
           className="w-full h-full"
           draggable={false}
+          unoptimized
         />
       </div>
 
@@ -91,6 +92,7 @@ export default async function FAQPage() {
           height={100}
           className="w-screen h-screen floating-3d-f"
           draggable={false}
+          unoptimized
         />
       </div>
 
@@ -106,6 +108,7 @@ export default async function FAQPage() {
               width={500}
               height={500}
               draggable={false}
+              unoptimized
             />
           </div>
 
@@ -116,6 +119,7 @@ export default async function FAQPage() {
               width={500}
               height={500}
               draggable={false}
+              unoptimized
             />
           </div>
 

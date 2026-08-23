@@ -131,6 +131,7 @@ export function FinishStep({
                     priority
                     className="w-full h-auto max-h-[400px] object-contain"
                     draggable={false}
+                    unoptimized
                   />
                 </div>
 

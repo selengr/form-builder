@@ -1,73 +1,82 @@
-'use client';
+import type { OAuthConfig } from 'next-auth/providers/oauth';
+import type { NextAuthOptions } from 'next-auth';
 
-import { AxiosApi } from '@/services/axios/AxiosApi';
-import { getAuthToken } from '@/utils/getAuthToken';
+// ------------------ OAuth Provider ------------------
+const Auth0Provider: OAuthConfig<any> = {
+  id: 'authorize',
+  name: 'authorize',
+  type: 'oauth',
+  idToken: true,
+  authorization: {
+    url: process.env.NEXT_PUBLIC_BASE_URL + '/sso/oauth2/authorize',
+    params: {
+      scope: 'openid',
+      response_type: 'code',
+      response_mode: 'form_post',
+    },
+  },
+  token: process.env.BASE_URL + '/sso/oauth2/token',
+  issuer: process.env.ISSUER_URL,
+  jwks_endpoint: process.env.BASE_URL + '/sso/oauth2/jwks',
+  clientId: process.env.CLIENT_ID,
+  clientSecret: process.env.CLIENT_SECRET,
+  httpOptions: {
+    timeout: 30000,
+  },
+  profile: (user) => {
+    return user;
+  },
+};
 
-interface IFetchUserInfoResult {
-  userInfo: any;
-  isAuthenticated: boolean;
-  error: Error | null;
+// ------------------ Cookie Config ------------------
+const rawNextAuthUrl = process.env.NEXTAUTH_URL || '';
+const sanitizedUrl = rawNextAuthUrl.replace(/\/$/, ''); // حذف `/` آخر URL
+
+const getDomainName = (hostName: string) => {
+  const parts = hostName.split('.');
+  return parts.length >= 2 ? parts.slice(-2).join('.') : hostName;
+};
+
+let cookieDomain: string | undefined = undefined;
+try {
+  const url = new URL(sanitizedUrl);
+  cookieDomain = '.' + getDomainName(url.hostname); // مثل: .qhami.ir
+} catch (e) {
+  console.warn('Invalid NEXTAUTH_URL:', rawNextAuthUrl);
 }
 
-let cachedUserInfo: any | null = null;
-let cachedUserInfoPromise: Promise<IFetchUserInfoResult> | null = null;
+// نام کوکی سشن جداگانه export می‌شود تا proxy.ts (که مستقیم از next-auth/jwt
+// تابع getToken را صدا می‌زند) دقیقاً همین نام را بخواند. getToken به‌صورت
+// پیش‌فرض دنبال «next-auth.session-token» می‌گردد، نه نام سفارشی‌شده‌ی زیر؛
+// بدون این export، هر کاربر لاگین‌شده هم unauthorized تشخیص داده می‌شود.
+export const sessionCookieName = `${sanitizedUrl.startsWith('https://') ? '__Secure-' : ''}psya-next-auth.session-token`;
 
-export async function fetchUserInfo(): Promise<IFetchUserInfoResult> {
-  if (typeof window !== 'undefined' && cachedUserInfo) {
-    return {
-      userInfo: cachedUserInfo,
-      isAuthenticated: true,
-      error: null,
-    };
-  }
-
-  if (cachedUserInfoPromise) {
-    return cachedUserInfoPromise;
-  }
-
-  cachedUserInfoPromise = (async (): Promise<IFetchUserInfoResult> => {
-    try {
-      if (!process.env.NEXT_PUBLIC_BASE_URL) {
-        throw new Error('NEXT_PUBLIC_BASE_URL is not defined');
+// ------------------ NextAuth Options ------------------
+export const authOptions: NextAuthOptions = {
+  providers: [Auth0Provider],
+  secret: process.env.NEXTAUTH_SECRET,
+  cookies: {
+    sessionToken: {
+      name: sessionCookieName,
+      options: {
+        domain: cookieDomain, // پشتیبانی از همه ساب‌دامین‌ها
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: sanitizedUrl.startsWith('https://'),
+      },
+    },
+  },
+  callbacks: {
+    async jwt({ account, token }) {
+      if (account) {
+        token.access_token = account.access_token;
+        token.refresh_token = account.refresh_token;
       }
-
-      const token = await getAuthToken();
-
-      if (!token) {
-        return {
-          userInfo: null,
-          isAuthenticated: false,
-          error: null,
-        };
-      }
-
-      const res = await AxiosApi.get<any>('/authorization/front-panel/non-org-user-role/find-user-loggedin-info', {
-        baseURL: process.env.NEXT_PUBLIC_BASE_URL,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (typeof window !== 'undefined') {
-        cachedUserInfo = res.data;
-      }
-
-      return {
-        userInfo: res.data,
-        isAuthenticated: true,
-        error: null,
-      };
-    } catch (error: any) {
-      const err = error instanceof Error ? error : new Error(error?.message || 'خطای نامشخص');
-      return {
-        userInfo: null,
-        isAuthenticated: false,
-        error: err,
-      };
-    } finally {
-      cachedUserInfoPromise = null;
-    }
-  })();
-
-  return cachedUserInfoPromise;
-}
+      return token;
+    },
+    async session({ session, token }) {
+      return { ...session, access_token: token.access_token };
+    },
+  },
+};

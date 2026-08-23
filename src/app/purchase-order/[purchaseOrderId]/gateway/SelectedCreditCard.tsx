@@ -28,7 +28,7 @@ export function SelectedCreditCard({ availableAmount = 0, creditTypeValue, onDel
           {formatNumberWithCommas(remainedCredit.toString())} تومان
         </Typography>
         <IconButton onClick={() => onDelete()} sx={{ marginLeft: 'auto' }}>
-          <Image src={TrashIcon} alt='trash' />
+          <Image src={TrashIcon} alt='trash' unoptimized/>
         </IconButton>
       </Box>
     </Box>

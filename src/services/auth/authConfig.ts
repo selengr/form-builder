@@ -45,13 +45,19 @@ try {
   console.warn('Invalid NEXTAUTH_URL:', rawNextAuthUrl);
 }
 
+// نام کوکی سشن جداگانه export می‌شود تا proxy.ts (که مستقیم از next-auth/jwt
+// تابع getToken را صدا می‌زند) دقیقاً همین نام را بخواند. getToken به‌صورت
+// پیش‌فرض دنبال «next-auth.session-token» می‌گردد، نه نام سفارشی‌شده‌ی زیر؛
+// بدون این export، هر کاربر لاگین‌شده هم unauthorized تشخیص داده می‌شود.
+export const sessionCookieName = `${sanitizedUrl.startsWith('https://') ? '__Secure-' : ''}psya-next-auth.session-token`;
+
 // ------------------ NextAuth Options ------------------
 export const authOptions: NextAuthOptions = {
   providers: [Auth0Provider],
   secret: process.env.NEXTAUTH_SECRET,
   cookies: {
     sessionToken: {
-      name: `${sanitizedUrl.startsWith('https://') ? '__Secure-' : ''}next-auth.session-token`,
+      name: sessionCookieName,
       options: {
         domain: cookieDomain, // پشتیبانی از همه ساب‌دامین‌ها
         httpOnly: true,

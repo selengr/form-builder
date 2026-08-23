@@ -69,7 +69,7 @@ export const TitleFieldFinishFormElement: FormElement = {
 function FormComponent({ elementInstance }: { elementInstance?: FormElementInstance }) {
   return (
     <div className='flex flex-col gap-4 items-center justify-center w-full'>
-      <Image src={finishIcon} alt='' width={200} height={300} className='h-[300px] w-full' />
+      <Image src={finishIcon} alt='' width={200} height={300} className='h-[300px] w-full' unoptimized />
       {elementInstance && <p className='text-[15px] font-bold text-[#161616] text-justify mb-6'>{elementInstance as any}</p>}
       <button disabled className='h-[52px] rounded-lg border-[1px] border-[#1758BA] text-[#1758BA] w-full max-w-[240px]'>
         ثبت و ارسال

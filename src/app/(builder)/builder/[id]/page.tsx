@@ -14,13 +14,16 @@ export default async function BuilderPage({
   params,
   searchParams,
 }: {
-  params: { id: string };
-  searchParams?: { admin?: string };
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ admin?: string }>;
 }) {
-  const response = await getFormDataAction(params.id);
+  const { id } = await params;
+  const { admin } = await searchParams;
+
+  const response = await getFormDataAction(id);
 
   if (!response.success) {
-    const back = getBuilderBackConfig(searchParams?.admin);
+    const back = getBuilderBackConfig(admin);
 
     return (
       <BuilderErrorPage

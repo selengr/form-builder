@@ -204,7 +204,7 @@ export function ReportTable({ headData, allData, isLoading, refetchStatsData, se
         content={
           <>
             <div className="flex flex-row items-center gap-2 mt-2">
-              <Image src={TrashIcon} alt="delete" width={20} height={20} />
+              <Image src={TrashIcon} alt="delete" width={20} height={20} unoptimized/>
               <p className='font-normal'>آیا از حذف ردیف <span className="font-semibold">
                 {deleteTarget?.name}
               </span> اطمینان دارید؟</p>

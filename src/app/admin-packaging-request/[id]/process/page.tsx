@@ -3,15 +3,16 @@ import ProcessPackagingRequestPageContent from '@/templates/admin-packaging-requ
 export const dynamic = 'force-dynamic';
 
 interface AdminPackagingRequestProcessPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default function AdminPackagingRequestProcessPage({
+export default async function AdminPackagingRequestProcessPage({
   params,
 }: AdminPackagingRequestProcessPageProps) {
-  const requestId = Number(params.id);
+  const { id } = await params;
+  const requestId = Number(id);
 
   return <ProcessPackagingRequestPageContent requestId={requestId} />;
 }

@@ -20,7 +20,7 @@ function SidebarBtnLogicContent({ title, icon }: { title: string; icon: string }
   return (
     <>
       <span className="bg-white rounded-[10px] h-9 w-9 flex justify-center items-center shrink-0">
-        <Image src={icon} width={22} height={22} alt="" />
+        <Image src={icon} width={22} height={22} alt="" unoptimized/>
       </span>
 
       <p className="flex-1 text-right pr-1 text-[#161616] text-sm">{title}</p>
@@ -102,7 +102,7 @@ export function SidebarBtnLogicDragOverlay({
       className="flex items-center gap-3 h-[52px] rounded-xl px-2 flex-row-reverse bg-[#F7F7FF] shadow-md"
     >
       <span className="bg-white rounded-[10px] h-9 w-9 flex justify-center items-center shrink-0">
-        <Image src={icon} width={22} height={22} alt="" />
+        <Image src={icon} width={22} height={22} alt="" unoptimized/>
       </span>
 
       <p className="flex-1 text-right pr-1 text-[#161616] text-sm">

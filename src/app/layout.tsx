@@ -4,6 +4,26 @@ import { RootProvider } from '@/providers';
 import NextTopLoader from 'nextjs-toploader';
 import LayoutWrapper from '@/templates/header/HeaderWrapper';
 import { fetchUserInfoServer } from '@actions/auth';
+import localFont from "next/font/local";
+
+const iranSans = localFont({
+    src: [
+        {
+            path: "../../public/fonts/IRANSansXVF.woff",
+            weight: "100 1000",
+            style: "normal",
+        },
+        {
+            path: "../../public/fonts/IRANSansXVF.woff2",
+            weight: "100 1000",
+            style: "normal",
+        },
+    ],
+    display: "swap",
+    variable: "--font-iransans",
+});
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'ام‌رسالت - سکوی سایا',
@@ -28,23 +48,23 @@ export const viewport: Viewport = {
 };
 
 export default async function RootLayout({
-  children,
-}: {
+                                           children,
+                                         }: {
   children: React.ReactNode;
 }) {
   const result = await fetchUserInfoServer();
 
   return (
-    <html lang="fa" dir="rtl" className="scroll-smooth" suppressHydrationWarning>
+      <html lang="fa" dir="rtl" className={`scroll-smooth ${iranSans.variable}`} suppressHydrationWarning>
       <body className="antialiased">
-        <NextTopLoader showSpinner={false} />
+      <NextTopLoader showSpinner={false} />
 
-        <RootProvider initialUserInfo={result.userInfo}>
-          <LayoutWrapper>
-            {children}
-          </LayoutWrapper>
-        </RootProvider>
+      <RootProvider initialUserInfo={result.userInfo}>
+        <LayoutWrapper>
+          {children}
+        </LayoutWrapper>
+      </RootProvider>
       </body>
-    </html>
+      </html>
   );
 }

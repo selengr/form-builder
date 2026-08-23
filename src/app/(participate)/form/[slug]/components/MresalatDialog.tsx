@@ -86,14 +86,15 @@ export default function MresalatDialog({
           }}
         >
           <Image
-            src="/images/home-page/mresalat-banner.svg"
-            alt="وام قرض الحسنه بدون کارمزد امرسالت"
+            src="/images/home-page/mresalat-banner.png"
+            alt="وام قرض الحسنه بدون کارمزد ام رسالت"
             fill
             priority
             sizes="(max-width: 600px) 100vw, 575px"
             style={{
               objectFit: 'cover',
             }}
+            unoptimized
           />
         </Box>
 
@@ -191,7 +192,7 @@ export default function MresalatDialog({
                 },
               }}
             >
-              ورود به امرسالت
+              ورود به ام رسالت
             </Box>
           </Box>
         </Box>

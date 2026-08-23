@@ -123,7 +123,7 @@ export default function SettingsDialog({
   const [openDialog, setOpenDialog] = useState(false);
 
   const search = searchParams.get('admin');
-  const IsDataCollection = search === 'data-collection' || search === 'data-collection-new';
+  const IsDataCollection = search === 'data-collection';
 
   const handleOpen = useCallback(() => {
     setOpenDialog((prev) => !prev);

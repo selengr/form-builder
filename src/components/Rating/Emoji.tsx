@@ -1,11 +1,11 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
-import SadIcon from "/public/images/icons/rating/sad.svg";
-import AngryIcon from "/public/images/icons/rating/angry.svg";
-import HappyIcon from "/public/images/icons/rating/happy.svg";
-import LaughIcon from "/public/images/icons/rating/laugh.svg";
-import NeutralIcon from "/public/images/icons/rating/neutral.svg";
+import SadIcon from "@/../public/images/icons/rating/sad.png";
+import AngryIcon from "@/../public/images/icons/rating/angry.png";
+import HappyIcon from "@/../public/images/icons/rating/happy.png";
+import LaughIcon from "@/../public/images/icons/rating/laugh.png";
+import NeutralIcon from "@/../public/images/icons/rating/neutral.png";
 
 
 type EmojiItem = {
@@ -52,12 +52,12 @@ const renderLable = (value: string) => {
 };
 
 export default function EmojiRating({
-    value: controlledValue,
-    onChange,
-    clickableEmojis = false,
-    startValue,
-    endValue
-}: EmojiRatingProps) {
+                                        value: controlledValue,
+                                        onChange,
+                                        clickableEmojis = false,
+                                        startValue,
+                                        endValue
+                                    }: EmojiRatingProps) {
     const [internalValue, setInternalValue] = useState(0);
     const [popIndex, setPopIndex] = useState<number | null>(null);
 
@@ -79,7 +79,7 @@ export default function EmojiRating({
                             <div
                                 key={emoji.id}
                                 className={`flex flex-col items-center gap-4 ${clickableEmojis ? "cursor-pointer" : ""
-                                    }`}
+                                }`}
                                 onClick={() => {
                                     if (!clickableEmojis) return;
                                     setInternalValue(emoji.id);
@@ -138,47 +138,47 @@ export default function EmojiRating({
                 {endValue && renderLable(endValue)}
             </span>
             <style jsx>{`
-@keyframes pop {
-0% {
-transform: scale(1);
-}
-70% {
-transform: scale(1.35);
-}
-100% {
-transform: scale(1);
-}
-}
+                @keyframes pop {
+                    0% {
+                        transform: scale(1);
+                    }
+                    70% {
+                        transform: scale(1.35);
+                    }
+                    100% {
+                        transform: scale(1);
+                    }
+                }
 
-.emoji-pop {
-animation: pop 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
+                .emoji-pop {
+                    animation: pop 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+                }
 
-@keyframes sweep {
-0% {
-transform: translateX(-40%);
-background: linear-gradient(
-120deg,
-transparent,
-rgba(255, 255, 255, 0.7),
-transparent
-);
-}
-100% {
-transform: translateX(100%);
-background: linear-gradient(
-120deg,
-transparent,
-rgba(255, 255, 255, 0),
-transparent
-);
-}
-}
+                @keyframes sweep {
+                    0% {
+                        transform: translateX(-40%);
+                        background: linear-gradient(
+                                120deg,
+                                transparent,
+                                rgba(255, 255, 255, 0.7),
+                                transparent
+                        );
+                    }
+                    100% {
+                        transform: translateX(100%);
+                        background: linear-gradient(
+                                120deg,
+                                transparent,
+                                rgba(255, 255, 255, 0),
+                                transparent
+                        );
+                    }
+                }
 
-.emoji-sweep {
-animation: sweep 0.4s ease-out;
-}
-`}</style>
+                .emoji-sweep {
+                    animation: sweep 0.4s ease-out;
+                }
+            `}</style>
         </div>
     );
 }

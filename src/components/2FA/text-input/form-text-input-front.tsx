@@ -158,9 +158,13 @@ function FormTextInput<TFieldValues extends FieldValues = FieldValues, TName ext
     <Controller
       // {...props.register}
       render={({ field, fieldState }) => (
-        <Grid xs={12} item display='flex' alignItems='center' justifyContent={'space-between'}>
+        <Grid
+          display='flex'
+          alignItems='center'
+          justifyContent={'space-between'}
+          size={12}>
           <Typography sx={{ color: 'gray' }}>{props.label}</Typography>
-          <Grid xs={8}>
+          <Grid size={8}>
             <TextInput
               label={''}
               autoFocus={props.autoFocus}

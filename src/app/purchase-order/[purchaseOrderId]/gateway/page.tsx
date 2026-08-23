@@ -256,7 +256,7 @@ export default function PayWithMHesam() {
             />
           ))}
 
-          <Image src={MhesamEmptyCartPage} alt='لیست اعتبارات' style={{ margin: '2rem auto' }} />
+          <Image src={MhesamEmptyCartPage} alt='لیست اعتبارات' style={{ margin: '2rem auto' }} unoptimized/>
           <Box bgcolor='#F2F4F8' padding='1rem' borderRadius='12px'>
             <Box display='flex' justifyContent='space-between'>
               <Typography variant='body2'>مبلغ کل استفاده شده</Typography>

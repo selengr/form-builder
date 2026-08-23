@@ -187,7 +187,7 @@ export default function PackagingListCard({
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}>
-                  <Image src={EditIcon} alt="edit" width={24} height={24} />
+                  <Image src={EditIcon} alt="edit" width={24} height={24} unoptimized/>
                 </IconButton>
               </Tooltip>
             )}

@@ -14,8 +14,6 @@ function DataAutocomplete<T>(props: IDataAutocomplete<T>) {
       open={open}
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
-      PopperComponent={(params) => <Popper sx={{ direction: 'rtl' }} {...params} />}
-      ListboxProps={{ sx: { '*': { direction: 'ltr' } } }}
       renderInput={(params: AutocompleteRenderInputParams) => {
         const { InputLabelProps, InputProps, ...rest } = params;
         return (
@@ -39,7 +37,12 @@ function DataAutocomplete<T>(props: IDataAutocomplete<T>) {
       }
       getOptionLabel={(options) => getOptionLabel(options as T).toString()}
       {...rest}
-    />
+      slots={{
+        popper: (params) => <Popper sx={{ direction: 'rtl' }} {...params} />
+      }}
+      slotProps={{
+        listbox: { sx: { '*': { direction: 'ltr' } } }
+      }} />
   );
 }
 

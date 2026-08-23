@@ -74,7 +74,7 @@ export function ConditionCard({
       >
         <div className="flex items-start justify-between mb-3 pr-2 pl-6">
                  <span className="bg-[#F7F7FF] rounded-[10px] h-9 w-9 flex justify-center items-center shrink-0">
-                  <Image src={"/images/calc/ic_condition.svg"} width={22} height={22} alt="" />
+                  <Image src={"/images/calc/ic_condition.svg"} width={22} height={22} alt="" unoptimized/>
                 </span>
 
           <button

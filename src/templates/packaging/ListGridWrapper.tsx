@@ -110,7 +110,7 @@ export default function PackagingListGridWrapper() {
                   borderRadius: '16px',
                   border: '1px solid #1758BA',
                 }}>
-                <Image src={PlusIcon} alt="" width={22} height={22} />
+                <Image src={PlusIcon} alt="" width={22} height={22} unoptimized/>
               </IconButton>
             </div>
           ),

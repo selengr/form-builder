@@ -11,8 +11,13 @@ import '@uppy/core/dist/style.min.css';
 import '@uppy/dashboard/dist/style.min.css';
 import '@uppy/image-editor/dist/style.min.css';
 import Persian from '@uppy/locales/lib/fa_IR';
+import { v7 as uuidv7 } from "uuid";
 
 export function UppyUploader({ fileRestriction = fileUploaderRestrictions, sx = {}, getData, register }: IUploader) {
+  const generateFileName = (file: any) => {
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    return `${uuidv7()}_${timestamp}_${file.name}`;
+  };
   const uppy = useRef(
     new Uppy({
       debug: true,
@@ -25,8 +30,10 @@ export function UppyUploader({ fileRestriction = fileUploaderRestrictions, sx = 
 
   uppy.current.on('file-added', (file) => {
     uppy.current.setFileMeta(file.id, {
-      name: Date.now() + '_' + file.name,
+      name: generateFileName(file),
       date: Date.now(),
+      uploadedAt: new Date().toISOString(),
+      uuid: uuidv7(),
     });
   });
 

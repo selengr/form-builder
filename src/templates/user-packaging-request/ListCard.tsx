@@ -33,50 +33,25 @@ export default function PackagingRequestListCard({
           alignItems: 'center',
           gap: .5,
         }}>
-             {canEdit && (
+        {canEdit && (
           <IconButton
             color="primary"
             onClick={() => router.push(`/user-packaging-request/${data.id}/edit`)}
             sx={{ padding: 1 }}>
-            <Image src={EditIcon} alt="edit" width={24} height={24} />
+            <Image src={EditIcon} alt="edit" width={24} height={24} unoptimized/>
           </IconButton>
         )}
-      {!canEdit && (
-        <IconButton
-          color="primary"
-          onClick={() => router.push(`/user-packaging-request/${data.id}/view`)}
-          sx={{ padding: 1 }}>
-          <CodiconEye style={{ width: 28, height: 28 }} />
-        </IconButton>
+        {!canEdit && (
+          <IconButton
+            color="primary"
+            onClick={() => router.push(`/user-packaging-request/${data.id}/view`)}
+            sx={{ padding: 1 }}>
+            <CodiconEye style={{ width: 28, height: 28 }} />
+          </IconButton>
         )}
-     
+
       </Box>
 
-      {isPublished && (
-        <div
-          className="flex w-fit items-center gap-2 rounded-xl border border-[#B8E6F5] bg-[#ECFAFF] px-3 py-1.5"
-          aria-label={`تعداد فروش: ${sellCount}`}>
-          <span className="text-xs text-[#1758BA]">تعداد فروش</span>
-          <span className="text-sm font-bold text-[#1758BA]">{sellCount}</span>
-        </div>
-      )}
-
-      <InfoRow label="نام" value={data.name} bold className="max-w-[90%]" />
-      <InfoRow
-        label="وضعیت"
-        value={
-          <span
-            className="inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-bold"
-            style={{
-              backgroundColor: statusStyle.backgroundColor,
-              color: statusStyle.color,
-            }}>
-            {getPackagingRequestStatusLabel(data.status)}
-          </span>
-        }
-      />
-
-      {/*
       <InfoRow label="نام" value={data.name} bold className="max-w-[90%]" />
       <div className="flex flex-wrap items-center justify-between gap-2">
         <InfoRow
@@ -92,9 +67,23 @@ export default function PackagingRequestListCard({
             </span>
           }
         />
-        {isPublished && <InfoRow label="تعداد فروش" value={sellCount} bold />}
+        {isPublished &&
+          <InfoRow
+            label="تعداد فروش"
+            value={
+              <span
+                className="inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-bold"
+                style={{
+                  backgroundColor: statusStyle.backgroundColor,
+                  color: statusStyle.color,
+                }}>
+                {sellCount}
+              </span>
+            }
+          />
+        }
       </div>
-      */}
+
     </div>
   );
 }

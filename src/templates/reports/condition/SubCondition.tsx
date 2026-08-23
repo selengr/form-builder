@@ -179,7 +179,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
               borderRadius: '10px',
               border: '1px solid #1758BA',
             }}>
-            <Image src='/images/home-page/Add-fill.svg' alt='' width={22} height={22} />
+            <Image src='/images/home-page/Add-fill.svg' alt='' width={22} height={22} unoptimized/>
           </IconButton>
           {subIndex !== 0 && (
             <IconButton
@@ -194,7 +194,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
                   bgcolor: '#FA4D560D',
                 },
               }}>
-              <Image src='/images/home-page/trash.svg' alt='' width={24} height={24} />
+              <Image src='/images/home-page/trash.svg' alt='' width={24} height={24} unoptimized/>
             </IconButton>
           )}
         </Box>

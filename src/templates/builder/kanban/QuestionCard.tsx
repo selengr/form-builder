@@ -4,7 +4,7 @@ import { memo } from 'react';
 import Image from 'next/image';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { ElementsType, FormElementInstance, FormElements } from '../../../types/FormElements';
+import { ElementsType, FormElementInstance, FormElements } from '#t/FormElements';
 import QuestionCardExtra from './QuestionCardExtra';
 
 
@@ -14,7 +14,7 @@ function QuestionTypeIcon({ questionType }: { questionType: ElementsType }) {
 
   return (
     <span className="rounded-[10px] h-9 w-9 flex justify-center items-center shrink-0 bg-[#F7F7FF]">
-      <Image src={icon} width={22} height={22} alt="" />
+      <Image src={icon} width={22} height={22} alt="" unoptimized/>
     </span>
   );
 }
@@ -55,7 +55,7 @@ export function QuestionCardContent({
       className="flex flex-col items-center justify-center gap-[3px] shrink-0 py-1 pl-2 -mr-[.55rem]"
       aria-hidden
     >
-       <Image src={'/images/home-page/menu.svg'} width={12} height={12} alt="" />
+       <Image src={'/images/home-page/menu.svg'} width={12} height={12} alt="" unoptimized/>
     </div>
 
       <span className="text-[#9EA3AC] font-medium text-[13px] w-5 text-center shrink-0">

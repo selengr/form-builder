@@ -21,6 +21,7 @@ export default function Index() {
           alt={''}
           height={100}
           width={100}
+          unoptimized
           style={{
             filter: 'brightness(0) saturate(100%) invert(29%) sepia(93%) saturate(2175%) hue-rotate(200deg) brightness(97%) contrast(101%)', // مثلاً برای آبی کردن آیکون مشکی
           }}

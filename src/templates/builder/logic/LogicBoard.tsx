@@ -69,6 +69,7 @@ export default function LogicBoard({
                 height={220}
                 className="opacity-80"
                 draggable={false}
+                unoptimized
               />
               <p className="text-[#6F6F6F] text-[14px] md:text-[15px] font-semibold md:font-bold text-center">
                 {dropZoneText}

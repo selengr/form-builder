@@ -255,6 +255,7 @@ export default function DocumentListField({
                           objectFit: 'cover',
                         }}
                         src={getDownloadUrl(currentDocument.link)}
+                        unoptimized
                       />
                     ) : (
                       <Typography fontSize={12} color="#393939">

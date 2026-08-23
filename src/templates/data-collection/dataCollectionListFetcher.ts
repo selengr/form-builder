@@ -1,4 +1,4 @@
-import { getDataCollectionListAction } from '@actions/data-collection-new/getDataCollectionListAction';
+import { getDataCollectionListAction } from '@actions/data-collection/getDataCollectionListAction';
 import {
   UnifiedListGridFetcher,
   UnifiedListGridFetchParams,

@@ -1,7 +1,7 @@
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
-import { getStatsDataAction } from '@actions/data-collection-new/stats';
+import { getStatsDataAction } from '@actions/data-collection/stats';
 
 export const useStatsViewModel = () => {
   const { id } = useParams();

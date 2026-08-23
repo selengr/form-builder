@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import UnifiedListGridLayoutSkeleton from '@/components/unified-list-grid/UnifiedListGridLayoutSkeleton';
-import DataCollectionNewListGridWrapper from '@/templates/data-collection-new/ListGridWrapper';
-import DataCollectionListCardSkeleton from '@/templates/data-collection-new/ListCardSkeleton';
+import DataCollectionListGridWrapper from '@/templates/data-collection/ListGridWrapper';
+import DataCollectionListCardSkeleton from '@/templates/data-collection/ListCardSkeleton';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,7 +17,7 @@ export default function DataCollectionPage() {
           hasCreateBtn
         />
       }>
-      <DataCollectionNewListGridWrapper />
+      <DataCollectionListGridWrapper />
     </Suspense>
   );
 }

@@ -1,4 +1,4 @@
-import { getSurveyListAction } from '@actions/survey-new/getSurveyListAction';
+import { getSurveyListAction } from '@actions/survey/getSurveyListAction';
 import {
   UnifiedListGridFetcher,
   UnifiedListGridFetchParams,

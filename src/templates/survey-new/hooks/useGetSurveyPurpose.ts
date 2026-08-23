@@ -1,9 +1,9 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { getSurveyPurposeAction } from '@actions/survey-new/getSurveyPurposeAction';
+import { getSurveyPurposeAction } from '@actions/survey/getSurveyPurposeAction';
 
-export const SURVEY_PURPOSE_QUERY_KEY = ['survey-new-purpose'] as const;
+export const SURVEY_PURPOSE_QUERY_KEY = ['survey-purpose'] as const;
 
 export function useGetSurveyPurpose(open?: boolean) {
   const { data, isFetching, isLoading, isError, error } = useQuery({

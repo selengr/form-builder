@@ -23,7 +23,7 @@ export default function SurveyListCard({
   const [, setOpenConfirmDialog] = useState(false);
 
   const handleNavigation = () => {
-    localStorage.setItem('stats', '/survey-new');
+    localStorage.setItem('stats', '/survey');
     router.push(`/stats/${data.id}`);
   };
 
@@ -70,7 +70,7 @@ export default function SurveyListCard({
           </IconButton>
 
           {data.status === 'CREATE' && (
-            <Link href={`/builder/${data.id}?admin=survey-new`}>
+            <Link href={`/builder/${data.id}?admin=survey`}>
               <IconButton disabled={loading} color="primary">
                 <Image src={EditIcon} alt="edit" width={24} height={24} />
               </IconButton>

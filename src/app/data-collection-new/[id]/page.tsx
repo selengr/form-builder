@@ -1,68 +1,19 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { useStatsViewModel } from './viewModel';
-import { useParams, useRouter } from 'next/navigation';
-import { ReportHeader, ReportPagination, ReportTable } from '../../stats/[id]/component';
+import { redirect } from 'next/navigation';
 
-export interface UserType {
-  name: string;
-  takePartId: number;
-}
+type Props = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
 
-// --------------------------------------------------------
-export default function StatsPage() {
-  const router = useRouter();
-  const params = useParams();
-  const formId = params?.id?.toString();
-  const [selectedUsers, setSelectedUsers] = useState<UserType[]>([]);
+export const dynamic = 'force-dynamic';
 
-  const { name, headData, refetchStatsData, allData, isLoading, page: currentPage, setPage: setCurrentPage, pageSize: rowsPerPage, setPageSize: setRowsPerPage, totalItems } = useStatsViewModel();
-
-  useEffect(() => {
-    if (!formId) return
-    try {
-      const raw = localStorage.getItem('selectedUsersByForm');
-      const data = raw ? JSON.parse(raw) : {};
-      setSelectedUsers(data[formId] || []);
-    } catch {
-      setSelectedUsers([]);
-    }
-  }, [formId]);
-
-  const handleNavigation = () => {
-    const address = localStorage.getItem("stats")
-    router.push(address || "/reports");
-  }
-
-  const numericFormId = Number(formId);
-
-  return (
-    <div className='w-0 grow flex flex-col md:p-4 p-2 overflow-x-hidden'>
-      <div className='flex-grow bg-white rounded-xl p-4 overflow-hidden flex flex-col min-w-0'>
-        <ReportHeader title={name || 'گزارش'} onBack={handleNavigation} />
-
-        <div className='flex-grow overflow-hidden min-w-0'>
-          <ReportTable
-            refetchStatsData={refetchStatsData}
-            headData={headData}
-            allData={allData}
-            isLoading={isLoading}
-            selectedUsers={selectedUsers}
-            setSelectedUsers={setSelectedUsers}
-            formId={numericFormId} />
-        </div>
-
-        <ReportPagination
-          totalItems={totalItems}
-          currentPage={currentPage}
-          rowsPerPage={rowsPerPage}
-          onPageChange={setCurrentPage}
-          onRowsPerPageChange={setRowsPerPage}
-          selectedUsers={selectedUsers}
-          setSelectedUsers={setSelectedUsers}
-          formId={numericFormId}
-        />
-      </div>
-    </div>
-  );
+export default async function DataCollectionNewDetailRedirect({
+  params,
+  searchParams,
+}: Props) {
+  const { id } = await params;
+  const query = await searchParams;
+  const name = typeof query.name === 'string' ? query.name : undefined;
+  const qs = name ? `?name=${encodeURIComponent(name)}` : '';
+  redirect(`/data-collection/${id}${qs}`);
 }

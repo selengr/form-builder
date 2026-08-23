@@ -1,13 +1,11 @@
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
-// actions
-import { getStatsDataAction } from '../../../../actions/dataCollection/stats';
+import { getStatsDataAction } from '@actions/data-collection-new/stats';
 
-// --------------------------------------------------------
 export const useStatsViewModel = () => {
   const { id } = useParams();
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
   const name = searchParams.get('name');
 
   const [page, setPage] = useState<number>(1);
@@ -17,20 +15,22 @@ export const useStatsViewModel = () => {
   const [totalItems, setTotalItems] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-
   const fetchStatsData = async (page: number, pageSize: number) => {
     try {
-       setIsLoading(true);
-       // @ts-ignore
-       const data = await getStatsDataAction(id.toString(), page, pageSize);
+      setIsLoading(true);
+      const res = await getStatsDataAction(id!.toString(), page, pageSize);
 
-       setAllData(data.allData);
-       setHeadData(data.headData);
-       setTotalItems(data.totalItems);
-    } catch (error:any) {
-       toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+      if (!res.success) {
+        throw new Error(res.message || 'خطا در دریافت اطلاعات');
+      }
+
+      setAllData(res.data.allData);
+      setHeadData(res.data.headData);
+      setTotalItems(res.data.totalItems);
+    } catch (error: any) {
+      toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
     } finally {
-       setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -56,6 +56,6 @@ export const useStatsViewModel = () => {
     isLoading,
     totalItems,
     setPageSize,
-    refetchStatsData
+    refetchStatsData,
   };
 };

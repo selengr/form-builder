@@ -71,7 +71,7 @@ export default function CreateSurveyModal({ open, onClose }: TCreateSurveyModalP
           onSuccess: (result) => {    
             toast.success('عملیات با موفقیت انجام شد');
             handleClose()
-            router.push(`/builder/${result.id}?admin=survey`);
+            router.push(`/builder/${result.id}?admin=survey-new`);
           },
           onError: (error: any) => {
             toast.error(error?.message || 'خطا در ایجاد فرم');

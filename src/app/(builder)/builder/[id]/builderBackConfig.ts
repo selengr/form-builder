@@ -6,6 +6,8 @@ export function getBuilderBackConfig(admin?: string) {
       return { href: '/data-collection-new', label: 'بازگشت' };
     case 'survey':
       return { href: '/survey', label: 'بازگشت' };
+    case 'survey-new':
+      return { href: '/survey-new', label: 'بازگشت' };
     case 'packaging':
       return { href: '/packaging', label: 'بازگشت' };
     default:

@@ -22,7 +22,7 @@ export default function PreviewPage() {
   const admin = search === 'list';
 
   const handleBack = () => {
-    if (from === 'data-collection') {
+    if (from === 'data-collection' || from === 'data-collection-new') {
       router.push('/data-collection');
       return;
     }
@@ -63,7 +63,7 @@ export default function PreviewPage() {
       <BuilderLoadErrorState
         message={errorMessage}
         backHref={
-          from === 'data-collection'
+          from === 'data-collection' || from === 'data-collection-new'
             ? '/data-collection'
             : admin
               ? `/user-reports/${paramId}`

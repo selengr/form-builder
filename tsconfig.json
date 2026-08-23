@@ -1,41 +1,55 @@
 {
   "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "ignoreDeprecations": "6.0",
     "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
+
+    "baseUrl": ".",
+
     "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
+    "exactOptionalPropertyTypes": false,
     "incremental": true,
+    "isolatedModules": true,
+
+    "jsx": "react-jsx",
+    "lib": ["DOM", "DOM.Iterable", "ES2023"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+
+    "noEmit": true,
+    "noImplicitAny": false,
+    "noUncheckedIndexedAccess": false,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@actions/*": ["./actions/*"],
+      "#a/*": ["src/actions/*"],
+      "#c/*": ["src/components/*"],
+      "#cfg/*": ["src/config/*"],
+      "#h/*": ["src/hooks/*"],
+      "#l/*": ["src/lib/*"],
+      "#s/*": ["src/services/*"],
+      "#sc/*": ["src/schemas/*"],
+      "#t/*": ["src/types/*"],
+      "#u/*": ["src/utils/*"]
+    },
+
     "plugins": [
       {
         "name": "next"
       }
     ],
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@actions/*": ["./actions/*"]
-    },
-    "target": "ES2017"
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2023"
   },
+  "exclude": ["node_modules"],
   "include": [
     "next-env.d.ts",
+    "next-auth.d.ts",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
-, "actions/packaging/getPackagePurposets"  ],
-  "exclude": [
-    "node_modules"
+    "**/*.mts"
   ]
 }

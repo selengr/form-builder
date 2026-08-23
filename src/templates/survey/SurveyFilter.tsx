@@ -7,122 +7,144 @@ import {
   FormControlLabel,
   FormLabel,
   Radio,
-  RadioGroup
+  RadioGroup,
 } from '@mui/material';
 import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
-import { IGetTargetPlatform } from '../../../actions/survey/getTargetPlatformAction';
+import { SearchQueryFilter, UnifiedListGridFilterMode } from '@/components/unified-list-grid';
+import { useGetTargetPlatform } from './hooks/useGetTargetPlatform';
 
-interface Props {
-  formType: any;
-  setFormType: (fn: any) => void;
-  TargetPlatform: IGetTargetPlatform[];
-  isFetchingTargetPlatform: boolean;
-  applyFilter: () => void;
-  clearFilter: () => void;
+interface SurveyFilterProps {
+  mode: UnifiedListGridFilterMode;
+  filter: SearchQueryFilter;
+  onChange: React.Dispatch<React.SetStateAction<SearchQueryFilter>>;
+  onApply: () => void;
+  onReset: () => void;
 }
 
 export default function SurveyFilter({
-  formType,
-  setFormType,
-  TargetPlatform,
-  isFetchingTargetPlatform,
-  applyFilter,
-  clearFilter
-}: Props) {
-
-  const handleIsCreatedSoloReportChange = (event: any) => {
-    setFormType((prev: any) => ({ ...prev, isCreatedSoloReport: event.target.value }));
-  };
-
-  const handleTargetPlatFormChange = (event: any) => {
-    setFormType((prev: any) => ({ ...prev, surveyTargetPlatformEnum: event.target.value }));
-  };
-
-  const handleTypeChange = (event: any) => {
-    setFormType((prev: any) => ({ ...prev, fieldOperation: event.target.value }));
-  };
+  mode,
+  filter,
+  onChange,
+  onApply,
+  onReset,
+}: SurveyFilterProps) {
+  const isMobile = mode === 'mobile';
+  const { TargetPlatform, isFetchingTargetPlatform } = useGetTargetPlatform(true);
 
   return (
-    <div className='flex h-[calc(100vh-60px)] w-full flex-col items-center justify-between'>
-
-      {/* Header */}
-      <div className='w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4'>
-        <Image src={FilterIcon} width={30} height={30} alt='filter' unoptimized/>
-        <p className='text-[16px] text-center font-bold text-[#161616]'>فیلتر</p>
+    <div
+      className={`flex w-full flex-col overflow-y-hidden ${
+        isMobile ? 'max-h-[70vh]' : 'h-[calc(100vh-50px)]'
+      }`}>
+      <div className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 shrink-0">
+        <div className="flex items-center w-full justify-center gap-2">
+          <Image src={FilterIcon} width={30} height={30} alt="filter" draggable={false} />
+          <p className="text-[16px] text-center font-bold text-[#161616]">فیلتر</p>
+        </div>
       </div>
 
-      {/* Content */}
-      <div className='flex flex-col gap-4 w-full overflow-y-auto h-full'>
-
-        {/* Report Filter */}
-        <div className='w-full bg-[#F7F7FF] rounded-[20px] px-4 pt-4 pb-3'>
+      <div className="flex-1 overflow-y-auto pb-4 min-h-0" style={{ scrollbarWidth: 'thin' }}>
+        <div className="w-full bg-[#F7F7FF] rounded-[20px] px-4 pt-4 pb-3 mb-4">
           <FormControl>
-            <FormLabel sx={{ fontSize: 15, fontWeight: 700 }}>بر اساس گزارش</FormLabel>
-            <RadioGroup value={formType.isCreatedSoloReport} onChange={handleIsCreatedSoloReportChange}>
-              <FormControlLabel value='ALL' control={<Radio />} label='همه' />
-              <FormControlLabel value='true' control={<Radio />} label='دارای گزارش' />
-              <FormControlLabel value='false' control={<Radio />} label='بدون گزارش' />
+            <FormLabel sx={{ fontSize: '15px', color: '#161616', fontWeight: 700, mb: '8px' }}>
+              بر اساس گزارش
+            </FormLabel>
+            <RadioGroup
+              value={filter.isCreatedSoloReport ?? 'ALL'}
+              onChange={(event) =>
+                onChange((prev) => ({ ...prev, isCreatedSoloReport: event.target.value }))
+              }>
+              <FormControlLabel value="ALL" control={<Radio />} label="همه" />
+              <FormControlLabel value="true" control={<Radio />} label="دارای گزارش" />
+              <FormControlLabel value="false" control={<Radio />} label="بدون گزارش" />
             </RadioGroup>
           </FormControl>
         </div>
 
-        {/* Target Filter */}
-        <div className='w-full bg-[#F7F7FF] rounded-[20px] px-4 pt-4 pb-3'>
+        <div className="w-full bg-[#F7F7FF] rounded-[20px] px-4 pt-4 pb-3 mb-4">
           <FormControl>
-            <FormLabel sx={{ fontSize: 15, fontWeight: 700 }}>بر اساس سرویس‌گیرنده</FormLabel>
-            <RadioGroup value={formType.surveyTargetPlatformEnum} onChange={handleTargetPlatFormChange}>
-              <FormControlLabel value='ALL' control={<Radio />} label='همه' />
-              {isFetchingTargetPlatform && <FormControlLabel value='ALL' control={<Radio />} label='loading...' />}
-              {TargetPlatform?.map((t) => (
-                <FormControlLabel key={t.value} value={t.value} control={<Radio />} label={t.caption} />
+            <FormLabel sx={{ fontSize: '15px', color: '#161616', fontWeight: 700, mb: '8px' }}>
+              بر اساس سرویس‌گیرنده
+            </FormLabel>
+            <RadioGroup
+              value={filter.surveyTargetPlatformEnum ?? 'ALL'}
+              onChange={(event) =>
+                onChange((prev) => ({
+                  ...prev,
+                  surveyTargetPlatformEnum: event.target.value,
+                }))
+              }>
+              <FormControlLabel value="ALL" control={<Radio />} label="همه" />
+              {isFetchingTargetPlatform && (
+                <FormControlLabel value="ALL" control={<Radio />} label="loading..." />
+              )}
+              {TargetPlatform?.map((item) => (
+                <FormControlLabel
+                  key={item.value}
+                  value={item.value}
+                  control={<Radio />}
+                  label={item.caption}
+                />
               ))}
             </RadioGroup>
           </FormControl>
         </div>
 
-        {/* Time Filter */}
-        <div className='w-full bg-[#F7F7FF] rounded-[20px] px-4 pt-4 pb-3'>
+        <div className="w-full bg-[#F7F7FF] rounded-[20px] px-4 pt-4 pb-3">
           <FormControl>
-            <FormLabel sx={{ fontSize: 15, fontWeight: 700 }}>بر اساس زمان</FormLabel>
-            <RadioGroup value={formType.fieldOperation} onChange={handleTypeChange}>
-              <FormControlLabel value='DSC' control={<Radio />} label='جدیدترین' />
-              <FormControlLabel value='ASC' control={<Radio />} label='قدیمی‌ترین' />
+            <FormLabel sx={{ fontSize: '15px', color: '#161616', fontWeight: 700, mb: '8px' }}>
+              بر اساس زمان
+            </FormLabel>
+            <RadioGroup
+              value={filter.fieldOperation ?? 'DSC'}
+              onChange={(event) =>
+                onChange((prev) => ({ ...prev, fieldOperation: event.target.value }))
+              }>
+              <FormControlLabel value="DSC" control={<Radio />} label="جدیدترین" />
+              <FormControlLabel value="ASC" control={<Radio />} label="قدیمی‌ترین" />
             </RadioGroup>
           </FormControl>
         </div>
-
       </div>
 
-      {/* Footer */}
-      <div className='flex gap-4 w-full mt-8'>
-        <Button fullWidth variant='contained'
-          sx={{
-            height: '52px',
-            bgcolor: '#1758BA',
-            boxShadow: 'none',
-            borderRadius: '8px',
-            color: 'white',
-            fontSize: '14px',
-            fontWeight: 700,
-          }}
-          onClick={applyFilter}>
-          اعمال فیلتر
-        </Button>
-        <Button fullWidth variant='outlined'
-          sx={{
-            height: '52px',
-            bgcolor: 'white',
-            border: '1px solid #1758BA',
-            boxShadow: 'none',
-            borderRadius: '8px',
-            color: '#1758BA',
-            fontSize: '14px',
-            fontWeight: 700,
-          
-          }}
-          onClick={clearFilter}>
-          حذف فیلتر
-        </Button>
+      <div className="sticky bottom-0 bg-white pt-4 pb-2 shrink-0">
+        <div className="flex gap-4 items-center justify-between w-full">
+          <Button
+            type="button"
+            sx={{
+              height: '52px',
+              bgcolor: '#1758BA',
+              boxShadow: 'none',
+              borderRadius: '8px',
+              color: 'white',
+              fontSize: '14px',
+              fontWeight: 700,
+              '&.MuiButtonBase-root:hover': { bgcolor: '#1758BA', boxShadow: 'none' },
+            }}
+            fullWidth
+            variant="contained"
+            onClick={onApply}>
+            اعمال فیلتر
+          </Button>
+          <Button
+            type="button"
+            sx={{
+              height: '52px',
+              bgcolor: 'white',
+              border: '1px solid #1758BA',
+              boxShadow: 'none',
+              borderRadius: '8px',
+              color: '#1758BA',
+              fontSize: '14px',
+              fontWeight: 700,
+              '&.MuiButtonBase-root:hover': { bgcolor: 'transparent', boxShadow: 'none' },
+            }}
+            fullWidth
+            variant="outlined"
+            onClick={onReset}>
+            حذف فیلتر
+          </Button>
+        </div>
       </div>
     </div>
   );

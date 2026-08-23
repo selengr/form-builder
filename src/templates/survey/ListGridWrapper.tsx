@@ -1,115 +1,131 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { IconButton } from '@mui/material';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-// componenst
-import ListCard from './ListCard';
-import ListGrid from './ListGrid';
-import SurveyFilter from './SurveyFilter';
-import CreateSurveyModal from './CreateSurveyModal';
-// images
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
-// hooks
-import { useGetTargetPlatform } from './hooks/useGetTargetPlatform';
+import {
+  UnifiedListGridPage,
+  createDefaultSearchBoxList,
+  SearchQueryFilter,
+  UnifiedListGridFilterSlotProps,
+} from '@/components/unified-list-grid';
+import CreateSurveyModal from './CreateSurveyModal';
+import SurveyListCard from './ListCard';
+import SurveyListCardSkeleton from './ListCardSkeleton';
+import SurveyFilter from './SurveyFilter';
+import { surveyListFetcher } from './surveyListFetcher';
+import { SurveyListItem } from './types';
 
-interface IFormTypeState {
-  isCreatedSoloReport: 'ALL' | 'true' | 'false';
-  surveyTargetPlatformEnum: string;
-  fieldOperation: 'DSC' | 'ASC';
-}
-const apiAddress = '/admin/form/survey/main-list'
-// --------------------------------------------------------
-export default function ListGridWrapper() {
-  const { push } = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+const DEFAULT_FILTER: SearchQueryFilter = {
+  isCreatedSoloReport: 'ALL',
+  surveyTargetPlatformEnum: 'ALL',
+  fieldOperation: 'DSC',
+};
 
-  const [refreshGrid, setRefreshGrid] = useState<boolean>(false);
-  const [openMyCreateModal, setOpenMyCreateModal] = useState<boolean>(false);
-  const [formType, setFormType] = useState<IFormTypeState>({
-    isCreatedSoloReport: 'ALL',
-    surveyTargetPlatformEnum: 'ALL',
-    fieldOperation: "DSC"
-  });
-  const { TargetPlatform, isFetchingTargetPlatform } = useGetTargetPlatform();
-  const filterBoxList: any = [];
-  const searchBoxList: any = [
-    {
-      fieldName: 'formSetting.name',
-      fieldOperation: 'MATCH',
-      fieldValue: '',
-      nextConditionOperator: 'AND',
+export default function SurveyListGridWrapper() {
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [draftFilter, setDraftFilter] = useState<SearchQueryFilter>(DEFAULT_FILTER);
+  const [appliedFilter, setAppliedFilter] = useState<SearchQueryFilter>(DEFAULT_FILTER);
+
+  const syncDraftFromApplied = useCallback(() => {
+    setDraftFilter(appliedFilter);
+  }, [appliedFilter]);
+
+  const FilterSlot = useCallback(
+    ({ mode, closeMobileFilter, refreshList }: UnifiedListGridFilterSlotProps) => {
+      const isMobile = mode === 'mobile';
+      const filter = isMobile ? draftFilter : appliedFilter;
+
+      const handleChange: React.Dispatch<React.SetStateAction<SearchQueryFilter>> = (
+        updater,
+      ) => {
+        if (isMobile) {
+          setDraftFilter(updater);
+          return;
+        }
+
+        setAppliedFilter((prev) =>
+          typeof updater === 'function' ? updater(prev) : updater,
+        );
+      };
+
+      const handleApply = () => {
+        if (isMobile) {
+          setAppliedFilter(draftFilter);
+          closeMobileFilter();
+          return;
+        }
+
+        setAppliedFilter(filter);
+        refreshList();
+      };
+
+      const handleReset = () => {
+        setDraftFilter(DEFAULT_FILTER);
+        setAppliedFilter(DEFAULT_FILTER);
+        if (isMobile) {
+          closeMobileFilter();
+          return;
+        }
+        refreshList();
+      };
+
+      return (
+        <SurveyFilter
+          mode={mode}
+          filter={filter}
+          onChange={handleChange}
+          onApply={handleApply}
+          onReset={handleReset}
+        />
+      );
     },
-  ];
-
-  const CreateButton = () => {
-    return (
-      <div className='min-w-[50px] w-[50px] h-full'>
-        <IconButton
-          onClick={() => setOpenMyCreateModal(true)}
-          sx={{
-            width: '50px',
-            height: '50px',
-            borderRadius: '16px',
-            border: '1px solid #1758BA',
-          }}>
-          <Image src={PlusIcon} alt='' width={22} height={22} unoptimized/>
-        </IconButton>
-      </div>
-    )
-  }
-
-   const applyFilter = () => {
-    const params = new URLSearchParams(searchParams);
-    if (params.size) params.delete('query');
-    push(`${pathname}?${params.toString()}`);
-    setRefreshGrid((prev) => !prev);
-  };
-
-  const clearFilter = () => {
-    const params = new URLSearchParams(searchParams);
-    if (params.size) params.delete('query');
-
-    push(`${pathname}?${params.toString()}`);
-    setFormType({ isCreatedSoloReport: 'ALL', surveyTargetPlatformEnum: "ALL", fieldOperation: "DSC" });
-    setRefreshGrid((prev) => !prev);
-  };
-
-  const handleCloseDialog = () => {
-    setOpenMyCreateModal((prev) => !prev)
-  }
+    [appliedFilter, draftFilter],
+  );
 
   return (
     <>
-      <ListGrid
-        url={apiAddress}
-        title='نظرسنجی‌های من'
-        textTotal={['تعداد کل نظرسنجی‌ها', 'عدد']}
-        searchBoxList={searchBoxList}
-        filterBoxList={filterBoxList}
-         filterComponent={
-          <SurveyFilter
-            formType={formType}
-            setFormType={setFormType}
-            TargetPlatform={TargetPlatform!}
-            isFetchingTargetPlatform={isFetchingTargetPlatform}
-            applyFilter={applyFilter}
-            clearFilter={clearFilter}
-          />
-        }
-        CartComponent={(item: any) => <ListCard {...item} />}
-        disableFilter={false}
-        showCreateButton={false}
-        CreateButton={CreateButton}
-        refreshGrid={refreshGrid}
-        searchQueryFilter={formType}
+      <UnifiedListGridPage<SurveyListItem>
+        config={{
+          title: 'نظرسنجی‌های من',
+          queryKey: 'survey_new_list',
+          textTotal: ['تعداد کل نظرسنجی‌ها', 'عدد'],
+          searchField: 'formSetting.name',
+          hasSidebarFilter: true,
+          backHref: '/',
+          onMobileFilterOpen: syncDraftFromApplied,
+        }}
+        slots={{
+          CardComponent: SurveyListCard,
+          SkeletonComponent: SurveyListCardSkeleton,
+          FilterComponent: FilterSlot,
+          CreateButton: (
+            <div className="min-w-[50px] w-[50px] h-full">
+              <IconButton
+                onClick={() => setOpenCreateModal(true)}
+                sx={{
+                  width: '50px',
+                  height: '50px',
+                  borderRadius: '16px',
+                  border: '1px solid #1758BA',
+                }}>
+                <Image src={PlusIcon} alt="" width={22} height={22} />
+              </IconButton>
+            </div>
+          ),
+        }}
+        fetcher={surveyListFetcher}
+        searchBoxList={createDefaultSearchBoxList('formSetting.name')}
+        searchQueryFilter={appliedFilter}
+        skeletonHeaderName="تعداد کل نظرسنجی‌ها"
+        loadingHasCreateBtn
       />
+
       <CreateSurveyModal
-         open={openMyCreateModal}
-         onClose={handleCloseDialog} 
-       />
+        open={openCreateModal}
+        onClose={() => setOpenCreateModal(false)}
+      />
     </>
   );
 }

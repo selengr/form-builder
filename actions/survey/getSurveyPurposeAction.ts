@@ -1,6 +1,6 @@
 'use server';
 
-import { serverApi } from '@/services/axios/serverApi';
+import { api } from '@/services/axios/actionWapper';
 
 export interface IGetSurvey {
   value: string;
@@ -11,8 +11,7 @@ type SurveyPurposeResponse = {
   dataList: IGetSurvey[];
 };
 
-export async function getSurveyPurposeAction(): Promise<SurveyPurposeResponse> {
-try{  
+export async function getSurveyPurposeAction() {
   const customComboFilterModel = {
     type: 'COMBO',
     entity: 'PROJECTS',
@@ -21,20 +20,9 @@ try{
     rows: 1000,
   };
 
-  const baseUrl = `/admin/form/survey/survey-purpose/custom-combo`;
-  const queryString = `?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`;
-  const url = baseUrl + queryString;
+  const url =
+    `/admin/form/survey/survey-purpose/custom-combo?customComboFilterModel=` +
+    encodeURIComponent(JSON.stringify(customComboFilterModel));
 
-  const { data } = await serverApi.get<SurveyPurposeResponse>(url);
-  return data;
-} catch (error: any) {
-  const message =
-    error?.response?.data?.message?.[0]?.title ||
-    error?.response?.data?.message ||
-    error?.response?.data ||
-    error?.message ||
-    'خطای نامشخص';
-
-  throw new Error(message);
-}
+  return api.get<SurveyPurposeResponse>(url);
 }

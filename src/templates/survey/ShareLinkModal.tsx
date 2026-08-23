@@ -29,7 +29,7 @@ export default function ShareLinkModal({formData} : {formData : any}) {
   return (
     <>
       <IconButton onClick={handleOpen} color='primary'>
-                <Image src={PublishIcon} alt='edit' width={24} height={24} unoptimized/>
+                <Image src={PublishIcon} alt='edit' width={24} height={24} />
               </IconButton>
 
       <Dialog

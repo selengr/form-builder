@@ -22,7 +22,7 @@ const DEFAULT_FILTER: SearchQueryFilter = {
   fieldOperation: 'DSC',
 };
 
-export default function DataCollectionNewListGridWrapper() {
+export default function DataCollectionListGridWrapper() {
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [draftFilter, setDraftFilter] = useState<SearchQueryFilter>(DEFAULT_FILTER);
   const [appliedFilter, setAppliedFilter] = useState<SearchQueryFilter>(DEFAULT_FILTER);

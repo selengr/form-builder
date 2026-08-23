@@ -1,7 +1,6 @@
 export function getBuilderBackConfig(admin?: string) {
   switch (admin) {
     case 'data-collection':
-    case 'data-collection-new':
       return { href: '/data-collection', label: 'بازگشت' };
     case 'survey':
       return { href: '/survey', label: 'بازگشت' };

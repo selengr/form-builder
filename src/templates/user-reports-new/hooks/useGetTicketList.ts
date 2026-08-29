@@ -1,14 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
-// actions
-import { getTicketListAction } from '../../../../../actions/userReports/getTicketListAction';
+import { getTicketListAction } from '@actions/user-reports-new/getTicketListAction';
 
-export const TICKET_LIST_QUERY_KEY = ['Ticket_List'] as const;
-// test git
+export const TICKET_LIST_QUERY_KEY = ['user-reports-new-Ticket_List'] as const;
+
 export const useGetTicketList = (id: string | string[]) => {
   return useQuery({
     queryKey: [...TICKET_LIST_QUERY_KEY, id],
     queryFn: () => getTicketListAction(id),
-    initialData: [],  
+    initialData: [],
     staleTime: 0,
     gcTime: 600000,
     refetchOnWindowFocus: true,

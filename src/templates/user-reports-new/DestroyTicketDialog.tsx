@@ -7,7 +7,7 @@ import { Dispatch, SetStateAction } from 'react';
 // components
 import DestroyTicketCard from './DestroyTicketCard';
 // _hooks
-import { useGetTicketList } from '../_hooks/useGetTicketList';
+import { useGetTicketList } from './hooks/useGetTicketList';
 // style
 import { StyledDialog, StyledDialogContent } from './userReports.style';
 

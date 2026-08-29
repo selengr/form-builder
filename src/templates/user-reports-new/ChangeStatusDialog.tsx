@@ -8,7 +8,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useParams, useRouter } from 'next/navigation';
 // hooks
-import { usePostChangeStatus } from '../_hooks/usePostChangeStatus';
+import { usePostChangeStatus } from './hooks/usePostChangeStatus';
 // components
 import { RHFTextField } from '@/components/hook-form';
 import { SubmitButtons } from '@/components/condition/form/SubmitButtons';

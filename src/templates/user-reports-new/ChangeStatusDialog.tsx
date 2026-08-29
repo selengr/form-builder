@@ -30,10 +30,9 @@ type TTicketFormData = z.infer<typeof TicketSchema>;
 
 export const ChangeStatusDialog: React.FC<IProps> = ({ open, setOpen, publicationApprovalByAdmin, setPublicationApprovalByAdmin }) => {
   const { id } = useParams();
-  const { refresh } = useRouter();
   const postChangeStatus = usePostChangeStatus();
 
-   const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   const methods = useForm<TTicketFormData>({
     resolver: zodResolver(TicketSchema),
@@ -51,7 +50,7 @@ export const ChangeStatusDialog: React.FC<IProps> = ({ open, setOpen, publicatio
       {
         data: {
           ticket,
-          formId: id,
+          formId: id as string | string[],
           publicationApprovalByAdmin: !publicationApprovalByAdmin,
         },
       },

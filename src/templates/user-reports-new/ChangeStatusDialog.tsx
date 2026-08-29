@@ -6,7 +6,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { IconButton } from '@mui/material';
 import { Dispatch, SetStateAction } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 // hooks
 import { usePostChangeStatus } from './hooks/usePostChangeStatus';
 // components

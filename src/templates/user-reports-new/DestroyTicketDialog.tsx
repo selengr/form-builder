@@ -18,7 +18,7 @@ export interface IProps {
 
 export const DestroyTicketDialog: React.FC<IProps> = ({ open, setOpen }) => {
   const { id } = useParams();
-  const { data, error, isLoading } = useGetTicketList(id);
+  const { data, error, isLoading } = useGetTicketList(id as string | string[]);
 
   const handleClose = () => {
     setOpen((prev) => !prev);

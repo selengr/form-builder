@@ -3,7 +3,7 @@
 import { api } from '@/services/axios/actionWapper';
 
 interface SearchBoxItem {
-  fieldName: 'typeOfReport' | 'responseForDestroyerReport' | string;
+  fieldName: string;
   fieldOperation: 'MATCH' | 'EQUAL' | 'DSC' | 'ASC' | 'IN';
   fieldValue: string | string[];
   nextConditionOperator: 'OR' | 'AND';
@@ -19,11 +19,10 @@ export interface GetReportersListParams {
   pageParam: number;
   searchBoxList: SearchBoxItem[];
   filterBoxList: SearchBoxItem[];
-  url: string;
+  formId: string;
   searchQueryFilter: ReportersSearchQueryFilter;
+  pageSize?: number;
 }
-
-const PAGE_SIZE = 10;
 
 function isValidRestriction(item?: SearchBoxItem) {
   if (!item) return false;
@@ -43,8 +42,9 @@ export async function getReportersListAction({
   pageParam,
   searchBoxList,
   filterBoxList,
-  url,
+  formId,
   searchQueryFilter,
+  pageSize = 10,
 }: GetReportersListParams) {
   const filterRestrictions: SearchBoxItem[] = [];
 
@@ -77,18 +77,27 @@ export async function getReportersListAction({
     searchFilterBoxList: [{ restrictionList }],
     sortList: [{ fieldName: 'id', type: searchQueryFilter.fieldOperation }],
     page: pageParam,
-    rows: PAGE_SIZE,
+    rows: pageSize,
   };
 
-  const endpoint = `${url}?searchFilterModel=${encodeURIComponent(JSON.stringify(params))}`;
-  const result = await api.get<any>(endpoint);
+  const url =
+    `/admin/destroy-form/listgrid-reporters-on-form/${formId}?searchFilterModel=` +
+    encodeURIComponent(JSON.stringify(params));
+
+  const result = await api.get<{
+    content: unknown[];
+    totalElements?: number;
+    publicationApprovalByAdmin?: boolean | null;
+  }>(url);
 
   if (!result.success) {
-    throw new Error(result.message || 'Failed to fetch data');
+    return { success: false as const, message: result.message };
   }
 
   return {
-    data: result.data ?? null,
-    publicationApprovalByAdmin: result.data?.publicationApprovalByAdmin ?? null,
+    success: true as const,
+    data: result.data.content ?? [],
+    total: result.data.totalElements ?? result.data.content?.length ?? 0,
+    publicationApprovalByAdmin: result.data.publicationApprovalByAdmin ?? null,
   };
 }

@@ -70,9 +70,11 @@ export default function PreviewPage() {
         backHref={
           from === 'data-collection'
             ? '/data-collection'
-            : admin
-              ? `/user-reports/${paramId}`
-              : `/builder/${paramId}`
+            : adminNew
+              ? `/user-reports-new/${paramId}`
+              : admin
+                ? `/user-reports/${paramId}`
+                : `/builder/${paramId}`
         }
         backLabel="بازگشت"
         className="h-[calc(100dvh-76px)] md:h-screen"

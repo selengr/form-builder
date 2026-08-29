@@ -30,7 +30,7 @@ export const RenderAction = ({ publicationApprovalByAdmin, name, setPublicationA
   };
 
   const handleReportResultsClick = () => {
-    push(`/reports/create-solo/${id}?rep=list-new&name=${name}`);
+    push(`/reports/create-solo/${id}?rep=list&name=${name}`);
   };
 
   const handleViewEventsClick = () => {

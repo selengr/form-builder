@@ -133,7 +133,7 @@ const ListGrid: React.FC<Props> = ({ filterComponent, searchBoxList, filterBoxLi
   const renderHeader = useCallback(
     () => (
       <div className='w-full relative h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 shrink-0'>
-        <IconButton sx={{ position: 'absolute', left: '8px' }} onClick={() => router.push('/user-reports')}>
+        <IconButton sx={{ position: 'absolute', left: '8px' }} onClick={() => router.push('/user-reports-new')}>
           <MdOutlineKeyboardArrowRight color='#292D32' />
         </IconButton>
         <p className='text-[16px] text-center font-bold text-[#161616]'>{formName}</p>

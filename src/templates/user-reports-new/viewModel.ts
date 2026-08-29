@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
-import userReports from '@/services/userReports';
+import { getUserReportsDataAction } from '@actions/user-reports-new/getUserReportsDataAction';
 
 export const useStatsViewModel = () => {
   const [headData, setHeadData] = useState<any[]>([]);
@@ -14,17 +14,16 @@ export const useStatsViewModel = () => {
   const fetchUserReportData = async (page: number, pageSize: number) => {
     try {
       setIsLoading(true);
-      // @ts-ignore
-      const data = await userReports.getUserReportsData(page, pageSize);
-      if(!data.success) {
-          toast.error( data?.message || 'انجام عملیات با خطا مواجه شد');
-          return
+      const data = await getUserReportsDataAction(page, pageSize);
+      if (!data.success) {
+        toast.error(data?.message || 'انجام عملیات با خطا مواجه شد');
+        return;
       }
       setHeadData(data.headData!);
       setAllData(data.allData);
       setTotalItems(data.totalItems);
     } catch (error: any) {
-         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+      toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
     } finally {
       setIsLoading(false);
     }

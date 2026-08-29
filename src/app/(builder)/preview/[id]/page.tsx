@@ -20,10 +20,15 @@ export default function PreviewPage() {
   const search = searchParams.get('rep');
   const from = searchParams.get('from');
   const admin = search === 'list';
+  const adminNew = search === 'list-new';
 
   const handleBack = () => {
     if (from === 'data-collection') {
       router.push('/data-collection');
+      return;
+    }
+    if (adminNew) {
+      router.push(`/user-reports-new/${paramId}`);
       return;
     }
     if (admin) {

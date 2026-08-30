@@ -35,31 +35,32 @@ function findListPane(root: HTMLElement): HTMLElement | null {
   let node: HTMLElement | null = content as HTMLElement;
   while (node && node !== root) {
     const parent = node.parentElement;
-    if (!parent) break;
+    if (!parent || parent === root) break;
 
     const style = getComputedStyle(parent);
     const isFlex = style.display.includes('flex');
+    const flexDir = style.flexDirection;
+    const isLayoutFlex =
+      isFlex &&
+      (flexDir === 'row' ||
+        flexDir === 'row-reverse' ||
+        flexDir === 'column' ||
+        flexDir === 'column-reverse');
 
-    // Desktop: row (list + filter). Mobile: column (list, filter hidden).
-    // In both cases the child that contains #content is the list pane.
-    if (isFlex && parent.children.length >= 1) {
+    // Outer list+filter layout flex has 2 children and is viewport-tall.
+    // That parent’s child which contains #content is the list pane.
+    if (
+      isLayoutFlex &&
+      parent.children.length >= 2 &&
+      parent.clientHeight >= window.innerHeight * 0.55
+    ) {
       return node;
     }
 
     node = parent;
   }
 
-  // Mobile: no row flex — climb to the white list card that wraps header + content
-  const contentEl = content as HTMLElement;
-  let candidate: HTMLElement | null = contentEl.parentElement;
-  while (candidate && candidate !== root) {
-    if (candidate.clientHeight > 200 && candidate.clientWidth > 200) {
-      return candidate;
-    }
-    candidate = candidate.parentElement;
-  }
-
-  return contentEl.parentElement;
+  return null;
 }
 
 export default function ListGridWrapper() {

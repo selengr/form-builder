@@ -137,22 +137,23 @@ export default function ListGridWrapper() {
       />
 
       {/*
-        Exception-only overlay: mirrors UnifiedListGrid row (list + 300px filter)
-        so actions sit only inside the list column, never over the filter.
+        Exception-only: pin actions inside the list card.
+        Filter sidebar is on physical LEFT (RTL UI); list card is on the RIGHT.
+        Use physical left/right — not flex — so RTL cannot stretch the bar.
       */}
-      <div className="pointer-events-none absolute inset-0 z-30 flex flex-col p-1 sm:py-2">
-        <div className="flex h-full min-h-0 w-full flex-col overflow-hidden lg:flex-row">
-          <div className="relative mx-0 min-w-0 flex-1 sm:mx-1">
-            <div className="pointer-events-auto absolute bottom-3 left-2 right-2">
-              <RenderAction
-                name={formName}
-                publicationApprovalByAdmin={publicationApprovalByAdmin}
-                setPublicationApprovalByAdmin={setPublicationApprovalByAdmin}
-              />
-            </div>
-          </div>
-          <div className="hidden max-w-[300px] w-full shrink-0 lg:block" aria-hidden />
-        </div>
+      <div
+        className="
+          pointer-events-auto absolute z-30
+          bottom-3
+          left-3 right-3
+          lg:left-[calc(300px+1.75rem)]
+          lg:right-[1.25rem]
+        ">
+        <RenderAction
+          name={formName}
+          publicationApprovalByAdmin={publicationApprovalByAdmin}
+          setPublicationApprovalByAdmin={setPublicationApprovalByAdmin}
+        />
       </div>
     </div>
   );

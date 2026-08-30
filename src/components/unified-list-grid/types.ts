@@ -79,8 +79,6 @@ export interface UnifiedListGridSlots<TItem = unknown> {
   FilterComponent?: ComponentType<UnifiedListGridFilterSlotProps>;
   CreateButton?: ReactNode;
   EmptyComponent?: ComponentType<{ error?: string }>;
-  /** Optional sticky/absolute bar under the list (e.g. user-reports actions). */
-  FooterComponent?: ReactNode;
 }
 
 export interface UnifiedListGridProps<TItem = unknown> {

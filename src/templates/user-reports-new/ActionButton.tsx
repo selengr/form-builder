@@ -42,19 +42,28 @@ export const RenderAction = ({ publicationApprovalByAdmin, name, setPublicationA
   };
 
   return (
-    <div className='w-[calc(100%-22px)]  h-14 absolute bottom-2 px-4 py-4 bg-[#F7F7FF] rounded-lg flex justify-between items-center'>
-      <div className='flex w-full gap-3'>
-        <ActionButton label='فرم' Icon={ChartSquareIcon} onClick={handleFormClick} />
-        <ActionButton label='گزارش نتایج' Icon={AdditemIcon} onClick={handleReportResultsClick} />
+    <div className="w-full h-14 px-4 py-4 bg-[#F7F7FF] rounded-lg flex justify-between items-center shadow-sm">
+      <div className="flex w-full gap-3">
+        <ActionButton label="فرم" Icon={ChartSquareIcon} onClick={handleFormClick} />
+        <ActionButton label="گزارش نتایج" Icon={AdditemIcon} onClick={handleReportResultsClick} />
       </div>
-      <div className='flex w-full gap-3 justify-end'>
-        <ActionButton label='مشاهده وقایع' Icon={ReceiptTextIcon} onClick={handleViewEventsClick} />
-        {!publicationApprovalByAdmin && <ActionButton label='غیرفعال' Icon={SlashIcon} onClick={handleSuspendClick} />}
-        {publicationApprovalByAdmin && <ActionButton label='فعال' Icon={TicketCircleIcon} onClick={handleSuspendClick} />}
+      <div className="flex w-full gap-3 justify-end">
+        <ActionButton label="مشاهده وقایع" Icon={ReceiptTextIcon} onClick={handleViewEventsClick} />
+        {!publicationApprovalByAdmin && (
+          <ActionButton label="غیرفعال" Icon={SlashIcon} onClick={handleSuspendClick} />
+        )}
+        {publicationApprovalByAdmin && (
+          <ActionButton label="فعال" Icon={TicketCircleIcon} onClick={handleSuspendClick} />
+        )}
       </div>
 
       {openDestroy && <DestroyTicketDialog open={openDestroy} setOpen={setOpenDestroy} />}
-      <ChangeStatusDialog setPublicationApprovalByAdmin={setPublicationApprovalByAdmin}  open={openChangeStatus} setOpen={setOpenChangeStatus} publicationApprovalByAdmin={publicationApprovalByAdmin} />
+      <ChangeStatusDialog
+        setPublicationApprovalByAdmin={setPublicationApprovalByAdmin}
+        open={openChangeStatus}
+        setOpen={setOpenChangeStatus}
+        publicationApprovalByAdmin={publicationApprovalByAdmin}
+      />
     </div>
   );
 };

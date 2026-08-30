@@ -47,20 +47,24 @@ function findListPane(root: HTMLElement): HTMLElement | null {
         flexDir === 'column' ||
         flexDir === 'column-reverse');
 
-    // Outer list+filter layout flex has 2 children and is viewport-tall.
-    // That parent’s child which contains #content is the list pane.
-    if (
-      isLayoutFlex &&
-      parent.children.length >= 2 &&
-      parent.clientHeight >= window.innerHeight * 0.55
-    ) {
+    // Outer list+filter layout flex (2 children: list pane + filter pane).
+    if (isLayoutFlex && parent.children.length >= 2) {
       return node;
     }
 
     node = parent;
   }
 
-  return null;
+  // Fallback: widest ancestor under root that still contains #content
+  node = content as HTMLElement;
+  let best: HTMLElement | null = null;
+  while (node && node !== root) {
+    if (node.clientWidth >= root.clientWidth * 0.85) {
+      best = node;
+    }
+    node = node.parentElement;
+  }
+  return best;
 }
 
 export default function ListGridWrapper() {

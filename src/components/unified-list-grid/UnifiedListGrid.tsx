@@ -362,9 +362,20 @@ const UnifiedListGrid = <TItem,>({
             p: { xs: 1, sm: 2 },
             mx: { xs: 0, sm: 1 },
             width: 1,
+            height: '100%',
+            minHeight: 0,
             overflow: 'hidden',
           }}>
-          <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
+          <Grid
+            container
+            sx={{
+              width: '100%',
+              justifyContent: 'center',
+              mx: 'auto',
+              flex: 1,
+              minHeight: 0,
+              overflow: 'hidden',
+            }}>
             {renderHeader()}
             <Grid
               container
@@ -375,6 +386,9 @@ const UnifiedListGrid = <TItem,>({
                 maxWidth: '470px',
                 flexDirection: 'column',
                 gap: 1,
+                flex: 1,
+                minHeight: 0,
+                overflow: 'hidden',
               }}>
               <Box
                 sx={{
@@ -384,6 +398,7 @@ const UnifiedListGrid = <TItem,>({
                   gap: '6px',
                   width: '100%',
                   flexWrap: { xs: 'nowrap', sm: 'nowrap' },
+                  flexShrink: 0,
                 }}>
                 {renderTotalCount()}
                 {showCreateButton && (
@@ -403,7 +418,7 @@ const UnifiedListGrid = <TItem,>({
                 )}
                 {CreateButton}
               </Box>
-              {renderSearchAndFilter()}
+              <Box sx={{ width: '100%', flexShrink: 0 }}>{renderSearchAndFilter()}</Box>
               <Grid
                 id="content"
                 container
@@ -411,24 +426,39 @@ const UnifiedListGrid = <TItem,>({
                 sx={{
                   width: '100%',
                   mt: 1,
-                  mb: FooterComponent ? 8 : 5,
-                  pb: 4,
+                  mb: FooterComponent ? 1 : 5,
+                  pb: FooterComponent ? 1 : 4,
                   flexDirection: 'column',
                   gap: 1,
                   overflowY: 'auto',
                   px: 0,
-                  height: {
-                    xs: FooterComponent ? 'calc(100vh - 360px)' : 'calc(100vh - 310px)',
-                    sm: FooterComponent ? 'calc(100vh - 340px)' : 'calc(100vh - 290px)',
-                    md: FooterComponent ? 'calc(100vh - 280px)' : 'calc(100vh - 230px)',
-                  },
+                  flex: 1,
+                  minHeight: 0,
+                  height: FooterComponent
+                    ? undefined
+                    : {
+                        xs: 'calc(100vh - 310px)',
+                        sm: 'calc(100vh - 290px)',
+                        md: 'calc(100vh - 230px)',
+                      },
                   scrollbarWidth: 'none',
                 }}>
                 {renderContent()}
               </Grid>
             </Grid>
           </Grid>
-          {FooterComponent}
+          {FooterComponent ? (
+            <Box
+              sx={{
+                width: '100%',
+                flexShrink: 0,
+                px: { xs: 0.5, sm: 1 },
+                pt: 1,
+                zIndex: 2,
+              }}>
+              {FooterComponent}
+            </Box>
+          ) : null}
           {FilterComponent && (
             <BottomSheet open={isFilterOpen} onClose={closeMobileFilter}>
               <Grid>

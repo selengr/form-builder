@@ -193,7 +193,7 @@ export default function ListGridWrapper() {
   );
 
   const actionBar = (
-    <div className="absolute inset-x-2 bottom-2 z-30 sm:inset-x-3 sm:bottom-3">
+    <div className="absolute z-30 inset-x-0 bottom-0 p-2 sm:inset-x-3 sm:bottom-3 sm:p-0">
       <RenderAction
         name={formName}
         publicationApprovalByAdmin={publicationApprovalByAdmin}

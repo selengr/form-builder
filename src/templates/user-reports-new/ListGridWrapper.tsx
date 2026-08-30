@@ -114,39 +114,32 @@ export default function ListGridWrapper() {
   );
 
   return (
-    // Local overlay only for this page — keeps UnifiedListGrid untouched.
-    // Extra bottom padding on #content so cards are not hidden under the bar.
-    <div className="relative h-full w-full [&_#content]:!pb-24 [&_#content]:!mb-2">
-      <UnifiedListGridPage<TReporterInformationItem>
-        config={{
-          title: formName,
-          queryKey: USER_REPORTS_REPORTERS_QUERY_KEY,
-          textTotal: ['تعداد کل گزارش‌ها', 'عدد'],
-          searchField: 'formSetting.name',
-          hasSidebarFilter: true,
-          backHref: '/user-reports-new',
-          onMobileFilterOpen: syncDraftFromApplied,
-        }}
-        slots={{
-          CardComponent: ListCard,
-          SkeletonComponent: ListCardSkeleton,
-          FilterComponent: FilterSlot,
-        }}
-        fetcher={fetcher}
-        searchBoxList={createDefaultSearchBoxList('formSetting.name')}
-        searchQueryFilter={appliedFilter}
-        skeletonHeaderName="تعداد کل گزارش‌ها"
-      />
-
-      <div className="pointer-events-none absolute inset-x-0 bottom-3 z-20 flex justify-center px-3 sm:px-4 lg:pr-[316px]">
-        <div className="pointer-events-auto w-full max-w-[470px]">
+    <UnifiedListGridPage<TReporterInformationItem>
+      config={{
+        title: formName,
+        queryKey: USER_REPORTS_REPORTERS_QUERY_KEY,
+        textTotal: ['تعداد کل گزارش‌ها', 'عدد'],
+        searchField: 'formSetting.name',
+        hasSidebarFilter: true,
+        backHref: '/user-reports-new',
+        onMobileFilterOpen: syncDraftFromApplied,
+      }}
+      slots={{
+        CardComponent: ListCard,
+        SkeletonComponent: ListCardSkeleton,
+        FilterComponent: FilterSlot,
+        FooterComponent: (
           <RenderAction
             name={formName}
             publicationApprovalByAdmin={publicationApprovalByAdmin}
             setPublicationApprovalByAdmin={setPublicationApprovalByAdmin}
           />
-        </div>
-      </div>
-    </div>
+        ),
+      }}
+      fetcher={fetcher}
+      searchBoxList={createDefaultSearchBoxList('formSetting.name')}
+      searchQueryFilter={appliedFilter}
+      skeletonHeaderName="تعداد کل گزارش‌ها"
+    />
   );
 }

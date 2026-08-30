@@ -54,7 +54,7 @@ const UnifiedListGrid = <TItem,>({
     refetchOnReconnect = false,
   } = config;
 
-  const { CardComponent, SkeletonComponent, FilterComponent, CreateButton, EmptyComponent } =
+  const { CardComponent, SkeletonComponent, FilterComponent, CreateButton, EmptyComponent, FooterComponent } =
     slots;
 
   const [totalData, setTotalData] = useState<number | null>(null);
@@ -354,6 +354,7 @@ const UnifiedListGrid = <TItem,>({
         <Grid
           container
           flexDirection="column"
+          position="relative"
           alignItems="center"
           sx={{
             bgcolor: 'white',
@@ -410,16 +411,16 @@ const UnifiedListGrid = <TItem,>({
                 sx={{
                   width: '100%',
                   mt: 1,
-                  mb: 5,
+                  mb: FooterComponent ? 8 : 5,
                   pb: 4,
                   flexDirection: 'column',
                   gap: 1,
                   overflowY: 'auto',
                   px: 0,
                   height: {
-                    xs: 'calc(100vh - 310px)',
-                    sm: 'calc(100vh - 290px)',
-                    md: 'calc(100vh - 230px)',
+                    xs: FooterComponent ? 'calc(100vh - 360px)' : 'calc(100vh - 310px)',
+                    sm: FooterComponent ? 'calc(100vh - 340px)' : 'calc(100vh - 290px)',
+                    md: FooterComponent ? 'calc(100vh - 280px)' : 'calc(100vh - 230px)',
                   },
                   scrollbarWidth: 'none',
                 }}>
@@ -427,6 +428,7 @@ const UnifiedListGrid = <TItem,>({
               </Grid>
             </Grid>
           </Grid>
+          {FooterComponent}
           {FilterComponent && (
             <BottomSheet open={isFilterOpen} onClose={closeMobileFilter}>
               <Grid>

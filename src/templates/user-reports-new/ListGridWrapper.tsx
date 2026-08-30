@@ -114,32 +114,38 @@ export default function ListGridWrapper() {
   );
 
   return (
-    <UnifiedListGridPage<TReporterInformationItem>
-      config={{
-        title: formName,
-        queryKey: USER_REPORTS_REPORTERS_QUERY_KEY,
-        textTotal: ['تعداد کل گزارش‌ها', 'عدد'],
-        searchField: 'formSetting.name',
-        hasSidebarFilter: true,
-        backHref: '/user-reports-new',
-        onMobileFilterOpen: syncDraftFromApplied,
-      }}
-      slots={{
-        CardComponent: ListCard,
-        SkeletonComponent: ListCardSkeleton,
-        FilterComponent: FilterSlot,
-        FooterComponent: (
+    <div className="relative h-full w-full overflow-hidden">
+      <UnifiedListGridPage<TReporterInformationItem>
+        config={{
+          title: formName,
+          queryKey: USER_REPORTS_REPORTERS_QUERY_KEY,
+          textTotal: ['تعداد کل گزارش‌ها', 'عدد'],
+          searchField: 'formSetting.name',
+          hasSidebarFilter: true,
+          backHref: '/user-reports-new',
+          onMobileFilterOpen: syncDraftFromApplied,
+        }}
+        slots={{
+          CardComponent: ListCard,
+          SkeletonComponent: ListCardSkeleton,
+          FilterComponent: FilterSlot,
+        }}
+        fetcher={fetcher}
+        searchBoxList={createDefaultSearchBoxList('formSetting.name')}
+        searchQueryFilter={appliedFilter}
+        skeletonHeaderName="تعداد کل گزارش‌ها"
+      />
+
+      {/* Exception: action bar only for this page — overlaid outside UnifiedListGrid */}
+      <div className="pointer-events-none absolute inset-0 z-30">
+        <div className="pointer-events-auto absolute bottom-3 left-2 right-2 lg:right-[316px]">
           <RenderAction
             name={formName}
             publicationApprovalByAdmin={publicationApprovalByAdmin}
             setPublicationApprovalByAdmin={setPublicationApprovalByAdmin}
           />
-        ),
-      }}
-      fetcher={fetcher}
-      searchBoxList={createDefaultSearchBoxList('formSetting.name')}
-      searchQueryFilter={appliedFilter}
-      skeletonHeaderName="تعداد کل گزارش‌ها"
-    />
+        </div>
+      </div>
+    </div>
   );
 }

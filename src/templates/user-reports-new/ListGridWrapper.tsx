@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import {
   UnifiedListGridPage,
@@ -23,11 +24,52 @@ const DEFAULT_FILTER: SearchQueryFilter = {
 
 export const USER_REPORTS_REPORTERS_QUERY_KEY = 'user_reports_new_reporters';
 
+/**
+ * Find the UnifiedListGrid white list column (the pane that contains #content),
+ * without modifying UnifiedListGrid itself.
+ */
+function findListPane(root: HTMLElement): HTMLElement | null {
+  const content = root.querySelector('#content');
+  if (!content) return null;
+
+  let node: HTMLElement | null = content as HTMLElement;
+  while (node && node !== root) {
+    const parent = node.parentElement;
+    if (!parent) break;
+
+    const style = getComputedStyle(parent);
+    const isRowFlex =
+      style.display.includes('flex') &&
+      (style.flexDirection === 'row' || style.flexDirection === 'row-reverse');
+
+    if (isRowFlex && parent.children.length >= 1) {
+      return node;
+    }
+
+    node = parent;
+  }
+
+  // Mobile: no row flex — climb to the white list card that wraps header + content
+  const contentEl = content as HTMLElement;
+  let candidate: HTMLElement | null = contentEl.parentElement;
+  while (candidate && candidate !== root) {
+    if (candidate.clientHeight > 200 && candidate.clientWidth > 200) {
+      return candidate;
+    }
+    candidate = candidate.parentElement;
+  }
+
+  return contentEl.parentElement;
+}
+
 export default function ListGridWrapper() {
   const { id } = useParams();
   const searchParams = useSearchParams();
   const formName = searchParams.get('formName') || 'گزارشات';
   const formId = String(id ?? '');
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [listPane, setListPane] = useState<HTMLElement | null>(null);
 
   const [draftFilter, setDraftFilter] = useState<SearchQueryFilter>(DEFAULT_FILTER);
   const [appliedFilter, setAppliedFilter] = useState<SearchQueryFilter>(DEFAULT_FILTER);
@@ -56,6 +98,38 @@ export default function ListGridWrapper() {
       JSON.stringify(publicationApprovalByAdmin),
     );
   }, [publicationApprovalByAdmin]);
+
+  useLayoutEffect(() => {
+    const root = containerRef.current;
+    if (!root) return;
+
+    const sync = () => {
+      const pane = findListPane(root);
+      if (!pane) return;
+
+      // Needed so absolute action bar is relative to the list column only
+      if (getComputedStyle(pane).position === 'static') {
+        pane.style.position = 'relative';
+      }
+      setListPane((prev) => (prev === pane ? prev : pane));
+    };
+
+    sync();
+
+    const mutationObserver = new MutationObserver(sync);
+    mutationObserver.observe(root, { childList: true, subtree: true });
+
+    const resizeObserver = new ResizeObserver(sync);
+    resizeObserver.observe(root);
+
+    window.addEventListener('resize', sync);
+
+    return () => {
+      mutationObserver.disconnect();
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', sync);
+    };
+  }, []);
 
   const syncDraftFromApplied = useCallback(() => {
     setDraftFilter(appliedFilter);
@@ -113,8 +187,18 @@ export default function ListGridWrapper() {
     [appliedFilter, draftFilter],
   );
 
+  const actionBar = (
+    <div className="absolute inset-x-2 bottom-2 z-30 sm:inset-x-3 sm:bottom-3">
+      <RenderAction
+        name={formName}
+        publicationApprovalByAdmin={publicationApprovalByAdmin}
+        setPublicationApprovalByAdmin={setPublicationApprovalByAdmin}
+      />
+    </div>
+  );
+
   return (
-    <div className="relative h-full w-full overflow-hidden">
+    <div ref={containerRef} className="relative h-full w-full overflow-hidden">
       <UnifiedListGridPage<TReporterInformationItem>
         config={{
           title: formName,
@@ -136,25 +220,8 @@ export default function ListGridWrapper() {
         skeletonHeaderName="تعداد کل گزارش‌ها"
       />
 
-      {/*
-        Exception-only: pin actions inside the list card.
-        Filter sidebar is on physical LEFT (RTL UI); list card is on the RIGHT.
-        Use physical left/right — not flex — so RTL cannot stretch the bar.
-      */}
-      <div
-        className="
-          pointer-events-auto absolute z-30
-          bottom-3
-          left-3 right-3
-          lg:left-[calc(300px+1.75rem)]
-          lg:right-[1.25rem]
-        ">
-        <RenderAction
-          name={formName}
-          publicationApprovalByAdmin={publicationApprovalByAdmin}
-          setPublicationApprovalByAdmin={setPublicationApprovalByAdmin}
-        />
-      </div>
+      {/* Portal into the list column only — never covers the filter sidebar */}
+      {listPane ? createPortal(actionBar, listPane) : null}
     </div>
   );
 }

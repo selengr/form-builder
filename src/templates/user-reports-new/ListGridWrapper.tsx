@@ -38,11 +38,11 @@ function findListPane(root: HTMLElement): HTMLElement | null {
     if (!parent) break;
 
     const style = getComputedStyle(parent);
-    const isRowFlex =
-      style.display.includes('flex') &&
-      (style.flexDirection === 'row' || style.flexDirection === 'row-reverse');
+    const isFlex = style.display.includes('flex');
 
-    if (isRowFlex && parent.children.length >= 1) {
+    // Desktop: row (list + filter). Mobile: column (list, filter hidden).
+    // In both cases the child that contains #content is the list pane.
+    if (isFlex && parent.children.length >= 1) {
       return node;
     }
 

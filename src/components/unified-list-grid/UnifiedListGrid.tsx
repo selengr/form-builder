@@ -192,7 +192,7 @@ const UnifiedListGrid = <TItem,>({
 
   const renderHeader = useCallback(
     () => (
-      <div className="w-full h-[52px] flex items-center justify-center rounded-lg bg-[#F7F7FF] px-2 mb-4 relative shrink-0 overflow-hidden">
+      <div className="w-full h-[52px] flex items-center justify-center rounded-lg bg-[#F7F7FF] px-2 mb-4 relative shrink-0 min-w-0 overflow-hidden">
         <IconButton
           sx={{ position: 'absolute', left: '8px', zIndex: 1, flexShrink: 0 }}
           onClick={() => router.push(backHref)}>
@@ -200,7 +200,7 @@ const UnifiedListGrid = <TItem,>({
         </IconButton>
         <p
           title={title}
-          className="text-[16px] text-center font-bold text-[#161616] truncate w-full max-w-full px-10">
+          className="min-w-0 flex-1 truncate text-center text-[16px] font-bold text-[#161616] px-10">
           {title}
         </p>
       </div>
@@ -360,6 +360,7 @@ const UnifiedListGrid = <TItem,>({
         <Grid
           container
           flexDirection="column"
+          position="relative"
           alignItems="center"
           sx={{
             bgcolor: 'white',
@@ -368,8 +369,9 @@ const UnifiedListGrid = <TItem,>({
             mx: { xs: 0, sm: 1 },
             width: 1,
             overflow: 'hidden',
+            minWidth: 0,
           }}>
-          <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
+          <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto', minWidth: 0 }}>
             {renderHeader()}
             <Grid
               container
@@ -380,6 +382,7 @@ const UnifiedListGrid = <TItem,>({
                 maxWidth: '470px',
                 flexDirection: 'column',
                 gap: 1,
+                minWidth: 0,
               }}>
               <Box
                 sx={{
@@ -416,16 +419,17 @@ const UnifiedListGrid = <TItem,>({
                 sx={{
                   width: '100%',
                   mt: 1,
-                  mb: 5,
+                  mb: ListFooter ? 10 : 5,
                   pb: 4,
                   flexDirection: 'column',
                   gap: 1,
                   overflowY: 'auto',
                   px: 0,
+                  minWidth: 0,
                   height: {
-                    xs: 'calc(100vh - 310px)',
-                    sm: 'calc(100vh - 290px)',
-                    md: 'calc(100vh - 230px)',
+                    xs: ListFooter ? 'calc(100vh - 360px)' : 'calc(100vh - 310px)',
+                    sm: ListFooter ? 'calc(100vh - 340px)' : 'calc(100vh - 290px)',
+                    md: ListFooter ? 'calc(100vh - 280px)' : 'calc(100vh - 230px)',
                   },
                   scrollbarWidth: 'none',
                 }}>
@@ -433,6 +437,11 @@ const UnifiedListGrid = <TItem,>({
               </Grid>
             </Grid>
           </Grid>
+          {ListFooter ? (
+            <div className="absolute inset-x-2 bottom-2 z-20 sm:inset-x-3 sm:bottom-3">
+              {ListFooter}
+            </div>
+          ) : null}
           {FilterComponent && (
             <BottomSheet open={isFilterOpen} onClose={closeMobileFilter}>
               <Grid>

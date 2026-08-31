@@ -1,7 +1,6 @@
 'use client';
 
-import { createPortal } from 'react-dom';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { CSSProperties, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import {
   UnifiedListGridPage,
@@ -24,47 +23,75 @@ const DEFAULT_FILTER: SearchQueryFilter = {
 
 export const USER_REPORTS_REPORTERS_QUERY_KEY = 'user_reports_new_reporters';
 
+type ActionBarBox = {
+  left: number;
+  width: number;
+  bottom: number;
+};
+
 /**
- * Find the UnifiedListGrid white list column (the pane that contains #content),
- * without modifying UnifiedListGrid itself.
+ * Locate the white list column that wraps #content (not the filter sidebar).
+ * Does not modify UnifiedListGrid — only reads the rendered DOM.
  */
 function findListPane(root: HTMLElement): HTMLElement | null {
   const content = root.querySelector('#content');
   if (!content) return null;
 
-  let node: HTMLElement | null = content as HTMLElement;
+  const rootWidth = root.getBoundingClientRect().width;
+  const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
+
+  const candidates: HTMLElement[] = [];
+  let node: HTMLElement | null = content.parentElement;
+
   while (node && node !== root) {
-    const parent = node.parentElement;
-    if (!parent || parent === root) break;
-
-    const style = getComputedStyle(parent);
-    const isFlex = style.display.includes('flex');
-    const flexDir = style.flexDirection;
-    const isLayoutFlex =
-      isFlex &&
-      (flexDir === 'row' ||
-        flexDir === 'row-reverse' ||
-        flexDir === 'column' ||
-        flexDir === 'column-reverse');
-
-    // Outer list+filter layout flex (2 children: list pane + filter pane).
-    if (isLayoutFlex && parent.children.length >= 2) {
-      return node;
-    }
-
-    node = parent;
-  }
-
-  // Fallback: widest ancestor under root that still contains #content
-  node = content as HTMLElement;
-  let best: HTMLElement | null = null;
-  while (node && node !== root) {
-    if (node.clientWidth >= root.clientWidth * 0.85) {
-      best = node;
+    const rect = node.getBoundingClientRect();
+    if (rect.height > 180 && rect.width > 180) {
+      candidates.push(node);
     }
     node = node.parentElement;
   }
-  return best;
+
+  if (!candidates.length) return null;
+
+  if (isDesktop) {
+    // List column is wide but not full root (filter ~300px sits beside it).
+    const listSized = candidates.filter((el) => {
+      const w = el.getBoundingClientRect().width;
+      return w <= rootWidth - 180 && w >= Math.min(280, rootWidth * 0.4);
+    });
+    const pool = listSized.length ? listSized : candidates;
+    return pool.reduce((a, b) =>
+      a.getBoundingClientRect().width >= b.getBoundingClientRect().width ? a : b,
+    );
+  }
+
+  // Mobile: list column is essentially full root width.
+  return candidates.reduce((a, b) =>
+    a.getBoundingClientRect().width >= b.getBoundingClientRect().width ? a : b,
+  );
+}
+
+function ellipsizeToWidth(text: string, maxPx: number, font = 'bold 16px Tahoma, sans-serif') {
+  if (typeof document === 'undefined' || maxPx <= 0) return text;
+
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return text;
+
+  ctx.font = font;
+  if (ctx.measureText(text).width <= maxPx) return text;
+
+  const ellipsis = '…';
+  let low = 0;
+  let high = text.length;
+  while (low < high) {
+    const mid = Math.ceil((low + high) / 2);
+    const sample = text.slice(0, mid) + ellipsis;
+    if (ctx.measureText(sample).width <= maxPx) low = mid;
+    else high = mid - 1;
+  }
+
+  return low > 0 ? `${text.slice(0, low)}${ellipsis}` : ellipsis;
 }
 
 export default function ListGridWrapper() {
@@ -74,7 +101,8 @@ export default function ListGridWrapper() {
   const formId = String(id ?? '');
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const [listPane, setListPane] = useState<HTMLElement | null>(null);
+  const [actionBox, setActionBox] = useState<ActionBarBox | null>(null);
+  const [displayTitle, setDisplayTitle] = useState(formName);
 
   const [draftFilter, setDraftFilter] = useState<SearchQueryFilter>(DEFAULT_FILTER);
   const [appliedFilter, setAppliedFilter] = useState<SearchQueryFilter>(DEFAULT_FILTER);
@@ -104,37 +132,51 @@ export default function ListGridWrapper() {
     );
   }, [publicationApprovalByAdmin]);
 
+  const syncLayout = useCallback(() => {
+    const root = containerRef.current;
+    if (!root) return;
+
+    const pane = findListPane(root);
+    if (!pane) return;
+
+    const rect = pane.getBoundingClientRect();
+    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+    const padX = isMobile ? 8 : 12;
+    const padBottom = isMobile ? 8 : 12;
+
+    setActionBox({
+      left: rect.left + padX,
+      width: Math.max(0, rect.width - padX * 2),
+      bottom: Math.max(0, window.innerHeight - rect.bottom + padBottom),
+    });
+
+    // Truncate header title to list-pane width (back button ~48px + padding).
+    const titleMax = Math.max(64, rect.width - 96);
+    setDisplayTitle(ellipsizeToWidth(formName, titleMax));
+  }, [formName]);
+
   useLayoutEffect(() => {
     const root = containerRef.current;
     if (!root) return;
 
-    const sync = () => {
-      const pane = findListPane(root);
-      if (!pane) return;
+    syncLayout();
 
-      // Needed so absolute action bar is relative to the list column only
-      if (getComputedStyle(pane).position === 'static') {
-        pane.style.position = 'relative';
-      }
-      setListPane((prev) => (prev === pane ? prev : pane));
-    };
-
-    sync();
-
-    const mutationObserver = new MutationObserver(sync);
+    const mutationObserver = new MutationObserver(syncLayout);
     mutationObserver.observe(root, { childList: true, subtree: true });
 
-    const resizeObserver = new ResizeObserver(sync);
+    const resizeObserver = new ResizeObserver(syncLayout);
     resizeObserver.observe(root);
 
-    window.addEventListener('resize', sync);
+    window.addEventListener('resize', syncLayout);
+    window.addEventListener('scroll', syncLayout, true);
 
     return () => {
       mutationObserver.disconnect();
       resizeObserver.disconnect();
-      window.removeEventListener('resize', sync);
+      window.removeEventListener('resize', syncLayout);
+      window.removeEventListener('scroll', syncLayout, true);
     };
-  }, []);
+  }, [syncLayout]);
 
   const syncDraftFromApplied = useCallback(() => {
     setDraftFilter(appliedFilter);
@@ -192,21 +234,21 @@ export default function ListGridWrapper() {
     [appliedFilter, draftFilter],
   );
 
-  const actionBar = (
-    <div className="absolute z-30 inset-x-0 bottom-0 p-2 sm:inset-x-3 sm:bottom-3 sm:p-0">
-      <RenderAction
-        name={formName}
-        publicationApprovalByAdmin={publicationApprovalByAdmin}
-        setPublicationApprovalByAdmin={setPublicationApprovalByAdmin}
-      />
-    </div>
-  );
+  const actionStyle: CSSProperties | undefined = actionBox
+    ? {
+        position: 'fixed',
+        left: actionBox.left,
+        width: actionBox.width,
+        bottom: actionBox.bottom,
+        zIndex: 40,
+      }
+    : undefined;
 
   return (
     <div ref={containerRef} className="relative h-full w-full overflow-hidden">
       <UnifiedListGridPage<TReporterInformationItem>
         config={{
-          title: formName,
+          title: displayTitle,
           queryKey: USER_REPORTS_REPORTERS_QUERY_KEY,
           textTotal: ['تعداد کل گزارش‌ها', 'عدد'],
           searchField: 'formSetting.name',
@@ -225,8 +267,20 @@ export default function ListGridWrapper() {
         skeletonHeaderName="تعداد کل گزارش‌ها"
       />
 
-      {/* Portal into the list column only — never covers the filter sidebar */}
-      {listPane ? createPortal(actionBar, listPane) : null}
+      {/*
+        Exception-only action bar: fixed to measured list-pane bounds so it
+        never covers the filter (desktop) and stays full-width of the list (mobile).
+        UnifiedListGrid is left untouched.
+      */}
+      {actionStyle ? (
+        <div style={actionStyle}>
+          <RenderAction
+            name={formName}
+            publicationApprovalByAdmin={publicationApprovalByAdmin}
+            setPublicationApprovalByAdmin={setPublicationApprovalByAdmin}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

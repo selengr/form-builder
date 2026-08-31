@@ -126,15 +126,11 @@ export default function UnifiedListGridLayoutSkeleton({
             overflow: 'hidden',
           }}>
           <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
-            <div className="w-full h-[52px] flex items-center justify-center rounded-lg bg-[#F7F7FF] px-2 mb-4 relative shrink-0 overflow-hidden">
-              <IconButton sx={{ position: 'absolute', left: '8px', zIndex: 1, flexShrink: 0 }}>
+            <div className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative shrink-0">
+              <IconButton sx={{ position: 'absolute', left: '8px' }}>
                 <MdOutlineKeyboardArrowRight color="#292D32" />
               </IconButton>
-              <p
-                title={title}
-                className="text-[16px] text-center font-bold text-[#161616] truncate w-full max-w-full px-10">
-                {title}
-              </p>
+              <p className="text-[16px] text-center font-bold text-[#161616]">{title}</p>
             </div>
             <Grid
               container

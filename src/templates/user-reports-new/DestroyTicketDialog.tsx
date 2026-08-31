@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 import { Dispatch, SetStateAction } from 'react';
 // components
 import DestroyTicketCard from './DestroyTicketCard';
-// _hooks
+// hooks
 import { useGetTicketList } from './hooks/useGetTicketList';
 // style
 import { StyledDialog, StyledDialogContent } from './userReports.style';

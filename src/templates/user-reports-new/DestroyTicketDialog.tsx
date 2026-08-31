@@ -4,8 +4,11 @@ import { CgClose } from 'react-icons/cg';
 import { IconButton } from '@mui/material';
 import { useParams } from 'next/navigation';
 import { Dispatch, SetStateAction } from 'react';
+// components
 import DestroyTicketCard from './DestroyTicketCard';
+// _hooks
 import { useGetTicketList } from './hooks/useGetTicketList';
+// style
 import { StyledDialog, StyledDialogContent } from './userReports.style';
 
 export interface IProps {

@@ -29,6 +29,10 @@ type ActionBarBox = {
   bottom: number;
 };
 
+/**
+ * Locate the white list column that wraps #content (not the filter sidebar).
+ * Does not modify UnifiedListGrid — only reads the rendered DOM.
+ */
 function findListPane(root: HTMLElement): HTMLElement | null {
   const content = root.querySelector('#content');
   if (!content) return null;
@@ -50,6 +54,7 @@ function findListPane(root: HTMLElement): HTMLElement | null {
   if (!candidates.length) return null;
 
   if (isDesktop) {
+    // List column is wide but not full root (filter ~300px sits beside it).
     const listSized = candidates.filter((el) => {
       const w = el.getBoundingClientRect().width;
       return w <= rootWidth - 180 && w >= Math.min(280, rootWidth * 0.4);
@@ -60,6 +65,7 @@ function findListPane(root: HTMLElement): HTMLElement | null {
     );
   }
 
+  // Mobile: list column is essentially full root width.
   return candidates.reduce((a, b) =>
     a.getBoundingClientRect().width >= b.getBoundingClientRect().width ? a : b,
   );
@@ -110,6 +116,7 @@ export default function ListGridWrapper() {
       try {
         setPublicationApprovalByAdmin(JSON.parse(stored));
       } catch {
+        // ignore invalid stored value
       }
     }
 
@@ -143,6 +150,7 @@ export default function ListGridWrapper() {
       bottom: Math.max(0, window.innerHeight - rect.bottom + padBottom),
     });
 
+    // Truncate header title to list-pane width (back button ~48px + padding).
     const titleMax = Math.max(64, rect.width - 96);
     setDisplayTitle(ellipsizeToWidth(formName, titleMax));
   }, [formName]);
@@ -259,6 +267,11 @@ export default function ListGridWrapper() {
         skeletonHeaderName="تعداد کل گزارش‌ها"
       />
 
+      {/*
+        Exception-only action bar: fixed to measured list-pane bounds so it
+        never covers the filter (desktop) and stays full-width of the list (mobile).
+        UnifiedListGrid is left untouched.
+      */}
       {actionStyle ? (
         <div style={actionStyle}>
           <RenderAction

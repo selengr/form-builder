@@ -44,7 +44,7 @@ export const RenderAction = ({ publicationApprovalByAdmin, name, setPublicationA
   };
 
   return (
-    <div className="w-full min-h-14 px-2 sm:px-3 md:px-4 py-2 bg-[#F7F7FF] rounded-lg flex justify-between items-center gap-1 sm:gap-2 border border-[#E8E8F5]">
+    <div className="w-full min-h-14 px-2 sm:px-3 md:px-4 py-2 bg-[#F7F7FF] rounded-lg flex justify-between items-center gap-1 sm:gap-2 shadow-sm border border-[#E8E8F5]">
       <div className="flex flex-1 min-w-0 gap-1 sm:gap-2 overflow-x-auto">
         <ActionButton label="فرم" Icon={ChartSquareIcon} onClick={handleFormClick} />
         <ActionButton label="گزارش نتایج" Icon={AdditemIcon} onClick={handleReportResultsClick} />

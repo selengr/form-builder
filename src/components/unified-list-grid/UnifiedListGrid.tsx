@@ -54,10 +54,8 @@ const UnifiedListGrid = <TItem,>({
     refetchOnReconnect = false,
   } = config;
 
-  const { CardComponent, SkeletonComponent, FilterComponent, CreateButton, EmptyComponent, FooterComponent } =
+  const { CardComponent, SkeletonComponent, FilterComponent, CreateButton, EmptyComponent } =
     slots;
-
-  const hasFooter = Boolean(FooterComponent);
 
   const [totalData, setTotalData] = useState<number | null>(null);
   const { ref, inView } = useInView();
@@ -194,7 +192,7 @@ const UnifiedListGrid = <TItem,>({
 
   const renderHeader = useCallback(
     () => (
-      <div className="w-full h-[52px] flex items-center justify-center rounded-lg bg-[#F7F7FF] px-2 mb-4 relative shrink-0 min-w-0 overflow-hidden">
+      <div className="w-full h-[52px] flex items-center justify-center rounded-lg bg-[#F7F7FF] px-2 mb-4 relative shrink-0 overflow-hidden">
         <IconButton
           sx={{ position: 'absolute', left: '8px', zIndex: 1, flexShrink: 0 }}
           onClick={() => router.push(backHref)}>
@@ -202,7 +200,7 @@ const UnifiedListGrid = <TItem,>({
         </IconButton>
         <p
           title={title}
-          className="text-[16px] text-center font-bold text-[#161616] truncate min-w-0 w-full px-10">
+          className="text-[16px] text-center font-bold text-[#161616] truncate w-full max-w-full px-10">
           {title}
         </p>
       </div>
@@ -340,7 +338,6 @@ const UnifiedListGrid = <TItem,>({
             mr: 0,
             p: 2,
             maxWidth: '300px',
-            flexShrink: 0,
           }}>
           <Grid sx={{ width: '100%', minWidth: '200px', maxWidth: '300px' }}>
             <FilterComponent mode="desktop" closeMobileFilter={closeMobileFilter} refreshList={handleRefreshGrid} />
@@ -360,34 +357,19 @@ const UnifiedListGrid = <TItem,>({
           height: { xs: 'calc(100vh - 60px)', md: '100vh' },
           flexDirection: { xs: 'column', lg: 'row' },
         }}>
-        {/* List column — footer lives ONLY here, never over the filter sidebar */}
         <Grid
           container
           flexDirection="column"
-          alignItems="stretch"
+          alignItems="center"
           sx={{
             bgcolor: 'white',
             borderRadius: '16px',
             p: { xs: 1, sm: 2 },
             mx: { xs: 0, sm: 1 },
             width: 1,
-            minWidth: 0,
             overflow: 'hidden',
-            height: '100%',
-            flex: 1,
           }}>
-          <Grid
-            container
-            sx={{
-              width: '100%',
-              justifyContent: 'center',
-              mx: 'auto',
-              flex: 1,
-              minHeight: 0,
-              minWidth: 0,
-              overflow: 'hidden',
-              alignContent: 'flex-start',
-            }}>
+          <Grid container sx={{ width: '100%', justifyContent: 'center', mx: 'auto' }}>
             {renderHeader()}
             <Grid
               container
@@ -398,10 +380,6 @@ const UnifiedListGrid = <TItem,>({
                 maxWidth: '470px',
                 flexDirection: 'column',
                 gap: 1,
-                minWidth: 0,
-                flex: 1,
-                minHeight: 0,
-                overflow: 'hidden',
               }}>
               <Box
                 sx={{
@@ -411,7 +389,6 @@ const UnifiedListGrid = <TItem,>({
                   gap: '6px',
                   width: '100%',
                   flexWrap: { xs: 'nowrap', sm: 'nowrap' },
-                  flexShrink: 0,
                 }}>
                 {renderTotalCount()}
                 {showCreateButton && (
@@ -431,7 +408,7 @@ const UnifiedListGrid = <TItem,>({
                 )}
                 {CreateButton}
               </Box>
-              <Box sx={{ flexShrink: 0, width: '100%' }}>{renderSearchAndFilter()}</Box>
+              {renderSearchAndFilter()}
               <Grid
                 id="content"
                 container
@@ -439,41 +416,27 @@ const UnifiedListGrid = <TItem,>({
                 sx={{
                   width: '100%',
                   mt: 1,
-                  mb: hasFooter ? 1 : 5,
-                  pb: hasFooter ? 1 : 4,
+                  mb: 5,
+                  pb: 4,
                   flexDirection: 'column',
                   gap: 1,
                   overflowY: 'auto',
                   px: 0,
-                  flex: 1,
-                  minHeight: 0,
+                  height: {
+                    xs: 'calc(100vh - 310px)',
+                    sm: 'calc(100vh - 290px)',
+                    md: 'calc(100vh - 230px)',
+                  },
                   scrollbarWidth: 'none',
                 }}>
                 {renderContent()}
               </Grid>
             </Grid>
           </Grid>
-
-          {hasFooter && (
-            <Box
-              sx={{
-                width: '100%',
-                flexShrink: 0,
-                pt: 1,
-                minWidth: 0,
-              }}>
-              {FooterComponent}
-            </Box>
-          )}
-
           {FilterComponent && (
             <BottomSheet open={isFilterOpen} onClose={closeMobileFilter}>
               <Grid>
-                <FilterComponent
-                  mode="mobile"
-                  closeMobileFilter={closeMobileFilter}
-                  refreshList={handleRefreshGrid}
-                />
+                <FilterComponent mode="mobile" closeMobileFilter={closeMobileFilter} refreshList={handleRefreshGrid} />
               </Grid>
             </BottomSheet>
           )}

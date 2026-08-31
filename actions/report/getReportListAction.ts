@@ -22,7 +22,7 @@ export async function getReportListAction({ formId, admin }: GetReportListParams
   const url =
     `${baseUrl}?searchFilterModel=` + encodeURIComponent(JSON.stringify(filterModel));
 
-  const result = await api.get<{ content: unknown[] }>(url);
+  const result = await api.get<{ content: any[] }>(url);
 
   if (!result.success) {
     throw new Error(result.message || 'انجام عملیات با خطا مواجه شد');

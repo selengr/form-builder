@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-// components
 import ChangeStatusDialog from './ChangeStatusDialog';
 import DestroyTicketDialog from './DestroyTicketDialog';
-// icons
 import { AdditemIcon, ChartSquareIcon, ReceiptTextIcon, SlashIcon, TicketCircleIcon } from '@/../public/images/icons';
 
 interface IProps {

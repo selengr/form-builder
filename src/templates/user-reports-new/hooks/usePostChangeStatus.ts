@@ -10,7 +10,15 @@ export const CHANGE_STATUS_MUTATION_KEY = ['user-reports-new-change-status'] as 
 export const usePostChangeStatus = () => {
   const mutation = useMutation({
     mutationKey: CHANGE_STATUS_MUTATION_KEY,
-    mutationFn: ({ data }: { data: TTicketFormData }) => postChangeStatusAction(data),
+    mutationFn: async ({ data }: { data: TTicketFormData }) => {
+      const res = await postChangeStatusAction(data);
+
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');
+      }
+
+      return res.data;
+    },
 
     onSuccess: () => {
       toast.success(`با موفقیت انجام شد`);

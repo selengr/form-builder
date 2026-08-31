@@ -9,11 +9,5 @@ export interface TTicketFormData {
 }
 
 export async function postChangeStatusAction(data: TTicketFormData) {
-  const result = await api.put(`/admin/form/change-status`, data);
-
-  if (!result.success) {
-    throw new Error(result.message || 'انجام عملیات با خطا مواجه شد');
-  }
-
-  return result.data;
+  return api.put(`/admin/form/change-status`, data);
 }

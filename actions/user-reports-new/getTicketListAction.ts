@@ -6,7 +6,7 @@ type TicketListResponse = {
   content: any[];
 };
 
-export async function getTicketListAction(id: string | string[]): Promise<any[]> {
+export async function getTicketListAction(id: string | string[]) {
   const filterModel = {
     searchFilterBoxList: [{ restrictionList: [] }],
     sortList: [{ fieldName: 'id', type: 'DSC' }],
@@ -18,11 +18,5 @@ export async function getTicketListAction(id: string | string[]): Promise<any[]>
   const queryString = `?searchFilterModel=${encodeURIComponent(JSON.stringify(filterModel))}`;
   const url = baseUrl + queryString;
 
-  const result = await api.get<TicketListResponse>(url);
-
-  if (!result.success) {
-    throw new Error(result.message || 'انجام عملیات با خطا مواجه شد');
-  }
-
-  return result.data.content;
+  return api.get<TicketListResponse>(url);
 }

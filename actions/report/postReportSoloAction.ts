@@ -11,11 +11,5 @@ type PostReportSoloParams = {
 export async function postReportSoloAction({ data, isEdit }: PostReportSoloParams) {
   const url = isEdit ? `/report/solo/${data?.[0]?.id}` : `/report/solo`;
 
-  const result = isEdit ? await api.put(url, data) : await api.post(url, data);
-
-  if (!result.success) {
-    throw new Error(result.message || 'انجام عملیات با خطا مواجه شد');
-  }
-
-  return result.data;
+  return isEdit ? api.put(url, data) : api.post(url, data);
 }

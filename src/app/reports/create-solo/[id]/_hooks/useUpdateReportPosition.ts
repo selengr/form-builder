@@ -12,9 +12,17 @@ interface IUpdatePositionPayload {
 export const useUpdateReportPosition = () => {
   const mutation = useMutation({
     mutationKey: ['change-position'],
-    mutationFn: (data: IUpdatePositionPayload) => updateReportPositionAction(data),
+    mutationFn: async (data: IUpdatePositionPayload) => {
+      const res = await updateReportPositionAction(data);
 
-    onSuccess: () => { },
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');
+      }
+
+      return res.data;
+    },
+
+    onSuccess: () => {},
     onError: (error) => {
       toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
     },

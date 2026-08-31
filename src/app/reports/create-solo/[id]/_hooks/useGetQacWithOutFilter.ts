@@ -8,12 +8,20 @@ export const useGetQacWithOutFilter = () => {
   const { id } = useParams();
   const { data, isFetching } = useQuery({
     queryKey: ['QAC_WIHT_OUT_FILTER'],
-    queryFn: () => getQacWithOutFilterAction({ formId: String(id) }),
+    queryFn: async () => {
+      const res = await getQacWithOutFilterAction({ formId: String(id) });
+
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');
+      }
+
+      return res.data;
+    },
     staleTime: 0,
     gcTime: 600000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    retry: 3,   
+    retry: 3,
   });
 
   const qacWithOutFilterOptions = data?.dataList?.map((item: IConditionQuestionType) => {

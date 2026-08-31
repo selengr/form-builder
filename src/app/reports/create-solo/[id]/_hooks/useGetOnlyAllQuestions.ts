@@ -8,7 +8,15 @@ export const useGetOnlyAllQuestions = () => {
   const { id } = useParams();
   const { data, isFetching } = useQuery({
     queryKey: ['ONLY_ALL_QUESTIONS'],
-    queryFn: () => getOnlyAllQuestionsAction({ formId: String(id) }),
+    queryFn: async () => {
+      const res = await getOnlyAllQuestionsAction({ formId: String(id) });
+
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');
+      }
+
+      return res.data;
+    },
     staleTime: 0,
     gcTime: 600000,
     refetchOnWindowFocus: false,

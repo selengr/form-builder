@@ -1,6 +1,6 @@
 'use server';
 
-import { serverApi } from '@/services/axios/serverApi';
+import { api } from '@/services/axios/actionWapper';
 
 export interface IUpdatePositionPayload {
   formBuilderId: string | string[];
@@ -9,17 +9,11 @@ export interface IUpdatePositionPayload {
 }
 
 export async function updateReportPositionAction(data: IUpdatePositionPayload) {
-  // try {
-    const url = '/report/solo/change-position';
+  const result = await api.post('/report/solo/change-position', data);
 
-    const res = await serverApi.post(url, data);
-    return res.data;
-  // } catch (error: any) {
-  //   const message =
-  //     error?.response?.data?.message?.[0]?.title ||
-  //     error?.response?.data?.message ||
-  //     'انجام عملیات با خطا مواجه شد';
+  if (!result.success) {
+    throw new Error(result.message || 'انجام عملیات با خطا مواجه شد');
+  }
 
-  //   throw new Error(message);
-  // }
+  return result.data;
 }

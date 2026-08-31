@@ -1,6 +1,6 @@
 'use server';
 
-import { serverApi } from '@/services/axios/serverApi';
+import { api } from '@/services/axios/actionWapper';
 import type { IPostCondition } from '@/types/conditionReportSolo';
 
 type PostReportSoloParams = {
@@ -9,20 +9,13 @@ type PostReportSoloParams = {
 };
 
 export async function postReportSoloAction({ data, isEdit }: PostReportSoloParams) {
-  // try {
-    const url = isEdit ? `/report/solo/${data?.[0]?.id}` : `/report/solo`;
+  const url = isEdit ? `/report/solo/${data?.[0]?.id}` : `/report/solo`;
 
-    const res = isEdit
-      ? await serverApi.put(url, data)
-      : await serverApi.post(url, data);
+  const result = isEdit ? await api.put(url, data) : await api.post(url, data);
 
-    return res.data;
-  // } catch (error: any) {
-  //   const message =
-  //     error?.response?.data?.message?.[0]?.title ||
-  //     error?.response?.data?.message ||
-  //     'انجام عملیات با خطا مواجه شد';
+  if (!result.success) {
+    throw new Error(result.message || 'انجام عملیات با خطا مواجه شد');
+  }
 
-  //   throw new Error(message);
-  // }
+  return result.data;
 }

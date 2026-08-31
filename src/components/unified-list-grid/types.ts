@@ -79,6 +79,11 @@ export interface UnifiedListGridSlots<TItem = unknown> {
   FilterComponent?: ComponentType<UnifiedListGridFilterSlotProps>;
   CreateButton?: ReactNode;
   EmptyComponent?: ComponentType<{ error?: string }>;
+  /**
+   * Optional bar pinned to the bottom of the list column only
+   * (does not span the filter sidebar). Used e.g. by user-reports.
+   */
+  FooterComponent?: ReactNode;
 }
 
 export interface UnifiedListGridProps<TItem = unknown> {

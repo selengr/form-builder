@@ -54,8 +54,10 @@ const UnifiedListGrid = <TItem,>({
     refetchOnReconnect = false,
   } = config;
 
-  const { CardComponent, SkeletonComponent, FilterComponent, CreateButton, EmptyComponent } =
+  const { CardComponent, SkeletonComponent, FilterComponent, CreateButton, EmptyComponent, FooterComponent } =
     slots;
+
+  const hasFooter = Boolean(FooterComponent);
 
   const [totalData, setTotalData] = useState<number | null>(null);
   const { ref, inView } = useInView();

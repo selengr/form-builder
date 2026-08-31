@@ -1,6 +1,6 @@
 'use server';
 
-import { serverApi } from '@/services/axios/serverApi';
+import { api } from '@/services/axios/actionWapper';
 
 export type GetReportListParams = {
   formId: string | number;
@@ -8,30 +8,25 @@ export type GetReportListParams = {
 };
 
 export async function getReportListAction({ formId, admin }: GetReportListParams) {
-  // try {
-    const filterModel = {
-      searchFilterBoxList: [{ restrictionList: [] }],
-      sortList: [{ fieldName: 'id', type: 'DSC' }],
-      page: 0,
-      rows: 1000,
-    };
+  const filterModel = {
+    searchFilterBoxList: [{ restrictionList: [] }],
+    sortList: [{ fieldName: 'id', type: 'DSC' }],
+    page: 0,
+    rows: 1000,
+  };
 
-    const baseUrl = admin
-      ? `/admin/report/solo/main-list/${String(formId)}`
-      : `/report/solo/main-list/${String(formId)}`;
+  const baseUrl = admin
+    ? `/admin/report/solo/main-list/${String(formId)}`
+    : `/report/solo/main-list/${String(formId)}`;
 
-    const url =
-      `${baseUrl}?searchFilterModel=` +
-      encodeURIComponent(JSON.stringify(filterModel));
+  const url =
+    `${baseUrl}?searchFilterModel=` + encodeURIComponent(JSON.stringify(filterModel));
 
-    const res = await serverApi.get(url);
-    return res.data.content;
-  // } catch (error: any) {
-  //   const message =
-  //     error?.response?.data?.message?.[0]?.title ||
-  //     error?.response?.data?.message ||
-  //     'انجام عملیات با خطا مواجه شد';
+  const result = await api.get<{ content: unknown[] }>(url);
 
-  //   throw new Error(message);
-  // }
+  if (!result.success) {
+    throw new Error(result.message || 'انجام عملیات با خطا مواجه شد');
+  }
+
+  return result.data.content;
 }

@@ -1,18 +1,13 @@
 'use server';
 
-import { serverApi } from '@/services/axios/serverApi';
+import { api } from '@/services/axios/actionWapper';
 
 export async function deleteReportAction(id: number) {
-  // try {
-    const url = `/report/solo/${id}`;
-    const res = await serverApi.delete(url);
-    return res.data;
-  // } catch (error: any) {
-  //   const message =
-  //     error?.response?.data?.message?.[0]?.title ||
-  //     error?.response?.data?.message ||
-  //     'انجام عملیات با خطا مواجه شد';
+  const result = await api.delete(`/report/solo/${id}`);
 
-  //   throw new Error(message);
-  // }
+  if (!result.success) {
+    throw new Error(result.message || 'انجام عملیات با خطا مواجه شد');
+  }
+
+  return result.data;
 }

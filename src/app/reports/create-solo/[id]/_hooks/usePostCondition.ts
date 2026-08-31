@@ -9,7 +9,15 @@ export const usePostCondition = (isEdit: boolean) => {
 
   const mutation = useMutation({
     mutationKey: ['post-condition'],
-    mutationFn: ({ data }: { data: IPostCondition[] }) => postReportSoloAction({ data, isEdit }),
+    mutationFn: async ({ data }: { data: IPostCondition[] }) => {
+      const res = await postReportSoloAction({ data, isEdit });
+
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');
+      }
+
+      return res.data;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(['Report_List'] as any);
       queryClient.refetchQueries(['Report_List'] as any);

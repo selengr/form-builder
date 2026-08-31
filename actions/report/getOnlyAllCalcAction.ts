@@ -22,11 +22,5 @@ export async function getOnlyAllCalcAction({ formId }: OnlyAllCalcParams) {
     `/question/q-and-c-custom-combo?customComboFilterModel=` +
     encodeURIComponent(JSON.stringify(customComboFilterModel));
 
-  const result = await api.get(url);
-
-  if (!result.success) {
-    throw new Error(result.message || 'انجام عملیات با خطا مواجه شد');
-  }
-
-  return result.data;
+  return api.get(url);
 }

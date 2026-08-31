@@ -9,11 +9,5 @@ export interface IUpdatePositionPayload {
 }
 
 export async function updateReportPositionAction(data: IUpdatePositionPayload) {
-  const result = await api.post('/report/solo/change-position', data);
-
-  if (!result.success) {
-    throw new Error(result.message || 'انجام عملیات با خطا مواجه شد');
-  }
-
-  return result.data;
+  return api.post('/report/solo/change-position', data);
 }

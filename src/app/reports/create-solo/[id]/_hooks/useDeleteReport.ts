@@ -3,13 +3,20 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 // actions
 import { deleteReportAction } from '../../../../../../actions/report/deleteReportAction';
 
-
 export const useDeleteReport = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationKey: ['delete-condition'],
-    mutationFn: (id: number) => deleteReportAction(id),
+    mutationFn: async (id: number) => {
+      const res = await deleteReportAction(id);
+
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');
+      }
+
+      return res.data;
+    },
 
     onSuccess: () => {
       queryClient.invalidateQueries(['Report_List'] as any);

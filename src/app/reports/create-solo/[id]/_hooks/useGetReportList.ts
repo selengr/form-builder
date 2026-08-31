@@ -11,7 +11,15 @@ export const useGetReportList = () => {
 
   return useQuery({
     queryKey: ['Report_List'],
-    queryFn: () => getReportListAction({ formId: String(id), admin }),
+    queryFn: async () => {
+      const res = await getReportListAction({ formId: String(id), admin });
+
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');
+      }
+
+      return res.data.content;
+    },
     staleTime: 0,
     gcTime: 600000,
     refetchOnWindowFocus: true,

@@ -110,7 +110,6 @@ export default function ListGridWrapper() {
       try {
         setPublicationApprovalByAdmin(JSON.parse(stored));
       } catch {
-        // ignore invalid stored value
       }
     }
 
@@ -144,7 +143,6 @@ export default function ListGridWrapper() {
       bottom: Math.max(0, window.innerHeight - rect.bottom + padBottom),
     });
 
-    // Truncate header title to list-pane width (back button ~48px + padding).
     const titleMax = Math.max(64, rect.width - 96);
     setDisplayTitle(ellipsizeToWidth(formName, titleMax));
   }, [formName]);
@@ -261,11 +259,6 @@ export default function ListGridWrapper() {
         skeletonHeaderName="تعداد کل گزارش‌ها"
       />
 
-      {/*
-        Exception-only action bar: fixed to measured list-pane bounds so it
-        never covers the filter (desktop) and stays full-width of the list (mobile).
-        UnifiedListGrid is left untouched.
-      */}
       {actionStyle ? (
         <div style={actionStyle}>
           <RenderAction

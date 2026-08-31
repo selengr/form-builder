@@ -340,6 +340,7 @@ const UnifiedListGrid = <TItem,>({
             mr: 0,
             p: 2,
             maxWidth: '300px',
+            flexShrink: 0,
           }}>
           <Grid sx={{ width: '100%', minWidth: '200px', maxWidth: '300px' }}>
             <FilterComponent mode="desktop" closeMobileFilter={closeMobileFilter} refreshList={handleRefreshGrid} />

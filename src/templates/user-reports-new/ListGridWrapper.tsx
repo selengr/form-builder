@@ -1,7 +1,6 @@
 'use client';
 
-import { createPortal } from 'react-dom';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import {
   UnifiedListGridPage,
@@ -24,57 +23,11 @@ const DEFAULT_FILTER: SearchQueryFilter = {
 
 export const USER_REPORTS_REPORTERS_QUERY_KEY = 'user_reports_new_reporters';
 
-/**
- * Find the UnifiedListGrid white list column (the pane that contains #content),
- * without modifying UnifiedListGrid itself.
- */
-function findListPane(root: HTMLElement): HTMLElement | null {
-  const content = root.querySelector('#content');
-  if (!content) return null;
-
-  let node: HTMLElement | null = content as HTMLElement;
-  while (node && node !== root) {
-    const parent = node.parentElement;
-    if (!parent || parent === root) break;
-
-    const style = getComputedStyle(parent);
-    const isFlex = style.display.includes('flex');
-    const flexDir = style.flexDirection;
-    const isLayoutFlex =
-      isFlex &&
-      (flexDir === 'row' ||
-        flexDir === 'row-reverse' ||
-        flexDir === 'column' ||
-        flexDir === 'column-reverse');
-
-    // Outer list+filter layout flex (2 children: list pane + filter pane).
-    if (isLayoutFlex && parent.children.length >= 2) {
-      return node;
-    }
-
-    node = parent;
-  }
-
-  // Fallback: widest ancestor under root that still contains #content
-  node = content as HTMLElement;
-  let best: HTMLElement | null = null;
-  while (node && node !== root) {
-    if (node.clientWidth >= root.clientWidth * 0.85) {
-      best = node;
-    }
-    node = node.parentElement;
-  }
-  return best;
-}
-
 export default function ListGridWrapper() {
   const { id } = useParams();
   const searchParams = useSearchParams();
   const formName = searchParams.get('formName') || 'گزارشات';
   const formId = String(id ?? '');
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [listPane, setListPane] = useState<HTMLElement | null>(null);
 
   const [draftFilter, setDraftFilter] = useState<SearchQueryFilter>(DEFAULT_FILTER);
   const [appliedFilter, setAppliedFilter] = useState<SearchQueryFilter>(DEFAULT_FILTER);
@@ -103,38 +56,6 @@ export default function ListGridWrapper() {
       JSON.stringify(publicationApprovalByAdmin),
     );
   }, [publicationApprovalByAdmin]);
-
-  useLayoutEffect(() => {
-    const root = containerRef.current;
-    if (!root) return;
-
-    const sync = () => {
-      const pane = findListPane(root);
-      if (!pane) return;
-
-      // Needed so absolute action bar is relative to the list column only
-      if (getComputedStyle(pane).position === 'static') {
-        pane.style.position = 'relative';
-      }
-      setListPane((prev) => (prev === pane ? prev : pane));
-    };
-
-    sync();
-
-    const mutationObserver = new MutationObserver(sync);
-    mutationObserver.observe(root, { childList: true, subtree: true });
-
-    const resizeObserver = new ResizeObserver(sync);
-    resizeObserver.observe(root);
-
-    window.addEventListener('resize', sync);
-
-    return () => {
-      mutationObserver.disconnect();
-      resizeObserver.disconnect();
-      window.removeEventListener('resize', sync);
-    };
-  }, []);
 
   const syncDraftFromApplied = useCallback(() => {
     setDraftFilter(appliedFilter);
@@ -192,41 +113,33 @@ export default function ListGridWrapper() {
     [appliedFilter, draftFilter],
   );
 
-  const actionBar = (
-    <div className="absolute z-30 inset-x-0 bottom-0 p-2 sm:inset-x-3 sm:bottom-3 sm:p-0">
-      <RenderAction
-        name={formName}
-        publicationApprovalByAdmin={publicationApprovalByAdmin}
-        setPublicationApprovalByAdmin={setPublicationApprovalByAdmin}
-      />
-    </div>
-  );
-
   return (
-    <div ref={containerRef} className="relative h-full w-full overflow-hidden">
-      <UnifiedListGridPage<TReporterInformationItem>
-        config={{
-          title: formName,
-          queryKey: USER_REPORTS_REPORTERS_QUERY_KEY,
-          textTotal: ['تعداد کل گزارش‌ها', 'عدد'],
-          searchField: 'formSetting.name',
-          hasSidebarFilter: true,
-          backHref: '/user-reports-new',
-          onMobileFilterOpen: syncDraftFromApplied,
-        }}
-        slots={{
-          CardComponent: ListCard,
-          SkeletonComponent: ListCardSkeleton,
-          FilterComponent: FilterSlot,
-        }}
-        fetcher={fetcher}
-        searchBoxList={createDefaultSearchBoxList('formSetting.name')}
-        searchQueryFilter={appliedFilter}
-        skeletonHeaderName="تعداد کل گزارش‌ها"
-      />
-
-      {/* Portal into the list column only — never covers the filter sidebar */}
-      {listPane ? createPortal(actionBar, listPane) : null}
-    </div>
+    <UnifiedListGridPage<TReporterInformationItem>
+      config={{
+        title: formName,
+        queryKey: USER_REPORTS_REPORTERS_QUERY_KEY,
+        textTotal: ['تعداد کل گزارش‌ها', 'عدد'],
+        searchField: 'formSetting.name',
+        hasSidebarFilter: true,
+        backHref: '/user-reports-new',
+        onMobileFilterOpen: syncDraftFromApplied,
+      }}
+      slots={{
+        CardComponent: ListCard,
+        SkeletonComponent: ListCardSkeleton,
+        FilterComponent: FilterSlot,
+        FooterComponent: (
+          <RenderAction
+            name={formName}
+            publicationApprovalByAdmin={publicationApprovalByAdmin}
+            setPublicationApprovalByAdmin={setPublicationApprovalByAdmin}
+          />
+        ),
+      }}
+      fetcher={fetcher}
+      searchBoxList={createDefaultSearchBoxList('formSetting.name')}
+      searchQueryFilter={appliedFilter}
+      skeletonHeaderName="تعداد کل گزارش‌ها"
+    />
   );
 }

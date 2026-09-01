@@ -19,16 +19,11 @@ export default function PreviewPage() {
   const searchParams = useSearchParams();
   const search = searchParams.get('rep');
   const from = searchParams.get('from');
-  const admin = search === 'list';
-  const adminNew = search === 'list-new';
+  const admin = search === 'list' || search === 'list-new'; // list-new: legacy QA query
 
   const handleBack = () => {
     if (from === 'data-collection') {
       router.push('/data-collection');
-      return;
-    }
-    if (adminNew) {
-      router.push(`/user-reports-new/${paramId}`);
       return;
     }
     if (admin) {
@@ -70,11 +65,9 @@ export default function PreviewPage() {
         backHref={
           from === 'data-collection'
             ? '/data-collection'
-            : adminNew
-              ? `/user-reports-new/${paramId}`
-              : admin
-                ? `/user-reports/${paramId}`
-                : `/builder/${paramId}`
+            : admin
+              ? `/user-reports/${paramId}`
+              : `/builder/${paramId}`
         }
         backLabel="بازگشت"
         className="h-[calc(100dvh-76px)] md:h-screen"

@@ -1,9 +1,9 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ReportHeader, ReportPagination, ReportTable } from '@/templates/user-reports-new';
-import { useStatsViewModel } from '@/templates/user-reports-new/viewModel';
-import ReportTableSkeleton from '@/templates/user-reports-new/ReportTableSkeleton';
+import { ReportHeader, ReportPagination, ReportTable } from '@/templates/user-reports';
+import { useStatsViewModel } from '@/templates/user-reports/viewModel';
+import ReportTableSkeleton from '@/templates/user-reports/ReportTableSkeleton';
 
 function MainPageSkeleton() {
   return (
@@ -20,7 +20,7 @@ function MainPageSkeleton() {
   );
 }
 
-export default function UserReportsNewPage() {
+export default function UserReportsPage() {
   const router = useRouter();
   const {
     headData,

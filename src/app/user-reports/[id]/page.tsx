@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
 import UnifiedListGridLayoutSkeleton from '@/components/unified-list-grid/UnifiedListGridLayoutSkeleton';
-import ListGridWrapper from '@/templates/user-reports-new/ListGridWrapper';
-import ListCardSkeleton from '@/templates/user-reports-new/ListCardSkeleton';
+import ListGridWrapper from '@/templates/user-reports/ListGridWrapper';
+import ListCardSkeleton from '@/templates/user-reports/ListCardSkeleton';
 
 export const dynamic = 'force-dynamic';
 
-export default function DisplayUserReportNewPage() {
+export default function DisplayUserReportPage() {
   return (
     <Suspense
       fallback={

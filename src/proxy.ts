@@ -78,6 +78,5 @@ export const config = {
     '/transactions/:path*',
     '/groups/:path*',
     '/user-reports/:path*',
-    '/user-reports-new/:path*',
   ],
 };

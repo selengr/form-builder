@@ -28,7 +28,7 @@ export const RenderAction = ({ publicationApprovalByAdmin, name, setPublicationA
   const [openChangeStatus, setOpenChangeStatus] = useState<boolean>(false);
 
   const handleFormClick = () => {
-    push(`/preview/${id}?rep=list-new`);
+    push(`/preview/${id}?rep=list`);
   };
 
   const handleReportResultsClick = () => {

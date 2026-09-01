@@ -26,7 +26,7 @@ export function ReportTable({ headData, allData, isLoading }: StatsTableProps) {
     if (typeof window !== 'undefined') {
       localStorage.setItem('publicationApprovalByAdmin', JSON.stringify(publicationApprovalByAdmin));
     }
-    push(`/user-reports-new/${id}?formName=${formName}`);
+    push(`/user-reports/${id}?formName=${formName}`);
   };
 
   if (isLoading) {

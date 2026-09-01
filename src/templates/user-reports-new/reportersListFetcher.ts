@@ -1,4 +1,4 @@
-import { getReportersListAction } from '@actions/user-reports-new/getReportersListAction';
+import { getReportersListAction } from '@actions/user-reports/getReportersListAction';
 import {
   UnifiedListGridFetcher,
   UnifiedListGridFetchParams,

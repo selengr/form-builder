@@ -3,9 +3,9 @@ import { useMutation } from '@tanstack/react-query';
 import {
   postChangeStatusAction,
   type TTicketFormData,
-} from '@actions/user-reports-new/postChangeStatusAction';
+} from '@actions/user-reports/postChangeStatusAction';
 
-export const CHANGE_STATUS_MUTATION_KEY = ['user-reports-new-change-status'] as const;
+export const CHANGE_STATUS_MUTATION_KEY = ['user-reports-change-status'] as const;
 
 export const usePostChangeStatus = () => {
   const mutation = useMutation({

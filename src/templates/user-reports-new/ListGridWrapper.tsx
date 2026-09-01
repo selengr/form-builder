@@ -21,7 +21,7 @@ const DEFAULT_FILTER: SearchQueryFilter = {
   fieldOperation: 'DSC',
 };
 
-export const USER_REPORTS_REPORTERS_QUERY_KEY = 'user_reports_new_reporters';
+export const USER_REPORTS_REPORTERS_QUERY_KEY = 'user_reports_reporters';
 
 type ActionBarBox = {
   left: number;
@@ -245,7 +245,7 @@ export default function ListGridWrapper() {
           textTotal: ['تعداد کل گزارش‌ها', 'عدد'],
           searchField: 'formSetting.name',
           hasSidebarFilter: true,
-          backHref: '/user-reports-new',
+          backHref: '/user-reports',
           onMobileFilterOpen: syncDraftFromApplied,
         }}
         slots={{

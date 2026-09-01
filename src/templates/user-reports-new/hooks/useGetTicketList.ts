@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { getTicketListAction } from '@actions/user-reports-new/getTicketListAction';
+import { getTicketListAction } from '@actions/user-reports/getTicketListAction';
 
-export const TICKET_LIST_QUERY_KEY = ['user-reports-new-Ticket_List'] as const;
+export const TICKET_LIST_QUERY_KEY = ['user-reports-Ticket_List'] as const;
 
 export const useGetTicketList = (id: string | string[]) => {
   return useQuery({

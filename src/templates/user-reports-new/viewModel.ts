@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
-import { getUserReportsDataAction } from '@actions/user-reports-new/getUserReportsDataAction';
+import { getUserReportsDataAction } from '@actions/user-reports/getUserReportsDataAction';
 
 export const useStatsViewModel = () => {
   const [headData, setHeadData] = useState<any[]>([]);

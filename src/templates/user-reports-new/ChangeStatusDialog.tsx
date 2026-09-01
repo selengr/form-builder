@@ -56,7 +56,7 @@ export const ChangeStatusDialog: React.FC<IProps> = ({ open, setOpen, publicatio
       },
       {
         onSuccess: async() => {
-          queryClient.invalidateQueries({ queryKey: ['user_reports_new_reporters'] });
+          queryClient.invalidateQueries({ queryKey: ['user_reports_reporters'] });
           setPublicationApprovalByAdmin(!publicationApprovalByAdmin)
           handleClose();
         },

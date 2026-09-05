@@ -28,10 +28,14 @@ const TicketSchema = z.object({
 });
 type TTicketFormData = z.infer<typeof TicketSchema>;
 
-export const ChangeStatusDialog: React.FC<IProps> = ({ open, setOpen, publicationApprovalByAdmin, setPublicationApprovalByAdmin }) => {
+export const ChangeStatusDialog: React.FC<IProps> = ({
+  open,
+  setOpen,
+  publicationApprovalByAdmin,
+  setPublicationApprovalByAdmin,
+}) => {
   const { id } = useParams();
   const postChangeStatus = usePostChangeStatus();
-
   const queryClient = useQueryClient();
 
   const methods = useForm<TTicketFormData>({
@@ -42,7 +46,8 @@ export const ChangeStatusDialog: React.FC<IProps> = ({ open, setOpen, publicatio
   });
 
   const handleClose = () => {
-    setOpen((prev) => !prev);
+    methods.reset({ ticket: '' });
+    setOpen(false);
   };
 
   const onSubmit = ({ ticket }: { ticket: string }) => {
@@ -55,9 +60,9 @@ export const ChangeStatusDialog: React.FC<IProps> = ({ open, setOpen, publicatio
         },
       },
       {
-        onSuccess: async() => {
+        onSuccess: async () => {
           queryClient.invalidateQueries({ queryKey: ['user_reports_reporters'] });
-          setPublicationApprovalByAdmin(!publicationApprovalByAdmin)
+          setPublicationApprovalByAdmin(!publicationApprovalByAdmin);
           handleClose();
         },
       },
@@ -65,20 +70,30 @@ export const ChangeStatusDialog: React.FC<IProps> = ({ open, setOpen, publicatio
   };
 
   return (
-    <StyledDialog open={open} maxWidth='xl'>
+    <StyledDialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
       <StyledDialogContent>
-        <div className='flex items-center justify-end h-6 -ml-2'>
-          <IconButton edge='end'>
-            <CgClose color='#404040' width={25} height={20} size='1.5rem' onClick={() => handleClose()} />
+        <div className="relative flex items-center justify-center mb-5 min-h-8">
+          <IconButton
+            onClick={handleClose}
+            aria-label="بستن"
+            disabled={postChangeStatus.isPending}
+            sx={{
+              position: 'absolute',
+              left: 0,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              p: 0.5,
+            }}>
+            <CgClose color="#404040" size="1.4rem" />
           </IconButton>
+          <h2 className="text-[15px] sm:text-base font-bold text-[#404040]">شرح عملیات</h2>
         </div>
-        <label className='flex justify-center text-[15px] text-[#404040] mb-8 font-bold'>شرح عملیات</label>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             <RHFTextField
               multiline
               rows={6}
-              name='ticket'
+              name="ticket"
               sx={{
                 '& .MuiInputBase-root': {
                   borderRadius: '10px',

@@ -21,11 +21,19 @@ const ActionButton = ({ label, Icon, onClick }: IProps) => (
   </button>
 );
 
-export const RenderAction = ({ publicationApprovalByAdmin, name, setPublicationApprovalByAdmin }: { publicationApprovalByAdmin: boolean; name: string, setPublicationApprovalByAdmin : any }) => {
+export const RenderAction = ({
+  publicationApprovalByAdmin,
+  name,
+  setPublicationApprovalByAdmin,
+}: {
+  publicationApprovalByAdmin: boolean;
+  name: string;
+  setPublicationApprovalByAdmin: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const { push } = useRouter();
   const { id } = useParams();
-  const [openDestroy, setOpenDestroy] = useState<boolean>(false);
-  const [openChangeStatus, setOpenChangeStatus] = useState<boolean>(false);
+  const [openDestroy, setOpenDestroy] = useState(false);
+  const [openChangeStatus, setOpenChangeStatus] = useState(false);
 
   const handleFormClick = () => {
     push(`/preview/${id}?rep=list`);
@@ -44,12 +52,12 @@ export const RenderAction = ({ publicationApprovalByAdmin, name, setPublicationA
   };
 
   return (
-    <div className="w-full min-h-14 px-2 sm:px-3 md:px-4 py-2 bg-[#F7F7FF] rounded-lg flex justify-between items-center gap-1 sm:gap-2 shadow-sm border border-[#E8E8F5]">
-      <div className="flex flex-1 min-w-0 gap-1 sm:gap-2 overflow-x-auto">
+    <div className="flex w-full min-h-14 items-center justify-between gap-1 rounded-lg border border-[#E8E8F5] bg-[#F7F7FF] px-2 py-2 shadow-sm sm:gap-2 sm:px-3 md:px-4">
+      <div className="flex min-w-0 flex-1 gap-1 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-2 [&::-webkit-scrollbar]:hidden">
         <ActionButton label="فرم" Icon={ChartSquareIcon} onClick={handleFormClick} />
         <ActionButton label="گزارش نتایج" Icon={AdditemIcon} onClick={handleReportResultsClick} />
       </div>
-      <div className="flex flex-1 min-w-0 gap-1 sm:gap-2 justify-end overflow-x-auto">
+      <div className="flex min-w-0 flex-1 justify-end gap-1 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-2 [&::-webkit-scrollbar]:hidden">
         <ActionButton label="مشاهده وقایع" Icon={ReceiptTextIcon} onClick={handleViewEventsClick} />
         {!publicationApprovalByAdmin && (
           <ActionButton label="غیرفعال" Icon={SlashIcon} onClick={handleSuspendClick} />
@@ -59,7 +67,7 @@ export const RenderAction = ({ publicationApprovalByAdmin, name, setPublicationA
         )}
       </div>
 
-      {openDestroy && <DestroyTicketDialog open={openDestroy} setOpen={setOpenDestroy} />}
+      <DestroyTicketDialog open={openDestroy} setOpen={setOpenDestroy} />
       <ChangeStatusDialog
         setPublicationApprovalByAdmin={setPublicationApprovalByAdmin}
         open={openChangeStatus}

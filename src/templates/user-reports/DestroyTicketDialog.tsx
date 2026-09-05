@@ -18,21 +18,30 @@ export interface IProps {
 
 export const DestroyTicketDialog: React.FC<IProps> = ({ open, setOpen }) => {
   const { id } = useParams();
-  const { data, error, isLoading } = useGetTicketList(id as string | string[]);
+  const { data, error, isLoading } = useGetTicketList(id as string | string[], open);
 
   const handleClose = () => {
-    setOpen((prev) => !prev);
+    setOpen(false);
   };
 
   return (
-    <StyledDialog open={open} maxWidth='xl'>
+    <StyledDialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
       <StyledDialogContent>
-        <div className='flex items-center justify-end h-6'>
-          <IconButton edge='end'>
-            <CgClose color='#404040' width={25} height={20} size='1.5rem' onClick={() => handleClose()} />
+        <div className="relative flex items-center justify-center mb-5 min-h-8">
+          <IconButton
+            onClick={handleClose}
+            aria-label="بستن"
+            sx={{
+              position: 'absolute',
+              left: 0,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              p: 0.5,
+            }}>
+            <CgClose color="#404040" size="1.4rem" />
           </IconButton>
+          <h2 className="text-[15px] sm:text-base font-bold text-[#404040]">وقایع</h2>
         </div>
-        <label className='flex justify-center text-[15px] text-[#404040] mb-8 font-bold'>وقایع</label>
         <DestroyTicketCard data={data} loading={isLoading} error={error} />
       </StyledDialogContent>
     </StyledDialog>

@@ -60,22 +60,25 @@ export default function ListCard({
         {createDate?.split(' ')[0]}
       </span>
       {isModalOpen && (
-        <StyledDialog open={isModalOpen} maxWidth="sm">
+        <StyledDialog open={isModalOpen} onClose={() => setIsModalOpen(false)} fullWidth maxWidth="sm">
           <StyledDialogContent>
-            <div className="flex items-center justify-end h-6 -ml-2">
-              <IconButton edge="end">
-                <CgClose
-                  color="#404040"
-                  width={25}
-                  height={20}
-                  size="1.5rem"
-                  onClick={() => setIsModalOpen(false)}
-                />
+            <div className="relative mb-4 flex min-h-8 items-center justify-center">
+              <IconButton
+                onClick={() => setIsModalOpen(false)}
+                aria-label="بستن"
+                sx={{
+                  position: 'absolute',
+                  left: 0,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  p: 0.5,
+                }}>
+                <CgClose color="#404040" size="1.4rem" />
               </IconButton>
             </div>
-            <div className="rounded-lg flex flex-col transition-all bg-[#F7F7FF] p-4 pb-8 w-full">
-              <div className="rounded-lg p-2 flex justify-between w-full border border-[#1758BA] bg-white">
-                <div className="overflow-y-auto w-full flex flex-col items-center p-8">
+            <div className="flex w-full flex-col rounded-lg bg-[#F7F7FF] p-3 pb-6 transition-all sm:p-4 sm:pb-8">
+              <div className="flex w-full justify-between rounded-lg border border-[#1758BA] bg-white p-2">
+                <div className="flex w-full flex-col items-center overflow-y-auto p-4 sm:p-8">
                   <HtmlPreview html={resultReportText as any} />
                 </div>
               </div>

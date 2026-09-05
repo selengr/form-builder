@@ -3,7 +3,7 @@ import { getTicketListAction } from '@actions/user-reports/getTicketListAction';
 
 export const TICKET_LIST_QUERY_KEY = ['user-reports-Ticket_List'] as const;
 
-export const useGetTicketList = (id: string | string[]) => {
+export const useGetTicketList = (id: string | string[], enabled = true) => {
   return useQuery({
     queryKey: [...TICKET_LIST_QUERY_KEY, id],
     queryFn: async () => {
@@ -21,6 +21,6 @@ export const useGetTicketList = (id: string | string[]) => {
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
     retry: 3,
-    enabled: Boolean(id),
+    enabled: Boolean(id) && enabled,
   });
 };

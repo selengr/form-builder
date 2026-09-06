@@ -19,7 +19,7 @@ export default function PreviewPage() {
   const searchParams = useSearchParams();
   const search = searchParams.get('rep');
   const from = searchParams.get('from');
-  const admin = search === 'list' || search === 'list-new'; // list-new: legacy QA query
+  const admin = search === 'list';
 
   const handleBack = () => {
     if (from === 'data-collection') {

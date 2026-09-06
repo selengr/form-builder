@@ -192,11 +192,17 @@ const UnifiedListGrid = <TItem,>({
 
   const renderHeader = useCallback(
     () => (
-      <div className="w-full h-[52px] flex items-center justify-center gap-4 rounded-lg bg-[#F7F7FF] px-2 mb-4 relative shrink-0">
-        <IconButton sx={{ position: 'absolute', left: '8px' }} onClick={() => router.push(backHref)}>
+      <div className="w-full h-[52px] flex items-center justify-center rounded-lg bg-[#F7F7FF] px-2 mb-4 relative shrink-0 overflow-hidden">
+        <IconButton
+          sx={{ position: 'absolute', left: '8px', zIndex: 1, flexShrink: 0 }}
+          onClick={() => router.push(backHref)}>
           <MdOutlineKeyboardArrowRight color="#292D32" />
         </IconButton>
-        <p className="text-[16px] text-center font-bold text-[#161616]">{title}</p>
+        <p
+          title={title}
+          className="text-[16px] text-center font-bold text-[#161616] truncate w-full max-w-full px-10">
+          {title}
+        </p>
       </div>
     ),
     [title, router, backHref],

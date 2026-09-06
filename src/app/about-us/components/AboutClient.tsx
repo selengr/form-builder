@@ -26,7 +26,7 @@ const HighlightedText = ({ text, highlight }: { text: string; highlight: string 
   );
 };
 
-export default function FaqClient({ items }: any) {
+export default function AboutClient({ items }: any) {
 
   const [searchTerm, setSearchTerm] = useState("");
 

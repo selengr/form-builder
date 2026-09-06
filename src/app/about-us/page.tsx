@@ -1,9 +1,9 @@
 import Image from "next/image";
-import FaqClient from "./components/FaqClient";
+import AboutClient from "./components/AboutClient";
 
 export const dynamic = "force-static";
 
-export default async function FAQPage() {
+export default async function AboutUSPage() {
 
   const accordionItems = [
     {
@@ -130,7 +130,7 @@ export default async function FAQPage() {
         </div>
 
         {/* client interactive section */}
-        <FaqClient items={accordionItems} />
+        <AboutClient items={accordionItems} />
 
       </div>
     </div>

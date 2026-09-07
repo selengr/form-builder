@@ -5,8 +5,12 @@ import { LuUsers } from 'react-icons/lu';
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
 import { ExcelDialog, UserCount } from '@/app/stats/[id]/component';
 import { toast } from 'sonner';
-import { getAuthToken } from '@/utils/getAuthToken';
 import { usePathname } from 'next/navigation';
+// actions
+import { checkExcelExportAction } from '@actions/report/checkExcelExportAction';
+import { exportExcelAction } from '@actions/report/exportExcelAction';
+import { checkDataCollectionExcelExportAction } from '@actions/data-collection/checkExcelExportAction';
+import { exportDataCollectionExcelAction } from '@actions/data-collection/exportExcelAction';
 
 interface StatsPaginationProps {
   totalItems: number;
@@ -24,13 +28,22 @@ export interface UserType {
   name: string;
 }
 
-export function ReportPagination({ totalItems, onPageChange, onRowsPerPageChange, currentPage, rowsPerPage, selectedUsers, setSelectedUsers, formId }: StatsPaginationProps) {
+export function ReportPagination({
+  totalItems,
+  onPageChange,
+  onRowsPerPageChange,
+  currentPage,
+  rowsPerPage,
+  selectedUsers,
+  setSelectedUsers,
+  formId,
+}: StatsPaginationProps) {
   const totalPages = rowsPerPage === -1 ? 1 : Math.ceil(totalItems / rowsPerPage);
-  const pathname = usePathname()
+  const pathname = usePathname();
+  const isDataCollection = pathname.includes('data-collection');
 
   const [isExcelDialogOpen, setIsExcelDialogOpen] = useState(false);
 
-  // ✅ Load selected users once on mount
   useEffect(() => {
     const raw = localStorage.getItem('selectedUsersByForm');
     if (raw) {
@@ -73,29 +86,25 @@ export function ReportPagination({ totalItems, onPageChange, onRowsPerPageChange
   };
 
   const checkAndDownloadExcel = async () => {
-    const token = await getAuthToken();
-     const url = pathname.includes('data-collection')
-        ? '/api/report/data-collection/'
-        : '/api/report/check/'
     try {
-      const checkRes = await fetch(`${url}${formId.toString()}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const checkData = await checkRes.json();
+      const checkRes = isDataCollection
+        ? await checkDataCollectionExcelExportAction(formId)
+        : await checkExcelExportAction(formId);
 
-      if (!checkRes.ok) {
-        throw new Error(checkData.error || 'بررسی فایل با خطا مواجه شد');
+      if (!checkRes.success) {
+        throw new Error(checkRes.message || 'بررسی فایل با خطا مواجه شد');
       }
 
+      const checkData = checkRes.data;
       const status = checkData.statusEnum;
       const currentUserIds = selectedUsers.map((u) => u.takePartId).sort((a, b) => a - b);
 
       const lastExportedRaw = localStorage.getItem(`lastExportedUserIds_${formId}`);
       const lastExportedUserIds: number[] = lastExportedRaw ? JSON.parse(lastExportedRaw) : [];
 
-      const isSameList = lastExportedUserIds.length === currentUserIds.length && lastExportedUserIds.every((id, index) => id === currentUserIds[index]);
+      const isSameList =
+        lastExportedUserIds.length === currentUserIds.length &&
+        lastExportedUserIds.every((id, index) => id === currentUserIds[index]);
 
       if (status === 'PROCESSING') {
         toast.info('📄 فایل اکسل شما در حال آماده‌سازی است. لطفاً چند لحظه دیگر دوباره تلاش کنید.');
@@ -103,35 +112,26 @@ export function ReportPagination({ totalItems, onPageChange, onRowsPerPageChange
       }
 
       if (status === 'SUCCESS' && checkData.filePath && isSameList) {
-        const fullPath = checkData.filePath.startsWith('/') ? checkData.filePath : `/${checkData.filePath}`;
+        const fullPath = checkData.filePath.startsWith('/')
+          ? checkData.filePath
+          : `/${checkData.filePath}`;
         const downloadUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/filemanager${fullPath}`;
         window.open(downloadUrl, '_blank');
         toast.success('فایل آماده بود و دانلود شد.');
       } else {
-        const url = pathname.includes('data-collection')
-        ? '/api/report/data-collection/export'
-        : '/api/report/exportexcel';
+        if (currentUserIds.length === 0) {
+          throw new Error('لیست افراد نباید خالی باشد');
+        }
 
-        const exportRes = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            takePartIdList: currentUserIds,
-            IsCollection: pathname.includes('data-collection') ? true : false
-          }),
-        });
+        const exportRes = isDataCollection
+          ? await exportDataCollectionExcelAction(currentUserIds)
+          : await exportExcelAction(currentUserIds);
 
-        const exportData = await exportRes.json();
-
-        if (!exportRes.ok || !exportData.response) {
-          throw new Error(exportData.error || 'ارسال درخواست فایل اکسل با خطا مواجه شد.');
+        if (!exportRes.success || !exportRes.data?.response) {
+          throw new Error(exportRes.success === false ? exportRes.message : 'ارسال درخواست فایل اکسل با خطا مواجه شد.');
         }
 
         localStorage.setItem(`lastExportedUserIds_${formId}`, JSON.stringify(currentUserIds));
-
         toast.success('درخواست تولید فایل اکسل با موفقیت ثبت شد.');
       }
     } catch (err: any) {
@@ -142,31 +142,42 @@ export function ReportPagination({ totalItems, onPageChange, onRowsPerPageChange
 
   return (
     <>
-      <div className='bg-[#F7F7FF] w-full flex flex-wrap justify-between items-center px-4 py-2 mt-4 gap-2 rounded-lg'>
-        <div className='flex items-center gap-2'>
-          <span className='text-sm'>سطر قابل نمایش در هر صفحه:</span>
-          <select className='bg-white rounded-md h-9 px-2 text-sm border border-gray-300 font-iran-sans' value={rowsPerPage} onChange={handleRowsChange}>
+      <div className="bg-[#F7F7FF] w-full flex flex-wrap justify-between items-center px-4 py-2 mt-4 gap-2 rounded-lg">
+        <div className="flex items-center gap-2">
+          <span className="text-sm">سطر قابل نمایش در هر صفحه:</span>
+          <select
+            className="bg-white rounded-md h-9 px-2 text-sm border border-gray-300 font-iran-sans"
+            value={rowsPerPage}
+            onChange={handleRowsChange}>
             <option value={25}>25</option>
             <option value={50}>50</option>
             <option value={100}>100</option>
             <option value={10000}>همه</option>
           </select>
         </div>
-        <div className='flex items-center gap-2'>
-          <button onClick={handlePrev} disabled={currentPage === 1} className='bg-white border border-blue-700 rounded-full p-1 disabled:opacity-50'>
-            <MdKeyboardArrowRight className='text-blue-700 text-xl' />
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handlePrev}
+            disabled={currentPage === 1}
+            className="bg-white border border-blue-700 rounded-full p-1 disabled:opacity-50">
+            <MdKeyboardArrowRight className="text-blue-700 text-xl" />
           </button>
-          <span className='text-sm'>
+          <span className="text-sm">
             صفحه {currentPage} از {totalPages}
           </span>
-          <button onClick={handleNext} disabled={currentPage === totalPages} className='bg-white border border-blue-700 rounded-full p-1 disabled:opacity-50'>
-            <MdKeyboardArrowLeft className='text-blue-700 text-xl' />
+          <button
+            onClick={handleNext}
+            disabled={currentPage === totalPages}
+            className="bg-white border border-blue-700 rounded-full p-1 disabled:opacity-50">
+            <MdKeyboardArrowLeft className="text-blue-700 text-xl" />
           </button>
         </div>
-        <div className='flex items-center gap-2'>
+        <div className="flex items-center gap-2">
           <UserCount userCount={selectedUsers.length} formId={formId} setUserCount={() => {}} />
-          <button onClick={() => setIsExcelDialogOpen(true)} className='rounded-xl p-2 bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 shadow-sm'>
-            <LuUsers className='text-white text-xl' />
+          <button
+            onClick={() => setIsExcelDialogOpen(true)}
+            className="rounded-xl p-2 bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 shadow-sm">
+            <LuUsers className="text-white text-xl" />
           </button>
         </div>
       </div>

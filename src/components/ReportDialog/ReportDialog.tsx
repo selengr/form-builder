@@ -18,21 +18,31 @@ import {
 } from '@mui/material';
 // actions
 import { fetchUserInfoServer } from '../../../actions/auth';
-// import { fetchUserInfo } from '@/lib/auth';
+import { getDestroyReportOptionsAction } from '@actions/report/getDestroyReportOptionsAction';
+import { postDestroyReportAction } from '@actions/report/postDestroyReportAction';
 
 interface ReportDialogProps {
   open: boolean;
   onClose: () => void;
   formId: any;
   userPhone?: any;
-  questionId?: number
-  resultReportText?: string
+  questionId?: number;
+  resultReportText?: string;
   typeOfReport: 'REPORT' | 'FORM' | 'RESULT_REPORT';
 }
 
-export default function ReportDialog({ open, onClose, formId, typeOfReport, userPhone, questionId, resultReportText }: ReportDialogProps) {
+export default function ReportDialog({
+  open,
+  onClose,
+  formId,
+  typeOfReport,
+  userPhone,
+  questionId,
+  resultReportText,
+}: ReportDialogProps) {
   const [reportData, setReportData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedReportKey, setSelectedReportKey] = useState<string | null>(null);
   const [reportText, setReportText] = useState('');
@@ -43,11 +53,13 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport, user
         setLoading(true);
         setError(null);
         try {
-          const res = await fetch('/api/report');
-          if (!res.ok) throw new Error('Failed to fetch report options');
+          const res = await getDestroyReportOptionsAction();
 
-          const json = await res.json();
-          const list = json.responseModelList;
+          if (!res.success) {
+            throw new Error(res.message || 'Failed to fetch report options');
+          }
+
+          const list = res.data?.responseModelList;
 
           if (Array.isArray(list)) {
             setReportData(list);
@@ -70,9 +82,9 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport, user
       setSelectedReportKey(null);
       setReportText('');
       setError(null);
+      setSubmitting(false);
     }
   }, [open]);
-
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedReportKey(event.target.value);
@@ -104,26 +116,20 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport, user
     }
 
     try {
-      const res = await fetch('/api/report', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      });
+      setSubmitting(true);
+      const res = await postDestroyReportAction(body);
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        const err = JSON.parse(errorData?.error ?? "{}");
-        const text = err?.message?.[0]?.title || "خطا در ارسال گزارش";
-        toast.error(text);
-      } else {
-        await res.json();
-        toast.success('گزارش با موفقیت ارسال شد');
-        onClose();
+      if (!res.success) {
+        toast.error(res.message || 'خطا در ارسال گزارش');
+        return;
       }
+
+      toast.success('گزارش با موفقیت ارسال شد');
+      onClose();
     } catch (error) {
-      toast.error("خطا در ارسال گزارش");
+      toast.error('خطا در ارسال گزارش');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -212,6 +218,7 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport, user
           variant='contained'
           disableElevation
           color='primary'
+          disabled={submitting || loading}
           sx={{
             marginX: '0 !important',
             height: { xs: 42, md: 52 },
@@ -220,7 +227,7 @@ export default function ReportDialog({ open, onClose, formId, typeOfReport, user
             borderRadius: '12px',
             borderColor: '#1758BA',
           }}>
-          تایید
+          {submitting ? <CircularProgress size={20} color="inherit" /> : 'تایید'}
         </Button>
 
         <Button

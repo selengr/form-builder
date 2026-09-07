@@ -1,4 +1,4 @@
-import ReportTableSkeleton from '../stats/[id]/component/ReportTableSkeleton';
+import ReportTableSkeleton from '@/app/stats/[id]/component/ReportTableSkeleton';
 
 export default function DataCollectionStatsLoading() {
   return (

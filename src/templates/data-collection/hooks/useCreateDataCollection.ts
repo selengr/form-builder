@@ -1,33 +1,19 @@
 import { useMutation } from '@tanstack/react-query';
-import { getAuthToken } from '@/utils/getAuthToken';
+import { createDataCollectionAction } from '@actions/data-collection/createDataCollectionAction';
 import { FormSchemaType } from '../CreateDataCollectionBtn';
 
 export async function createDataCollection(data: FormSchemaType) {
-  const token = await getAuthToken();
-  const res = await fetch('/api/data-collection', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(data),
+  const res = await createDataCollectionAction({
+    name: data.name,
+    targetPlatformEnum: data.targetPlatformEnum,
+    label: data.label,
   });
 
-  const result = await res.json();
-
-  if (!res.ok) {
-    let errorMessage = 'خطا در ثبت گروه.';
-
-    if (Array.isArray(result?.error) && result.error[0]?.title) {
-      errorMessage = result.error[0].title;
-    } else if (typeof result?.error === 'string') {
-      errorMessage = result.error;
-    }
-
-    throw new Error(errorMessage);
+  if (!res.success) {
+    throw new Error(res.message || 'خطا در ثبت گروه.');
   }
 
-  return result;
+  return res.data;
 }
 
 export function useCreateDataCollection() {

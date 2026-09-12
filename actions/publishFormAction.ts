@@ -1,34 +1,36 @@
 'use server';
 
-import { serverApi } from '@/services/axios/serverApi';
+import { z } from 'zod';
+import { api } from '@/services/axios/actionWapper';
 
-interface PublishFormParams {
-  formId: string | string[];
-  survey: boolean;
-  dataCollection: boolean;
-}
+const publishSchema = z.object({
+  formId: z.union([z.string(), z.array(z.string())]),
+  IsSurvey: z.boolean(),
+  IsPackaging: z.boolean(),
+});
 
-export async function publishFormServer({ formId, survey, dataCollection }: PublishFormParams) {
-  // if (!formId) throw new Error('Form id is required');
+export type PublishFormInput = z.infer<typeof publishSchema>;
 
-  // try { 
-    if (survey) {
-      return await serverApi.put(`/admin/form/survey/finalization/${formId}`);
-    } else if (dataCollection) {
-      return await serverApi.put(`/admin/form/data-collection/finalization/${formId}`);
-    } else {
-      return await serverApi.put(`/form/ready-to-publish/${formId}`);
-    }
-  // } catch (error: any) {
-  //   const message =
-  //     error?.response?.data?.message?.[0]?.title ||
-  //     error?.response?.data?.message ||
-  //     'انجام عملیات با خطا مواجه شد';
+export async function publishFormAction(input: PublishFormInput) {
+  const parsed = publishSchema.safeParse(input);
 
-  //   throw new Error(message);
-  // }
-}
+  if (!parsed.success) {
+    return {
+      success: false as const,
+      message: 'Validation error.',
+    };
+  }
 
-export async function publishFormAction(formId: string|string[], survey: boolean, dataCollection: boolean ) {
-  await publishFormServer({ formId, survey, dataCollection });
+  const { formId, IsSurvey, IsPackaging } = parsed.data;
+  const id = Array.isArray(formId) ? formId[0] : formId;
+
+  if (IsSurvey) {
+    return api.put(`/admin/form/survey/finalization/${id}`);
+  }
+
+  if (IsPackaging) {
+    return api.put(`/admin/packaging/finalization/${id}`);
+  }
+
+  return api.put(`/form/ready-to-publish/${id}`);
 }

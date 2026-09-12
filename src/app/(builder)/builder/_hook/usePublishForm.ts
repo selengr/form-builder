@@ -2,8 +2,7 @@
 
 import { toast } from 'sonner';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-// hook
-import { getAuthToken } from '@/utils/getAuthToken';
+import { publishFormAction } from '@actions/publishFormAction';
 
 interface UsePublishFormParams {
   formId?: string | string[];
@@ -11,42 +10,27 @@ interface UsePublishFormParams {
   IsPackaging: boolean;
 }
 
-const API_BASE = '/api/builder';
-
-const publishFormAction = async ({ formId, IsSurvey, IsPackaging }: UsePublishFormParams) => {
-  const token = await getAuthToken();
-  const url = `${API_BASE}/${formId}/publish`
-
-  const res = await fetch(url, {
-    method: 'PUT',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      IsSurvey,
-      IsPackaging
-    }),
-  });
-
-  const result = await res.json();
-
-  if (!res.ok) {
-    let errorMessage = ''
-
-    if (Array.isArray(result?.error) && result.error[0]?.title) {
-      errorMessage = result.error[0].title;
-    }
-
-    throw new Error(errorMessage);
-  }
-  return result;
-};
-
 export function usePublishForm({ formId, IsSurvey, IsPackaging }: UsePublishFormParams) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => publishFormAction({ formId, IsSurvey, IsPackaging }),
+    mutationFn: async () => {
+      if (!formId) {
+        throw new Error('Form id is required');
+      }
+
+      const res = await publishFormAction({
+        formId,
+        IsSurvey,
+        IsPackaging,
+      });
+
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.');
+      }
+
+      return res.data;
+    },
     onSuccess: () => {
       toast.success('فرم با موفقیت منتشر شد');
       queryClient.invalidateQueries({

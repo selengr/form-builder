@@ -89,10 +89,16 @@ export function CreateGroupDialog({ onClose, onSubmit }: CreateGroupDialogProps)
         {error && <p className='text-red-600 text-sm text-center mt-2'>{error}</p>}
 
         <div className='flex justify-center gap-3 mt-1 w-2/3 mx-auto'>
-          <button onClick={handleSubmit} disabled={loading} className='px-5 py-1 md:py-3 w-full bg-[#1758BA] text-white rounded-lg hover:bg-[#216ee1] transition disabled:opacity-50'>
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className='px-5 h-9 md:h-12 w-full bg-[#1758BA] text-white rounded-lg hover:bg-[#216ee1] transition disabled:opacity-50 whitespace-nowrap text-sm md:text-base'>
             {loading ? 'در حال ارسال...' : 'ثبت'}
           </button>
-          <button onClick={onClose} className='px-5 py-1 md:py-3 border w-full border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition'>
+          <button
+            onClick={onClose}
+            disabled={loading}
+            className='px-5 h-9 md:h-12 border w-full border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition whitespace-nowrap text-sm md:text-base disabled:opacity-50'>
             انصراف
           </button>
         </div>

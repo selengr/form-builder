@@ -3,8 +3,8 @@ import { toast } from 'sonner';
 import React, { useState } from 'react';
 // uploader
 import UploaderPage from './uploader';
-// utils
-import { getAuthToken } from '@/utils/getAuthToken';
+// actions
+import { addMembersByExcelAction } from '@actions/groups/addByExcel';
 
 interface CreateGroupDialogProps {
   onClose: () => void;
@@ -40,32 +40,16 @@ export function CreateGroupDialog({ onClose, onSubmit }: CreateGroupDialogProps)
     }
 
     setLoading(true);
-    const token = await getAuthToken();
 
     try {
-      const res = await fetch('/api/group/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          uuid: receivedFileId,
-          groupName,
-          groupId: '',
-        }),
+      const res = await addMembersByExcelAction({
+        uuid: receivedFileId,
+        groupName,
+        groupId: '',
       });
 
-      const data = await res.json();
-      if (!res.ok) {
-        let errorMessage = 'خطا در ثبت گروه.';
-
-        if (Array.isArray(data?.error) && data.error[0]?.title) {
-          errorMessage = data.error[0].title;
-        } else if (typeof data?.error === 'string') {
-          errorMessage = data.error;
-        }
-        throw new Error(errorMessage);
+      if (!res.success) {
+        throw new Error(res.message || 'خطا در ثبت گروه.');
       }
 
       onSubmit(groupName);

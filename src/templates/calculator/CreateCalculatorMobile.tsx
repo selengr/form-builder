@@ -12,7 +12,15 @@ export const CreateCalculatorMobile = () => {
   const { id } = useParams();
   const { data, isLoading, isFetching, error, refetch } = useQuery({
     queryKey: ['calculators'],
-    queryFn: () => fetchCalculatorsAction(id as string),
+    queryFn: async () => {
+      const res = await fetchCalculatorsAction(id as string);
+
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');
+      }
+
+      return res.data;
+    },
     staleTime: 0,
     gcTime: 600000,
     refetchOnWindowFocus: true,

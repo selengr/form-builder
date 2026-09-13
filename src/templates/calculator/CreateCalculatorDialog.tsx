@@ -17,10 +17,18 @@ const CreateCalculatorDialog: React.FC<ICreateCalculatorDialogProps> = ({ open, 
 
   const { data, isLoading, isFetching, error, refetch } = useQuery({
     queryKey: ['calculators', id],
-    queryFn: () => fetchCalculatorsAction(id as string),
+    queryFn: async () => {
+      const res = await fetchCalculatorsAction(id as string);
+
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');
+      }
+
+      return res.data;
+    },
     enabled: open && !!id,
     gcTime: 10 * 60 * 1000,
-    retry: 3
+    retry: 3,
   });
 
 

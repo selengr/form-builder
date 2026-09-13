@@ -1,14 +1,21 @@
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { IConditionQuestionType } from '@/types/condition';
-// actions
 import { getQacWithOutFilterAction } from '../../../../../../../actions/condition/getQacWithOutFilterAction';
 
 export const useGetQacWithOutFilter = () => {
   const { id } = useParams();
   const { data, isFetching } = useQuery({
     queryKey: ['QAC_WIHT_OUT_FILTER'],
-    queryFn: () => getQacWithOutFilterAction(id),
+    queryFn: async () => {
+      const res = await getQacWithOutFilterAction(String(id));
+
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');
+      }
+
+      return res.data;
+    },
     staleTime: 0,
     gcTime: 600000,
     refetchOnWindowFocus: true,

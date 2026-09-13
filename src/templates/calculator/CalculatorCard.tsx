@@ -9,7 +9,7 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import { SlPencil } from 'react-icons/sl';
 
 import { ICalculatorCardProps } from '@/types/calculator';
@@ -21,6 +21,7 @@ import {
   useCheckDependency,
   useDeleteCalculator,
 } from '../../app/(builder)/builder/[id]/calculator/_hooks';
+import { getBuilderBasePath } from '@/utils/getBuilderBasePath';
 
 export const buttonStyles = {
   height: '45px',
@@ -63,6 +64,7 @@ export function CalculatorCard({
   const { id, name, label } = calculator;
 
   const { push } = useRouter();
+  const pathname = usePathname();
   const { id: pageId } = useParams();
   const isDesktop = useMediaQuery('(min-width:768px)');
 
@@ -96,7 +98,7 @@ export function CalculatorCard({
     }
 
     if (isDesktop) setOpenEditDialog(true);
-    else push(`/builder/${pageId}/calculator/create?calcId=${id}`);
+    else push(`${getBuilderBasePath(pathname)}/${pageId}/calculator/create?calcId=${id}`);
   };
 
   const tryDelete = () => {

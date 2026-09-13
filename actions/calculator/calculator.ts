@@ -1,6 +1,6 @@
 'use server';
 
-import { serverApi } from '@/services/axios/serverApi';
+import { api } from '@/services/axios/actionWapper';
 
 export async function fetchCalculatorsAction(formId: string) {
   const customComboFilterModel = {
@@ -20,12 +20,9 @@ export async function fetchCalculatorsAction(formId: string) {
     `/question/q-and-c-custom-combo?customComboFilterModel=` +
     encodeURIComponent(JSON.stringify(customComboFilterModel));
 
-  const response = await serverApi.get(url);
-  return response.data;
+  return api.get(url);
 }
 
 export async function fetchEditCalculatorsAction(calcId: number) {
-  const url = `/calculation/main-list/find/${calcId}`;
-  const response = await serverApi.get(url);
-  return response.data;
+  return api.get(`/calculation/main-list/find/${calcId}`);
 }

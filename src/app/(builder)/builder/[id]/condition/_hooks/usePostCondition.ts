@@ -14,15 +14,22 @@ export const usePostCondition = (isEdit: boolean) => {
 
   const mutation = useMutation({
     mutationKey: ['post-condition', isEdit],
-    mutationFn: ({ data }: { data: IPostCondition[] }) =>
-      postConditionAction({ data, isEdit }),
+    mutationFn: async ({ data }: { data: IPostCondition[] }) => {
+      const res = await postConditionAction({ data, isEdit });
+
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');
+      }
+
+      return res.data;
+    },
 
     onSuccess: () => {
       invalidateLogicListQueries(queryClient, formId);
       toast.success(`شرط با موفقیت ${isEdit ? 'ویرایش' : 'ایجاد'} شد`);
     },
-    onError: () => {
-      toast.error('انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.');
+    onError: (error) => {
+      toast.error(error?.message || 'انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.');
     },
   });
 

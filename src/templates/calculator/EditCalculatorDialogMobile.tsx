@@ -23,7 +23,15 @@ export const EditCalculatorDialogMobile: React.FC<IProps> = ({ calcId }) => {
     refetch: refetchQuestions,
   } = useQuery({
     queryKey: ['calculators'],
-    queryFn: () => fetchCalculatorsAction(id as string),
+    queryFn: async () => {
+      const res = await fetchCalculatorsAction(id as string);
+
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');
+      }
+
+      return res.data;
+    },
     staleTime: 0,
     gcTime: 0,
   });
@@ -36,7 +44,15 @@ export const EditCalculatorDialogMobile: React.FC<IProps> = ({ calcId }) => {
     refetch: refetchEdit,
   } = useQuery({
     queryKey: ['edit-calculators', calcId],
-    queryFn: () => fetchEditCalculatorsAction(calcId as number),
+    queryFn: async () => {
+      const res = await fetchEditCalculatorsAction(calcId as number);
+
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');
+      }
+
+      return res.data;
+    },
     staleTime: 0,
     gcTime: 0,
   });

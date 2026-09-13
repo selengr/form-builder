@@ -1,6 +1,6 @@
-// this is not server action
-'use server' // temprarly
-import { serverApi } from '@/services/axios/serverApi';
+'use server';
+
+import { api } from '@/services/axios/actionWapper';
 
 export async function getConditionListAction(formId: string) {
   const filterModel = {
@@ -10,10 +10,18 @@ export async function getConditionListAction(formId: string) {
     rows: 1000,
   };
 
-  const baseUrl = `/condition/main-list/${formId}`;
-  const queryString = `?searchFilterModel=${encodeURIComponent(JSON.stringify(filterModel))}`;
-  const url = baseUrl + queryString;
+  const url =
+    `/condition/main-list/${formId}` +
+    `?searchFilterModel=${encodeURIComponent(JSON.stringify(filterModel))}`;
 
-  const res = await serverApi.get(url);
-  return res.data.content;
+  const result = await api.get<{ content: unknown[] }>(url);
+
+  if (!result.success) {
+    return { success: false as const, message: result.message };
+  }
+
+  return {
+    success: true as const,
+    data: result.data.content,
+  };
 }

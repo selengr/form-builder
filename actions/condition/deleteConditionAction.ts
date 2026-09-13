@@ -1,9 +1,7 @@
 'use server';
 
-import { serverApi } from '@/services/axios/serverApi';
+import { api } from '@/services/axios/actionWapper';
 
 export async function deleteConditionAction(id: number) {
-  const url = `/condition/${id}`;
-  const response = await serverApi.delete(url);
-  return response.data;
+  return api.delete(`/condition/${id}`);
 }

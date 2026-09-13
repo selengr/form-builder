@@ -15,6 +15,7 @@ import FormulaInput from '@/components/formula-editor/FormulaInput';
 import FormulaKeypad from '@/components/formula-editor/FormulaKeypad';
 import FormulaControls from '@/components/formula-editor/FormulaControls';
 import { invalidateLogicListQueries } from '@/templates/builder/logic/useLogicItems';
+import { getBuilderBasePath } from '@/utils/getBuilderBasePath';
 // action
 import {
   createCalculationAction,
@@ -629,7 +630,8 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
 
   const handleClosePage = () => {
     if (pathname.includes('/create')) {
-      router.push(`/builder/${id}/calculator`);
+      const base = getBuilderBasePath(pathname);
+      router.push(`${base}/${id}/calculator`);
     } else {
       handleClose();
     }
@@ -701,31 +703,36 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
 
     try {
       setLoading(true);
-      if (!isEdit) {
-        await createCalculationAction({
-          name: formName,
-          formBuilderId: id,
-          label: label ?? null,
-          theFormula: finalFormula,
-          frontCalcData: JSON.stringify(elements),
-        });
-      } else {
-        await updateCalculationAction(editList?.id as number, {
-          id: editList?.id as number,
-          name: formName,
-          label: label ?? null,
-          formBuilderId: id,
-          theFormula: finalFormula,
-          frontCalcData: JSON.stringify(elements),
-        });
+      const res = !isEdit
+        ? await createCalculationAction({
+            name: formName,
+            formBuilderId: id,
+            label: label ?? null,
+            theFormula: finalFormula,
+            frontCalcData: JSON.stringify(elements),
+          })
+        : await updateCalculationAction(editList?.id as number, {
+            id: editList?.id as number,
+            name: formName,
+            label: label ?? null,
+            formBuilderId: id,
+            theFormula: finalFormula,
+            frontCalcData: JSON.stringify(elements),
+          });
+
+      if (!res.success) {
+        throw new Error(res.message || 'عملیات ناموفق بود مجددا امتحان نمایید');
       }
+
       queryClient.invalidateQueries({ queryKey: ['calculators'] });
       invalidateLogicListQueries(queryClient, String(id));
       router.refresh();
       handleClosePage();
       toast.success('محاسبه گر با موفقیت ثبت شد');
     } catch (error) {
-      toast.error('عملیات ناموفق بود مجددا امتحان نمایید');
+      toast.error(
+        error instanceof Error ? error.message : 'عملیات ناموفق بود مجددا امتحان نمایید',
+      );
     } finally {
       setLoading(false);
     }

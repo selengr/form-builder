@@ -169,8 +169,8 @@ export default function SettingsDialog({
         }
 
       toast.success('تنظیمات با موفقیت ثبت شد');
-      queryClient.invalidateQueries({ queryKey: ["datas_builder_query"] })
-        
+      queryClient.invalidateQueries({ queryKey: ['datas_builder_query'] });
+      queryClient.invalidateQueries({ queryKey: ['builder_new_list'] });
       onChangeName?.(values.name);
 
       onChangeStartFromContinue?.(values.startFromContinue ?? null);

@@ -1,6 +1,6 @@
 'use server';
 
-import { serverApi } from '@/services/axios/serverApi';
+import { api } from '@/services/axios/actionWapper';
 
 export async function getOnlyAllCalcAction(formId: string) {
   const customComboFilterModel = {
@@ -20,6 +20,5 @@ export async function getOnlyAllCalcAction(formId: string) {
     `/question/q-and-c-custom-combo` +
     `?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}`;
 
-  const res = await serverApi.get(url);
-  return res.data;
+  return api.get(url);
 }

@@ -2,11 +2,11 @@
 
 import { memo, useMemo } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import QuestionMenu from './QuestionPopUpMenu';
 import useElements from '@/hooks/useElements';
 import Image from 'next/image';
-// import CodiconEye from '@/../public/images/home-page/ic_view-eye.svg';
+import { getBuilderBasePath } from '@/utils/getBuilderBasePath';
 
 const QuestionCardExtra = memo(function QuestionCardExtra({
   questionId,
@@ -16,11 +16,14 @@ const QuestionCardExtra = memo(function QuestionCardExtra({
   index: number;
 }) {
   const { id } = useParams();
+  const pathname = usePathname();
   const elements = useElements();
   const questionCurrentIndex = useMemo(
     () => elements.findIndex((el: any) => el.questionId === questionId),
-    [elements, questionId]
+    [elements, questionId],
   );
+  const fromParam =
+    getBuilderBasePath(pathname) === '/builder-new' ? '&from=builder-new' : '';
 
   return (
     <div className="flex shrink-0 flex-row gap-1 items-center">
@@ -32,13 +35,19 @@ const QuestionCardExtra = memo(function QuestionCardExtra({
         <Link
           prefetch={false}
           className="flex justify-center items-center w-8 h-8"
-          href={`/preview/${id}?question=${questionCurrentIndex}`}
-          onClick={e => e.stopPropagation()}
+          href={`/preview/${id}?question=${questionCurrentIndex}${fromParam}`}
+          onClick={(e) => e.stopPropagation()}
         >
-          <Image src="/images/home-page/ic_view-eye.svg" alt="view" height={20} width={20} unoptimized/>
+          <Image
+            src="/images/home-page/ic_view-eye.svg"
+            alt="view"
+            height={20}
+            width={20}
+            unoptimized
+          />
         </Link>
       </button>
-      <div onClick={e => e.stopPropagation()}>
+      <div onClick={(e) => e.stopPropagation()}>
         <QuestionMenu index={index} questionID={questionId} position={questionCurrentIndex} />
       </div>
     </div>

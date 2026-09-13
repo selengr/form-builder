@@ -26,7 +26,15 @@ export function useLogicItems(enabled = true) {
 
   const calculatorsQuery = useQuery({
     queryKey: [LOGIC_CALCULATORS_KEY, formId],
-    queryFn: () => getCalculationListAction(formId),
+    queryFn: async () => {
+      const res = await getCalculationListAction(formId);
+
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');
+      }
+
+      return res.data as ICalculator[];
+    },
     enabled: enabled && !!formId,
     staleTime: 0,
     gcTime: 600_000,
@@ -34,7 +42,15 @@ export function useLogicItems(enabled = true) {
 
   const conditionsQuery = useQuery({
     queryKey: [LOGIC_CONDITIONS_KEY, formId],
-    queryFn: () => getConditionListAction(formId),
+    queryFn: async () => {
+      const res = await getConditionListAction(formId);
+
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');
+      }
+
+      return res.data as IGetCondition[];
+    },
     enabled: enabled && !!formId,
     staleTime: 0,
     gcTime: 600_000,

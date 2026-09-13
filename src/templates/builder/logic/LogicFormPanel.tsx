@@ -42,7 +42,15 @@ export default function LogicFormPanel({
     refetch: refetchQuestions,
   } = useQuery({
     queryKey: ['calculators', id],
-    queryFn: () => fetchCalculatorsAction(id as string),
+    queryFn: async () => {
+      const res = await fetchCalculatorsAction(id as string);
+
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');
+      }
+
+      return res.data;
+    },
     enabled: isCalculator && !!id,
   });
 
@@ -54,7 +62,15 @@ export default function LogicFormPanel({
     refetch: refetchEdit,
   } = useQuery({
     queryKey: ['edit-calculators', calcId],
-    queryFn: () => fetchEditCalculatorsAction(calcId as number),
+    queryFn: async () => {
+      const res = await fetchEditCalculatorsAction(calcId as number);
+
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');
+      }
+
+      return res.data;
+    },
     enabled: isCalculator && formState.mode === 'edit' && !!calcId,
   });
 

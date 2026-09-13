@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 import clsx from 'clsx';
-import { useParams } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { Button, IconButton } from '@mui/material';
 import SettingsDialog from '../SettingsDialog/SettingsDialog';
 import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
 import type { DesignerSidebarData } from './DesignerSidebar';
+import { getBuilderBasePath } from '@/utils/getBuilderBasePath';
 
 const APP_SIDEBAR_WIDTH_PX = 500;
 
@@ -40,6 +41,9 @@ export default function BuilderMobileBottomBar({
   isDataCollection,
 }: BuilderMobileBottomBarProps) {
   const { id } = useParams();
+  const pathname = usePathname();
+  const previewFrom =
+    getBuilderBasePath(pathname) === '/builder-new' ? '?from=builder-new' : '';
 
   if (isDataCollection) return null;
 
@@ -83,7 +87,7 @@ export default function BuilderMobileBottomBar({
         />
       )}
 
-      <Link href={`/preview/${id}`}>
+      <Link href={`/preview/${id}${previewFrom}`}>
         <IconButton
           sx={{
             height: 48,

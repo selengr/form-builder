@@ -1,7 +1,6 @@
-// only ssr
-// this is not server action
-'use server' // temprarly
-import { serverApi } from '@/services/axios/serverApi';
+'use server';
+
+import { api } from '@/services/axios/actionWapper';
 
 export async function createCalculationAction(payload: {
   name: string;
@@ -10,8 +9,7 @@ export async function createCalculationAction(payload: {
   theFormula: string;
   frontCalcData: string;
 }) {
-  const res = await serverApi.post('/calculation', payload as any);
-  return res.data;
+  return api.post('/calculation', payload);
 }
 
 export async function updateCalculationAction(
@@ -25,18 +23,15 @@ export async function updateCalculationAction(
     frontCalcData: string;
   },
 ) {
-  const res = await serverApi.put(`/calculation/${calcId}`, payload as any);
-  return res.data;
+  return api.put(`/calculation/${calcId}`, payload);
 }
 
 export async function checkCalculationDependencyAction(id: number) {
-  const res = await serverApi.get(`/calculation/check-dependency/${id}`);
-  return res.data;
+  return api.get(`/calculation/check-dependency/${id}`);
 }
 
 export async function deleteCalculatorAction(id: number) {
-  const res = await serverApi.delete(`/calculation/delete/${id}`);
-  return res.data;
+  return api.delete(`/calculation/delete/${id}`);
 }
 
 export async function getCalculationListAction(id: string) {
@@ -51,6 +46,14 @@ export async function getCalculationListAction(id: string) {
     `/calculation/main-list/${id}` +
     `?searchFilterModel=${encodeURIComponent(JSON.stringify(filterModel))}`;
 
-  const res = await serverApi.get(url);
-  return res.data.content;
+  const result = await api.get<{ content: unknown[] }>(url);
+
+  if (!result.success) {
+    return { success: false as const, message: result.message };
+  }
+
+  return {
+    success: true as const,
+    data: result.data.content,
+  };
 }

@@ -117,7 +117,7 @@ function ParenDeleteRow({
         )
       </button>
       <button type="button" className={deleteBtnClass} onClick={handleUndo} aria-label="حذف">
-        <Image src="/images/calc/arrow-left.svg" width={22} height={22} alt="" />
+        <Image src="/images/calc/arrow-left.svg" width={22} height={22} alt="" unoptimized />
       </button>
     </div>
   );

@@ -837,7 +837,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
                   className="absolute bottom-3 left-3 w-12 h-12 rounded-full bg-[#2CDFC9] shadow-md flex items-center justify-center hover:bg-[#25c4b3] transition-colors"
                   aria-label="ماشین حساب"
                 >
-                  <Image src="/images/calc/ic_keypad.svg" width={60} height={60} alt="" />
+                  <Image src="/images/calc/ic_keypad.svg" width={60} height={60} alt="" unoptimized />
                 </button>
               )} */}
             </div>

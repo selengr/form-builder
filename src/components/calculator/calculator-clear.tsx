@@ -26,7 +26,7 @@ const CalculatorClear = ({ handleClear }: ICalculatorClear) => {
           borderRadius: '8px',
         }}
         onClick={handleClear}>
-        <Image src={'/images/calc/arrow-left.svg'} width={25} height={25} alt='' />
+        <Image src={'/images/calc/arrow-left.svg'} width={25} height={25} alt='' unoptimized />
       </Button>
     </>
   );

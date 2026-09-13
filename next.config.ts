@@ -40,6 +40,9 @@ const nextConfig: NextConfig = {
         ],
         localPatterns: [
             {
+                pathname: "/images/**",
+            },
+            {
                 pathname: "/src/**",
             },
             {

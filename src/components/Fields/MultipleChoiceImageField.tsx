@@ -3,7 +3,7 @@
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { ElementsType, FormElement, FormElementInstance } from '#t/FormElements';
+import type { ElementsType, FormElement, FormElementInstance } from '@/types/formElementTypes';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, IconButton, Radio, RadioGroup, Stack, Typography } from '@mui/material';

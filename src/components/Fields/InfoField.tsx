@@ -23,7 +23,7 @@ import useSelectedElement from '@/hooks/useSelectedElement';
 import useActionDesigner from '@/hooks/useActionDesigner';
 
 import InformationIcon from '@/../public/images/home-page/information.svg';
-import { ElementsType, FormElement, FormElementInstance } from '@/types/FormElements';
+import type { ElementsType, FormElement, FormElementInstance } from '@/types/formElementTypes';
 import { IFormElementConstructor, IQPLInfoField } from '@/types/bulider';
 // actions
 import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/question';

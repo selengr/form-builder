@@ -23,10 +23,11 @@ import { useGetPackagingFormsCombo } from '@/templates/packaging/hooks/useGetPac
 import Packaging from '@/../public/images/home-page/packaging.svg';
 import { useGetForm } from '@/app/(builder)/builder/_hook/useGetForm';
 import { IFormElementConstructor, IQPLPackagingForm } from '@/types/bulider';
-import { ElementsType, FormElement, FormElementInstance } from '@/types/FormElements';
+import type { ElementsType, FormElement, FormElementInstance } from '@/types/formElementTypes';
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
 // actions
-import { createPackagingFormInjection, IPostPackageFormInjectionBody } from '../../../actions/builder/question';
+import { createPackagingFormInjection } from '../../../actions/builder/question';
+import type { IPostPackageFormInjectionBody } from '../../../actions/builder/question';
 
 interface IGetPAckagingForm {
   value: string;

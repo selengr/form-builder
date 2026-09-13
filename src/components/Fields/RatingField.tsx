@@ -26,7 +26,7 @@ import useActionSelectedElement from '@/hooks/useActionSelectedElement';
 import RatingIcon from '@/../public/images/home-page/rating.svg';
 // type
 import { IFormElementConstructor, IQPLRating, IRatingQTapAndOptionsType } from '@/types/bulider';
-import { ElementsType, FormElement, FormElementInstance } from '../../types/FormElements';
+import type { ElementsType, FormElement, FormElementInstance } from '@/types/formElementTypes';
 // actions
 import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/question';
 

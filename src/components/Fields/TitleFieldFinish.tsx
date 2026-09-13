@@ -1,6 +1,6 @@
 'use client';
 
-import { ElementsType, FormElement, FormElementInstance } from '@/types/FormElements';
+import type { ElementsType, FormElement, FormElementInstance } from '@/types/formElementTypes';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

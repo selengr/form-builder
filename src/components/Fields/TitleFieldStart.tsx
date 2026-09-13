@@ -11,7 +11,7 @@ import { FIELD_PROPERTIES_FORM_ID } from '@/constants/fieldDialog';
 import RHFTextField from '../../components/hook-form/RHFTextField';
 import { IFormElementConstructor } from '@/types/bulider';
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
-import { ElementsType, FormElement, FormElementInstance } from '@/types/FormElements';
+import type { ElementsType, FormElement, FormElementInstance } from '@/types/formElementTypes';
 import { useParams } from 'next/navigation';
 import useDesigner from '@/hooks/useDesigner';
 import useActionOpenDialog from '@/hooks/useActionOpenDialog';

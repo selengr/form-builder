@@ -1,4 +1,4 @@
-import { FormElementInstance } from './FormElements';
+import type { FormElementInstance } from './formElementTypes';
 
 export type IFormElementConstructor = {
   questionId: number;

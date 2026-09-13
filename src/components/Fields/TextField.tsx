@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { memo, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { ElementsType, FormElement, FormElementInstance } from '@/types/FormElements';
+import type { ElementsType, FormElement, FormElementInstance } from '@/types/formElementTypes';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';

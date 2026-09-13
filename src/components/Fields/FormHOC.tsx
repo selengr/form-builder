@@ -1,6 +1,6 @@
 'use client';
 import { ComponentType, useState } from 'react';
-import { FormElementInstance } from '@/types/FormElements';
+import type { FormElementInstance } from '@/types/formElementTypes';
 
 type WrappedComponentProps = {
   elementInstance: FormElementInstance;

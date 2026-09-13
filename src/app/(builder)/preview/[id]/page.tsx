@@ -15,7 +15,6 @@ import BuilderLoadErrorState from '@/components/builder/BuilderLoadErrorState';
 function getBuilderBackHref(paramId: string | string[], from: string | null, admin: boolean) {
   if (from === 'data-collection') return '/data-collection';
   if (admin) return `/user-reports/${paramId}`;
-  if (from === 'builder-new') return `/builder-new/${paramId}`;
   return `/builder/${paramId}`;
 }
 

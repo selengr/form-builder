@@ -21,7 +21,7 @@ import useActionOpenDialog from '@/hooks/useActionOpenDialog';
 import { useGetPackagingFormsCombo } from '@/templates/packaging/hooks/useGetPackagingFormsCombo';
 // images
 import Packaging from '@/../public/images/home-page/packaging.svg';
-import { useGetForm } from '@/app/(builder)/builder/_hook/useGetForm';
+import { useGetForm } from '@/features/form-builder/hooks/useGetForm';
 import { IFormElementConstructor, IQPLPackagingForm } from '@/types/bulider';
 import type { ElementsType, FormElement, FormElementInstance } from '@/types/formElementTypes';
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';

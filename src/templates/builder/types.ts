@@ -19,4 +19,4 @@ export interface BuilderListItem {
   questionListSize: number;
 }
 
-export const BUILDER_NEW_LIST_QUERY_KEY = 'builder_new_list';
+export const BUILDER_LIST_QUERY_KEY = 'builder_list';

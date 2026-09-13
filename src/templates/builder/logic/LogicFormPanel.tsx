@@ -10,7 +10,7 @@ import { ConditionalSystem } from '@/templates/condition/ConditionalSystem';
 import {
   fetchCalculatorsAction,
   fetchEditCalculatorsAction,
-} from '../../../../actions/calculator/calculator';
+} from '@actions/calculator/calculator';
 import { LogicFormState } from './types';
 
 interface LogicFormPanelProps {

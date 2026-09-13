@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import useDesigner from '@/hooks/useDesigner';
-import { usePublishForm } from '@/app/(builder)/builder/_hook/usePublishForm';
+import { usePublishForm } from '@/features/form-builder/hooks/usePublishForm';
 
 interface UseBuilderPublishOptions {
   isSurvey?: boolean;

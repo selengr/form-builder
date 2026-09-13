@@ -10,11 +10,11 @@ import SubConditionDivider, { DottedLineWithDots } from './SubConditionDivider';
 import { SubmitButtons } from '@/components/condition/form/SubmitButtons';
 import { SelectController } from '@/components/condition/form/SelectController';
 import { IConditionalSystemProps, IPostCondition } from '@/types/condition';
-import { useConditionalForm } from '@/app/(builder)/builder/[id]/condition/_hooks/useConditionalForm';
-import { usePostCondition } from '@/app/(builder)/builder/[id]/condition/_hooks/usePostCondition';
-import { useGetQacWithOutFilter } from '@/app/(builder)/builder/[id]/condition/_hooks/useGetQacWithOutFilter';
-import { useGetOnlyAllQuestions } from '@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllQuestions';
-import { useGetOnlyAllCalculation } from '@/app/(builder)/builder/[id]/condition/_hooks/useGetOnlyAllCalculation';
+import { useConditionalForm } from '@/features/form-builder/hooks/condition/useConditionalForm';
+import { usePostCondition } from '@/features/form-builder/hooks/condition/usePostCondition';
+import { useGetQacWithOutFilter } from '@/features/form-builder/hooks/condition/useGetQacWithOutFilter';
+import { useGetOnlyAllQuestions } from '@/features/form-builder/hooks/condition/useGetOnlyAllQuestions';
+import { useGetOnlyAllCalculation } from '@/features/form-builder/hooks/condition/useGetOnlyAllCalculation';
 
 const actionSelectSx = {
   flex: 1,

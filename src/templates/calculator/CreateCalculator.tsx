@@ -1,11 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, useParams, usePathname } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { Button, SxProps, Theme, useMediaQuery } from '@mui/material';
 
 import CreateCalculatorDialog from './CreateCalculatorDialog';
-import { getBuilderBasePath } from '@/utils/getBuilderBasePath';
 
 const buttonSx: SxProps<Theme> = {
   height: 52,
@@ -32,7 +31,6 @@ const buttonSxDisabled: SxProps<Theme> = {
 
 const CreateCalculator = ({ isCreateMode }: { isCreateMode: boolean }) => {
   const router = useRouter();
-  const pathname = usePathname();
   const { id } = useParams();
   const isDesktop = useMediaQuery('(min-width:768px)');
   const [open, setOpen] = useState(false);
@@ -41,7 +39,7 @@ const CreateCalculator = ({ isCreateMode }: { isCreateMode: boolean }) => {
     if (isDesktop) {
       setOpen(true);
     } else {
-      router.push(`${getBuilderBasePath(pathname)}/${id}/calculator/create`);
+      router.push(`/builder/${id}/calculator/create`);
     }
   };
 

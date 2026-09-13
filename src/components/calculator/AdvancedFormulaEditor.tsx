@@ -15,7 +15,6 @@ import FormulaInput from '@/components/formula-editor/FormulaInput';
 import FormulaKeypad from '@/components/formula-editor/FormulaKeypad';
 import FormulaControls from '@/components/formula-editor/FormulaControls';
 import { invalidateLogicListQueries } from '@/templates/builder/logic/useLogicItems';
-import { getBuilderBasePath } from '@/utils/getBuilderBasePath';
 // action
 import {
   createCalculationAction,
@@ -630,8 +629,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
 
   const handleClosePage = () => {
     if (pathname.includes('/create')) {
-      const base = getBuilderBasePath(pathname);
-      router.push(`${base}/${id}/calculator`);
+      router.push(`/builder/${id}/calculator`);
     } else {
       handleClose();
     }

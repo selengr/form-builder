@@ -1,14 +1,1 @@
-export function getBuilderBackConfig(admin?: string) {
-  switch (admin) {
-    case 'data-collection':
-      return { href: '/data-collection', label: 'بازگشت' };
-    case 'survey':
-      return { href: '/survey', label: 'بازگشت' };
-    case 'packaging':
-      return { href: '/packaging', label: 'بازگشت' };
-    case 'builder-new':
-      return { href: '/builder-new', label: 'بازگشت به فرم ساز' };
-    default:
-      return { href: '/builder', label: 'بازگشت به فرم ساز' };
-  }
-}
+export { getBuilderBackConfig } from '@/features/form-builder/builderBackConfig';

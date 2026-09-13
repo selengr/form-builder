@@ -25,7 +25,7 @@ import { formStatusPersian, formTypePersian } from '@/constants/formDictionaries
 import { changeFormStatusAction } from '@actions/builder/changeFormStatusAction';
 import { duplicateFormAction } from '@actions/builder/duplicateFormAction';
 import { deleteFormAction } from '@actions/builder/deleteFormAction';
-import { BUILDER_NEW_LIST_QUERY_KEY, BuilderListItem } from './types';
+import { BUILDER_LIST_QUERY_KEY, BuilderListItem } from './types';
 
 export default function ListCard({ data }: UnifiedListGridCardProps<BuilderListItem>) {
   const router = useRouter();
@@ -34,7 +34,7 @@ export default function ListCard({ data }: UnifiedListGridCardProps<BuilderListI
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
 
   const invalidateList = () => {
-    queryClient.invalidateQueries({ queryKey: [BUILDER_NEW_LIST_QUERY_KEY] });
+    queryClient.invalidateQueries({ queryKey: [BUILDER_LIST_QUERY_KEY] });
   };
 
   const handlePublishStatus = useCallback(async () => {
@@ -98,7 +98,7 @@ export default function ListCard({ data }: UnifiedListGridCardProps<BuilderListI
   };
 
   const handleNavigation = () => {
-    localStorage.setItem('stats', '/builder-new');
+    localStorage.setItem('stats', '/builder');
     router.push(`stats/${data.id}`);
   };
 
@@ -206,7 +206,7 @@ export default function ListCard({ data }: UnifiedListGridCardProps<BuilderListI
             )}
 
             {data.status === 'CREATE' && data.type !== 'PACKAGING' && (
-              <Link href={`/builder-new/${data.id}`}>
+              <Link href={`/builder/${data.id}`}>
                 <IconButton disabled={loading} color="primary">
                   <Image src={EditIcon} alt="edit" width={24} height={24} unoptimized />
                 </IconButton>

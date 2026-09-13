@@ -5,7 +5,7 @@ import { memo, useEffect, useState } from 'react';
 import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 // components
 import Designer from './Designer';
-import DragOverlayWrapper from '../../components/builder/DragOverlayWrapper';
+import DragOverlayWrapper from '@/components/builder/DragOverlayWrapper';
 
 interface FormBuilderProps {
   data: any;

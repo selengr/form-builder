@@ -27,7 +27,7 @@ import { SwitchButton } from '../Switch/SwitchButton';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 // actions
-import { createQuestionAction, updateQuestionAction } from '@actions/builder/question';
+import { createQuestion, updateQuestion } from '@/lib/builderFieldActions';
 
 const questionType: ElementsType = 'MULTIPLE_CHOICE_IMAGE';
 
@@ -622,7 +622,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       const removeId: any = { ...finalFieldData };
       delete removeId.questionId;
       try {
-        const res = await createQuestionAction(removeId as any);
+        const res = await createQuestion(removeId as any);
         if (!res.success) {
           toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
           return;
@@ -644,7 +644,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       }
     } else {
       try {
-        const res = await updateQuestionAction(String(finalFieldData.questionId), finalFieldData);
+        const res = await updateQuestion(String(finalFieldData.questionId), finalFieldData);
         if (!res.success) {
           toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
           return;

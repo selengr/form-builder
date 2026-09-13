@@ -23,7 +23,7 @@ import useActionDesigner from '@/hooks/useActionDesigner';
 import shuffleArray from '@/lib/shuffle';
 import { useSearchParams } from 'next/navigation';
 // actions
-import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/question';
+import { createQuestion, updateQuestion } from '@/lib/builderFieldActions';
 
 const questionType: ElementsType = 'MULTIPLE_CHOICE';
 
@@ -424,7 +424,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       delete removeId.questionId;
 
       try {
-        const res = await createQuestionAction(removeId as any);
+        const res = await createQuestion(removeId as any);
 
         if (!res.success) {
           toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
@@ -448,7 +448,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       }
     } else {
       try {
-        const res = await updateQuestionAction(String(finalFieldData?.questionId), finalFieldData);
+        const res = await updateQuestion(String(finalFieldData?.questionId), finalFieldData);
         if (!res.success) {
           toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
           return;

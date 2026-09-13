@@ -25,9 +25,10 @@ import { useGetForm } from '@/app/(builder)/builder/_hook/useGetForm';
 import { IFormElementConstructor, IQPLPackagingForm } from '@/types/bulider';
 import type { ElementsType, FormElement, FormElementInstance } from '@/types/formElementTypes';
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
-// actions
-import { createPackagingFormInjection } from '../../../actions/builder/question';
-import type { IPostPackageFormInjectionBody } from '../../../actions/builder/question';
+import {
+  createPackagingInjection,
+  type PackagingInjectionBody,
+} from '@/lib/builderFieldActions';
 
 interface IGetPAckagingForm {
   value: string;
@@ -124,14 +125,14 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       findSelectedGroupPreviousGroup = 0;
     }
 
-    const body: IPostPackageFormInjectionBody = {
+    const body: PackagingInjectionBody = {
       targetFormId: Number(element.formId),
       selectedFormId: Number(values.selectedFormId),
       position: selectedElement?.position?.apiPosition ?? group.length,
     };
 
     try {
-      const res = await createPackagingFormInjection(body);
+      const res = await createPackagingInjection(body);
 
       if (!res.success) {
         toast.error(res.message || 'انجام عملیات با خطا مواجه شد');

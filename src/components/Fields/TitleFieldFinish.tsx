@@ -21,7 +21,7 @@ import { memo } from 'react';
 import Image from 'next/image';
 import finishIcon from '@/../public/images/home-page/finish.svg';
 // action
-import { createEndPageAction, updateEndPageAction } from '../../../actions/builder/formEndPage';
+import { createEndPage, updateEndPage } from '@/lib/builderFieldActions';
 
 const questionType: ElementsType = 'TitleFieldFinish';
 
@@ -114,7 +114,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
     if (!finishPage) {
       try {
-        const res = await createEndPageAction(data as any);
+        const res = await createEndPage(data as any);
         if (!res.success) {
           toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
           return;
@@ -133,7 +133,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       }
     } else {
       try {
-        const res = await updateEndPageAction(data as any);
+        const res = await updateEndPage(data as any);
         if (!res.success) {
           toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
           return;

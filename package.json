@@ -23,8 +23,9 @@
     "url": "http://gitlab.fardup.ir/fardup/psya_client/issues"
   },
   "scripts": {
-    "dev": "next dev -p 80",
-    "dev:https": "next dev -p 443 --experimental-https",
+    "dev": "next dev --webpack -p 80",
+    "dev:https": "next dev --webpack -p 443 --experimental-https",
+    "dev:turbo": "next dev -p 80",
     "build": "next build --turbo",
     "build:analyze": "ANALYZE=true next build --turbo",
     "start": "next start",

@@ -27,8 +27,7 @@ import RatingIcon from '@/../public/images/home-page/rating.svg';
 // type
 import { IFormElementConstructor, IQPLRating, IRatingQTapAndOptionsType } from '@/types/bulider';
 import type { ElementsType, FormElement, FormElementInstance } from '@/types/formElementTypes';
-// actions
-import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/question';
+import { createQuestion, updateQuestion } from '@/lib/builderFieldActions';
 
 const questionType: ElementsType = 'RATING';
 
@@ -401,7 +400,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       delete removeId.questionId;
 
       try {
-        const res = await createQuestionAction(removeId as any);
+        const res = await createQuestion(removeId as any);
         if (!res.success) {
           toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
           return;
@@ -423,7 +422,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       }
     } else {
       try {
-        const res = await updateQuestionAction(String(finalFieldData.questionId), finalFieldData);
+        const res = await updateQuestion(String(finalFieldData.questionId), finalFieldData);
         if (!res.success) {
           toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
           return;

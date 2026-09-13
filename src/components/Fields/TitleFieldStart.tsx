@@ -19,7 +19,7 @@ import useActionSelectedElement from '@/hooks/useActionSelectedElement';
 import useSelectedElement from '@/hooks/useSelectedElement';
 import useActionDesigner from '@/hooks/useActionDesigner';
 // actions
-import { upsertStartPageAction } from '../../../actions/builder/formStartPage';
+import { upsertStartPage } from '@/lib/builderFieldActions';
 
 const questionType: ElementsType = 'TitleFieldStart';
 
@@ -103,7 +103,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
     if (!startPage) {
       try {
-        const res = await upsertStartPageAction(data as any);
+        const res = await upsertStartPage(data as any);
         if (!res.success) {
           toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
           return;
@@ -121,7 +121,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
       }
     } else {
       try {
-        const res = await upsertStartPageAction(data as any);
+        const res = await upsertStartPage(data as any);
         if (!res.success) {
           toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
           return;

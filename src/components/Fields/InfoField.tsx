@@ -26,7 +26,7 @@ import InformationIcon from '@/../public/images/home-page/information.svg';
 import type { ElementsType, FormElement, FormElementInstance } from '@/types/formElementTypes';
 import { IFormElementConstructor, IQPLInfoField } from '@/types/bulider';
 // actions
-import { createQuestionAction, updateQuestionAction } from '../../../actions/builder/question';
+import { createQuestion, updateQuestion } from '@/lib/builderFieldActions';
 
 const questionType: ElementsType = 'INFO_FIELD';
 
@@ -210,7 +210,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
     try {
       if (!selected) {
-        const res = await createQuestionAction(newField);
+        const res = await createQuestion(newField);
 
         if (!res.success) {
           toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
@@ -219,7 +219,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
         addElement(selectedElement?.position?.realPosition ?? insertIdx, res.data);
       } else {
-        const res = await updateQuestionAction(String(element.questionId), newField); 
+        const res = await updateQuestion(String(element.questionId), newField); 
         
         if (!res.success) {
           toast.error(res.message || 'انجام عملیات با خطا مواجه شد');

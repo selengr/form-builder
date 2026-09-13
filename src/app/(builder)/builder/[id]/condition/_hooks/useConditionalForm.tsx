@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { idGenerator } from '@/lib/idGenerator';
 import { IGetCondition } from '@/types/condition';
@@ -27,12 +28,23 @@ export const createNewCondition = () => ({
 
 const TransformOutputToInput = (
   conditionJson: IGetCondition,
-  qacWithOutFilterOptions: ReturnType<typeof useGetQacWithOutFilterList>['qacWithOutFilterOptions'],
+  qacWithOutFilterOptions?: ReturnType<typeof useGetQacWithOutFilterList>['qacWithOutFilterOptions'],
 ): TConditionData => {
   const { frontConditionData } = conditionJson;
 
-  const conditions = JSON.parse(frontConditionData);
-  const { subConditions, returnQuestionId, elseQuestionId } = conditions;
+  let conditions: any;
+  try {
+    conditions = JSON.parse(frontConditionData);
+  } catch {
+    return {
+      id: conditionJson.id,
+      returnQuestionId: '',
+      elseQuestionId: '',
+      subConditions: [createNewSubCondition()],
+    };
+  }
+
+  const { subConditions, returnQuestionId, elseQuestionId } = conditions ?? {};
 
   function findOptionLabel(item: any, key: string) {
     const option = item.options?.[key];
@@ -40,51 +52,61 @@ const TransformOutputToInput = (
     return `${key}@${caption}`;
   }
 
-  const SubConditionsData: TSubConditionData[] = subConditions?.map((subCondition: TSubConditionData) => {
-    const conditionType = subCondition.conditionType;
-    const questionType = subCondition.questionType;
-    const operatorType = subCondition.operatorType;
-    const logicalOperator = subCondition.logicalOperator;
-    let value: string | string[] = '';
+  const SubConditionsData: TSubConditionData[] = (Array.isArray(subConditions) ? subConditions : []).map(
+    (subCondition: TSubConditionData) => {
+      const conditionType = subCondition.conditionType;
+      const questionType = subCondition.questionType;
+      const operatorType = subCondition.operatorType;
+      const logicalOperator = subCondition.logicalOperator;
+      let value: string | string[] = '';
 
-    const splitedOperatorType = subCondition.operatorType?.split('@')[0];
-    const splitedQuestionType = questionType?.split('*')[0];
+      const splitedOperatorType = subCondition.operatorType?.split('@')[0];
+      const splitedQuestionType = questionType?.split('*')[0];
 
-    if (
-      (splitedOperatorType === 'OPTION' && splitedQuestionType === 'MULTIPLE_CHOICE_MULTI_SELECT') ||
-      splitedQuestionType === 'MULTIPLE_CHOICE'
-    ) {
-      const questionId = subCondition.questionType?.split('*')[1];
-      const compared = questionId?.split('@')[0];
-      const found = qacWithOutFilterOptions?.find((val: any) => val?.value.includes(compared));
+      if (
+        splitedOperatorType === 'OPTION' && splitedQuestionType === 'MULTIPLE_CHOICE_MULTI_SELECT' ||
+        splitedQuestionType === 'MULTIPLE_CHOICE'
+      ) {
+        const questionId = subCondition.questionType?.split('*')[1];
+        const compared = questionId?.split('@')[0];
+        const found = qacWithOutFilterOptions?.find((val: any) => val?.value.includes(compared));
 
-      if (found) {
-        if (Array.isArray(subCondition.value)) {
-          const optionList: string[] = [];
-          subCondition.value.map(
-            (val: string, index) => (optionList[index] = findOptionLabel(found, val.split('@')[0])),
-          );
-          value = optionList;
-        } else {
-          value = findOptionLabel(found, (subCondition.value as string).split('@')[0]);
+        if (found) {
+          if (Array.isArray(subCondition.value)) {
+            const optionList: string[] = [];
+            subCondition.value.map(
+              (val: string, index) =>
+                (optionList[index] = findOptionLabel(found, String(val).split('@')[0])),
+            );
+            value = optionList;
+          } else if (subCondition.value != null) {
+            value = findOptionLabel(found, String(subCondition.value).split('@')[0]);
+          }
+        } else if (subCondition.value != null) {
+          value = Array.isArray(subCondition.value)
+            ? subCondition.value.map(String)
+            : String(subCondition.value);
         }
+      } else {
+        value = subCondition.value == null ? '' : String(subCondition.value);
       }
-    } else value = subCondition.value.toString();
-    return {
-      id: subCondition.id,
-      conditionType,
-      questionType,
-      operatorType,
-      value,
-      logicalOperator,
-    };
-  });
+
+      return {
+        id: subCondition.id ?? idGenerator(),
+        conditionType,
+        questionType,
+        operatorType,
+        value,
+        logicalOperator,
+      };
+    },
+  );
 
   return {
     id: conditionJson.id,
-    returnQuestionId: returnQuestionId,
-    elseQuestionId: elseQuestionId,
-    subConditions: SubConditionsData,
+    returnQuestionId: returnQuestionId ?? '',
+    elseQuestionId: elseQuestionId ?? '',
+    subConditions: SubConditionsData.length ? SubConditionsData : [createNewSubCondition()],
   };
 };
 
@@ -94,17 +116,20 @@ export const useConditionalForm = (condition: IGetCondition | undefined) => {
   const methods = useForm<TConditionFormData>({
     resolver: zodResolver(ConditionFormSchema),
     defaultValues: {
-      conditions: [
-        condition ? TransformOutputToInput(condition, qacWithOutFilterOptions) : createNewCondition(),
-      ],
+      conditions: [condition ? TransformOutputToInput(condition, qacWithOutFilterOptions) : createNewCondition()],
     },
   });
 
-  const {
-    control,
-    handleSubmit,
-    getValues,
-  } = methods;
+  const { control, getValues, reset } = methods;
+
+  // When QAC options arrive after mount, re-apply edit values (option labels).
+  // Depend on length (not the array ref) — options is remapped every render.
+  useEffect(() => {
+    if (!condition || !qacWithOutFilterOptions?.length) return;
+    reset({
+      conditions: [TransformOutputToInput(condition, qacWithOutFilterOptions)],
+    });
+  }, [condition, qacWithOutFilterOptions?.length, reset]);
 
   const {
     fields: conditions,

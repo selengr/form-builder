@@ -140,6 +140,11 @@ export default function LogicFormPanel({
 
         {formState.type === 'condition' && (
           <ConditionalSystem
+            key={
+              formState.mode === 'edit'
+                ? `edit-${formState.condition.id}`
+                : 'create'
+            }
             handleClose={handleClose}
             condition={formState.mode === 'edit' ? formState.condition : undefined}
             isEdit={formState.mode === 'edit'}

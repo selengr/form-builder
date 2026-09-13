@@ -13,7 +13,12 @@ export const EditConditionDialog: React.FC<IEditConditionDialogProps> = ({
 
   return (
     <ConditionDialogShell open={open} onClose={handleClose}>
-      <ConditionalSystem handleClose={handleClose} condition={condition} isEdit />
+      <ConditionalSystem
+        key={condition?.id ?? 'edit'}
+        handleClose={handleClose}
+        condition={condition}
+        isEdit
+      />
     </ConditionDialogShell>
   );
 };

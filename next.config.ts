@@ -80,50 +80,80 @@ const nextConfig: NextConfig = {
     },
 
     async headers() {
+        const isDev = process.env.NODE_ENV === 'development';
+
+        // In dev, NEVER long-cache JS/CSS — stale chunks keep old Server Action IDs
+        // and cause "Server Action was not found on the server" after restarts.
+        const staticAssetCache = isDev
+            ? 'no-store, must-revalidate'
+            : `public, max-age=${ONE_YEAR_SECONDS}, immutable`;
+
         return [
             {
                 headers: [
                     {
-                        key: "Cache-Control",
-                        value: `public, max-age=${ONE_YEAR_SECONDS}, immutable`,
+                        key: 'Cache-Control',
+                        value: isDev
+                            ? 'no-store, must-revalidate'
+                            : `public, max-age=${ONE_YEAR_SECONDS}, immutable`,
                     },
                 ],
-                source: "/(.*).(jpg|jpeg|png|gif|webp|avif|svg|ico)",
-            },
-            {
-
-                headers: [
-                    {
-                        key: "Cache-Control",
-                        value: `public, max-age=${ONE_YEAR_SECONDS}, immutable`,
-                    },
-                ],
-                source: "/_next/static/:path*",
+                source: '/(.*).(jpg|jpeg|png|gif|webp|avif|svg|ico)',
             },
             {
                 headers: [
                     {
-                        key: "X-Frame-Options",
-                        value: "SAMEORIGIN",
-                    },
-                    {
-                        key: "X-Content-Type-Options",
-                        value: "nosniff",
-                    },
-                    {
-                        key: "X-XSS-Protection",
-                        value: "1; mode=block",
-                    },
-                    {
-                        key: "Referrer-Policy",
-                        value: "strict-origin-when-cross-origin",
-                    },
-                    {
-                        key: "Strict-Transport-Security",
-                        value: "max-age=63072000; includeSubDomains",
+                        key: 'Cache-Control',
+                        value: staticAssetCache,
                     },
                 ],
-                source: "/:path*",
+                source: '/_next/static/:path*',
+            },
+            ...(isDev
+                ? [
+                      {
+                          headers: [
+                              {
+                                  key: 'Cache-Control',
+                                  value: 'no-store, must-revalidate',
+                              },
+                          ],
+                          source: '/_next/:path*',
+                      },
+                  ]
+                : []),
+            {
+                headers: [
+                    {
+                        key: 'X-Frame-Options',
+                        value: 'SAMEORIGIN',
+                    },
+                    {
+                        key: 'X-Content-Type-Options',
+                        value: 'nosniff',
+                    },
+                    {
+                        key: 'X-XSS-Protection',
+                        value: '1; mode=block',
+                    },
+                    {
+                        key: 'Referrer-Policy',
+                        value: 'strict-origin-when-cross-origin',
+                    },
+                    {
+                        key: 'Strict-Transport-Security',
+                        value: 'max-age=63072000; includeSubDomains',
+                    },
+                    ...(isDev
+                        ? [
+                              {
+                                  key: 'Cache-Control',
+                                  value: 'no-store, must-revalidate',
+                              },
+                          ]
+                        : []),
+                ],
+                source: '/:path*',
             },
         ];
     },

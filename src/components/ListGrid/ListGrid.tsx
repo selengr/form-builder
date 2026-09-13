@@ -159,15 +159,31 @@ const ListGrid: React.FC<Props> = ({
   useEffect(() => {
     if (pages?.pages?.[0]?.total !== undefined) {
       setTotalData(pages.pages[0].total);
+      if (typeof window !== 'undefined') {
+        sessionStorage.removeItem('psya-reload-server-action');
+      }
     } else {
       setTotalData(0);
     }
   }, [pages]);
 
   useEffect(() => {
-    if (error) toast.error((error as Error).message);
-  }, [error]);
+    if (!error) return;
 
+    const message = (error as Error).message || '';
+    toast.error(message);
+
+    // Stale client after server restart / deploy — reload once to pick up new action IDs
+    if (
+      typeof window !== 'undefined' &&
+      message.includes('Server Action') &&
+      message.includes('not found') &&
+      !sessionStorage.getItem('psya-reload-server-action')
+    ) {
+      sessionStorage.setItem('psya-reload-server-action', '1');
+      window.location.reload();
+    }
+  }, [error]);
 
   const renderHeader = useCallback(
     () => (

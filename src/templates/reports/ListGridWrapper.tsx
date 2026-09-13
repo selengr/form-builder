@@ -1,35 +1,42 @@
 'use client';
 
-import { useState } from 'react';
+import {
+  UnifiedListGridPage,
+  createDefaultSearchBoxList,
+} from '@/components/unified-list-grid';
 import ListCard from './ListCard';
-import ListGrid from '@/components/ListGrid/ListGrid';
 import ReportListCardSkeleton from './ReportListCardSkeleton';
+import { reportsListFetcher } from './reportsListFetcher';
+import { ReportsListItem } from './types';
+
+const SEARCH_QUERY_FILTER = {
+  type: 'ALL',
+  status: 'PUBLIC',
+  isCreatedSoloReport: 'ALL',
+  fieldOperation: 'DSC',
+};
 
 export default function ListGridWrapper() {
-  const [refreshGrid, setRefreshGrid] = useState(false);
-  const formType = { type: 'ALL', status: 'PUBLIC', isCreatedSoloReport: 'ALL', fieldOperation: "DSC" };
-  const filterBoxList: any = [];
-  const searchBoxList: any = [
-    {
-      fieldName: 'formSetting.name',
-      fieldOperation: 'MATCH',
-      fieldValue: '',
-      nextConditionOperator: 'AND',
-    },
-  ];
-
   return (
-    <ListGrid
-      title='گزارش‌ها'
-      searchBoxList={searchBoxList}
-      filterBoxList={filterBoxList}
-      url='/form/main-list/reports'
-      filterComponent={null}
-      CartComponent={(item: any) => <ListCard setRefreshGrid={setRefreshGrid} {...item} />}
-      disableFilter
-      refreshGrid={refreshGrid}
-      searchQueryFilter={formType}
-      SkeletonComponent={()=> <ReportListCardSkeleton />}
+    <UnifiedListGridPage<ReportsListItem>
+      config={{
+        title: 'گزارش‌ها',
+        queryKey: 'reports_list',
+        textTotal: ['تعداد کل فرم‌ها', 'عدد'],
+        searchField: 'formSetting.name',
+        disableFilter: true,
+        hasSidebarFilter: false,
+        backHref: '/',
+      }}
+      slots={{
+        CardComponent: ListCard,
+        SkeletonComponent: ReportListCardSkeleton,
+      }}
+      fetcher={reportsListFetcher}
+      searchBoxList={createDefaultSearchBoxList('formSetting.name')}
+      searchQueryFilter={SEARCH_QUERY_FILTER}
+      skeletonHeaderName="تعداد کل فرم‌ها"
+      loadingHasCreateBtn={false}
     />
   );
 }

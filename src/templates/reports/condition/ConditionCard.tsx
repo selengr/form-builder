@@ -3,8 +3,6 @@
 import { CSS } from '@dnd-kit/utilities';
 import { useSortable } from '@dnd-kit/sortable';
 import { useQueryClient } from '@tanstack/react-query';
-//services
-import { AxiosApi } from '@/services/axios/AxiosApi';
 // React & Libs
 import { SlPencil } from 'react-icons/sl';
 import { useCallback, useState } from 'react';
@@ -22,6 +20,9 @@ import { useDeleteReport } from '@/app/reports/create-solo/[id]/_hooks/useDelete
 import { PhDotsThreeVerticalBold } from '@/../public/images/icons/PhDotsThreeVerticalBold';
 import { toast } from 'sonner';
 import { SwitchButton } from '@/components/Switch/SwitchButton';
+// actions
+import { duplicateReportAction } from '@actions/report/duplicateReportAction';
+import { updateReportInvalidAction } from '@actions/report/updateReportInvalidAction';
 
 const buttonStyles = {
   height: '50px',
@@ -91,7 +92,12 @@ export function ConditionCard({ condition, index, admin }: IConditionCardProps) 
     e.stopPropagation();
     try {
       setLoadingDuplicateData(true);
-      await AxiosApi.post(`/report/solo/main-list/${id}/duplicate`);
+      const res = await duplicateReportAction(id);
+
+      if (!res.success) {
+        throw new Error(res.message || 'خطایی رخ داده است');
+      }
+
       queryClient.invalidateQueries(['Report_List'] as any);
       queryClient.refetchQueries(['Report_List'] as any);
     } catch (error) {
@@ -105,11 +111,15 @@ export function ConditionCard({ condition, index, admin }: IConditionCardProps) 
   const handleStatus = async () => {
     try {
       setLoadingStatus(true);
-      const body = {
+      const res = await updateReportInvalidAction({
         id,
         invalid: !invalid,
-      };
-      await AxiosApi.put(`/report/solo/main-list/invalid`, body);
+      });
+
+      if (!res.success) {
+        throw new Error(res.message || 'خطایی رخ داده است');
+      }
+
       queryClient.invalidateQueries(['Report_List'] as any);
       queryClient.refetchQueries(['Report_List'] as any);
     } catch (error) {

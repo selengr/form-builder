@@ -26,6 +26,7 @@ export const SelectController: React.FC<CustomSelectProps> = ({
   isOperator = false,
   isLoading = false,
   placeholder = '',
+  parentStyle,
   ...props
 }) => {
   const { control } = useFormContext();
@@ -35,7 +36,7 @@ export const SelectController: React.FC<CustomSelectProps> = ({
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <FormControl error={!!error} sx={{...props.parentStyle}}>
+        <FormControl error={!!error} sx={{ ...parentStyle }}>
           <Select
             IconComponent={IoIosArrowDown}
             variant='outlined'

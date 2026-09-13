@@ -2,7 +2,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { idGenerator } from '@/lib/idGenerator';
 import { IGetCondition } from '@/types/condition';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { ConditionFormSchema, TConditionData, type TConditionFormData, TSubConditionData } from '@/lib/ConditionFormSchema';
+import {
+  ConditionFormSchema,
+  TConditionData,
+  type TConditionFormData,
+  TSubConditionData,
+} from '@/lib/ConditionFormSchema';
 import { useGetQacWithOutFilterList } from '@/app/reports/create-solo/[id]/_hooks/useGetQacWithOutFilterList';
 
 export const createNewSubCondition = () => ({
@@ -20,9 +25,11 @@ export const createNewCondition = () => ({
   returnQuestionId: '',
 });
 
-const TransformOutputToInput = (conditionJson: IGetCondition): TConditionData => {
+const TransformOutputToInput = (
+  conditionJson: IGetCondition,
+  qacWithOutFilterOptions: ReturnType<typeof useGetQacWithOutFilterList>['qacWithOutFilterOptions'],
+): TConditionData => {
   const { frontConditionData } = conditionJson;
-  const { qacWithOutFilterOptions } = useGetQacWithOutFilterList();
 
   const conditions = JSON.parse(frontConditionData);
   const { subConditions, returnQuestionId, elseQuestionId } = conditions;
@@ -34,7 +41,6 @@ const TransformOutputToInput = (conditionJson: IGetCondition): TConditionData =>
   }
 
   const SubConditionsData: TSubConditionData[] = subConditions?.map((subCondition: TSubConditionData) => {
-    const id = subCondition.id;
     const conditionType = subCondition.conditionType;
     const questionType = subCondition.questionType;
     const operatorType = subCondition.operatorType;
@@ -42,32 +48,27 @@ const TransformOutputToInput = (conditionJson: IGetCondition): TConditionData =>
     let value: string | string[] = '';
 
     const splitedOperatorType = subCondition.operatorType?.split('@')[0];
-    const splitedQuestionType = questionType?.split('*')[0]
+    const splitedQuestionType = questionType?.split('*')[0];
 
-    if (splitedOperatorType === 'OPTION' && splitedQuestionType === 'MULTIPLE_CHOICE_MULTI_SELECT' || splitedQuestionType === "MULTIPLE_CHOICE") {
-      // const op: string[] = [];
-      // if (Array.isArray(subCondition.value)) {
-      //   subCondition.value?.map((item: string) => op.push(item?.toString()));
-      //   value = op;
-      // }
+    if (
+      (splitedOperatorType === 'OPTION' && splitedQuestionType === 'MULTIPLE_CHOICE_MULTI_SELECT') ||
+      splitedQuestionType === 'MULTIPLE_CHOICE'
+    ) {
       const questionId = subCondition.questionType?.split('*')[1];
       const compared = questionId?.split('@')[0];
-      const found = qacWithOutFilterOptions?.find(
-        (val: any) => val?.value.includes(compared)
-      );
+      const found = qacWithOutFilterOptions?.find((val: any) => val?.value.includes(compared));
 
       if (found) {
         if (Array.isArray(subCondition.value)) {
-          const optionList: string[] = []
-          subCondition.value
-            .map((val: string, index) => optionList[index] = findOptionLabel(found, val.split('@')[0]))
-            .join(", ");
-          value = optionList
+          const optionList: string[] = [];
+          subCondition.value.map(
+            (val: string, index) => (optionList[index] = findOptionLabel(found, val.split('@')[0])),
+          );
+          value = optionList;
         } else {
           value = findOptionLabel(found, (subCondition.value as string).split('@')[0]);
         }
       }
-
     } else value = subCondition.value.toString();
     return {
       id: subCondition.id,
@@ -88,17 +89,20 @@ const TransformOutputToInput = (conditionJson: IGetCondition): TConditionData =>
 };
 
 export const useConditionalForm = (condition: IGetCondition | undefined) => {
+  const { qacWithOutFilterOptions } = useGetQacWithOutFilterList();
+
   const methods = useForm<TConditionFormData>({
     resolver: zodResolver(ConditionFormSchema),
     defaultValues: {
-      conditions: [condition ? TransformOutputToInput(condition) : createNewCondition()],
+      conditions: [
+        condition ? TransformOutputToInput(condition, qacWithOutFilterOptions) : createNewCondition(),
+      ],
     },
   });
 
   const {
     control,
     handleSubmit,
-    // formState: { errors },
     getValues,
   } = methods;
 

@@ -20,7 +20,7 @@ import { PhDotsThreeVerticalBold } from '../../../public/images/icons/PhDotsThre
 import {
   useCheckDependency,
   useDeleteCalculator,
-} from '@/features/form-builder/hooks/calculator';
+} from '@/app/(builder)/builder/[id]/calculator/_hooks';
 
 export const buttonStyles = {
   height: '45px',

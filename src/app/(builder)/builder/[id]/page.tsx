@@ -1,7 +1,7 @@
 import { api } from '@/services/axios/actionWapper';
 import FormBuilderWapper from '@/templates/builder/FormBuilderWapper';
-import BuilderErrorPage from '@/features/form-builder/BuilderErrorPage';
-import { getBuilderBackConfig } from '@/features/form-builder/builderBackConfig';
+import BuilderErrorPage from './BuilderErrorPage';
+import { getBuilderBackConfig } from './builderBackConfig';
 
 async function getFormDataAction(id: string) {
   return api.get(`/form/${id}`);

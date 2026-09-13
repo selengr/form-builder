@@ -10,7 +10,7 @@ import { ConditionCardOperator } from './ConditionCardOperator';
 import { SlPencil } from 'react-icons/sl';
 import { WeuiDeleteOutlined } from '../../../public/images/icons/DeleteIcon';
 import { PhDotsThreeVerticalBold } from '../../../public/images/icons/PhDotsThreeVerticalBold';
-import { useDeleteCondition } from '@/features/form-builder/hooks/condition/useDeleteCondition';
+import { useDeleteCondition } from '@/app/(builder)/builder/[id]/condition/_hooks/useDeleteCondition';
 
 const buttonStyles = {
   height: '45px',

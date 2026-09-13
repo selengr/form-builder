@@ -1,3 +1,3 @@
 'use client';
 
-export { default } from '@/features/form-builder/BuilderErrorPage';
+export { default } from './BuilderErrorPage';

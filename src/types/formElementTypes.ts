@@ -65,3 +65,4 @@ export type FormElement = {
 
   validate: (formElement: FormElementInstance, currentValue: string) => boolean;
 };
+//todo: add type for form element instance

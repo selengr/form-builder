@@ -5,29 +5,21 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 // components
 import { InfoRow } from '@/components/common/infoRow';
+import { UnifiedListGridCardProps } from '@/components/unified-list-grid';
 // actions
-import { clonePackageAction } from '../../../actions/standard-forms/clone';
+import { clonePackageAction } from '@actions/standard-forms/clone';
+import { StandardFormsListItem } from './types';
 
-export interface IPackagingItem {
-  id: number;
-  name: string;
-  sellCount: number;
-  formId: number;
-}
-interface ListCardProps {
-  data: IPackagingItem;
-}
-// ---------------------------------------------------------------------
-const ListCard: React.FC<ListCardProps> = ({
-  data: { name, id, sellCount }
-}) => {
-  const { push } = useRouter()
-  const [loading, setLoading] = useState<boolean>(false);
+export default function ListCard({
+  data: { name, id, sellCount },
+}: UnifiedListGridCardProps<StandardFormsListItem>) {
+  const { push } = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleClone = async () => {
     setLoading(true);
     try {
-       const res = await clonePackageAction(id);
+      const res = await clonePackageAction(id);
 
       if (!res.success) {
         toast.error(res.message || 'خطا در کپی فرم');
@@ -38,22 +30,19 @@ const ListCard: React.FC<ListCardProps> = ({
         <div className="flex flex-col">
           <span>یک نسخه از این فرم با موفقیت به فرم‌های من اضافه شد</span>
 
-          <div className='flex justify-end'>
+          <div className="flex justify-end">
             <button
               onClick={() => push('/builder')}
-              className="px-3 max-w-[150px] py-1 rounded bg-zinc-950 text-white transition"
-            >
+              className="px-3 max-w-[150px] py-1 rounded bg-zinc-950 text-white transition">
               مشاهده فرم‌های من
             </button>
           </div>
-
         </div>,
         {
           className: 'max-w-[300px]',
           duration: 70000,
-        }
+        },
       );
-      
     } catch (error: any) {
       toast.error(error?.message || 'خطا در انجام عملیات');
     } finally {
@@ -71,13 +60,12 @@ const ListCard: React.FC<ListCardProps> = ({
         transition-all 
         hover:shadow-md hover:border-[#c5cacf]
         bg-white
-      "
-    >
+      ">
       <div className="flex flex-wrap gap-2 w-full items-center justify-between">
-       <div>
-           <InfoRow label="نام بسته" value={name} bold />
-        <InfoRow label="تعداد فروش" value={sellCount} bold />
-       </div>
+        <div>
+          <InfoRow label="نام بسته" value={name} bold />
+          <InfoRow label="تعداد فروش" value={sellCount} bold />
+        </div>
         <button
           className="
             bg-[#1758BA] text-white 
@@ -88,13 +76,10 @@ const ListCard: React.FC<ListCardProps> = ({
             whitespace-nowrap
           "
           onClick={handleClone}
-          disabled={loading}
-        >
+          disabled={loading}>
           {loading ? 'درحال کپی...' : 'رونوشت'}
         </button>
       </div>
     </div>
   );
-};
-
-export default ListCard;
+}

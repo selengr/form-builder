@@ -4,11 +4,7 @@ export type PackagingInjectionBody = {
   selectedFormId: number;
 };
 
-/**
- * Client-safe wrappers around builder server actions.
- * Fields must NOT statically import `'use server'` modules — Turbopack then fails
- * while evaluating FormElements → RatingField (module factory not available).
- */
+
 export async function createQuestion(payload: any) {
   const { createQuestionAction } = await import('@actions/builder/question');
   return createQuestionAction(payload);

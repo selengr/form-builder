@@ -6,6 +6,8 @@ export function getBuilderBackConfig(admin?: string) {
       return { href: '/survey', label: 'بازگشت' };
     case 'packaging':
       return { href: '/packaging', label: 'بازگشت' };
+    case 'builder-new':
+      return { href: '/builder-new', label: 'بازگشت به فرم ساز' };
     default:
       return { href: '/builder', label: 'بازگشت به فرم ساز' };
   }

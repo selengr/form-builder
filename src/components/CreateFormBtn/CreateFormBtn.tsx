@@ -31,9 +31,15 @@ type PropertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 interface CreateFormBtnProps {
   open: boolean;
   onClose: () => void;
+  /** Where to open the editor after create. Default: `/builder` */
+  redirectBasePath?: string;
 }
 
-export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
+export default function CreateFormBtn({
+  open,
+  onClose,
+  redirectBasePath = '/builder',
+}: CreateFormBtnProps) {
   const router = useRouter();
   const { mutation, SubCategoryData } = useGetSubCategory();
   const { Category, isFetchingCategory } = useGetParentCategory();
@@ -83,7 +89,7 @@ export default function CreateFormBtn({ open, onClose }: CreateFormBtnProps) {
 
       if (result.success) {
         toast.success('فرم با موفقیت ایجاد شد');
-        router.push(`/builder/${result.data?.id}`);
+        router.push(`${redirectBasePath}/${result.data?.id}`);
         // onClose();
         reset()
       } else {

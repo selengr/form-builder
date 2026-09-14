@@ -36,7 +36,6 @@ function buildSearchFilterModel(input: {
   page: number;
   rows: number;
   searchBoxList?: SearchBoxItem[];
-  /** Match old GroupSettings list: omit empty searchFilterBoxList when true */
   omitEmptySearchFilterBox?: boolean;
 }) {
   const restrictionList = (input.searchBoxList ?? []).filter(isValidRestriction);
@@ -98,7 +97,6 @@ export interface GroupMembersListResponse {
 }
 
 export async function getGroupMembersAction(input: {
-  /** Numeric group id, or `"default"` for solo/individual publish members */
   groupId: number | string;
   pageParam?: number;
   pageSize?: number;
@@ -107,7 +105,6 @@ export async function getGroupMembersAction(input: {
 
   searchFilterModel?: string;
 }) {
-  // Individual publish tab uses literal "default" (backend path segment), not a number.
   const isDefaultGroup = String(input.groupId) === 'default';
   const numericGroupId = Number(input.groupId);
 

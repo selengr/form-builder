@@ -1,3 +1,5 @@
+'use client';
+
 import { IUserGroupMemmerInfo } from "@/types/setting";
 import { SwitchButton } from "@/components/Switch/SwitchButton";
 

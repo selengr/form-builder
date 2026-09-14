@@ -32,9 +32,8 @@ export const MenuItem = React.memo(
           style={{ userSelect: "none" }}
           className={`
             group relative w-full rounded-xl pt-3
-            transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
+            transition-all duration-200 ease-out
             overflow-hidden
-            active:scale-[0.985]
             ${isActive
               ? "bg-[#F7F9FC]"
               : "hover:bg-[#F7F9FC] active:bg-[#EEF2F6]"
@@ -46,7 +45,7 @@ export const MenuItem = React.memo(
             <div
               className={`
                 absolute right-0 top-0 h-full w-[4px]
-                rounded-l-full transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
+                rounded-l-full transition-all duration-200
                 ${isActive && !isExpanded
                   ? "bg-[#2CDFC9] opacity-100"
                   : "opacity-0"
@@ -60,14 +59,14 @@ export const MenuItem = React.memo(
                 className={`
                   w-full flex items-center justify-between
                   px-3 py-2
-                  transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
+                  transition-transform duration-200
                   ${isActive ? "translate-x-[4px]" : "group-hover:translate-l-[1px]"}
                 `}
               >
                 <div className="flex items-center gap-3">
                   <div
                     className={`
-                      transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
+                      transition-transform duration-200
                       ${isActive ? "scale-105" : "group-hover:scale-105"}
                     `}
                   >
@@ -78,7 +77,7 @@ export const MenuItem = React.memo(
                       text-[13px] sm:text-[14px]
                       font-semibold sm:font-bold
                       text-[#1F2937]
-                      transition-colors duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
+                      transition-all duration-200
                     "
                   >
                     {title}
@@ -88,7 +87,7 @@ export const MenuItem = React.memo(
                 <IoIosArrowBack
                   size="1.3rem"
                   color="#292D32"
-                  className={`transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${isExpanded ? "rotate-[-90deg]" : "rotate-0"
+                  className={`transition-transform duration-300 ease-in-out ${isExpanded ? "rotate-[-90deg]" : "rotate-0"
                     } group-hover:ml-0.5`}
                 />
 
@@ -101,14 +100,14 @@ export const MenuItem = React.memo(
                 className={`
                   w-full flex items-center justify-between
                   px-3 py-2
-                  transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
+                  transition-transform duration-200
                   ${isActive ? "translate-x-[4px]" : "group-hover:translate-l-[1px]"}
                 `}
               >
                 <div className="flex items-center gap-2">
                   <div
                     className={`
-                      transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
+                      transition-transform duration-200
                       ${isActive ? "scale-105" : "group-hover:scale-105"}
                     `}
                   >
@@ -120,7 +119,7 @@ export const MenuItem = React.memo(
                       text-[13px] sm:text-[14px]
                       font-semibold sm:font-bold
                       text-[#1F2937]
-                      transition-colors duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
+                      transition-all duration-200
                     "
                   >
                     {title}
@@ -130,14 +129,14 @@ export const MenuItem = React.memo(
                 <IoIosArrowBack
                   size="1.1rem"
                   color={isActive ? "#0066CC" : "#4B5563"}
-                  className="transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:-translate-x-1"
+                  className="transition-all duration-200 group-hover:-translate-x-1"
                 />
               </Link>
             )}
           </div>
 
           <div
-            className={`grid transition-[grid-template-rows,opacity] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${isExpanded
+            className={`grid transition-all duration-300 ease-in-out ${isExpanded
                 ? "grid-rows-[1fr] opacity-100"
                 : "grid-rows-[0fr] opacity-0"
               }`}

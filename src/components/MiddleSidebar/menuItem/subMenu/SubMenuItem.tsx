@@ -22,8 +22,7 @@ const SubMenuItem = React.memo(
           group flex items-center justify-between w-full
           px-5 py-3 rounded-md
           border-b border-[#E4E7EB]
-          transition-[background-color,transform,border-color] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
-          active:scale-[0.985]
+          transition-all duration-200 ease-out
           ${isActive
             ? "bg-[#F3F8FF] border-r-4 border-r-[#0066CC]"
             : "bg-white hover:bg-[#F3F6FA] active:bg-[#E8EDF4]"
@@ -33,7 +32,7 @@ const SubMenuItem = React.memo(
         <div className="flex items-center gap-3 pr-2">
           <SubMenuIcon src={iconSrc} className="h-5 w-5 sm:h-6 sm:w-6" />
           <span
-            className={`text-[11px] sm:text-[13px] leading-none transition-colors duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+            className={`text-[11px] sm:text-[13px] leading-none ${
               isActive ? "text-[#0066CC] font-medium" : "text-[#222] font-normal"
             }`}
           >
@@ -44,7 +43,7 @@ const SubMenuItem = React.memo(
         <IoIosArrowBack
           size="1rem"
           color={isActive ? "#0066CC" : "#292D32"}
-          className="opacity-60 transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-[-2px]"
+          className="opacity-60 transition-all group-hover:translate-x-[-2px]"
         />
       </Link>
     );

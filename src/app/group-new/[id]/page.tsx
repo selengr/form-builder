@@ -2,18 +2,20 @@
 
 import { toast } from 'sonner'
 import Image from 'next/image'
-import { Box, CircularProgress } from '@mui/material'
+import { LinearProgress } from '@mui/material'
 import { useQueryClient } from '@tanstack/react-query'
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md'
 import React, { useState, useCallback, useEffect } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import { useInView } from 'react-intersection-observer'
 // images
-import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
+import PlusIcon from '@/../public/images/home-page/Add-fill.svg'
 // type
 import type { IUserGroupMemmerInfo } from '@/types/setting'
 // components
 import { InfoRow } from '@/components/common/infoRow'
 import { MemberListItem } from '../components/MemberListItem'
+import MemberListSkeleton from '../components/MemberListSkeleton'
 import { SearchBoxItem } from '@/components/ListGrid/ListGrid'
 import { InvalidConfirmDialog } from '../components/invalidConfirmDialog'
 import { CancelGroupAllocationModal } from '../components/createMemberDialog'
@@ -30,6 +32,7 @@ export default function GroupDetailsPage() {
   const groupId = typeof params.id === 'string' ? parseInt(params.id, 10) : null
 
   const queryClient = useQueryClient()
+  const { ref: loadMoreRef, inView } = useInView({ threshold: 0.1 })
 
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
@@ -43,7 +46,6 @@ export default function GroupDetailsPage() {
     { fieldName: 'introducedUser.name', fieldOperation: 'MATCH', fieldValue: '', nextConditionOperator: 'AND' },
   ])
 
-  // Fetch members
   const {
     data,
     fetchNextPage,
@@ -59,7 +61,6 @@ export default function GroupDetailsPage() {
 
   const members: IUserGroupMemmerInfo[] = data?.pages.flatMap((page) => page.data) ?? []
 
-
   useEffect(() => {
     setSearchBoxList([
       {
@@ -74,6 +75,12 @@ export default function GroupDetailsPage() {
   useEffect(() => {
     refetch();
   }, [searchBoxList, refetch]);
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage && !isLoading) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, isLoading, fetchNextPage]);
 
   const handleUserCheckboxChange = (userId: number, isChecked: boolean) => {
     setSelectedUsers((prev) =>
@@ -155,11 +162,13 @@ export default function GroupDetailsPage() {
         </div>
 
         <div className="border relative border-gray-200 rounded-xl p-4 pt-6 pb-3 flex flex-col gap-4 mb-4 md:flex-row md:items-center md:justify-between">
-
-          {/* Group info */}
           <div className="flex flex-col gap-[10px]">
             <InfoRow label="نام گروه" value={groupName ?? '---'} bold />
-            <InfoRow label="تعداد اعضا" value={`${members.length} نفر`} bold />
+            {isLoading ? (
+              <div className="h-5 w-24 bg-gray-200 rounded animate-pulse" />
+            ) : (
+              <InfoRow label="تعداد اعضا" value={`${members.length} نفر`} bold />
+            )}
           </div>
 
           <div className="w-full md:w-[40%]">
@@ -170,51 +179,48 @@ export default function GroupDetailsPage() {
             <button
               onClick={() => setShowCreateMemberDialog(true)}
               className="w-[50px] h-[50px] border border-[#1758BA] rounded-xl flex items-center justify-center hover:bg-gray-100 transition"
-              aria-label="افزودن گروه جدید"
+              aria-label="افزودن عضو جدید"
             >
               <Image src={PlusIcon} alt="افزودن" width={24} height={24} draggable={false} />
             </button>
           </div>
-
         </div>
-
 
         <div className='flex flex-col flex-1 min-h-0'>
           <div className='flex justify-between items-center mb-3'>
             <h3 className='text-lg font-bold text-[#2a2a2a]'>لیست کاربران</h3>
-            <div className='flex items-center gap-2'>
-            </div>
           </div>
 
           <div className='flex-1 overflow-y-auto border border-gray-200 rounded-xl'>
-            {isLoading && (
-              <div className='flex justify-center items-center h-full w-full'>
-                <CircularProgress />
-              </div>
-            )}
-            {members.length === 0 ? (
+            {isLoading ? (
+              <MemberListSkeleton />
+            ) : members.length === 0 ? (
               <p className='p-4 text-center text-gray-500'>هیچ کاربری در این گروه وجود ندارد.</p>
             ) : (
-              <ul className='divide-y divide-gray-200'>
-                {members.map((m) => (
-                  <MemberListItem
-                    key={m.introducedUserJTGroupId}
-                    member={m}
-                    selectedUsers={selectedUsers}
-                    handleUserCheckboxChange={handleUserCheckboxChange}
-                    handleChangeStatus={handleChangeStatus}
-                    disabledSwitches={disabledSwitches}
-                  />
-                ))}
-              </ul>
-            )}
-            {hasNextPage && (
-              <Box className='flex justify-center my-2'>
-                {isFetchingNextPage && <CircularProgress size={24} />}
-                <button onClick={() => fetchNextPage()} className='text-[#1758BA] font-semibold'>
-                  بارگذاری بیشتر
-                </button>
-              </Box>
+              <>
+                <ul className='divide-y divide-gray-200'>
+                  {members.map((m) => (
+                    <MemberListItem
+                      key={m.introducedUserJTGroupId}
+                      member={m}
+                      selectedUsers={selectedUsers}
+                      handleUserCheckboxChange={handleUserCheckboxChange}
+                      handleChangeStatus={handleChangeStatus}
+                      disabledSwitches={disabledSwitches}
+                    />
+                  ))}
+                </ul>
+
+                <div ref={loadMoreRef} className='flex justify-center p-4 min-h-10'>
+                  {isFetchingNextPage ? (
+                    <div className='w-full px-4'>
+                      <LinearProgress />
+                    </div>
+                  ) : !hasNextPage ? (
+                    <p className='text-gray-400 text-sm'>همه اعضا بارگذاری شدند.</p>
+                  ) : null}
+                </div>
+              </>
             )}
           </div>
         </div>

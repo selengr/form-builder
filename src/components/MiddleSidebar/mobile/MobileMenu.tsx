@@ -1,22 +1,22 @@
 'use client';
-
 import Image from 'next/image';
 import { CgClose } from 'react-icons/cg';
-import React, { useEffect, useMemo, useState } from 'react';
-import { IconButton } from '@mui/material';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import React, { useMemo, useState } from 'react';
+import { Drawer, IconButton } from '@mui/material';
+
+// public
 import Logo from '@/../public/images/home-page/psya-logo.svg';
 import MenuIcon from '@/../public/images/home-page/menu/ic_menu.svg';
+// view
 import MenuList from '../menuList/MenuList';
+// context
 import { useUserInfoContext } from '@/context/UserInfoContext';
 
-const panelSpring = { type: 'spring' as const, stiffness: 380, damping: 36, mass: 0.85 };
-const backdropEase = { duration: 0.22, ease: [0.32, 0.72, 0, 1] as const };
+const IOS_EASE = 'cubic-bezier(0.32, 0.72, 0, 1)';
 
 const MobileMenu: React.FC = () => {
   const { userInfo } = useUserInfoContext();
-  const [open, setOpen] = useState(false);
-  const reduceMotion = useReducedMotion();
+  const [open, setOpen] = useState<boolean>(false);
 
   const menuLinks = useMemo(() => {
     if (!userInfo?.aclList) return [];
@@ -26,17 +26,9 @@ const MobileMenu: React.FC = () => {
     );
   }, [userInfo?.aclList]);
 
-  const toggleDrawer = () => setOpen((prev) => !prev);
-  const closeDrawer = () => setOpen(false);
-
-  useEffect(() => {
-    if (!open) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = prev;
-    };
-  }, [open]);
+  const toggleDrawer = () => {
+    setOpen((prev) => !prev);
+  };
 
   return (
     <div className="z-50">
@@ -45,60 +37,58 @@ const MobileMenu: React.FC = () => {
         color="inherit"
         aria-label="menu"
         onClick={toggleDrawer}
-        className="active:scale-95 transition-transform">
+        sx={{
+          transition: `transform 200ms ${IOS_EASE}`,
+          '&:active': { transform: 'scale(0.92)' },
+        }}>
         <Image src={MenuIcon} alt="icon" width={32} height={32} priority draggable={false} />
       </IconButton>
 
-      <AnimatePresence>
-        {open && (
-          <>
-            <motion.button
-              type="button"
-              aria-label="بستن منو"
-              className="fixed inset-0 z-[1300] bg-black/40 backdrop-blur-[2px]"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={reduceMotion ? { duration: 0 } : backdropEase}
-              onClick={closeDrawer}
-            />
-
-            <motion.aside
-              className="fixed top-0 left-0 z-[1301] flex h-[100dvh] w-[78vw] max-w-[340px] flex-col gap-8 overflow-y-auto bg-white px-4 py-5 shadow-[8px_0_32px_rgba(0,0,0,0.12)]"
-              style={{ scrollbarWidth: 'thin' }}
-              initial={reduceMotion ? false : { x: '-105%' }}
-              animate={{ x: 0 }}
-              exit={reduceMotion ? undefined : { x: '-105%' }}
-              transition={reduceMotion ? { duration: 0 } : panelSpring}
-              drag={reduceMotion ? false : 'x'}
-              dragConstraints={{ left: -320, right: 0 }}
-              dragElastic={0.08}
-              onDragEnd={(_, info) => {
-                if (info.offset.x < -72 || info.velocity.x < -450) {
-                  closeDrawer();
-                }
-              }}>
-              <div className="flex w-full flex-col items-start gap-10">
-                <div className="flex w-full flex-row items-center justify-between">
-                  <Image src={Logo} width={111} height={38} alt="Psya-Logo" priority draggable={false} />
-                  <IconButton edge="end" onClick={closeDrawer} aria-label="بستن" className="active:scale-90">
-                    <motion.span
-                      initial={reduceMotion ? false : { rotate: -90, opacity: 0 }}
-                      animate={{ rotate: 0, opacity: 1 }}
-                      transition={panelSpring}>
-                      <CgClose color="#404040" size="1.5rem" />
-                    </motion.span>
-                  </IconButton>
-                </div>
-
-                <div className="flex w-full flex-col items-start">
-                  <MenuList menuLinks={menuLinks} onItemClick={closeDrawer} />
-                </div>
-              </div>
-            </motion.aside>
-          </>
-        )}
-      </AnimatePresence>
+      <Drawer
+        anchor="left"
+        open={open}
+        onClose={toggleDrawer}
+        transitionDuration={{ enter: 340, exit: 280 }}
+        SlideProps={{
+          easing: { enter: IOS_EASE, exit: IOS_EASE },
+        }}
+        ModalProps={{ keepMounted: true }}
+        slotProps={{
+          backdrop: {
+            sx: {
+              backgroundColor: 'rgba(15, 23, 42, 0.28)',
+              transition: `opacity 280ms ${IOS_EASE} !important`,
+            },
+          },
+          paper: {
+            sx: {
+              boxShadow: '0 12px 40px rgba(15, 23, 42, 0.18)',
+            },
+          },
+        }}>
+        <div
+          className="w-[75vw] max-w-[340px] min-h-screen bg-white px-4 py-5 flex flex-col gap-8 overflow-y-auto"
+          style={{ scrollbarWidth: 'thin' }}>
+          <div className="w-full flex flex-col gap-10 items-start">
+            <div className="flex flex-row justify-between w-full items-center">
+              <Image src={Logo} width={111} height={38} alt="Psya-Logo" priority draggable={false} />
+              <IconButton
+                edge="end"
+                onClick={toggleDrawer}
+                aria-label="بستن منو"
+                sx={{
+                  transition: `transform 280ms ${IOS_EASE}`,
+                  '&:active': { transform: 'scale(0.9)' },
+                }}>
+                <CgClose color="#404040" size="1.5rem" />
+              </IconButton>
+            </div>
+            <div className="flex flex-col items-start w-full">
+              <MenuList menuLinks={menuLinks} onItemClick={() => setOpen(false)} />
+            </div>
+          </div>
+        </div>
+      </Drawer>
     </div>
   );
 };

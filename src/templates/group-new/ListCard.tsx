@@ -9,7 +9,7 @@ import EditIcon from '@/../public/images/home-page/edit-2.svg';
 import { InfoRow } from '@/components/common/infoRow';
 import { SwitchButton } from '@/components/Switch/SwitchButton';
 import { UnifiedListGridCardProps } from '@/components/unified-list-grid';
-import { InvalidConfirmDialog } from '@/app/group-new/components/invalidConfirmDialog';
+import { InvalidConfirmDialog } from './invalidConfirmDialog';
 import { changeGroupStatusAction } from '@actions/groups/group';
 import { GroupListItem } from './types';
 

@@ -18,7 +18,7 @@ const fetchMembersPage = async ({
   groupId,
   searchBoxList,
   pageParam = 0,
-  pageSize = 30,
+  pageSize = 10,
 }: FetchMembersPageParams): Promise<{ data: IUserGroupMemmerInfo[]; nextPage: number | null }> => {
   const numericGroupId = Number(groupId);
   if (!Number.isFinite(numericGroupId)) {
@@ -38,8 +38,14 @@ const fetchMembersPage = async ({
   }
 
   const members = Array.isArray(res.data?.content) ? res.data.content : [];
-  const nextPage =
-    res.data.totalPages && pageParam + 1 < res.data.totalPages ? pageParam + 1 : null;
+
+  // Prefer totalPages when present; otherwise keep loading while a full page is returned.
+  let nextPage: number | null = null;
+  if (typeof res.data.totalPages === 'number' && res.data.totalPages > 0) {
+    nextPage = pageParam + 1 < res.data.totalPages ? pageParam + 1 : null;
+  } else {
+    nextPage = members.length >= pageSize ? pageParam + 1 : null;
+  }
 
   return { data: members, nextPage };
 };
@@ -54,7 +60,7 @@ export const useFetchGroupMembers = ({
   pageSize?: number;
 }) => {
   return useInfiniteQuery({
-    queryKey: ['members-setting', groupId, searchBoxList, formId ?? 'no-form'],
+    queryKey: ['members-setting', groupId, searchBoxList, formId ?? 'no-form', pageSize],
     queryFn: ({ pageParam = 0 }) =>
       fetchMembersPage({ formId, groupId, searchBoxList, pageParam, pageSize }),
     getNextPageParam: (lastPage) => lastPage.nextPage,

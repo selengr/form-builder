@@ -9,7 +9,7 @@ import {
   UnifiedListGridPage,
   createDefaultSearchBoxList,
 } from '@/components/unified-list-grid';
-import { CreateGroupDialog } from '@/app/group-new/components/createGroupDialog';
+import { CreateGroupDialog } from './createGroupDialog';
 import ListCard from './ListCard';
 import ListCardSkeleton from './ListCardSkeleton';
 import { groupsListFetcher } from './groupsListFetcher';

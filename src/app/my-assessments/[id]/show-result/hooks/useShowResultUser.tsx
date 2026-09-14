@@ -1,23 +1,36 @@
+'use client';
+
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
-// actions
-import { showResultUser } from '../../../../../../actions/myAssessments/showResultUser';
-
+import { showResultUserAction } from '@actions/my-assessments/showResultUserAction';
 
 export const useShowResultUser = () => {
   const { push } = useRouter();
 
   const mutation = useMutation({
     mutationKey: ['Show_User_Solo_Result'],
-    mutationFn: ({ data }: { data: { formId: number; takePartId: number }; name: string }) => showResultUser(data),
+    mutationFn: async ({
+      data,
+    }: {
+      data: { formId: number; takePartId: number };
+      name: string;
+    }) => {
+      const res = await showResultUserAction(data);
+
+      if (!res.success) {
+        throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');
+      }
+
+      return res.data;
+    },
 
     onSuccess: (result, { name }) => {
       localStorage.setItem('Show_User_Solo_Result', JSON.stringify(result));
       push(`/my-assessments/${result?.formId}/show-result?name=${name}`);
     },
     onError: (error) => {
-      toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
+      toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
     },
   });
 

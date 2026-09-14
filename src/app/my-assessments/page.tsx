@@ -1,7 +1,7 @@
-import ListGridWrapper from '@/templates/my-assessment/ListGridWrapper';
+import ListGridWrapper from '@/templates/my-assessments/ListGridWrapper';
 
 export const dynamic = 'force-dynamic';
 
 export default function MyAssessmentPage() {
-  return <ListGridWrapper />
+  return <ListGridWrapper />;
 }

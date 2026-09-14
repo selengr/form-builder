@@ -98,6 +98,7 @@ export interface GroupMembersListResponse {
 }
 
 export async function getGroupMembersAction(input: {
+  /** Numeric group id, or `"default"` for solo/individual publish members */
   groupId: number | string;
   pageParam?: number;
   pageSize?: number;
@@ -106,13 +107,18 @@ export async function getGroupMembersAction(input: {
 
   searchFilterModel?: string;
 }) {
-  const groupId = Number(input.groupId);
-  if (!Number.isFinite(groupId)) {
+  // Individual publish tab uses literal "default" (backend path segment), not a number.
+  const isDefaultGroup = String(input.groupId) === 'default';
+  const numericGroupId = Number(input.groupId);
+
+  if (!isDefaultGroup && !Number.isFinite(numericGroupId)) {
     return {
       success: false as const,
       message: 'شناسه گروه نامعتبر است',
     };
   }
+
+  const groupIdPath = isDefaultGroup ? 'default' : String(numericGroupId);
 
   let encoded = input.searchFilterModel;
   if (!encoded) {
@@ -124,7 +130,7 @@ export async function getGroupMembersAction(input: {
     encoded = encodeURIComponent(JSON.stringify(model));
   }
 
-  const base = `/user-group/introducer/group-listgrid/${groupId}/members?searchFilterModel=${encoded}`;
+  const base = `/user-group/introducer/group-listgrid/${groupIdPath}/members?searchFilterModel=${encoded}`;
   const url =
     input.formId != null && input.formId !== ''
       ? `${base}&formId=${input.formId}`

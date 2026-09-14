@@ -13,14 +13,14 @@ import { CreateGroupDialog } from './createGroupDialog';
 import ListCard from './ListCard';
 import ListCardSkeleton from './ListCardSkeleton';
 import { groupsListFetcher } from './groupsListFetcher';
-import { GROUP_NEW_LIST_QUERY_KEY, GroupListItem } from './types';
+import { GROUPS_LIST_QUERY_KEY, GroupListItem } from './types';
 
 export default function ListGridWrapper() {
   const queryClient = useQueryClient();
   const [showCreateGroupDialog, setShowCreateGroupDialog] = useState(false);
 
   const handleCreateGroupSubmit = async () => {
-    await queryClient.invalidateQueries({ queryKey: [GROUP_NEW_LIST_QUERY_KEY] });
+    await queryClient.invalidateQueries({ queryKey: [GROUPS_LIST_QUERY_KEY] });
     setShowCreateGroupDialog(false);
   };
 
@@ -29,7 +29,7 @@ export default function ListGridWrapper() {
       <UnifiedListGridPage<GroupListItem>
         config={{
           title: 'گروه‌ها',
-          queryKey: GROUP_NEW_LIST_QUERY_KEY,
+          queryKey: GROUPS_LIST_QUERY_KEY,
           textTotal: ['تعداد کل گروه‌ها', 'عدد'],
           searchField: 'name',
           disableFilter: true,

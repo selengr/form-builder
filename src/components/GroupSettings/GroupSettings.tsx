@@ -22,6 +22,7 @@ import type { SearchBoxItem } from "../ListGrid/ListGrid"
 import { RemoveGroupConfirmModal } from "./RemoveConfirmDialog"
 import { useFetchGroupsSetting } from "./hook/useFetchGroupsSetting"
 import CancelGroupAllocationModal from "./CancelGroupAllocationModal"
+import { cancelGroupAllocationAction } from "@actions/groups/cancel"
 // images
 import { UserWithSearchIcon } from "../../../public/images/icons/UserWithSearchIcon "
 
@@ -277,21 +278,13 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
         });
       }
       if (removedGroups.length > 0) {
-        const cancelResponse = await fetch("/api/group/cancel", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            formId: Number(formId),
-            unselectedGroupsId: removedGroups,
-          }),
+        const cancelRes = await cancelGroupAllocationAction({
+          formId: Number(formId),
+          unselectedGroupsId: removedGroups as [number, ...number[]],
         })
 
-        const cancelData = await cancelResponse.json()
-        if (!cancelResponse.ok) {
-          toast.error(cancelData.error || "خطا در لغو گروه‌ها")
+        if (!cancelRes.success) {
+          toast.error(cancelRes.message || "خطا در لغو گروه‌ها")
         } else {
           toast.success("گروه(های) لغوشده با موفقیت حذف شد.")
         }

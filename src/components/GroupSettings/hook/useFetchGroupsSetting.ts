@@ -1,8 +1,9 @@
 "use client"
 
-import { getAuthToken } from "@/utils/getAuthToken"
 import { useInfiniteQuery } from "@tanstack/react-query"
+import { getGroupsListAction } from "@actions/groups/list"
 import type { SearchBoxItem } from "@/components/ListGrid/ListGrid"
+
 interface IGroup {
   id: number;
   name: string;
@@ -19,60 +20,24 @@ interface UseInfiniteGroupsParams {
   pageSize?: number
 }
 
-interface GroupListResponse {
-  content: any[]
-  totalPages: number
-  totalElements: number
-}
-
 const fetchGroupsPage = async ({
   formId,
   searchBoxList,
   pageParam = 0,
   pageSize = 30,
 }: UseInfiniteGroupsParams & { pageParam?: number }): Promise<{ data: IGroup[]; nextPage: number | null }> => {
-  const token = await getAuthToken()
-
-  const validCombinedRestrictionList = searchBoxList.filter((item) => {
-    if (!item) return false
-    if (typeof item.fieldValue === "string") return item.fieldValue.trim() !== ""
-    if (Array.isArray(item.fieldValue)) return item.fieldValue.length > 0
-    return true
+  const res = await getGroupsListAction({
+    formId,
+    pageParam,
+    pageSize,
+    searchBoxList: searchBoxList as any,
   })
 
-  const searchFilterBoxListPayload =
-    validCombinedRestrictionList.length > 0 ? [{ restrictionList: validCombinedRestrictionList }] : []
-
-  const params: any = {
-    sortList: [{ fieldName: "id", type: "DSC" }],
-    page: pageParam,
-    rows: pageSize,
+  if (!res.success) {
+    throw new Error(res.message || "دریافت لیست گروه‌ها ناموفق بود.")
   }
 
-  if (searchFilterBoxListPayload.length > 0) {
-    params.searchFilterBoxList = searchFilterBoxListPayload
-  }
-
-  const queryParams = new URLSearchParams()
-  queryParams.set("formId", String(formId))
-  queryParams.set("searchFilterModel", JSON.stringify(params))
-
-  const res = await fetch(`/api/group/list?${queryParams.toString()}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    cache: "no-store",
-  })
-
-  if (!res.ok) {
-    const errorData = await res.json()
-    throw new Error(errorData.error || "دریافت لیست گروه‌ها ناموفق بود.")
-  }
-
-  const json: GroupListResponse = await res.json()
-
-  const mapped: IGroup[] = json.content.map((item) => ({
+  const mapped: IGroup[] = (res.data.content ?? []).map((item) => ({
     id: item.groupId,
     name: item.groupName,
     description: "",
@@ -82,7 +47,15 @@ const fetchGroupsPage = async ({
     invalid: item.invalid || false,
   }))
 
-  const nextPage = json.totalPages && pageParam + 1 < json.totalPages ? pageParam + 1 : null
+  const totalPages = res.data.totalPages
+  const nextPage =
+    typeof totalPages === "number" && totalPages > 0
+      ? pageParam + 1 < totalPages
+        ? pageParam + 1
+        : null
+      : mapped.length >= pageSize
+        ? pageParam + 1
+        : null
 
   return { data: mapped, nextPage }
 }

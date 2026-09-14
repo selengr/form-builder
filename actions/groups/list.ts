@@ -36,17 +36,28 @@ function buildSearchFilterModel(input: {
   page: number;
   rows: number;
   searchBoxList?: SearchBoxItem[];
+  /** Match old GroupSettings list: omit empty searchFilterBoxList when true */
+  omitEmptySearchFilterBox?: boolean;
 }) {
   const restrictionList = (input.searchBoxList ?? []).filter(isValidRestriction);
-  const searchFilterBoxList =
-    restrictionList.length > 0 ? [{ restrictionList }] : [];
-
-  return {
-    searchFilterBoxList,
+  const model: {
+    searchFilterBoxList?: { restrictionList: SearchBoxItem[] }[];
+    sortList: { fieldName: string; type: string }[];
+    page: number;
+    rows: number;
+  } = {
     sortList: [{ fieldName: 'id', type: 'DSC' }],
     page: input.page,
     rows: input.rows,
   };
+
+  if (restrictionList.length > 0) {
+    model.searchFilterBoxList = [{ restrictionList }];
+  } else if (!input.omitEmptySearchFilterBox) {
+    model.searchFilterBoxList = [];
+  }
+
+  return model;
 }
 
 
@@ -68,6 +79,7 @@ export async function getGroupsListAction(input: {
     page,
     rows,
     searchBoxList: input.searchBoxList,
+    omitEmptySearchFilterBox: input.formId != null && input.formId !== '',
   });
   const encoded = encodeURIComponent(JSON.stringify(model));
 

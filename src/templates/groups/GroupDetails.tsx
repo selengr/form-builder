@@ -170,7 +170,7 @@ export default function GroupDetails() {
         <div className="min-h-[52px] flex items-center justify-center relative rounded-xl bg-[#F7F7FF] mb-4 px-2">
           <p className="text-[16px] font-bold text-[#2a2a2a]">جزئیات گروه</p>
           <button
-            onClick={() => router.push('/group-new')}
+            onClick={() => router.push('/groups')}
             className="absolute right-2 p-1 rounded-full hover:bg-gray-200">
             <MdOutlineKeyboardArrowRight size={24} color="#292D32" />
           </button>

@@ -6,4 +6,4 @@ export interface GroupListItem {
   invalid?: boolean;
 }
 
-export const GROUP_NEW_LIST_QUERY_KEY = 'group_new_list';
+export const GROUPS_LIST_QUERY_KEY = 'groups_list';

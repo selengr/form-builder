@@ -73,7 +73,7 @@ export default function ListCard({
         <div className="flex w-full gap-2">
           <Link
             className="absolute top-[6px] left-16"
-            href={`/group-new/${data.id}?groupName=${encodeURIComponent(data.name)}`}>
+            href={`/groups/${data.id}?groupName=${encodeURIComponent(data.name)}`}>
             <IconButton color="primary">
               <Image src={EditIcon} alt="edit" width={24} height={24} />
             </IconButton>

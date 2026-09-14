@@ -1,14 +1,8 @@
 "use client"
 
 import { useInfiniteQuery } from "@tanstack/react-query"
-import { getAuthToken } from "@/utils/getAuthToken"
+import { getGroupMembersAction } from "@actions/groups/list"
 import type { IUserGroupMemmerInfo, IUseFetchMembersParams } from "@/types/setting"
-
-interface MembersResponse {
-  content: IUserGroupMemmerInfo[]
-  totalPages: number
-  totalElements: number
-}
 
 interface FetchMembersPageParams extends Omit<IUseFetchMembersParams, "formId"> {
   formId?: number | string
@@ -23,48 +17,28 @@ const fetchMembersPage = async ({
   pageParam = 0,
   pageSize = 30,
 }: FetchMembersPageParams): Promise<{ data: IUserGroupMemmerInfo[]; nextPage: number | null }> => {
-  const token = await getAuthToken()
-
-  const validCombinedRestrictionList = searchBoxList.filter((item) => {
-    if (!item) return false
-    if (typeof item.fieldValue === "string") return item.fieldValue.trim() !== ""
-    if (Array.isArray(item.fieldValue)) return item.fieldValue.length > 0
-    return true
+  const res = await getGroupMembersAction({
+    groupId: String(groupId),
+    pageParam,
+    pageSize,
+    searchBoxList: searchBoxList as any,
+    formId,
   })
 
-  const searchFilterBoxListPayload =
-    validCombinedRestrictionList.length > 0 ? [{ restrictionList: validCombinedRestrictionList }] : []
-
-  const params = {
-    searchFilterBoxList: searchFilterBoxListPayload,
-    sortList: [{ fieldName: "id", type: "DSC" }],
-    page: pageParam,
-    rows: pageSize,
+  if (!res.success) {
+    throw new Error(res.message || "دریافت لیست اعضا ناموفق بود.")
   }
 
-  const encoded = encodeURIComponent(JSON.stringify(params))
-
-  const url = formId
-    ? `/api/group/list/${groupId}?searchFilterModel=${encoded}&formId=${formId}`
-    : `/api/group/list/${groupId}?searchFilterModel=${encoded}`
-
-  const res = await fetch(url, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    cache: "no-store",
-  })
-
-  if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}))
-    throw new Error(errorData.error || "دریافت لیست اعضا ناموفق بود.")
-  }
-
-  const data: MembersResponse = await res.json()
-  const members = Array.isArray(data?.content) ? data.content : []
-
-  const nextPage = data.totalPages && pageParam + 1 < data.totalPages ? pageParam + 1 : null
+  const members = Array.isArray(res.data?.content) ? res.data.content : []
+  const totalPages = res.data.totalPages
+  const nextPage =
+    typeof totalPages === "number" && totalPages > 0
+      ? pageParam + 1 < totalPages
+        ? pageParam + 1
+        : null
+      : members.length >= pageSize
+        ? pageParam + 1
+        : null
 
   return { data: members, nextPage }
 }

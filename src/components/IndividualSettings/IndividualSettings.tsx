@@ -12,10 +12,6 @@ import { useInView } from 'react-intersection-observer';
 import { Box, Button, Tooltip, Checkbox, CircularProgress, MenuItem, Typography } from '@mui/material';
 // hook
 import FormProvider, { RHFSelect, RHFTextField } from '../hook-form';
-// utils
-import { getAuthToken } from '@/utils/getAuthToken';
-// services
-import { AxiosApi } from '@/services/axios/AxiosApi';
 // type
 import { IUserGroupMemmerInfo } from '@/types/setting';
 // components
@@ -23,6 +19,9 @@ import { SearchBoxItem } from '../ListGrid/ListGrid';
 import { SwitchButton } from '../Switch/SwitchButton';
 import ConfirmDialog from '@/components/confirm-dialog';
 import { RemoveGroupConfirmModal } from '../GroupSettings/RemoveConfirmDialog';
+import { PublishListRowsSkeleton } from '../PublishSettingsDialog/PublishListSkeleton';
+import { publishSoloMethodAction } from '@actions/publish/soloMethod';
+import { cancelMemberAllocationAction } from '@actions/publish/memberAllocation';
 import { useFetchMembersSetting } from "../GroupSettings/hook/useFetchMembersSetting"
 
 const buttonStylesAlert = {
@@ -166,7 +165,6 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
   const {
     reset,
     setValue,
-    setError,
     getValues,
     handleSubmit,
     formState: { isSubmitting, isValid },
@@ -213,8 +211,6 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
 
 
   async function onSubmit(values: propertiesFormSchemaType) {
-    const token = await getAuthToken();
-
     try {
       if (values.name && values.family && values.phone && values.gender) {
         const bodyData = introducedUserJTGroupId
@@ -229,39 +225,17 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
             name: values.name,
             lname: values.family,
             username: values.phone,
-            gender: values.gender,
+            gender: values.gender as 'MALE' | 'FEMALE',
             showReportForResponder: values.showReportForResponder,
           };
-        const response = await fetch('/api/publish/individual', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(bodyData),
-        });
 
-        const data = await response.json();
+        const res = await publishSoloMethodAction(bodyData);
 
-        if (!response.ok) {
-          if (data.error && data.details) {
-            data.details.forEach((err: any) => {
-              if (err.path && err.path[0]) {
-                setError(err.path[0], {
-                  type: 'manual',
-                  message: err.message || 'خطا در ورودی',
-                });
-              }
-            });
-          } else if (data.error) {
-            if (Array.isArray(data.error)) {
-              toast.error(data.error[0].title);
-            }
-          } else {
-            toast.error('خطای ناشناخته از سمت سرور');
-          }
+        if (!res.success) {
+          toast.error(res.message || 'خطای ناشناخته از سمت سرور');
           return;
         }
+
         toast.success('با موفقیت به سبد خرید افزوده شد.', {
           className: `max-w-[300px]`,
           duration: 6000,
@@ -274,10 +248,15 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
         });
       }
       if (removedMember.length > 0) {
-        await AxiosApi.post("/form-publish-setting/cancel-member-allocation", {
+        const cancelRes = await cancelMemberAllocationAction({
           formId: Number(formId),
-          introducedUserPublishIdList: removedMember,
-        })
+          introducedUserPublishIdList: removedMember as [number, ...number[]],
+        });
+
+        if (!cancelRes.success) {
+          throw new Error(cancelRes.message || 'انجام عملیات با خطا مواجه شد');
+        }
+
         toast.success("اعضای لغوشده با موفقیت حذف شد.")
       }
 
@@ -436,9 +415,7 @@ const IndividualSettings: React.FC<IndividualSettingsProps> = ({ handleOpen, for
 
           <Box display="flex" flexDirection="column" gap="7px" mt={5} mb={2} width={"100%"}>
             {loading ? (
-              <Box display="flex" justifyContent="center" my={4}>
-                <CircularProgress />
-              </Box>
+              <PublishListRowsSkeleton />
             ) : error ? (
               <Typography color="error" textAlign="center">
                 {error.message}

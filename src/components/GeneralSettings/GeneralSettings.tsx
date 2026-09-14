@@ -16,8 +16,8 @@ import { SwitchButton } from '../Switch/SwitchButton';
 import ConfirmDialog from '@/components/confirm-dialog';
 
 import Share from '../share-media/Share';
-import { getAuthToken } from '@/utils/getAuthToken';
 import CopyToClipboardButton from '../clipboard-button/CopyToClipBoardButton';
+import { publishPublicMethodAction } from '@actions/publish/publicMethod';
 
 const buttonStylesAlert = {
   height: '50px',
@@ -106,49 +106,25 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
     setValue,
     getValues,
     formState: { isSubmitting, isDirty },
-    setError,
   } = methods;
 
   const onSubmit = useCallback(
     async (values: PropertiesFormSchemaType) => {
-
-      const token = await getAuthToken();
       try {
-        const response = await fetch('/api/publish/general', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            formId: Number(formId),
-            publicationMainPageMethod: values.publicationMainPageMethod,
-            capacityPublicLink: values.capacityPublicLink,
-            showReportForResponder: values.showReportForResponder,
-          }),
+        const res = await publishPublicMethodAction({
+          formId: Number(formId),
+          publicationMainPageMethod: values.publicationMainPageMethod,
+          capacityPublicLink: values.capacityPublicLink,
+          showReportForResponder: values.showReportForResponder,
         });
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          if (data.error && data.details) {
-            data.details.forEach((err: any) => {
-              if (err.path && err.path[0]) {
-                setError(err.path[0], {
-                  type: 'manual',
-                  message: err.message || 'خطا در اعتبارسنجی فیلد',
-                });
-              }
-            });
-          } else if (data.error) {
-            toast.error(data.error);
-          } else {
-            toast.error('خطای نامشخص در پاسخ سرور.');
-          }
+        if (!res.success) {
+          toast.error(res.message || 'خطای نامشخص در پاسخ سرور.');
           return;
         }
+
         queryClient.invalidateQueries({ queryKey: ['datas_builder_query'] });
-        if(values.capacityPublicLink){
+        if (values.capacityPublicLink) {
           toast.success('با موفقیت به سبد خرید افزوده شد.', {
             className: `max-w-[300px]`,
             duration: 6000,
@@ -162,13 +138,13 @@ export default function GeneralSettings({ handleOpen, formId, formData }: Genera
         } else {
           toast.success('اعمال تغییرات با موفقیت به انجام شد.');
         }
-       handleOpen();
+        handleOpen();
         reset();
       } catch (error: any) {
         toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
       }
     },
-    [formId, handleOpen, reset, setError],
+    [formId, handleOpen, reset, queryClient, push],
   );
 
   const handleCancel = useCallback(() => {

@@ -12,22 +12,25 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useInView } from "react-intersection-observer"
 import { useQueryClient } from "@tanstack/react-query"
 import { useCallback, useEffect, useState, useRef } from "react"
-import { Box, Button, Checkbox, CircularProgress, IconButton, InputBase, Paper, Tooltip, Typography } from "@mui/material"
+import { Box, Button, Checkbox, CircularProgress, IconButton, InputBase, Paper, Skeleton, Tooltip, Typography } from "@mui/material"
 // hook
 import { useDebounce } from "@/hooks/useDebounce"
 import FormProvider from "../hook-form/FormProvider"
 import type { SearchBoxItem } from "../ListGrid/ListGrid"
-// services
-import { AxiosApi } from "@/services/axios/AxiosApi"
 // components
 import { SwitchButton } from "../Switch/SwitchButton"
 import ConfirmDialog from "@/components/confirm-dialog"
 import { RemoveGroupConfirmModal } from "./RemoveConfirmDialog"
+import { PublishListRowsSkeleton } from "../PublishSettingsDialog/PublishListSkeleton"
 // hook
 import { useFetchMembersSetting } from "./hook/useFetchMembersSetting"
 // type
 import type { MemberSettingsProps, IUserGroupMemmerInfo } from "@/types/setting"
 import { useShowReportForResponder, useUpdateShowReportForResponder } from "./hook/useShowReportForResponder"
+import {
+  cancelMemberAllocationAction,
+  newMemberAllocationAction,
+} from "@actions/publish/memberAllocation"
 
 const buttonStylesAlert = {
   height: "50px",
@@ -96,7 +99,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
     searchBoxList,
   })
 
-  const { data: showReportForResponder } = useShowReportForResponder(Number(formId), Number(groupId))
+  const { data: showReportForResponder, isLoading: isShowReportLoading } = useShowReportForResponder(Number(formId), Number(groupId))
 
   const {
     mutate: updateShowReport
@@ -283,45 +286,42 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
 
   const handleMembersSubmit = useCallback(async () => {
     try {
-      const promises = [];
       if (introducedUserJTGroupIdList.length > 0) {
-        promises.push(
-          await AxiosApi.post("/form-publish-setting/new-member-allocation", {
-            formId: Number(formId),
-            introducedUserJTGroupIdList
-          })
-        )
+        const allocateRes = await newMemberAllocationAction({
+          formId: Number(formId),
+          introducedUserJTGroupIdList: introducedUserJTGroupIdList as [number, ...number[]],
+        })
+
+        if (!allocateRes.success) {
+          toast.error(allocateRes.message || "انجام عملیات با خطا مواجه شد")
+          return
+        }
+
+        toast.success('با موفقیت به سبد خرید افزوده شد.', {
+          className: `max-w-[300px]`,
+          duration: 6000,
+          action: {
+            label: 'مشاهده سبد خرید',
+            onClick: () => {
+              push('/purchase-order')
+            },
+          },
+        });
       }
 
       if (introducedUserPublishIdList.length > 0) {
-        promises.push(
-          await AxiosApi.post("/form-publish-setting/cancel-member-allocation", {
-            formId: Number(formId),
-            introducedUserPublishIdList,
-          })
-        )
-      }
+        const cancelRes = await cancelMemberAllocationAction({
+          formId: Number(formId),
+          introducedUserPublishIdList: introducedUserPublishIdList as [number, ...number[]],
+        })
 
-      if (promises.length > 0) {
-        await Promise.all(promises);
-
-        if (introducedUserJTGroupIdList.length > 0) {
-           toast.success('با موفقیت به سبد خرید افزوده شد.', {
-            className: `max-w-[300px]`,
-            duration: 6000, 
-            action: {
-              label: 'مشاهده سبد خرید',
-              onClick: () => {
-                push('/purchase-order')
-              },
-            },
-          });
+        if (!cancelRes.success) {
+          toast.error(cancelRes.message || "انجام عملیات با خطا مواجه شد")
+          return
         }
-        if (introducedUserPublishIdList.length > 0) {
-          toast.success("اعضای لغوشده با موفقیت حذف شد.");
-        }
-      }
 
+        toast.success("اعضای لغوشده با موفقیت حذف شد.");
+      }
 
       const currentShowReportValue = getValues("showReportForResponder");
       if (currentShowReportValue !== showReportForResponder) {
@@ -336,7 +336,18 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
      } catch (error:any) {
         toast.error( error?.message || 'انجام عملیات با خطا مواجه شد');
     }
-  }, [formId, handleClose, reset, methods, introducedUserJTGroupIdList, introducedUserPublishIdList])
+  }, [
+    formId,
+    handleClose,
+    reset,
+    getValues,
+    push,
+    queryClient,
+    showReportForResponder,
+    updateShowReport,
+    introducedUserJTGroupIdList,
+    introducedUserPublishIdList,
+  ])
 
 
   const onSubmit = async () => {
@@ -432,9 +443,7 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
 
           <Box display="flex" flexDirection="column" gap="6px" mb={2} width={"100%"}>
             {loading ? (
-              <Box display="flex" justifyContent="center" my={4}>
-                <CircularProgress />
-              </Box>
+              <PublishListRowsSkeleton />
             ) : error ? (
               <Typography color="error" textAlign="center">
                 {error.message}
@@ -513,17 +522,21 @@ const MemberSettings: React.FC<MemberSettingsProps> = ({ handleClose, formId, fo
             <Typography variant="subtitle2" fontWeight={500} fontSize="14px">
               نمایش نتیجه به پاسخ دهنده
             </Typography>
-            <SwitchButton
-              onChange={handleShowReportForResponder}
-              checked={isShowReportForResponder}
-              sx={{
-                "& .MuiInputBase-root": {
-                  borderRadius: "10px",
-                  fontWeight: 600,
-                  height: 42,
-                },
-              }}
-            />
+            {isShowReportLoading ? (
+              <Skeleton variant="rounded" width={46} height={24} animation="wave" sx={{ borderRadius: 12 }} />
+            ) : (
+              <SwitchButton
+                onChange={handleShowReportForResponder}
+                checked={isShowReportForResponder}
+                sx={{
+                  "& .MuiInputBase-root": {
+                    borderRadius: "10px",
+                    fontWeight: 600,
+                    height: 42,
+                  },
+                }}
+              />
+            )}
           </Box>
 
           <Box display="flex" justifyContent="center" alignItems="center" pb={2} gap="16px" px="16px" mt="14px">

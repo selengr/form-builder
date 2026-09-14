@@ -12,8 +12,6 @@ import { useQueryClient } from "@tanstack/react-query"
 import { useInView } from "react-intersection-observer"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Box, Button, Checkbox, CircularProgress, IconButton, InputBase, Paper, Typography } from "@mui/material"
-// utils
-import { getAuthToken } from "@/utils/getAuthToken"
 // hook
 import { useDebounce } from "@/hooks/useDebounce"
 import FormProvider from "../hook-form/FormProvider"
@@ -22,7 +20,9 @@ import type { SearchBoxItem } from "../ListGrid/ListGrid"
 import { RemoveGroupConfirmModal } from "./RemoveConfirmDialog"
 import { useFetchGroupsSetting } from "./hook/useFetchGroupsSetting"
 import CancelGroupAllocationModal from "./CancelGroupAllocationModal"
+import { PublishListRowsSkeleton } from "../PublishSettingsDialog/PublishListSkeleton"
 import { cancelGroupAllocationAction } from "@actions/groups/cancel"
+import { publishGroupMethodAction } from "@actions/publish/groupMethod"
 // images
 import { UserWithSearchIcon } from "../../../public/images/icons/UserWithSearchIcon "
 
@@ -219,7 +219,6 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
   }
 
   const handleGroupSubmit = useCallback(async () => {
-    const token = await getAuthToken()
     const values = getValues();
     const currentSelected = values.groupsId
     const addedGroups = currentSelected.filter((id) => !initialSelectedGroupIds.includes(id))
@@ -231,38 +230,14 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
 
     try {
       if (addedGroups.length > 0) {
-        const response = await fetch("/api/publish/group", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            formId: Number(formId),
-            groupsId: addedGroups,
-            showReportForResponder: false,
-          }),
+        const res = await publishGroupMethodAction({
+          formId: Number(formId),
+          groupsId: addedGroups as [number, ...number[]],
+          showReportForResponder: false,
         })
 
-        const data = await response.json()
-
-        if (!response.ok) {
-          if (data.error && data.details) {
-            data.details.forEach((err: any) => {
-              if (err.path && err.path[0]) {
-                if (err.path[0] === "groupsId") {
-                  methods.setError("groupsId", {
-                    type: "manual",
-                    message: err.message || "خطا در فیلد گروه",
-                  })
-                }
-              }
-            })
-          } else if (data.error) {
-            toast.error(data.error)
-          } else {
-            toast.error("خطای ناشناخته از سمت سرور")
-          }
+        if (!res.success) {
+          toast.error(res.message || "خطای ناشناخته از سمت سرور")
           return
         }
 
@@ -299,7 +274,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
       console.error("Group publish error:", err)
     }
   },
-    [formId, handleOpen, reset, methods, initialSelectedGroupIds, explicitlyUncheckedIncompleteIds],
+    [formId, handleOpen, reset, getValues, queryClient, push, initialSelectedGroupIds, explicitlyUncheckedIncompleteIds],
   )
 
   const onSubmit = async () => {
@@ -411,9 +386,7 @@ const GroupSettings: React.FC<GroupSettingsProps> = ({ handleOpen, formId, formD
 
           <Box display="flex" flexDirection="column" gap="6px" mb={2} width={"100%"}>
             {isLoading ? (
-              <Box display="flex" justifyContent="center" my={4}>
-                <CircularProgress />
-              </Box>
+              <PublishListRowsSkeleton />
             ) : error ? (
               <Typography color="error" textAlign="center">
                 {error.message}

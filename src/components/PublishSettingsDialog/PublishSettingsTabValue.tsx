@@ -23,18 +23,7 @@ function CustomTabPanel(props: CustomTabPanelProps) {
   }, [isSelected, children]);
 
   return (
-    <div
-      role='tabpanel'
-      hidden={!isSelected}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      style={{
-        display: isSelected ? 'flex' : 'none',
-        flex: 1,
-        minHeight: 0,
-        flexDirection: 'column',
-        overflow: 'hidden',
-      }}>
+    <div role='tabpanel' hidden={!isSelected} id={`simple-tabpanel-${index}`} aria-labelledby={`simple-tab-${index}`}>
       {memoizedChildren}
     </div>
   );
@@ -48,7 +37,7 @@ export default function PublishSettingsTabValue({ handleOpen, formId, formData }
   };
 
   return (
-    <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+    <>
       <Box
         sx={{
           borderBottom: 1,
@@ -57,7 +46,6 @@ export default function PublishSettingsTabValue({ handleOpen, formId, formData }
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          flexShrink: 0,
         }}>
         <Tabs
           TabIndicatorProps={{ style: { backgroundColor: '#2CDFC9' } }}
@@ -109,23 +97,21 @@ export default function PublishSettingsTabValue({ handleOpen, formId, formData }
 
       </Box>
 
-      <Box sx={{ flex: 1, minHeight: 0, overflow: 'auto', scrollbarWidth: 'thin' }}>
-        <CustomTabPanel value={value} index='general'>
-          <GeneralSettings handleOpen={handleOpen} formData={formData} formId={formId} />
-        </CustomTabPanel>
+      <CustomTabPanel value={value} index='general'>
+        <GeneralSettings handleOpen={handleOpen} formData={formData} formId={formId} />
+      </CustomTabPanel>
 
-        <CustomTabPanel value={value} index='individual'>
-          <IndividualSettings handleOpen={handleOpen} formData={formData} formId={formId} />
-        </CustomTabPanel>
+      <CustomTabPanel value={value} index='individual'>
+        <IndividualSettings handleOpen={handleOpen} formData={formData} formId={formId} />
+      </CustomTabPanel>
 
-        <CustomTabPanel value={value} index='group'>
-          <GroupSettings handleOpen={handleOpen} formData={formData} formId={formId} />
-        </CustomTabPanel>
+      <CustomTabPanel value={value} index='group'>
+        <GroupSettings handleOpen={handleOpen} formData={formData} formId={formId} />
+      </CustomTabPanel>
 
-        <CustomTabPanel value={value} index='mresalat'>
-          <MresalatUsersSettings handleOpen={handleOpen} />
-        </CustomTabPanel>
-      </Box>
-    </Box>
+      <CustomTabPanel value={value} index='mresalat'>
+        <MresalatUsersSettings handleOpen={handleOpen} />
+      </CustomTabPanel>
+    </>
   );
 }

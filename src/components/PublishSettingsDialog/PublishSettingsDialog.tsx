@@ -69,12 +69,6 @@ export default function PublishSettingsDialog({ formId , formData }: PublishSett
             margin: '10px',
             width: '100%',
             maxWidth: '600px',
-            height: { xs: '85vh', sm: '75vh' },
-            minHeight: { xs: 520, sm: 640 },
-            maxHeight: '90vh',
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'hidden',
             transition: 'transform 0.25s cubic-bezier(0.34, 1.2, 0.64, 1), opacity 0.2s ease',
             transform: openDialog ? 'scale(1)' : 'scale(0.96)',
             opacity: openDialog ? 1 : 0,
@@ -85,7 +79,7 @@ export default function PublishSettingsDialog({ formId , formData }: PublishSett
             transition: 'opacity 0.2s ease',
           },
         }}>
-        <Box className='flex items-center justify-start' sx={{ p: 2, pb: 0, flexShrink: 0 }}>
+        <Box className='flex items-center justify-start' sx={{ p: 2, pb : 0 }}>
           <IconButton onClick={handleOpen} aria-label='بستن'>
             <CgClose color='#404040' className="text-[1.25rem] md:text-[1.35rem]" />
           </IconButton>
@@ -93,24 +87,20 @@ export default function PublishSettingsDialog({ formId , formData }: PublishSett
         <DialogContent
           dir='rtl'
           sx={{
-            flex: 1,
-            minHeight: 0,
-            overflow: 'hidden',
+            maxHeight: '75vh',
             scrollbarWidth: 'thin',
             paddingX: 1,
             paddingTop: 0,
-            paddingBottom: 0,
+               paddingBottom: 0,
             display: 'flex',
             flexDirection: 'column',
           }}>
-          <Box className='flex justify-center items-baseline' sx={{ mb: 2, flexShrink: 0 }}>
+          <Box className='flex justify-center items-baseline' sx={{ mb: 2 }}>
             <Typography variant='h6' component='p' fontWeight='bold' textAlign='center' sx={{fontSize: { xs: '16px', sm: '18px', md: '20px' } }}>
               تنظیمات انتشار
             </Typography>
           </Box>
-          <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-            <PublishSettingsTabValue handleOpen={handleOpen} formId={formId} formData={formData} />
-          </Box>
+          <PublishSettingsTabValue handleOpen={handleOpen} formId={formId} formData={formData} />
         </DialogContent>
       </Dialog>
     </>

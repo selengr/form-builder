@@ -1,6 +1,12 @@
-import FormCardBase from '@/components/common/FormCardBase';
+'use client';
 
-export default function ListCard({ data }: { data: any }) {
+import FormCardBase from '@/components/common/FormCardBase';
+import { UnifiedListGridCardProps } from '@/components/unified-list-grid';
+import { PublicFormListItem } from './types';
+
+export default function ListCard({
+  data,
+}: UnifiedListGridCardProps<PublicFormListItem>) {
   return (
     <FormCardBase
       data={data}

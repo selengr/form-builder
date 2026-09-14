@@ -1,106 +1,104 @@
 'use client';
 
-import { Suspense, useState } from 'react';
-import dynamic from 'next/dynamic';
-import PublicFormCard from './ListCard';
+import { useCallback, useState } from 'react';
+import {
+  UnifiedListGridPage,
+  createDefaultSearchBoxList,
+  SearchQueryFilter,
+  UnifiedListGridFilterSlotProps,
+} from '@/components/unified-list-grid';
+import ListCard from './ListCard';
 import CardSkeleton from './CardSkeleton';
-import ListGridWrapperSkeleton from '@/components/ListGrid/ListGridWrapperSkeleton';
-import FilterSidebar from './FilterSidebar';
-
-const ListGrid = dynamic(() => import('./ListGrid'), {
-  ssr: false,
-});
+import PublicFormFilter from './PublicFormFilter';
+import { publicFormListFetcher } from './publicFormListFetcher';
+import {
+  DEFAULT_PUBLIC_FORM_FILTER,
+  PUBLIC_FORM_LIST_QUERY_KEY,
+  PublicFormListItem,
+} from './types';
 
 export default function ListGridWrapper() {
-  const [refreshGrid, setRefreshGrid] = useState(false);
-  const [formType, setFormType] = useState<any>({
-    type: 'ALL',
-    status: 'ALL',
-    isCreatedSoloReport: 'ALL',
-    fieldOperation: "DSC"
-  });
-  
-  const filterBoxList: any = [];
+  const [draftFilter, setDraftFilter] = useState<SearchQueryFilter>(DEFAULT_PUBLIC_FORM_FILTER);
+  const [appliedFilter, setAppliedFilter] = useState<SearchQueryFilter>(DEFAULT_PUBLIC_FORM_FILTER);
+
+  const syncDraftFromApplied = useCallback(() => {
+    setDraftFilter(appliedFilter);
+  }, [appliedFilter]);
+
+  const FilterSlot = useCallback(
+    ({ mode, closeMobileFilter, refreshList }: UnifiedListGridFilterSlotProps) => {
+      const isMobile = mode === 'mobile';
+      const filter = isMobile ? draftFilter : appliedFilter;
+
+      const handleChange: React.Dispatch<React.SetStateAction<SearchQueryFilter>> = (
+        updater,
+      ) => {
+        if (isMobile) {
+          setDraftFilter(updater);
+          return;
+        }
+
+        setAppliedFilter((prev) =>
+          typeof updater === 'function' ? updater(prev) : updater,
+        );
+      };
+
+      const handleApply = () => {
+        if (isMobile) {
+          setAppliedFilter(draftFilter);
+          closeMobileFilter();
+          return;
+        }
+
+        setAppliedFilter(filter);
+        refreshList();
+      };
+
+      const handleReset = () => {
+        setDraftFilter(DEFAULT_PUBLIC_FORM_FILTER);
+        setAppliedFilter(DEFAULT_PUBLIC_FORM_FILTER);
+        if (isMobile) {
+          closeMobileFilter();
+          return;
+        }
+        refreshList();
+      };
+
+      return (
+        <PublicFormFilter
+          mode={mode}
+          filter={filter}
+          onChange={handleChange}
+          onApply={handleApply}
+          onReset={handleReset}
+        />
+      );
+    },
+    [appliedFilter, draftFilter],
+  );
 
   return (
-    <Suspense fallback={<ListGridWrapperSkeleton
-      name='فرم‌های عمومی'
-      headerName='تعداد کل فرم‌ها'
-      hasCreateBtn={false}
-      hasSidebarFilter={false}
-      SkeletonComponent={CardSkeleton}
-    />}>
-      <ListGrid
-        title='فرم‌های عمومی'
-        CartComponent={PublicFormCard}
-        searchQueryFilter={formType}
-        url='/public-page/form/main-list'
-        filterComponent={
-        <FilterSidebar 
-          formType={formType} 
-          setFormType={setFormType} 
-          setRefreshGrid={setRefreshGrid}
-        />
-      }
-      filterBoxList={filterBoxList}
-      refreshGrid={refreshGrid}
-      />
-    </Suspense>
+    <UnifiedListGridPage<PublicFormListItem>
+      config={{
+        title: 'فرم‌های عمومی',
+        queryKey: PUBLIC_FORM_LIST_QUERY_KEY,
+        textTotal: ['تعداد کل فرم‌ها', 'عدد'],
+        searchField: 'formSetting.name',
+        pageSize: 10,
+        hasSidebarFilter: true,
+        backHref: '/',
+        onMobileFilterOpen: syncDraftFromApplied,
+      }}
+      slots={{
+        CardComponent: ListCard,
+        SkeletonComponent: CardSkeleton,
+        FilterComponent: FilterSlot,
+      }}
+      fetcher={publicFormListFetcher}
+      searchBoxList={createDefaultSearchBoxList('formSetting.name')}
+      searchQueryFilter={appliedFilter}
+      skeletonHeaderName="تعداد کل فرم‌ها"
+      loadingHasCreateBtn={false}
+    />
   );
 }
-
-
-
-
-
-// const searchBoxList = [
-//   {
-//     fieldName: 'formSetting.name',
-//     fieldOperation: 'MATCH',
-//     fieldValue: '',
-//     nextConditionOperator: 'OR',
-//   },
-// ] satisfies SearchBoxItem[];
-// 'use client';
-
-// import ListCard from './ListCard';
-// import { useEffect, useState } from 'react';
-// import { useSearchParams } from 'next/navigation';
-// import ListGrid from '@/components/ListGrid/ListGrid';
-
-// export default function ListGridWrapper() {
-//   const searchParams = useSearchParams()
-//   const search = searchParams.get("query")
-//   const [refreshGrid, setRefreshGrid] = useState(false);
-//   const [formType] = useState<any>({
-//     type: 'ALL',
-//     status: 'ALL',
-//   });
-//   const filterBoxList: any = [];
-//   const searchBoxList: any = [
-//     {
-//       fieldName: 'formSetting.name',
-//       fieldOperation: 'MATCH',
-//       fieldValue: '',
-//       nextConditionOperator: 'OR',
-//     },
-//   ];
-
-//   useEffect(() => {
-//     setRefreshGrid((prev) => !prev);
-//   }, [search]);
-
-//   return (
-//     <ListGrid
-//       searchBoxList={searchBoxList}
-//       filterBoxList={filterBoxList}
-//       url='/public-page/form/main-list'
-//       filterComponent={null}
-//       CartComponent={(item: any) => <ListCard {...item} />}
-//       disableFilter={false}
-//       searchQueryFilter={formType}
-//       refreshGrid={refreshGrid}
-//       title='فرم‌های عمومی'
-//     />
-//   );
-// }

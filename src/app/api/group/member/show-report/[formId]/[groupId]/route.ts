@@ -11,24 +11,22 @@ const showReportSchema = z.object({
 
 export async function GET(
   req: Request,
-  { params }: { params: { formId: string; groupId: string } }
+  { params }: { params: Promise<{ formId: string; groupId: string }> },
 ) {
-  const formId = Number(params.formId);
-  const groupId = Number(params.groupId);
-  const endpoint = `/psya/form-publish-setting/find-group-config/${formId}/${groupId}`
+  const { formId, groupId } = await params;
+  const endpoint = `/psya/form-publish-setting/find-group-config/${formId}/${groupId}`;
   return handleGetRequest(req, endpoint);
 }
 
 export async function PUT(
   req: Request,
-  { params }: { params: { formId: string; groupId: string } }
+  { params }: { params: Promise<{ formId: string; groupId: string }> },
 ) {
-  const formId = Number(params.formId);
-  const groupId = Number(params.groupId);
-  
+  const { formId, groupId } = await params;
+
   return handleApiProxy(req, {
     schema: showReportSchema,
     endpoint: `/psya/form-publish-setting/update-group-config/${formId}/${groupId}`,
-    method : "PUT"
+    method: 'PUT',
   });
 }

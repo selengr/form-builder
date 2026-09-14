@@ -2,7 +2,6 @@
 
 import { z } from 'zod';
 import { api } from '@/services/axios/actionWapper';
-import type { IUserGroupMemmerInfo } from '@/types/setting';
 
 export async function changeMemberStatusAction(input: {
   groupId: number | null;
@@ -23,6 +22,7 @@ const addMemberSchema = z.object({
 
 export type AddMemberToGroupInput = z.infer<typeof addMemberSchema>;
 
+
 export async function addMemberToGroupAction(input: AddMemberToGroupInput) {
   const parsed = addMemberSchema.safeParse(input);
 
@@ -36,20 +36,42 @@ export async function addMemberToGroupAction(input: AddMemberToGroupInput) {
   return api.post('/user-group/introducer/add-member-to-group', parsed.data);
 }
 
-export interface GroupMembersListResponse {
-  content: IUserGroupMemmerInfo[];
-  totalPages: number;
-  totalElements: number;
+export async function getShowReportForResponderAction(input: {
+  formId: number | string;
+  groupId: number | string;
+}) {
+  const formId = Number(input.formId);
+  const groupId = Number(input.groupId);
+
+  if (!Number.isFinite(formId) || !Number.isFinite(groupId)) {
+    return {
+      success: false as const,
+      message: 'شناسه فرم یا گروه نامعتبر است',
+    };
+  }
+
+  return api.get<{ showReportForResponder: boolean }>(
+    `/form-publish-setting/find-group-config/${formId}/${groupId}`,
+  );
 }
 
-export async function getGroupMembersAction(input: {
+export async function updateShowReportForResponderAction(input: {
+  formId: number | string;
   groupId: number | string;
-  searchFilterModel: string;
-  formId?: number | string;
+  showReportForResponder: boolean;
 }) {
-  const { groupId, searchFilterModel, formId } = input;
-  const base = `/user-group/introducer/group-listgrid/${groupId}/members?searchFilterModel=${searchFilterModel}`;
-  const url = formId != null && formId !== '' ? `${base}&formId=${formId}` : base;
+  const formId = Number(input.formId);
+  const groupId = Number(input.groupId);
 
-  return api.get<GroupMembersListResponse>(url);
+  if (!Number.isFinite(formId) || !Number.isFinite(groupId)) {
+    return {
+      success: false as const,
+      message: 'شناسه فرم یا گروه نامعتبر است',
+    };
+  }
+
+  return api.put(
+    `/form-publish-setting/update-group-config/${formId}/${groupId}`,
+    { showReportForResponder: input.showReportForResponder },
+  );
 }

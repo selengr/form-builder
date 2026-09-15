@@ -137,7 +137,7 @@ export default function ShareLinkSetting({ handleOpen, formData }: ShareLinkSett
           width: '100%',
           gap: 1,
         }}>
-        <Box display='flex' gap={1} mt={4}>
+        <Box display='flex' gap={1} mt={4} mb={3}>
           <IconButtonContainer>
             <LuRefreshCcw size='1.5rem' color='#1758BA' />
           </IconButtonContainer>
@@ -171,7 +171,7 @@ export default function ShareLinkSetting({ handleOpen, formData }: ShareLinkSett
         </Box>
 
 
-        <Box display='flex' flexDirection='column' gap={2} mt={2}>
+        {/* <Box display='flex' flexDirection='column' gap={2} mt={2}>
 
           <Box display='flex' justifyContent='space-between' alignItems='center'>
             <Typography variant='subtitle2' fontWeight={500} fontSize='14px'>
@@ -190,7 +190,7 @@ export default function ShareLinkSetting({ handleOpen, formData }: ShareLinkSett
             />
           </Box>
 
-        </Box>
+        </Box> */}
       </Box>
 
       <Box

@@ -77,8 +77,9 @@ export default function PackagingListCard({
 
     const params = new URLSearchParams({
       from: 'TESTING',
+      source: 'packaging',
     });
-    router.push(`form/${data.formId}?${params.toString()}`);
+    router.push(`/form/${data.formId}?${params.toString()}`);
   };
 
   const handleNavigateToReport = () => {

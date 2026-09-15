@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { Button } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-// import { usePathname, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 // templates
 import AnimatedBox from '@/templates/form/AnimatedBox';
@@ -23,6 +23,7 @@ import { useReportFlow } from '@/hooks/useReportFlow';
 import { useShowResultUser } from '../show-result/hooks/useShowResultUser';
 import { useIframeDetector } from '@/hooks/useIframeDetector';
 import { useUserInfoContext } from '@/context/UserInfoContext';
+import { getParticipateBackHref } from '../getParticipateBackHref';
 
 interface FinishStepProps {
   question: any;
@@ -44,6 +45,8 @@ export function FinishStep({
   const { isInIframe, modalSize } = useIframeDetector();
   const { isAuthenticated } = useUserInfoContext();
   const { mutate, isPending } = useShowResultUser();
+  const searchParams = useSearchParams();
+  const backHref = getParticipateBackHref(searchParams.get('source'));
 
   const [showMresalatDialog, setShowMresalatDialog] = useState(false);
 
@@ -149,7 +152,7 @@ export function FinishStep({
                       },
                     }}
                     variant="contained"
-                    onClick={() => replace('/')}
+                    onClick={() => replace(backHref)}
                   >
                     بازگشت
                   </Button>

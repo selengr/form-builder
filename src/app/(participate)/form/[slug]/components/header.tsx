@@ -1,24 +1,29 @@
 import React from 'react';
 import Image from 'next/image';
 import { Button, IconButton } from '@mui/material';
+import { useSearchParams } from 'next/navigation';
 import { MdOutlineKeyboardArrowRight } from 'react-icons/md';
 import BugIcon from '@/../public/images/home-page/menu/bugIcon.svg';
+import { getParticipateBackHref } from '../getParticipateBackHref';
 
 interface HeaderProps {
   handleOpenReportDialog: any;
-  replace: any;
+  replace: (path: string) => void;
   formName: string;
   surveyParam: boolean;
 }
 
 function Header({ handleOpenReportDialog, replace, formName, surveyParam }: HeaderProps) {
+  const searchParams = useSearchParams();
+  const backHref = getParticipateBackHref(searchParams.get('source'));
+
   return (
     <div className="shrink-0 relative m-2 mb-4 rounded-lg bg-[#F7F7FF] px-4 py-4 z-10">
 
       {!surveyParam && (
         <IconButton
           sx={{ position: 'absolute', left: { xs: '2px', sm: '8px' }, top: '50%', transform: 'translateY(-50%)' }}
-          onClick={() => replace('/')}
+          onClick={() => replace(backHref)}
         >
           <MdOutlineKeyboardArrowRight color="#292D32" />
         </IconButton>

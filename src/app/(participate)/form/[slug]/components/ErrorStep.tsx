@@ -3,8 +3,10 @@
 import React from 'react';
 import { Button } from '@mui/material';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import AnimatedBox from '@/templates/form/AnimatedBox';
 import errorStep from '@/../public/images/home-page/errorStep.svg';
+import { getParticipateBackHref } from '../getParticipateBackHref';
 
 interface ErrorStepProps {
   message: string;
@@ -12,6 +14,9 @@ interface ErrorStepProps {
 }
 
 export function ErrorStep({ message, replace }: ErrorStepProps) {
+  const searchParams = useSearchParams();
+  const backHref = getParticipateBackHref(searchParams.get('source'));
+
   return (
     <div className='w-full flex flex-col p-4 overflow-hidden'>
       <div className='flex flex-col bg-white rounded-xl h-full max-h-screen'>
@@ -38,7 +43,7 @@ export function ErrorStep({ message, replace }: ErrorStepProps) {
                     },
                   }}
                   variant='contained'
-                  onClick={() => replace('/')}>
+                  onClick={() => replace(backHref)}>
                   بازگشت
                 </Button>
               </div>

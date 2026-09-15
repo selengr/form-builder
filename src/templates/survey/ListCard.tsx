@@ -38,11 +38,11 @@ export default function SurveyListCard({
   return (
     <div className="border p-4 rounded-2xl border-[#DDE1E6] flex flex-col gap-3 w-full max-w-full relative">
       <InfoRow label="نام" value={data.name} bold />
-      <SwitchButton
+      {/* <SwitchButton
         sx={{ position: 'absolute', top: 15, right: 15 }}
         checked={!data.showReportForResponder}
         onChange={() => console.log('object')}
-      />
+      /> */}
       <InfoRow label="سرویس‌گیرنده" value={data.surveyTargetPlatformEnum} bold />
       <InfoRow
         label="وضعیت"
@@ -58,7 +58,7 @@ export default function SurveyListCard({
         </button>
 
         <div className="flex gap-2 flex-wrap items-center justify-start">
-          <IconButton
+          {/* <IconButton
             onClick={() => setOpenConfirmDialog(true)}
             disabled={loading}
             color="error">
@@ -67,7 +67,7 @@ export default function SurveyListCard({
 
           <IconButton disabled={loading}>
             <Image src={CopyIcon} alt="copy" width={24} height={24} />
-          </IconButton>
+          </IconButton> */}
 
           {data.status === 'CREATE' && (
             <Link href={`/builder/${data.id}?admin=survey`}>

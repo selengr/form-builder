@@ -104,8 +104,11 @@ export default function ListCard({ data }: UnifiedListGridCardProps<BuilderListI
 
   const handlePreview = () => {
     if (!data.id) return;
-    const params = new URLSearchParams({ from: 'TESTING' });
-    router.push(`form/${data.id}?${params.toString()}`);
+    const params = new URLSearchParams({
+      from: 'TESTING',
+      source: 'builder',
+    });
+    router.push(`/form/${data.id}?${params.toString()}`);
   };
 
   const getAccessLabel = (accessType?: string[]) => {

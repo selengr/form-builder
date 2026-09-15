@@ -6,6 +6,8 @@ export function getParticipateBackHref(source: string | null | undefined): strin
       return '/public-form';
     case 'survey':
       return '/survey';
+    case 'builder':
+      return '/builder';
     default:
       return '/';
   }

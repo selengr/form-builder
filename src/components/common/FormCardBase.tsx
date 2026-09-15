@@ -65,6 +65,7 @@ const FormCardBase: React.FC<FormCardBaseProps> = ({
   if (pathname === '/my-assessments') {
     const params = new URLSearchParams({
       from: 'MY_ASSESSMENT',
+      source: 'my-assessments',
     });
 
     router.push(`${basePath}?${params.toString()}`);

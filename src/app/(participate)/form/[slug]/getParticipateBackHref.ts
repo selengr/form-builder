@@ -8,6 +8,8 @@ export function getParticipateBackHref(source: string | null | undefined): strin
       return '/survey';
     case 'builder':
       return '/builder';
+    case 'my-assessments':
+      return '/my-assessments';
     default:
       return '/';
   }

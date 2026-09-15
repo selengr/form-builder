@@ -11,7 +11,7 @@ export default function ListCard({
     <FormCardBase
       data={data}
       buttonText="شرکت در آزمون"
-      buttonLink={`/form/${data.id}`}
+      buttonLink={`/form/${data.id}?source=public-form`}
       showStatus={false}
     />
   );

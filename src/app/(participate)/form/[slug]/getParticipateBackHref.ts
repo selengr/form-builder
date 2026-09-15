@@ -2,6 +2,8 @@ export function getParticipateBackHref(source: string | null | undefined): strin
   switch (source) {
     case 'packaging':
       return '/packaging';
+    case 'public-form':
+      return '/public-form';
     default:
       return '/';
   }

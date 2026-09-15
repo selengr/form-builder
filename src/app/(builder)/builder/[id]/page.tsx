@@ -9,14 +9,18 @@ async function getFormDataAction(id: string) {
 
 export default async function BuilderIdPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ admin?: string | string[] }>;
 }) {
   const { id } = await params;
+  const sp = await searchParams;
+  const admin = Array.isArray(sp.admin) ? sp.admin[0] : sp.admin;
   const response = await getFormDataAction(id);
 
   if (!response.success) {
-    const back = getBuilderBackConfig('builder');
+    const back = getBuilderBackConfig(admin);
 
     return (
       <BuilderErrorPage

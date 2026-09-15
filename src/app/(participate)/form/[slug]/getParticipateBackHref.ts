@@ -4,6 +4,8 @@ export function getParticipateBackHref(source: string | null | undefined): strin
       return '/packaging';
     case 'public-form':
       return '/public-form';
+    case 'survey':
+      return '/survey';
     default:
       return '/';
   }

@@ -31,8 +31,9 @@ export default function SurveyListCard({
     if (!data.id) return;
     const params = new URLSearchParams({
       from: 'TESTING',
+      source: 'survey',
     });
-    router.push(`form/${data.id}?${params.toString()}`);
+    router.push(`/form/${data.id}?${params.toString()}`);
   };
 
   return (

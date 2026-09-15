@@ -33,11 +33,12 @@ export default function DataCollectionListCard({
     if (!data.id) return;
     const params = new URLSearchParams({
       from: 'TESTING',
+      source: 'data-collection',
     });
     if (data.status === 'CREATE') {
       router.push(`/preview/${data.id}?rep=list&from=data-collection`);
     } else {
-      router.push(`form/${data.id}?${params.toString()}`);
+      router.push(`/form/${data.id}?${params.toString()}`);
     }
   };
 

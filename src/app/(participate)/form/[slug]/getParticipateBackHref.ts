@@ -1,8 +1,3 @@
-/**
- * Resolve form-page back destination.
- * Prefer explicit `back` (relative path only) when present — used by builder editor preview.
- * Otherwise map `source` list origins; default home.
- */
 export function getParticipateBackHref(
   source: string | null | undefined,
   back?: string | null,
@@ -18,7 +13,7 @@ export function getParticipateBackHref(
         return decoded;
       }
     } catch {
-      // ignore malformed back and fall through to source
+      // ignoring malformed back 
     }
   }
 

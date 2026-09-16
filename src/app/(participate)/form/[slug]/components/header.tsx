@@ -15,7 +15,10 @@ interface HeaderProps {
 
 function Header({ handleOpenReportDialog, replace, formName, surveyParam }: HeaderProps) {
   const searchParams = useSearchParams();
-  const backHref = getParticipateBackHref(searchParams.get('source'));
+  const backHref = getParticipateBackHref(
+    searchParams.get('source'),
+    searchParams.get('back'),
+  );
 
   return (
     <div className="shrink-0 relative m-2 mb-4 rounded-lg bg-[#F7F7FF] px-4 py-4 z-10">

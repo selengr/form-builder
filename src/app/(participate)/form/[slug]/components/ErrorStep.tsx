@@ -15,7 +15,10 @@ interface ErrorStepProps {
 
 export function ErrorStep({ message, replace }: ErrorStepProps) {
   const searchParams = useSearchParams();
-  const backHref = getParticipateBackHref(searchParams.get('source'));
+  const backHref = getParticipateBackHref(
+    searchParams.get('source'),
+    searchParams.get('back'),
+  );
 
   return (
     <div className='w-full flex flex-col p-4 overflow-hidden'>

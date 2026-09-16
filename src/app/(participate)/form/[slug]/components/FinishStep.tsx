@@ -46,7 +46,10 @@ export function FinishStep({
   const { isAuthenticated } = useUserInfoContext();
   const { mutate, isPending } = useShowResultUser();
   const searchParams = useSearchParams();
-  const backHref = getParticipateBackHref(searchParams.get('source'));
+  const backHref = getParticipateBackHref(
+    searchParams.get('source'),
+    searchParams.get('back'),
+  );
 
   const [showMresalatDialog, setShowMresalatDialog] = useState(false);
 

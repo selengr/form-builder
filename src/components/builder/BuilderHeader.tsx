@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useParams } from 'next/navigation';
+import { useMemo } from 'react';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { Button, IconButton } from '@mui/material';
 import { IoIosArrowForward } from 'react-icons/io';
 import useDesigner from '@/hooks/useDesigner';
@@ -41,25 +41,37 @@ export default function BuilderHeader({
 }: BuilderHeaderProps) {
   const { id } = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { formName } = useDesigner();
 
+  const formId = Array.isArray(id) ? id[0] : id;
   const title = formTitle || formName || 'پرسشنامه جدید';
+
+  const previewHref = useMemo(() => {
+    const qs = searchParams.toString();
+    const editorPath = `/builder/${formId}${qs ? `?${qs}` : ''}`;
+    const params = new URLSearchParams({
+      from: 'TESTING',
+      source: 'builder',
+      back: editorPath,
+    });
+    return `/form/${formId}?${params.toString()}`;
+  }, [formId, searchParams]);
 
   const actionButtons = (
     <div className="flex items-center gap-2">
-     
-        <Link href={`/form/${id}?from=TESTING&source=builder`}>
+      <Link href={previewHref}>
         <IconButton
           sx={{
             height: 32,
             width: 32,
-            padding: "6px",
+            padding: '6px',
             border: 'none',
             borderRadius: '10px',
             backgroundColor: '#F7F7FF',
           }}
         >
-          <CodiconEye color="#1758BA" className='p-0'/>
+          <CodiconEye color="#1758BA" className="p-0" />
         </IconButton>
       </Link>
 
@@ -75,8 +87,7 @@ export default function BuilderHeader({
         />
       )}
 
-
-       {!isDataCollection && (
+      {!isDataCollection && (
         <Button
           onClick={onPublish}
           variant="contained"

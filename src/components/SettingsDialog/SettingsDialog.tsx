@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { IoSettingsOutline } from 'react-icons/io5';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useState } from 'react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { Box, Button, Dialog, DialogContent, IconButton, Typography } from '@mui/material';
 
 // lib
@@ -188,6 +188,8 @@ export default function SettingsDialog({
   }
 
   useEffect(() => {
+    if (!openDialog) return;
+
     reset({
       name: formName,
       label: data?.formSettingModel?.label ?? '',
@@ -195,9 +197,9 @@ export default function SettingsDialog({
         checked: !!formLimitation,
         value: formLimitation ?? '',
       },
-      startFromContinue: data?.formSettingModel?.startFromContinue ?? false,
+      startFromContinue: startFromContinue ?? false,
     });
-  }, [formName, formLimitation, data, reset]);
+  }, [openDialog, formName, formLimitation, startFromContinue, data?.formSettingModel?.label, reset]);
 
   return (
     <>

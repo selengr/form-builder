@@ -1,47 +1,33 @@
 /**
- * PM scenarios for «شروع از ادامه» (from strart-from-continu.docx).
- *
- * Dimensions:
- * - user: logged-in | guest
- * - previous session: none | incomplete | complete  (resolved after OTP / check-answer; not always known at modal open)
- * - startFromContinue (form setting)
- * - responseLimitation (form setting)
- *
- * This module holds copy + modal modes we can decide with API flags available
- * when the dialog opens (`loggedInStatus`, `responseLimitation`, `startFromContinue`).
- * Toast / access-denied strings are exported for later hook wiring (post-OTP).
+ * Copy + modal modes for «شروع از ادامه» (PM scenarios doc).
+ * Session state (none / incomplete / complete) is decided after OTP / check-answer.
  */
 
 export type StartFromContinueModalMode =
-  /** Scenario 8 — guest, start-from-continue ON, no response limitation */
+  /** Guest, continue ON, no phone limit */
   | 'guest_optional_phone'
-  /** Scenario 9/10 — guest, response limitation ON (phone required) */
+  /** Guest, phone required */
   | 'guest_required_phone'
-  /** Scenario 2-ish — logged-in, start-from-continue ON, no limitation: choose new vs continue */
+  /** Logged in, continue ON, no phone limit */
   | 'logged_in_choose_continue'
-  /** Logged-in + response limitation + start-from-continue: confirm before phone/continue flow */
+  /** Logged in, phone required */
   | 'logged_in_limitation_confirm';
 
 export const START_FROM_CONTINUE_COPY = {
-  /** Scenario 8 modal body */
   optionalPhoneInfo: `می‌توانید فرم را نیمه‌کاره رها کنید و دوباره به آن برگردید!
 این فرم به شما امکان می‌دهد در صورت وقفه، بعداً از همانجایی که آن را رها کرده‌اید ادامه دهید.
 • اگر اولین بار است که این فرم را تکمیل می‌کنید، با وارد کردن شماره همراه، پاسخ‌های شما ذخیره می‌شود تا بعداً بتوانید ادامه دهید.
 • اگر قبلاً این فرم را آغاز کرده‌اید، پاسخ‌های قبلی شما بازیابی خواهد شد.
 وارد کردن شماره همراه اختیاری است، اما اگر احتمال می‌دهید کارتان نیمه‌تمام بماند، توصیه می‌کنیم شماره همراه خود را وارد کنید.`,
 
-  /** Scenario 9 / 10 modal body */
   requiredPhoneInfo: `برای پاسخ دادن به این فرم لازم است که شماره همراه خود را وارد کنید!
 برای جلوگیری از ثبت پاسخ تکراری لازم است شماره همراه شما ثبت شود. اگر قبلاً این فرم را تکمیل کرده باشید، امکان دسترسی مجدد نخواهید داشت.`,
 
-  /** Scenario 2 / 8 / 10 — toast after resuming incomplete session */
   welcomeResumeToast:
     'به ادامه نشست قبلی خوش آمدید! پاسخ‌های قبلی شما بازیابی شد و می‌توانید از همان جایی که متوقف شده بودید ادامه دهید.',
 
-  /** Scenario 9 / 10 — toast after OTP when no previous session */
   phoneRegisteredToast: 'شماره تماس شما با موفقیت ثبت شد.',
 
-  /** Scenario 3 / 5 / 9 / 10 — access denied page body */
   accessDenied:
     'شما قبلاً به این فرم پاسخ داده‌اید. امکان پاسخ‌دهی مجدد توسط سازنده فرم محدود شده است. از مشارکت شما سپاسگزاریم.',
 
@@ -61,11 +47,8 @@ export const START_FROM_CONTINUE_COPY = {
 } as const;
 
 export interface StartFromContinueScenarioInput {
-  /** API: `loggedInStatus === false` means guest */
   loggedInStatus: boolean | null | undefined;
-  /** API: form setting e.g. `PHONE_NUMBER` | `EMAIL` | null */
   responseLimitation: string | null | undefined;
-  /** API: form setting — dialog only opens when true today */
   startFromContinue: boolean | null | undefined;
 }
 
@@ -86,12 +69,10 @@ export interface StartFromContinueModalContent {
   mode: StartFromContinueModalMode;
   body: string;
   question: string;
-  /** Left / secondary button */
   secondary: {
     label: string;
     action: 'start_new' | 'cancel' | 'skip_enter';
   };
-  /** Right / primary button */
   primary: {
     label: string;
     action: 'continue_previous' | 'enter_phone' | 'confirm_limitation';
@@ -106,7 +87,6 @@ export function getStartFromContinueModalContent(
 
   switch (mode) {
     case 'guest_optional_phone':
-      // Scenario 8
       return {
         mode,
         body: c.optionalPhoneInfo,
@@ -115,7 +95,6 @@ export function getStartFromContinueModalContent(
         primary: { label: c.btnEnterPhone, action: 'enter_phone' },
       };
     case 'guest_required_phone':
-      // Scenario 9 / 10 (guest + limitation) — same modal copy
       return {
         mode,
         body: c.requiredPhoneInfo,
@@ -133,7 +112,6 @@ export function getStartFromContinueModalContent(
       };
     case 'logged_in_choose_continue':
     default:
-      // Scenario 2 UI when user must pick; resume toast is shown by hooks later
       return {
         mode,
         body: c.optionalPhoneInfo,

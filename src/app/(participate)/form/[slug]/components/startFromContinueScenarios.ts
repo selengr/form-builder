@@ -1,8 +1,3 @@
-/**
- * Copy + modal modes for «شروع از ادامه» (PM scenarios doc).
- * Session state (none / incomplete / complete) is decided after OTP / check-answer.
- */
-
 export type StartFromContinueModalMode =
   /** Guest, continue ON, no phone limit */
   | 'guest_optional_phone'

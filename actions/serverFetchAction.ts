@@ -1,30 +1,26 @@
 'use server';
 
-import { serverApi } from '@/services/axios/serverApi';
+import { api } from '@/services/axios/actionWapper';
 
 export async function serverFetch(url: string, params: Record<string, any> = {}) {
-  // try {
-    const queryString = JSON.stringify(params);
-    const encodedParams = encodeURIComponent(queryString);
-    const fullURL = `${url}${encodedParams === encodeURIComponent('{}') ? '' : encodedParams}`;
+  const queryString = JSON.stringify(params);
+  const encodedParams = encodeURIComponent(queryString);
+  const fullURL = `${url}${encodedParams === encodeURIComponent('{}') ? '' : encodedParams}`;
 
-    const response = await serverApi.get(fullURL);
+  const res = await api.get(fullURL);
 
+  if (!res.success) {
     return {
-      ok: true as const,
-      data: response.data ?? null,
-      status: response.status,
+      ok: false as const,
+      data: null,
+      status: res.status ?? 500,
+      message: res.message || 'خطای نامشخص',
     };
-  // } catch (error: any) {
-  //   return {
-  //     ok: false as const,
-  //     data: null,
-  //     status: error?.response?.status ?? 500,
-  //     message: error?.response?.data?.message?.[0]?.title ||
-  //     error?.response?.data?.message ||
-  //     error?.response?.data ||
-  //     error?.message ||
-  //     'خطای نامشخص'
-  //   };
-  // }
+  }
+
+  return {
+    ok: true as const,
+    data: res.data ?? null,
+    status: 200,
+  };
 }

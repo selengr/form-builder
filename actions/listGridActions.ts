@@ -1,6 +1,6 @@
 'use server';
 
-import { serverApi } from '@/services/axios/serverApi';
+import { api } from '@/services/axios/actionWapper';
 
 interface SearchBoxItem {
   fieldName: string;
@@ -39,9 +39,9 @@ function buildFilterRestrictions(filter: SearchQueryFilter): SearchBoxItem[] {
     .filter(({ key }) => filter[key] && filter[key] !== 'ALL')
     .map(({ key, fieldName }) => ({
       fieldName,
-      fieldOperation: 'EQUAL',
+      fieldOperation: 'EQUAL' as const,
       fieldValue: filter[key],
-      nextConditionOperator: 'AND',
+      nextConditionOperator: 'AND' as const,
     }));
 }
 
@@ -66,42 +66,41 @@ export async function fetchListGridData(
   url: string,
   searchQueryFilter: SearchQueryFilter = DEFAULT_SEARCH_FILTER,
 ) {
-  try {
-    const filterRestrictions = buildFilterRestrictions(searchQueryFilter);
+  const filterRestrictions = buildFilterRestrictions(searchQueryFilter);
 
-    const restrictionList = [
-      ...searchBoxList,
-      ...filterBoxList,
-      ...filterRestrictions,
-    ].filter(isValidRestriction);
+  const restrictionList = [
+    ...searchBoxList,
+    ...filterBoxList,
+    ...filterRestrictions,
+  ].filter(isValidRestriction);
 
-    const params = {
-      searchFilterBoxList: [{ restrictionList }],
-      sortList: [
-        {
-          fieldName: 'id',
-          type: searchQueryFilter.fieldOperation,
-        },
-      ],
-      page: pageParam,
-      rows: PAGE_SIZE,
+  const params = {
+    searchFilterBoxList: [{ restrictionList }],
+    sortList: [
+      {
+        fieldName: 'id',
+        type: searchQueryFilter.fieldOperation,
+      },
+    ],
+    page: pageParam,
+    rows: PAGE_SIZE,
+  };
+
+  const encodedParams = encodeURIComponent(JSON.stringify(params));
+  const fullURL = `${url}?searchFilterModel=${encodedParams}`;
+
+  const res = await api.get<{ content: unknown[]; totalElements: number }>(fullURL);
+
+  if (!res.success) {
+    return {
+      success: false as const,
+      message: res.message,
     };
+  }
 
-    const encodedParams = encodeURIComponent(JSON.stringify(params));
-
-    const fullURL = `${url}?searchFilterModel=${encodedParams}`;
-
-    const { data } = await serverApi.get(fullURL);
-
-      return {
-        success: true,
-        data: data.content,
-        total: data.totalElements,
-      };
-    } catch (error: any) {
-        return {
-        success: false,
-        message: error?.message
-      };
-   }
+  return {
+    success: true as const,
+    data: res.data.content,
+    total: res.data.totalElements,
+  };
 }

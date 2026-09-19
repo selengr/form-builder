@@ -1,13 +1,12 @@
 'use server';
 
-import { serverApi } from '@/services/axios/serverApi';
+import { api } from '@/services/axios/actionWapper';
 
 interface SubcategoryModel {
   parentId: string[];
 }
 
 export async function getSubcategoryAction(parentId: string[]) {
-  //  try {
   const customComboFilterModel = {
     type: 'COMBO',
     entity: 'PROJECTS',
@@ -18,24 +17,10 @@ export async function getSubcategoryAction(parentId: string[]) {
 
   const subcategoryModel: SubcategoryModel = { parentId };
 
-  const baseUrl = `/category/subcategory`;
-  const queryString =
+  const url =
+    `/category/subcategory` +
     `?customComboFilterModel=${encodeURIComponent(JSON.stringify(customComboFilterModel))}` +
     `&subcategoryModel=${encodeURIComponent(JSON.stringify(subcategoryModel))}`;
 
-  const url = baseUrl + queryString;
-
-  const response = await serverApi.get(url);
-  return response.data;
-
-// } catch (error: any) {
-//   const message =
-//     error?.response?.data?.message?.[0]?.title ||
-//     error?.response?.data?.message ||
-//     error?.response?.data ||
-//     error?.message ||
-//     'خطای نامشخص';
-
-//   throw new Error(message);
-// }
+  return api.get(url);
 }

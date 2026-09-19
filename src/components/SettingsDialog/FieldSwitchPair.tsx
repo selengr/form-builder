@@ -11,15 +11,8 @@ import TimePicker from 'react-multi-date-picker/plugins/analog_time_picker';
 import { GoClock } from 'react-icons/go';
 import TimePickerStyled from './TimePicker.styled';
 
-const FieldSwitchPair = memo(function FieldSwitchPair({
-  fieldName,
-  label,
-  type,
-  options,
-  disabled = false,
-}: any) {
-  const { setValue, control, watch } = useFormContext();
-  const isChecked = watch(`${fieldName}.checked`);
+const FieldSwitchPair = memo(function FieldSwitchPair({ fieldName, label, type, options, disabled = false }: any) {
+  const { setValue, control } = useFormContext();
 
   const renderInput = () => {
     switch (type) {
@@ -62,7 +55,7 @@ const FieldSwitchPair = memo(function FieldSwitchPair({
                 min={new Date().setDate(new Date().getDate() - 1)}
                 onChange={(value) => {
                   field.onChange(value);
-                  setValue(`${fieldName}.value`, value, { shouldDirty: true });
+                  setValue(`${fieldName}.value`, value);
                 }}
               />
             )}
@@ -75,26 +68,20 @@ const FieldSwitchPair = memo(function FieldSwitchPair({
             control={control}
             render={({ field }) => (
               <TimePickerStyled>
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  height="56px"
-                  borderRadius="10px"
-                  border="1px solid #d4d4d4"
-                  textAlign="center">
+                <Box display='flex' alignItems='center' height='56px' borderRadius='10px' border='1px solid #d4d4d4' textAlign='center'>
                   <DatePicker
                     disableDayPicker
-                    format="HH:mm:ss"
-                    inputClass="w-full text-center font-bold"
-                    containerClassName="w-full"
-                    plugins={[<TimePicker key="1" />]}
+                    format='HH:mm:ss'
+                    inputClass='w-full text-center font-bold'
+                    containerClassName='w-full'
+                    plugins={[<TimePicker key='1' />]}
                     onChange={(value: any) => {
                       const formattedValue = `${value.hour}:${value.minute}:${value.second}`;
                       field.onChange(value);
-                      setValue(`${fieldName}.value`, formattedValue, { shouldDirty: true });
+                      setValue(`${fieldName}.value`, formattedValue);
                     }}
                   />
-                  <GoClock size="2rem" className="ml-2" color="#424242" />
+                  <GoClock size='2rem' className='ml-2' color='#424242' />
                 </Box>
               </TimePickerStyled>
             )}
@@ -132,39 +119,40 @@ const FieldSwitchPair = memo(function FieldSwitchPair({
     );
   }
 
-  // Switch + optional input (e.g. responseLimitation)
   return (
-    <div className="flex flex-col gap-2">
-      <Box display="flex" justifyContent="space-between" width="100%" gap="16px">
-        <Typography variant="subtitle2" fontWeight="600" fontSize="15px">
-          {!disabled ? label : `${label} (بزودی)`}
-        </Typography>
-        <Controller
-          name={`${fieldName}.checked`}
-          control={control}
-          render={({ field }) => (
-            <SwitchButton
-              disableRipple
-              disabled={disabled}
-              checked={!!field.value}
-              onChange={(event) => {
-                if (disabled) return;
-                const checked = event.target.checked;
-                field.onChange(checked);
-                if (!checked) {
-                  setValue(
-                    `${fieldName}.value`,
-                    type === 'multi-select' ? [] : '',
-                    { shouldDirty: true, shouldValidate: true },
-                  );
-                }
-              }}
-            />
-          )}
-        />
-      </Box>
-      {isChecked && renderInput()}
-    </div>
+    <Controller
+      name={`${fieldName}.checked`}
+      control={control}
+      render={({ field }) => {
+        const isChecked = !!field.value;
+
+        return (
+          <div className='flex flex-col gap-2'>
+            <Box display='flex' justifyContent='space-between' width='100%' gap='16px'>
+              <Typography variant='subtitle2' fontWeight='600' fontSize='15px'>
+                {!disabled ? label : `${label} (بزودی)`}
+              </Typography>
+              <SwitchButton
+                disableRipple
+                disabled={disabled}
+                checked={isChecked}
+                onChange={(event) => {
+                  if (disabled) return;
+                  const checked = event.target.checked;
+                  field.onChange(checked);
+                  if (!checked) {
+                    setValue(`${fieldName}.value`, type === 'multi-select' ? [] : '', {
+                      shouldDirty: true,
+                    });
+                  }
+                }}
+              />
+            </Box>
+            {isChecked && renderInput()}
+          </div>
+        );
+      }}
+    />
   );
 });
 

@@ -6,7 +6,8 @@ import { useParticipateForm } from '@/hooks/useParticipateForm';
 import ResponsiveContainer from '@/templates/form/ContentWrapper';
 import { ErrorStep, FinishStep, QuestionStep } from './components';
 import { ParticipateLoadingSkeleton } from './components/participateSkeleton';
-import StartFromContinueDialog from './components/StartFromContinueDialog';
+// import StartFromContinueDialog from './components/StartFromContinueDialog';
+import StartFromContinueDialog from './components/StartFromContinueDialog.updated';
 import Header from './components/header';
 
 export default function ParticipateFormPage() {

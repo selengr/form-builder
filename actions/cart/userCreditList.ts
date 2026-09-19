@@ -1,21 +1,9 @@
 'use server';
 
-import { serverApi } from '@/services/axios/serverApi';
+import { api } from '@/services/axios/actionWapper';
 
 export async function userCreditListAction(issueRequestId: number) {
-  // try {
-    const body = { issueRequestId };
-
-    const response = await serverApi.post(
-      '/mhesam/profile/credit/user-credit-list',
-      body,
-      {
-        baseURL: process.env.NEXT_PUBLIC_BASE_URL_PSYA,
-      }
-    );
-
-    return response.data;
-  // } catch (error) {
-  //   return Promise.resolve('');
-  // }
+  return api.post('/mhesam/profile/credit/user-credit-list', { issueRequestId }, {
+    baseURL: process.env.NEXT_PUBLIC_BASE_URL_PSYA,
+  });
 }

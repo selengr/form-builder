@@ -1,10 +1,8 @@
 'use server';
 
-import { serverApi } from '@/services/axios/serverApi';
+import { api } from '@/services/axios/actionWapper';
 import { IPurchaseOrder } from '@/types/shoppingCart';
 
 export async function getPurchaseOrderAction() {
-  const baseUrl = '/purchase-order/invoice';
-  const response = await serverApi.get<IPurchaseOrder>(baseUrl);
-  return response.data;
+  return api.get<IPurchaseOrder>('/purchase-order/invoice');
 }

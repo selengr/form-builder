@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { BiChevronRight } from 'react-icons/bi';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { formatNumberWithCommas } from '@/lib/numberFormatter';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Box, Button, Divider, Typography, useTheme } from '@mui/material';
 
 // types
@@ -20,14 +20,17 @@ import TwoFABottomSheet, { type OTPResponseType } from '@/components/2FA';
 import PrerequestHeader from '@/templates/purchase-order/PrerequestHeader';
 // public
 import MhesamEmptyCartPage from '@/../public/images/purchase-order/MhesamEmptyCartPage.svg';
-// apis
-import { confirmPayment, connectToGateway, issueRequest, serviceCost, userCreditList } from './_api/getIssueRequest';
+// actions
+import { serviceCostAction } from '@actions/cart/serviceCost';
+import { issueRequestAction } from '@actions/cart/issueRequest';
+import { userCreditListAction } from '@actions/cart/userCreditList';
+import { confirmPaymentAction } from '@actions/cart/confirmPayment';
+import { connectToGatewayAction } from '@actions/cart/connectToGateway';
 
 // -------------------------------------------------
 
 export default function PayWithMHesam() {
   const router = useRouter();
-  const pathname = usePathname();
   const { palette } = useTheme();
   const [selectedCredits, setSelectedCredits] = useState<UserCreditListResponse[]>([]);
   const [remainedAmount, setRemainedAmount] = useState<number>(0);
@@ -43,33 +46,34 @@ export default function PayWithMHesam() {
     // @ts-ignore
     isPendingIssueRequest,
   } = useMutation({
-    mutationFn: () => serviceCost(),
+    mutationFn: async () => {
+      const res = await serviceCostAction();
+      if (!res.success) {
+        throw new Error(res.message || 'خطا در دریافت صورتحساب');
+      }
+      return res.data;
+    },
   });
 
   const { data: issueRequestData } = useQuery({
     queryKey: ['issueRequest'],
-    queryFn: () => {
-      return issueRequest();
+    queryFn: async () => {
+      const res = await issueRequestAction();
+      if (!res.success) {
+        throw new Error(res.message || 'خطا در ایجاد درخواست');
+      }
+      return res.data;
     },
   });
 
-  // useEffect(() => {
-  //   const issueRequest = async () => {
-  //     try {
-  //       const response = await AxiosApi.post("/purchase-order/createIssueRequest"
-  //       );
-  //       return response;
-  //     } catch (error) {
-  //       return Promise.resolve("");
-  //     }
-  //   };
-  //   issueRequest();
-  // }, [])
-
   const { data: creditListData } = useQuery({
     queryKey: ['userCreditList'],
-    queryFn: () => {
-      return userCreditList(+issueRequestData?.issueRequestId);
+    queryFn: async () => {
+      const res = await userCreditListAction(+issueRequestData!.issueRequestId);
+      if (!res.success) {
+        throw new Error(res.message || 'خطا در دریافت لیست اعتبار');
+      }
+      return res.data as UserCreditListResponse[];
     },
     enabled: Boolean(issueRequestData?.issueRequestId),
   });
@@ -113,16 +117,15 @@ export default function PayWithMHesam() {
   };
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (body: ConfirmPaymentRequestBody) => confirmPayment(body),
-    onSuccess: (response) => {
-      if (response.message) {
-        toast.error(JSON.parse(response.message).message[0].title);
-      } else {
-        setOpenModal(undefined);
-        router.push("/purchase-order")
-        toast.success('پرداخت با موفقیت انجام شد.');
-
+    mutationFn: (body: ConfirmPaymentRequestBody) => confirmPaymentAction(body),
+    onSuccess: (res) => {
+      if (!res.success) {
+        toast.error(res.message || 'پرداخت ناموفق بود');
+        return;
       }
+      setOpenModal(undefined);
+      router.push('/purchase-order');
+      toast.success('پرداخت با موفقیت انجام شد.');
     },
   });
 
@@ -151,21 +154,20 @@ export default function PayWithMHesam() {
   };
 
   const { mutate: connectToGatewayMutation } = useMutation({
-    mutationFn: (amount: number) => {
-      return connectToGateway(window.location.href.replace('/gateway', '/success'), amount);
-    },
-    onSuccess: (response) => {
-      if (response.message) {
-        toast.error(JSON.parse(response.message).message[0].title);
-      } else {
-        const newUrl = response.gatewayUrl.replace('www.', '');
-        const param = {
-          redirectUrl: response.redirectUrl,
-          token: response.token,
-        };
-        const url = `${newUrl}?${new URLSearchParams(param)}`;
-        window.location.href = url;
+    mutationFn: (amount: number) =>
+      connectToGatewayAction(window.location.href.replace('/gateway', '/success'), amount),
+    onSuccess: (res) => {
+      if (!res.success) {
+        toast.error(res.message || 'خطا در اتصال به درگاه');
+        return;
       }
+      const newUrl = res.data.gatewayUrl.replace('www.', '');
+      const param = {
+        redirectUrl: res.data.redirectUrl,
+        token: res.data.token,
+      };
+      const url = `${newUrl}?${new URLSearchParams(param)}`;
+      window.location.href = url;
     },
   });
 

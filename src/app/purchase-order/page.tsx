@@ -14,7 +14,7 @@ import { useGetPurchaseOrder } from './_hook/useGetPurchaseOrder';
 // templates
 import { CartItem, EmptyCart } from '@/templates/purchase-order';
 // actions
-import { deletePurchaseOrderDetailAction } from '../../../actions/cart/purchaseOrderDetail';
+import { deletePurchaseOrderDetailAction } from '@actions/cart/purchaseOrderDetail';
 import { ShoppingCartSkeleton } from '@/templates/purchase-order/cart-skeleton';
 import EmptyList from '@/components/ListGrid/EmptyList';
 
@@ -107,12 +107,12 @@ export default function ShoppingCartPage() {
   const handleRemoveDetail = async () => {
     try {
       setLoading(true);
-      const data = await deletePurchaseOrderDetailAction(deleteId as number);
-      if (data) {
+      const res = await deletePurchaseOrderDetailAction(deleteId as number);
+      if (res.success) {
         toast.success('با موفقیت حذف شد');
         await refetch();
       } else {
-        toast.error('ناموفق بود مجددا امتحان نمایید');
+        toast.error(res.message || 'ناموفق بود مجددا امتحان نمایید');
       }
     } catch (err: any) {
       console.error(err);

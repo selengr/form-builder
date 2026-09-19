@@ -1,12 +1,7 @@
 'use server';
 
-import { serverApi } from '@/services/axios/serverApi';
+import { api } from '@/services/axios/actionWapper';
 
 export async function issueRequestAction() {
-  // try {
-    const { data } = await serverApi.post('/purchase-order/createIssueRequest');
-    return data;
-  // } catch (error) {
-  //   return Promise.resolve('');
-  // }
+  return api.post<{ issueRequestId: number }>('/purchase-order/createIssueRequest');
 }

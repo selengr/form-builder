@@ -18,7 +18,7 @@ import NationalCardIcon from '@/../public/images/purchase-order/NationalCard.svg
 // components
 import BottomSheet from '../BottomSheet/BottomSheet';
 import FormTextInput from './text-input/form-text-input';
-import { twoFARequestHandler } from '@/app/purchase-order/[purchaseOrderId]/gateway/_api/getIssueRequest';
+import { twoFARequestHandlerAction } from '@actions/cart/twofa';
 
 const NationalCodeSchema = z.object({
   nationalCode: z.string().length(10, 'کد ملی باید 10 رقم باشد').regex(/^\d+$/, 'کد ملی باید فقط شامل اعداد باشد'),
@@ -48,38 +48,39 @@ export default function TwoFABottomSheet<T>({ open, sendOtpInfo, resendOtpInfo, 
   const [otpError, setOtpError] = useState<string>('');
 
   const { mutate: mutateCheckNationalCode, isPending: isPendingCheckNationalCode } = useMutation({
-    mutationFn: (nationalCode: string) => {
-      return twoFARequestHandler(nationalCode);
-    },
-    onSuccess: (response: OTPResponseType<T>) => {
-      if (response.message) {
-        toast.error(response.message[0].title);
-      } else {
-        setSendOtpResponse(response);
-        setCurrentActiveBottomSheet('OTP');
-        setTimer(2 * 60 * 1000 + Date.now());
+    mutationFn: (nationalCode: string) => twoFARequestHandlerAction(nationalCode),
+    onSuccess: (res) => {
+      if (!res.success) {
+        toast.error(res.message || 'ارسال کد ناموفق بود');
+        return;
       }
+      setSendOtpResponse(res.data as OTPResponseType<T>);
+      setCurrentActiveBottomSheet('OTP');
+      setTimer(2 * 60 * 1000 + Date.now());
     },
   });
 
   const { mutate: mutateResendOtp, isPending: isPendingResendOtp } = useMutation({
     mutationFn: () => {
       const nationalCode = methods.getValues('nationalCode');
-      const url = typeof resendOtpInfo.url === 'string' ? resendOtpInfo.url : resendOtpInfo.url({ nationalCode, ...(sendOtpResponse as T) });
-      let body = {};
-      if (resendOtpInfo.body) {
-        body = typeof resendOtpInfo.body === 'object' ? resendOtpInfo.body : resendOtpInfo.body({ nationalCode, ...(sendOtpResponse as T) });
-      }
-      return twoFARequestHandler(url);
+      const url =
+        typeof resendOtpInfo.url === 'string'
+          ? resendOtpInfo.url
+          : resendOtpInfo.url({ nationalCode, ...(sendOtpResponse as T) });
+      // Same as before: resend still goes through check-nationalCode action with this value.
+      return twoFARequestHandlerAction(url);
     },
-    onSuccess: (response: OTPResponseType<T>) => {
-      if (response.message) {
-        toast.error(response.message[0].title);
-      } else {
-        setSendOtpResponse((prev) => (typeof response === 'object' ? { ...prev, ...response } : response));
-        setCurrentActiveBottomSheet('OTP');
-        setTimer(2 * 60 * 1000 + Date.now());
+    onSuccess: (res) => {
+      if (!res.success) {
+        toast.error(res.message || 'ارسال مجدد ناموفق بود');
+        return;
       }
+      const response = res.data as OTPResponseType<T>;
+      setSendOtpResponse((prev) =>
+        typeof response === 'object' ? { ...prev, ...response } : response,
+      );
+      setCurrentActiveBottomSheet('OTP');
+      setTimer(2 * 60 * 1000 + Date.now());
     },
   });
 

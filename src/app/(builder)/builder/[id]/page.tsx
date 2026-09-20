@@ -1,11 +1,7 @@
-import { api } from '@/services/axios/actionWapper';
 import FormBuilderWapper from '@/templates/builder/FormBuilderWapper';
 import BuilderErrorPage from './BuilderErrorPage';
 import { getBuilderBackConfig } from './builderBackConfig';
-
-async function getFormDataAction(id: string) {
-  return api.get(`/form/${id}`);
-}
+import { getFormAction } from '@actions/builder/getFormAction';
 
 export default async function BuilderIdPage({
   params,
@@ -17,7 +13,7 @@ export default async function BuilderIdPage({
   const { id } = await params;
   const sp = await searchParams;
   const admin = Array.isArray(sp.admin) ? sp.admin[0] : sp.admin;
-  const response = await getFormDataAction(id);
+  const response = await getFormAction(id);
 
   if (!response.success) {
     const back = getBuilderBackConfig(admin);

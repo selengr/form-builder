@@ -1,8 +1,7 @@
-// ssr not ---- 'use server';
+'use server';
 
-import { serverApi } from '@/services/axios/serverApi';
+import { api } from '@/services/axios/actionWapper';
 
 export async function getFormDataAction(id: string) {
-    const response = await serverApi.get(`/form/${id}`);
-    return response.data;
+  return api.get(`/form/${id}`);
 }

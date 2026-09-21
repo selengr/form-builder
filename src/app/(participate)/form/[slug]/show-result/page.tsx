@@ -67,10 +67,8 @@ const ResultsPage = () => {
         console.error('Failed to parse stored results:', err);
       }
     }
-
-    return () => {
-      localStorage.removeItem('Show_Solo_Result');
-    };
+    // Do NOT removeItem in cleanup — React Strict Mode remounts and would wipe
+    // the report after a moment. Clear only when the user leaves (handleBack).
   }, []);
 
   useEffect(() => {
@@ -110,6 +108,7 @@ const ResultsPage = () => {
   }, [results]);
 
   const handleBack = () => {
+    localStorage.removeItem('Show_Solo_Result');
     router.replace(backHref);
   };
 
@@ -117,7 +116,6 @@ const ResultsPage = () => {
     <PageContainer>
       <div className="flex flex-col bg-white rounded-xl overflow-hidden min-h-0 flex-1">
         <div className="shrink-0 m-2 p-4 z-10 w-[calc(100%-16px)] h-[52px] flex items-center justify-center rounded-lg bg-[#F7F7FF] mb-4 relative">
-     
           <IconButton
             aria-label="بازگشت"
             onClick={handleBack}
@@ -165,53 +163,45 @@ const ResultsPage = () => {
         <div className="overflow-y-auto w-full flex flex-col items-center p-8 flex-1 min-h-0">
           <HtmlPreview html={html} />
 
-          {/*
-            ALT 1 — Inline back under the report (like FinishStep).
-            Good when the report is short; easy to miss after long scroll.
-            Uncomment and remove the sticky footer below to try this.
-
-            <div className="mt-8 mb-2 flex justify-center w-full">
-              <Button
-                variant="contained"
-                onClick={handleBack}
-                sx={{
-                  width: '150px',
-                  height: '52px',
-                  borderRadius: '10px',
-                  backgroundColor: '#1758BA',
-                  boxShadow: 'none',
-                  '&:hover': { backgroundColor: '#1758BA', boxShadow: 'none' },
-                }}
-              >
-                بازگشت
-              </Button>
-            </div>
-          */}
-
-          {/*
-            ALT 2 — Full-width outlined back flush under HTML (secondary look).
-            Softer than primary blue; pairs well if header arrow is enough as primary exit.
-
+          {/* ALT 1 — Inline back under the report (like FinishStep) */}
+          <div className="mt-8 mb-2 flex justify-center w-full">
             <Button
-              fullWidth
-              variant="outlined"
+              variant="contained"
               onClick={handleBack}
               sx={{
-                mt: 4,
-                maxWidth: 420,
+                width: '150px',
                 height: '52px',
                 borderRadius: '10px',
-                fontWeight: 700,
-                color: '#1758BA',
-                borderColor: '#1758BA',
+                backgroundColor: '#1758BA',
+                boxShadow: 'none',
+                '&:hover': { backgroundColor: '#1758BA', boxShadow: 'none' },
               }}
             >
-              بازگشت به صفحه قبل
+              بازگشت (ALT1)
             </Button>
-          */}
+          </div>
+
+          {/* ALT 2 — Full-width outlined under HTML */}
+          <Button
+            fullWidth
+            variant="outlined"
+            onClick={handleBack}
+            sx={{
+              mt: 2,
+              mb: 2,
+              maxWidth: 420,
+              height: '52px',
+              borderRadius: '10px',
+              fontWeight: 700,
+              color: '#1758BA',
+              borderColor: '#1758BA',
+            }}
+          >
+            بازگشت به صفحه قبل (ALT2)
+          </Button>
         </div>
 
-        {/* PRIMARY — Sticky bottom bar: always reachable after long result HTML */}
+        {/* PRIMARY — Sticky bottom bar */}
         <div className="shrink-0 border-t border-[#EEF0F4] bg-white px-4 py-3 safe-area-pb">
           <div className="mx-auto flex w-full max-w-md justify-center">
             <Button
@@ -232,7 +222,7 @@ const ResultsPage = () => {
                 },
               }}
             >
-              بازگشت
+              بازگشت (PRIMARY)
             </Button>
           </div>
         </div>

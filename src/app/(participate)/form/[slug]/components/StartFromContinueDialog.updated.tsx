@@ -1,11 +1,5 @@
 'use client';
 
-/**
- * Updated Start-From-Continue dialog (PM scenarios).
- * Original: `StartFromContinueDialog.tsx` — left unchanged for regression tests.
- * Switch usage in `page.tsx` by commenting the old import.
- */
-
 import { memo, Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { CgClose } from 'react-icons/cg';
 import { FiClock } from 'react-icons/fi';

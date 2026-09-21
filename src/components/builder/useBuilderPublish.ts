@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import useDesigner from '@/hooks/useDesigner';
 import { usePublishForm } from '@/app/(builder)/builder/_hook/usePublishForm';
 
@@ -12,7 +12,6 @@ interface UseBuilderPublishOptions {
 
 export function useBuilderPublish(data?: { typeEnum?: string }) {
   const { id } = useParams();
-  const { refresh } = useRouter();
   const searchParams = useSearchParams();
   const pid = searchParams.get('pid');
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -32,7 +31,6 @@ export function useBuilderPublish(data?: { typeEnum?: string }) {
   const confirmPublish = () => {
     publishMutation.mutate(undefined, {
       onSuccess: () => {
-        refresh();
         setOpenConfirm(false);
       },
     });

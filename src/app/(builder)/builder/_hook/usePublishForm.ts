@@ -1,6 +1,7 @@
 'use client';
 
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { publishFormAction } from '@actions/publishFormAction';
 
@@ -11,6 +12,7 @@ interface UsePublishFormParams {
 }
 
 export function usePublishForm({ formId, IsSurvey, IsPackaging }: UsePublishFormParams) {
+  const router = useRouter();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -32,10 +34,15 @@ export function usePublishForm({ formId, IsSurvey, IsPackaging }: UsePublishForm
       return res.data;
     },
     onSuccess: () => {
-      toast.success('فرم با موفقیت منتشر شد');
+      toast.success(
+        'فرم با موفقیت منتشر شد. برای نهایی‌سازی و خرید به تنظیمات انتشار مراجعه کنید',
+      );
       queryClient.invalidateQueries({
         queryKey: ['form-builder'],
       });
+      setTimeout(() => {
+        router.push('/builder');
+      }, 5000);
     },
     onError: (err) => {
       toast.error(err.message || 'انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.');

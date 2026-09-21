@@ -35,14 +35,14 @@ export function usePublishForm({ formId, IsSurvey, IsPackaging }: UsePublishForm
     },
     onSuccess: () => {
       toast.success(
-        'فرم با موفقیت منتشر شد. برای نهایی‌سازی و خرید به تنظیمات انتشار مراجعه کنید',
+        'فرم با موفقیت منتشر شد. برای نهایی‌سازی به تنظیمات انتشار مراجعه کنید',
       );
       queryClient.invalidateQueries({
         queryKey: ['form-builder'],
       });
       setTimeout(() => {
         router.push('/builder');
-      }, 5000);
+      }, 4000);
     },
     onError: (err) => {
       toast.error(err.message || 'انجام عملیات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.');

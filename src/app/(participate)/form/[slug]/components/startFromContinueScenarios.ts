@@ -1,6 +1,3 @@
-// شما قبلاً به این فرم پاسخ داده‌اید. امکان پاسخ‌دهی مجدد توسط سازنده فرم محدود شده است. از مشارکت شما سپاسگزاریم.
-// امکان پاسخ‌دهی مجدد توسط سازنده فرم محدود شده است. از مشارکت شما سپاسگزاریم.
-
 export type StartFromContinueModalMode =
   /** Guest, continue ON, no phone limit */
   | 'guest_optional_phone'
@@ -20,6 +17,9 @@ export const START_FROM_CONTINUE_COPY = {
   requiredPhoneInfo: `برای پاسخ دادن به این فرم لازم است که شماره همراه خود را وارد کنید!
 برای جلوگیری از ثبت پاسخ تکراری لازم است شماره همراه شما ثبت شود. اگر قبلاً این فرم را تکمیل کرده باشید، امکان دسترسی مجدد نخواهید داشت.`,
 
+  loggedInLimitationInfo: `این فرم محدودیت پاسخ‌دهی دارد!
+برای جلوگیری از ثبت پاسخ تکراری، اگر قبلاً این فرم را تکمیل کرده باشید، امکان دسترسی مجدد نخواهید داشت.`,
+
   welcomeResumeToast:
     'به ادامه نشست قبلی خوش آمدید! پاسخ‌های قبلی شما بازیابی شد و می‌توانید از همان جایی که متوقف شده بودید ادامه دهید.',
 
@@ -33,6 +33,7 @@ export const START_FROM_CONTINUE_COPY = {
 
   questionOptional: 'می‌توانید شماره همراه را وارد کنید یا مستقیم وارد فرم شوید.',
   questionRequired: 'آیا مایل به ادامه با ثبت شماره همراه هستید؟',
+  questionLoggedInLimitation: 'آیا مایل به ادامه هستید؟',
   questionChoose: 'چگونه می‌خواهید ادامه دهید؟',
 
   btnSkipEnterForm: 'رد کردن و ورود به فرم',
@@ -102,8 +103,8 @@ export function getStartFromContinueModalContent(
     case 'logged_in_limitation_confirm':
       return {
         mode,
-        body: c.requiredPhoneInfo,
-        question: c.questionRequired,
+        body: c.loggedInLimitationInfo,
+        question: c.questionLoggedInLimitation,
         secondary: { label: c.btnCancel, action: 'cancel' },
         primary: { label: c.btnYesContinue, action: 'confirm_limitation' },
       };

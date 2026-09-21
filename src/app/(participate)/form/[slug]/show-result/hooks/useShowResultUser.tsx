@@ -1,10 +1,11 @@
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { showResultParticipate } from '@actions/participate/showResultParticipate';
 
 export const useShowResultUser = () => {
   const { push } = useRouter();
+  const searchParams = useSearchParams();
 
   const mutation = useMutation({
     mutationKey: ['Show_Solo_Result'],
@@ -23,7 +24,15 @@ export const useShowResultUser = () => {
 
     onSuccess: (result, { name }) => {
       localStorage.setItem('Show_Solo_Result', JSON.stringify(result));
-      push(`/form/${result?.formId}/show-result?name=${name}`);
+
+      const params = new URLSearchParams();
+      params.set('name', name ?? '');
+      const source = searchParams.get('source');
+      const back = searchParams.get('back');
+      if (source) params.set('source', source);
+      if (back) params.set('back', back);
+
+      push(`/form/${result?.formId}/show-result?${params.toString()}`);
     },
     onError: (error) => {
       toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');

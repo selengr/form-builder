@@ -25,8 +25,7 @@ export const useShowResultUser = () => {
     onSuccess: (result, { name }) => {
       localStorage.setItem('Show_Solo_Result', JSON.stringify(result));
 
-      const params = new URLSearchParams();
-      params.set('name', name ?? '');
+      const params = new URLSearchParams({ name });
       const source = searchParams.get('source');
       const back = searchParams.get('back');
       if (source) params.set('source', source);

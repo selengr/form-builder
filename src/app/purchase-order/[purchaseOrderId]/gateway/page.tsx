@@ -66,14 +66,18 @@ export default function PayWithMHesam() {
     },
   });
 
-  const { data: creditListData } = useQuery({
-    queryKey: ['userCreditList'],
+  const { data: creditListData, error: creditListError } = useQuery({
+    queryKey: ['userCreditList', issueRequestData?.issueRequestId],
     queryFn: async () => {
       const res = await userCreditListAction(+issueRequestData!.issueRequestId);
       if (!res.success) {
         throw new Error(res.message || 'خطا در دریافت لیست اعتبار');
       }
-      return res.data as UserCreditListResponse[];
+      // API may return a bare array (production shape).
+      const payload = res.data as UserCreditListResponse[] | { content?: UserCreditListResponse[] };
+      if (Array.isArray(payload)) return payload;
+      if (Array.isArray(payload?.content)) return payload.content;
+      return [];
     },
     enabled: Boolean(issueRequestData?.issueRequestId),
   });
@@ -176,6 +180,12 @@ export default function PayWithMHesam() {
       setCreditList(creditListData);
     }
   }, [creditListData]);
+
+  useEffect(() => {
+    if (creditListError) {
+      toast.error(creditListError.message || 'خطا در دریافت لیست اعتبار');
+    }
+  }, [creditListError]);
 
   useEffect(() => {
     if (issueRequestData) {

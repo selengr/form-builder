@@ -15,8 +15,6 @@ export async function connectToGatewayAction(redirectUrl: string, amount: number
   return api.post<ConnectToGatewayResult>(
     '/mhesam/profile/credit/before-gateway',
     { redirectUrl, amount, failedRedirectUrl },
-    {
-      baseURL: process.env.NEXT_PUBLIC_BASE_URL_PSYA,
-    },
+    { baseURL: process.env.BASE_URL },
   );
 }

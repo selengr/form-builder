@@ -704,7 +704,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
       const res = !isEdit
         ? await createCalculationAction({
             name: formName,
-            formBuilderId: id,
+            formBuilderId: String(id),
             label: label ?? null,
             theFormula: finalFormula,
             frontCalcData: JSON.stringify(elements),
@@ -713,7 +713,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
             id: editList?.id as number,
             name: formName,
             label: label ?? null,
-            formBuilderId: id,
+            formBuilderId: String(id),
             theFormula: finalFormula,
             frontCalcData: JSON.stringify(elements),
           });

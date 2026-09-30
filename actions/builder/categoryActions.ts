@@ -2,6 +2,15 @@
 
 import { api } from '@/services/axios/actionWapper';
 
+export interface CategoryComboItem {
+  value: string;
+  caption: string;
+}
+
+export interface CategoryComboResponse {
+  dataList: CategoryComboItem[];
+}
+
 export async function fetchParentCategory() {
   const customComboFilterModel = {
     type: 'COMBO',
@@ -15,7 +24,7 @@ export async function fetchParentCategory() {
     `/category/parent?customComboFilterModel=` +
     encodeURIComponent(JSON.stringify(customComboFilterModel));
 
-  return api.get(url);
+  return api.get<CategoryComboResponse>(url);
 }
 
 // 'use server';

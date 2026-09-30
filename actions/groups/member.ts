@@ -3,12 +3,14 @@
 import { z } from 'zod';
 import { api } from '@/services/axios/actionWapper';
 
-export async function changeMemberStatusAction(input: {
+export interface ChangeMemberStatusInput {
   groupId: number | null;
   introducedUserJTGroupId: number;
   invalid: boolean;
   rememberAllocation: boolean;
-}) {
+}
+
+export async function changeMemberStatusAction(input: ChangeMemberStatusInput) {
   return api.post('/user-group/introducer/change-status-member', input);
 }
 
@@ -36,10 +38,16 @@ export async function addMemberToGroupAction(input: AddMemberToGroupInput) {
   return api.post('/user-group/introducer/add-member-to-group', parsed.data);
 }
 
-export async function getShowReportForResponderAction(input: {
+interface GroupConfigParams {
   formId: number | string;
   groupId: number | string;
-}) {
+}
+
+export interface UpdateShowReportForResponderInput extends GroupConfigParams {
+  showReportForResponder: boolean;
+}
+
+export async function getShowReportForResponderAction(input: GroupConfigParams) {
   const formId = Number(input.formId);
   const groupId = Number(input.groupId);
 
@@ -55,11 +63,9 @@ export async function getShowReportForResponderAction(input: {
   );
 }
 
-export async function updateShowReportForResponderAction(input: {
-  formId: number | string;
-  groupId: number | string;
-  showReportForResponder: boolean;
-}) {
+export async function updateShowReportForResponderAction(
+  input: UpdateShowReportForResponderInput,
+) {
   const formId = Number(input.formId);
   const groupId = Number(input.groupId);
 

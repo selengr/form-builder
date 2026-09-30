@@ -2,12 +2,23 @@
 
 import { api } from '@/services/axios/actionWapper';
 
-export async function createEndPageAction(payload: any) {
-  return api.post('/form/end-page', payload);
+export interface EndPagePayload {
+  formId: number | string;
+  description: string;
+  endPageId?: number | string;
 }
 
-export async function updateEndPageAction(payload: any) {
-  return api.put('/form/end-page', payload);
+export interface EndPageResponse {
+  endPageId: number | string;
+  description: string;
+}
+
+export async function createEndPageAction(payload: EndPagePayload) {
+  return api.post<EndPageResponse>('/form/end-page', payload);
+}
+
+export async function updateEndPageAction(payload: EndPagePayload) {
+  return api.put<EndPageResponse>('/form/end-page', payload);
 }
 
 

@@ -2,8 +2,15 @@
 
 import { api } from '@/services/axios/actionWapper';
 
+export interface TicketItem {
+  ticket: string;
+  adminTicket: boolean;
+  registrarInformation: string;
+  formBuilderName: string;
+}
+
 type TicketListResponse = {
-  content: any[];
+  content: TicketItem[];
 };
 
 export async function getTicketListAction(id: string | string[]) {

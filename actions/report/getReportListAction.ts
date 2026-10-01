@@ -1,6 +1,7 @@
 'use server';
 
 import { api } from '@/services/axios/actionWapper';
+import type { IGetCondition } from '@/types/conditionReportSolo';
 
 export type GetReportListParams = {
   formId: string | number;
@@ -22,5 +23,5 @@ export async function getReportListAction({ formId, admin }: GetReportListParams
   const url =
     `${baseUrl}?searchFilterModel=` + encodeURIComponent(JSON.stringify(filterModel));
 
-  return api.get<{ content: any[] }>(url);
+  return api.get<{ content: IGetCondition[] }>(url);
 }

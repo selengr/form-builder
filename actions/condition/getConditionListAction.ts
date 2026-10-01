@@ -1,6 +1,7 @@
 'use server';
 
 import { api } from '@/services/axios/actionWapper';
+import type { IGetCondition } from '@/types/condition';
 
 export async function getConditionListAction(formId: string) {
   const filterModel = {
@@ -14,7 +15,7 @@ export async function getConditionListAction(formId: string) {
     `/condition/main-list/${formId}` +
     `?searchFilterModel=${encodeURIComponent(JSON.stringify(filterModel))}`;
 
-  const result = await api.get<{ content: unknown[] }>(url);
+  const result = await api.get<{ content: IGetCondition[] }>(url);
 
   if (!result.success) {
     return { success: false as const, message: result.message };

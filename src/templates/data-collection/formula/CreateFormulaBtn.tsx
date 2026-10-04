@@ -15,11 +15,9 @@ import {
   Typography,
 } from '@mui/material';
 import { IoClose } from 'react-icons/io5';
-// components
 import FormProvider from '@/components/hook-form/FormProvider';
 import { RHFSelect, RHFTextField } from '@/components/hook-form';
 import { SkeletonMenuItem } from '@/components/Fields/PackageInjectionField';
-// hooks
 import { useGetFormulaTargetPlatform } from './hooks/useGetFormulaTargetPlatform';
 import { useCreateMajorFormula } from './hooks/useCreateMajorFormula';
 
@@ -48,8 +46,6 @@ const propertiesSchema = z.object({
         .max(50, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' }),
     ),
   targetPlatformEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
-  // Not shown in the design — carried over from data-collection's create
-  // modal because the Create Major API requires majorLabel in the payload.
   majorLabel: z
     .string()
     .trim()

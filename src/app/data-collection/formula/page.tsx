@@ -5,10 +5,6 @@ import FormulaListCardSkeleton from '@/templates/data-collection/formula/ListCar
 
 export const dynamic = 'force-dynamic';
 
-// start formula module - major list api and route
-// add formula module - major list api, template and route
-//start implementing formula module - list api and route
-
 export default function DataCollectionFormulaPage() {
   return (
     <Suspense

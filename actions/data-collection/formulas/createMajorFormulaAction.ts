@@ -22,8 +22,6 @@ export async function createMajorFormulaAction(input: CreateMajorFormulaInput) {
 
   const result = await api.post(CREATE_MAJOR_URL, parsed.data);
 
-  // Temporary: logging the raw response so we can see its real shape
-  // (id field name, wrapper, etc.) before wiring anything that depends on it.
   console.log('[createMajorFormulaAction] response:', JSON.stringify(result, null, 2));
 
   return result;

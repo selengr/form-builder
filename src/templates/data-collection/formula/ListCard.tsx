@@ -32,13 +32,10 @@ export default function FormulaListCard({
     router.push(`/data-collection/formula/${data.id}`);
   };
 
-  // No delete endpoint exists yet for major formulas — stubbed until the API is available.
   const handleDelete = () => {
     toast.info('این قابلیت به‌زودی اضافه می‌شود');
   };
 
-  // Maps to the "run formula" API, but that needs an accessKey/metaParameters
-  // this list item doesn't carry — stubbed until that flow is designed.
   const handleValidate = () => {
     toast.info('این قابلیت به‌زودی اضافه می‌شود');
   };

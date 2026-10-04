@@ -39,6 +39,7 @@ const MenuList: React.FC<IMenuListProps> = ({ menuLinks, onItemClick }) => {
         const dataCollection = langMap.get("acl.psya.admin.data-collection.master");
         const userreportsItem = langMap.get("acl.psya.userreports.master");
         const adminPackagingRequestItem = langMap.get("acl.psya.admin.packagingRequest.master");
+        const dataCollectionFormulasItem = langMap.get("acl.psya.admin.data-collection.formulas.master");
 
         const linksWithHierarchy = allLinks
             .map((item) => {
@@ -49,6 +50,7 @@ const MenuList: React.FC<IMenuListProps> = ({ menuLinks, onItemClick }) => {
                         userreportsItem,
                         dataCollection,
                         adminPackagingRequestItem,
+                        dataCollectionFormulasItem,
                     ].filter(Boolean) as IMenuItemData[];
 
                     return { ...item, children };
@@ -64,6 +66,7 @@ const MenuList: React.FC<IMenuListProps> = ({ menuLinks, onItemClick }) => {
                     userreportsItem?.id,
                     dataCollection?.id,
                     adminPackagingRequestItem?.id,
+                    dataCollectionFormulasItem?.id,
                 ].includes(item.id);
             });
 

@@ -95,7 +95,7 @@ export default function CreateFormulaBtn({ open, onClose }: IProps) {
         toast.success('عملیات با موفقیت انجام شد');
         reset();
         onClose();
-        router.push(`/data-collection/formulas/${result.id}`);
+        router.push(`/data-collection/formulas/${result.id}?name=${encodeURIComponent(data.majorName)}`);
       },
       onError: (error: any) => {
         toast.error(error?.message || 'خطا در ایجاد فرمول');

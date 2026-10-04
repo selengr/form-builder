@@ -25,11 +25,11 @@ export default function FormulaListCard({
     data.targetPlatformEnum;
 
   const handleEdit = () => {
-    router.push(`/data-collection/formulas/${data.id}`);
+    router.push(`/data-collection/formulas/${data.id}?name=${encodeURIComponent(data.majorName)}`);
   };
 
   const handleView = () => {
-    router.push(`/data-collection/formulas/${data.id}`);
+    router.push(`/data-collection/formulas/${data.id}?name=${encodeURIComponent(data.majorName)}`);
   };
 
   const handleDelete = () => {

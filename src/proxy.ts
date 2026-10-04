@@ -9,6 +9,7 @@ import { sessionCookieName } from '@/services/auth/authConfig';
  * `pino` here — this was not reliably possible under the old Edge-based
  * `middleware`.
  */
+       // "fix the x-access-token leak in proxy.ts && scurity bug fix" 
 const logger = pino({
   level: process.env.LOG_LEVEL || 'info',
   redact: ['ip', 'userAgent', 'email', 'name'],

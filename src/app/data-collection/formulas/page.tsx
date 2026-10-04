@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import UnifiedListGridLayoutSkeleton from '@/components/unified-list-grid/UnifiedListGridLayoutSkeleton';
-import FormulaListGridWrapper from '@/templates/data-collection/formula/ListGridWrapper';
-import FormulaListCardSkeleton from '@/templates/data-collection/formula/ListCardSkeleton';
+import FormulaListGridWrapper from '@/templates/data-collection/formulas/ListGridWrapper';
+import FormulaListCardSkeleton from '@/templates/data-collection/formulas/ListCardSkeleton';
 
 export const dynamic = 'force-dynamic';
 

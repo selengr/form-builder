@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Box,
@@ -18,7 +19,7 @@ import { IoClose } from 'react-icons/io5';
 import FormProvider from '@/components/hook-form/FormProvider';
 import { RHFSelect, RHFTextField } from '@/components/hook-form';
 import { SkeletonMenuItem } from '@/components/Fields/PackageInjectionField';
-import { useGetFormulaTargetPlatform } from './hooks/useGetFormulaTargetPlatform';
+import { useGetTargetPlatform } from '../hooks/useGetTargetPlatform';
 import { useCreateMajorFormula } from './hooks/useCreateMajorFormula';
 
 interface IGetTargetPlatform {
@@ -69,8 +70,9 @@ interface IProps {
 }
 
 export default function CreateFormulaBtn({ open, onClose }: IProps) {
+  const router = useRouter();
   const { mutate, isPending } = useCreateMajorFormula();
-  const { TargetPlatform, isFetchingTargetPlatform } = useGetFormulaTargetPlatform(open);
+  const { TargetPlatform, isFetchingTargetPlatform } = useGetTargetPlatform(open);
 
   const methods = useForm<CreateFormulaFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
@@ -89,10 +91,11 @@ export default function CreateFormulaBtn({ open, onClose }: IProps) {
 
   const onSubmit = async (data: CreateFormulaFormSchemaType) => {
     mutate(data, {
-      onSuccess: () => {
+      onSuccess: (result) => {
         toast.success('عملیات با موفقیت انجام شد');
         reset();
         onClose();
+        router.push(`/data-collection/formula/${result.id}`);
       },
       onError: (error: any) => {
         toast.error(error?.message || 'خطا در ایجاد فرمول');

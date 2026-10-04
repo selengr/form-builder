@@ -25,7 +25,7 @@ export default function FormulaListCard({
     data.targetPlatformEnum;
 
   const handleEdit = () => {
-    router.push(`/data-collection/formula/${data.id}?mode=edit`);
+    router.push(`/data-collection/formula/${data.id}`);
   };
 
   const handleView = () => {

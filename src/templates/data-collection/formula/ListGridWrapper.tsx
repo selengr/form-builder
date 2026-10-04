@@ -2,7 +2,6 @@
 
 import { useCallback, useState } from 'react';
 import Image from 'next/image';
-import { toast } from 'sonner';
 import { IconButton } from '@mui/material';
 import PlusIcon from '@/../public/images/home-page/Add-fill.svg';
 import {
@@ -14,6 +13,7 @@ import {
 import FormulaListCard from './ListCard';
 import FormulaListCardSkeleton from './ListCardSkeleton';
 import FormulaFilter from './FormulaFilter';
+import CreateFormulaBtn from './CreateFormulaBtn';
 import { majorFormulaListFetcher } from './majorFormulaListFetcher';
 import { MajorFormulaListItem } from './types';
 
@@ -23,6 +23,7 @@ const DEFAULT_FILTER: SearchQueryFilter = {
 };
 
 export default function FormulaListGridWrapper() {
+  const [openCreateModal, setOpenCreateModal] = useState(false);
   const [draftFilter, setDraftFilter] = useState<SearchQueryFilter>(DEFAULT_FILTER);
   const [appliedFilter, setAppliedFilter] = useState<SearchQueryFilter>(DEFAULT_FILTER);
 
@@ -83,40 +84,44 @@ export default function FormulaListGridWrapper() {
   );
 
   return (
-    <UnifiedListGridPage<MajorFormulaListItem>
-      config={{
-        title: 'فرمول‌ها',
-        queryKey: 'major_formula_list',
-        textTotal: ['تعداد کل فرمول‌ها', 'عدد'],
-        searchField: 'majorName',
-        hasSidebarFilter: true,
-        backHref: '/data-collection',
-        onMobileFilterOpen: syncDraftFromApplied,
-      }}
-      slots={{
-        CardComponent: FormulaListCard,
-        SkeletonComponent: FormulaListCardSkeleton,
-        FilterComponent: FilterSlot,
-        CreateButton: (
-          <div className="min-w-[50px] w-[50px] h-full">
-            <IconButton
-              onClick={() => toast.info('این قابلیت به‌زودی اضافه می‌شود')}
-              sx={{
-                width: '50px',
-                height: '50px',
-                borderRadius: '16px',
-                border: '1px solid #1758BA',
-              }}>
-              <Image src={PlusIcon} alt="" width={22} height={22} />
-            </IconButton>
-          </div>
-        ),
-      }}
-      fetcher={majorFormulaListFetcher}
-      searchBoxList={createDefaultSearchBoxList('majorName')}
-      searchQueryFilter={appliedFilter}
-      skeletonHeaderName="تعداد کل فرمول‌ها"
-      loadingHasCreateBtn
-    />
+    <>
+      <UnifiedListGridPage<MajorFormulaListItem>
+        config={{
+          title: 'فرمول‌ها',
+          queryKey: 'major_formula_list',
+          textTotal: ['تعداد کل فرمول‌ها', 'عدد'],
+          searchField: 'majorName',
+          hasSidebarFilter: true,
+          backHref: '/data-collection',
+          onMobileFilterOpen: syncDraftFromApplied,
+        }}
+        slots={{
+          CardComponent: FormulaListCard,
+          SkeletonComponent: FormulaListCardSkeleton,
+          FilterComponent: FilterSlot,
+          CreateButton: (
+            <div className="min-w-[50px] w-[50px] h-full">
+              <IconButton
+                onClick={() => setOpenCreateModal(true)}
+                sx={{
+                  width: '50px',
+                  height: '50px',
+                  borderRadius: '16px',
+                  border: '1px solid #1758BA',
+                }}>
+                <Image src={PlusIcon} alt="" width={22} height={22} />
+              </IconButton>
+            </div>
+          ),
+        }}
+        fetcher={majorFormulaListFetcher}
+        searchBoxList={createDefaultSearchBoxList('majorName')}
+        searchQueryFilter={appliedFilter}
+        skeletonHeaderName="تعداد کل فرمول‌ها"
+        loadingHasCreateBtn
+      />
+
+      <CreateFormulaBtn open={openCreateModal} onClose={() => setOpenCreateModal(false)} />
+    </>
   );
 }

@@ -49,8 +49,8 @@ const MenuList: React.FC<IMenuListProps> = ({ menuLinks, onItemClick }) => {
                         surveyItem,
                         userreportsItem,
                         dataCollection,
-                        adminPackagingRequestItem,
                         dataCollectionFormulasItem,
+                        adminPackagingRequestItem,
                     ].filter(Boolean) as IMenuItemData[];
 
                     return { ...item, children };
@@ -65,8 +65,8 @@ const MenuList: React.FC<IMenuListProps> = ({ menuLinks, onItemClick }) => {
                     surveyItem?.id,
                     userreportsItem?.id,
                     dataCollection?.id,
-                    adminPackagingRequestItem?.id,
                     dataCollectionFormulasItem?.id,
+                    adminPackagingRequestItem?.id,
                 ].includes(item.id);
             });
 

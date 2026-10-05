@@ -41,6 +41,18 @@ export default function MinorFormulaRow({ index }: MinorFormulaRowProps) {
     <div
       dir="rtl"
       className="flex items-center gap-2 h-[65px] w-full border border-[#E8E8E8] rounded-xl bg-white px-3">
+      <Image src="/images/home-page/menu.svg" width={14} height={14} alt="" />
+
+      <span className="text-[#9EA3AC] font-medium text-[13px] w-5 text-center shrink-0">
+        {persianIndex}
+      </span>
+
+      <span className="h-9 w-9 flex justify-center items-center shrink-0 rounded-[10px] border border-[#2CDFC9] text-[#2CDFC9] font-bold">
+        T
+      </span>
+
+      <span className="flex-1 text-sm text-[#161616] text-right">{getOrdinalLabel(index)}</span>
+
       <IconButton onClick={handleClick} size="small">
         <PhDotsThreeVerticalBold color="#1758BA" fontSize="1.4rem" />
       </IconButton>
@@ -48,20 +60,6 @@ export default function MinorFormulaRow({ index }: MinorFormulaRowProps) {
         <MenuItem onClick={handleStub}>ویرایش</MenuItem>
         <MenuItem onClick={handleStub}>حذف</MenuItem>
       </Menu>
-
-      <div className="flex-1" />
-
-      <span className="text-sm text-[#161616]">{getOrdinalLabel(index)}</span>
-
-      <span className="h-9 w-9 flex justify-center items-center shrink-0 rounded-[10px] border border-[#2CDFC9] text-[#2CDFC9] font-bold">
-        T
-      </span>
-
-      <span className="text-[#9EA3AC] font-medium text-[13px] w-5 text-center shrink-0">
-        {persianIndex}
-      </span>
-
-      <Image src="/images/home-page/menu.svg" width={14} height={14} alt="" />
     </div>
   );
 }

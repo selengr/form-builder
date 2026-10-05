@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { Button, IconButton } from '@mui/material';
+import { Box, Button, IconButton } from '@mui/material';
 import { IoIosArrowForward } from 'react-icons/io';
 import { IoSettingsOutline } from 'react-icons/io5';
 import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
@@ -12,6 +12,7 @@ import MinorFormulaRow from './MinorFormulaRow';
 import { MinorFormulaListItem } from './types';
 
 const APP_SIDEBAR_WIDTH_PX = 500;
+const DESKTOP_MEDIA = '@media (min-width:1280px)';
 
 interface FormulaDetailViewProps {
   majorId: string;
@@ -56,17 +57,26 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
       className="flex w-full mx-auto overflow-hidden xs:h-[calc(100dvh-5rem)] md:h-[100dvh]">
       <main className="flex flex-col w-full h-full overflow-hidden">
         <div className="flex w-full px-3 py-2 lg:p-4 items-start justify-center relative flex-1 overflow-hidden">
-          <div className="bg-white w-full h-full rounded-xl lg:rounded-2xl flex flex-col overflow-hidden">
+          <Box
+            className="bg-white w-full h-full flex flex-col overflow-hidden"
+            sx={{ borderRadius: '12px', [DESKTOP_MEDIA]: { borderRadius: '16px' } }}>
             <div className="flex-1 overflow-y-auto min-h-0">
-              <div className="w-full h-full flex flex-col px-2 pt-2 lg:p-0">
+              <Box
+                className="w-full h-full flex flex-col"
+                sx={{
+                  paddingX: '8px',
+                  paddingTop: '8px',
+                  [DESKTOP_MEDIA]: { padding: 0 },
+                }}>
                 <div
                   dir="rtl"
-                  className="hidden lg:flex items-center justify-between w-full pt-[18px] pb-5 pl-4 pr-[45px] shrink-0">
+                  className="hidden lg:flex items-center justify-between w-full pb-5 shrink-0"
+                  style={{ paddingTop: 18, paddingLeft: 16, paddingRight: 45 }}>
                   <h1 className="text-[16px] font-bold text-[#161616] truncate max-w-[325px]">
                     {title}
                   </h1>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center" style={{ gap: 12 }}>
                     <IconButton
                       onClick={handleStub}
                       sx={{
@@ -127,13 +137,18 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                   <div className="w-10" />
                 </div>
 
-                <div className="flex flex-col flex-1 min-h-0 pb-24 lg:pb-5 lg:pl-5 lg:pr-7">
+                <Box
+                  className="flex flex-col flex-1 min-h-0"
+                  sx={{
+                    paddingBottom: '96px',
+                    [DESKTOP_MEDIA]: { paddingBottom: '20px', paddingLeft: '20px', paddingRight: '28px' },
+                  }}>
                   <div
                     dir="rtl"
                     className="flex flex-col w-full h-full min-h-0 rounded-[20px] border border-[#DDE1E6] bg-[#F8FAFC] overflow-hidden">
                     <div
-                      className="flex flex-col w-full flex-1 min-h-0 overflow-y-auto px-[10px] pt-[11px] gap-[7px]"
-                      style={{ scrollbarWidth: 'thin' }}>
+                      className="flex flex-col w-full flex-1 min-h-0 overflow-y-auto"
+                      style={{ scrollbarWidth: 'thin', padding: '11px 10px 0', gap: 7 }}>
                       {minorList.map((item, index) => (
                         <MinorFormulaRow key={item.id} index={index} />
                       ))}
@@ -149,13 +164,14 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
 
                     <div
                       onClick={handleStub}
-                      className="mx-[10px] mb-[10px] mt-2 flex items-center justify-center rounded-xl border border-dashed border-[#DDE1E6] bg-transparent min-h-[56px] cursor-pointer shrink-0">
+                      className="flex items-center justify-center rounded-xl border border-dashed border-[#DDE1E6] bg-transparent min-h-[56px] cursor-pointer shrink-0"
+                      style={{ margin: '8px 10px 10px' }}>
                       <p className="p-3 text-[#6F6F6F] text-center text-sm font-medium cursor-pointer">
                         افزودن فرمول کلی
                       </p>
                     </div>
                   </div>
-                </div>
+                </Box>
 
                 <div
                   className={clsx(
@@ -209,9 +225,9 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                     <CodiconEye color="#1758BA" />
                   </IconButton>
                 </div>
-              </div>
+              </Box>
             </div>
-          </div>
+          </Box>
         </div>
       </main>
     </div>

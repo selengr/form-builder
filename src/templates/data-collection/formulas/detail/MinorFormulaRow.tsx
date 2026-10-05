@@ -39,7 +39,8 @@ function MinorFormulaMenu() {
       <button
         type="button"
         onClick={handleClick}
-        className="absolute left-[9px] top-1/2 -translate-y-1/2 flex items-center justify-center w-9 h-9 rounded-[10px] hover:bg-[#F7F7FF] transition-colors z-50"
+        className="absolute top-1/2 -translate-y-1/2 flex items-center justify-center w-9 h-9 rounded-[10px] hover:bg-[#F7F7FF] transition-colors z-50"
+        style={{ left: 9 }}
         aria-label="منو">
         <PhDotsThreeVerticalBold color="#9EA3AC" fontSize="1.5rem" />
       </button>
@@ -110,7 +111,8 @@ export default function MinorFormulaRow({ index }: MinorFormulaRowProps) {
   return (
     <div
       dir="rtl"
-      className="relative flex items-center w-full h-[54px] shrink-0 pr-[11px] pl-12 border border-[#DDE1E6] rounded-xl bg-white">
+      className="relative flex items-center w-full h-[54px] shrink-0 pl-12 border border-[#DDE1E6] rounded-xl bg-white"
+      style={{ paddingRight: 11 }}>
       <Image
         src="/images/home-page/menu.svg"
         width={8}
@@ -118,18 +120,23 @@ export default function MinorFormulaRow({ index }: MinorFormulaRowProps) {
         alt=""
         aria-hidden
         unoptimized
-        className="absolute -right-px top-1/2 -translate-y-1/2"
+        className="absolute top-1/2 -translate-y-1/2"
+        style={{ right: -1 }}
       />
 
       <span className="text-[#9EA3AC] font-medium text-[13px] w-5 text-center shrink-0">
         {persianNumber}
       </span>
 
-      <span className="mr-px rounded-[10px] h-9 w-9 flex justify-center items-center shrink-0 bg-[#F7F7FF]">
+      <span
+        className="rounded-[10px] h-9 w-9 flex justify-center items-center shrink-0 bg-[#F7F7FF]"
+        style={{ marginRight: 1 }}>
         <Image src="/images/home-page/text-block.svg" width={28} height={28} alt="" unoptimized />
       </span>
 
-      <p className="mr-[10px] flex-1 min-w-0 text-[13px] text-[#161616] truncate">
+      <p
+        className="flex-1 min-w-0 text-[13px] text-[#161616] truncate"
+        style={{ marginRight: 10 }}>
         {getOrdinalLabel(index)}
       </p>
 

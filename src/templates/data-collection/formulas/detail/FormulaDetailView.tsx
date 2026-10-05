@@ -9,15 +9,38 @@ import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
 import PageContainer from '@/templates/layout/PageContainer';
 import { useGetMinorFormulaList } from './useGetMinorFormulaList';
 import MinorFormulaRow from './MinorFormulaRow';
+import { MinorFormulaListItem } from './types';
 
 interface FormulaDetailViewProps {
   majorId: string;
   majorName: string;
 }
 
+const TEMP_FAKE_MINOR_ITEMS: MinorFormulaListItem[] = [
+  {
+    id: -1,
+    majorId: 0,
+    formulaModel: {
+      formId: 0,
+      formula: '',
+      condition: { type: 'condition', field: '', operator: 'EQUAL', value: '' },
+    },
+  },
+  {
+    id: -2,
+    majorId: 0,
+    formulaModel: {
+      formId: 0,
+      formula: '',
+      condition: { type: 'condition', field: '', operator: 'EQUAL', value: '' },
+    },
+  },
+];
+
 export default function FormulaDetailView({ majorId, majorName }: FormulaDetailViewProps) {
   const router = useRouter();
-  const { minorList, isLoading } = useGetMinorFormulaList(majorId);
+  const { isLoading } = useGetMinorFormulaList(majorId);
+  const minorList = TEMP_FAKE_MINOR_ITEMS;
 
   const handleStub = () => {
     toast.info('این قابلیت به‌زودی اضافه می‌شود');

@@ -3,13 +3,12 @@
 import clsx from 'clsx';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { Box, Button, IconButton } from '@mui/material';
+import { Box, Button, IconButton, Skeleton } from '@mui/material';
 import { IoIosArrowForward } from 'react-icons/io';
 import { IoSettingsOutline } from 'react-icons/io5';
 import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
 import { useGetMinorFormulaList } from './useGetMinorFormulaList';
 import MinorFormulaRow from './MinorFormulaRow';
-import { MinorFormulaListItem } from './types';
 
 const APP_SIDEBAR_WIDTH_PX = 500;
 const DESKTOP_MEDIA = '@media (min-width:1280px)';
@@ -19,31 +18,9 @@ interface FormulaDetailViewProps {
   majorName: string;
 }
 
-const TEMP_FAKE_MINOR_ITEMS: MinorFormulaListItem[] = [
-  {
-    id: -1,
-    majorId: 0,
-    formulaModel: {
-      formId: 0,
-      formula: '',
-      condition: { type: 'condition', field: '', operator: 'EQUAL', value: '' },
-    },
-  },
-  {
-    id: -2,
-    majorId: 0,
-    formulaModel: {
-      formId: 0,
-      formula: '',
-      condition: { type: 'condition', field: '', operator: 'EQUAL', value: '' },
-    },
-  },
-];
-
 export default function FormulaDetailView({ majorId, majorName }: FormulaDetailViewProps) {
   const router = useRouter();
-  useGetMinorFormulaList(majorId);
-  const minorList = TEMP_FAKE_MINOR_ITEMS;
+  const { minorList, isLoading, isError, error } = useGetMinorFormulaList(majorId);
 
   const handleStub = () => {
     toast.info('این قابلیت به‌زودی اضافه می‌شود');
@@ -149,6 +126,29 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                     <div
                       className="flex flex-col w-full flex-1 min-h-0 overflow-y-auto"
                       style={{ scrollbarWidth: 'thin', padding: '11px 10px 0', gap: 7 }}>
+                      {isLoading &&
+                        Array.from({ length: 2 }).map((_, index) => (
+                          <Skeleton
+                            key={index}
+                            variant="rounded"
+                            animation="wave"
+                            height={54}
+                            sx={{ borderRadius: '12px', flexShrink: 0 }}
+                          />
+                        ))}
+
+                      {isError && (
+                        <p className="p-3 text-[#6F6F6F] text-center text-sm font-medium">
+                          {(error as Error)?.message || 'خطا در دریافت لیست فرمول‌های جزئی'}
+                        </p>
+                      )}
+
+                      {!isLoading && !isError && minorList.length === 0 && (
+                        <p className="p-3 text-[#6F6F6F] text-center text-sm font-medium">
+                          هیچ فرمول جزئی ثبت نشده است
+                        </p>
+                      )}
+
                       {minorList.map((item, index) => (
                         <MinorFormulaRow key={item.id} index={index} />
                       ))}

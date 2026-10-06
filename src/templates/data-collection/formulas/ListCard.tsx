@@ -42,11 +42,11 @@ export default function FormulaListCard({
 
   return (
     <div className="border p-4 rounded-2xl border-[#DDE1E6] flex flex-col gap-3 w-full max-w-full relative">
-      <SwitchButton
+      {/* <SwitchButton
         sx={{ position: 'absolute', top: 15, right: 15 }}
         checked={enabled}
         onChange={(event) => setEnabled(event.target.checked)}
-      />
+      /> */}
 
       <InfoRow label="نام فرمول" value={data.majorName} bold />
       <InfoRow label="سرویس‌گیرنده" value={platformCaption} bold />
@@ -69,9 +69,9 @@ export default function FormulaListCard({
           <IconButton color="primary" onClick={handleEdit}>
             <Image src={EditIcon} alt="edit" width={24} height={24} />
           </IconButton>
-          <IconButton color="error" onClick={handleDelete}>
+          {/* <IconButton color="error" onClick={handleDelete}>
             <Image src={TrashIcon} alt="delete" width={24} height={24} />
-          </IconButton>
+          </IconButton> */}
         </div>
       </div>
     </div>

@@ -157,19 +157,19 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                         onClick={handleStub}
                         className="flex items-center justify-center rounded-xl border border-dashed border-[#DDE1E6] bg-transparent min-h-[56px] cursor-pointer shrink-0">
                         <p className="p-3 text-[#6F6F6F] text-center text-sm font-medium cursor-pointer">
-                          افزودن فرمول جزئی
+                        افزودن فرمول جزئی
                         </p>
                       </div>
                     </div>
 
-                    <div
+                    {/* <div
                       onClick={handleStub}
                       className="flex items-center justify-center rounded-xl border border-dashed border-[#DDE1E6] bg-transparent min-h-[56px] cursor-pointer shrink-0"
                       style={{ margin: '8px 10px 10px' }}>
                       <p className="p-3 text-[#6F6F6F] text-center text-sm font-medium cursor-pointer">
                         افزودن فرمول کلی
                       </p>
-                    </div>
+                    </div> */}
                   </div>
                 </Box>
 

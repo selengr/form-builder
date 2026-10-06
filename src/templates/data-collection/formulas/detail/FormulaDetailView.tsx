@@ -1,6 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { Box, Button, IconButton, Skeleton } from '@mui/material';
@@ -9,6 +10,7 @@ import { IoSettingsOutline } from 'react-icons/io5';
 import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
 import { useGetMinorFormulaList } from './useGetMinorFormulaList';
 import MinorFormulaRow from './MinorFormulaRow';
+import MinorFormulaDialog from '../minor-formula/MinorFormulaDialog';
 
 const APP_SIDEBAR_WIDTH_PX = 500;
 const DESKTOP_MEDIA = '@media (min-width:1280px)';
@@ -20,6 +22,7 @@ interface FormulaDetailViewProps {
 
 export default function FormulaDetailView({ majorId, majorName }: FormulaDetailViewProps) {
   const router = useRouter();
+  const [openMinorFormulaDialog, setOpenMinorFormulaDialog] = useState(false);
   const { minorList, isLoading, isError, error } = useGetMinorFormulaList(majorId);
 
   const handleStub = () => {
@@ -154,7 +157,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                       ))}
 
                       <div
-                        onClick={handleStub}
+                        onClick={() => setOpenMinorFormulaDialog(true)}
                         className="flex items-center justify-center rounded-xl border border-dashed border-[#DDE1E6] bg-transparent min-h-[56px] cursor-pointer shrink-0">
                         <p className="p-3 text-[#6F6F6F] text-center text-sm font-medium cursor-pointer">
                         افزودن فرمول جزئی
@@ -230,6 +233,12 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
           </Box>
         </div>
       </main>
+
+      <MinorFormulaDialog
+        open={openMinorFormulaDialog}
+        onClose={() => setOpenMinorFormulaDialog(false)}
+        majorId={majorId}
+      />
     </div>
   );
 }

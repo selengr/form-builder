@@ -19,7 +19,7 @@ import { IoClose } from 'react-icons/io5';
 import FormProvider from '@/components/hook-form/FormProvider';
 import { RHFSelect, RHFTextField } from '@/components/hook-form';
 import { SkeletonMenuItem } from '@/components/Fields/PackageInjectionField';
-import { useGetTargetPlatform } from '../hooks/useGetTargetPlatform';
+import { useGetFormulaTargetPlatform } from './hooks/useGetFormulaTargetPlatform';
 import { useCreateMajorFormula } from './hooks/useCreateMajorFormula';
 
 interface IGetTargetPlatform {
@@ -72,7 +72,7 @@ interface IProps {
 export default function CreateFormulaBtn({ open, onClose }: IProps) {
   const router = useRouter();
   const { mutate, isPending } = useCreateMajorFormula();
-  const { TargetPlatform, isFetchingTargetPlatform } = useGetTargetPlatform(open);
+  const { TargetPlatform, isFetchingTargetPlatform } = useGetFormulaTargetPlatform(open);
 
   const methods = useForm<CreateFormulaFormSchemaType>({
     resolver: zodResolver(propertiesSchema),

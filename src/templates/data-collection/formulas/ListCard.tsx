@@ -10,7 +10,7 @@ import { SwitchButton } from '@/components/Switch/SwitchButton';
 import { UnifiedListGridCardProps } from '@/components/unified-list-grid';
 import EditIcon from '@/../public/images/home-page/edit-2.svg';
 import TrashIcon from '@/../public/images/home-page/trash.svg';
-import { useGetTargetPlatform } from '../hooks/useGetTargetPlatform';
+import { useGetFormulaTargetPlatform } from './hooks/useGetFormulaTargetPlatform';
 import { MajorFormulaListItem } from './types';
 
 export default function FormulaListCard({
@@ -18,7 +18,7 @@ export default function FormulaListCard({
 }: UnifiedListGridCardProps<MajorFormulaListItem>) {
   const router = useRouter();
   const [enabled, setEnabled] = useState(true);
-  const { TargetPlatform } = useGetTargetPlatform(true);
+  const { TargetPlatform } = useGetFormulaTargetPlatform(true);
 
   const platformCaption =
     TargetPlatform?.find((item) => item.value === data.targetPlatformEnum)?.caption ??

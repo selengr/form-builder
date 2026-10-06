@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import FilterIcon from '@/../public/images/home-page/filter-icon.svg';
 import { SearchQueryFilter, UnifiedListGridFilterMode } from '@/components/unified-list-grid';
-import { useGetTargetPlatform } from '../hooks/useGetTargetPlatform';
+import { useGetFormulaTargetPlatform } from './hooks/useGetFormulaTargetPlatform';
 
 interface FormulaFilterProps {
   mode: UnifiedListGridFilterMode;
@@ -29,7 +29,7 @@ export default function FormulaFilter({
   onReset,
 }: FormulaFilterProps) {
   const isMobile = mode === 'mobile';
-  const { TargetPlatform, isFetchingTargetPlatform } = useGetTargetPlatform(true);
+  const { TargetPlatform, isFetchingTargetPlatform } = useGetFormulaTargetPlatform(true);
 
   return (
     <div

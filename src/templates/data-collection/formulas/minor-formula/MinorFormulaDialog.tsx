@@ -8,6 +8,7 @@ import { Autocomplete, Button, Dialog, DialogContent, IconButton, TextField } fr
 import ConditionSection, { ConditionSectionHandle } from './condition/ConditionSection';
 import CalculatorSection, { CalculatorSectionHandle } from './calculator/CalculatorSection';
 import styles from './minorFormulaDialog.module.css';
+import { FormulaFormOption, useGetFormulaForms } from './hooks/useGetFormulaForms';
 
 const StyledDialog = styled(Dialog)({
   overflow: 'hidden',
@@ -57,11 +58,6 @@ const inputSx = {
 
 const labelClass = 'block text-[14px] font-medium text-[#161616]';
 
-export interface MinorFormulaFormOption {
-  value: string;
-  label: string;
-}
-
 interface MinorFormulaDialogProps {
   open: boolean;
   onClose: () => void;
@@ -79,9 +75,9 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
 
   const [name, setName] = useState('');
   const [nameError, setNameError] = useState<string | null>(null);
-  const [selectedForm, setSelectedForm] = useState<MinorFormulaFormOption | null>(null);
+  const [selectedForm, setSelectedForm] = useState<FormulaFormOption | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
-  const formOptions: MinorFormulaFormOption[] = [];
+  const { formOptions, isFetchingForms } = useGetFormulaForms();
   const formId = selectedForm?.value ?? '';
 
   const handleSubmit = async () => {
@@ -159,6 +155,8 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
           getOptionLabel={(option) => option.label}
           isOptionEqualToValue={(option, value) => option.value === value.value}
           noOptionsText="فرمی یافت نشد"
+          loading={isFetchingForms}
+          loadingText="در حال بارگذاری..."
           popupIcon={null}
           renderInput={(params) => (
             <TextField

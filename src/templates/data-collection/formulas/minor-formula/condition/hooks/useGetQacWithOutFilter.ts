@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { IConditionQuestionType } from '../types';
-import { getQacWithOutFilterAction } from '@actions/data-collection/formulas/minor-formula/getQacWithOutFilterAction';
+import { getFormQuestionsAction } from '@actions/data-collection/formulas/minor-formula/getFormQuestionsAction';
 
 export const useGetQacWithOutFilter = (formId: string) => {
   const { data, isFetching } = useQuery({
-    queryKey: ['MINOR_FORMULA_QAC_WIHT_OUT_FILTER', formId],
+    queryKey: ['MINOR_FORMULA_FORM_QUESTIONS', formId],
     queryFn: async () => {
-      const res = await getQacWithOutFilterAction(formId);
+      const res = await getFormQuestionsAction(formId);
 
       if (!res.success) {
         throw new Error(res.message || 'انجام عملیات با خطا مواجه شد');

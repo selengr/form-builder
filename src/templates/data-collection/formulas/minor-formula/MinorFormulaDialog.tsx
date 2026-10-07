@@ -172,11 +172,11 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
       </div>
 
       <div style={{ marginTop: 16 }}>
-        <ConditionSection ref={conditionRef} formId={formId} />
+        <ConditionSection key={formId} ref={conditionRef} formId={formId} />
       </div>
 
       <div style={{ marginTop: 2 }}>
-        <CalculatorSection ref={calculatorRef} formId={formId} />
+        <CalculatorSection key={formId} ref={calculatorRef} formId={formId} />
       </div>
 
       <div className="flex justify-center w-full" style={{ marginTop: 100, gap: 16 }}>

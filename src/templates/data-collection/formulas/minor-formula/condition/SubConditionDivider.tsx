@@ -10,7 +10,7 @@ interface SubConditionDividerProps {
   onRemove: () => void;
 }
 
-function DottedLineWithDots() {
+export function DottedLineWithDots() {
   return (
     <div className="flex flex-1 items-center min-w-0 mx-1">
       <span className="shrink-0 w-[6px] h-[6px] rounded-full bg-[#DDE1E6]" />

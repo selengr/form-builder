@@ -22,8 +22,6 @@ export const createNewSubCondition = () => ({
 
 export const createNewCondition = () => ({
   subConditions: [createNewSubCondition()],
-  elseQuestionId: '',
-  returnQuestionId: '',
 });
 
 const TransformOutputToInput = (
@@ -38,13 +36,11 @@ const TransformOutputToInput = (
   } catch {
     return {
       id: conditionJson.id,
-      returnQuestionId: '',
-      elseQuestionId: '',
       subConditions: [createNewSubCondition()],
     };
   }
 
-  const { subConditions, returnQuestionId, elseQuestionId } = conditions ?? {};
+  const { subConditions } = conditions ?? {};
 
   function findOptionLabel(item: any, key: string) {
     const option = item.options?.[key];
@@ -104,8 +100,6 @@ const TransformOutputToInput = (
 
   return {
     id: conditionJson.id,
-    returnQuestionId: returnQuestionId ?? '',
-    elseQuestionId: elseQuestionId ?? '',
     subConditions: SubConditionsData.length ? SubConditionsData : [createNewSubCondition()],
   };
 };
@@ -131,21 +125,11 @@ export const useConditionalForm = (condition: IGetCondition | undefined, formId:
 
   const {
     fields: conditions,
-    append: appendCondition,
-    remove: removeCondition,
     update: updateCondition,
   } = useFieldArray({
     control,
     name: 'conditions',
   });
-
-  const handleAddCondition = () => {
-    appendCondition(createNewCondition());
-  };
-
-  const handleRemoveCondition = (index: number) => {
-    removeCondition(index);
-  };
 
   const handleAddSubCondition = (index: number, subIndex: number) => {
     const currentCondition = getValues().conditions[index];
@@ -179,8 +163,6 @@ export const useConditionalForm = (condition: IGetCondition | undefined, formId:
   return {
     methods,
     conditions,
-    handleAddCondition,
-    handleRemoveCondition,
     handleAddSubCondition,
     handleRemoveSubCondition,
   };

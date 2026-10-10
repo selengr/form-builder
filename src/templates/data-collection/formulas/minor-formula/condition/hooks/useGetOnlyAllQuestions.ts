@@ -22,11 +22,6 @@ export const useGetOnlyAllQuestions = (formId: string) => {
     retry: 3,
   });
 
-  const onlyAllQuestionsOptions = data?.dataList?.map((item: IConditionQuestionType) => ({
-    value: `${item?.extMap.UNIC_NAME}@${item.caption}`,
-    label: item.caption,
-  }));
-
   const onlySomeQuestionsOptions = data?.dataList
     ?.filter((item: IConditionQuestionType) => {
       const { TEXT_FIELD_PATTERN, SPECTRAL_TYPE, MULTI_SELECT } = item.extMap;
@@ -51,7 +46,6 @@ export const useGetOnlyAllQuestions = (formId: string) => {
   return {
     isFetchingOnlyAllQuestions: isFetching,
     onlyAllQuestions: data?.dataList,
-    onlyAllQuestionsOptions,
     onlySomeQuestionsOptions,
     onlyAllDateOptions,
   };

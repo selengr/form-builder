@@ -15,9 +15,6 @@ interface CustomSelectProps extends Omit<SelectProps, 'sx' | 'name'> {
   isLoading?: boolean;
   placeholder?: string;
   parentStyle?: SxProps<Theme>;
-  contentInset?: string;
-  iconInset?: string;
-  borderless?: boolean;
 }
 
 export const SelectController: React.FC<CustomSelectProps> = ({
@@ -30,9 +27,6 @@ export const SelectController: React.FC<CustomSelectProps> = ({
   isLoading = false,
   placeholder = '',
   parentStyle,
-  contentInset = '12px',
-  iconInset = '18.8px',
-  borderless = false,
   ...props
 }) => {
   const { control } = useFormContext();
@@ -78,9 +72,9 @@ export const SelectController: React.FC<CustomSelectProps> = ({
                 paddingLeft: '0 !important',
               },
               '&.MuiInputBase-root': {
-                borderRadius: borderless ? '8px' : '12px',
-                paddingLeft: contentInset,
-                border: borderless ? 'none' : error ? '1px solid #FA4D56' : '1px solid #DDE1E6',
+                borderRadius: '12px',
+                paddingLeft: '12px',
+                border: error ? '1px solid #FA4D56' : '1px solid #DDE1E6',
                 height: {
                   xs: 52,
                   sm: 50,
@@ -89,7 +83,7 @@ export const SelectController: React.FC<CustomSelectProps> = ({
               },
               '& .MuiSelect-icon': {
                 left: 'auto',
-                right: iconInset,
+                right: '18.8px',
                 color: error ? '#FA4D56' : '#1758BA',
                 fontSize: '1.2rem',
               },

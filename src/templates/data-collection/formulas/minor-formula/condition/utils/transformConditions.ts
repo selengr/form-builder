@@ -2,11 +2,6 @@ import { formatContainText } from './formatContainText';
 import { TConditionData, TConditionFormData, TSubConditionData } from '../schema';
 import { IPostCondition } from '../types';
 
-const extractId = (value: string): number | null => {
-  const match = value.match(/\d+/);
-  return match ? Number(match[0]) : null;
-};
-
 const formatValue = (subCondition: TSubConditionData): string => {
   const conditionType = subCondition.conditionType?.split('@')[0];
   const questionType = subCondition.questionType?.split('@')[0];
@@ -54,7 +49,7 @@ export const transformConditions = (
   formId: string,
 ): IPostCondition[] =>
   input.conditions.map((condition: TConditionData, index) => {
-    const { subConditions, returnQuestionId, elseQuestionId } = condition;
+    const { subConditions } = condition;
 
     const conditionFormula = subConditions
       .map((subCondition: TSubConditionData) => {
@@ -70,8 +65,6 @@ export const transformConditions = (
     return {
       formBuilderId: Number(formId),
       conditionFormula,
-      elseQuestionId: extractId(elseQuestionId),
-      returnQuestionId: extractId(returnQuestionId) as number,
       frontConditionData: JSON.stringify(input.conditions[index]),
     };
   });

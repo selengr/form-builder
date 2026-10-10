@@ -45,8 +45,6 @@ export type IConditionFormAction =
 export interface IPostCondition {
   conditionFormula: string;
   formBuilderId: number;
-  returnQuestionId: number;
-  elseQuestionId: number | null;
   frontConditionData: string;
   id?: number;
 }
@@ -55,8 +53,6 @@ export interface IGetCondition {
   id: number;
   conditionFormula: string;
   formBuilderId: number;
-  returnQuestionId: number;
-  elseQuestionId: number | null;
   frontConditionData: string;
 }
 

@@ -13,7 +13,7 @@ export async function getFormQuestionsAction(formId: string) {
   };
 
   const url =
-    `/admin/data-collection/formulas/questions-custom-combo/${formId}?customComboFilterModel=` +
+    `/admin/data-collection/formulas/questions-condition-custom-combo/${formId}?customComboFilterModel=` +
     encodeURIComponent(JSON.stringify(customComboFilterModel));
 
   const result = await api.get(url);

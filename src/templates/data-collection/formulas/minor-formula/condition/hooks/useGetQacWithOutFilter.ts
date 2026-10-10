@@ -23,23 +23,26 @@ export const useGetQacWithOutFilter = (formId: string) => {
   });
 
   const qacWithOutFilterOptions = data?.dataList?.map((item: IConditionQuestionType) => {
+    const extMap = item.extMap ?? {};
+    const uniqueName = extMap.UNIC_NAME ?? item.elementStr ?? '';
+    const baseType = extMap.QUESTION_TYPE ?? item.value;
     const isCalculation = item.elementStr === 'CALCULATION';
-    const isTextFieldDate = item.extMap.TEXT_FIELD_PATTERN === 'DATE';
-    const isSpectralDouble = item.extMap.SPECTRAL_TYPE === 'DOMAIN';
-    const isTextFieldNumber = item.extMap.TEXT_FIELD_PATTERN === 'NUMBER';
-    const isMultiSelect = item.extMap.MULTI_SELECT ? JSON.parse(item.extMap.MULTI_SELECT) : false;
+    const isTextFieldDate = extMap.TEXT_FIELD_PATTERN === 'DATE';
+    const isSpectralDouble = extMap.SPECTRAL_TYPE === 'DOMAIN';
+    const isTextFieldNumber = extMap.TEXT_FIELD_PATTERN === 'NUMBER';
+    const isMultiSelect = extMap.MULTI_SELECT ? JSON.parse(extMap.MULTI_SELECT) : false;
 
     const questionType = isCalculation
-      ? `${item.elementStr}*${item.extMap.UNIC_NAME}`
+      ? `${item.elementStr}*${uniqueName}`
       : isTextFieldDate
-        ? `${item.extMap.QUESTION_TYPE}_${item.extMap.TEXT_FIELD_PATTERN}*${item.extMap.UNIC_NAME}`
+        ? `${baseType}_${extMap.TEXT_FIELD_PATTERN}*${uniqueName}`
         : isMultiSelect
-          ? `${item.extMap.QUESTION_TYPE}_MULTI_SELECT*${item.extMap.UNIC_NAME}`
+          ? `${baseType}_MULTI_SELECT*${uniqueName}`
           : isSpectralDouble
-            ? `${item.extMap.QUESTION_TYPE}_${item.extMap.SPECTRAL_TYPE}*${item.extMap.UNIC_NAME}`
+            ? `${baseType}_${extMap.SPECTRAL_TYPE}*${uniqueName}`
             : isTextFieldNumber
-              ? `${item.extMap.QUESTION_TYPE}_${item.extMap.TEXT_FIELD_PATTERN}*${item.extMap.UNIC_NAME}`
-              : `${item.extMap.QUESTION_TYPE}*${item.extMap.UNIC_NAME || ''}`;
+              ? `${baseType}_${extMap.TEXT_FIELD_PATTERN}*${uniqueName}`
+              : `${baseType}*${uniqueName}`;
 
     return {
       value: `${questionType}@${item.caption}`,

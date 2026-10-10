@@ -4,6 +4,7 @@ import { Fragment, Ref, useImperativeHandle } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { SubCondition } from './SubCondition';
 import SubConditionDivider from './SubConditionDivider';
+import ConditionFormulaDemo from './ConditionFormulaDemo';
 import { useConditionalForm } from './hooks/useConditionalForm';
 import { useGetQacWithOutFilter } from './hooks/useGetQacWithOutFilter';
 import { useGetOnlyAllQuestions } from './hooks/useGetOnlyAllQuestions';
@@ -91,6 +92,8 @@ export default function ConditionSection({ formId, ref }: ConditionSectionProps)
             </div>
           </div>
         ))}
+
+        <ConditionFormulaDemo formId={formId} />
       </FormProvider>
     </div>
   );

@@ -2,7 +2,7 @@ import { formatContainText } from './formatContainText';
 import { TConditionData, TConditionFormData, TSubConditionData } from '../schema';
 import { IPostCondition } from '../types';
 
-const formatValue = (subCondition: TSubConditionData): string => {
+export const formatValue = (subCondition: TSubConditionData): string => {
   const conditionType = subCondition.conditionType?.split('@')[0];
   const questionType = subCondition.questionType?.split('@')[0];
   const operatorType = subCondition.operatorType?.split('@')[0];

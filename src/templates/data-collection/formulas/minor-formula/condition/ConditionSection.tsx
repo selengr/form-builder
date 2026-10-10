@@ -19,11 +19,12 @@ export interface ConditionSectionHandle {
 interface ConditionSectionProps {
   formId: string;
   ref?: Ref<ConditionSectionHandle>;
+  calculatorFormula?: string;
 }
 
 const dashedButtonStyle = { minHeight: 50, color: '#9A9A9A' };
 
-export default function ConditionSection({ formId, ref }: ConditionSectionProps) {
+export default function ConditionSection({ formId, ref, calculatorFormula }: ConditionSectionProps) {
   const { qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter(formId);
   const { onlyAllCalculationOptions, isFetchingOnlyAllCalculation } = useGetOnlyAllCalculation(formId);
   const {
@@ -93,7 +94,7 @@ export default function ConditionSection({ formId, ref }: ConditionSectionProps)
           </div>
         ))}
 
-        <ConditionFormulaDemo formId={formId} />
+        <ConditionFormulaDemo calculatorFormula={calculatorFormula} />
       </FormProvider>
     </div>
   );

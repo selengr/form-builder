@@ -72,6 +72,7 @@ interface MinorFormulaDialogContentProps {
 function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogContentProps) {
   const conditionRef = useRef<ConditionSectionHandle>(null);
   const calculatorRef = useRef<CalculatorSectionHandle>(null);
+  const [calculatorFormula, setCalculatorFormula] = useState('');
 
   const [name, setName] = useState('');
   const [nameError, setNameError] = useState<string | null>(null);
@@ -172,11 +173,11 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
       </div>
 
       <div style={{ marginTop: 16 }}>
-        <ConditionSection key={formId} ref={conditionRef} formId={formId} />
+        <ConditionSection key={formId} ref={conditionRef} formId={formId} calculatorFormula={calculatorFormula} />
       </div>
 
       <div style={{ marginTop: 12 }}>
-        <CalculatorSection key={formId} ref={calculatorRef} formId={formId} />
+        <CalculatorSection key={formId} ref={calculatorRef} formId={formId} onFormulaChange={setCalculatorFormula} />
       </div>
 
       <div className="flex justify-center w-full" style={{ marginTop: 100, gap: 16 }}>

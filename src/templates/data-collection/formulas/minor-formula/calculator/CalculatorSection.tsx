@@ -12,6 +12,21 @@ import { useGetCalculatorFields } from './hooks/useGetCalculatorFields';
 
 const OPERATOR_TYPES = ['-', '+', '*', '/'];
 
+const buildCalculatorFormula = (rawFormula: string) => {
+  let formula = '';
+  rawFormula.split('#avg').forEach((item) => {
+    if (item.length === 0) return;
+    if (item.includes('MultiSelect') || item.includes('SpectralDouble')) {
+      formula += `#avg${item}`;
+    } else if (item.includes('Number')) {
+      formula += `#avg${item.replaceAll('}{', '},{')}`;
+    } else {
+      formula += item;
+    }
+  });
+  return replaceNestedParentheses(formula);
+};
+
 export interface CalculatorSectionHandle {
   getResult: () => CalculatorResult | null;
 }
@@ -19,9 +34,10 @@ export interface CalculatorSectionHandle {
 interface CalculatorSectionProps {
   formId: string;
   ref?: Ref<CalculatorSectionHandle>;
+  onFormulaChange?: (formula: string) => void;
 }
 
-export default function CalculatorSection({ formId, ref }: CalculatorSectionProps) {
+export default function CalculatorSection({ formId, ref, onFormulaChange }: CalculatorSectionProps) {
   const isDesktop = useMediaQuery('(min-width:900px)');
   const { questionList } = useGetCalculatorFields(formId);
 
@@ -498,6 +514,16 @@ export default function CalculatorSection({ formId, ref }: CalculatorSectionProp
     }
   };
 
+  useEffect(() => {
+    if (!onFormulaChange) return;
+    const rawFormula = htmlToFormula(elements, selectFieldRef, selectAvgRef).replaceAll('undefined', '?');
+    try {
+      onFormulaChange(rawFormula ? buildCalculatorFormula(rawFormula) : '');
+    } catch {
+      onFormulaChange(rawFormula);
+    }
+  }, [elements, onFormulaChange]);
+
   useImperativeHandle(
     ref,
     () => ({
@@ -513,20 +539,8 @@ export default function CalculatorSection({ formId, ref }: CalculatorSectionProp
           return null;
         }
 
-        let formula = '';
-        newFormula.split('#avg').forEach((item) => {
-          if (item.length === 0) return;
-          if (item.includes('MultiSelect') || item.includes('SpectralDouble')) {
-            formula += `#avg${item}`;
-          } else if (item.includes('Number')) {
-            formula += `#avg${item.replaceAll('}{', '},{')}`;
-          } else {
-            formula += item;
-          }
-        });
-
         return {
-          formula: replaceNestedParentheses(formula),
+          formula: buildCalculatorFormula(newFormula),
           frontCalcData: JSON.stringify(elements),
         };
       },

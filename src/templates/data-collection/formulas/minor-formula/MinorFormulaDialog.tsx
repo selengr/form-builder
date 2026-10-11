@@ -9,6 +9,7 @@ import ConditionSection, { ConditionSectionHandle } from './condition/ConditionS
 import CalculatorSection, { CalculatorSectionHandle } from './calculator/CalculatorSection';
 import styles from './minorFormulaDialog.module.css';
 import { FormulaFormOption, useGetFormulaForms } from './hooks/useGetFormulaForms';
+import { useCreateMinorFormula } from './hooks/useCreateMinorFormula';
 
 const StyledDialog = styled(Dialog)({
   overflow: 'hidden',
@@ -81,35 +82,36 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
   const { formOptions, isFetchingForms } = useGetFormulaForms();
   const formId = selectedForm?.value ?? '';
 
+  const { mutate: createMinorFormula, isPending } = useCreateMinorFormula(majorId);
+
   const handleSubmit = async () => {
-    let hasError = false;
-
-    if (!name.trim()) {
-      setNameError('نام فرمول الزامی است');
-      hasError = true;
-    }
-
     if (!formId) {
       setFormError('انتخاب فرم الزامی است');
-      hasError = true;
+      return;
     }
 
-    const conditions = await conditionRef.current?.validate();
-    const calculator = calculatorRef.current?.getResult();
+    const condition = await conditionRef.current?.getCondition();
+    if (!condition) return;
 
-    if (hasError || !conditions || !calculator) return;
-
-    const payload = {
-      majorId: Number(majorId),
-      name: name.trim(),
-      formId: Number(formId),
-      conditions,
-      formula: calculator.formula,
-      frontCalcData: calculator.frontCalcData,
-    };
-
-    console.log('[MinorFormulaDialog] payload:', JSON.stringify(payload, null, 2));
-    toast.info('ثبت فرمول جزئی پس از دریافت API آن متصل می‌شود');
+    createMinorFormula(
+      {
+        majorId: Number(majorId),
+        formulaModel: {
+          formId: Number(formId),
+          formula: '',
+          condition,
+        },
+      },
+      {
+        onSuccess: () => {
+          toast.success('فرمول جزئی با موفقیت ثبت شد');
+          onClose();
+        },
+        onError: (error) => {
+          toast.error(error.message);
+        },
+      },
+    );
   };
 
   return (
@@ -183,6 +185,7 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
       <div className="flex justify-center w-full" style={{ marginTop: 100, gap: 16 }}>
         <Button
           onClick={handleSubmit}
+          disabled={isPending}
           variant="contained"
           sx={{
             backgroundColor: '#1758BA',
@@ -194,7 +197,7 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
             boxShadow: 'none',
             '&:hover': { backgroundColor: '#134a9e', boxShadow: 'none' },
           }}>
-          تایید
+          {isPending ? 'در حال ثبت...' : 'تایید'}
         </Button>
 
         <Button

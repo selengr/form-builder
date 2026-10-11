@@ -24,7 +24,7 @@ export const useGetQacWithOutFilter = (formId: string) => {
 
   const qacWithOutFilterOptions = data?.dataList?.map((item: IConditionQuestionType) => {
     const extMap = item.extMap ?? {};
-    const uniqueName = extMap.UNIC_NAME ?? item.elementStr ?? '';
+    const uniqueName = item.elementStr || extMap.UNIC_NAME || '';
     const baseType = extMap.QUESTION_TYPE ?? item.value;
     const isCalculation = item.elementStr === 'CALCULATION';
     const isTextFieldDate = extMap.TEXT_FIELD_PATTERN === 'DATE';

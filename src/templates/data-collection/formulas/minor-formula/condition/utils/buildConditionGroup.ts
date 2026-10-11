@@ -45,7 +45,7 @@ const NUMERIC_OPERATOR_TYPES = ['VALUE', 'OPTION'];
 
 const stripLabel = (value: string) => String(value).split('@')[0];
 
-const toNextOperator = (logicalOperator?: string): FormulaConditionNextOperator =>
+export const toNextOperator = (logicalOperator?: string): FormulaConditionNextOperator =>
   stripLabel(logicalOperator ?? '') === '||' ? 'OR' : 'AND';
 
 export const getConditionField = (questionType: string) => {
@@ -56,7 +56,7 @@ export const getConditionField = (questionType: string) => {
 export const getConditionOperator = (conditionType: string): FormulaConditionOperator | undefined =>
   OPERATOR_MAP[stripLabel(conditionType)];
 
-const toConditionValue = (subCondition: TSubConditionData): FormulaConditionValue => {
+export const toConditionValue = (subCondition: TSubConditionData): FormulaConditionValue => {
   const operatorType = stripLabel(subCondition.operatorType);
   const shouldBeNumber = NUMERIC_OPERATOR_TYPES.includes(operatorType);
 

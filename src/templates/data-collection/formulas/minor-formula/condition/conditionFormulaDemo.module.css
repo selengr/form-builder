@@ -1,0 +1,5 @@
+.code,
+.code * {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace !important;
+  font-feature-settings: normal !important;
+}

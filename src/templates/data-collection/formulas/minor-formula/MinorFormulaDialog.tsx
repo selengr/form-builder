@@ -175,7 +175,7 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
       </div>
 
       <div style={{ marginTop: 16 }}>
-        <ConditionSection key={formId} ref={conditionRef} formId={formId} calculatorFormula={calculatorFormula} />
+        <ConditionSection key={formId} ref={conditionRef} formId={formId} majorId={majorId} calculatorFormula={calculatorFormula} />
       </div>
 
       <div style={{ marginTop: 12 }}>

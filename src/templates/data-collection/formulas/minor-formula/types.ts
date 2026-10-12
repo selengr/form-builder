@@ -5,15 +5,8 @@ export type FormulaConditionOperator =
   | 'LESS_THAN'
   | 'GREATER_EQUAL_THAN'
   | 'LESS_EQUAL_THAN'
-  | 'CONTAINS'
-  | 'NOT_CONTAINS'
-  | 'STARTS_WITH'
-  | 'ENDS_WITH'
-  | 'LENGTH_EQUAL'
-  | 'LENGTH_GREATER_THAN'
-  | 'LENGTH_LESS_THAN'
-  | 'BEFORE'
-  | 'AFTER';
+  | 'EXISTS'
+  | 'NOT_EXISTS';
 
 export type FormulaConditionNextOperator = 'AND' | 'OR';
 

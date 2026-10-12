@@ -40,6 +40,6 @@ export interface FormulaModel {
 
 export interface CreateMinorFormulaPayload {
   majorId: number;
-  majorTitle: string;
+  minorName: string;
   formulaModel: FormulaModel;
 }

@@ -103,7 +103,7 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
     createMinorFormula(
       {
         majorId: Number(majorId),
-        majorTitle: name.trim(),
+        minorName: name.trim(),
         formulaModel: {
           formId: Number(formId),
           formula: '',
@@ -183,7 +183,7 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
       </div>
 
       <div style={{ marginTop: 16 }}>
-        <ConditionSection key={formId} ref={conditionRef} formId={formId} majorId={majorId} majorTitle={name} calculatorFormula={calculatorFormula} />
+        <ConditionSection key={formId} ref={conditionRef} formId={formId} majorId={majorId} minorName={name} calculatorFormula={calculatorFormula} />
       </div>
 
       <div style={{ marginTop: 12 }}>

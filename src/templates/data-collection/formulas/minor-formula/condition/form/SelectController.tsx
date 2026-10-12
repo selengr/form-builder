@@ -6,7 +6,7 @@ import { IoIosArrowDown } from 'react-icons/io';
 import { Controller, useFormContext } from 'react-hook-form';
 
 interface CustomSelectProps extends Omit<SelectProps, 'sx' | 'name'> {
-  options: { value: string; label: string }[];
+  options: { value: string; label: string; highlighted?: boolean }[];
   sx?: SxProps<Theme>;
   name: string;
   onChange?: any;
@@ -109,6 +109,12 @@ export const SelectController: React.FC<CustomSelectProps> = ({
                   mx: 1,
                   borderRadius: 0.75,
                   typography: 'body2',
+                  ...(option.highlighted && {
+                    mb: 0.5,
+                    color: '#1758BA',
+                    backgroundColor: '#F1F6FD',
+                    '&:hover, &.Mui-selected, &.Mui-selected:hover': { backgroundColor: '#E6EEFB' },
+                  }),
                 }}>
                 {option.label}
               </MenuItem>

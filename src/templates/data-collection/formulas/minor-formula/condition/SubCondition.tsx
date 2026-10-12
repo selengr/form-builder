@@ -4,6 +4,11 @@ import { Fragment } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { getCondition, getInput, getQuestion } from './GetConditionInput';
 import { SelectController } from './form/SelectController';
+import {
+  isRefIdQuestion,
+  REF_ID_CONDITION_TYPE,
+  REF_ID_OPERATOR_TYPE,
+} from './utils/questionType';
 
 type SubConditionProps = {
   index: number;
@@ -35,7 +40,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
   isFetchingOnlyAllCalculation,
   onlyAllQuestions,
 }) => {
-  const { control, setValue, getValues } = useFormContext();
+  const { control, setValue, getValues, clearErrors } = useFormContext();
   const currentValues = useWatch({
     control,
     name: `conditions.${index}.subConditions.${subIndex}`,
@@ -75,8 +80,19 @@ export const SubCondition: React.FC<SubConditionProps> = ({
           placeholder="بر اساس"
           sx={{ ...fieldSx, width: { xs: '100%', md: 305 } }}
           onChange={(e: any) => {
-            const combinedKey = `${e.target?.value?.split('*')[0]}`;
-            if (combinedKey === 'INFO_FIELD') {
+            const selectedQuestionType = e.target?.value;
+            const combinedKey = `${selectedQuestionType?.split('*')[0]}`;
+            if (isRefIdQuestion(selectedQuestionType)) {
+              const refIdOption = qacWithOutFilterOptions?.find((option) => option.value === selectedQuestionType);
+              setValue(`conditions.${index}.subConditions.${subIndex}.operatorType`, REF_ID_OPERATOR_TYPE);
+              setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, REF_ID_CONDITION_TYPE);
+              setValue(`conditions.${index}.subConditions.${subIndex}.value`, refIdOption?.elementStr ?? '');
+              clearErrors([
+                `conditions.${index}.subConditions.${subIndex}.operatorType`,
+                `conditions.${index}.subConditions.${subIndex}.conditionType`,
+                `conditions.${index}.subConditions.${subIndex}.value`,
+              ]);
+            } else if (combinedKey === 'INFO_FIELD') {
               setValue(`conditions.${index}.subConditions.${subIndex}.operatorType`, 'TEXT');
               setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, '#startWithText');
               setValue(`conditions.${index}.subConditions.${subIndex}.value`, '---');
@@ -88,49 +104,65 @@ export const SubCondition: React.FC<SubConditionProps> = ({
           }}
         />
 
-        <SelectController
-          name={`conditions.${index}.subConditions.${subIndex}.operatorType`}
-          options={getQuestion(currentValues.questionType, currentValues)}
-          placeholder="گویه"
-          sx={{ ...fieldSx, width: { xs: '100%', md: 122 } }}
-          onChange={() => {
-            const questionType = getValues(`conditions.${index}.subConditions.${subIndex}.questionType`);
-            const combinedKey = `${questionType?.split('*')[0]}`;
-            if (combinedKey === 'INFO_FIELD') {
-              setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, '#startWithText');
-              setValue(`conditions.${index}.subConditions.${subIndex}.value`, '---');
-            } else {
-              setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, '');
-              setValue(`conditions.${index}.subConditions.${subIndex}.value`, '');
-            }
-          }}
-          isOperator
-          disabled={!currentValues.questionType}
-        />
+        {isRefIdQuestion(currentValues.questionType) ? (
+          <div
+            className="flex-1 min-w-0 w-full flex items-center rounded-xl text-[14px] font-semibold"
+            style={{
+              height: 52,
+              padding: '0 16px',
+              color: '#379E76',
+              backgroundColor: '#ECFDF5',
+              border: '1px solid #BBEBD5',
+            }}>
+            مطابقت داشت
+          </div>
+        ) : (
+          <>
+            <SelectController
+              name={`conditions.${index}.subConditions.${subIndex}.operatorType`}
+              options={getQuestion(currentValues.questionType, currentValues)}
+              placeholder="گویه"
+              sx={{ ...fieldSx, width: { xs: '100%', md: 122 } }}
+              onChange={() => {
+                const questionType = getValues(`conditions.${index}.subConditions.${subIndex}.questionType`);
+                const combinedKey = `${questionType?.split('*')[0]}`;
+                if (combinedKey === 'INFO_FIELD') {
+                  setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, '#startWithText');
+                  setValue(`conditions.${index}.subConditions.${subIndex}.value`, '---');
+                } else {
+                  setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, '');
+                  setValue(`conditions.${index}.subConditions.${subIndex}.value`, '');
+                }
+              }}
+              isOperator
+              disabled={!currentValues.questionType}
+            />
 
-        <SelectController
-          name={`conditions.${index}.subConditions.${subIndex}.conditionType`}
-          options={getCondition(
-            currentValues.questionType,
-            currentValues.operatorType,
-            currentValues,
-          )}
-          placeholder="عملگر"
-          sx={{ ...fieldSx, width: { xs: '100%', md: 122 } }}
-          onChange={() => {
-            const questionType = getValues(`conditions.${index}.subConditions.${subIndex}.questionType`);
-            const combinedKey = `${questionType?.split('*')[0]}`;
-            if (combinedKey === 'INFO_FIELD') {
-              setValue(`conditions.${index}.subConditions.${subIndex}.value`, '---');
-            } else {
-              setValue(`conditions.${index}.subConditions.${subIndex}.value`, '');
-            }
-          }}
-          isOperator
-          disabled={!currentValues.operatorType}
-        />
+            <SelectController
+              name={`conditions.${index}.subConditions.${subIndex}.conditionType`}
+              options={getCondition(
+                currentValues.questionType,
+                currentValues.operatorType,
+                currentValues,
+              )}
+              placeholder="عملگر"
+              sx={{ ...fieldSx, width: { xs: '100%', md: 122 } }}
+              onChange={() => {
+                const questionType = getValues(`conditions.${index}.subConditions.${subIndex}.questionType`);
+                const combinedKey = `${questionType?.split('*')[0]}`;
+                if (combinedKey === 'INFO_FIELD') {
+                  setValue(`conditions.${index}.subConditions.${subIndex}.value`, '---');
+                } else {
+                  setValue(`conditions.${index}.subConditions.${subIndex}.value`, '');
+                }
+              }}
+              isOperator
+              disabled={!currentValues.operatorType}
+            />
 
-        <div className="flex-1 min-w-0 w-full bg-white rounded-xl border-none">{valueInput}</div>
+            <div className="flex-1 min-w-0 w-full bg-white rounded-xl border-none">{valueInput}</div>
+          </>
+        )}
       </div>
     </div>
   );

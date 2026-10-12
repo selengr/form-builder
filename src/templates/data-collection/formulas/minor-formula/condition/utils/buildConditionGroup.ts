@@ -1,5 +1,5 @@
 import { TConditionFormData, TSubConditionData } from '../schema';
-import { getQuestionField } from './questionType';
+import { getQuestionField, REF_ID_CONDITION_TYPE } from './questionType';
 import {
   FormulaConditionGroup,
   FormulaConditionItem,
@@ -40,6 +40,7 @@ const OPERATOR_MAP: Record<string, FormulaConditionOperator> = {
   '#lenLessThanText': 'LENGTH_LESS_THAN',
   '#beforeDate': 'BEFORE',
   '#afterDate': 'AFTER',
+  [REF_ID_CONDITION_TYPE]: 'EQUAL',
 };
 
 const NUMERIC_OPERATOR_TYPES = ['VALUE', 'OPTION'];

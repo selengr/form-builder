@@ -29,6 +29,12 @@ const fieldSx = {
   backgroundColor: 'white',
 };
 
+const refIdSelectedSx = {
+  backgroundColor: '#F1F6FD',
+  '&&.MuiInputBase-root': { borderColor: '#C9DAF5' },
+  '& .MuiSelect-select': { color: '#1758BA', fontWeight: 500 },
+};
+
 export const SubCondition: React.FC<SubConditionProps> = ({
   index,
   subIndex,
@@ -78,7 +84,11 @@ export const SubCondition: React.FC<SubConditionProps> = ({
           options={qacWithOutFilterOptions}
           isLoading={isFetchingQacWithOutFilter}
           placeholder="بر اساس"
-          sx={{ ...fieldSx, width: { xs: '100%', md: 305 } }}
+          sx={{
+            ...fieldSx,
+            width: { xs: '100%', md: 305 },
+            ...(isRefIdQuestion(currentValues.questionType) && refIdSelectedSx),
+          }}
           onChange={(e: any) => {
             const selectedQuestionType = e.target?.value;
             const combinedKey = `${selectedQuestionType?.split('*')[0]}`;

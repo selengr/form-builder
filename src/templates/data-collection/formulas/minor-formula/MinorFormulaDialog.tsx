@@ -85,17 +85,25 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
   const { mutate: createMinorFormula, isPending } = useCreateMinorFormula(majorId);
 
   const handleSubmit = async () => {
+    let hasError = false;
+
+    if (!name.trim()) {
+      setNameError('نام فرمول الزامی است');
+      hasError = true;
+    }
+
     if (!formId) {
       setFormError('انتخاب فرم الزامی است');
-      return;
+      hasError = true;
     }
 
     const condition = await conditionRef.current?.getCondition();
-    if (!condition) return;
+    if (hasError || !condition) return;
 
     createMinorFormula(
       {
         majorId: Number(majorId),
+        majorTitle: name.trim(),
         formulaModel: {
           formId: Number(formId),
           formula: '',
@@ -175,7 +183,7 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
       </div>
 
       <div style={{ marginTop: 16 }}>
-        <ConditionSection key={formId} ref={conditionRef} formId={formId} majorId={majorId} calculatorFormula={calculatorFormula} />
+        <ConditionSection key={formId} ref={conditionRef} formId={formId} majorId={majorId} majorTitle={name} calculatorFormula={calculatorFormula} />
       </div>
 
       <div style={{ marginTop: 12 }}>

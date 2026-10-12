@@ -13,6 +13,7 @@ import styles from './conditionFormulaDemo.module.css';
 
 interface ConditionFormulaDemoProps {
   majorId?: string;
+  majorTitle?: string;
   formId: string;
   calculatorFormula?: string;
 }
@@ -45,12 +46,14 @@ const buildLiveChild = (subCondition: TSubConditionData, nextSubCondition?: TSub
 const buildLivePayload = (
   conditions: TConditionData[] | undefined,
   majorId: string | undefined,
+  majorTitle: string | undefined,
   formId: string,
 ) => {
   const subConditions = (conditions ?? []).flatMap((condition) => condition?.subConditions ?? []);
 
   return {
     majorId: toNumberOrNull(majorId),
+    majorTitle: majorTitle?.trim() || null,
     formulaModel: {
       formId: toNumberOrNull(formId),
       formula: '',
@@ -104,9 +107,9 @@ const codeStyle = {
   color: COLORS.punctuation,
 };
 
-export default function ConditionFormulaDemo({ majorId, formId, calculatorFormula }: ConditionFormulaDemoProps) {
+export default function ConditionFormulaDemo({ majorId, majorTitle, formId, calculatorFormula }: ConditionFormulaDemoProps) {
   const conditions = useWatch({ name: 'conditions' }) as TConditionData[] | undefined;
-  const payloadJson = JSON.stringify(buildLivePayload(conditions, majorId, formId), null, 2);
+  const payloadJson = JSON.stringify(buildLivePayload(conditions, majorId, majorTitle, formId), null, 2);
 
   return (
     <div

@@ -10,6 +10,7 @@ const conditionValueSchema = z.union([z.string(), z.number(), z.array(z.union([z
 
 const createMinorFormulaSchema = z.object({
   majorId: z.number().int().positive(),
+  majorTitle: z.string().trim().min(1),
   formulaModel: z.object({
     formId: z.number().int().positive(),
     formula: z.string(),

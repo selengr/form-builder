@@ -37,10 +37,7 @@ export const getQuestion = (type: string, values: any) => {
       return [{ value: 'VALUE', label: 'ارزش' }];
 
     case 'TEXT_FIELD_DATE':
-      return [
-        { value: 'QUESTION', label: 'سوال' },
-        { value: 'DATE', label: 'تاریخ' },
-      ];
+      return [{ value: 'DATE', label: 'تاریخ' }];
 
     case 'TEXT_FIELD_NUMBER':
     case 'RATING':
@@ -117,7 +114,6 @@ export const getCondition = (type: string, operator: string, values: any) => {
       ];
 
     case 'TEXT_FIELD_DATE_DATE':
-    case 'TEXT_FIELD_DATE_QUESTION':
       return [
         { value: '#afterDate', label: 'بعد از' },
         { value: '#beforeDate', label: 'قبل از' },
@@ -160,7 +156,7 @@ export const getInput = (
   operator: string,
   condition: string,
   field: { name: any; key?: string },
-  { onlySomeQuestionsOptions, isFetchingOnlyAllQuestions, onlyAllCalculationOptions, isFetchingOnlyAllCalculation, onlyAllQuestions, onlyAllDateOptions, control, setValue }: any,
+  { onlySomeQuestionsOptions, isFetchingOnlyAllQuestions, onlyAllCalculationOptions, isFetchingOnlyAllCalculation, onlyAllQuestions, control, setValue }: any,
 ) => {
   const combinedKey = `${type?.split('*')[0]}_${operator?.split('@')[0]}_${condition?.split('@')[0]}`;
 
@@ -295,10 +291,6 @@ export const getInput = (
           )}
         />
       );
-
-    case 'TEXT_FIELD_DATE_QUESTION_#beforeDate':
-    case 'TEXT_FIELD_DATE_QUESTION_#afterDate':
-      return <SelectController name={field.name} options={onlyAllDateOptions} isLoading={isFetchingOnlyAllQuestions} placeholder="مقدار" sx={{ minWidth: 215, width: '100%' }} />;
 
     case 'TEXT_FIELD_NUMBER_VALUE_#greaterThanNumber':
     case 'TEXT_FIELD_NUMBER_VALUE_#lessThanNumber':

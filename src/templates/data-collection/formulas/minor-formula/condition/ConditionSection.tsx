@@ -31,7 +31,6 @@ export default function ConditionSection({ formId, majorId, ref, calculatorFormu
   const { onlyAllCalculationOptions, isFetchingOnlyAllCalculation } = useGetOnlyAllCalculation(formId);
   const {
     onlyAllQuestions,
-    onlyAllDateOptions,
     onlySomeQuestionsOptions,
     isFetchingOnlyAllQuestions,
   } = useGetOnlyAllQuestions(formId);
@@ -85,7 +84,6 @@ export default function ConditionSection({ formId, majorId, ref, calculatorFormu
                   onlyAllCalculationOptions={onlyAllCalculationOptions ?? []}
                   isFetchingOnlyAllCalculation={isFetchingOnlyAllCalculation}
                   onlyAllQuestions={onlyAllQuestions ?? []}
-                  onlyAllDateOptions={onlyAllDateOptions ?? []}
                 />
               </Fragment>
             ))}

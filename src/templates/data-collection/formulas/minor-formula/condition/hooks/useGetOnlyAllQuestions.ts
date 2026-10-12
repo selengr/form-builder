@@ -36,17 +36,9 @@ export const useGetOnlyAllQuestions = (formId: string) => {
       label: item.caption,
     }));
 
-  const onlyAllDateOptions = data?.dataList
-    ?.filter((item: IConditionQuestionType) => item.extMap.TEXT_FIELD_PATTERN === 'DATE')
-    ?.map((item: IConditionQuestionType) => ({
-      value: `${item?.extMap.UNIC_NAME}@${item.caption}`,
-      label: item.caption,
-    }));
-
   return {
     isFetchingOnlyAllQuestions: isFetching,
     onlyAllQuestions: data?.dataList,
     onlySomeQuestionsOptions,
-    onlyAllDateOptions,
   };
 };

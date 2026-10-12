@@ -9,6 +9,7 @@ import KeypadPanel from './KeypadPanel';
 import { htmlToFormula } from './utils/htmlToFormula';
 import { replaceNestedParentheses } from './utils/parenthesesReplacer';
 import { useGetCalculatorFields } from './hooks/useGetCalculatorFields';
+import { getCalculatorFieldId } from './utils/getCalculatorFieldId';
 
 const OPERATOR_TYPES = ['-', '+', '*', '/'];
 
@@ -364,8 +365,8 @@ export default function CalculatorSection({ formId, ref, onFormulaChange }: Calc
   };
 
   const handleOptionClick = (item: any, dropdownId: string, element: any) => {
-    const { UNIC_NAME, STICKY_FUNC } = item.extMap;
-    const finalId = STICKY_FUNC ?? UNIC_NAME;
+    const finalId = getCalculatorFieldId(item);
+    if (!finalId) return;
 
     const elementIndex = elements.findIndex(
       (elem) => elem.id === dropdownId && element.mainIndex === elem.mainIndex,

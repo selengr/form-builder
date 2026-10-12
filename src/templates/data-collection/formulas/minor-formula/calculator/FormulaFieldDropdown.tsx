@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './formulaEditor.module.css';
 import { Element } from './types';
+import { getCalculatorFieldId } from './utils/getCalculatorFieldId';
 
 interface FormulaFieldDropdownProps {
   element: Element;
@@ -36,7 +37,7 @@ const FormulaFieldDropdown: React.FC<FormulaFieldDropdownProps> = ({ element, op
   };
 
   const returnCaption = () => {
-    const match = options.find(item => element.id?.includes(item.value));
+    const match = options.find((item) => getCalculatorFieldId(item) === element.id);
     return match?.caption || "انتخاب سوال";
   };
 

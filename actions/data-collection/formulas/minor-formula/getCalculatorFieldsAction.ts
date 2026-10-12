@@ -9,16 +9,16 @@ export async function getCalculatorFieldsAction(formId: string) {
     mode: 'QUESTIONS_IN_FORM_BUILDER__ALL',
     input: '',
     page: 0,
-    rows: 10000,
-    extMap: {
-      formId,
-      typeRequest: 'QAC_BY_FILTER',
-    },
+    rows: 10,
   };
 
   const url =
-    `/question/q-and-c-custom-combo?customComboFilterModel=` +
+    `/admin/data-collection/formulas/questions-calc-custom-combo/${formId}?customComboFilterModel=` +
     encodeURIComponent(JSON.stringify(customComboFilterModel));
 
-  return api.get(url);
+  const result = await api.get(url);
+
+  console.log('[getCalculatorFieldsAction] response:', JSON.stringify(result, null, 2));
+
+  return result;
 }

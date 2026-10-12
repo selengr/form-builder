@@ -10,6 +10,7 @@ import {
   TSubConditionData,
 } from '../schema';
 import { useGetQacWithOutFilterList } from './useGetQacWithOutFilterList';
+import { getQuestionField } from '../utils/questionType';
 
 export const createNewSubCondition = () => ({
   logicalOperator: '',
@@ -63,9 +64,8 @@ const TransformOutputToInput = (
         splitedOperatorType === 'OPTION' && splitedQuestionType === 'MULTIPLE_CHOICE_MULTI_SELECT' ||
         splitedQuestionType === 'MULTIPLE_CHOICE'
       ) {
-        const questionId = subCondition.questionType?.split('*')[1];
-        const compared = questionId?.split('@')[0];
-        const found = qacWithOutFilterOptions?.find((val: any) => val?.value.includes(compared));
+        const compared = getQuestionField(subCondition.questionType);
+        const found = qacWithOutFilterOptions?.find((val: any) => getQuestionField(val?.value) === compared);
 
         if (found) {
           if (Array.isArray(subCondition.value)) {

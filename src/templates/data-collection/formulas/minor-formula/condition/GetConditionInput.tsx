@@ -2,6 +2,7 @@
 import { Box } from '@mui/material';
 import { Controller } from 'react-hook-form';
 import { IConditionQuestionType } from './types';
+import { getQuestionField } from './utils/questionType';
 import { DatePicker as DatePickerCustome } from '@/components/DatePicker/DatePicker';
 import { TextFieldController } from './form/TextFieldController';
 import { MultiSelectController, SelectController } from './form/SelectController';
@@ -205,9 +206,7 @@ export const getInput = (
     case 'MULTIPLE_CHOICE_OPTION_!#equalMultiChoiceSingle':
     case 'MULTIPLE_CHOICE_OPTION_#lessThanMultiChoiceSingle':
     case 'MULTIPLE_CHOICE_OPTION_#greaterThanMultiChoiceSingle': {
-      const typeParts = type.split('*');
-
-      const targetUnicName = typeParts[1]?.split('@')[0];
+      const targetUnicName = getQuestionField(type);
       const targetQuestion = onlyAllQuestions?.find((item: IConditionQuestionType) => item?.extMap?.UNIC_NAME === targetUnicName);
 
       if (!targetQuestion) return null;
@@ -225,8 +224,7 @@ export const getInput = (
     case 'MULTIPLE_CHOICE_MULTI_SELECT_OPTION_!#containMultiChoiceMulti':
     case 'MULTIPLE_CHOICE_MULTI_SELECT_OPTION_!#equalThanMultiChoiceMulti':
     case 'MULTIPLE_CHOICE_MULTI_SELECT_OPTION_#equalThanMultiChoiceMulti': {
-      const typeParts = type.split('*');
-      const targetUnicName = typeParts[1]?.split('@')[0];
+      const targetUnicName = getQuestionField(type);
 
       if (!onlyAllQuestions) return null;
       const targetQuestion = onlyAllQuestions?.find((item: IConditionQuestionType) => item?.extMap?.UNIC_NAME === targetUnicName);

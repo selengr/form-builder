@@ -1,4 +1,5 @@
 import { TConditionFormData, TSubConditionData } from '../schema';
+import { getQuestionField } from './questionType';
 import {
   FormulaConditionGroup,
   FormulaConditionItem,
@@ -42,16 +43,19 @@ const OPERATOR_MAP: Record<string, FormulaConditionOperator> = {
 };
 
 const NUMERIC_OPERATOR_TYPES = ['VALUE', 'OPTION'];
+const LABELED_OPERATOR_TYPES = ['OPTION', 'QUESTION', 'CALCULATION'];
 
 const stripLabel = (value: string) => String(value).split('@')[0];
+
+const stripTrailingLabel = (value: string) => {
+  const labelIndex = value.lastIndexOf('@');
+  return labelIndex === -1 ? value : value.slice(0, labelIndex);
+};
 
 export const toNextOperator = (logicalOperator?: string): FormulaConditionNextOperator =>
   stripLabel(logicalOperator ?? '') === '||' ? 'OR' : 'AND';
 
-export const getConditionField = (questionType: string) => {
-  const typeWithField = stripLabel(questionType);
-  return typeWithField.slice(typeWithField.indexOf('*') + 1);
-};
+export const getConditionField = (questionType: string) => getQuestionField(questionType);
 
 export const getConditionOperator = (conditionType: string): FormulaConditionOperator | undefined =>
   OPERATOR_MAP[stripLabel(conditionType)];
@@ -59,9 +63,11 @@ export const getConditionOperator = (conditionType: string): FormulaConditionOpe
 export const toConditionValue = (subCondition: TSubConditionData): FormulaConditionValue => {
   const operatorType = stripLabel(subCondition.operatorType);
   const shouldBeNumber = NUMERIC_OPERATOR_TYPES.includes(operatorType);
+  const hasLabel = LABELED_OPERATOR_TYPES.includes(operatorType);
 
   const convert = (raw: string) => {
-    const value = stripLabel(raw).trim();
+    const text = String(raw);
+    const value = (hasLabel ? stripTrailingLabel(text) : text).trim();
     return shouldBeNumber && value !== '' && Number.isFinite(Number(value)) ? Number(value) : value;
   };
 

@@ -45,7 +45,7 @@ export const useGetQacWithOutFilter = (formId: string) => {
               : `${baseType}*${uniqueName}`;
 
     return {
-      value: `${questionType}@${item.caption}`,
+      value: questionType,
       label: item.caption,
     };
   });

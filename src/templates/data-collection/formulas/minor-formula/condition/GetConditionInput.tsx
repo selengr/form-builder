@@ -43,17 +43,8 @@ export const getQuestion = (type: string, values: any) => {
       ];
 
     case 'TEXT_FIELD_NUMBER':
-      return [
-        { value: 'VALUE', label: 'ارزش' },
-        { value: 'QUESTION', label: 'سوال ' },
-        { value: 'CALCULATION', label: 'محاسبه‌گر' },
-      ];
     case 'RATING':
-      return [
-        { value: 'VALUE', label: 'ارزش' },
-        { value: 'QUESTION', label: 'سوال ' },
-        { value: 'CALCULATION', label: 'محاسبه‌گر' },
-      ];
+      return [{ value: 'VALUE', label: 'ارزش' }];
 
     case 'CALCULATION':
       return [
@@ -133,23 +124,13 @@ export const getCondition = (type: string, operator: string, values: any) => {
       ];
 
     case 'TEXT_FIELD_NUMBER_VALUE':
-    case 'TEXT_FIELD_NUMBER_QUESTION':
-    case 'TEXT_FIELD_NUMBER_CALCULATION':
-      return [
-        { value: '#greaterThanNumber', label: 'بزرگتر از' },
-        { value: '#lessThanNumber', label: 'کوچکتر  از' },
-        { value: '#greaterEqualThanNumber', label: 'بزرگتر مساوی' },
-        { value: '#lessEqualThanNumber', label: ' کوچکتر مساوی' },
-      ];
-
     case 'RATING_VALUE':
-    case 'RATING_QUESTION':
-    case 'RATING_CALCULATION':
       return [
         { value: '#greaterThanNumber', label: 'بزرگتر از' },
         { value: '#lessThanNumber', label: 'کوچکتر  از' },
         { value: '#greaterEqualThanNumber', label: 'بزرگتر مساوی' },
         { value: '#lessEqualThanNumber', label: ' کوچکتر مساوی' },
+        { value: '#equalThanNumber', label: 'برابر با' },
       ];
 
     case 'CALCULATION_VALUE':
@@ -323,37 +304,13 @@ export const getInput = (
     case 'TEXT_FIELD_NUMBER_VALUE_#lessThanNumber':
     case 'TEXT_FIELD_NUMBER_VALUE_#greaterEqualThanNumber':
     case 'TEXT_FIELD_NUMBER_VALUE_#lessEqualThanNumber':
-      return <TextFieldController name={field.name} type='number' sx={{ width: '100%' }} />;
-
-    case 'TEXT_FIELD_NUMBER_QUESTION_#greaterThanNumber':
-    case 'TEXT_FIELD_NUMBER_QUESTION_#lessThanNumber':
-    case 'TEXT_FIELD_NUMBER_QUESTION_#greaterEqualThanNumber':
-    case 'TEXT_FIELD_NUMBER_QUESTION_#lessEqualThanNumber':
-      return <SelectController name={field.name} options={onlySomeQuestionsOptions} isLoading={isFetchingOnlyAllQuestions} placeholder="مقدار" sx={{ minWidth: 215, width: '100%' }} />;
-
-    case 'TEXT_FIELD_NUMBER_CALCULATION_#greaterThanNumber':
-    case 'TEXT_FIELD_NUMBER_CALCULATION_#lessThanNumber':
-    case 'TEXT_FIELD_NUMBER_CALCULATION_#greaterEqualThanNumber':
-    case 'TEXT_FIELD_NUMBER_CALCULATION_#lessEqualThanNumber':
-      return <SelectController name={field.name} options={onlyAllCalculationOptions} isLoading={isFetchingOnlyAllCalculation} placeholder="مقدار" sx={{ minWidth: 215, width: '100%' }} />;
-   
+    case 'TEXT_FIELD_NUMBER_VALUE_#equalThanNumber':
     case 'RATING_VALUE_#greaterThanNumber':
     case 'RATING_VALUE_#lessThanNumber':
     case 'RATING_VALUE_#greaterEqualThanNumber':
     case 'RATING_VALUE_#lessEqualThanNumber':
+    case 'RATING_VALUE_#equalThanNumber':
       return <TextFieldController name={field.name} type='number' sx={{ width: '100%' }} />;
-
-    case 'RATING_QUESTION_#greaterThanNumber':
-    case 'RATING_QUESTION_#lessThanNumber':
-    case 'RATING_QUESTION_#greaterEqualThanNumber':
-    case 'RATING_QUESTION_#lessEqualThanNumber':
-      return <SelectController name={field.name} options={onlySomeQuestionsOptions} isLoading={isFetchingOnlyAllQuestions} placeholder="مقدار" sx={{ minWidth: 215, width: '100%' }} />;
-
-    case 'RATING_CALCULATION_#greaterThanNumber':
-    case 'RATING_CALCULATION_#lessThanNumber':
-    case 'RATING_CALCULATION_#greaterEqualThanNumber':
-    case 'RATING_CALCULATION_#lessEqualThanNumber':
-      return <SelectController name={field.name} options={onlyAllCalculationOptions} isLoading={isFetchingOnlyAllCalculation} placeholder="مقدار" sx={{ minWidth: 215, width: '100%' }} />;
 
     case 'CALCULATION_VALUE_#equalThanNumber':
     case 'CALCULATION_VALUE_!#equalThanNumber':

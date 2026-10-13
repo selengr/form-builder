@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { IConditionQuestionType } from '../types';
 import { getQacWithOutFilterListAction } from '@actions/data-collection/formulas/minor-formula/getQacWithOutFilterListAction';
 
-export const useGetQacWithOutFilterList = (formId: string) => {
+export const useGetQacWithOutFilterList = (formId: string, enabled = true) => {
   const { data } = useQuery({
     queryKey: ['MINOR_FORMULA_QAC_WIHT_OUT_FILTER_LIST', formId],
     queryFn: async () => {
@@ -14,7 +14,7 @@ export const useGetQacWithOutFilterList = (formId: string) => {
 
       return res.data;
     },
-    enabled: Boolean(formId),
+    enabled: enabled && Boolean(formId),
     staleTime: 0,
     gcTime: 600000,
     refetchOnWindowFocus: false,

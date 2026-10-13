@@ -105,7 +105,7 @@ const TransformOutputToInput = (
 };
 
 export const useConditionalForm = (condition: IGetCondition | undefined, formId: string) => {
-  const { qacWithOutFilterOptions } = useGetQacWithOutFilterList(formId);
+  const { qacWithOutFilterOptions } = useGetQacWithOutFilterList(formId, Boolean(condition));
 
   const methods = useForm<TConditionFormData>({
     resolver: zodResolver(ConditionFormSchema),

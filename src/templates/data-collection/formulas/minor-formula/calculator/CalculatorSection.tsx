@@ -40,7 +40,16 @@ interface CalculatorSectionProps {
 
 export default function CalculatorSection({ formId, ref, onFormulaChange }: CalculatorSectionProps) {
   const isDesktop = useMediaQuery('(min-width:900px)');
-  const { questionList } = useGetCalculatorFields(formId);
+  const { questionList, isPendingCalculatorFields, isCalculatorFieldsError, calculatorFieldsError } =
+    useGetCalculatorFields(formId);
+
+  const fieldsEmptyText = !formId
+    ? 'ابتدا فرم را انتخاب کنید'
+    : isCalculatorFieldsError
+      ? calculatorFieldsError?.message || 'خطا در دریافت سوالات'
+      : isPendingCalculatorFields
+        ? 'در حال دریافت سوالات...'
+        : 'سوالی برای این فرم یافت نشد';
 
   const mainIndex = useRef<number>(-2);
   const contentEditable = useRef<HTMLDivElement>(null);
@@ -577,6 +586,7 @@ export default function CalculatorSection({ formId, ref, onFormulaChange }: Calc
             <FormulaInput
               elements={elements}
               questionList={questionList}
+              fieldsEmptyText={fieldsEmptyText}
               contentEditableRef={contentEditable}
               onFieldSelect={handleOptionClick}
               onFieldClick={handleDropdownClick}

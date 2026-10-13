@@ -29,8 +29,17 @@ const OPERATOR_MAP: Record<string, FormulaConditionOperator> = {
   '#greaterEqualThanNumber': 'GREATER_EQUAL_THAN',
   '#lessEqualThanSpectralSingle': 'LESS_EQUAL_THAN',
   '#lessEqualThanNumber': 'LESS_EQUAL_THAN',
-  '#beforeDate': 'LESS_THAN',
-  '#afterDate': 'GREATER_THAN',
+  '#containMultiChoiceMulti': 'CONTAINS',
+  '#containAnyText': 'CONTAINS',
+  '!#containMultiChoiceMulti': 'NOT_CONTAINS',
+  '!#containAnyText': 'NOT_CONTAINS',
+  '#startWithText': 'STARTS_WITH',
+  '#endWithText': 'ENDS_WITH',
+  '#lenEqualText': 'LENGTH_EQUAL',
+  '#lenGreaterThanText': 'LENGTH_GREATER_THAN',
+  '#lenLessThanText': 'LENGTH_LESS_THAN',
+  '#beforeDate': 'BEFORE',
+  '#afterDate': 'AFTER',
   [REF_ID_CONDITION_TYPE]: 'EQUAL',
 };
 
@@ -73,8 +82,7 @@ export const buildConditionGroup = (input: TConditionFormData): FormulaCondition
     const operator = getConditionOperator(subCondition.conditionType);
 
     if (!operator) {
-      const operatorLabel = subCondition.conditionType?.split('@')[1]?.trim() || subCondition.conditionType;
-      throw new Error(`عملگر «${operatorLabel}» هنوز توسط سرور پشتیبانی نمی‌شود`);
+      throw new Error(`عملگر «${subCondition.conditionType}» پشتیبانی نمی‌شود`);
     }
 
     return {

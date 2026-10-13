@@ -21,16 +21,7 @@ const createMinorFormulaSchema = z.object({
           z.object({
             type: z.literal('condition'),
             field: z.string().min(1),
-            operator: z.enum([
-              'EQUAL',
-              'NOT_EQUAL',
-              'GREATER_THAN',
-              'LESS_THAN',
-              'GREATER_EQUAL_THAN',
-              'LESS_EQUAL_THAN',
-              'EXISTS',
-              'NOT_EXISTS',
-            ]),
+            operator: z.string().min(1),
             value: conditionValueSchema,
             nextOperator: z.enum(['AND', 'OR']),
           }),

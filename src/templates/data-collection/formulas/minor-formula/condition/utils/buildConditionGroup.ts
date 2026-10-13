@@ -38,8 +38,8 @@ const OPERATOR_MAP: Record<string, FormulaConditionOperator> = {
   '#lenEqualText': 'LENGTH_EQUAL',
   '#lenGreaterThanText': 'LENGTH_GREATER_THAN',
   '#lenLessThanText': 'LENGTH_LESS_THAN',
-  '#beforeDate': 'BEFORE',
-  '#afterDate': 'AFTER',
+  '#beforeDate': 'BEFORE_DATE',
+  '#afterDate': 'AFTER_DATE',
   [REF_ID_CONDITION_TYPE]: 'EQUAL',
 };
 

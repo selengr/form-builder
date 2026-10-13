@@ -12,8 +12,8 @@ export type FormulaConditionOperator =
   | 'LENGTH_EQUAL'
   | 'LENGTH_GREATER_THAN'
   | 'LENGTH_LESS_THAN'
-  | 'BEFORE'
-  | 'AFTER';
+  | 'BEFORE_DATE'
+  | 'AFTER_DATE';
 
 export type FormulaConditionNextOperator = 'AND' | 'OR';
 

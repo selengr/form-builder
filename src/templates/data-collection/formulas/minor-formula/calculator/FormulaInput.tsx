@@ -7,7 +7,6 @@ import FormulaElement from './FormulaElement';
 interface FormulaInputProps {
   elements: Element[];
   questionList: any;
-  fieldsEmptyText: string;
   contentEditableRef: React.RefObject<HTMLDivElement | null>;
   onFieldSelect: (item: any, id: string, element: any) => void;
   onFieldClick: (e: React.MouseEvent, id: string, index: any) => void;
@@ -17,7 +16,7 @@ interface FormulaInputProps {
   onKeyDown: (e: React.KeyboardEvent) => void;
 }
 
-const FormulaInput: React.FC<FormulaInputProps> = ({ elements, questionList, fieldsEmptyText, contentEditableRef, onFieldSelect, onFieldClick, onFnSelect, onFnClick, onClick, onKeyDown }) => {
+const FormulaInput: React.FC<FormulaInputProps> = ({ elements, questionList, contentEditableRef, onFieldSelect, onFieldClick, onFnSelect, onFnClick, onClick, onKeyDown }) => {
   const renderElements = useCallback(
     () =>
       elements.map((elem, index) => (
@@ -26,14 +25,13 @@ const FormulaInput: React.FC<FormulaInputProps> = ({ elements, questionList, fie
           element={elem}
           index={index}
           questionList={questionList}
-          fieldsEmptyText={fieldsEmptyText}
           onFieldSelect={onFieldSelect}
           onFieldClick={onFieldClick}
           onFnSelect={onFnSelect}
           onFnClick={onFnClick}
         />
       )),
-    [elements, questionList, fieldsEmptyText, onFieldSelect, onFieldClick, onFnSelect, onFnClick],
+    [elements, questionList, onFieldSelect, onFieldClick, onFnSelect, onFnClick],
   );
 
   return (

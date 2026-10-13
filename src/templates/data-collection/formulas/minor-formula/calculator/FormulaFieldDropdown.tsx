@@ -7,12 +7,11 @@ import { getCalculatorFieldId } from './utils/getCalculatorFieldId';
 interface FormulaFieldDropdownProps {
   element: Element;
   options: any[];
-  emptyText: string;
   onSelect: (item: any, id: string, element: any) => void;
   onClick: (e: React.MouseEvent, id: string, index: any) => void;
 }
 
-const FormulaFieldDropdown: React.FC<FormulaFieldDropdownProps> = ({ element, options, emptyText, onSelect, onClick }) => {
+const FormulaFieldDropdown: React.FC<FormulaFieldDropdownProps> = ({ element, options, onSelect, onClick }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -49,9 +48,6 @@ const FormulaFieldDropdown: React.FC<FormulaFieldDropdownProps> = ({ element, op
       </div>
       {isOpen && (
         <div className={styles.optionsContainer} style={{ display: 'block' }}>
-          {options.length === 0 && (
-            <div style={{ color: '#6F6F6F', fontSize: 12, textAlign: 'center', padding: '8px 4px' }}>{emptyText}</div>
-          )}
           {options.map((item, index) => (
             <div key={index} className={styles.option} onClick={() => handleOptionClick(item)}>
               {item.caption}

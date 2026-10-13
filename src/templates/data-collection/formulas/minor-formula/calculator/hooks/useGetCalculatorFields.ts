@@ -5,7 +5,7 @@ import { IFieldQuestionData } from '../types';
 const EMPTY_FIELDS: IFieldQuestionData = { dataList: [] };
 
 export const useGetCalculatorFields = (formId: string) => {
-  const { data, isFetching, isPending, isError, error } = useQuery({
+  const { data, isFetching } = useQuery({
     queryKey: ['MINOR_FORMULA_CALCULATOR_FIELDS', formId],
     queryFn: async () => {
       const res = await getCalculatorFieldsAction(formId);
@@ -18,14 +18,11 @@ export const useGetCalculatorFields = (formId: string) => {
     },
     enabled: Boolean(formId),
     gcTime: 10 * 60 * 1000,
-    retry: 1,
+    retry: 3,
   });
 
   return {
     questionList: data?.dataList ? data : EMPTY_FIELDS,
     isFetchingCalculatorFields: isFetching,
-    isPendingCalculatorFields: isPending,
-    isCalculatorFieldsError: isError,
-    calculatorFieldsError: error,
   };
 };

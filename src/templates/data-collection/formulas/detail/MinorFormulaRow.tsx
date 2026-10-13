@@ -103,9 +103,10 @@ function MinorFormulaMenu() {
 
 interface MinorFormulaRowProps {
   index: number;
+  name?: string;
 }
 
-export default function MinorFormulaRow({ index }: MinorFormulaRowProps) {
+export default function MinorFormulaRow({ index, name }: MinorFormulaRowProps) {
   const persianNumber = (index + 1).toLocaleString('fa-IR');
 
   return (
@@ -137,7 +138,7 @@ export default function MinorFormulaRow({ index }: MinorFormulaRowProps) {
       <p
         className="flex-1 min-w-0 text-[13px] text-[#161616] truncate"
         style={{ marginRight: 10 }}>
-        {getOrdinalLabel(index)}
+        {name?.trim() || getOrdinalLabel(index)}
       </p>
 
       <MinorFormulaMenu />

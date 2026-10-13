@@ -14,5 +14,6 @@ export interface MinorFormulaModel {
 export interface MinorFormulaListItem {
   id: number;
   majorId: number;
+  minorName?: string;
   formulaModel: MinorFormulaModel;
 }

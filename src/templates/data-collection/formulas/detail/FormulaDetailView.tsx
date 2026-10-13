@@ -4,13 +4,14 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { Box, Button, IconButton, Skeleton } from '@mui/material';
+import { Box, Button, IconButton } from '@mui/material';
 import { IoIosArrowForward } from 'react-icons/io';
 import { IoSettingsOutline } from 'react-icons/io5';
 import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
 import { useGetMinorFormulaList } from './useGetMinorFormulaList';
 import MinorFormulaRow from './MinorFormulaRow';
 import MinorFormulaDialog from '../minor-formula/MinorFormulaDialog';
+import MinorFormulaRowSkeleton from './MinorFormulaRowSkeleton';
 
 const APP_SIDEBAR_WIDTH_PX = 500;
 const DESKTOP_MEDIA = '@media (min-width:1280px)';
@@ -130,15 +131,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                       className="flex flex-col w-full flex-1 min-h-0 overflow-y-auto"
                       style={{ scrollbarWidth: 'thin', padding: '11px 10px 0', gap: 7 }}>
                       {isLoading &&
-                        Array.from({ length: 2 }).map((_, index) => (
-                          <Skeleton
-                            key={index}
-                            variant="rounded"
-                            animation="wave"
-                            height={54}
-                            sx={{ borderRadius: '12px', flexShrink: 0 }}
-                          />
-                        ))}
+                        Array.from({ length: 3 }).map((_, index) => <MinorFormulaRowSkeleton key={index} />)}
 
                       {isError && (
                         <p className="p-3 text-[#6F6F6F] text-center text-sm font-medium">
@@ -153,7 +146,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                       )}
 
                       {minorList.map((item, index) => (
-                        <MinorFormulaRow key={item.id} index={index} />
+                        <MinorFormulaRow key={item.id} index={index} name={item.minorName} />
                       ))}
 
                       <div

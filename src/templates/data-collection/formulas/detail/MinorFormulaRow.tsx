@@ -6,7 +6,6 @@ import { toast } from 'sonner';
 import { Button, Menu, Typography } from '@mui/material';
 import { SlPencil } from 'react-icons/sl';
 import { WeuiDeleteOutlined } from '@/../public/images/icons/DeleteIcon';
-import { IonCopyOutline } from '@/../public/images/icons/CopyIcon';
 import { PhDotsThreeVerticalBold } from '@/../public/images/icons/PhDotsThreeVerticalBold';
 
 const ORDINAL_WORDS = ['اول', 'دوم', 'سوم', 'چهارم', 'پنجم', 'ششم', 'هفتم', 'هشتم', 'نهم', 'دهم'];
@@ -59,18 +58,6 @@ function MinorFormulaMenu() {
           anchorEl={anchorEl}
           open={open}
           onClose={handleClose}>
-          <Button
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              color: '#222',
-              paddingX: '10px',
-            }}
-            fullWidth
-            onClick={handleStub}>
-            <Typography fontSize={12}>تکثیر</Typography>
-            <IonCopyOutline width={18} height={18} />
-          </Button>
           <Button
             sx={{
               paddingX: '10px',

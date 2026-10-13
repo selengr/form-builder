@@ -131,7 +131,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                       className="flex flex-col w-full flex-1 min-h-0 overflow-y-auto"
                       style={{ scrollbarWidth: 'thin', padding: '11px 10px 0', gap: 7 }}>
                       {isLoading &&
-                        Array.from({ length: 3 }).map((_, index) => <MinorFormulaRowSkeleton key={index} />)}
+                        Array.from({ length: 2 }).map((_, index) => <MinorFormulaRowSkeleton key={index} />)}
 
                       {isError && (
                         <p className="p-3 text-[#6F6F6F] text-center text-sm font-medium">

@@ -83,6 +83,16 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
   const formId = selectedForm?.value ?? '';
 
   const { mutate: createMinorFormula, isPending } = useCreateMinorFormula(majorId);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const scrollToFirstError = () => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const firstError = contentRef.current?.querySelector<HTMLElement>('.Mui-error');
+        firstError?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+  };
 
   const handleSubmit = async () => {
     let hasError = false;
@@ -98,7 +108,10 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
     }
 
     const condition = await conditionRef.current?.getCondition();
-    if (hasError || !condition) return;
+    if (hasError || !condition) {
+      scrollToFirstError();
+      return;
+    }
 
     createMinorFormula(
       {
@@ -123,7 +136,7 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
   };
 
   return (
-    <div dir="rtl">
+    <div dir="rtl" ref={contentRef}>
       <IconButton
         onClick={onClose}
         aria-label="بستن"

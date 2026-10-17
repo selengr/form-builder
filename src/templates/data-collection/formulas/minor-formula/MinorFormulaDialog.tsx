@@ -28,10 +28,11 @@ const StyledDialog = styled(Dialog)({
 
 const StyledDialogContent = styled(DialogContent)({
   maxHeight: '90vh',
-  scrollbarWidth: 'thin',
   maxWidth: '100%',
-  padding: '36px 24px 21px',
-  overflowX: 'hidden',
+  padding: 0,
+  overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column',
 });
 
 const inputSx = {
@@ -143,7 +144,7 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
   };
 
   return (
-    <div dir="rtl" ref={contentRef}>
+    <div dir="rtl" ref={contentRef} className="flex flex-col flex-1 min-h-0">
       <IconButton
         onClick={onClose}
         aria-label="بستن"
@@ -151,66 +152,72 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
         <CgClose color="#404040" size="1.4rem" />
       </IconButton>
 
-      <h2 className="text-[16px] font-bold text-[#404040] text-center">فرمول ساز</h2>
+      <div
+        className="flex-1 min-h-0"
+        style={{ overflowY: 'auto', overflowX: 'hidden', padding: '36px 24px 24px', scrollbarWidth: 'thin' }}>
+        <h2 className="text-[16px] font-bold text-[#404040] text-center">فرمول ساز</h2>
 
-      <div className="flex flex-col" style={{ marginTop: 6 }}>
-        <label className={labelClass} style={{ marginBottom: 4 }}>
-          نام:
-        </label>
-        <TextField
-          fullWidth
-          placeholder="نام فرمول"
-          value={name}
-          onChange={(event) => {
-            setName(event.target.value);
-            if (nameError) setNameError(null);
-          }}
-          error={Boolean(nameError)}
-          helperText={nameError}
-          sx={inputSx}
-          slotProps={{ htmlInput: { className: styles.input } }}
-        />
+        <div className="flex flex-col" style={{ marginTop: 6 }}>
+          <label className={labelClass} style={{ marginBottom: 4 }}>
+            نام:
+          </label>
+          <TextField
+            fullWidth
+            placeholder="نام فرمول"
+            value={name}
+            onChange={(event) => {
+              setName(event.target.value);
+              if (nameError) setNameError(null);
+            }}
+            error={Boolean(nameError)}
+            helperText={nameError}
+            sx={inputSx}
+            slotProps={{ htmlInput: { className: styles.input } }}
+          />
+        </div>
+
+        <div className="flex flex-col" style={{ marginTop: 8 }}>
+          <label className={labelClass} style={{ marginBottom: 4 }}>
+            انتخاب فرم:
+          </label>
+          <Autocomplete
+            options={formOptions}
+            value={selectedForm}
+            onChange={(_, option) => {
+              setSelectedForm(option);
+              if (formError) setFormError(null);
+            }}
+            getOptionLabel={(option) => option.label}
+            isOptionEqualToValue={(option, value) => option.value === value.value}
+            noOptionsText="فرمی یافت نشد"
+            loading={isFetchingForms}
+            loadingText="در حال بارگذاری..."
+            popupIcon={null}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                placeholder="انتخاب فرم"
+                error={Boolean(formError)}
+                helperText={formError}
+                sx={inputSx}
+                inputProps={{ ...params.inputProps, className: `${params.inputProps.className ?? ''} ${styles.input}` }}
+              />
+            )}
+          />
+        </div>
+
+        <div style={{ marginTop: 16 }}>
+          <ConditionSection key={formId} ref={conditionRef} formId={formId} majorId={majorId} minorName={name} calculatorFormula={calculatorFormula} />
+        </div>
+
+        <div ref={calculatorWrapperRef} style={{ marginTop: 12 }}>
+          <CalculatorSection key={formId} ref={calculatorRef} formId={formId} onFormulaChange={setCalculatorFormula} />
+        </div>
       </div>
 
-      <div className="flex flex-col" style={{ marginTop: 8 }}>
-        <label className={labelClass} style={{ marginBottom: 4 }}>
-          انتخاب فرم:
-        </label>
-        <Autocomplete
-          options={formOptions}
-          value={selectedForm}
-          onChange={(_, option) => {
-            setSelectedForm(option);
-            if (formError) setFormError(null);
-          }}
-          getOptionLabel={(option) => option.label}
-          isOptionEqualToValue={(option, value) => option.value === value.value}
-          noOptionsText="فرمی یافت نشد"
-          loading={isFetchingForms}
-          loadingText="در حال بارگذاری..."
-          popupIcon={null}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              placeholder="انتخاب فرم"
-              error={Boolean(formError)}
-              helperText={formError}
-              sx={inputSx}
-              inputProps={{ ...params.inputProps, className: `${params.inputProps.className ?? ''} ${styles.input}` }}
-            />
-          )}
-        />
-      </div>
-
-      <div style={{ marginTop: 16 }}>
-        <ConditionSection key={formId} ref={conditionRef} formId={formId} majorId={majorId} minorName={name} calculatorFormula={calculatorFormula} />
-      </div>
-
-      <div ref={calculatorWrapperRef} style={{ marginTop: 12 }}>
-        <CalculatorSection key={formId} ref={calculatorRef} formId={formId} onFormulaChange={setCalculatorFormula} />
-      </div>
-
-      <div className="flex justify-center w-full" style={{ marginTop: 100, gap: 16 }}>
+      <div
+        className="flex justify-center w-full shrink-0"
+        style={{ gap: 16, padding: '16px 24px 21px', borderTop: '1px solid #EEF0F3', backgroundColor: '#fff' }}>
         <Button
           onClick={handleSubmit}
           disabled={isPending}

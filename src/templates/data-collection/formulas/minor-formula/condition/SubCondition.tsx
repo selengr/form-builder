@@ -20,6 +20,8 @@ type SubConditionProps = {
   onlyAllCalculationOptions: any[];
   isFetchingOnlyAllCalculation: boolean;
   onlyAllQuestions: any[];
+  questionsEmptyText?: string;
+  onSelectFormRequest?: () => void;
 };
 
 const fieldSx = {
@@ -45,6 +47,8 @@ export const SubCondition: React.FC<SubConditionProps> = ({
   onlyAllCalculationOptions,
   isFetchingOnlyAllCalculation,
   onlyAllQuestions,
+  questionsEmptyText,
+  onSelectFormRequest,
 }) => {
   const { control, setValue, getValues, clearErrors } = useFormContext();
   const currentValues = useWatch({
@@ -83,6 +87,9 @@ export const SubCondition: React.FC<SubConditionProps> = ({
           name={`conditions.${index}.subConditions.${subIndex}.questionType`}
           options={qacWithOutFilterOptions}
           isLoading={isFetchingQacWithOutFilter}
+          emptyText={questionsEmptyText}
+          emptyActionText="انتخاب فرم"
+          onEmptyAction={onSelectFormRequest}
           placeholder="بر اساس"
           sx={{
             ...fieldSx,

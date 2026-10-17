@@ -1,6 +1,7 @@
 'use client';
 import type React from 'react';
-import { Box, Checkbox, Chip, FormControl, FormHelperText, InputLabel, LinearProgress, MenuItem, OutlinedInput, Select, type SelectProps, type SxProps, type Theme } from '@mui/material';
+import { useState } from 'react';
+import { Box, Button, Checkbox, Chip, FormControl, FormHelperText, InputLabel, LinearProgress, ListSubheader, MenuItem, OutlinedInput, Select, type SelectProps, type SxProps, type Theme } from '@mui/material';
 
 import { IoIosArrowDown } from 'react-icons/io';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -18,7 +19,12 @@ interface CustomSelectProps extends Omit<SelectProps, 'sx' | 'name'> {
   contentInset?: string;
   iconInset?: string;
   borderless?: boolean;
+  emptyText?: string;
+  emptyActionText?: string;
+  onEmptyAction?: () => void;
 }
+
+const MENU_CLOSE_DELAY = 300;
 
 export const SelectController: React.FC<CustomSelectProps> = ({
   options,
@@ -33,9 +39,19 @@ export const SelectController: React.FC<CustomSelectProps> = ({
   contentInset = '12px',
   iconInset = '18.8px',
   borderless = false,
+  emptyText,
+  emptyActionText,
+  onEmptyAction,
   ...props
 }) => {
   const { control } = useFormContext();
+  const [open, setOpen] = useState(false);
+  const showEmpty = Boolean(emptyText) && !isLoading && !options?.length;
+
+  const handleEmptyAction = () => {
+    setOpen(false);
+    setTimeout(() => onEmptyAction?.(), MENU_CLOSE_DELAY);
+  };
 
   return (
     <Controller
@@ -53,6 +69,9 @@ export const SelectController: React.FC<CustomSelectProps> = ({
             }}
             disabled={disabled || isLoading}
             displayEmpty
+            open={open}
+            onOpen={() => setOpen(true)}
+            onClose={() => setOpen(false)}
             renderValue={(selected) => {
               if (isLoading) {
                 return <LinearProgress variant='buffer' value={0} valueBuffer={0} sx={{ width: 28, pt: 1 }} />;
@@ -119,6 +138,31 @@ export const SelectController: React.FC<CustomSelectProps> = ({
                 {option.label}
               </MenuItem>
             ))}
+            {showEmpty && (
+              <ListSubheader disableSticky sx={{ px: 2, py: 1.5, lineHeight: 1.6, backgroundColor: 'transparent' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1, textAlign: 'center' }}>
+                  <Box component="span" sx={{ fontSize: 13, color: '#6F7782', fontWeight: 400 }}>
+                    {emptyText}
+                  </Box>
+                  {onEmptyAction && emptyActionText && (
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={handleEmptyAction}
+                      sx={{
+                        fontSize: 12,
+                        borderRadius: '8px',
+                        color: '#1758BA',
+                        borderColor: '#C9DAF5',
+                        backgroundColor: '#F1F6FD',
+                        '&:hover': { backgroundColor: '#E6EEFB', borderColor: '#1758BA' },
+                      }}>
+                      {emptyActionText}
+                    </Button>
+                  )}
+                </Box>
+              </ListSubheader>
+            )}
           </Select>
           {error && <FormHelperText sx={{ color: '#FA4D56' }}>{error.message}</FormHelperText>}
         </FormControl>

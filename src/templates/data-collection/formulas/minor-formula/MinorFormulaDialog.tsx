@@ -86,6 +86,14 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
   const { mutate: createMinorFormula, isPending } = useCreateMinorFormula(majorId);
   const contentRef = useRef<HTMLDivElement>(null);
   const calculatorWrapperRef = useRef<HTMLDivElement>(null);
+  const formFieldRef = useRef<HTMLDivElement>(null);
+  const [isFormListOpen, setIsFormListOpen] = useState(false);
+
+  const handleSelectFormRequest = () => {
+    formFieldRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    formFieldRef.current?.querySelector('input')?.focus({ preventScroll: true });
+    setIsFormListOpen(true);
+  };
 
   const scrollToFirstError = () => {
     requestAnimationFrame(() => {
@@ -176,11 +184,14 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
           />
         </div>
 
-        <div className="flex flex-col" style={{ marginTop: 8 }}>
+        <div ref={formFieldRef} className="flex flex-col" style={{ marginTop: 8 }}>
           <label className={labelClass} style={{ marginBottom: 4 }}>
             انتخاب فرم:
           </label>
           <Autocomplete
+            open={isFormListOpen}
+            onOpen={() => setIsFormListOpen(true)}
+            onClose={() => setIsFormListOpen(false)}
             options={formOptions}
             value={selectedForm}
             onChange={(_, option) => {
@@ -207,7 +218,7 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
         </div>
 
         <div style={{ marginTop: 16 }}>
-          <ConditionSection key={formId} ref={conditionRef} formId={formId} majorId={majorId} minorName={name} calculatorFormula={calculatorFormula} />
+          <ConditionSection key={formId} ref={conditionRef} formId={formId} majorId={majorId} minorName={name} calculatorFormula={calculatorFormula} onSelectFormRequest={handleSelectFormRequest} />
         </div>
 
         <div ref={calculatorWrapperRef} style={{ marginTop: 12 }}>

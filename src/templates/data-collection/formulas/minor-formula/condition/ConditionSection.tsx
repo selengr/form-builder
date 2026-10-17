@@ -23,11 +23,19 @@ interface ConditionSectionProps {
   minorName?: string;
   ref?: Ref<ConditionSectionHandle>;
   calculatorFormula?: string;
+  onSelectFormRequest?: () => void;
 }
 
 const dashedButtonStyle = { minHeight: 50, color: '#9A9A9A' };
 
-export default function ConditionSection({ formId, majorId, minorName, ref, calculatorFormula }: ConditionSectionProps) {
+export default function ConditionSection({
+  formId,
+  majorId,
+  minorName,
+  ref,
+  calculatorFormula,
+  onSelectFormRequest,
+}: ConditionSectionProps) {
   const { qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter(formId);
   const { onlyAllCalculationOptions, isFetchingOnlyAllCalculation } = useGetOnlyAllCalculation(formId);
   const {
@@ -85,6 +93,8 @@ export default function ConditionSection({ formId, majorId, minorName, ref, calc
                   onlyAllCalculationOptions={onlyAllCalculationOptions ?? []}
                   isFetchingOnlyAllCalculation={isFetchingOnlyAllCalculation}
                   onlyAllQuestions={onlyAllQuestions ?? []}
+                  questionsEmptyText={formId ? 'سوالی برای این فرم یافت نشد' : 'ابتدا فرم را انتخاب کنید'}
+                  onSelectFormRequest={formId ? undefined : onSelectFormRequest}
                 />
               </Fragment>
             ))}

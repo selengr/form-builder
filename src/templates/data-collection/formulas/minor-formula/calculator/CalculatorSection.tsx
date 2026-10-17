@@ -563,8 +563,7 @@ export default function CalculatorSection({ formId, ref, onFormulaChange }: Calc
         const newFormula = htmlToFormula(elements, selectFieldRef, selectAvgRef);
 
         if (!newFormula) {
-          toast.error('هیچ محاسبه‌ای افزوده نشده');
-          return null;
+          return { formula: '', frontCalcData: JSON.stringify(elements) };
         }
         if (newFormula.includes('undefined')) {
           toast.error('سوال انتخاب نشده دارید');

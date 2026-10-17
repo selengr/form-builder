@@ -105,11 +105,9 @@ function KeypadTabs({
 function ParenDeleteRow({
   handleParenthesis,
   handleUndo,
-  handleOperator,
 }: {
   handleParenthesis: (content: string) => void;
   handleUndo: () => void;
-  handleOperator?: (op: string) => void;
 }) {
   return (
     <div className="flex gap-[6px] mb-[6px] w-full">
@@ -122,16 +120,6 @@ function ParenDeleteRow({
       <button type="button" className={deleteBtnClass} onClick={handleUndo} aria-label="حذف">
         <Image src="/images/calc/arrow-left.svg" width={22} height={22} alt="" unoptimized />
       </button>
-      {handleOperator && (
-        <button
-          type="button"
-          className={clsx(operatorBtnClass, 'w-9 max-w-9 shrink-0')}
-          onClick={() => handleOperator(POWER_OPERATOR)}
-          title="توان"
-        >
-          {POWER_OPERATOR}
-        </button>
-      )}
     </div>
   );
 }
@@ -149,7 +137,7 @@ function NumbersTabContent({
 }) {
   return (
     <>
-      <ParenDeleteRow handleParenthesis={handleParenthesis} handleUndo={handleUndo} handleOperator={handleOperator} />
+      <ParenDeleteRow handleParenthesis={handleParenthesis} handleUndo={handleUndo} />
 
       <div className="flex gap-[6px]">
         <div className="flex-1 flex flex-col gap-[6px] min-w-0">
@@ -197,6 +185,20 @@ function NumbersTabContent({
             </button>
           ))}
         </div>
+      </div>
+
+      <div className="flex gap-[6px]" style={{ marginTop: 6 }}>
+        <button type="button" className={clsx(numberBtnClass, 'flex-1 cursor-default')} aria-disabled>
+          به‌زودی
+        </button>
+        <button
+          type="button"
+          className={clsx(operatorBtnClass, 'w-9 max-w-9 shrink-0')}
+          onClick={() => handleOperator(POWER_OPERATOR)}
+          title="توان"
+        >
+          {POWER_OPERATOR}
+        </button>
       </div>
     </>
   );

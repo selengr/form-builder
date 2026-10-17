@@ -11,7 +11,7 @@ import { replaceNestedParentheses } from './utils/parenthesesReplacer';
 import { useGetCalculatorFields } from './hooks/useGetCalculatorFields';
 import { getCalculatorFieldId } from './utils/getCalculatorFieldId';
 
-const OPERATOR_TYPES = ['-', '+', '*', '/'];
+const OPERATOR_TYPES = ['-', '+', '*', '/', '^'];
 
 const buildCalculatorFormula = (rawFormula: string) => {
   let formula = '';

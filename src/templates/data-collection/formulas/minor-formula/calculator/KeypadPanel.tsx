@@ -31,6 +31,7 @@ const TABS = [
 ];
 
 const OPERATORS = ['+', '-', '*', '/'];
+const POWER_OPERATOR = '^';
 const NUMBER_ROWS = [
   ['7', '8', '9'],
   ['4', '5', '6'],
@@ -104,9 +105,11 @@ function KeypadTabs({
 function ParenDeleteRow({
   handleParenthesis,
   handleUndo,
+  handleOperator,
 }: {
   handleParenthesis: (content: string) => void;
   handleUndo: () => void;
+  handleOperator?: (op: string) => void;
 }) {
   return (
     <div className="flex gap-[6px] mb-[6px] w-full">
@@ -119,6 +122,16 @@ function ParenDeleteRow({
       <button type="button" className={deleteBtnClass} onClick={handleUndo} aria-label="حذف">
         <Image src="/images/calc/arrow-left.svg" width={22} height={22} alt="" unoptimized />
       </button>
+      {handleOperator && (
+        <button
+          type="button"
+          className={clsx(operatorBtnClass, 'w-9 max-w-9 shrink-0')}
+          onClick={() => handleOperator(POWER_OPERATOR)}
+          title="توان"
+        >
+          {POWER_OPERATOR}
+        </button>
+      )}
     </div>
   );
 }
@@ -136,7 +149,7 @@ function NumbersTabContent({
 }) {
   return (
     <>
-      <ParenDeleteRow handleParenthesis={handleParenthesis} handleUndo={handleUndo} />
+      <ParenDeleteRow handleParenthesis={handleParenthesis} handleUndo={handleUndo} handleOperator={handleOperator} />
 
       <div className="flex gap-[6px]">
         <div className="flex-1 flex flex-col gap-[6px] min-w-0">

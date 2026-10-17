@@ -3,7 +3,7 @@ export function insertMissingOperators(formula: string): string {
 
   correctedFormula = correctedFormula.replace(/}(?={|#)/g, '},');
 
-  correctedFormula = correctedFormula.replace(/(\(|\{)([^()*+\-/{}]+)(?=[,})])/g, (match, p1, p2) => {
+  correctedFormula = correctedFormula.replace(/(\(|\{)([^()*+\-/^{}]+)(?=[,})])/g, (match, p1, p2) => {
     return p1 + p2.replace(/}(?={)/g, '},');
   });
 

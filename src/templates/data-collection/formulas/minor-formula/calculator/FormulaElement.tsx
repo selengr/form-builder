@@ -25,7 +25,12 @@ const FormulaElement: React.FC<FormulaElementProps> = ({ element, index, questio
       return <FormulaFnDropdown element={element} options={[{ fnValue: 'avg', fnCaption: 'میانگین' }]} onSelect={onFnSelect} onClick={onFnClick} />;
     default:
       return (
-        <div key={elementKey} contentEditable={false} className={`${styles.dynamicbtn} ${styles[element.type]}`} data-type={element.type}>
+        <div
+          key={elementKey}
+          contentEditable={false}
+          dir={element.type === 'NUMBER' ? 'ltr' : undefined}
+          className={`${styles.dynamicbtn} ${styles[element.type]}`}
+          data-type={element.type}>
           {element.content}
         </div>
       );

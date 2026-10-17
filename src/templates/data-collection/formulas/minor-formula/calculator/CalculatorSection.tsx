@@ -12,6 +12,7 @@ import { useGetCalculatorFields } from './hooks/useGetCalculatorFields';
 import { getCalculatorFieldId } from './utils/getCalculatorFieldId';
 
 const OPERATOR_TYPES = ['-', '+', '*', '/', '^'];
+const NEGATIVE_SIGN = '-';
 
 const buildCalculatorFormula = (rawFormula: string) => {
   let formula = '';
@@ -309,9 +310,9 @@ export default function CalculatorSection({ formId, ref, onFormulaChange }: Calc
           toast.error('عدد نمی‌تواند بیش از یک ممیز اعشار داشته باشد');
           return;
         }
-        newElements[cursorIndex - 1].content += content;
-      } else if (currentNumber === '0') {
-        newElements[cursorIndex - 1].content = content;
+        newElements[cursorIndex - 1].content += currentNumber === NEGATIVE_SIGN ? `0${content}` : content;
+      } else if (currentNumber === '0' || currentNumber === `${NEGATIVE_SIGN}0`) {
+        newElements[cursorIndex - 1].content = currentNumber.replace(/0$/, content);
       } else if (currentNumber === '.') {
         newElements[cursorIndex - 1].content = `0.${content}`;
       } else {
@@ -326,6 +327,36 @@ export default function CalculatorSection({ formId, ref, onFormulaChange }: Calc
     }
 
     updateElements(newElements, newCursorIndex);
+  };
+
+  const handleToggleSign = () => {
+    const prevElement = cursorIndex > 0 ? elements[cursorIndex - 1] : null;
+
+    if (prevElement?.type === 'NUMBER') {
+      const newElements = [...elements];
+      const toggled = prevElement.content.startsWith(NEGATIVE_SIGN)
+        ? prevElement.content.slice(1)
+        : `${NEGATIVE_SIGN}${prevElement.content}`;
+
+      if (!toggled) {
+        newElements.splice(cursorIndex - 1, 1);
+        updateElements(newElements, cursorIndex - 1);
+        return;
+      }
+
+      newElements[cursorIndex - 1] = { ...prevElement, content: toggled };
+      updateElements(newElements, cursorIndex);
+      return;
+    }
+
+    if (!canAddNumber()) {
+      toast.error('امکان اضافه کردن عدد در این موقعیت وجود ندارد');
+      return;
+    }
+
+    const newElements = [...elements];
+    newElements.splice(cursorIndex, 0, { type: 'NUMBER', content: NEGATIVE_SIGN });
+    updateElements(newElements, cursorIndex + 1);
   };
 
   const handleParenthesis = (content: string) => {
@@ -539,6 +570,10 @@ export default function CalculatorSection({ formId, ref, onFormulaChange }: Calc
           toast.error('سوال انتخاب نشده دارید');
           return null;
         }
+        if (elements.some((element) => element.type === 'NUMBER' && !/\d/.test(element.content))) {
+          toast.error('عدد وارد شده کامل نیست');
+          return null;
+        }
 
         return {
           formula: buildCalculatorFormula(newFormula),
@@ -558,6 +593,7 @@ export default function CalculatorSection({ formId, ref, onFormulaChange }: Calc
       handleParenthesis={handleParenthesis}
       handleOperator={handleOperator}
       handleNumber={handleNumber}
+      handleToggleSign={handleToggleSign}
       handleUndo={handleUndo}
       contentEditable={contentEditable}
       variant={isDesktop ? 'desktop' : 'mobile'}

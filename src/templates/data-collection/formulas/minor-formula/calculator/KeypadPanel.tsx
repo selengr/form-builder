@@ -20,6 +20,7 @@ interface KeypadPanelProps {
   handleParenthesis: (content: string) => void;
   handleOperator: (op: string) => void;
   handleNumber: (num: string) => void;
+  handleToggleSign: () => void;
   handleUndo: () => void;
   contentEditable: React.RefObject<HTMLDivElement | null>;
   variant?: 'desktop' | 'mobile';
@@ -128,11 +129,13 @@ function NumbersTabContent({
   handleParenthesis,
   handleUndo,
   handleNumber,
+  handleToggleSign,
   handleOperator,
 }: {
   handleParenthesis: (content: string) => void;
   handleUndo: () => void;
   handleNumber: (num: string) => void;
+  handleToggleSign: () => void;
   handleOperator: (op: string) => void;
 }) {
   return (
@@ -188,8 +191,8 @@ function NumbersTabContent({
       </div>
 
       <div className="flex gap-[6px]" style={{ marginTop: 6 }}>
-        <button type="button" className={clsx(numberBtnClass, 'flex-1 cursor-default')} aria-disabled>
-          به‌زودی
+        <button type="button" className={clsx(numberBtnClass, 'flex-1')} onClick={handleToggleSign} title="مثبت / منفی">
+          +/-
         </button>
         <button
           type="button"
@@ -241,6 +244,7 @@ export default function KeypadPanel({
   handleParenthesis,
   handleOperator,
   handleNumber,
+  handleToggleSign,
   handleUndo,
   variant = 'desktop',
 }: KeypadPanelProps) {
@@ -253,6 +257,7 @@ export default function KeypadPanel({
         handleParenthesis={handleParenthesis}
         handleUndo={handleUndo}
         handleNumber={handleNumber}
+        handleToggleSign={handleToggleSign}
         handleOperator={handleOperator}
       />
     ) : (

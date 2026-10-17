@@ -84,6 +84,7 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
 
   const { mutate: createMinorFormula, isPending } = useCreateMinorFormula(majorId);
   const contentRef = useRef<HTMLDivElement>(null);
+  const calculatorWrapperRef = useRef<HTMLDivElement>(null);
 
   const scrollToFirstError = () => {
     requestAnimationFrame(() => {
@@ -113,13 +114,19 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
       return;
     }
 
+    const calculator = calculatorRef.current?.getResult();
+    if (!calculator) {
+      calculatorWrapperRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
     createMinorFormula(
       {
         majorId: Number(majorId),
         minorName: name.trim(),
         formulaModel: {
           formId: Number(formId),
-          formula: '',
+          formula: calculator.formula,
           condition,
         },
       },
@@ -199,7 +206,7 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
         <ConditionSection key={formId} ref={conditionRef} formId={formId} majorId={majorId} minorName={name} calculatorFormula={calculatorFormula} />
       </div>
 
-      <div style={{ marginTop: 12 }}>
+      <div ref={calculatorWrapperRef} style={{ marginTop: 12 }}>
         <CalculatorSection key={formId} ref={calculatorRef} formId={formId} onFormulaChange={setCalculatorFormula} />
       </div>
 

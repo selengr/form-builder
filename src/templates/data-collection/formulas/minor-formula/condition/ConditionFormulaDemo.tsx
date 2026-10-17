@@ -48,6 +48,7 @@ const buildLivePayload = (
   majorId: string | undefined,
   minorName: string | undefined,
   formId: string,
+  calculatorFormula: string | undefined,
 ) => {
   const subConditions = (conditions ?? []).flatMap((condition) => condition?.subConditions ?? []);
 
@@ -56,7 +57,7 @@ const buildLivePayload = (
     minorName: minorName?.trim() || null,
     formulaModel: {
       formId: toNumberOrNull(formId),
-      formula: '',
+      formula: calculatorFormula ?? '',
       condition: {
         type: 'group',
         children: subConditions.map((subCondition, index) =>
@@ -109,7 +110,7 @@ const codeStyle = {
 
 export default function ConditionFormulaDemo({ majorId, minorName, formId, calculatorFormula }: ConditionFormulaDemoProps) {
   const conditions = useWatch({ name: 'conditions' }) as TConditionData[] | undefined;
-  const payloadJson = JSON.stringify(buildLivePayload(conditions, majorId, minorName, formId), null, 2);
+  const payloadJson = JSON.stringify(buildLivePayload(conditions, majorId, minorName, formId, calculatorFormula), null, 2);
 
   return (
     <div
@@ -125,17 +126,6 @@ export default function ConditionFormulaDemo({ majorId, minorName, formId, calcu
         <span style={{ fontSize: 12, color: COLORS.label }}>payload</span>
         <pre dir="ltr" className={styles.code} style={codeStyle}>
           {highlightJson(payloadJson)}
-        </pre>
-      </div>
-
-      <div className="flex flex-col" style={{ gap: 6, borderTop: `1px dashed ${COLORS.border}`, paddingTop: 12 }}>
-        <span style={{ fontSize: 12, color: COLORS.label }}>محاسبه</span>
-        <pre dir="ltr" className={styles.code} style={codeStyle}>
-          {calculatorFormula ? (
-            <span style={{ color: COLORS.string }}>{calculatorFormula}</span>
-          ) : (
-            <span style={{ color: COLORS.label }}>-</span>
-          )}
         </pre>
       </div>
     </div>

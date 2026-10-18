@@ -248,7 +248,7 @@ export default function KeypadPanel({
   handleUndo,
   variant = 'desktop',
 }: KeypadPanelProps) {
-  const [activeTab, setActiveTab] = useState<KeypadTab>('functions');
+  const [activeTab, setActiveTab] = useState<KeypadTab>('numbers');
   const isMobile = variant === 'mobile';
 
   const tabContent =

@@ -21,15 +21,28 @@ export function htmlToFormula(elements: Element[], selectFieldRef: React.Mutable
     },
   };
 
+  const isAvgOperand = (type?: string) => type === 'NEW_FIELD' || type === 'NUMBER';
+  let avgDepth = 0;
+  let previousType: string | undefined;
+
   for (const element of elements) {
     if (!element) continue;
 
     const { type, content, id } = element;
     const handler = elementHandlers[type as keyof typeof elementHandlers];
 
+    if (avgDepth > 0 && isAvgOperand(type) && isAvgOperand(previousType)) {
+      formula += ',';
+    }
+
     if (handler) {
       formula += handler(content, id || '');
     }
+
+    if (type === 'AVG_PARENTHESIS') {
+      avgDepth += content === '(' ? 1 : -1;
+    }
+    previousType = type;
   }
 
   return insertMissingOperators(formula);

@@ -12,6 +12,7 @@ import { useGetMinorFormulaList } from './useGetMinorFormulaList';
 import MinorFormulaRow from './MinorFormulaRow';
 import MinorFormulaDialog from '../minor-formula/MinorFormulaDialog';
 import MinorFormulaRowSkeleton from './MinorFormulaRowSkeleton';
+import CalculatorSection from './calculator/CalculatorSection';
 
 const APP_SIDEBAR_WIDTH_PX = 500;
 const DESKTOP_MEDIA = '@media (min-width:1280px)';
@@ -129,7 +130,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                     className="flex flex-col w-full h-full min-h-0 rounded-[20px] border border-[#DDE1E6] bg-[#F8FAFC] overflow-hidden">
                     <div
                       className="flex flex-col w-full flex-1 min-h-0 overflow-y-auto"
-                      style={{ scrollbarWidth: 'thin', padding: '11px 10px 0', gap: 7 }}>
+                      style={{ scrollbarWidth: 'thin', padding: '11px 10px', gap: 7 }}>
                       {isLoading &&
                         Array.from({ length: 2 }).map((_, index) => <MinorFormulaRowSkeleton key={index} />)}
 
@@ -156,6 +157,12 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                         افزودن فرمول جزئی
                         </p>
                       </div>
+                    </div>
+
+                    <div
+                      className="flex flex-col w-full flex-1 min-h-0 overflow-y-auto"
+                      style={{ scrollbarWidth: 'thin', padding: '12px 10px', borderTop: '1px solid #DDE1E6' }}>
+                      <CalculatorSection formId="" />
                     </div>
 
                     {/* <div

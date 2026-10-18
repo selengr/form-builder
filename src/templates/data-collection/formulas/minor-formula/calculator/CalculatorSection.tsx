@@ -37,9 +37,10 @@ interface CalculatorSectionProps {
   formId: string;
   ref?: Ref<CalculatorSectionHandle>;
   onFormulaChange?: (formula: string) => void;
+  onSelectFormRequest?: () => void;
 }
 
-export default function CalculatorSection({ formId, ref, onFormulaChange }: CalculatorSectionProps) {
+export default function CalculatorSection({ formId, ref, onFormulaChange, onSelectFormRequest }: CalculatorSectionProps) {
   const isDesktop = useMediaQuery('(min-width:900px)');
   const { questionList } = useGetCalculatorFields(formId);
 
@@ -446,7 +447,16 @@ export default function CalculatorSection({ formId, ref, onFormulaChange }: Calc
     );
   };
 
+  const requireForm = () => {
+    if (formId) return true;
+    toast.error('ابتدا فرم را انتخاب کنید');
+    onSelectFormRequest?.();
+    return false;
+  };
+
   const handleNewField = () => {
+    if (!requireForm()) return;
+
     if (!isValidCursorPosition(cursorIndex, true)) {
       toast.error('امکان اضافه کردن فیلد در این موقعیت وجود ندارد');
       return;
@@ -492,6 +502,8 @@ export default function CalculatorSection({ formId, ref, onFormulaChange }: Calc
   };
 
   const handleFnFX = () => {
+    if (!requireForm()) return;
+
     if (isLastElementOperand()) {
       toast.error('لطفاً ابتدا یک عملگر وارد کنید');
       return;

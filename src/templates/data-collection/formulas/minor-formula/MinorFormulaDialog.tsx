@@ -222,7 +222,7 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
         </div>
 
         <div ref={calculatorWrapperRef} style={{ marginTop: 12 }}>
-          <CalculatorSection key={formId} ref={calculatorRef} formId={formId} onFormulaChange={setCalculatorFormula} />
+          <CalculatorSection key={formId} ref={calculatorRef} formId={formId} onFormulaChange={setCalculatorFormula} onSelectFormRequest={handleSelectFormRequest} />
         </div>
       </div>
 

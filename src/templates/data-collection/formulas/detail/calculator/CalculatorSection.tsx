@@ -3,12 +3,11 @@
 import { toast } from 'sonner';
 import { useMediaQuery } from '@mui/material';
 import React, { Ref, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { Element, FnFxItem, CalculatorResult } from './types';
+import { Element, FnFxItem, CalculatorResult, IFieldQuestionData } from './types';
 import FormulaInput from './FormulaInput';
 import KeypadPanel from './KeypadPanel';
 import { htmlToFormula } from './utils/htmlToFormula';
 import { replaceNestedParentheses } from './utils/parenthesesReplacer';
-import { useGetCalculatorFields } from './hooks/useGetCalculatorFields';
 import { getCalculatorFieldId } from './utils/getCalculatorFieldId';
 
 const OPERATOR_TYPES = ['-', '+', '*', '/', '^'];
@@ -34,15 +33,13 @@ export interface CalculatorSectionHandle {
 }
 
 interface CalculatorSectionProps {
-  formId: string;
+  questionList: IFieldQuestionData;
   ref?: Ref<CalculatorSectionHandle>;
   onFormulaChange?: (formula: string) => void;
-  onSelectFormRequest?: () => void;
 }
 
-export default function CalculatorSection({ formId, ref, onFormulaChange, onSelectFormRequest }: CalculatorSectionProps) {
+export default function CalculatorSection({ questionList, ref, onFormulaChange }: CalculatorSectionProps) {
   const isDesktop = useMediaQuery('(min-width:900px)');
-  const { questionList } = useGetCalculatorFields(formId);
 
   const mainIndex = useRef<number>(-2);
   const contentEditable = useRef<HTMLDivElement>(null);
@@ -447,16 +444,7 @@ export default function CalculatorSection({ formId, ref, onFormulaChange, onSele
     );
   };
 
-  const requireForm = () => {
-    if (formId) return true;
-    toast.error('ابتدا فرم را انتخاب کنید');
-    onSelectFormRequest?.();
-    return false;
-  };
-
   const handleNewField = () => {
-    if (!requireForm()) return;
-
     if (!isValidCursorPosition(cursorIndex, true)) {
       toast.error('امکان اضافه کردن فیلد در این موقعیت وجود ندارد');
       return;
@@ -502,8 +490,6 @@ export default function CalculatorSection({ formId, ref, onFormulaChange, onSele
   };
 
   const handleFnFX = () => {
-    if (!requireForm()) return;
-
     if (isLastElementOperand()) {
       toast.error('لطفاً ابتدا یک عملگر وارد کنید');
       return;

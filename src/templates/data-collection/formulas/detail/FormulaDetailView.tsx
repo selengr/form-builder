@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { Box, Button, IconButton } from '@mui/material';
@@ -28,6 +28,9 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
   const [openMinorFormulaDialog, setOpenMinorFormulaDialog] = useState(false);
   const { minorList, isLoading, isError, error } = useGetMinorFormulaList(majorId);
   const calculatorFields = useMemo(() => toCalculatorFields(minorList), [minorList]);
+  const handleCalculatorFormulaChange = useCallback((formula: string) => {
+    console.log('[FormulaDetailView] calculator formula:', formula);
+  }, []);
 
   const handleStub = () => {
     toast.info('این قابلیت به‌زودی اضافه می‌شود');
@@ -166,9 +169,9 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                     </div>
 
                     <div
-                      className="flex flex-col w-full flex-1 min-h-0 overflow-y-auto"
-                      style={{ scrollbarWidth: 'thin', padding: '12px 10px', borderTop: '1px solid #DDE1E6' }}>
-                      <CalculatorSection questionList={calculatorFields} />
+                      className="flex flex-col w-full shrink-0 overflow-y-auto"
+                      style={{ maxHeight: '60%', scrollbarWidth: 'thin', padding: '12px 10px', borderTop: '1px solid #DDE1E6' }}>
+                      <CalculatorSection questionList={calculatorFields} onFormulaChange={handleCalculatorFormulaChange} />
                     </div>
 
                     {/* <div

@@ -599,14 +599,14 @@ export default function CalculatorSection({ questionList, ref, onFormulaChange }
 
   return (
     <div dir="rtl" className="w-full flex flex-col">
-      <div className="w-full flex flex-row items-start">
+      <div className="w-full flex flex-row items-stretch">
         <div className="flex-1 w-full min-w-0 flex flex-col">
           <label className="block text-[13px] md:text-sm font-medium text-[#161616]" style={{ marginBottom: 14 }}>
             اسکریپت:
           </label>
           <div
-            className="relative w-full rounded-[20px] border border-[#DDE1E6] bg-[#F8FAFC] p-3 overflow-y-auto"
-            style={{ height: 161, maxHeight: 161 }}>
+            className="relative w-full flex-1 rounded-[20px] border border-[#DDE1E6] bg-[#F8FAFC] p-3 overflow-y-auto"
+            style={isDesktop ? { minHeight: 161 } : { height: 161, maxHeight: 161 }}>
             <FormulaInput
               elements={elements}
               questionList={questionList}

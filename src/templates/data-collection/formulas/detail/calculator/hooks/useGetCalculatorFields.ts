@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { getCalculatorFieldsAction } from '@actions/data-collection/formulas/minor-formula/getCalculatorFieldsAction';
+import { getCalculatorFieldsAction } from '@actions/data-collection/formulas/detail/getCalculatorFieldsAction';
 import { IFieldQuestionData } from '../types';
 
 const EMPTY_FIELDS: IFieldQuestionData = { dataList: [] };
 
 export const useGetCalculatorFields = (formId: string) => {
   const { data, isFetching } = useQuery({
-    queryKey: ['MINOR_FORMULA_CALCULATOR_FIELDS', formId],
+    queryKey: ['FORMULA_DETAIL_CALCULATOR_FIELDS', formId],
     queryFn: async () => {
       const res = await getCalculatorFieldsAction(formId);
 

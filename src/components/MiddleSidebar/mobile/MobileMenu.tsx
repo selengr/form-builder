@@ -42,7 +42,7 @@ const MobileMenu: React.FC = () => {
       </IconButton>
 
       <Drawer anchor='left' open={open} onClose={toggleDrawer}>
-        <div data-leave-guard className='w-[75vw] max-w-[340px] min-h-screen bg-white px-4 py-5 flex flex-col gap-8 overflow-y-auto' style={{ scrollbarWidth: 'thin' }}>
+        <div className='w-[75vw] max-w-[340px] min-h-screen bg-white px-4 py-5 flex flex-col gap-8 overflow-y-auto' style={{ scrollbarWidth: 'thin' }}>
           <div className='w-full flex flex-col gap-10 items-start'>
             <div className='flex flex-row justify-between w-full items-center'>
               <Image src={Logo} width={111} height={38} alt='Psya-Logo' priority draggable={false} />

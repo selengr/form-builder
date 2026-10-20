@@ -156,7 +156,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                   className="flex flex-col flex-1 min-h-0"
                   sx={{
                     paddingBottom: '96px',
-                    [DESKTOP_MEDIA]: { paddingBottom: '20px', paddingLeft: '20px', paddingRight: '28px' },
+                    [DESKTOP_MEDIA]: { paddingBottom: '20px', paddingLeft: '20px', paddingRight: '20px' },
                   }}>
                   <div
                     dir="rtl"

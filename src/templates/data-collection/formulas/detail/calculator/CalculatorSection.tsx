@@ -456,7 +456,7 @@ export default function CalculatorSection({
       return false;
     }
     if (!questionList.dataList.length) {
-      toast.error('هنوز فرمول جزئی‌ای نساخته‌اید. اول با دکمه‌ی «افزودن فرمول جزئی» یکی بسازید');
+      toast.error('هنوز فرمول جزئی‌ای نساخته‌اید. با دکمه‌ی «افزودن فرمول جزئی» یکی بسازید');
       return false;
     }
     return true;

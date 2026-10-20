@@ -1,23 +1,42 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 type LeaveAction = () => void;
 
-export function useUnsavedChangesGuard(isDirty: boolean, navigate: (href: string) => void) {
+export function useUnsavedChangesGuard(isDirty: boolean) {
+  const router = useRouter();
   const [pendingLeave, setPendingLeave] = useState<LeaveAction | null>(null);
   const allowLeaveRef = useRef(false);
-  const navigateRef = useRef(navigate);
-  navigateRef.current = navigate;
+  const guardEntryRef = useRef(false);
+  const isDirtyRef = useRef(isDirty);
+  isDirtyRef.current = isDirty;
 
-  const requestLeave = useCallback(
-    (leave: LeaveAction) => {
-      if (!isDirty || allowLeaveRef.current) {
-        leave();
-        return;
+  const navigate = useCallback(
+    (href: string) => {
+      if (guardEntryRef.current) {
+        router.replace(href);
+      } else {
+        router.push(href);
       }
-      setPendingLeave(() => leave);
     },
-    [isDirty],
+    [router],
   );
+
+  const goBack = useCallback(() => {
+    if (guardEntryRef.current) {
+      window.history.go(-2);
+    } else {
+      router.back();
+    }
+  }, [router]);
+
+  const requestLeave = useCallback((leave: LeaveAction) => {
+    if (!isDirtyRef.current || allowLeaveRef.current) {
+      leave();
+      return;
+    }
+    setPendingLeave(() => leave);
+  }, []);
 
   const leaveWithoutGuard = useCallback((leave: LeaveAction) => {
     allowLeaveRef.current = true;
@@ -26,6 +45,30 @@ export function useUnsavedChangesGuard(isDirty: boolean, navigate: (href: string
   }, []);
 
   const cancelLeave = useCallback(() => setPendingLeave(null), []);
+
+  useEffect(() => {
+    if (!isDirty || guardEntryRef.current) return;
+    window.history.pushState(window.history.state, '', window.location.href);
+    guardEntryRef.current = true;
+  }, [isDirty]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      if (allowLeaveRef.current || !guardEntryRef.current) return;
+
+      if (!isDirtyRef.current) {
+        guardEntryRef.current = false;
+        window.history.back();
+        return;
+      }
+
+      window.history.pushState(window.history.state, '', window.location.href);
+      setPendingLeave(() => () => window.history.go(-2));
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   useEffect(() => {
     if (!isDirty) return;
@@ -39,12 +82,20 @@ export function useUnsavedChangesGuard(isDirty: boolean, navigate: (href: string
       if (!anchor || anchor.target === '_blank' || anchor.hasAttribute('download')) return;
 
       const url = new URL(anchor.href, window.location.href);
-      if (url.origin !== window.location.origin) return;
-      if (url.pathname === window.location.pathname && url.search === window.location.search) return;
+      const isSamePage =
+        url.origin === window.location.origin &&
+        url.pathname === window.location.pathname &&
+        url.search === window.location.search;
+      if (isSamePage) return;
 
       event.preventDefault();
       event.stopPropagation();
-      setPendingLeave(() => () => navigateRef.current(`${url.pathname}${url.search}${url.hash}`));
+
+      if (url.origin === window.location.origin) {
+        setPendingLeave(() => () => navigate(`${url.pathname}${url.search}${url.hash}`));
+      } else {
+        setPendingLeave(() => () => window.location.assign(url.href));
+      }
     };
 
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -60,11 +111,13 @@ export function useUnsavedChangesGuard(isDirty: boolean, navigate: (href: string
       document.removeEventListener('click', handleLinkClick, true);
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [isDirty]);
+  }, [isDirty, navigate]);
 
   return {
     isLeaveDialogOpen: pendingLeave !== null,
     pendingLeave,
+    navigate,
+    goBack,
     requestLeave,
     leaveWithoutGuard,
     cancelLeave,

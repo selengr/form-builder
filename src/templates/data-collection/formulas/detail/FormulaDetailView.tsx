@@ -3,7 +3,6 @@
 import clsx from 'clsx';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
 import { Box, Button, IconButton } from '@mui/material';
 import { IoIosArrowForward } from 'react-icons/io';
 import { IoSettingsOutline } from 'react-icons/io5';
@@ -15,7 +14,7 @@ import MinorFormulaRowSkeleton from './MinorFormulaRowSkeleton';
 import CalculatorSection, { CalculatorSectionHandle } from './calculator/CalculatorSection';
 import { useUpdateMajorFormula } from './useUpdateMajorFormula';
 import { useUnsavedChangesGuard } from './useUnsavedChangesGuard';
-import ConfirmDialog from '@/components/confirm-dialog';
+import UnsavedChangesDialog from './UnsavedChangesDialog';
 import { toCalculatorFields } from './calculator/utils/toCalculatorFields';
 
 const APP_SIDEBAR_WIDTH_PX = 500;
@@ -28,7 +27,6 @@ interface FormulaDetailViewProps {
 }
 
 export default function FormulaDetailView({ majorId, majorName }: FormulaDetailViewProps) {
-  const router = useRouter();
   const [openMinorFormulaDialog, setOpenMinorFormulaDialog] = useState(false);
   const { minorList, isLoading, isError, error } = useGetMinorFormulaList(majorId);
   const calculatorFields = useMemo(() => toCalculatorFields(minorList), [minorList]);
@@ -39,12 +37,10 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
   const calculatorRef = useRef<CalculatorSectionHandle>(null);
   const { mutate: updateMajorFormula, isPending: isSubmitting } = useUpdateMajorFormula();
   const [calculatorElementsCount, setCalculatorElementsCount] = useState(0);
-  const { isLeaveDialogOpen, pendingLeave, requestLeave, leaveWithoutGuard, cancelLeave } = useUnsavedChangesGuard(
-    calculatorElementsCount >= UNSAVED_ELEMENTS_THRESHOLD,
-    router.push,
-  );
+  const { isLeaveDialogOpen, pendingLeave, navigate, goBack, requestLeave, leaveWithoutGuard, cancelLeave } =
+    useUnsavedChangesGuard(calculatorElementsCount >= UNSAVED_ELEMENTS_THRESHOLD);
 
-  const handleSubmit = (afterSave: () => void = () => router.push('/data-collection/formulas')) => {
+  const handleSubmit = (afterSave: () => void = () => navigate('/data-collection/formulas')) => {
     const result = calculatorRef.current?.getResult();
     if (!result) return;
 
@@ -149,7 +145,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                   className="flex lg:hidden items-center justify-between w-full px-1 pb-3 shrink-0 relative">
                   <button
                     type="button"
-                    onClick={() => requestLeave(() => router.back())}
+                    onClick={() => requestLeave(goBack)}
                     className="flex items-center justify-center w-10 h-10 text-[#2A2A2A]"
                     aria-label="بازگشت">
                     <IoIosArrowForward size={22} />
@@ -184,7 +180,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
 
                         {!isLoading && !isError && minorList.length === 0 && (
                           <p className="p-3 text-[#6F6F6F] text-center text-sm font-medium">
-                            هنوز هیچ فرمول جزئی‌ای اضافه نکرده‌اید؛ برای ساختن اولین فرمول، دکمه‌ی پایین را بزنید.
+                            هنوز فرمول جزئی‌ای نساخته‌اید. از دکمه‌ی پایین شروع کنید.
                           </p>
                         )}
 
@@ -286,55 +282,16 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
         </div>
       </main>
 
-      <ConfirmDialog
+      <UnsavedChangesDialog
         open={isLeaveDialogOpen}
-        onClose={cancelLeave}
         loading={isSubmitting}
-        title="تغییرات ذخیره نشده"
-        content="محاسبه‌ای که ساخته‌اید هنوز ذخیره نشده است. قبل از خروج ذخیره شود؟"
-        cancelText="ماندن"
-        action={
-          <>
-            <Button
-              fullWidth
-              variant="contained"
-              disabled={isSubmitting}
-              onClick={() => {
-                const leave = pendingLeave;
-                cancelLeave();
-                if (leave) handleSubmit(leave);
-              }}
-              sx={{
-                height: 45,
-                fontWeight: 500,
-                fontSize: 15,
-                whiteSpace: 'nowrap',
-                borderRadius: 3,
-                boxShadow: 'none',
-                backgroundColor: '#1758BA',
-                '&:hover': { backgroundColor: '#134a9e', boxShadow: 'none' },
-              }}>
-              {isSubmitting ? 'در حال ذخیره...' : 'ذخیره'}
-            </Button>
-            <Button
-              fullWidth
-              variant="outlined"
-              disabled={isSubmitting}
-              onClick={() => pendingLeave && leaveWithoutGuard(pendingLeave)}
-              sx={{
-                height: 45,
-                fontWeight: 500,
-                fontSize: 15,
-                whiteSpace: 'nowrap',
-                borderRadius: 3,
-                color: '#FA4D56',
-                borderColor: '#FA4D56',
-                '&:hover': { borderColor: '#FA4D56', backgroundColor: '#FFF5F5' },
-              }}>
-              دور ریختن
-            </Button>
-          </>
-        }
+        onStay={cancelLeave}
+        onDiscard={() => pendingLeave && leaveWithoutGuard(pendingLeave)}
+        onSave={() => {
+          const leave = pendingLeave;
+          cancelLeave();
+          if (leave) handleSubmit(leave);
+        }}
       />
 
       <MinorFormulaDialog

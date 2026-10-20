@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { Box, Button, IconButton } from '@mui/material';
@@ -12,7 +12,8 @@ import { useGetMinorFormulaList } from './useGetMinorFormulaList';
 import MinorFormulaRow from './MinorFormulaRow';
 import MinorFormulaDialog from '../minor-formula/MinorFormulaDialog';
 import MinorFormulaRowSkeleton from './MinorFormulaRowSkeleton';
-import CalculatorSection from './calculator/CalculatorSection';
+import CalculatorSection, { CalculatorSectionHandle } from './calculator/CalculatorSection';
+import { useUpdateMajorFormula } from './useUpdateMajorFormula';
 import { toCalculatorFields } from './calculator/utils/toCalculatorFields';
 
 const APP_SIDEBAR_WIDTH_PX = 500;
@@ -31,6 +32,32 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
   const handleCalculatorFormulaChange = useCallback((formula: string) => {
     console.log('[FormulaDetailView] calculator formula:', formula);
   }, []);
+
+  const calculatorRef = useRef<CalculatorSectionHandle>(null);
+  const { mutate: updateMajorFormula, isPending: isSubmitting } = useUpdateMajorFormula();
+
+  const handleSubmit = () => {
+    const result = calculatorRef.current?.getResult();
+    if (!result) return;
+
+    if (!result.formula) {
+      toast.error('هیچ محاسبه‌ای افزوده نشده');
+      return;
+    }
+
+    updateMajorFormula(
+      { id: Number(majorId), frontFormula: result.formula },
+      {
+        onSuccess: () => {
+          toast.success('فرمول با موفقیت ثبت شد');
+          router.push('/data-collection/formulas');
+        },
+        onError: (submitError) => {
+          toast.error(submitError.message);
+        },
+      },
+    );
+  };
 
   const handleStub = () => {
     toast.info('این قابلیت به‌زودی اضافه می‌شود');
@@ -91,7 +118,8 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                     </IconButton>
 
                     <Button
-                      onClick={handleStub}
+                      onClick={handleSubmit}
+                      disabled={isSubmitting}
                       variant="contained"
                       sx={{
                         backgroundColor: '#1758BA',
@@ -103,7 +131,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                         boxShadow: 'none',
                         '&:hover': { backgroundColor: '#134a9e' },
                       }}>
-                      ثبت نهایی
+                      {isSubmitting ? 'در حال ثبت...' : 'ثبت'}
                     </Button>
                   </div>
                 </div>
@@ -171,7 +199,11 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                     <div
                       className="flex flex-col w-full shrink-0 overflow-y-auto"
                       style={{ maxHeight: '60%', scrollbarWidth: 'thin', padding: '12px 10px', borderTop: '1px solid #DDE1E6' }}>
-                      <CalculatorSection questionList={calculatorFields} onFormulaChange={handleCalculatorFormulaChange} />
+                      <CalculatorSection
+                        ref={calculatorRef}
+                        questionList={calculatorFields}
+                        onFormulaChange={handleCalculatorFormulaChange}
+                      />
                     </div>
 
                     {/* <div
@@ -192,7 +224,8 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                   )}
                   style={{ ['--app-sidebar-width' as string]: `${APP_SIDEBAR_WIDTH_PX}px` }}>
                   <Button
-                    onClick={handleStub}
+                    onClick={handleSubmit}
+                    disabled={isSubmitting}
                     variant="contained"
                     fullWidth
                     sx={{
@@ -205,7 +238,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                       flex: 1,
                       '&:hover': { backgroundColor: '#134a9e' },
                     }}>
-                    ثبت نهایی
+                    {isSubmitting ? 'در حال ثبت...' : 'ثبت نهایی'}
                   </Button>
 
                   <IconButton

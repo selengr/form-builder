@@ -58,6 +58,7 @@ export default function CalculatorSection({
   const [cursorIndex, setCursorIndex] = useState<number>(0);
   const [elements, setElements] = useState<Element[]>([]);
   const [liveFormula, setLiveFormula] = useState('');
+  const formulaPreviewRef = useRef<HTMLDivElement>(null);
   const [isClient, setIsClient] = useState<boolean>(false);
 
   useEffect(() => {
@@ -586,6 +587,11 @@ export default function CalculatorSection({
     onFormulaChange?.(formula);
   }, [elements, onFormulaChange]);
 
+  useEffect(() => {
+    const preview = formulaPreviewRef.current;
+    if (preview) preview.scrollLeft = preview.scrollWidth;
+  }, [liveFormula]);
+
   useImperativeHandle(
     ref,
     () => ({
@@ -655,24 +661,29 @@ export default function CalculatorSection({
           <div
             dir="ltr"
             title={liveFormula}
-            className={`${styles.formulaPreview} flex items-center shrink-0 rounded-[10px] border border-[#DDE1E6] bg-[#F4F5F7] overflow-x-auto whitespace-nowrap`}
-            style={{ marginTop: 8, height: 34, padding: '0 12px', gap: 8, fontSize: 13, scrollbarWidth: 'none' }}>
-            <span style={{ color: '#9EA3AC', fontSize: 11 }}>formula</span>
-            {liveFormula ? (
-              <span style={{ color: '#1758BA' }}>
-                {liveFormula.split(/(\?)/).map((part, index) =>
-                  part === '?' ? (
-                    <span key={index} style={{ color: '#D98213' }}>
-                      ?
-                    </span>
-                  ) : (
-                    part
-                  ),
-                )}
-              </span>
-            ) : (
-              <span style={{ color: '#C1C7CD' }}>—</span>
-            )}
+            className={`${styles.formulaPreview} relative shrink-0 rounded-[10px] border border-[#DDE1E6] bg-[#F4F5F7]`}
+            style={{ marginTop: 8, height: 34, fontSize: 13 }}>
+            <div
+              ref={formulaPreviewRef}
+              className="absolute flex items-center"
+              style={{ inset: 0, padding: '0 12px', gap: 8, overflowX: 'auto', overflowY: 'hidden', whiteSpace: 'nowrap', scrollbarWidth: 'thin' }}>
+              <span style={{ color: '#9EA3AC', fontSize: 11, flexShrink: 0 }}>formula</span>
+              {liveFormula ? (
+                <span style={{ color: '#1758BA', flexShrink: 0 }}>
+                  {liveFormula.split(/(\?)/).map((part, index) =>
+                    part === '?' ? (
+                      <span key={index} style={{ color: '#D98213' }}>
+                        ?
+                      </span>
+                    ) : (
+                      part
+                    ),
+                  )}
+                </span>
+              ) : (
+                <span style={{ color: '#C1C7CD' }}>—</span>
+              )}
+            </div>
           </div>
         </div>
 

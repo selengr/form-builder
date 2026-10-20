@@ -91,9 +91,10 @@ function MinorFormulaMenu() {
 interface MinorFormulaRowProps {
   index: number;
   name?: string;
+  readOnly?: boolean;
 }
 
-export default function MinorFormulaRow({ index, name }: MinorFormulaRowProps) {
+export default function MinorFormulaRow({ index, name, readOnly = false }: MinorFormulaRowProps) {
   const persianNumber = (index + 1).toLocaleString('fa-IR');
 
   return (
@@ -128,7 +129,7 @@ export default function MinorFormulaRow({ index, name }: MinorFormulaRowProps) {
         {name?.trim() || getOrdinalLabel(index)}
       </p>
 
-      <MinorFormulaMenu />
+      {!readOnly && <MinorFormulaMenu />}
     </div>
   );
 }

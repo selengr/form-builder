@@ -29,7 +29,7 @@ export default function FormulaListCard({
   };
 
   const handleView = () => {
-    router.push(`/data-collection/formulas/${data.id}?name=${encodeURIComponent(data.majorName)}`);
+    router.push(`/data-collection/formulas/${data.id}/view?name=${encodeURIComponent(data.majorName)}`);
   };
 
   const handleDelete = () => {

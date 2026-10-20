@@ -37,6 +37,7 @@ interface CalculatorSectionProps {
   isQuestionListLoading?: boolean;
   ref?: Ref<CalculatorSectionHandle>;
   onFormulaChange?: (formula: string) => void;
+  onElementsCountChange?: (count: number) => void;
 }
 
 export default function CalculatorSection({
@@ -44,6 +45,7 @@ export default function CalculatorSection({
   isQuestionListLoading = false,
   ref,
   onFormulaChange,
+  onElementsCountChange,
 }: CalculatorSectionProps) {
   const isDesktop = useMediaQuery('(min-width:900px)');
 
@@ -565,6 +567,10 @@ export default function CalculatorSection({
       setCursorIndex(index === -1 ? elements.length : index);
     }
   };
+
+  useEffect(() => {
+    onElementsCountChange?.(elements.length);
+  }, [elements.length, onElementsCountChange]);
 
   useEffect(() => {
     if (!onFormulaChange) return;

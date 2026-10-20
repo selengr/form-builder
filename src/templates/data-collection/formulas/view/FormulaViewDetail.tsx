@@ -85,7 +85,7 @@ export default function FormulaViewDetail({ majorId, majorName }: FormulaViewDet
                         boxShadow: 'none',
                         '&:hover': { backgroundColor: '#134a9e' },
                       }}>
-                      ویرایش
+                      برو به ویرایش
                     </Button>
                   </div>
                 </div>
@@ -160,7 +160,7 @@ export default function FormulaViewDetail({ majorId, majorName }: FormulaViewDet
                       flex: 1,
                       '&:hover': { backgroundColor: '#134a9e' },
                     }}>
-                    ویرایش
+                    برو به ویرایش
                   </Button>
 
                   <IconButton

@@ -28,7 +28,7 @@ export default function MiddleSidebar({ userInfo }: IProps) {
 
 
   return (
-    <div className='min-w-[400px] w-[400px] min-h-screen bg-white px-5 py-5 flex flex-col gap-5'>
+    <div data-leave-guard className='min-w-[400px] w-[400px] min-h-screen bg-white px-5 py-5 flex flex-col gap-5'>
       <div className='flex flex-col gap-5 items-center flex-shrink-0'>
         <Link href="/" aria-label="بازگشت به خانه" className="cursor-pointer">
           <Image

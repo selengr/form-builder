@@ -79,7 +79,8 @@ export function useUnsavedChangesGuard(isDirty: boolean) {
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 
       const anchor = (event.target as HTMLElement | null)?.closest('a[href]') as HTMLAnchorElement | null;
-      if (!anchor || anchor.target === '_blank' || anchor.hasAttribute('download')) return;
+      if (!anchor || !anchor.closest('[data-leave-guard]')) return;
+      if (anchor.target === '_blank' || anchor.hasAttribute('download')) return;
 
       const url = new URL(anchor.href, window.location.href);
       const isSamePage =
@@ -98,19 +99,8 @@ export function useUnsavedChangesGuard(isDirty: boolean) {
       }
     };
 
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (allowLeaveRef.current) return;
-      event.preventDefault();
-      event.returnValue = '';
-    };
-
     document.addEventListener('click', handleLinkClick, true);
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      document.removeEventListener('click', handleLinkClick, true);
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
+    return () => document.removeEventListener('click', handleLinkClick, true);
   }, [isDirty, navigate]);
 
   return {

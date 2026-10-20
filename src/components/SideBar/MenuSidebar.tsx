@@ -13,10 +13,10 @@ export default function MenuSidebar() {
         const isActive = current === link;
 
         return (
-          <a key={id} href={link} className='flex flex-col items-center gap-[2px] cursor-pointer'>
+          <div key={id} className='flex flex-col items-center gap-[2px] cursor-pointer' onClick={() => (window.location.href = link)}>
             <Image src={current === link ? active : notActive} width={28} height={28} priority draggable={false} alt={title} />
             <p className={`text-[9px] ${isActive ? 'text-[#2CDFC9]' : 'text-[#F2F4F8]'}`}>{title}</p>
-          </a>
+          </div>
         );
       })}
     </div>

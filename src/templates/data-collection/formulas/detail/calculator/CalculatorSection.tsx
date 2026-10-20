@@ -34,11 +34,17 @@ export interface CalculatorSectionHandle {
 
 interface CalculatorSectionProps {
   questionList: IFieldQuestionData;
+  isQuestionListLoading?: boolean;
   ref?: Ref<CalculatorSectionHandle>;
   onFormulaChange?: (formula: string) => void;
 }
 
-export default function CalculatorSection({ questionList, ref, onFormulaChange }: CalculatorSectionProps) {
+export default function CalculatorSection({
+  questionList,
+  isQuestionListLoading = false,
+  ref,
+  onFormulaChange,
+}: CalculatorSectionProps) {
   const isDesktop = useMediaQuery('(min-width:900px)');
 
   const mainIndex = useRef<number>(-2);
@@ -444,7 +450,21 @@ export default function CalculatorSection({ questionList, ref, onFormulaChange }
     );
   };
 
+  const hasFieldOptions = () => {
+    if (isQuestionListLoading) {
+      toast.info('فرمول‌های جزئی در حال بارگذاری است، کمی صبر کنید');
+      return false;
+    }
+    if (!questionList.dataList.length) {
+      toast.error('هنوز فرمول جزئی‌ای نساخته‌اید. اول با دکمه‌ی «افزودن فرمول جزئی» یکی بسازید');
+      return false;
+    }
+    return true;
+  };
+
   const handleNewField = () => {
+    if (!hasFieldOptions()) return;
+
     if (!isValidCursorPosition(cursorIndex, true)) {
       toast.error('امکان اضافه کردن فیلد در این موقعیت وجود ندارد');
       return;
@@ -490,6 +510,8 @@ export default function CalculatorSection({ questionList, ref, onFormulaChange }
   };
 
   const handleFnFX = () => {
+    if (!hasFieldOptions()) return;
+
     if (isLastElementOperand()) {
       toast.error('لطفاً ابتدا یک عملگر وارد کنید');
       return;

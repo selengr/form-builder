@@ -176,7 +176,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
 
                         {!isLoading && !isError && minorList.length === 0 && (
                           <p className="p-3 text-[#6F6F6F] text-center text-sm font-medium">
-                            هیچ فرمول جزئی ثبت نشده است
+                            هنوز هیچ فرمول جزئی‌ای اضافه نکرده‌اید؛ برای ساختن اولین فرمول، دکمه‌ی پایین را بزنید.
                           </p>
                         )}
 
@@ -202,6 +202,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                       <CalculatorSection
                         ref={calculatorRef}
                         questionList={calculatorFields}
+                        isQuestionListLoading={isLoading}
                         onFormulaChange={handleCalculatorFormulaChange}
                       />
                     </div>
@@ -238,7 +239,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                       flex: 1,
                       '&:hover': { backgroundColor: '#134a9e' },
                     }}>
-                    {isSubmitting ? 'در حال ثبت...' : 'ثبت نهایی'}
+                    {isSubmitting ? 'در حال ثبت...' : 'ثبت '}
                   </Button>
 
                   <IconButton

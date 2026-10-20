@@ -251,22 +251,31 @@ export default function KeypadPanel({
   const [activeTab, setActiveTab] = useState<KeypadTab>('numbers');
   const isMobile = variant === 'mobile';
 
-  const tabContent =
-    activeTab === 'numbers' ? (
-      <NumbersTabContent
-        handleParenthesis={handleParenthesis}
-        handleUndo={handleUndo}
-        handleNumber={handleNumber}
-        handleToggleSign={handleToggleSign}
-        handleOperator={handleOperator}
-      />
-    ) : (
-      <FunctionsTabContent
-        handleParenthesis={handleParenthesis}
-        handleUndo={handleUndo}
-        handleFnFX={handleFnFX}
-      />
-    );
+  const tabPaneStyle = (tab: KeypadTab) => ({
+    gridArea: '1 / 1',
+    visibility: activeTab === tab ? ('visible' as const) : ('hidden' as const),
+  });
+
+  const tabContent = (
+    <div style={{ display: 'grid' }}>
+      <div style={tabPaneStyle('numbers')} aria-hidden={activeTab !== 'numbers'}>
+        <NumbersTabContent
+          handleParenthesis={handleParenthesis}
+          handleUndo={handleUndo}
+          handleNumber={handleNumber}
+          handleToggleSign={handleToggleSign}
+          handleOperator={handleOperator}
+        />
+      </div>
+      <div style={tabPaneStyle('functions')} aria-hidden={activeTab !== 'functions'}>
+        <FunctionsTabContent
+          handleParenthesis={handleParenthesis}
+          handleUndo={handleUndo}
+          handleFnFX={handleFnFX}
+        />
+      </div>
+    </div>
+  );
 
   if (isMobile) {
     return (

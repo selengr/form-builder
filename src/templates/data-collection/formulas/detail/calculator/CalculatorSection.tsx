@@ -5,6 +5,7 @@ import { useMediaQuery } from '@mui/material';
 import React, { Ref, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { Element, FnFxItem, CalculatorResult, IFieldQuestionData } from './types';
 import FormulaInput from './FormulaInput';
+import styles from './formulaEditor.module.css';
 import KeypadPanel from './KeypadPanel';
 import { htmlToFormula } from './utils/htmlToFormula';
 import { replaceNestedParentheses } from './utils/parenthesesReplacer';
@@ -56,6 +57,7 @@ export default function CalculatorSection({
 
   const [cursorIndex, setCursorIndex] = useState<number>(0);
   const [elements, setElements] = useState<Element[]>([]);
+  const [liveFormula, setLiveFormula] = useState('');
   const [isClient, setIsClient] = useState<boolean>(false);
 
   useEffect(() => {
@@ -573,13 +575,15 @@ export default function CalculatorSection({
   }, [elements.length, onElementsCountChange]);
 
   useEffect(() => {
-    if (!onFormulaChange) return;
     const rawFormula = htmlToFormula(elements, selectFieldRef, selectAvgRef).replaceAll('undefined', '?');
+    let formula = rawFormula;
     try {
-      onFormulaChange(rawFormula ? buildCalculatorFormula(rawFormula) : '');
+      formula = rawFormula ? buildCalculatorFormula(rawFormula) : '';
     } catch {
-      onFormulaChange(rawFormula);
+      formula = rawFormula;
     }
+    setLiveFormula(formula);
+    onFormulaChange?.(formula);
   }, [elements, onFormulaChange]);
 
   useImperativeHandle(
@@ -646,6 +650,29 @@ export default function CalculatorSection({
               onClick={handleClick}
               onKeyDown={handleKeyDown}
             />
+          </div>
+
+          <div
+            dir="ltr"
+            title={liveFormula}
+            className={`${styles.formulaPreview} flex items-center shrink-0 rounded-[10px] border border-[#DDE1E6] bg-[#F4F5F7] overflow-x-auto whitespace-nowrap`}
+            style={{ marginTop: 8, height: 34, padding: '0 12px', gap: 8, fontSize: 13, scrollbarWidth: 'none' }}>
+            <span style={{ color: '#9EA3AC', fontSize: 11 }}>formula</span>
+            {liveFormula ? (
+              <span style={{ color: '#1758BA' }}>
+                {liveFormula.split(/(\?)/).map((part, index) =>
+                  part === '?' ? (
+                    <span key={index} style={{ color: '#D98213' }}>
+                      ?
+                    </span>
+                  ) : (
+                    part
+                  ),
+                )}
+              </span>
+            ) : (
+              <span style={{ color: '#C1C7CD' }}>—</span>
+            )}
           </div>
         </div>
 

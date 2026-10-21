@@ -1,6 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
+import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Box, Button, IconButton } from '@mui/material';
 import { IoIosArrowForward } from 'react-icons/io';
@@ -9,6 +10,10 @@ import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
 import { useGetMinorFormulaList } from '../detail/useGetMinorFormulaList';
 import MinorFormulaRow from '../detail/MinorFormulaRow';
 import MinorFormulaRowSkeleton from '../detail/MinorFormulaRowSkeleton';
+import { useGetMajorFormula } from '../detail/useGetMajorFormula';
+import { toCalculatorFields } from '../detail/calculator/utils/toCalculatorFields';
+import { parseFrontFormulaData } from '../detail/calculator/utils/restoreCalculator';
+import SavedFormulaPreview from './SavedFormulaPreview';
 
 const APP_SIDEBAR_WIDTH_PX = 500;
 const DESKTOP_MEDIA = '@media (min-width:1280px)';
@@ -27,8 +32,11 @@ interface FormulaViewDetailProps {
 export default function FormulaViewDetail({ majorId, majorName }: FormulaViewDetailProps) {
   const router = useRouter();
   const { minorList, isLoading, isError, error } = useGetMinorFormulaList(majorId);
+  const { majorFormula, isLoading: isMajorFormulaLoading } = useGetMajorFormula(majorId);
+  const savedElements = useMemo(() => parseFrontFormulaData(majorFormula?.frontFormulaData), [majorFormula?.frontFormulaData]);
+  const minorFields = useMemo(() => toCalculatorFields(minorList), [minorList]);
 
-  const title = majorName || 'فرمول';
+  const title = majorFormula?.majorName || majorName || 'فرمول';
 
   const handleEdit = () => {
     router.push(`/data-collection/formulas/${majorId}?name=${encodeURIComponent(majorName)}`);
@@ -136,6 +144,17 @@ export default function FormulaViewDetail({ majorId, majorName }: FormulaViewDet
                       {minorList.map((item, index) => (
                         <MinorFormulaRow key={item.id} index={index} name={item.minorName} readOnly />
                       ))}
+                    </div>
+
+                    <div
+                      className="flex flex-col w-full shrink-0 overflow-y-auto"
+                      style={{ maxHeight: '55%', scrollbarWidth: 'thin', padding: '12px 10px', borderTop: '1px solid #DDE1E6' }}>
+                      <SavedFormulaPreview
+                        elements={savedElements}
+                        formula={majorFormula?.frontFormula ?? ''}
+                        fields={minorFields}
+                        isLoading={isMajorFormulaLoading}
+                      />
                     </div>
                   </div>
                 </Box>

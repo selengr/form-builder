@@ -6,16 +6,6 @@ import type { CreateMinorFormulaPayload } from '@/templates/data-collection/form
 
 const CREATE_MINOR_URL = '/admin/data-collection/formulas/minor-formula';
 
-const SERVER_OPERATOR_ALIASES: Record<string, string> = {
-  STARTS_WITH: 'START_WITH',
-  ENDS_WITH: 'END_WITH',
-};
-
-const operatorSchema = z
-  .string()
-  .min(1)
-  .transform((operator) => SERVER_OPERATOR_ALIASES[operator] ?? operator);
-
 const conditionValueSchema = z.union([z.string(), z.number(), z.array(z.union([z.string(), z.number()]))]);
 
 const createMinorFormulaSchema = z.object({
@@ -31,7 +21,7 @@ const createMinorFormulaSchema = z.object({
           z.object({
             type: z.literal('condition'),
             field: z.string().min(1),
-            operator: operatorSchema,
+            operator: z.string().min(1),
             value: conditionValueSchema,
             nextOperator: z.enum(['AND', 'OR']),
           }),

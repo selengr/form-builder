@@ -224,11 +224,11 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          gap: '6px',
-                          height: 40,
+                          gap: '4px',
+                          height: { xs: 40, md: 36 },
                           width: { xs: 40, md: 'auto' },
-                          paddingX: { xs: 0, md: '14px' },
-                          borderRadius: '20px',
+                          paddingX: { xs: 0, md: '12px' },
+                          borderRadius: { xs: '20px', md: '14px' },
                           border: 'none',
                           cursor: 'pointer',
                           color: '#fff',
@@ -250,7 +250,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                         }}>
                         <IoAdd size={20} />
                         <Box component="span" sx={{ display: { xs: 'none', md: 'inline' } }}>
-                          افزودن فرمول جزئی
+                          فرمول جزئی
                         </Box>
                       </Box>
                     </div>

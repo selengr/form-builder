@@ -66,7 +66,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
     }
 
     updateMajorFormula(
-      { id: Number(majorId), frontFormula: result.formula },
+      { id: Number(majorId), frontFormula: result.formula, frontFormulaData: result.frontCalcData },
       {
         onSuccess: () => {
           toast.success('فرمول با موفقیت ثبت شد');

@@ -8,6 +8,7 @@ const UPDATE_MAJOR_URL = '/admin/data-collection/formulas/major-formula';
 const updateMajorFormulaSchema = z.object({
   id: z.number().int().positive(),
   frontFormula: z.string().trim().min(1),
+  frontFormulaData: z.string().min(1),
 });
 
 export type UpdateMajorFormulaInput = z.infer<typeof updateMajorFormulaSchema>;

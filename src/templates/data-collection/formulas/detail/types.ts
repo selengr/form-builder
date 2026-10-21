@@ -17,3 +17,12 @@ export interface MinorFormulaListItem {
   minorName?: string;
   formulaModel: MinorFormulaModel;
 }
+
+export interface MajorFormulaDetail {
+  id: number;
+  majorLabel: string;
+  majorName: string;
+  targetPlatformEnum: string;
+  frontFormula?: string | null;
+  frontFormulaData?: string | null;
+}

@@ -17,6 +17,7 @@ import { useUpdateMajorFormula } from './useUpdateMajorFormula';
 import { useUnsavedChangesGuard } from './useUnsavedChangesGuard';
 import UnsavedChangesDialog from './UnsavedChangesDialog';
 import { toCalculatorFields } from './calculator/utils/toCalculatorFields';
+import { parseFrontFormulaData } from './calculator/utils/restoreCalculator';
 
 const APP_SIDEBAR_WIDTH_PX = 500;
 const UNSAVED_ELEMENTS_THRESHOLD = 2;
@@ -30,9 +31,16 @@ interface FormulaDetailViewProps {
 export default function FormulaDetailView({ majorId, majorName }: FormulaDetailViewProps) {
   const [openMinorFormulaDialog, setOpenMinorFormulaDialog] = useState(false);
   const { minorList, isLoading, isError, error } = useGetMinorFormulaList(majorId);
-  useGetMajorFormula(majorId);
+  const { majorFormula, isLoading: isMajorFormulaLoading } = useGetMajorFormula(majorId);
+  const savedCalculatorElements = useMemo(
+    () => parseFrontFormulaData(majorFormula?.frontFormulaData),
+    [majorFormula?.frontFormulaData],
+  );
+  const savedFormula = majorFormula?.frontFormula ?? '';
   const calculatorFields = useMemo(() => toCalculatorFields(minorList), [minorList]);
+  const [currentFormula, setCurrentFormula] = useState('');
   const handleCalculatorFormulaChange = useCallback((formula: string) => {
+    setCurrentFormula(formula);
     console.log('[FormulaDetailView] calculator formula:', formula);
   }, []);
 
@@ -56,7 +64,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
   const { mutate: updateMajorFormula, isPending: isSubmitting } = useUpdateMajorFormula();
   const [calculatorElementsCount, setCalculatorElementsCount] = useState(0);
   const { isLeaveDialogOpen, pendingLeave, navigate, goBack, requestLeave, leaveWithoutGuard, cancelLeave } =
-    useUnsavedChangesGuard(calculatorElementsCount >= UNSAVED_ELEMENTS_THRESHOLD);
+    useUnsavedChangesGuard(calculatorElementsCount >= UNSAVED_ELEMENTS_THRESHOLD && currentFormula !== savedFormula);
 
   const handleSubmit = (afterSave: () => void = () => navigate('/data-collection/formulas')) => {
     const result = calculatorRef.current?.getResult();
@@ -85,7 +93,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
     toast.info('این قابلیت به‌زودی اضافه می‌شود');
   };
 
-  const title = majorName || 'فرمول';
+  const title = majorFormula?.majorName || majorName || 'فرمول';
 
   return (
     <div
@@ -261,7 +269,9 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                       className="flex flex-col w-full shrink-0 overflow-y-auto"
                       style={{ maxHeight: '60%', scrollbarWidth: 'thin', padding: '12px 10px', borderTop: '1px solid #DDE1E6' }}>
                       <CalculatorSection
+                        key={isMajorFormulaLoading ? 'loading' : `saved-${majorFormula?.id ?? 'new'}`}
                         ref={calculatorRef}
+                        initialElements={savedCalculatorElements}
                         questionList={calculatorFields}
                         isQuestionListLoading={isLoading}
                         onFormulaChange={handleCalculatorFormulaChange}

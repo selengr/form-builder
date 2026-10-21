@@ -21,6 +21,7 @@ export function useUpdateMajorFormula() {
     mutationFn: updateMajorFormula,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['major_formula_list'] });
+      queryClient.invalidateQueries({ queryKey: ['major_formula'] });
     },
   });
 }

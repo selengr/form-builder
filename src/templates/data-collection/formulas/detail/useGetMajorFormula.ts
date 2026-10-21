@@ -2,6 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { getMajorFormulaAction } from '@actions/data-collection/formulas/getMajorFormulaAction';
+import { MajorFormulaDetail } from './types';
 
 export function useGetMajorFormula(majorId: string) {
   const { data, isLoading, isError, error } = useQuery({
@@ -13,9 +14,7 @@ export function useGetMajorFormula(majorId: string) {
         throw new Error(res.message || 'خطا در دریافت اطلاعات فرمول');
       }
 
-      console.log('[useGetMajorFormula] response:', res.data);
-
-      return res.data;
+      return res.data as MajorFormulaDetail;
     },
     enabled: Boolean(majorId),
   });

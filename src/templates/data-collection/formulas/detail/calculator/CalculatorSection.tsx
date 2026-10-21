@@ -10,6 +10,7 @@ import KeypadPanel from './KeypadPanel';
 import { htmlToFormula } from './utils/htmlToFormula';
 import { replaceNestedParentheses } from './utils/parenthesesReplacer';
 import { getCalculatorFieldId } from './utils/getCalculatorFieldId';
+import { restoreCalculatorRefs } from './utils/restoreCalculator';
 
 const OPERATOR_TYPES = ['-', '+', '*', '/', '^'];
 const NEGATIVE_SIGN = '-';
@@ -39,6 +40,7 @@ interface CalculatorSectionProps {
   ref?: Ref<CalculatorSectionHandle>;
   onFormulaChange?: (formula: string) => void;
   onElementsCountChange?: (count: number) => void;
+  initialElements?: Element[];
 }
 
 export default function CalculatorSection({
@@ -47,16 +49,22 @@ export default function CalculatorSection({
   ref,
   onFormulaChange,
   onElementsCountChange,
+  initialElements,
 }: CalculatorSectionProps) {
   const isDesktop = useMediaQuery('(min-width:900px)');
 
-  const mainIndex = useRef<number>(-2);
-  const contentEditable = useRef<HTMLDivElement>(null);
-  const selectAvgRef = useRef<Record<string, string>>({});
-  const selectFieldRef = useRef<Record<string, string>>({});
+  const [restored] = useState(() => {
+    const restoredElements = initialElements ?? [];
+    return { elements: restoredElements, ...restoreCalculatorRefs(restoredElements) };
+  });
 
-  const [cursorIndex, setCursorIndex] = useState<number>(0);
-  const [elements, setElements] = useState<Element[]>([]);
+  const mainIndex = useRef<number>(restored.lastMainIndex);
+  const contentEditable = useRef<HTMLDivElement>(null);
+  const selectAvgRef = useRef<Record<string, string>>(restored.avgRefs);
+  const selectFieldRef = useRef<Record<string, string>>(restored.fieldRefs);
+
+  const [cursorIndex, setCursorIndex] = useState<number>(restored.elements.length);
+  const [elements, setElements] = useState<Element[]>(restored.elements);
   const [liveFormula, setLiveFormula] = useState('');
   const formulaPreviewRef = useRef<HTMLDivElement>(null);
   const [isClient, setIsClient] = useState<boolean>(false);

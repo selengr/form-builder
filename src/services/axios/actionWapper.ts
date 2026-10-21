@@ -4,7 +4,7 @@ import { AxiosRequestConfig } from 'axios';
 
 export type ActionResult<T> =
   | { success: true; data: T }
-  | { success: false; message: string; status?: number };
+  | { success: false; message: string; status?: number; serverMessage?: string };
 
 async function runSafe<T>(request: Promise<{ data: T }>): Promise<ActionResult<T>> {
   try {
@@ -19,6 +19,7 @@ async function runSafe<T>(request: Promise<{ data: T }>): Promise<ActionResult<T
         success: false,
         message: error.message,
         status: error.status,
+        serverMessage: error.serverMessage,
       };
     }
 

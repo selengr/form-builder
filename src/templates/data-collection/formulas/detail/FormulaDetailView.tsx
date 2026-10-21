@@ -8,6 +8,7 @@ import { IoIosArrowForward } from 'react-icons/io';
 import { IoAdd, IoSettingsOutline } from 'react-icons/io5';
 import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
 import { useGetMinorFormulaList } from './useGetMinorFormulaList';
+import { useGetMajorFormula } from './useGetMajorFormula';
 import MinorFormulaRow from './MinorFormulaRow';
 import MinorFormulaDialog from '../minor-formula/MinorFormulaDialog';
 import MinorFormulaRowSkeleton from './MinorFormulaRowSkeleton';
@@ -29,6 +30,7 @@ interface FormulaDetailViewProps {
 export default function FormulaDetailView({ majorId, majorName }: FormulaDetailViewProps) {
   const [openMinorFormulaDialog, setOpenMinorFormulaDialog] = useState(false);
   const { minorList, isLoading, isError, error } = useGetMinorFormulaList(majorId);
+  useGetMajorFormula(majorId);
   const calculatorFields = useMemo(() => toCalculatorFields(minorList), [minorList]);
   const handleCalculatorFormulaChange = useCallback((formula: string) => {
     console.log('[FormulaDetailView] calculator formula:', formula);

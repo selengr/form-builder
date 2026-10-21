@@ -1,7 +1,7 @@
 'use server';
 
 import { z } from 'zod';
-import { api } from '@/services/axios/actionWapper';
+import { serverApi } from '@/services/axios/serverApi';
 import type { CreateMinorFormulaPayload } from '@/templates/data-collection/formulas/minor-formula/types';
 
 const CREATE_MINOR_URL = '/admin/data-collection/formulas/minor-formula';
@@ -41,6 +41,13 @@ const createMinorFormulaSchema = z.object({
   }),
 });
 
+const getServerMessage = (data: unknown): string | undefined => {
+  const message = (data as { message?: unknown } | undefined)?.message;
+  if (typeof message === 'string') return message;
+  if (Array.isArray(message)) return message[0]?.title;
+  return undefined;
+};
+
 export async function createMinorFormulaAction(payload: CreateMinorFormulaPayload) {
   const parsed = createMinorFormulaSchema.safeParse(payload);
 
@@ -48,9 +55,21 @@ export async function createMinorFormulaAction(payload: CreateMinorFormulaPayloa
     return { success: false as const, message: 'Validation error.' };
   }
 
-  const result = await api.post(CREATE_MINOR_URL, parsed.data);
+  try {
+    const response = await serverApi.post(CREATE_MINOR_URL, parsed.data, { validateStatus: () => true });
 
-  console.log('[createMinorFormulaAction] response:', JSON.stringify(result, null, 2));
+    console.log('[createMinorFormulaAction] response:', response.status, JSON.stringify(response.data, null, 2));
 
-  return result;
+    if (response.status >= 200 && response.status < 300) {
+      return { success: true as const, data: response.data };
+    }
+
+    return {
+      success: false as const,
+      message: getServerMessage(response.data) || 'خطا در ثبت فرمول جزئی.',
+      status: response.status,
+    };
+  } catch {
+    return { success: false as const, message: 'خطا در ارتباط با سرور' };
+  }
 }

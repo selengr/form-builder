@@ -6,8 +6,7 @@ export async function createMinorFormula(payload: CreateMinorFormulaPayload) {
   const res = await createMinorFormulaAction(payload);
 
   if (!res.success) {
-    const serverMessage = 'serverMessage' in res ? res.serverMessage : undefined;
-    throw new Error(serverMessage || res.message || 'خطا در ثبت فرمول جزئی.');
+    throw new Error(res.message || 'خطا در ثبت فرمول جزئی.');
   }
 
   return res.data;

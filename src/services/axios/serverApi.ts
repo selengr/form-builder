@@ -1,7 +1,7 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/authConfig';
 import axios, { AxiosError, AxiosHeaders, InternalAxiosRequestConfig } from 'axios';
-import { ApiError, extractErrorMessage, extractServerMessage, TApiErrorResponse } from './error-handler';
+import { ApiError, extractErrorMessage, TApiErrorResponse } from './error-handler';
 
 export const runtime = 'nodejs';
 
@@ -57,6 +57,6 @@ serverApi.interceptors.response.use(
     const message = extractErrorMessage(error);
     const status = error.response?.status;
 
-    return Promise.reject(new ApiError(message, status, extractServerMessage(error)));
+    return Promise.reject(new ApiError(message, status));
   },
 );

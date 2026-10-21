@@ -51,19 +51,11 @@ export function extractErrorMessage(error: AxiosError<TApiErrorResponse>): strin
   return 'انجام عملیات با خطا مواجه شد';
 }
 // ------------------------------------------------------------
-export function extractServerMessage(error: AxiosError<TApiErrorResponse>): string | undefined {
-  const message = error.response?.data?.message;
-  if (typeof message === 'string') return message;
-  if (Array.isArray(message)) return message[0]?.title;
-  return undefined;
-}
-// ------------------------------------------------------------
 export class ApiError extends Error {
 
-  constructor(message: string, public status?: number, public serverMessage?: string) {
+  constructor(message: string, public status?: number) {
     super(message);
     this.name = 'خطا';
     this.status = status;
-    this.serverMessage = serverMessage;
   }
 }

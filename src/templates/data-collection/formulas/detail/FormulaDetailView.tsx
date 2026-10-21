@@ -1,11 +1,11 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { Box, Button, IconButton } from '@mui/material';
 import { IoIosArrowForward } from 'react-icons/io';
-import { IoSettingsOutline } from 'react-icons/io5';
+import { IoAdd, IoSettingsOutline } from 'react-icons/io5';
 import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
 import { useGetMinorFormulaList } from './useGetMinorFormulaList';
 import MinorFormulaRow from './MinorFormulaRow';
@@ -35,6 +35,22 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
   }, []);
 
   const calculatorRef = useRef<CalculatorSectionHandle>(null);
+  const minorListScrollRef = useRef<HTMLDivElement>(null);
+  const inlineAddButtonRef = useRef<HTMLButtonElement>(null);
+  const [isInlineAddButtonVisible, setIsInlineAddButtonVisible] = useState(true);
+
+  useEffect(() => {
+    const root = minorListScrollRef.current;
+    const target = inlineAddButtonRef.current;
+    if (!root || !target) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInlineAddButtonVisible(entry.isIntersecting),
+      { root, threshold: 0.6 },
+    );
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, []);
   const { mutate: updateMajorFormula, isPending: isSubmitting } = useUpdateMajorFormula();
   const [calculatorElementsCount, setCalculatorElementsCount] = useState(0);
   const { isLeaveDialogOpen, pendingLeave, navigate, goBack, requestLeave, leaveWithoutGuard, cancelLeave } =
@@ -165,10 +181,11 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                   <div
                     dir="rtl"
                     className="flex flex-col w-full h-full min-h-0 rounded-[20px] border border-[#DDE1E6] bg-[#F8FAFC] overflow-hidden">
-                    <div className="flex flex-col w-full flex-1 min-h-0">
+                    <div className="relative flex flex-col w-full flex-1 min-h-0">
                       <div
+                        ref={minorListScrollRef}
                         className="flex flex-col w-full flex-1 min-h-0 overflow-y-auto"
-                        style={{ scrollbarWidth: 'thin', padding: '11px 10px 7px', gap: 7 }}>
+                        style={{ scrollbarWidth: 'thin', padding: '11px 10px', gap: 7 }}>
                         {isLoading &&
                           Array.from({ length: 2 }).map((_, index) => <MinorFormulaRowSkeleton key={index} />)}
 
@@ -187,17 +204,55 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                         {minorList.map((item, index) => (
                           <MinorFormulaRow key={item.id} index={index} name={item.minorName} />
                         ))}
+
+                        <button
+                          ref={inlineAddButtonRef}
+                          type="button"
+                          onClick={() => setOpenMinorFormulaDialog(true)}
+                          className="flex items-center justify-center w-full rounded-xl border border-dashed border-[#DDE1E6] bg-transparent min-h-[56px] cursor-pointer shrink-0 text-[#6F6F6F] text-sm font-medium hover:bg-[#F7F7FF] transition-colors">
+                          افزودن فرمول جزئی
+                        </button>
                       </div>
 
-                      <div className="shrink-0" style={{ padding: '4px 10px 11px' }}>
-                        <div
-                          onClick={() => setOpenMinorFormulaDialog(true)}
-                          className="flex items-center justify-center rounded-xl border border-dashed border-[#DDE1E6] bg-transparent min-h-[56px] cursor-pointer shrink-0">
-                          <p className="p-3 text-[#6F6F6F] text-center text-sm font-medium cursor-pointer">
+                      <Box
+                        component="button"
+                        type="button"
+                        aria-label="افزودن فرمول جزئی"
+                        tabIndex={isInlineAddButtonVisible ? -1 : 0}
+                        onClick={() => setOpenMinorFormulaDialog(true)}
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '6px',
+                          height: 40,
+                          width: { xs: 40, md: 'auto' },
+                          paddingX: { xs: 0, md: '14px' },
+                          borderRadius: '20px',
+                          border: 'none',
+                          cursor: 'pointer',
+                          color: '#fff',
+                          fontSize: 13,
+                          fontWeight: 500,
+                          backgroundColor: '#1758BA',
+                          boxShadow: '0 6px 16px rgba(23, 88, 186, 0.28)',
+                          '&:hover': { backgroundColor: '#134a9e' },
+                        }}
+                        style={{
+                          position: 'absolute',
+                          left: 14,
+                          bottom: 12,
+                          zIndex: 2,
+                          opacity: isInlineAddButtonVisible ? 0 : 1,
+                          transform: isInlineAddButtonVisible ? 'translateY(8px) scale(0.92)' : 'translateY(0) scale(1)',
+                          pointerEvents: isInlineAddButtonVisible ? 'none' : 'auto',
+                          transition: 'opacity 180ms ease, transform 180ms ease',
+                        }}>
+                        <IoAdd size={20} />
+                        <Box component="span" sx={{ display: { xs: 'none', md: 'inline' } }}>
                           افزودن فرمول جزئی
-                          </p>
-                        </div>
-                      </div>
+                        </Box>
+                      </Box>
                     </div>
 
                     <div

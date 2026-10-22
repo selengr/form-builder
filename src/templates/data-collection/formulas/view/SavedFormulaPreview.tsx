@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import { Box } from '@mui/material';
 import styles from '../detail/calculator/formulaEditor.module.css';
 import { Element, IFieldQuestionData } from '../detail/calculator/types';
 import { getCalculatorFieldId } from '../detail/calculator/utils/getCalculatorFieldId';
@@ -11,6 +12,9 @@ interface SavedFormulaPreviewProps {
   fields: IFieldQuestionData;
   isLoading: boolean;
 }
+
+const SCRIPT_BOX_HEIGHT_DESKTOP = 245;
+const SCRIPT_BOX_HEIGHT_MOBILE = 161;
 
 const fieldTextStyle = {
   display: 'flex',
@@ -62,13 +66,13 @@ export default function SavedFormulaPreview({ elements, formula, fields, isLoadi
 
   return (
     <div dir="rtl" className="flex flex-col w-full">
-      <label className="block text-[13px] md:text-sm font-medium text-[#161616]" style={{ marginBottom: 10 }}>
+      <label className="block text-[13px] md:text-sm font-medium text-[#161616]" style={{ marginBottom: 14 }}>
         فرمول:
       </label>
 
-      <div
+      <Box
         className="w-full rounded-[20px] border border-[#DDE1E6] bg-[#F8FAFC] p-3 overflow-y-auto"
-        style={{ minHeight: 72, maxHeight: 160, scrollbarWidth: 'thin' }}>
+        sx={{ height: { xs: SCRIPT_BOX_HEIGHT_MOBILE, md: SCRIPT_BOX_HEIGHT_DESKTOP }, scrollbarWidth: 'thin' }}>
         {isLoading ? (
           <span className="text-[13px] text-[#9EA3AC]">در حال بارگذاری...</span>
         ) : elements.length ? (
@@ -76,7 +80,7 @@ export default function SavedFormulaPreview({ elements, formula, fields, isLoadi
         ) : (
           <span className="text-[13px] text-[#9EA3AC]">هنوز فرمولی برای این فرمول ثبت نشده است.</span>
         )}
-      </div>
+      </Box>
 
       <div
         dir="ltr"

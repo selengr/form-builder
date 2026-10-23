@@ -232,3 +232,20 @@
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace !important;
   font-feature-settings: normal !important;
 }
+
+.formulaEditorRoot {
+  height: 100%;
+}
+
+.formulaEditor {
+  height: 100%;
+  min-height: 100%;
+  outline: none;
+  cursor: text;
+  caret-color: #1758ba;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.formulaEditor p {
+  margin: 0;
+}

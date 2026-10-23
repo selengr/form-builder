@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
-import styles from './formulaEditor.module.css';
+import styles from './formulaCalculator.module.css';
 import { Element } from './types';
 import { getCalculatorFieldId } from './utils/getCalculatorFieldId';
 
@@ -43,7 +43,7 @@ const FormulaFieldDropdown: React.FC<FormulaFieldDropdownProps> = ({ element, op
 
   return (
     <div ref={dropdownRef} data-id={element.mainIndex} contentEditable={false} className={`${styles.dynamicbtn} ${styles.NEW_FIELD}`} data-type='NEW_FIELD'>
-      <div className={styles.customDropdown} data-type='down' onClick={handleDropdownClick}>
+      <div className={styles.customDropdown} data-type={isOpen ? 'up' : 'down'} onClick={handleDropdownClick}>
         {returnCaption()}
       </div>
       {isOpen && (

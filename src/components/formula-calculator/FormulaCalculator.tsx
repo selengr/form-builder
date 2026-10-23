@@ -3,59 +3,70 @@
 import { toast } from 'sonner';
 import { useMediaQuery } from '@mui/material';
 import React, { Ref, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { Element, FnFxItem, CalculatorResult } from './types';
-import FormulaInput from './FormulaInput';
+import { Element, FnFxItem, CalculatorResult, IFieldQuestionData } from './types';
+import styles from './formulaCalculator.module.css';
 import KeypadPanel from './KeypadPanel';
+import FormulaEditor, { FormulaKeyAction } from './editor/FormulaEditor';
 import { htmlToFormula } from './utils/htmlToFormula';
-import { replaceNestedParentheses } from './utils/parenthesesReplacer';
-import { useGetCalculatorFields } from './hooks/useGetCalculatorFields';
+import { buildCalculatorFormula } from './utils/buildCalculatorFormula';
 import { getCalculatorFieldId } from './utils/getCalculatorFieldId';
+import { restoreCalculatorRefs } from './utils/restoreCalculator';
 
 const OPERATOR_TYPES = ['-', '+', '*', '/', '^'];
 const NEGATIVE_SIGN = '-';
+const SCRIPT_BOX_MIN_HEIGHT = 161;
 
-const buildCalculatorFormula = (rawFormula: string) => {
-  let formula = '';
-  rawFormula.split('#avg').forEach((item) => {
-    if (item.length === 0) return;
-    if (item.includes('MultiSelect') || item.includes('SpectralDouble')) {
-      formula += `#avg${item}`;
-    } else if (item.includes('Number')) {
-      formula += `#avg${item.replaceAll('}{', '},{')}`;
-    } else {
-      formula += item;
-    }
-  });
-  return replaceNestedParentheses(formula);
-};
-
-export interface CalculatorSectionHandle {
+export interface FormulaCalculatorHandle {
   getResult: () => CalculatorResult | null;
 }
 
-interface CalculatorSectionProps {
-  formId: string;
-  ref?: Ref<CalculatorSectionHandle>;
+export interface FormulaCalculatorProps {
+  fields: IFieldQuestionData;
+  ref?: Ref<FormulaCalculatorHandle>;
+  initialElements?: Element[];
+  beforeAddField?: () => boolean;
   onFormulaChange?: (formula: string) => void;
-  onSelectFormRequest?: () => void;
+  onElementsCountChange?: (count: number) => void;
+  showFormulaPreview?: boolean;
+  scriptLayout?: 'fixed' | 'stretch';
 }
 
-export default function CalculatorSection({ formId, ref, onFormulaChange, onSelectFormRequest }: CalculatorSectionProps) {
+export default function FormulaCalculator({
+  fields,
+  ref,
+  initialElements,
+  beforeAddField,
+  onFormulaChange,
+  onElementsCountChange,
+  showFormulaPreview = false,
+  scriptLayout = 'fixed',
+}: FormulaCalculatorProps) {
   const isDesktop = useMediaQuery('(min-width:900px)');
-  const { questionList } = useGetCalculatorFields(formId);
+  const questionList = fields;
 
-  const mainIndex = useRef<number>(-2);
-  const contentEditable = useRef<HTMLDivElement>(null);
-  const selectAvgRef = useRef<Record<string, string>>({});
-  const selectFieldRef = useRef<Record<string, string>>({});
+  const [restored] = useState(() => {
+    const restoredElements = initialElements ?? [];
+    return { elements: restoredElements, ...restoreCalculatorRefs(restoredElements) };
+  });
 
-  const [cursorIndex, setCursorIndex] = useState<number>(0);
-  const [elements, setElements] = useState<Element[]>([]);
+  const mainIndex = useRef<number>(restored.lastMainIndex);
+  const selectAvgRef = useRef<Record<string, string>>(restored.avgRefs);
+  const selectFieldRef = useRef<Record<string, string>>(restored.fieldRefs);
+
+  const [cursorIndex, setCursorIndex] = useState<number>(restored.elements.length);
+  const [elements, setElements] = useState<Element[]>(restored.elements);
+  const [focusRequest, setFocusRequest] = useState(0);
+  const keyActionQueueRef = useRef<FormulaKeyAction[]>([]);
+  const [keyActionTick, setKeyActionTick] = useState(0);
+  const [liveFormula, setLiveFormula] = useState('');
+  const formulaPreviewRef = useRef<HTMLDivElement>(null);
   const [isClient, setIsClient] = useState<boolean>(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  const requestFocus = useCallback(() => setFocusRequest((value) => value + 1), []);
 
   const isLastElementOperand = (): boolean => {
     if (elements.length === 0) return false;
@@ -67,33 +78,6 @@ export default function CalculatorSection({ formId, ref, onFormulaChange, onSele
       lastElement.type === 'NEW_FnFx'
     );
   };
-
-  const updateCursorPosition = useCallback((newCursorIndex: number) => {
-    setTimeout(() => {
-      const editableDiv = contentEditable.current;
-      if (!editableDiv) return;
-
-      const range = document.createRange();
-      const sel = window.getSelection();
-
-      if (newCursorIndex >= editableDiv.childNodes.length) {
-        if (editableDiv.lastChild) {
-          range.setStartAfter(editableDiv.lastChild);
-        } else {
-          range.setStart(editableDiv, 0);
-        }
-      } else {
-        const targetNode = editableDiv.childNodes[newCursorIndex];
-        range.setStartBefore(targetNode);
-      }
-
-      range.collapse(true);
-      sel?.removeAllRanges();
-      sel?.addRange(range);
-      editableDiv.focus();
-      editableDiv.style.caretColor = '#1758BA';
-    }, 10);
-  }, []);
 
   const updateElements = useCallback(
     (incomingElements: Element[], newCursorIndex: number, normalize: boolean = true) => {
@@ -113,9 +97,9 @@ export default function CalculatorSection({ formId, ref, onFormulaChange, onSele
       }
       setElements(cloned);
       setCursorIndex(newCursorIndex);
-      updateCursorPosition(newCursorIndex);
+      requestFocus();
     },
-    [updateCursorPosition],
+    [requestFocus],
   );
 
   const isValidParenthesisPosition = (content: string): boolean => {
@@ -418,7 +402,7 @@ export default function CalculatorSection({ formId, ref, onFormulaChange, onSele
     selectFieldRef.current[finalId] = finalId;
 
     setCursorIndex(elementIndex + 1);
-    updateCursorPosition(elementIndex + 1);
+    requestFocus();
     closeDropdown(dropdownId);
   };
 
@@ -447,15 +431,8 @@ export default function CalculatorSection({ formId, ref, onFormulaChange, onSele
     );
   };
 
-  const requireForm = () => {
-    if (formId) return true;
-    toast.error('ابتدا فرم را انتخاب کنید');
-    onSelectFormRequest?.();
-    return false;
-  };
-
   const handleNewField = () => {
-    if (!requireForm()) return;
+    if (beforeAddField && !beforeAddField()) return;
 
     if (!isValidCursorPosition(cursorIndex, true)) {
       toast.error('امکان اضافه کردن فیلد در این موقعیت وجود ندارد');
@@ -502,7 +479,7 @@ export default function CalculatorSection({ formId, ref, onFormulaChange, onSele
   };
 
   const handleFnFX = () => {
-    if (!requireForm()) return;
+    if (beforeAddField && !beforeAddField()) return;
 
     if (isLastElementOperand()) {
       toast.error('لطفاً ابتدا یک عملگر وارد کنید');
@@ -532,41 +509,46 @@ export default function CalculatorSection({ formId, ref, onFormulaChange, onSele
     updateElements(newElements, cursorIndex + 3);
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key.length === 1 && !event.ctrlKey && !event.metaKey) {
-      event.preventDefault();
-      return;
-    }
-
-    if (event.key === 'Enter') {
-      event.preventDefault();
-    }
-    if (event.key === 'Backspace' || event.key === 'Delete') {
-      event.preventDefault();
-      handleUndo();
-    }
+  const handleKeyAction = (action: FormulaKeyAction) => {
+    if (action.kind === 'number') handleNumber(action.value);
+    else if (action.kind === 'operator') handleOperator(action.value);
+    else if (action.kind === 'parenthesis') handleParenthesis(action.value);
+    else handleUndo();
   };
 
-  const handleClick = (e: React.MouseEvent) => {
-    const editableDiv = contentEditable.current;
-    if (!editableDiv) return;
-
-    const range = document.caretRangeFromPoint(e.clientX, e.clientY);
-    if (range) {
-      const index = Array.from(editableDiv.childNodes).findIndex((_, i) => i === range.endOffset);
-      setCursorIndex(index === -1 ? elements.length : index);
-    }
-  };
+  const enqueueKeyActions = useCallback((actions: FormulaKeyAction[]) => {
+    keyActionQueueRef.current.push(...actions);
+    setKeyActionTick((tick) => tick + 1);
+  }, []);
 
   useEffect(() => {
-    if (!onFormulaChange) return;
+    const nextAction = keyActionQueueRef.current.shift();
+    if (!nextAction) return;
+    handleKeyAction(nextAction);
+    if (keyActionQueueRef.current.length) setKeyActionTick((tick) => tick + 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keyActionTick]);
+
+  useEffect(() => {
+    onElementsCountChange?.(elements.length);
+  }, [elements.length, onElementsCountChange]);
+
+  useEffect(() => {
     const rawFormula = htmlToFormula(elements, selectFieldRef, selectAvgRef).replaceAll('undefined', '?');
+    let formula = rawFormula;
     try {
-      onFormulaChange(rawFormula ? buildCalculatorFormula(rawFormula) : '');
+      formula = rawFormula ? buildCalculatorFormula(rawFormula) : '';
     } catch {
-      onFormulaChange(rawFormula);
+      formula = rawFormula;
     }
+    setLiveFormula(formula);
+    onFormulaChange?.(formula);
   }, [elements, onFormulaChange]);
+
+  useEffect(() => {
+    const preview = formulaPreviewRef.current;
+    if (preview) preview.scrollLeft = preview.scrollWidth;
+  }, [liveFormula]);
 
   useImperativeHandle(
     ref,
@@ -606,33 +588,69 @@ export default function CalculatorSection({ formId, ref, onFormulaChange, onSele
       handleNumber={handleNumber}
       handleToggleSign={handleToggleSign}
       handleUndo={handleUndo}
-      contentEditable={contentEditable}
       variant={isDesktop ? 'desktop' : 'mobile'}
     />
   );
 
+  const isStretch = scriptLayout === 'stretch' && isDesktop;
+
   return (
     <div dir="rtl" className="w-full flex flex-col">
-      <div className="w-full flex flex-row items-start">
+      <div className={`w-full flex flex-row ${isStretch ? 'items-stretch' : 'items-start'}`}>
         <div className="flex-1 w-full min-w-0 flex flex-col">
           <label className="block text-[13px] md:text-sm font-medium text-[#161616]" style={{ marginBottom: 14 }}>
             اسکریپت:
           </label>
           <div
-            className="relative w-full rounded-[20px] border border-[#DDE1E6] bg-[#F8FAFC] p-3 overflow-y-auto"
-            style={{ height: 161, maxHeight: 161 }}>
-            <FormulaInput
+            className={`relative w-full ${isStretch ? 'flex-1' : ''} rounded-[20px] border border-[#DDE1E6] bg-[#F8FAFC] p-3 overflow-y-auto`}
+            style={
+              isStretch
+                ? { minHeight: SCRIPT_BOX_MIN_HEIGHT }
+                : { height: SCRIPT_BOX_MIN_HEIGHT, maxHeight: SCRIPT_BOX_MIN_HEIGHT }
+            }>
+            <FormulaEditor
               elements={elements}
-              questionList={questionList}
-              contentEditableRef={contentEditable}
+              cursorIndex={cursorIndex}
+              focusRequest={focusRequest}
+              onCursorChange={setCursorIndex}
+              onKeyActions={enqueueKeyActions}
+              fields={questionList}
               onFieldSelect={handleOptionClick}
               onFieldClick={handleDropdownClick}
               onFnSelect={handleFnFXOptionClick}
               onFnClick={handleFnFXDropdownClick}
-              onClick={handleClick}
-              onKeyDown={handleKeyDown}
             />
           </div>
+
+          {showFormulaPreview && (
+            <div
+              dir="ltr"
+              title={liveFormula}
+              className={`${styles.formulaPreview} relative shrink-0 rounded-[10px] border border-[#DDE1E6] bg-[#F4F5F7]`}
+              style={{ marginTop: 8, height: 34, fontSize: 13 }}>
+              <div
+                ref={formulaPreviewRef}
+                className="absolute flex items-center"
+                style={{ inset: 0, padding: '0 12px', gap: 8, overflowX: 'auto', overflowY: 'hidden', whiteSpace: 'nowrap', scrollbarWidth: 'thin' }}>
+                <span style={{ color: '#9EA3AC', fontSize: 11, flexShrink: 0 }}>formula</span>
+                {liveFormula ? (
+                  <span style={{ color: '#1758BA', flexShrink: 0 }}>
+                    {liveFormula.split(/(\?)/).map((part, index) =>
+                      part === '?' ? (
+                        <span key={index} style={{ color: '#D98213' }}>
+                          ?
+                        </span>
+                      ) : (
+                        part
+                      ),
+                    )}
+                  </span>
+                ) : (
+                  <span style={{ color: '#C1C7CD' }}>—</span>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {isDesktop && keypad}

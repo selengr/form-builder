@@ -12,12 +12,11 @@ import { useGetMajorFormula } from './useGetMajorFormula';
 import MinorFormulaRow from './MinorFormulaRow';
 import MinorFormulaDialog from '../minor-formula/MinorFormulaDialog';
 import MinorFormulaRowSkeleton from './MinorFormulaRowSkeleton';
-import CalculatorSection, { CalculatorSectionHandle } from './calculator/CalculatorSection';
+import { FormulaCalculator, parseFrontFormulaData, type FormulaCalculatorHandle } from '@/components/formula-calculator';
 import { useUpdateMajorFormula } from './useUpdateMajorFormula';
 import { useUnsavedChangesGuard } from './useUnsavedChangesGuard';
 import UnsavedChangesDialog from './UnsavedChangesDialog';
-import { toCalculatorFields } from './calculator/utils/toCalculatorFields';
-import { parseFrontFormulaData } from './calculator/utils/restoreCalculator';
+import { toCalculatorFields } from './toCalculatorFields';
 
 const APP_SIDEBAR_WIDTH_PX = 500;
 const UNSAVED_ELEMENTS_THRESHOLD = 2;
@@ -38,13 +37,24 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
   );
   const savedFormula = majorFormula?.frontFormula ?? '';
   const calculatorFields = useMemo(() => toCalculatorFields(minorList), [minorList]);
+  const canAddCalculatorField = useCallback(() => {
+    if (isLoading) {
+      toast.info('فرمول‌های جزئی در حال بارگذاری است، کمی صبر کنید');
+      return false;
+    }
+    if (!minorList.length) {
+      toast.error('هنوز فرمول جزئی‌ای نساخته‌اید. با دکمه‌ی «افزودن فرمول جزئی» یکی بسازید');
+      return false;
+    }
+    return true;
+  }, [isLoading, minorList.length]);
   const [currentFormula, setCurrentFormula] = useState('');
   const handleCalculatorFormulaChange = useCallback((formula: string) => {
     setCurrentFormula(formula);
     console.log('[FormulaDetailView] calculator formula:', formula);
   }, []);
 
-  const calculatorRef = useRef<CalculatorSectionHandle>(null);
+  const calculatorRef = useRef<FormulaCalculatorHandle>(null);
   const minorListScrollRef = useRef<HTMLDivElement>(null);
   const inlineAddButtonRef = useRef<HTMLButtonElement>(null);
   const [isInlineAddButtonVisible, setIsInlineAddButtonVisible] = useState(true);
@@ -268,12 +278,14 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                     <div
                       className="flex flex-col w-full shrink-0 overflow-y-auto"
                       style={{ maxHeight: '60%', scrollbarWidth: 'thin', padding: '12px 10px', borderTop: '1px solid #DDE1E6' }}>
-                      <CalculatorSection
+                      <FormulaCalculator
                         key={isMajorFormulaLoading ? 'loading' : `saved-${majorFormula?.id ?? 'new'}`}
                         ref={calculatorRef}
                         initialElements={savedCalculatorElements}
-                        questionList={calculatorFields}
-                        isQuestionListLoading={isLoading}
+                        fields={calculatorFields}
+                        beforeAddField={canAddCalculatorField}
+                        showFormulaPreview
+                        scriptLayout="stretch"
                         onFormulaChange={handleCalculatorFormulaChange}
                         onElementsCountChange={setCalculatorElementsCount}
                       />

@@ -26,6 +26,7 @@ interface KeypadPanelProps {
 }
 
 const MOBILE_KEYPAD_MAX_WIDTH = 360;
+const MOBILE_OPERATOR_WIDTH = 52;
 
 const keepEditorFocus = (event: React.MouseEvent) => {
   event.preventDefault();
@@ -112,13 +113,17 @@ function NumbersTabContent({
   handleNumber,
   handleToggleSign,
   handleOperator,
+  isMobile = false,
 }: {
   handleParenthesis: (content: string) => void;
   handleUndo: () => void;
   handleNumber: (num: string) => void;
   handleToggleSign: () => void;
   handleOperator: (op: string) => void;
+  isMobile?: boolean;
 }) {
+  const operatorSizeStyle = isMobile ? { width: MOBILE_OPERATOR_WIDTH, fontSize: 15 } : undefined;
+
   return (
     <>
       <ParenDeleteRow handleParenthesis={handleParenthesis} handleUndo={handleUndo} />
@@ -157,12 +162,13 @@ function NumbersTabContent({
           </div>
         </div>
 
-        <div className="flex flex-col gap-[6px] w-9 shrink-0">
+        <div className={clsx('flex flex-col gap-[6px] shrink-0', !isMobile && 'w-9')} style={operatorSizeStyle}>
           {OPERATORS.map((op) => (
             <button
               key={op}
               type="button"
               className={operatorBtnClass}
+              style={isMobile ? { fontSize: 15 } : undefined}
               onClick={() => handleOperator(op)}
             >
               {op}
@@ -177,7 +183,8 @@ function NumbersTabContent({
         </button>
         <button
           type="button"
-          className={clsx(operatorBtnClass, 'w-9 max-w-9 shrink-0')}
+          className={clsx(operatorBtnClass, 'shrink-0', !isMobile && 'w-9 max-w-9')}
+          style={operatorSizeStyle}
           onClick={() => handleOperator(POWER_OPERATOR)}
           title="توان"
         >
@@ -246,6 +253,7 @@ export default function KeypadPanel({
           handleNumber={handleNumber}
           handleToggleSign={handleToggleSign}
           handleOperator={handleOperator}
+          isMobile={isMobile}
         />
       </div>
       <div style={tabPaneStyle('functions')} aria-hidden={activeTab !== 'functions'}>

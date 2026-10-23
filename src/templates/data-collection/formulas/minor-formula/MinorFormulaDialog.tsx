@@ -6,8 +6,7 @@ import { CgClose } from 'react-icons/cg';
 import { styled } from '@mui/material/styles';
 import { Autocomplete, Button, Dialog, DialogContent, IconButton, TextField } from '@mui/material';
 import ConditionSection, { ConditionSectionHandle } from './condition/ConditionSection';
-import { FormulaCalculator, type FormulaCalculatorHandle } from '@/components/formula-calculator';
-import { useGetCalculatorFields } from './hooks/useGetCalculatorFields';
+import CalculatorSection, { CalculatorSectionHandle } from './calculator/CalculatorSection';
 import styles from './minorFormulaDialog.module.css';
 import { FormulaFormOption, useGetFormulaForms } from './hooks/useGetFormulaForms';
 import { useCreateMinorFormula } from './hooks/useCreateMinorFormula';
@@ -74,7 +73,7 @@ interface MinorFormulaDialogContentProps {
 
 function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogContentProps) {
   const conditionRef = useRef<ConditionSectionHandle>(null);
-  const calculatorRef = useRef<FormulaCalculatorHandle>(null);
+  const calculatorRef = useRef<CalculatorSectionHandle>(null);
   const [calculatorFormula, setCalculatorFormula] = useState('');
 
   const [name, setName] = useState('');
@@ -94,15 +93,6 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
     formFieldRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     formFieldRef.current?.querySelector('input')?.focus({ preventScroll: true });
     setIsFormListOpen(true);
-  };
-
-  const { questionList: calculatorFields } = useGetCalculatorFields(formId);
-
-  const canAddCalculatorField = () => {
-    if (formId) return true;
-    toast.error('ابتدا فرم را انتخاب کنید');
-    handleSelectFormRequest();
-    return false;
   };
 
   const scrollToFirstError = () => {
@@ -232,13 +222,7 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
         </div>
 
         <div ref={calculatorWrapperRef} style={{ marginTop: 12 }}>
-          <FormulaCalculator
-            key={formId}
-            ref={calculatorRef}
-            fields={calculatorFields}
-            beforeAddField={canAddCalculatorField}
-            onFormulaChange={setCalculatorFormula}
-          />
+          <CalculatorSection key={formId} ref={calculatorRef} formId={formId} onFormulaChange={setCalculatorFormula} onSelectFormRequest={handleSelectFormRequest} />
         </div>
       </div>
 

@@ -1,5 +1,5 @@
-import { MinorFormulaListItem } from '../types';
-import type { IFieldDataItem, IFieldQuestionData } from '@/components/formula-calculator';
+import { MinorFormulaListItem } from '../../types';
+import { IFieldDataItem, IFieldQuestionData } from '../types';
 
 const toMinorFieldId = (id: number) => `{#minor_${id}}`;
 

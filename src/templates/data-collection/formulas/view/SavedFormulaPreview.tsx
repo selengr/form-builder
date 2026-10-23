@@ -2,9 +2,9 @@
 
 import { useMemo } from 'react';
 import { Box } from '@mui/material';
-import styles from '@/components/formula-calculator/formulaCalculator.module.css';
-import type { FormulaElementData as Element, IFieldQuestionData } from '@/components/formula-calculator';
-import { getCalculatorFieldId } from '@/components/formula-calculator';
+import styles from '../detail/calculator/formulaEditor.module.css';
+import { Element, IFieldQuestionData } from '../detail/calculator/types';
+import { getCalculatorFieldId } from '../detail/calculator/utils/getCalculatorFieldId';
 
 interface SavedFormulaPreviewProps {
   elements: Element[];

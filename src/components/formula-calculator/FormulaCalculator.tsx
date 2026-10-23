@@ -15,6 +15,7 @@ import { restoreCalculatorRefs } from './utils/restoreCalculator';
 const OPERATOR_TYPES = ['-', '+', '*', '/', '^'];
 const NEGATIVE_SIGN = '-';
 const SCRIPT_BOX_MIN_HEIGHT = 161;
+const SCRIPT_BOX_MOBILE_HEIGHT = 211;
 
 export interface FormulaCalculatorHandle {
   getResult: () => CalculatorResult | null;
@@ -593,6 +594,7 @@ export default function FormulaCalculator({
   );
 
   const isStretch = scriptLayout === 'stretch' && isDesktop;
+  const scriptBoxHeight = isDesktop ? SCRIPT_BOX_MIN_HEIGHT : SCRIPT_BOX_MOBILE_HEIGHT;
 
   return (
     <div dir="rtl" className="w-full flex flex-col">
@@ -606,7 +608,7 @@ export default function FormulaCalculator({
             style={
               isStretch
                 ? { minHeight: SCRIPT_BOX_MIN_HEIGHT }
-                : { height: SCRIPT_BOX_MIN_HEIGHT, maxHeight: SCRIPT_BOX_MIN_HEIGHT }
+                : { height: scriptBoxHeight, maxHeight: scriptBoxHeight }
             }>
             <FormulaEditor
               elements={elements}

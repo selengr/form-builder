@@ -25,6 +25,8 @@ interface KeypadPanelProps {
   variant?: 'desktop' | 'mobile';
 }
 
+const MOBILE_KEYPAD_MAX_WIDTH = 360;
+
 const keepEditorFocus = (event: React.MouseEvent) => {
   event.preventDefault();
 };
@@ -55,34 +57,10 @@ const FUNCTION_BUTTONS = [
 function KeypadTabs({
   activeTab,
   onChange,
-  mobile = false,
 }: {
   activeTab: KeypadTab;
   onChange: (tab: KeypadTab) => void;
-  mobile?: boolean;
 }) {
-  if (mobile) {
-    return (
-      <div className="flex flex-col gap-1.5 p-1.5 rounded-2xl bg-[#F7F7FF] h-full shrink-0 w-[90px]">
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            onClick={() => onChange(tab.id)}
-            className={clsx(
-              'h-[36px] rounded-xl text-[11px] leading-tight transition-all duration-200 px-3',
-              activeTab === tab.id
-                ? 'bg-white text-[#1758BA] shadow-sm font-semibold'
-                : 'text-[#8A9099] font-normal',
-            )}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-row-reverse items-center justify-center gap-6 border-b border-[#E8E8E8]" style={{ marginBottom: 8 }}>
       {TABS.map((tab) => (
@@ -284,16 +262,17 @@ export default function KeypadPanel({
     return (
       <div
         dir="rtl"
-        className="flex flex-row gap-3 w-full max-w-[320px] mx-2 px-1 pb-1"
+        className="flex flex-col w-full mx-auto px-1 pb-1"
+        style={{ maxWidth: MOBILE_KEYPAD_MAX_WIDTH }}
         onMouseDown={keepEditorFocus}>
-        <KeypadTabs activeTab={activeTab} onChange={setActiveTab} mobile />
-
-        <div className="flex-1 flex flex-col w-[200px] min-w-[200px] min-h-[246px]">
-          <button type="button" className={newFieldBtnClass} onClick={handleNewField}>
-            فیلد جدید
-          </button>
-          {tabContent}
+        <div dir="ltr">
+          <KeypadTabs activeTab={activeTab} onChange={setActiveTab} />
         </div>
+
+        <button type="button" className={newFieldBtnClass} onClick={handleNewField}>
+          فیلد جدید
+        </button>
+        {tabContent}
       </div>
     );
   }

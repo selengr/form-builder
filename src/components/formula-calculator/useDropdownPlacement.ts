@@ -5,8 +5,6 @@ const GAP = 2;
 const EDGE_SPACE = 8;
 const MIN_LIST_HEIGHT = 96;
 
-// Keeps an option list inside the script box: opens down or up (whichever fits better)
-// and caps its height to the free space, so the box itself never needs to scroll.
 export function useDropdownPlacement(
   anchorRef: RefObject<HTMLElement | null>,
   listRef: RefObject<HTMLElement | null>,

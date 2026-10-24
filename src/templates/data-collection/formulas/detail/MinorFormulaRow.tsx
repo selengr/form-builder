@@ -132,7 +132,7 @@ export default function MinorFormulaRow({ index, name, readOnly = false, onEdit 
 
       <p
         className="flex-1 min-w-0 text-[13px] text-[#161616] truncate"
-        style={{ marginRight: 10 }}>
+        style={{ marginRight: 10, contain: 'inline-size' }}>
         {name?.trim() || getOrdinalLabel(index)}
       </p>
 

@@ -48,14 +48,11 @@ export default function FormulaListCard({
         onChange={(event) => setEnabled(event.target.checked)}
       /> */}
 
-      <div className="flex items-start gap-1 text-[#393939] text-sm" style={{ minWidth: 0 }}>
-        <span className="whitespace-nowrap">نام فرمول:</span>
-        <span
-          className="font-bold"
-          style={{ flex: 1, minWidth: 0, contain: 'inline-size', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-          {data.majorName}
-        </span>
-      </div>
+      <InfoRow
+        label="نام فرمول"
+        value={<span style={{ overflowWrap: 'anywhere' }}>{data.majorName}</span>}
+        bold
+      />
       <InfoRow label="سرویس‌گیرنده" value={platformCaption} bold />
 
       <div className="flex flex-wrap gap-2 w-full justify-between">

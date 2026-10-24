@@ -88,16 +88,22 @@ function KeypadTabs({
 function ParenDeleteRow({
   handleParenthesis,
   handleUndo,
+  isMobile = false,
 }: {
   handleParenthesis: (content: string) => void;
   handleUndo: () => void;
+  isMobile?: boolean;
 }) {
+  const parenSizeStyle = isMobile
+    ? { width: MOBILE_OPERATOR_WIDTH, maxWidth: MOBILE_OPERATOR_WIDTH, flex: `0 0 ${MOBILE_OPERATOR_WIDTH}px`, fontSize: 15 }
+    : undefined;
+
   return (
     <div className="flex gap-[6px] mb-[6px] w-full">
-      <button type="button" className={parenBtnClass} onClick={() => handleParenthesis(')')}>
+      <button type="button" className={parenBtnClass} style={parenSizeStyle} onClick={() => handleParenthesis(')')}>
         (
       </button>
-      <button type="button" className={parenBtnClass} onClick={() => handleParenthesis('(')}>
+      <button type="button" className={parenBtnClass} style={parenSizeStyle} onClick={() => handleParenthesis('(')}>
         )
       </button>
       <button type="button" className={deleteBtnClass} onClick={handleUndo} aria-label="حذف">
@@ -126,7 +132,7 @@ function NumbersTabContent({
 
   return (
     <>
-      <ParenDeleteRow handleParenthesis={handleParenthesis} handleUndo={handleUndo} />
+      <ParenDeleteRow handleParenthesis={handleParenthesis} handleUndo={handleUndo} isMobile={isMobile} />
 
       <div className="flex gap-[6px]">
         <div className="flex-1 flex flex-col gap-[6px] min-w-0">
@@ -199,14 +205,16 @@ function FunctionsTabContent({
   handleParenthesis,
   handleUndo,
   handleFnFX,
+  isMobile = false,
 }: {
   handleParenthesis: (content: string) => void;
   handleUndo: () => void;
   handleFnFX: () => void;
+  isMobile?: boolean;
 }) {
   return (
     <>
-      <ParenDeleteRow handleParenthesis={handleParenthesis} handleUndo={handleUndo} />
+      <ParenDeleteRow handleParenthesis={handleParenthesis} handleUndo={handleUndo} isMobile={isMobile} />
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 6 }}>
         {FUNCTION_BUTTONS.map((fn) => (
@@ -261,6 +269,7 @@ export default function KeypadPanel({
           handleParenthesis={handleParenthesis}
           handleUndo={handleUndo}
           handleFnFX={handleFnFX}
+          isMobile={isMobile}
         />
       </div>
     </div>

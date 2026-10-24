@@ -57,7 +57,6 @@ const FormulaFieldDropdown: React.FC<FormulaFieldDropdownProps> = ({ element, op
               key={index}
               className={styles.option}
               data-selected={getCalculatorFieldId(item) === element.id || undefined}
-              title={item.caption}
               onClick={() => handleOptionClick(item)}>
               {item.caption}
             </div>

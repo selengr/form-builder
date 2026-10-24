@@ -40,7 +40,7 @@ const FormulaFnDropdown: React.FC<FormulaFnDropdownProps> = ({ element, options,
 
   return (
     <div ref={dropdownRef} key={element.id} data-id={element.id} contentEditable={false} className={`${styles.dynamicbtn} ${styles.NEW_FnFx}`} data-type='NEW_FnFx'>
-      <div className={styles.customDropdown} data-type={isOpen ? 'up' : 'down'} title={element.content} onClick={handleDropdownClick}>
+      <div className={styles.customDropdown} data-type={isOpen ? 'up' : 'down'} onClick={handleDropdownClick}>
         {element.content}
       </div>
       {isOpen && (

@@ -43,12 +43,11 @@ const FormulaFieldDropdown: React.FC<FormulaFieldDropdownProps> = ({ element, op
     const match = options.find((item) => getCalculatorFieldId(item) === element.id);
     return match?.caption || "انتخاب سوال";
   };
-  const caption = returnCaption();
 
   return (
     <div ref={dropdownRef} data-id={element.mainIndex} contentEditable={false} className={`${styles.dynamicbtn} ${styles.NEW_FIELD}`} data-type='NEW_FIELD'>
-      <div className={styles.customDropdown} data-type={isOpen ? 'up' : 'down'} title={caption} onClick={handleDropdownClick}>
-        {caption}
+      <div className={styles.customDropdown} data-type={isOpen ? 'up' : 'down'} onClick={handleDropdownClick}>
+        {returnCaption()}
       </div>
       {isOpen && (
         <div ref={listRef} className={styles.optionsContainer} style={{ display: 'block', ...placementStyle }}>

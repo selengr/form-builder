@@ -16,7 +16,7 @@ function getOrdinalLabel(index: number) {
   return `فرمول ${(index + 1).toLocaleString('fa-IR')}`;
 }
 
-function MinorFormulaMenu({ onEdit }: { onEdit?: () => void }) {
+function MinorFormulaMenu({ onEdit, onDelete }: { onEdit?: () => void; onDelete?: () => void }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -28,14 +28,15 @@ function MinorFormulaMenu({ onEdit }: { onEdit?: () => void }) {
     setAnchorEl(null);
   };
 
-  const handleStub = () => {
-    handleClose();
-    toast.info('این قابلیت به‌زودی اضافه می‌شود');
-  };
-
   const handleEdit = () => {
     handleClose();
     if (onEdit) onEdit();
+    else toast.info('این قابلیت به‌زودی اضافه می‌شود');
+  };
+
+  const handleDelete = () => {
+    handleClose();
+    if (onDelete) onDelete();
     else toast.info('این قابلیت به‌زودی اضافه می‌شود');
   };
 
@@ -84,7 +85,7 @@ function MinorFormulaMenu({ onEdit }: { onEdit?: () => void }) {
               color: '#FA4D56',
             }}
             fullWidth
-            onClick={handleStub}>
+            onClick={handleDelete}>
             <Typography fontSize={12}>حذف</Typography>
             <WeuiDeleteOutlined width={20} height={20} />
           </Button>
@@ -99,9 +100,10 @@ interface MinorFormulaRowProps {
   name?: string;
   readOnly?: boolean;
   onEdit?: () => void;
+  onDelete?: () => void;
 }
 
-export default function MinorFormulaRow({ index, name, readOnly = false, onEdit }: MinorFormulaRowProps) {
+export default function MinorFormulaRow({ index, name, readOnly = false, onEdit, onDelete }: MinorFormulaRowProps) {
   const persianNumber = (index + 1).toLocaleString('fa-IR');
 
   return (
@@ -136,7 +138,7 @@ export default function MinorFormulaRow({ index, name, readOnly = false, onEdit 
         {name?.trim() || getOrdinalLabel(index)}
       </p>
 
-      {!readOnly && <MinorFormulaMenu onEdit={onEdit} />}
+      {!readOnly && <MinorFormulaMenu onEdit={onEdit} onDelete={onDelete} />}
     </div>
   );
 }

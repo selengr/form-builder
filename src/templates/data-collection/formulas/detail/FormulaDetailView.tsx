@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { Box, Button, IconButton } from '@mui/material';
+import { Box, Button, CircularProgress, IconButton } from '@mui/material';
 import { IoIosArrowForward } from 'react-icons/io';
 import { IoAdd, IoSettingsOutline } from 'react-icons/io5';
 import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
@@ -11,6 +11,8 @@ import { useGetMinorFormulaList } from './useGetMinorFormulaList';
 import { useGetMajorFormula } from './useGetMajorFormula';
 import MinorFormulaRow from './MinorFormulaRow';
 import MinorFormulaDialog from '../minor-formula/MinorFormulaDialog';
+import { useDeleteMinorFormula } from '../minor-formula/hooks/useDeleteMinorFormula';
+import ConfirmDialog from '@/components/confirm-dialog';
 import MinorFormulaRowSkeleton from './MinorFormulaRowSkeleton';
 // import CalculatorSection, { CalculatorSectionHandle } from './calculator/CalculatorSection';
 import { FormulaCalculator, type FormulaCalculatorHandle } from '@/components/formula-calculator';
@@ -32,6 +34,8 @@ interface FormulaDetailViewProps {
 export default function FormulaDetailView({ majorId, majorName }: FormulaDetailViewProps) {
   const [openMinorFormulaDialog, setOpenMinorFormulaDialog] = useState(false);
   const [editingMinorId, setEditingMinorId] = useState<number | undefined>(undefined);
+  const [deletingMinorId, setDeletingMinorId] = useState<number | null>(null);
+  const { mutate: deleteMinorFormula, isPending: isDeletingMinor } = useDeleteMinorFormula(majorId);
   const { minorList, isLoading, isError, error } = useGetMinorFormulaList(majorId);
   const { majorFormula, isLoading: isMajorFormulaLoading } = useGetMajorFormula(majorId);
   const savedCalculatorElements = useMemo(
@@ -234,6 +238,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                               setEditingMinorId(item.id);
                               setOpenMinorFormulaDialog(true);
                             }}
+                            onDelete={() => setDeletingMinorId(item.id)}
                           />
                         ))}
 
@@ -398,6 +403,49 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
           cancelLeave();
           if (leave) handleSubmit(leave);
         }}
+      />
+
+      <ConfirmDialog
+        title="حذف فرمول جزئی"
+        content="آیا از حذف این فرمول جزئی اطمینان دارید؟"
+        open={deletingMinorId !== null}
+        loading={isDeletingMinor}
+        onClose={() => setDeletingMinorId(null)}
+        cancelText="انصراف"
+        action={
+          <Button
+            fullWidth
+            variant="contained"
+            disabled={isDeletingMinor}
+            onClick={() => {
+              if (deletingMinorId === null) return;
+              deleteMinorFormula(deletingMinorId, {
+                onSuccess: () => {
+                  toast.success('فرمول جزئی حذف شد');
+                  setDeletingMinorId(null);
+                },
+                onError: (error) => toast.error(error.message),
+              });
+            }}
+            sx={{
+              height: 45,
+              fontWeight: 400,
+              fontSize: 15,
+              borderRadius: '12px',
+              boxShadow: 'none',
+              bgcolor: '#FA4D56',
+              '&:hover': { bgcolor: '#C6394D', boxShadow: 'none' },
+            }}>
+            {isDeletingMinor ? (
+              <>
+                <CircularProgress size={20} color="inherit" style={{ marginLeft: 10 }} />
+                در حال حذف…
+              </>
+            ) : (
+              'حذف'
+            )}
+          </Button>
+        }
       />
 
       <MinorFormulaDialog

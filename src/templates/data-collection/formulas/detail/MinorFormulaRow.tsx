@@ -16,7 +16,7 @@ function getOrdinalLabel(index: number) {
   return `فرمول ${(index + 1).toLocaleString('fa-IR')}`;
 }
 
-function MinorFormulaMenu() {
+function MinorFormulaMenu({ onEdit }: { onEdit?: () => void }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -31,6 +31,12 @@ function MinorFormulaMenu() {
   const handleStub = () => {
     handleClose();
     toast.info('این قابلیت به‌زودی اضافه می‌شود');
+  };
+
+  const handleEdit = () => {
+    handleClose();
+    if (onEdit) onEdit();
+    else toast.info('این قابلیت به‌زودی اضافه می‌شود');
   };
 
   return (
@@ -66,7 +72,7 @@ function MinorFormulaMenu() {
               color: '#1758BA',
             }}
             fullWidth
-            onClick={handleStub}>
+            onClick={handleEdit}>
             <Typography fontSize={12}>ویرایش</Typography>
             <SlPencil size="1.15rem" />
           </Button>
@@ -92,9 +98,10 @@ interface MinorFormulaRowProps {
   index: number;
   name?: string;
   readOnly?: boolean;
+  onEdit?: () => void;
 }
 
-export default function MinorFormulaRow({ index, name, readOnly = false }: MinorFormulaRowProps) {
+export default function MinorFormulaRow({ index, name, readOnly = false, onEdit }: MinorFormulaRowProps) {
   const persianNumber = (index + 1).toLocaleString('fa-IR');
 
   return (
@@ -129,7 +136,7 @@ export default function MinorFormulaRow({ index, name, readOnly = false }: Minor
         {name?.trim() || getOrdinalLabel(index)}
       </p>
 
-      {!readOnly && <MinorFormulaMenu />}
+      {!readOnly && <MinorFormulaMenu onEdit={onEdit} />}
     </div>
   );
 }

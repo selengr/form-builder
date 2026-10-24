@@ -31,6 +31,7 @@ interface FormulaDetailViewProps {
 
 export default function FormulaDetailView({ majorId, majorName }: FormulaDetailViewProps) {
   const [openMinorFormulaDialog, setOpenMinorFormulaDialog] = useState(false);
+  const [editingMinorId, setEditingMinorId] = useState<number | undefined>(undefined);
   const { minorList, isLoading, isError, error } = useGetMinorFormulaList(majorId);
   const { majorFormula, isLoading: isMajorFormulaLoading } = useGetMajorFormula(majorId);
   const savedCalculatorElements = useMemo(
@@ -225,13 +226,24 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                         )}
 
                         {minorList.map((item, index) => (
-                          <MinorFormulaRow key={item.id} index={index} name={item.minorName} />
+                          <MinorFormulaRow
+                            key={item.id}
+                            index={index}
+                            name={item.minorName}
+                            onEdit={() => {
+                              setEditingMinorId(item.id);
+                              setOpenMinorFormulaDialog(true);
+                            }}
+                          />
                         ))}
 
                         <button
                           ref={inlineAddButtonRef}
                           type="button"
-                          onClick={() => setOpenMinorFormulaDialog(true)}
+                          onClick={() => {
+                            setEditingMinorId(undefined);
+                            setOpenMinorFormulaDialog(true);
+                          }}
                           className="flex items-center justify-center w-full rounded-xl border border-dashed border-[#DDE1E6] bg-transparent min-h-[56px] cursor-pointer shrink-0 text-[#6F6F6F] text-sm font-medium hover:bg-[#F7F7FF] transition-colors">
                           افزودن فرمول جزئی
                         </button>
@@ -242,7 +254,10 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                         type="button"
                         aria-label="افزودن فرمول جزئی"
                         tabIndex={isInlineAddButtonVisible ? -1 : 0}
-                        onClick={() => setOpenMinorFormulaDialog(true)}
+                        onClick={() => {
+                          setEditingMinorId(undefined);
+                          setOpenMinorFormulaDialog(true);
+                        }}
                         sx={{
                           display: 'flex',
                           alignItems: 'center',
@@ -389,6 +404,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
         open={openMinorFormulaDialog}
         onClose={() => setOpenMinorFormulaDialog(false)}
         majorId={majorId}
+        minorId={editingMinorId}
       />
     </div>
   );

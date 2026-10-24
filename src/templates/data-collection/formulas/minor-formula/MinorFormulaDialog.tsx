@@ -12,6 +12,7 @@ import { useGetCalculatorFields } from './calculator/hooks/useGetCalculatorField
 import styles from './minorFormulaDialog.module.css';
 import { FormulaFormOption, useGetFormulaForms } from './hooks/useGetFormulaForms';
 import { useCreateMinorFormula } from './hooks/useCreateMinorFormula';
+import { useGetMinorFormula } from './hooks/useGetMinorFormula';
 
 const StyledDialog = styled(Dialog)({
   overflow: 'hidden',
@@ -62,18 +63,38 @@ const inputSx = {
 
 const labelClass = 'block text-[14px] font-medium text-[#161616]';
 
+const responseBoxStyle = {
+  margin: 0,
+  marginTop: 12,
+  padding: 16,
+  borderRadius: 12,
+  background: '#F4F5F7',
+  border: '1px solid #DDE1E6',
+  color: '#404040',
+  fontSize: 13,
+  lineHeight: 1.6,
+  maxHeight: 320,
+  overflow: 'auto',
+  whiteSpace: 'pre-wrap' as const,
+  wordBreak: 'break-all' as const,
+  textAlign: 'left' as const,
+};
+
 interface MinorFormulaDialogProps {
   open: boolean;
   onClose: () => void;
   majorId: string;
+  minorId?: number | string;
 }
 
 interface MinorFormulaDialogContentProps {
   onClose: () => void;
   majorId: string;
+  minorId?: number | string;
 }
 
-function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogContentProps) {
+function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDialogContentProps) {
+  const { minorFormula, isLoading: isMinorFormulaLoading, error: minorFormulaError } = useGetMinorFormula(minorId);
   const conditionRef = useRef<ConditionSectionHandle>(null);
   // const calculatorRef = useRef<CalculatorSectionHandle>(null);
   const calculatorRef = useRef<FormulaCalculatorHandle>(null);
@@ -176,6 +197,16 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
         className="flex-1 min-h-0"
         style={{ overflowY: 'auto', overflowX: 'hidden', padding: '36px 24px 24px', scrollbarWidth: 'thin' }}>
         <h2 className="text-[16px] font-bold text-[#404040] text-center">فرمول ساز</h2>
+
+        {minorId && (
+          <pre dir="ltr" style={responseBoxStyle}>
+            {isMinorFormulaLoading
+              ? 'loading...'
+              : minorFormulaError
+                ? (minorFormulaError as Error).message
+                : JSON.stringify(minorFormula, null, 2)}
+          </pre>
+        )}
 
         <div className="flex flex-col" style={{ marginTop: 6 }}>
           <label className={labelClass} style={{ marginBottom: 4 }}>
@@ -288,11 +319,11 @@ function MinorFormulaDialogContent({ onClose, majorId }: MinorFormulaDialogConte
   );
 }
 
-export default function MinorFormulaDialog({ open, onClose, majorId }: MinorFormulaDialogProps) {
+export default function MinorFormulaDialog({ open, onClose, majorId, minorId }: MinorFormulaDialogProps) {
   return (
     <StyledDialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <StyledDialogContent>
-        <MinorFormulaDialogContent onClose={onClose} majorId={majorId} />
+        <MinorFormulaDialogContent key={minorId ?? 'new'} onClose={onClose} majorId={majorId} minorId={minorId} />
       </StyledDialogContent>
     </StyledDialog>
   );

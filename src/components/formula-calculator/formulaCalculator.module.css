@@ -249,3 +249,99 @@
 .formulaEditor p {
   margin: 0;
 }
+
+.fieldOptions {
+  position: fixed;
+  z-index: 1400;
+  box-sizing: border-box;
+  min-width: 130px;
+  width: max-content;
+  min-height: 160px;
+  padding: 6px;
+  padding-left: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  border-radius: 10px;
+  background-color: #fff;
+  font-size: 12px;
+  box-shadow: 0px 0px 50px 0px #00000033;
+  animation: fieldOptionsIn 120ms ease-out;
+}
+
+.fieldOptions[data-placement='up'] {
+  animation-name: fieldOptionsInUp;
+}
+
+.fieldOptionsClosing {
+  opacity: 0;
+  transition: opacity 120ms ease-in;
+  pointer-events: none;
+}
+
+.fieldOption {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 30px;
+  margin: 4px 0;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  text-align: start;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+  color: #fff;
+  background-color: #1753af;
+  border-radius: 10px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 120ms ease;
+}
+
+.fieldOption[data-active] {
+  background-color: #134a9e;
+}
+
+.fieldOption[data-selected] {
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.55);
+}
+
+.fieldOption:active {
+  background-color: #0f3f86;
+}
+
+.fieldOptionsEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 148px;
+  padding: 0 8px;
+  color: #9ea3ac;
+  text-align: center;
+  line-height: 1.6;
+}
+
+@keyframes fieldOptionsIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fieldOptionsInUp {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

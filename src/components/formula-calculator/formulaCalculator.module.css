@@ -164,7 +164,9 @@
   min-height: 160px;
   max-height: 240px;
   position: absolute;
-  overflow-y: scroll;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable both-edges;
   align-items: center;
   border-radius: 10px;
   background-color: #fff;
@@ -180,12 +182,32 @@
 }
 .NEW_FIELD .optionsContainer {
   margin-top: 2px;
-    padding: 6px;
-  scrollbar-width: thin;
-    width: 130px;
-    margin-right: -10px;
-    padding-left: 0 !important;
+  padding: 6px 2px;
+  width: 130px;
+  margin-right: -10px;
+}
+
+.NEW_FnFx .optionsContainer::-webkit-scrollbar,
+.NEW_FIELD .optionsContainer::-webkit-scrollbar {
+  width: 4px;
+}
+.NEW_FnFx .optionsContainer::-webkit-scrollbar-track,
+.NEW_FIELD .optionsContainer::-webkit-scrollbar-track {
+  margin: 10px 0;
+  background: transparent;
+}
+.NEW_FnFx .optionsContainer::-webkit-scrollbar-thumb,
+.NEW_FIELD .optionsContainer::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: #d5d9de;
+}
+@supports (-moz-appearance: none) {
+  .NEW_FnFx .optionsContainer,
+  .NEW_FIELD .optionsContainer {
+    scrollbar-width: thin;
+    scrollbar-color: #d5d9de transparent;
   }
+}
 
 .NEW_FnFx .option,
 .NEW_FIELD .option {
@@ -248,93 +270,4 @@
 
 .formulaEditor p {
   margin: 0;
-}
-
-.fieldOptions {
-  position: fixed;
-  z-index: 1400;
-  width: 130px;
-  min-height: 160px;
-  padding: 6px;
-  padding-left: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  border-radius: 10px;
-  background-color: #fff;
-  font-size: 12px;
-  box-shadow: 0px 0px 50px 0px #00000033;
-  animation: fieldOptionsIn 120ms ease-out;
-}
-
-.fieldOptions[data-placement='up'] {
-  animation-name: fieldOptionsInUp;
-}
-
-.fieldOptionsClosing {
-  opacity: 0;
-  transition: opacity 120ms ease-in;
-  pointer-events: none;
-}
-
-.fieldOption {
-  box-sizing: border-box;
-  width: 100%;
-  min-height: 30px;
-  margin: 4px 0;
-  padding: 1px 5px;
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  text-align: start;
-  white-space: normal;
-  overflow-wrap: anywhere;
-  color: #fff;
-  background-color: #1753af;
-  border-radius: 10px;
-  cursor: pointer;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  transition: background-color 120ms ease;
-}
-
-.fieldOption[data-active] {
-  background-color: #134a9e;
-}
-
-.fieldOption:active {
-  background-color: #0f3f86;
-}
-
-.fieldOptionsEmpty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 148px;
-  padding: 0 8px;
-  color: #9ea3ac;
-  text-align: center;
-  line-height: 1.6;
-}
-
-@keyframes fieldOptionsIn {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fieldOptionsInUp {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }

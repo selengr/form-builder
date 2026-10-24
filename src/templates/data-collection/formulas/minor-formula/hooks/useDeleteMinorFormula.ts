@@ -16,8 +16,6 @@ export function useDeleteMinorFormula(majorId: string) {
 
   return useMutation({
     mutationFn: deleteMinorFormula,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['minor_formula_list', majorId] });
-    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['minor_formula_list', majorId] }),
   });
 }

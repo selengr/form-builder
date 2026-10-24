@@ -3,7 +3,7 @@
 import { Fragment, MouseEvent, useState } from 'react';
 import Image from 'next/image';
 import { toast } from 'sonner';
-import { Button, Menu, Typography } from '@mui/material';
+import { Button, CircularProgress, Menu, Typography } from '@mui/material';
 import { SlPencil } from 'react-icons/sl';
 import { WeuiDeleteOutlined } from '@/../public/images/icons/DeleteIcon';
 import { PhDotsThreeVerticalBold } from '@/../public/images/icons/PhDotsThreeVerticalBold';
@@ -16,7 +16,13 @@ function getOrdinalLabel(index: number) {
   return `فرمول ${(index + 1).toLocaleString('fa-IR')}`;
 }
 
-function MinorFormulaMenu({ onEdit, onDelete }: { onEdit?: () => void; onDelete?: () => void }) {
+interface MinorFormulaMenuProps {
+  onEdit?: () => void;
+  onDelete?: () => void;
+  isDeleting?: boolean;
+}
+
+function MinorFormulaMenu({ onEdit, onDelete, isDeleting = false }: MinorFormulaMenuProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -35,9 +41,11 @@ function MinorFormulaMenu({ onEdit, onDelete }: { onEdit?: () => void; onDelete?
   };
 
   const handleDelete = () => {
-    handleClose();
     if (onDelete) onDelete();
-    else toast.info('این قابلیت به‌زودی اضافه می‌شود');
+    else {
+      handleClose();
+      toast.info('این قابلیت به‌زودی اضافه می‌شود');
+    }
   };
 
   return (
@@ -83,11 +91,17 @@ function MinorFormulaMenu({ onEdit, onDelete }: { onEdit?: () => void; onDelete?
               display: 'flex',
               justifyContent: 'space-between',
               color: '#FA4D56',
+              '&.Mui-disabled': { color: '#FA4D56', opacity: 0.6 },
             }}
             fullWidth
+            disabled={isDeleting}
             onClick={handleDelete}>
             <Typography fontSize={12}>حذف</Typography>
-            <WeuiDeleteOutlined width={20} height={20} />
+            {isDeleting ? (
+              <CircularProgress size={18} sx={{ color: '#FA4D56', mx: '1px' }} />
+            ) : (
+              <WeuiDeleteOutlined width={20} height={20} />
+            )}
           </Button>
         </Menu>
       )}
@@ -101,9 +115,10 @@ interface MinorFormulaRowProps {
   readOnly?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
+  isDeleting?: boolean;
 }
 
-export default function MinorFormulaRow({ index, name, readOnly = false, onEdit, onDelete }: MinorFormulaRowProps) {
+export default function MinorFormulaRow({ index, name, readOnly = false, onEdit, onDelete, isDeleting }: MinorFormulaRowProps) {
   const persianNumber = (index + 1).toLocaleString('fa-IR');
 
   return (
@@ -138,7 +153,7 @@ export default function MinorFormulaRow({ index, name, readOnly = false, onEdit,
         {name?.trim() || getOrdinalLabel(index)}
       </p>
 
-      {!readOnly && <MinorFormulaMenu onEdit={onEdit} onDelete={onDelete} />}
+      {!readOnly && <MinorFormulaMenu onEdit={onEdit} onDelete={onDelete} isDeleting={isDeleting} />}
     </div>
   );
 }

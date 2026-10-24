@@ -28,7 +28,7 @@ export const restoreCalculatorRefs = (elements: Element[]) => {
       fieldRefs[element.id] = element.id;
     }
     if (element.type === 'NEW_FnFx' && element.id) {
-      avgRefs[element.id] = '#avgNumber';
+      avgRefs[element.id] = '#avgNumberListMulti';
     }
     if (typeof element.mainIndex === 'number') {
       lastMainIndex = Math.max(lastMainIndex, element.mainIndex);

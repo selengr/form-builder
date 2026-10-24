@@ -53,11 +53,11 @@ function replaceWholeNormalParentheses(text: string): string {
   let depth = 0;
 
   for (let i = 0; i < input.length; i++) {
-    if (!skip && input.startsWith("#avgNumber(", i)) {
+    if (!skip && input.startsWith("#avgNumberListMulti(", i)) {
       skip = true;
       depth = 0;
-      output += "#avgNumber(";
-      i += "#avgNumber(".length - 1;
+      output += "#avgNumberListMulti(";
+      i += "#avgNumberListMulti(".length - 1;
       continue;
     } else if (!skip &&  input.startsWith("#avgSpectralDouble(", i)) {
       skip = true;

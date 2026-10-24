@@ -528,7 +528,7 @@ export default function CalculatorSection({ formId, ref, onFormulaChange, onSele
       { type: 'AVG_PARENTHESIS', content: ')' },
     );
 
-    selectAvgRef.current[selectId] = '#avgNumber';
+    selectAvgRef.current[selectId] = '#avgNumberListMulti';
     updateElements(newElements, cursorIndex + 3);
   };
 

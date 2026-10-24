@@ -469,8 +469,6 @@ export default function FormulaCalculator({
 
   const handleFnFXDropdownClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const target = e.target as HTMLElement;
-    toggleDropdown(target, target.getAttribute('data-type') === 'down');
   };
 
   const handleFnFXOptionClick = (item: FnFxItem, id: string) => {
@@ -604,6 +602,7 @@ export default function FormulaCalculator({
             اسکریپت:
           </label>
           <div
+            data-formula-scroll
             className={`relative w-full ${isStretch ? 'flex-1' : ''} rounded-[20px] border border-[#DDE1E6] bg-[#F8FAFC] p-3 overflow-y-auto`}
             style={
               isStretch

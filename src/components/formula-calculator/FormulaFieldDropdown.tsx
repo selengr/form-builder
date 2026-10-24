@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styles from './formulaCalculator.module.css';
 import { Element } from './types';
 import { getCalculatorFieldId } from './utils/getCalculatorFieldId';
+import { useDropdownPlacement } from './useDropdownPlacement';
 
 interface FormulaFieldDropdownProps {
   element: Element;
@@ -14,6 +15,8 @@ interface FormulaFieldDropdownProps {
 const FormulaFieldDropdown: React.FC<FormulaFieldDropdownProps> = ({ element, options, onSelect, onClick }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+  const placementStyle = useDropdownPlacement(dropdownRef, listRef, isOpen, 240, 160);
 
   const handleOptionClick = (item: any) => {
     onSelect(item, element.id!, element);
@@ -40,16 +43,22 @@ const FormulaFieldDropdown: React.FC<FormulaFieldDropdownProps> = ({ element, op
     const match = options.find((item) => getCalculatorFieldId(item) === element.id);
     return match?.caption || "انتخاب سوال";
   };
+  const caption = returnCaption();
 
   return (
     <div ref={dropdownRef} data-id={element.mainIndex} contentEditable={false} className={`${styles.dynamicbtn} ${styles.NEW_FIELD}`} data-type='NEW_FIELD'>
-      <div className={styles.customDropdown} data-type={isOpen ? 'up' : 'down'} onClick={handleDropdownClick}>
-        {returnCaption()}
+      <div className={styles.customDropdown} data-type={isOpen ? 'up' : 'down'} title={caption} onClick={handleDropdownClick}>
+        {caption}
       </div>
       {isOpen && (
-        <div className={styles.optionsContainer} style={{ display: 'block' }}>
+        <div ref={listRef} className={styles.optionsContainer} style={{ display: 'block', ...placementStyle }}>
           {options.map((item, index) => (
-            <div key={index} className={styles.option} onClick={() => handleOptionClick(item)}>
+            <div
+              key={index}
+              className={styles.option}
+              data-selected={getCalculatorFieldId(item) === element.id || undefined}
+              title={item.caption}
+              onClick={() => handleOptionClick(item)}>
               {item.caption}
             </div>
           ))}

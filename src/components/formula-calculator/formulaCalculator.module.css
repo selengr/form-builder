@@ -225,6 +225,11 @@
 .NEW_FIELD .option {
   background-color: #1753af;
 }
+.NEW_FIELD .option[data-selected] {
+  color: #1758ba;
+  background-color: #e8eef8;
+  box-shadow: inset 0 0 0 1px #b9cdee;
+}
 .NEW_FnFx .option {
   background-color: #9d2cdf;
 }

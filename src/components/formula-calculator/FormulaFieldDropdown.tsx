@@ -13,6 +13,7 @@ interface FormulaFieldDropdownProps {
 }
 
 const LIST_MAX_HEIGHT = 240;
+const LIST_WIDTH = 130;
 const LIST_GAP = 2;
 const VIEWPORT_MARGIN = 8;
 const CLOSE_ANIMATION_MS = 120;
@@ -21,7 +22,6 @@ interface ListPosition {
   top: number;
   right: number;
   maxHeight: number;
-  maxWidth: number;
   placement: 'down' | 'up';
 }
 
@@ -84,15 +84,13 @@ const FormulaFieldDropdown: React.FC<FormulaFieldDropdownProps> = ({ element, op
     const maxHeight = Math.max(Math.min(LIST_MAX_HEIGHT, available), 80);
     const height = Math.min(listHeight, maxHeight);
 
-    const maxWidth = Math.min(240, viewportWidth - VIEWPORT_MARGIN * 2);
-    const listWidth = Math.min(listRef.current?.offsetWidth ?? 130, maxWidth);
     let right = viewportWidth - rect.right - 10;
-    right = Math.min(right, viewportWidth - listWidth - VIEWPORT_MARGIN);
+    right = Math.min(right, viewportWidth - LIST_WIDTH - VIEWPORT_MARGIN);
     right = Math.max(right, VIEWPORT_MARGIN);
 
     const top = placement === 'down' ? rect.bottom + LIST_GAP : rect.top - LIST_GAP - height;
 
-    setPosition({ top, right, maxHeight, maxWidth, placement });
+    setPosition({ top, right, maxHeight, placement });
   }, [close]);
 
   useLayoutEffect(() => {
@@ -191,7 +189,6 @@ const FormulaFieldDropdown: React.FC<FormulaFieldDropdownProps> = ({ element, op
               top: position?.top ?? 0,
               right: position?.right ?? 0,
               maxHeight: position?.maxHeight ?? LIST_MAX_HEIGHT,
-              maxWidth: position?.maxWidth ?? 240,
               visibility: position ? 'visible' : 'hidden',
             }}
             onMouseDown={(event) => event.preventDefault()}>
@@ -206,7 +203,6 @@ const FormulaFieldDropdown: React.FC<FormulaFieldDropdownProps> = ({ element, op
                   title={item.caption}
                   className={styles.fieldOption}
                   data-active={index === activeIndex || undefined}
-                  data-selected={index === selectedIndex || undefined}
                   onMouseEnter={() => setActiveIndex(index)}
                   onClick={() => handleOptionClick(item)}>
                   {item.caption}

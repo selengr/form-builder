@@ -84,6 +84,7 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
   const calculatorRef = useRef<FormulaCalculatorHandle>(null);
   const [calculatorFormula, setCalculatorFormula] = useState('');
   const [calculatorFrontData, setCalculatorFrontData] = useState('');
+  const [demoContainer, setDemoContainer] = useState<HTMLDivElement | null>(null);
   const handleCalculatorChange = useCallback((formula: string, frontCalcData: string) => {
     setCalculatorFormula(formula);
     setCalculatorFrontData(frontCalcData);
@@ -285,6 +286,7 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
             calculatorFormula={calculatorFormula}
             calculatorFrontData={calculatorFrontData}
             initialCondition={formId && formId === savedFormId ? minorFormula?.formulaModel?.condition : undefined}
+            demoContainer={demoContainer}
             onSelectFormRequest={handleSelectFormRequest}
           />
         </div>
@@ -302,6 +304,8 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
             scriptLayout="stretch"
           />
         </div>
+
+        <div ref={setDemoContainer} />
       </div>
 
       <div

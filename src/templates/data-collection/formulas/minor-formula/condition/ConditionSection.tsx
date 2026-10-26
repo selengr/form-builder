@@ -1,6 +1,7 @@
 'use client';
 
 import { Fragment, Ref, useEffect, useImperativeHandle, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { toast } from 'sonner';
 import { FormProvider } from 'react-hook-form';
 import { SubCondition } from './SubCondition';
@@ -27,6 +28,7 @@ interface ConditionSectionProps {
   calculatorFormula?: string;
   calculatorFrontData?: string;
   initialCondition?: FormulaConditionGroup | null;
+  demoContainer?: HTMLElement | null;
   onSelectFormRequest?: () => void;
 }
 
@@ -41,6 +43,7 @@ export default function ConditionSection({
   calculatorFormula,
   calculatorFrontData,
   initialCondition,
+  demoContainer,
   onSelectFormRequest,
 }: ConditionSectionProps) {
   const { qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter(formId);
@@ -145,14 +148,18 @@ export default function ConditionSection({
           </div>
         ))}
 
-        <ConditionFormulaDemo
-          minorId={minorId}
-          majorId={majorId}
-          minorName={minorName}
-          formId={formId}
-          calculatorFormula={calculatorFormula}
-          calculatorFrontData={calculatorFrontData}
-        />
+        {demoContainer &&
+          createPortal(
+            <ConditionFormulaDemo
+              minorId={minorId}
+              majorId={majorId}
+              minorName={minorName}
+              formId={formId}
+              calculatorFormula={calculatorFormula}
+              calculatorFrontData={calculatorFrontData}
+            />,
+            demoContainer,
+          )}
       </FormProvider>
     </div>
   );

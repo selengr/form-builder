@@ -1,12 +1,13 @@
 'use client';
 
-import { Fragment, Ref, useEffect, useImperativeHandle, useRef } from 'react';
+import { Fragment, Ref, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { toast } from 'sonner';
 import { FormProvider } from 'react-hook-form';
 import { SubCondition } from './SubCondition';
 import SubConditionDivider from './SubConditionDivider';
 import ConditionFormulaDemo from './ConditionFormulaDemo';
+import ConditionSectionSkeleton from './ConditionSectionSkeleton';
 import { useConditionalForm } from './hooks/useConditionalForm';
 import { useGetQacWithOutFilter } from './hooks/useGetQacWithOutFilter';
 import { useGetOnlyAllQuestions } from './hooks/useGetOnlyAllQuestions';
@@ -30,6 +31,7 @@ interface ConditionSectionProps {
   initialCondition?: FormulaConditionGroup | null;
   demoContainer?: HTMLElement | null;
   onPrefilled?: () => void;
+  isLoading?: boolean;
   onSelectFormRequest?: () => void;
 }
 
@@ -46,6 +48,7 @@ export default function ConditionSection({
   initialCondition,
   demoContainer,
   onPrefilled,
+  isLoading = false,
   onSelectFormRequest,
 }: ConditionSectionProps) {
   const { qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter(formId);
@@ -60,6 +63,8 @@ export default function ConditionSection({
     useConditionalForm(undefined, formId);
 
   const hasPrefilledRef = useRef(false);
+  const [isPrefilled, setIsPrefilled] = useState(false);
+  const showSkeleton = isLoading || (initialCondition !== undefined && !isPrefilled);
   const areSourcesReady =
     !isFetchingQacWithOutFilter && !isFetchingOnlyAllQuestions && !isFetchingOnlyAllCalculation;
 
@@ -76,6 +81,7 @@ export default function ConditionSection({
         }),
       ],
     });
+    setIsPrefilled(true);
     onPrefilled?.();
   }, [
     initialCondition,
@@ -111,7 +117,9 @@ export default function ConditionSection({
   return (
     <div dir="rtl" className="w-full flex flex-col">
       <FormProvider {...methods}>
-        {conditions.map((conditionBlock, index) => (
+        {showSkeleton && <ConditionSectionSkeleton />}
+
+        {!showSkeleton && conditions.map((conditionBlock, index) => (
           <div
             key={conditionBlock.id}
             className="flex flex-col w-full rounded-2xl border border-[#DDE1E6] bg-[#F8FAFC] overflow-hidden">

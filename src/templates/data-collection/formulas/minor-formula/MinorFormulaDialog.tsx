@@ -14,7 +14,6 @@ import { FormulaFormOption, useGetFormulaForms } from './hooks/useGetFormulaForm
 import { useCreateMinorFormula } from './hooks/useCreateMinorFormula';
 import { useUpdateMinorFormula } from './hooks/useUpdateMinorFormula';
 import { useGetMinorFormula } from './hooks/useGetMinorFormula';
-import MinorFormulaDialogSkeleton from './MinorFormulaDialogSkeleton';
 
 const StyledDialog = styled(Dialog)({
   overflow: 'hidden',
@@ -137,12 +136,10 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
     setIsFormListOpen(true);
   };
 
-  const { questionList: calculatorFields, isFetchingCalculatorFields } = useGetCalculatorFields(formId);
+  const { questionList: calculatorFields } = useGetCalculatorFields(formId);
 
-  const isEditLoading =
-    Boolean(minorId) &&
-    !minorFormulaError &&
-    (!isPrefilled || (Boolean(savedFormId) && (!isConditionPrefilled || isFetchingCalculatorFields)));
+  const isEditDataLoading = Boolean(minorId) && !minorFormulaError && !isPrefilled;
+  const isEditLoading = isEditDataLoading || (Boolean(minorId) && Boolean(savedFormId) && !isConditionPrefilled);
 
   const canAddCalculatorField = () => {
     if (formId) return true;
@@ -175,6 +172,7 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
 
     const condition = await conditionRef.current?.getCondition();
     if (hasError || !condition) {
+      if (!condition) toast.error('لطفاً شرط‌ها را کامل کنید');
       scrollToFirstError();
       return;
     }
@@ -233,96 +231,93 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
           </p>
         )}
 
-        {isEditLoading && <MinorFormulaDialogSkeleton />}
-
-        <div style={isEditLoading ? { display: 'none' } : undefined}>
-          <div className="flex flex-col" style={{ marginTop: 6 }}>
-            <label className={labelClass} style={{ marginBottom: 4 }}>
-              نام:
-            </label>
-            <TextField
-              fullWidth
-              placeholder="نام فرمول"
-              value={name}
-              onChange={(event) => {
-                setName(event.target.value);
-                if (nameError) setNameError(null);
-              }}
-              error={Boolean(nameError)}
-              helperText={nameError}
-              sx={inputSx}
-              slotProps={{ htmlInput: { className: styles.input } }}
-            />
-          </div>
-
-          <div ref={formFieldRef} className="flex flex-col" style={{ marginTop: 8 }}>
-            <label className={labelClass} style={{ marginBottom: 4 }}>
-              انتخاب فرم:
-            </label>
-            <Autocomplete
-              open={isFormListOpen}
-              onOpen={() => setIsFormListOpen(true)}
-              onClose={() => setIsFormListOpen(false)}
-              options={formOptions}
-              value={selectedForm}
-              onChange={(_, option) => {
-                setSelectedForm(option);
-                if (formError) setFormError(null);
-              }}
-              getOptionLabel={(option) => option.label}
-              isOptionEqualToValue={(option, value) => option.value === value.value}
-              noOptionsText="فرمی یافت نشد"
-              loading={isFetchingForms}
-              loadingText="در حال بارگذاری..."
-              popupIcon={null}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  placeholder="انتخاب فرم"
-                  error={Boolean(formError)}
-                  helperText={formError}
-                  sx={inputSx}
-                  inputProps={{ ...params.inputProps, className: `${params.inputProps.className ?? ''} ${styles.input}` }}
-                />
-              )}
-            />
-          </div>
-
-          <div style={{ marginTop: 16 }}>
-            <ConditionSection
-              key={formId}
-              ref={conditionRef}
-              formId={formId}
-              minorId={minorId}
-              majorId={majorId}
-              minorName={name}
-              calculatorFormula={calculatorFormula}
-              calculatorFrontData={calculatorFrontData}
-              initialCondition={
-                formId && formId === savedFormId ? (minorFormula?.formulaModel?.condition ?? null) : undefined
-              }
-              demoContainer={demoContainer}
-              onPrefilled={handleConditionPrefilled}
-              onSelectFormRequest={handleSelectFormRequest}
-            />
-          </div>
-
-          <div ref={calculatorWrapperRef} style={{ marginTop: 12 }}>
-            {/* <CalculatorSection key={formId} ref={calculatorRef} formId={formId} onFormulaChange={setCalculatorFormula} onSelectFormRequest={handleSelectFormRequest} /> */}
-            <FormulaCalculator
-              key={formId}
-              ref={calculatorRef}
-              fields={calculatorFields}
-              initialElements={formId && formId === savedFormId ? savedCalculatorElements : undefined}
-              beforeAddField={canAddCalculatorField}
-              onFormulaChange={handleCalculatorChange}
-              showFormulaPreview
-              scriptLayout="stretch"
-            />
-          </div>
-
-          <div ref={setDemoContainer} />
+        <div className="flex flex-col" style={{ marginTop: 6 }}>
+          <label className={labelClass} style={{ marginBottom: 4 }}>
+            نام:
+          </label>
+          <TextField
+            fullWidth
+            placeholder="نام فرمول"
+            value={name}
+            onChange={(event) => {
+              setName(event.target.value);
+              if (nameError) setNameError(null);
+            }}
+            error={Boolean(nameError)}
+            helperText={nameError}
+            sx={inputSx}
+            slotProps={{ htmlInput: { className: styles.input } }}
+          />
         </div>
+
+        <div ref={formFieldRef} className="flex flex-col" style={{ marginTop: 8 }}>
+          <label className={labelClass} style={{ marginBottom: 4 }}>
+            انتخاب فرم:
+          </label>
+          <Autocomplete
+            open={isFormListOpen}
+            onOpen={() => setIsFormListOpen(true)}
+            onClose={() => setIsFormListOpen(false)}
+            options={formOptions}
+            value={selectedForm}
+            onChange={(_, option) => {
+              setSelectedForm(option);
+              if (formError) setFormError(null);
+            }}
+            getOptionLabel={(option) => option.label}
+            isOptionEqualToValue={(option, value) => option.value === value.value}
+            noOptionsText="فرمی یافت نشد"
+            loading={isFetchingForms}
+            loadingText="در حال بارگذاری..."
+            popupIcon={null}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                placeholder="انتخاب فرم"
+                error={Boolean(formError)}
+                helperText={formError}
+                sx={inputSx}
+                inputProps={{ ...params.inputProps, className: `${params.inputProps.className ?? ''} ${styles.input}` }}
+              />
+            )}
+          />
+        </div>
+
+        <div style={{ marginTop: 16 }}>
+          <ConditionSection
+            key={formId}
+            ref={conditionRef}
+            formId={formId}
+            minorId={minorId}
+            majorId={majorId}
+            minorName={name}
+            calculatorFormula={calculatorFormula}
+            calculatorFrontData={calculatorFrontData}
+            initialCondition={
+              formId && formId === savedFormId ? (minorFormula?.formulaModel?.condition ?? null) : undefined
+            }
+            demoContainer={demoContainer}
+            onPrefilled={handleConditionPrefilled}
+            isLoading={isEditDataLoading}
+            onSelectFormRequest={handleSelectFormRequest}
+          />
+        </div>
+
+        <div ref={calculatorWrapperRef} style={{ marginTop: 12 }}>
+          {/* <CalculatorSection key={formId} ref={calculatorRef} formId={formId} onFormulaChange={setCalculatorFormula} onSelectFormRequest={handleSelectFormRequest} /> */}
+          <FormulaCalculator
+            key={formId}
+            ref={calculatorRef}
+            fields={calculatorFields}
+            initialElements={formId && formId === savedFormId ? savedCalculatorElements : undefined}
+            beforeAddField={canAddCalculatorField}
+            onFormulaChange={handleCalculatorChange}
+            showFormulaPreview
+            scriptLayout="stretch"
+          />
+        </div>
+
+        <div ref={setDemoContainer} />
       </div>
 
       <div
@@ -330,7 +325,7 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
         style={{ gap: 16, padding: '16px 24px 21px', borderTop: '1px solid #EEF0F3', backgroundColor: '#fff' }}>
         <Button
           onClick={handleSubmit}
-          disabled={isPending}
+          disabled={isPending || isEditLoading}
           variant="contained"
           sx={{
             backgroundColor: '#1758BA',

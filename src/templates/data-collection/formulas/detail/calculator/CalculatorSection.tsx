@@ -549,7 +549,7 @@ export default function CalculatorSection({
       { type: 'AVG_PARENTHESIS', content: ')' },
     );
 
-    selectAvgRef.current[selectId] = '#avgNumberListMulti';
+    selectAvgRef.current[selectId] = '#avgNumber';
     updateElements(newElements, cursorIndex + 3);
   };
 

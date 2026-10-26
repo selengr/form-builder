@@ -155,7 +155,7 @@ export const useConditionalForm = (condition: IGetCondition | undefined, formId:
   };
 
   const handleRemoveSubCondition = (conditionIndex: number, subConditionIndex: number) => {
-    const updatedCondition = { ...conditions[conditionIndex] };
+    const updatedCondition = structuredClone(getValues().conditions[conditionIndex]);
     updatedCondition.subConditions.splice(subConditionIndex, 1);
     updateCondition(conditionIndex, updatedCondition);
   };

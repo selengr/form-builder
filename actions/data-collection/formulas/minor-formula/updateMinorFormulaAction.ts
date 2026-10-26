@@ -40,6 +40,8 @@ export async function updateMinorFormulaAction(payload: UpdateMinorFormulaPayloa
     return { success: false as const, message: 'Validation error.' };
   }
 
+  console.log('[updateMinorFormulaAction] payload:', JSON.stringify(parsed.data, null, 2));
+
   const result = await api.put(UPDATE_MINOR_URL, parsed.data);
 
   console.log('[updateMinorFormulaAction] response:', JSON.stringify(result, null, 2));

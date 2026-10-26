@@ -16,14 +16,14 @@ export const TextFieldController: React.FC<TextFieldControllerProps> = ({
   placeholder = '',
   ...props
 }) => {
-  const { control } = useFormContext();
+  const { control, getValues } = useFormContext();
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (inputRef.current) {
+    if (inputRef.current && !getValues(name)) {
       inputRef.current?.focus();
     }
-  }, [name]);
+  }, [name, getValues]);
 
   return (
     <Controller

@@ -29,6 +29,7 @@ interface ConditionSectionProps {
   calculatorFrontData?: string;
   initialCondition?: FormulaConditionGroup | null;
   demoContainer?: HTMLElement | null;
+  onPrefilled?: () => void;
   onSelectFormRequest?: () => void;
 }
 
@@ -44,6 +45,7 @@ export default function ConditionSection({
   calculatorFrontData,
   initialCondition,
   demoContainer,
+  onPrefilled,
   onSelectFormRequest,
 }: ConditionSectionProps) {
   const { qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter(formId);
@@ -62,7 +64,7 @@ export default function ConditionSection({
     !isFetchingQacWithOutFilter && !isFetchingOnlyAllQuestions && !isFetchingOnlyAllCalculation;
 
   useEffect(() => {
-    if (!initialCondition || hasPrefilledRef.current || !areSourcesReady) return;
+    if (initialCondition === undefined || hasPrefilledRef.current || !areSourcesReady) return;
     hasPrefilledRef.current = true;
     methods.reset({
       conditions: [
@@ -74,8 +76,10 @@ export default function ConditionSection({
         }),
       ],
     });
+    onPrefilled?.();
   }, [
     initialCondition,
+    onPrefilled,
     areSourcesReady,
     methods,
     qacWithOutFilterOptions,

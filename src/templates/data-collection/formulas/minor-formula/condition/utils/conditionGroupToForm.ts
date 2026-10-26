@@ -6,7 +6,7 @@ import { FormulaConditionGroup, FormulaConditionItem } from '../../types';
 import { getConditionOperator } from './buildConditionGroup';
 import { getQuestionField, isRefIdQuestion, REF_ID_CONDITION_TYPE, REF_ID_OPERATOR_TYPE } from './questionType';
 
-type Option = { value: string; label: string };
+type Option = { value: string; label: string; elementStr?: string };
 
 export interface ConditionFormSources {
   questionOptions: Option[];
@@ -74,12 +74,13 @@ const toSubCondition = (
     sources.questionOptions.find((option) => getQuestionField(option.value) === item.field)?.value ?? item.field;
 
   if (isRefIdQuestion(questionType)) {
+    const refIdOption = sources.questionOptions.find((option) => isRefIdQuestion(option.value));
     return {
       ...base,
-      questionType,
+      questionType: refIdOption?.value ?? questionType,
       operatorType: REF_ID_OPERATOR_TYPE,
       conditionType: REF_ID_CONDITION_TYPE,
-      value: String(item.value ?? ''),
+      value: refIdOption?.elementStr ?? String(item.value ?? ''),
     };
   }
 

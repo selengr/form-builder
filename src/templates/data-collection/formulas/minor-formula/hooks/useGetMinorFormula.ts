@@ -5,7 +5,7 @@ import { getMinorFormulaAction } from '@actions/data-collection/formulas/minor-f
 import { MinorFormulaDetail } from '../types';
 
 export function useGetMinorFormula(minorId?: number | string) {
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isFetching, isError, error } = useQuery({
     queryKey: ['minor_formula', minorId],
     queryFn: async () => {
       const res = await getMinorFormulaAction(minorId!);
@@ -20,7 +20,8 @@ export function useGetMinorFormula(minorId?: number | string) {
     },
     enabled: Boolean(minorId),
     staleTime: 0,
+    gcTime: 0,
   });
 
-  return { minorFormula: data, isLoading, isError, error };
+  return { minorFormula: data, isLoading, isFetching, isError, error };
 }

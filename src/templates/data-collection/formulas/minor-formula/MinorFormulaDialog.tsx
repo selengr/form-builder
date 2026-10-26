@@ -1,13 +1,13 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { CgClose } from 'react-icons/cg';
 import { styled } from '@mui/material/styles';
 import { Autocomplete, Button, Dialog, DialogContent, IconButton, TextField } from '@mui/material';
 import ConditionSection, { ConditionSectionHandle } from './condition/ConditionSection';
 // import CalculatorSection, { CalculatorSectionHandle } from './calculator/CalculatorSection';
-import { FormulaCalculator, type FormulaCalculatorHandle } from '@/components/formula-calculator';
+import { FormulaCalculator, type FormulaCalculatorHandle, parseFrontFormulaData } from '@/components/formula-calculator';
 import { useGetCalculatorFields } from './calculator/hooks/useGetCalculatorFields';
 import styles from './minorFormulaDialog.module.css';
 import { FormulaFormOption, useGetFormulaForms } from './hooks/useGetFormulaForms';
@@ -63,23 +63,6 @@ const inputSx = {
 
 const labelClass = 'block text-[14px] font-medium text-[#161616]';
 
-const responseBoxStyle = {
-  margin: 0,
-  marginTop: 12,
-  padding: 16,
-  borderRadius: 12,
-  background: '#F4F5F7',
-  border: '1px solid #DDE1E6',
-  color: '#404040',
-  fontSize: 13,
-  lineHeight: 1.6,
-  maxHeight: 320,
-  overflow: 'auto',
-  whiteSpace: 'pre-wrap' as const,
-  wordBreak: 'break-all' as const,
-  textAlign: 'left' as const,
-};
-
 interface MinorFormulaDialogProps {
   open: boolean;
   onClose: () => void;
@@ -106,6 +89,25 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
   const [formError, setFormError] = useState<string | null>(null);
   const { formOptions, isFetchingForms } = useGetFormulaForms();
   const formId = selectedForm?.value ?? '';
+
+  const savedFormId = minorFormula?.formulaModel?.formId ? String(minorFormula.formulaModel.formId) : '';
+  const savedCalculatorElements = useMemo(
+    () => parseFrontFormulaData(minorFormula?.formulaModel?.frontFormulaData),
+    [minorFormula?.formulaModel?.frontFormulaData],
+  );
+  const [isPrefilled, setIsPrefilled] = useState(false);
+
+  useEffect(() => {
+    if (!minorFormula || isPrefilled) return;
+    if (savedFormId && isFetchingForms && formOptions.length === 0) return;
+
+    setName(minorFormula.minorName ?? '');
+    if (savedFormId) {
+      const option = formOptions.find((item) => item.value === savedFormId);
+      setSelectedForm(option ?? { value: savedFormId, label: savedFormId });
+    }
+    setIsPrefilled(true);
+  }, [minorFormula, isPrefilled, savedFormId, isFetchingForms, formOptions]);
 
   const { mutate: createMinorFormula, isPending } = useCreateMinorFormula(majorId);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -169,6 +171,7 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
         formulaModel: {
           formId: Number(formId),
           formula: calculator.formula,
+          frontFormulaData: calculator.frontCalcData,
           condition,
         },
       },
@@ -198,14 +201,12 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
         style={{ overflowY: 'auto', overflowX: 'hidden', padding: '36px 24px 24px', scrollbarWidth: 'thin' }}>
         <h2 className="text-[16px] font-bold text-[#404040] text-center">فرمول ساز</h2>
 
-        {minorId && (
-          <pre dir="ltr" style={responseBoxStyle}>
-            {isMinorFormulaLoading
-              ? 'loading...'
-              : minorFormulaError
-                ? (minorFormulaError as Error).message
-                : JSON.stringify(minorFormula, null, 2)}
-          </pre>
+        {minorId && (isMinorFormulaLoading || minorFormulaError) && (
+          <p
+            className="text-center text-[13px]"
+            style={{ marginTop: 6, color: minorFormulaError ? '#FA4D56' : '#9EA3AC' }}>
+            {minorFormulaError ? (minorFormulaError as Error).message : 'در حال دریافت اطلاعات فرمول...'}
+          </p>
         )}
 
         <div className="flex flex-col" style={{ marginTop: 6 }}>
@@ -270,6 +271,7 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
             key={formId}
             ref={calculatorRef}
             fields={calculatorFields}
+            initialElements={formId && formId === savedFormId ? savedCalculatorElements : undefined}
             beforeAddField={canAddCalculatorField}
             onFormulaChange={setCalculatorFormula}
             showFormulaPreview

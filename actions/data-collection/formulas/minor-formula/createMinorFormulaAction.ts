@@ -14,6 +14,7 @@ const createMinorFormulaSchema = z.object({
   formulaModel: z.object({
     formId: z.number().int().positive(),
     formula: z.string(),
+    frontFormulaData: z.string(),
     condition: z.object({
       type: z.literal('group'),
       children: z

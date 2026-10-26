@@ -35,6 +35,7 @@ export interface FormulaConditionGroup {
 export interface FormulaModel {
   formId: number;
   formula: string;
+  frontFormulaData: string;
   condition: FormulaConditionGroup;
 }
 
@@ -42,4 +43,17 @@ export interface CreateMinorFormulaPayload {
   majorId: number;
   minorName: string;
   formulaModel: FormulaModel;
+}
+
+export interface MinorFormulaDetail {
+  id: number;
+  majorId: number | null;
+  minorName: string;
+  formulaModel: {
+    formId: number;
+    formula: string;
+    frontFormulaData: string | null;
+    condition: FormulaConditionGroup & { nextOperator?: FormulaConditionNextOperator | null };
+    finalConditionForSQL: string | null;
+  };
 }

@@ -19,10 +19,12 @@ export interface ConditionSectionHandle {
 
 interface ConditionSectionProps {
   formId: string;
+  minorId?: number | string;
   majorId?: string;
   minorName?: string;
   ref?: Ref<ConditionSectionHandle>;
   calculatorFormula?: string;
+  calculatorFrontData?: string;
   onSelectFormRequest?: () => void;
 }
 
@@ -30,10 +32,12 @@ const dashedButtonStyle = { minHeight: 50, color: '#9A9A9A' };
 
 export default function ConditionSection({
   formId,
+  minorId,
   majorId,
   minorName,
   ref,
   calculatorFormula,
+  calculatorFrontData,
   onSelectFormRequest,
 }: ConditionSectionProps) {
   const { qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter(formId);
@@ -111,7 +115,14 @@ export default function ConditionSection({
           </div>
         ))}
 
-        <ConditionFormulaDemo majorId={majorId} minorName={minorName} formId={formId} calculatorFormula={calculatorFormula} />
+        <ConditionFormulaDemo
+          minorId={minorId}
+          majorId={majorId}
+          minorName={minorName}
+          formId={formId}
+          calculatorFormula={calculatorFormula}
+          calculatorFrontData={calculatorFrontData}
+        />
       </FormProvider>
     </div>
   );

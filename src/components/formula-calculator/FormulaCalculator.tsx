@@ -26,7 +26,7 @@ export interface FormulaCalculatorProps {
   ref?: Ref<FormulaCalculatorHandle>;
   initialElements?: Element[];
   beforeAddField?: () => boolean;
-  onFormulaChange?: (formula: string) => void;
+  onFormulaChange?: (formula: string, frontCalcData: string) => void;
   onElementsCountChange?: (count: number) => void;
   showFormulaPreview?: boolean;
   scriptLayout?: 'fixed' | 'stretch';
@@ -541,7 +541,7 @@ export default function FormulaCalculator({
       formula = rawFormula;
     }
     setLiveFormula(formula);
-    onFormulaChange?.(formula);
+    onFormulaChange?.(formula, JSON.stringify(elements));
   }, [elements, onFormulaChange]);
 
   useEffect(() => {

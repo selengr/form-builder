@@ -45,6 +45,10 @@ export interface CreateMinorFormulaPayload {
   formulaModel: FormulaModel;
 }
 
+export interface UpdateMinorFormulaPayload extends CreateMinorFormulaPayload {
+  id: number;
+}
+
 export interface MinorFormulaDetail {
   id: number;
   majorId: number | null;

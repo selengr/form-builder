@@ -12,10 +12,12 @@ import { TConditionData, TSubConditionData } from './schema';
 import styles from './conditionFormulaDemo.module.css';
 
 interface ConditionFormulaDemoProps {
+  minorId?: number | string;
   majorId?: string;
   minorName?: string;
   formId: string;
   calculatorFormula?: string;
+  calculatorFrontData?: string;
 }
 
 const COLORS = {
@@ -45,19 +47,23 @@ const buildLiveChild = (subCondition: TSubConditionData, nextSubCondition?: TSub
 
 const buildLivePayload = (
   conditions: TConditionData[] | undefined,
+  minorId: number | string | undefined,
   majorId: string | undefined,
   minorName: string | undefined,
   formId: string,
   calculatorFormula: string | undefined,
+  calculatorFrontData: string | undefined,
 ) => {
   const subConditions = (conditions ?? []).flatMap((condition) => condition?.subConditions ?? []);
 
   return {
+    ...(minorId ? { id: toNumberOrNull(String(minorId)) } : {}),
     majorId: toNumberOrNull(majorId),
     minorName: minorName?.trim() || null,
     formulaModel: {
       formId: toNumberOrNull(formId),
       formula: calculatorFormula ?? '',
+      frontFormulaData: calculatorFrontData ?? '[]',
       condition: {
         type: 'group',
         children: subConditions.map((subCondition, index) =>
@@ -108,9 +114,20 @@ const codeStyle = {
   color: COLORS.punctuation,
 };
 
-export default function ConditionFormulaDemo({ majorId, minorName, formId, calculatorFormula }: ConditionFormulaDemoProps) {
+export default function ConditionFormulaDemo({
+  minorId,
+  majorId,
+  minorName,
+  formId,
+  calculatorFormula,
+  calculatorFrontData,
+}: ConditionFormulaDemoProps) {
   const conditions = useWatch({ name: 'conditions' }) as TConditionData[] | undefined;
-  const payloadJson = JSON.stringify(buildLivePayload(conditions, majorId, minorName, formId, calculatorFormula), null, 2);
+  const payloadJson = JSON.stringify(
+    buildLivePayload(conditions, minorId, majorId, minorName, formId, calculatorFormula, calculatorFrontData),
+    null,
+    2,
+  );
 
   return (
     <div

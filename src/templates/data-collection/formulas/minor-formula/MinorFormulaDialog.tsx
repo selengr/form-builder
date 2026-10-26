@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { CgClose } from 'react-icons/cg';
 import { styled } from '@mui/material/styles';
@@ -12,6 +12,7 @@ import { useGetCalculatorFields } from './calculator/hooks/useGetCalculatorField
 import styles from './minorFormulaDialog.module.css';
 import { FormulaFormOption, useGetFormulaForms } from './hooks/useGetFormulaForms';
 import { useCreateMinorFormula } from './hooks/useCreateMinorFormula';
+import { useUpdateMinorFormula } from './hooks/useUpdateMinorFormula';
 import { useGetMinorFormula } from './hooks/useGetMinorFormula';
 
 const StyledDialog = styled(Dialog)({
@@ -82,6 +83,11 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
   // const calculatorRef = useRef<CalculatorSectionHandle>(null);
   const calculatorRef = useRef<FormulaCalculatorHandle>(null);
   const [calculatorFormula, setCalculatorFormula] = useState('');
+  const [calculatorFrontData, setCalculatorFrontData] = useState('');
+  const handleCalculatorChange = useCallback((formula: string, frontCalcData: string) => {
+    setCalculatorFormula(formula);
+    setCalculatorFrontData(frontCalcData);
+  }, []);
 
   const [name, setName] = useState('');
   const [nameError, setNameError] = useState<string | null>(null);
@@ -109,7 +115,9 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
     setIsPrefilled(true);
   }, [minorFormula, isPrefilled, savedFormId, isFetchingForms, formOptions]);
 
-  const { mutate: createMinorFormula, isPending } = useCreateMinorFormula(majorId);
+  const { mutate: createMinorFormula, isPending: isCreating } = useCreateMinorFormula(majorId);
+  const { mutate: updateMinorFormula, isPending: isUpdating } = useUpdateMinorFormula(majorId);
+  const isPending = isCreating || isUpdating;
   const contentRef = useRef<HTMLDivElement>(null);
   const calculatorWrapperRef = useRef<HTMLDivElement>(null);
   const formFieldRef = useRef<HTMLDivElement>(null);
@@ -164,27 +172,32 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
       return;
     }
 
-    createMinorFormula(
-      {
-        majorId: Number(majorId),
-        minorName: name.trim(),
-        formulaModel: {
-          formId: Number(formId),
-          formula: calculator.formula,
-          frontFormulaData: calculator.frontCalcData,
-          condition,
-        },
+    const payload = {
+      majorId: Number(majorId),
+      minorName: name.trim(),
+      formulaModel: {
+        formId: Number(formId),
+        formula: calculator.formula,
+        frontFormulaData: calculator.frontCalcData,
+        condition,
       },
-      {
-        onSuccess: () => {
-          toast.success('فرمول جزئی با موفقیت ثبت شد');
-          onClose();
-        },
-        onError: (error) => {
-          toast.error(error.message);
-        },
+    };
+
+    const callbacks = {
+      onSuccess: () => {
+        toast.success(minorId ? 'فرمول جزئی با موفقیت ویرایش شد' : 'فرمول جزئی با موفقیت ثبت شد');
+        onClose();
       },
-    );
+      onError: (error: Error) => {
+        toast.error(error.message);
+      },
+    };
+
+    if (minorId) {
+      updateMinorFormula({ id: Number(minorId), ...payload }, callbacks);
+    } else {
+      createMinorFormula(payload, callbacks);
+    }
   };
 
   return (
@@ -262,7 +275,17 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
         </div>
 
         <div style={{ marginTop: 16 }}>
-          <ConditionSection key={formId} ref={conditionRef} formId={formId} majorId={majorId} minorName={name} calculatorFormula={calculatorFormula} onSelectFormRequest={handleSelectFormRequest} />
+          <ConditionSection
+            key={formId}
+            ref={conditionRef}
+            formId={formId}
+            minorId={minorId}
+            majorId={majorId}
+            minorName={name}
+            calculatorFormula={calculatorFormula}
+            calculatorFrontData={calculatorFrontData}
+            onSelectFormRequest={handleSelectFormRequest}
+          />
         </div>
 
         <div ref={calculatorWrapperRef} style={{ marginTop: 12 }}>
@@ -273,7 +296,7 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
             fields={calculatorFields}
             initialElements={formId && formId === savedFormId ? savedCalculatorElements : undefined}
             beforeAddField={canAddCalculatorField}
-            onFormulaChange={setCalculatorFormula}
+            onFormulaChange={handleCalculatorChange}
             showFormulaPreview
             scriptLayout="stretch"
           />

@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, Ref, useImperativeHandle } from 'react';
+import { Fragment, Ref, useEffect, useImperativeHandle, useRef } from 'react';
 import { toast } from 'sonner';
 import { FormProvider } from 'react-hook-form';
 import { SubCondition } from './SubCondition';
@@ -11,6 +11,7 @@ import { useGetQacWithOutFilter } from './hooks/useGetQacWithOutFilter';
 import { useGetOnlyAllQuestions } from './hooks/useGetOnlyAllQuestions';
 import { useGetOnlyAllCalculation } from './hooks/useGetOnlyAllCalculation';
 import { buildConditionGroup } from './utils/buildConditionGroup';
+import { conditionGroupToForm } from './utils/conditionGroupToForm';
 import { FormulaConditionGroup } from '../types';
 
 export interface ConditionSectionHandle {
@@ -25,6 +26,7 @@ interface ConditionSectionProps {
   ref?: Ref<ConditionSectionHandle>;
   calculatorFormula?: string;
   calculatorFrontData?: string;
+  initialCondition?: FormulaConditionGroup | null;
   onSelectFormRequest?: () => void;
 }
 
@@ -38,6 +40,7 @@ export default function ConditionSection({
   ref,
   calculatorFormula,
   calculatorFrontData,
+  initialCondition,
   onSelectFormRequest,
 }: ConditionSectionProps) {
   const { qacWithOutFilterOptions, isFetchingQacWithOutFilter } = useGetQacWithOutFilter(formId);
@@ -50,6 +53,33 @@ export default function ConditionSection({
 
   const { methods, conditions, handleAddSubCondition, handleRemoveSubCondition } =
     useConditionalForm(undefined, formId);
+
+  const hasPrefilledRef = useRef(false);
+  const areSourcesReady =
+    !isFetchingQacWithOutFilter && !isFetchingOnlyAllQuestions && !isFetchingOnlyAllCalculation;
+
+  useEffect(() => {
+    if (!initialCondition || hasPrefilledRef.current || !areSourcesReady) return;
+    hasPrefilledRef.current = true;
+    methods.reset({
+      conditions: [
+        conditionGroupToForm(initialCondition, {
+          questionOptions: qacWithOutFilterOptions ?? [],
+          onlyAllQuestions: onlyAllQuestions ?? [],
+          questionValueOptions: onlySomeQuestionsOptions ?? [],
+          calculationValueOptions: onlyAllCalculationOptions ?? [],
+        }),
+      ],
+    });
+  }, [
+    initialCondition,
+    areSourcesReady,
+    methods,
+    qacWithOutFilterOptions,
+    onlyAllQuestions,
+    onlySomeQuestionsOptions,
+    onlyAllCalculationOptions,
+  ]);
 
   useImperativeHandle(
     ref,

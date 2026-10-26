@@ -284,6 +284,7 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
             minorName={name}
             calculatorFormula={calculatorFormula}
             calculatorFrontData={calculatorFrontData}
+            initialCondition={formId && formId === savedFormId ? minorFormula?.formulaModel?.condition : undefined}
             onSelectFormRequest={handleSelectFormRequest}
           />
         </div>

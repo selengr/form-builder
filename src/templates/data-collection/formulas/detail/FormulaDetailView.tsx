@@ -11,6 +11,7 @@ import { useGetMinorFormulaList } from './useGetMinorFormulaList';
 import { useGetMajorFormula } from './useGetMajorFormula';
 import MinorFormulaRow from './MinorFormulaRow';
 import MinorFormulaDialog from '../minor-formula/MinorFormulaDialog';
+import MajorFormulaSettingsDialog from './MajorFormulaSettingsDialog';
 import { useDeleteMinorFormula } from '../minor-formula/hooks/useDeleteMinorFormula';
 import MinorFormulaRowSkeleton from './MinorFormulaRowSkeleton';
 import { FormulaCalculator, type FormulaCalculatorHandle, parseFrontFormulaData } from '@/components/formula-calculator';
@@ -30,6 +31,7 @@ interface FormulaDetailViewProps {
 
 export default function FormulaDetailView({ majorId, majorName }: FormulaDetailViewProps) {
   const [openMinorFormulaDialog, setOpenMinorFormulaDialog] = useState(false);
+  const [openSettings, setOpenSettings] = useState(false);
   const [editingMinorId, setEditingMinorId] = useState<number | undefined>(undefined);
   const [deletingMinorId, setDeletingMinorId] = useState<number | null>(null);
   const { mutate: deleteMinorFormula } = useDeleteMinorFormula(majorId);
@@ -158,7 +160,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                     </IconButton>
 
                     <IconButton
-                      onClick={handleStub}
+                      onClick={() => setOpenSettings(true)}
                       sx={{
                         height: 34,
                         width: 34,
@@ -356,7 +358,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                   </Button>
 
                   <IconButton
-                    onClick={handleStub}
+                    onClick={() => setOpenSettings(true)}
                     sx={{
                       height: { xs: 48, md: 32 },
                       width: { xs: 48, md: 32 },
@@ -400,6 +402,13 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
           cancelLeave();
           if (leave) handleSubmit(leave);
         }}
+      />
+
+      <MajorFormulaSettingsDialog
+        open={openSettings}
+        onClose={() => setOpenSettings(false)}
+        majorId={majorId}
+        majorName={title}
       />
 
       <MinorFormulaDialog

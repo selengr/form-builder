@@ -1,11 +1,28 @@
 'use client';
 
 import { useEffect, useMemo, useRef } from 'react';
-import { EditorContent, useEditor } from '@tiptap/react';
+import { EditorContent, useEditor, type Editor } from '@tiptap/react';
 import { Element } from '../types';
 import styles from '../formulaCalculator.module.css';
 import { elementsToDocument, formulaExtensions } from './formulaExtensions';
 import { FormulaEditorContext, FormulaEditorContextValue } from './FormulaEditorContext';
+
+const CARET_MARGIN = 8;
+
+const keepCaretInScriptBox = (editor: Editor) => {
+  const { view } = editor;
+  const box = view.dom.closest<HTMLElement>('[data-formula-scroll]');
+  if (!box) return;
+
+  const caret = view.coordsAtPos(view.state.selection.from);
+  const boxRect = box.getBoundingClientRect();
+
+  if (caret.top < boxRect.top + CARET_MARGIN) {
+    box.scrollTop -= boxRect.top + CARET_MARGIN - caret.top;
+  } else if (caret.bottom > boxRect.bottom - CARET_MARGIN) {
+    box.scrollTop += caret.bottom - (boxRect.bottom - CARET_MARGIN);
+  }
+};
 
 const NAVIGATION_KEYS = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'Tab'];
 const PERSIAN_DIGITS = '۰۱۲۳۴۵۶۷۸۹';
@@ -131,7 +148,7 @@ export default function FormulaEditor({
       if (from !== position || to !== position) {
         editor.commands.setTextSelection(position);
       }
-      if (shouldFocus) editor.commands.scrollIntoView();
+      if (shouldFocus) keepCaretInScriptBox(editor);
 
       isSyncingRef.current = false;
     });

@@ -221,11 +221,6 @@ export default function FormulaCalculator({
     const nextElement = cursorIndex < elements.length ? elements[cursorIndex] : null;
 
     if (prevElement) {
-      if (prevElement.type === 'OPERATOR' && !insideAvg) {
-        toast.error('عملگر نمی‌تواند بعد از عملگر دیگر قرار گیرد');
-        return;
-      }
-
       if (
         (prevElement.type === 'PARENTHESIS' || prevElement.type === 'AVG_PARENTHESIS') &&
         prevElement.content === '(' &&
@@ -236,8 +231,9 @@ export default function FormulaCalculator({
       }
     }
 
-    if (nextElement?.type === 'OPERATOR' && !insideAvg) {
-      toast.error('دو عملگر نمی‌توانند پشت سر هم قرار گیرند');
+    if (nextElement?.type === 'OPERATOR' && OPERATOR_TYPES.includes(nextElement.content)) {
+      newElements[cursorIndex] = { ...nextElement, content };
+      updateElements(newElements, cursorIndex + 1);
       return;
     }
 
@@ -246,7 +242,7 @@ export default function FormulaCalculator({
       newElements[cursorIndex - 1].type === 'OPERATOR' &&
       OPERATOR_TYPES.includes(newElements[cursorIndex - 1].content)
     ) {
-      newElements[cursorIndex - 1].content = content;
+      newElements[cursorIndex - 1] = { ...newElements[cursorIndex - 1], content };
     } else {
       newElements.splice(cursorIndex, 0, { type: 'OPERATOR', content });
       newCursorIndex++;

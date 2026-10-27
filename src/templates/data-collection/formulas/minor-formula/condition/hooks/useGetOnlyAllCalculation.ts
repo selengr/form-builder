@@ -15,7 +15,7 @@ export const useGetOnlyAllCalculation = (formId: string) => {
       return res.data;
     },
     enabled: Boolean(formId),
-    staleTime: 0,
+    staleTime: 60 * 1000,
     gcTime: 600000,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,

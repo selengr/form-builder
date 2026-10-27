@@ -55,7 +55,11 @@ export default function ConditionSectionSkeleton() {
       <RowSkeleton />
 
       <div style={{ padding: '9px 14px 14px' }}>
-        <div className="w-full rounded-xl border border-dashed border-[#DDE1E6] bg-[#F8FAFC]" style={{ height: 50 }} />
+        <div
+          className="flex items-center justify-center w-full rounded-xl border border-dashed border-[#DDE1E6] bg-[#F8FAFC] text-sm font-medium"
+          style={{ minHeight: 50, color: '#9A9A9A' }}>
+          افزودن شرط جدید (و)
+        </div>
       </div>
     </div>
   );

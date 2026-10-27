@@ -60,13 +60,15 @@ export default function ConditionSection({
   } = useGetOnlyAllQuestions(formId);
 
   const { methods, conditions, handleAddSubCondition, handleRemoveSubCondition } =
-    useConditionalForm(undefined, formId);
+    useConditionalForm(undefined);
 
   const hasPrefilledRef = useRef(false);
   const [isPrefilled, setIsPrefilled] = useState(false);
   const showSkeleton = isLoading || (initialCondition !== undefined && !isPrefilled);
   const areSourcesReady =
-    !isFetchingQacWithOutFilter && !isFetchingOnlyAllQuestions && !isFetchingOnlyAllCalculation;
+    (qacWithOutFilterOptions !== undefined || !isFetchingQacWithOutFilter) &&
+    (onlyAllQuestions !== undefined || !isFetchingOnlyAllQuestions) &&
+    (onlyAllCalculationOptions !== undefined || !isFetchingOnlyAllCalculation);
 
   useEffect(() => {
     if (initialCondition === undefined || hasPrefilledRef.current || !areSourcesReady) return;

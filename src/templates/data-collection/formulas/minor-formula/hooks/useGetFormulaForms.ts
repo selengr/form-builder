@@ -23,7 +23,7 @@ export const useGetFormulaForms = () => {
 
       return res.data as { dataList?: FormulaFormItem[] };
     },
-    staleTime: 0,
+    staleTime: 60 * 1000,
     retry: 3,
   });
 

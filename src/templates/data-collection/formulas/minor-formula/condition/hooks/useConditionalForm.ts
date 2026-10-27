@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { idGenerator } from '../../utils/idGenerator';
 import { IGetCondition } from '../types';
@@ -9,7 +8,6 @@ import {
   type TConditionFormData,
   TSubConditionData,
 } from '../schema';
-import { useGetQacWithOutFilterList } from './useGetQacWithOutFilterList';
 import { getQuestionField } from '../utils/questionType';
 
 export const createNewSubCondition = () => ({
@@ -27,7 +25,7 @@ export const createNewCondition = () => ({
 
 const TransformOutputToInput = (
   conditionJson: IGetCondition,
-  qacWithOutFilterOptions?: ReturnType<typeof useGetQacWithOutFilterList>['qacWithOutFilterOptions'],
+  qacWithOutFilterOptions?: any[],
 ): TConditionData => {
   const { frontConditionData } = conditionJson;
 
@@ -104,24 +102,15 @@ const TransformOutputToInput = (
   };
 };
 
-export const useConditionalForm = (condition: IGetCondition | undefined, formId: string) => {
-  const { qacWithOutFilterOptions } = useGetQacWithOutFilterList(formId);
-
+export const useConditionalForm = (condition: IGetCondition | undefined) => {
   const methods = useForm<TConditionFormData>({
     resolver: zodResolver(ConditionFormSchema),
     defaultValues: {
-      conditions: [condition ? TransformOutputToInput(condition, qacWithOutFilterOptions) : createNewCondition()],
+      conditions: [condition ? TransformOutputToInput(condition) : createNewCondition()],
     },
   });
 
-  const { control, getValues, reset } = methods;
-
-  useEffect(() => {
-    if (!condition || !qacWithOutFilterOptions?.length) return;
-    reset({
-      conditions: [TransformOutputToInput(condition, qacWithOutFilterOptions)],
-    });
-  }, [condition, qacWithOutFilterOptions?.length, reset]);
+  const { control, getValues } = methods;
 
   const {
     fields: conditions,

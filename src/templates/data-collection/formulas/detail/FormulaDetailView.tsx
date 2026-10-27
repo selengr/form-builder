@@ -13,13 +13,11 @@ import MinorFormulaRow from './MinorFormulaRow';
 import MinorFormulaDialog from '../minor-formula/MinorFormulaDialog';
 import { useDeleteMinorFormula } from '../minor-formula/hooks/useDeleteMinorFormula';
 import MinorFormulaRowSkeleton from './MinorFormulaRowSkeleton';
-// import CalculatorSection, { CalculatorSectionHandle } from './calculator/CalculatorSection';
-import { FormulaCalculator, type FormulaCalculatorHandle } from '@/components/formula-calculator';
+import { FormulaCalculator, type FormulaCalculatorHandle, parseFrontFormulaData } from '@/components/formula-calculator';
 import { useUpdateMajorFormula } from './useUpdateMajorFormula';
 import { useUnsavedChangesGuard } from './useUnsavedChangesGuard';
 import UnsavedChangesDialog from './UnsavedChangesDialog';
-import { toCalculatorFields } from './calculator/utils/toCalculatorFields';
-import { parseFrontFormulaData } from './calculator/utils/restoreCalculator';
+import { toCalculatorFields } from './utils/toCalculatorFields';
 
 const APP_SIDEBAR_WIDTH_PX = 500;
 const UNSAVED_ELEMENTS_THRESHOLD = 2;
@@ -69,7 +67,6 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
     console.log('[FormulaDetailView] calculator formula:', formula);
   }, []);
 
-  // const calculatorRef = useRef<CalculatorSectionHandle>(null);
   const calculatorRef = useRef<FormulaCalculatorHandle>(null);
   const minorListScrollRef = useRef<HTMLDivElement>(null);
   const inlineAddButtonRef = useRef<HTMLButtonElement>(null);
@@ -310,15 +307,6 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                     <div
                       className="flex flex-col w-full shrink-0 overflow-y-auto"
                       style={{ maxHeight: '60%', scrollbarWidth: 'thin', padding: '12px 10px', borderTop: '1px solid #DDE1E6' }}>
-                      {/* <CalculatorSection
-                        key={isMajorFormulaLoading ? 'loading' : `saved-${majorFormula?.id ?? 'new'}`}
-                        ref={calculatorRef}
-                        initialElements={savedCalculatorElements}
-                        questionList={calculatorFields}
-                        isQuestionListLoading={isLoading}
-                        onFormulaChange={handleCalculatorFormulaChange}
-                        onElementsCountChange={setCalculatorElementsCount}
-                      /> */}
                       <FormulaCalculator
                         key={isMajorFormulaLoading ? 'loading' : `saved-${majorFormula?.id ?? 'new'}`}
                         ref={calculatorRef}

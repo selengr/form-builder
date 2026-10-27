@@ -6,9 +6,8 @@ import { CgClose } from 'react-icons/cg';
 import { styled } from '@mui/material/styles';
 import { Autocomplete, Button, Dialog, DialogContent, IconButton, TextField } from '@mui/material';
 import ConditionSection, { ConditionSectionHandle } from './condition/ConditionSection';
-// import CalculatorSection, { CalculatorSectionHandle } from './calculator/CalculatorSection';
 import { FormulaCalculator, type FormulaCalculatorHandle, parseFrontFormulaData } from '@/components/formula-calculator';
-import { useGetCalculatorFields } from './calculator/hooks/useGetCalculatorFields';
+import { useGetCalculatorFields } from './hooks/useGetCalculatorFields';
 import styles from './minorFormulaDialog.module.css';
 import { FormulaFormOption, useGetFormulaForms } from './hooks/useGetFormulaForms';
 import { useCreateMinorFormula } from './hooks/useCreateMinorFormula';
@@ -84,7 +83,6 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
     error: minorFormulaError,
   } = useGetMinorFormula(minorId);
   const conditionRef = useRef<ConditionSectionHandle>(null);
-  // const calculatorRef = useRef<CalculatorSectionHandle>(null);
   const calculatorRef = useRef<FormulaCalculatorHandle>(null);
   const [calculatorFormula, setCalculatorFormula] = useState('');
   const [calculatorFrontData, setCalculatorFrontData] = useState('');
@@ -304,7 +302,6 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
         </div>
 
         <div ref={calculatorWrapperRef} style={{ marginTop: 12 }}>
-          {/* <CalculatorSection key={formId} ref={calculatorRef} formId={formId} onFormulaChange={setCalculatorFormula} onSelectFormRequest={handleSelectFormRequest} /> */}
           <FormulaCalculator
             key={formId}
             ref={calculatorRef}

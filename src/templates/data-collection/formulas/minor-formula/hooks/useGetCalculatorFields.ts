@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getCalculatorFieldsAction } from '@actions/data-collection/formulas/minor-formula/getCalculatorFieldsAction';
-import { IFieldQuestionData } from '../types';
+import type { IFieldQuestionData } from '@/components/formula-calculator';
 
 const EMPTY_FIELDS: IFieldQuestionData = { dataList: [] };
 

@@ -11,8 +11,8 @@ import { useGetMinorFormulaList } from '../detail/useGetMinorFormulaList';
 import MinorFormulaRow from '../detail/MinorFormulaRow';
 import MinorFormulaRowSkeleton from '../detail/MinorFormulaRowSkeleton';
 import { useGetMajorFormula } from '../detail/useGetMajorFormula';
-import { toCalculatorFields } from '../detail/calculator/utils/toCalculatorFields';
-import { parseFrontFormulaData } from '../detail/calculator/utils/restoreCalculator';
+import { parseFrontFormulaData } from '@/components/formula-calculator';
+import { toCalculatorFields } from '../detail/utils/toCalculatorFields';
 import SavedFormulaPreview from './SavedFormulaPreview';
 
 const APP_SIDEBAR_WIDTH_PX = 500;

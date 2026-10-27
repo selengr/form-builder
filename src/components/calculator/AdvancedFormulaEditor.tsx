@@ -977,6 +977,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
           ref={calculatorRef}
           fields={questionList as unknown as IFieldQuestionData}
           initialElements={initialElements}
+          showFormulaPreview
           scriptLayout="stretch"
         />
       </div>

@@ -62,17 +62,19 @@ export default function ConditionSection({
   const { methods, conditions, handleAddSubCondition, handleRemoveSubCondition } =
     useConditionalForm(undefined);
 
-  const hasPrefilledRef = useRef(false);
   const [isPrefilled, setIsPrefilled] = useState(false);
+  const prefilledWithValueListsRef = useRef(false);
+  const { isDirty } = methods.formState;
   const showSkeleton = isLoading || (initialCondition !== undefined && !isPrefilled);
-  const areSourcesReady =
-    (qacWithOutFilterOptions !== undefined || !isFetchingQacWithOutFilter) &&
+  const isQuestionListReady = qacWithOutFilterOptions !== undefined || !isFetchingQacWithOutFilter;
+  const areValueListsReady =
     (onlyAllQuestions !== undefined || !isFetchingOnlyAllQuestions) &&
     (onlyAllCalculationOptions !== undefined || !isFetchingOnlyAllCalculation);
 
   useEffect(() => {
-    if (initialCondition === undefined || hasPrefilledRef.current || !areSourcesReady) return;
-    hasPrefilledRef.current = true;
+    if (initialCondition === undefined || !isQuestionListReady) return;
+    if (isPrefilled && (prefilledWithValueListsRef.current || !areValueListsReady || isDirty)) return;
+
     methods.reset({
       conditions: [
         conditionGroupToForm(initialCondition, {
@@ -83,12 +85,19 @@ export default function ConditionSection({
         }),
       ],
     });
-    setIsPrefilled(true);
-    onPrefilled?.();
+    prefilledWithValueListsRef.current = areValueListsReady;
+
+    if (!isPrefilled) {
+      setIsPrefilled(true);
+      onPrefilled?.();
+    }
   }, [
     initialCondition,
     onPrefilled,
-    areSourcesReady,
+    isPrefilled,
+    isDirty,
+    isQuestionListReady,
+    areValueListsReady,
     methods,
     qacWithOutFilterOptions,
     onlyAllQuestions,

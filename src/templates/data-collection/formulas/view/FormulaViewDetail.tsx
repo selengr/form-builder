@@ -15,7 +15,7 @@ import { parseFrontFormulaData } from '@/components/formula-calculator';
 import { toCalculatorFields } from '../detail/utils/toCalculatorFields';
 import SavedFormulaPreview from './SavedFormulaPreview';
 
-const APP_SIDEBAR_WIDTH_PX = 450;
+const APP_SIDEBAR_WIDTH_PX = 440;
 const DESKTOP_MEDIA = '@media (min-width:1280px)';
 
 const disabledIconSx = {

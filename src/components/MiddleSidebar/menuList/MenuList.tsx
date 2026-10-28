@@ -15,7 +15,7 @@ const MenuList: React.FC<IMenuListProps> = ({ menuLinks, onItemClick }) => {
                 title: item.text,
                 icon: item.icon ?? "",
                 link: item.a_attr?.href ?? "#",
-                order: Number(item?.data?.order ?? 0),
+                order: Number(item?.data?.depth ?? 0),
                 isStatic: false,
                 langId: item?.data?.langId,
             })) ?? [];
@@ -29,7 +29,7 @@ const MenuList: React.FC<IMenuListProps> = ({ menuLinks, onItemClick }) => {
             isStatic: true,
         }));
 
-        const allLinks: IMenuItemData[] = [...serverLinks, ...staticLinks];
+        const byOrder = (a: IMenuItemData, b: IMenuItemData) => a.order - b.order;
 
         const langMap = new Map(serverLinks.map((i) => [i.langId, i]));
 
@@ -41,17 +41,19 @@ const MenuList: React.FC<IMenuListProps> = ({ menuLinks, onItemClick }) => {
         const adminPackagingRequestItem = langMap.get("acl.psya.admin.packagingRequest.master");
         const dataCollectionFormulasItem = langMap.get("acl.psya.admin.data-collection.formulas.master");
 
-        const linksWithHierarchy = allLinks
+        const linksWithHierarchy = serverLinks
             .map((item) => {
                 if (managementMaster && item.id === managementMaster.id) {
-                    const children = [
-                        assessmentsItem,
-                        surveyItem,
-                        userreportsItem,
-                        dataCollection,
-                        dataCollectionFormulasItem,
-                        adminPackagingRequestItem,
-                    ].filter(Boolean) as IMenuItemData[];
+                    const children = (
+                        [
+                            assessmentsItem,
+                            surveyItem,
+                            userreportsItem,
+                            dataCollection,
+                            dataCollectionFormulasItem,
+                            adminPackagingRequestItem,
+                        ].filter(Boolean) as IMenuItemData[]
+                    ).sort(byOrder);
 
                     return { ...item, children };
                 }
@@ -70,7 +72,7 @@ const MenuList: React.FC<IMenuListProps> = ({ menuLinks, onItemClick }) => {
                 ].includes(item.id);
             });
 
-        return [...linksWithHierarchy].sort((a, b) => a.order - b.order);
+        return [...linksWithHierarchy.sort(byOrder), ...staticLinks.sort(byOrder)];
     }, [menuLinks]);
 
     const handleToggle = (id: string | number) => {

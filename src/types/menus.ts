@@ -15,6 +15,7 @@ export interface IServerMenuItem {
   a_attr?: { href?: string };
   data: {
     order: string;
+    depth?: number;
     langId?: string;
   };
 }

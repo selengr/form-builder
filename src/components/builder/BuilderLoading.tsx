@@ -130,7 +130,7 @@ function SidebarSkeleton() {
 function MobileBottomBarSkeleton() {
   return (
     <div
-      className={`lg:hidden fixed bottom-0 left-0 right-0 md:right-[500px] z-50 bg-white border-t border-[#E8E8E8] px-4 py-3 flex items-center gap-2 ${pulse}`}
+      className={`lg:hidden fixed bottom-0 left-0 right-0 md:right-[450px] z-50 bg-white border-t border-[#E8E8E8] px-4 py-3 flex items-center gap-2 ${pulse}`}
     >
       <SkeletonBlock className="h-12 flex-1 rounded-[10px] bg-[#1758BA]/20" />
       <SkeletonBlock className="h-12 w-12 shrink-0 rounded-[10px] bg-gray-100" />

@@ -8,7 +8,7 @@ import SettingsDialog from '../SettingsDialog/SettingsDialog';
 import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
 import type { DesignerSidebarData } from './DesignerSidebar';
 
-const APP_SIDEBAR_WIDTH_PX = 500;
+const APP_SIDEBAR_WIDTH_PX = 450;
 
 interface BuilderMobileBottomBarProps {
   data: DesignerSidebarData;

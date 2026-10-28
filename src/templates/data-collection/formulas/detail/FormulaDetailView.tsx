@@ -20,7 +20,7 @@ import { useUnsavedChangesGuard } from './useUnsavedChangesGuard';
 import UnsavedChangesDialog from './UnsavedChangesDialog';
 import { toCalculatorFields } from './utils/toCalculatorFields';
 
-const APP_SIDEBAR_WIDTH_PX = 500;
+const APP_SIDEBAR_WIDTH_PX = 450;
 const UNSAVED_ELEMENTS_THRESHOLD = 2;
 const DESKTOP_MEDIA = '@media (min-width:1280px)';
 

@@ -6,8 +6,10 @@ import { toast } from 'sonner';
 import { CgClose } from 'react-icons/cg';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, Button, Dialog, DialogContent, Typography } from '@mui/material';
-import FormProvider, { RHFTextField } from '@/components/hook-form';
+import { Box, Button, Dialog, DialogContent, MenuItem, Typography } from '@mui/material';
+import FormProvider, { RHFSelect, RHFTextField } from '@/components/hook-form';
+import { SkeletonMenuItem } from '@/components/Fields/PackageInjectionField';
+import { useGetFormulaTargetPlatform } from '../hooks/useGetFormulaTargetPlatform';
 import { useUpdateMajorFormulaInfo } from './useUpdateMajorFormulaInfo';
 
 const settingsSchema = z.object({
@@ -21,7 +23,29 @@ const settingsSchema = z.object({
         .min(2, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' })
         .max(50, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' }),
     ),
+  targetPlatformEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
 });
+
+interface ITargetPlatform {
+  value: string;
+  caption: string;
+}
+
+const selectSx = {
+  '& .MuiInputBase-root': {
+    bgcolor: '#fff',
+    borderRadius: '10px',
+    paddingY: '0',
+  },
+  '& .MuiSelect-select [data-saved-tag]': { display: 'none' },
+};
+
+const savedOptionSx = {
+  color: '#1758BA',
+  fontWeight: 600,
+  backgroundColor: '#F1F6FD',
+  '&:hover, &.Mui-selected, &.Mui-selected:hover': { backgroundColor: '#E6EEFB' },
+};
 
 type SettingsFormValues = z.infer<typeof settingsSchema>;
 
@@ -30,22 +54,33 @@ interface MajorFormulaSettingsDialogProps {
   onClose: () => void;
   majorId: string;
   majorName: string;
+  targetPlatformEnum?: string | null;
 }
 
-export default function MajorFormulaSettingsDialog({ open, onClose, majorId, majorName }: MajorFormulaSettingsDialogProps) {
+export default function MajorFormulaSettingsDialog({
+  open,
+  onClose,
+  majorId,
+  majorName,
+  targetPlatformEnum,
+}: MajorFormulaSettingsDialogProps) {
   const { mutate: updateInfo, isPending } = useUpdateMajorFormulaInfo();
+  const { TargetPlatform, isFetchingTargetPlatform } = useGetFormulaTargetPlatform(open);
+  const savedPlatform = targetPlatformEnum ?? '';
+  const platformOptions: ITargetPlatform[] = TargetPlatform ?? [];
+  const isSavedMissing = Boolean(savedPlatform) && !platformOptions.some((item) => item.value === savedPlatform);
 
   const methods = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema),
     mode: 'all',
-    defaultValues: { majorName },
+    defaultValues: { majorName, targetPlatformEnum: savedPlatform },
   });
 
   const { handleSubmit, reset } = methods;
 
   useEffect(() => {
-    if (open) reset({ majorName });
-  }, [open, majorName, reset]);
+    if (open) reset({ majorName, targetPlatformEnum: savedPlatform });
+  }, [open, majorName, savedPlatform, reset]);
 
   const handleClose = () => {
     if (isPending) return;
@@ -54,7 +89,7 @@ export default function MajorFormulaSettingsDialog({ open, onClose, majorId, maj
 
   const onSubmit = (values: SettingsFormValues) => {
     updateInfo(
-      { id: Number(majorId), majorName: values.majorName },
+      { id: Number(majorId), majorName: values.majorName, targetPlatformEnum: values.targetPlatformEnum },
       {
         onSuccess: () => {
           toast.success('تنظیمات با موفقیت ثبت شد');
@@ -118,6 +153,43 @@ export default function MajorFormulaSettingsDialog({ open, onClose, majorId, maj
                     },
                   }}
                 />
+              </Box>
+
+              <Box display="flex" flexDirection="column" gap={1}>
+                <Typography fontWeight="600" fontSize="15px">
+                  سرویس گیرنده:
+                </Typography>
+                <RHFSelect fullWidth name="targetPlatformEnum" sx={selectSx}>
+                  <MenuItem value="">انتخاب کنید</MenuItem>
+                  {isFetchingTargetPlatform && (
+                    <MenuItem value="" disabled>
+                      <SkeletonMenuItem />
+                    </MenuItem>
+                  )}
+                  {isSavedMissing && (
+                    <MenuItem value={savedPlatform} sx={savedOptionSx}>
+                      {savedPlatform}
+                    </MenuItem>
+                  )}
+                  {platformOptions.map((item) => (
+                    <MenuItem
+                      key={item.value}
+                      value={item.value}
+                      sx={item.value === savedPlatform ? savedOptionSx : undefined}>
+                      <Box component="span" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: 1 }}>
+                        {item.caption}
+                        {item.value === savedPlatform && (
+                          <Box
+                            component="span"
+                            data-saved-tag
+                            sx={{ fontSize: 11, fontWeight: 500, color: '#1758BA', bgcolor: '#E6EEFB', borderRadius: '6px', px: 0.75, py: 0.25 }}>
+                            فعلی
+                          </Box>
+                        )}
+                      </Box>
+                    </MenuItem>
+                  ))}
+                </RHFSelect>
               </Box>
             </Box>
 

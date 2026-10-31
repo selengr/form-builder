@@ -12,12 +12,14 @@ import EditIcon from '@/../public/images/home-page/edit-2.svg';
 import TrashIcon from '@/../public/images/home-page/trash.svg';
 import { useGetFormulaTargetPlatform } from './hooks/useGetFormulaTargetPlatform';
 import { MajorFormulaListItem } from './types';
+import FormulaValidateDialog from './FormulaValidateDialog';
 
 export default function FormulaListCard({
   data,
 }: UnifiedListGridCardProps<MajorFormulaListItem>) {
   const router = useRouter();
   const [enabled, setEnabled] = useState(true);
+  const [openValidate, setOpenValidate] = useState(false);
   const { TargetPlatform } = useGetFormulaTargetPlatform(true);
 
   const platformCaption =
@@ -37,7 +39,7 @@ export default function FormulaListCard({
   };
 
   const handleValidate = () => {
-    toast.info('این قابلیت به‌زودی اضافه می‌شود');
+    setOpenValidate(true);
   };
 
   return (
@@ -78,6 +80,10 @@ export default function FormulaListCard({
           </IconButton> */}
         </div>
       </div>
+
+      {openValidate && (
+        <FormulaValidateDialog open onClose={() => setOpenValidate(false)} label={data.majorLabel} />
+      )}
     </div>
   );
 }

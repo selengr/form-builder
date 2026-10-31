@@ -52,7 +52,6 @@ const selectSx = {
     borderRadius: '10px',
     paddingY: '0',
   },
-  '& .MuiSelect-select [data-saved-tag]': { display: 'none' },
 };
 
 const savedOptionSx = {
@@ -200,17 +199,7 @@ export default function MajorFormulaSettingsDialog({
                       key={item.value}
                       value={item.value}
                       sx={item.value === savedPlatform ? savedOptionSx : undefined}>
-                      <Box component="span" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: 1 }}>
-                        {item.caption}
-                        {item.value === savedPlatform && (
-                          <Box
-                            component="span"
-                            data-saved-tag
-                            sx={{ fontSize: 11, fontWeight: 500, color: '#1758BA', bgcolor: '#E6EEFB', borderRadius: '6px', px: 0.75, py: 0.25 }}>
-                            فعلی
-                          </Box>
-                        )}
-                      </Box>
+                      {item.caption}
                     </MenuItem>
                   ))}
                 </RHFSelect>

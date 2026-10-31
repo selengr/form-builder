@@ -69,6 +69,8 @@ export async function getMajorFormulaListAction({
     rows: PAGE_SIZE,
   };
 
+  console.log('[getMajorFormulaListAction] params:', JSON.stringify(params));
+
   const encodedParams = encodeURIComponent(JSON.stringify(params));
   const url = `${LIST_URL}?searchFilterModel=${encodedParams}`;
 

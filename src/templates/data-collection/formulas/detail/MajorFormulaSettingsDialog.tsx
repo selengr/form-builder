@@ -1,7 +1,7 @@
 'use client';
 
 import { z } from 'zod';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { toast } from 'sonner';
 import { CgClose } from 'react-icons/cg';
 import { useForm } from 'react-hook-form';
@@ -12,19 +12,34 @@ import { SkeletonMenuItem } from '@/components/Fields/PackageInjectionField';
 import { useGetFormulaTargetPlatform } from '../hooks/useGetFormulaTargetPlatform';
 import { useUpdateMajorFormulaInfo } from './useUpdateMajorFormulaInfo';
 
-const settingsSchema = z.object({
-  majorName: z
-    .string()
-    .trim()
-    .transform((value) => value.replace(/\s+/g, ' '))
-    .pipe(
-      z
-        .string()
-        .min(2, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' })
-        .max(50, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' }),
-    ),
-  targetPlatformEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
-});
+const PERSIAN_CHARS_REGEX = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/;
+
+const createSettingsSchema = (savedLabel: string) =>
+  z.object({
+    majorName: z
+      .string()
+      .trim()
+      .transform((value) => value.replace(/\s+/g, ' '))
+      .pipe(
+        z
+          .string()
+          .min(2, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' })
+          .max(50, { message: 'حداقل باید 2 و حداکثر 50 کاراکتر باشد' }),
+      ),
+    targetPlatformEnum: z.string().min(1, { message: 'لطفا یک مورد را انتخاب کنید' }),
+    majorLabel: z
+      .string()
+      .trim()
+      .transform((value) => value.replace(/\s+/g, ' '))
+      .superRefine((value, ctx) => {
+        if (savedLabel && value === savedLabel) return;
+        if (value.length < 8 || value.length > 30) {
+          ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'حداقل باید 8 و حداکثر 30 کاراکتر باشد' });
+        } else if (PERSIAN_CHARS_REGEX.test(value)) {
+          ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'استفاده از حروف فارسی مجاز نیست' });
+        }
+      }),
+  });
 
 interface ITargetPlatform {
   value: string;
@@ -47,13 +62,14 @@ const savedOptionSx = {
   '&:hover, &.Mui-selected, &.Mui-selected:hover': { backgroundColor: '#E6EEFB' },
 };
 
-type SettingsFormValues = z.infer<typeof settingsSchema>;
+type SettingsFormValues = z.infer<ReturnType<typeof createSettingsSchema>>;
 
 interface MajorFormulaSettingsDialogProps {
   open: boolean;
   onClose: () => void;
   majorId: string;
   majorName: string;
+  majorLabel?: string | null;
   targetPlatformEnum?: string | null;
 }
 
@@ -62,25 +78,28 @@ export default function MajorFormulaSettingsDialog({
   onClose,
   majorId,
   majorName,
+  majorLabel,
   targetPlatformEnum,
 }: MajorFormulaSettingsDialogProps) {
   const { mutate: updateInfo, isPending } = useUpdateMajorFormulaInfo();
   const { TargetPlatform, isFetchingTargetPlatform } = useGetFormulaTargetPlatform(open);
   const savedPlatform = targetPlatformEnum ?? '';
+  const savedLabel = majorLabel ?? '';
+  const settingsSchema = useMemo(() => createSettingsSchema(savedLabel), [savedLabel]);
   const platformOptions: ITargetPlatform[] = TargetPlatform ?? [];
   const isSavedMissing = Boolean(savedPlatform) && !platformOptions.some((item) => item.value === savedPlatform);
 
   const methods = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema),
     mode: 'all',
-    defaultValues: { majorName, targetPlatformEnum: savedPlatform },
+    defaultValues: { majorName, targetPlatformEnum: savedPlatform, majorLabel: savedLabel },
   });
 
   const { handleSubmit, reset } = methods;
 
   useEffect(() => {
-    if (open) reset({ majorName, targetPlatformEnum: savedPlatform });
-  }, [open, majorName, savedPlatform, reset]);
+    if (open) reset({ majorName, targetPlatformEnum: savedPlatform, majorLabel: savedLabel });
+  }, [open, majorName, savedPlatform, savedLabel, reset]);
 
   const handleClose = () => {
     if (isPending) return;
@@ -89,7 +108,12 @@ export default function MajorFormulaSettingsDialog({
 
   const onSubmit = (values: SettingsFormValues) => {
     updateInfo(
-      { id: Number(majorId), majorName: values.majorName, targetPlatformEnum: values.targetPlatformEnum },
+      {
+        id: Number(majorId),
+        majorLabel: values.majorLabel,
+        majorName: values.majorName,
+        targetPlatformEnum: values.targetPlatformEnum,
+      },
       {
         onSuccess: () => {
           toast.success('تنظیمات با موفقیت ثبت شد');
@@ -190,6 +214,22 @@ export default function MajorFormulaSettingsDialog({
                     </MenuItem>
                   ))}
                 </RHFSelect>
+              </Box>
+
+              <Box display="flex" flexDirection="column" gap={1}>
+                <Typography fontWeight="600" fontSize="15px">
+                  شناسه:
+                </Typography>
+                <RHFTextField
+                  name="majorLabel"
+                  dir="ltr"
+                  sx={{
+                    '& .MuiInputBase-root': {
+                      borderRadius: '10px',
+                      fontWeight: '600',
+                    },
+                  }}
+                />
               </Box>
             </Box>
 

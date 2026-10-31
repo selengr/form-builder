@@ -7,6 +7,7 @@ const UPDATE_MAJOR_INFO_URL = '/admin/data-collection/formulas/major-formula-upd
 
 const updateMajorFormulaInfoSchema = z.object({
   id: z.number().int().positive(),
+  majorLabel: z.string().trim().min(1),
   majorName: z.string().trim().min(2).max(50),
   targetPlatformEnum: z.string().min(1),
 });

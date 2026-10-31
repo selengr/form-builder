@@ -409,6 +409,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
         onClose={() => setOpenSettings(false)}
         majorId={majorId}
         majorName={title}
+        majorLabel={majorFormula?.majorLabel}
         targetPlatformEnum={majorFormula?.targetPlatformEnum}
       />
 

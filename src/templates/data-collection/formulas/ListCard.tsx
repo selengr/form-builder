@@ -45,7 +45,7 @@ export default function FormulaListCard({
   const handleConfirmDelete = () => {
     deleteMajorFormula(data.id, {
       onSuccess: () => {
-        toast.success('فرمول حذف شد');
+        toast.success(`فرمول «${data.majorName}» حذف شد`);
         setOpenDeleteConfirm(false);
       },
       onError: (error) => toast.error(error.message),
@@ -97,7 +97,7 @@ export default function FormulaListCard({
 
       <FormulaDeleteConfirmDialog
         open={openDeleteConfirm}
-        content="آیا از حذف این فرمول اطمینان دارید؟"
+        content={`آیا از حذف فرمول «${data.majorName}» اطمینان دارید؟`}
         loading={isDeleting}
         onClose={() => setOpenDeleteConfirm(false)}
         onConfirm={handleConfirmDelete}

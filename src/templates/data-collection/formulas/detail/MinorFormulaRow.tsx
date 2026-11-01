@@ -10,7 +10,7 @@ import { PhDotsThreeVerticalBold } from '@/../public/images/icons/PhDotsThreeVer
 
 const ORDINAL_WORDS = ['اول', 'دوم', 'سوم', 'چهارم', 'پنجم', 'ششم', 'هفتم', 'هشتم', 'نهم', 'دهم'];
 
-function getOrdinalLabel(index: number) {
+export function getOrdinalLabel(index: number) {
   const word = ORDINAL_WORDS[index];
   if (word) return `فرمول ${word}`;
   return `فرمول ${(index + 1).toLocaleString('fa-IR')}`;

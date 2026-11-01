@@ -4,9 +4,11 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { CgClose } from 'react-icons/cg';
 import { IoAdd, IoCheckmarkCircle } from 'react-icons/io5';
-import { Box, Button, CircularProgress, Dialog, DialogContent, LinearProgress, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Dialog, DialogContent, LinearProgress, MenuItem, TextField, Typography } from '@mui/material';
 import { WeuiDeleteOutlined } from '@/../public/images/icons/DeleteIcon';
+import { SkeletonMenuItem } from '@/components/Fields/PackageInjectionField';
 import { useRunMajorFormula } from './hooks/useRunMajorFormula';
+import { useGetMetaParams } from './hooks/useGetMetaParams';
 
 const MAX_ROWS = 5;
 const REF_ID_KEY = '{#REF_ID}';
@@ -60,14 +62,16 @@ const squareButtonSx = {
   flexShrink: 0,
 };
 
-const toLatinNumber = (value: string) => {
-  const latin = value.replace(/[۰-۹٠-٩]/g, (digit) => {
+const toLatinDigits = (value: string) =>
+  value.replace(/[۰-۹٠-٩]/g, (digit) => {
     const persian = PERSIAN_DIGITS.indexOf(digit);
     return String(persian !== -1 ? persian : ARABIC_DIGITS.indexOf(digit));
   });
-  const cleaned = latin.replace(/[^\d.-]/g, '');
-  const [whole, ...rest] = cleaned.replace(/(?!^)-/g, '').split('.');
-  return rest.length ? `${whole}.${rest.join('')}` : whole;
+
+const toParamValue = (value: string): number | string => {
+  const text = value.trim();
+  const latin = toLatinDigits(text);
+  return /^-?\d+(\.\d+)?$/.test(latin) ? Number(latin) : text;
 };
 
 const formatResult = (result: unknown) => {
@@ -84,6 +88,7 @@ const createRow = (rows: ParamRow[], key = ''): ParamRow => ({
 
 export default function FormulaValidateDialog({ open, onClose, label }: FormulaValidateDialogProps) {
   const { mutate: runFormula, isPending } = useRunMajorFormula();
+  const { metaParamOptions, isFetchingMetaParams } = useGetMetaParams(open);
   const [accessKey, setAccessKey] = useState('');
   const [rows, setRows] = useState<ParamRow[]>(() => [createRow([], REF_ID_KEY)]);
   const [showErrors, setShowErrors] = useState(false);
@@ -96,7 +101,7 @@ export default function FormulaValidateDialog({ open, onClose, label }: FormulaV
   }, {});
 
   const isRowKeyInvalid = (row: ParamRow) => !row.key.trim() || keyCounts[row.key.trim()] > 1;
-  const isRowValueInvalid = (row: ParamRow) => row.value === '' || !Number.isFinite(Number(row.value));
+  const isRowValueInvalid = (row: ParamRow) => !row.value.trim();
   const hasDuplicateKey = Object.values(keyCounts).some((count) => count > 1);
   const isAccessKeyInvalid = !accessKey.trim();
   const hasRowError = rows.some((row) => isRowKeyInvalid(row) || isRowValueInvalid(row));
@@ -117,7 +122,7 @@ export default function FormulaValidateDialog({ open, onClose, label }: FormulaV
     setShowErrors(true);
     if (isAccessKeyInvalid || hasRowError) return;
 
-    const metaParameters = Object.fromEntries(rows.map((row) => [row.key.trim(), Number(row.value)]));
+    const metaParameters = Object.fromEntries(rows.map((row) => [row.key.trim(), toParamValue(row.value)]));
 
     setResult(null);
     runFormula(
@@ -205,22 +210,47 @@ export default function FormulaValidateDialog({ open, onClose, label }: FormulaV
                 <Box key={row.id} display="flex" alignItems="center" gap={ROW_GAP}>
                   <TextField
                     value={row.value}
-                    onChange={(event) => updateRow(row.id, { value: toLatinNumber(event.target.value) })}
+                    onChange={(event) => updateRow(row.id, { value: event.target.value })}
                     placeholder="مقدار"
                     disabled={isPending}
                     error={showErrors && isRowValueInvalid(row)}
                     sx={{ ...latinInputSx, width: VALUE_WIDTH, flexShrink: 0 }}
-                    slotProps={{ htmlInput: { dir: 'ltr', inputMode: 'decimal', style: { textAlign: 'center' } } }}
+                    slotProps={{ htmlInput: { dir: 'auto', autoComplete: 'off', style: { textAlign: 'center' } } }}
                   />
                   <TextField
+                    select
                     value={row.key}
                     onChange={(event) => updateRow(row.id, { key: event.target.value })}
-                    placeholder="کلید"
                     disabled={isPending}
                     error={showErrors && isRowKeyInvalid(row)}
-                    sx={{ ...latinInputSx, flex: 1, minWidth: 0 }}
-                    slotProps={{ htmlInput: { dir: 'ltr', autoComplete: 'off', spellCheck: false } }}
-                  />
+                    sx={{ ...inputSx, flex: 1, minWidth: 0 }}
+                    slotProps={{
+                      select: {
+                        displayEmpty: true,
+                        renderValue: (selected) => {
+                          if (!selected) return <Box component="span" sx={{ color: '#9EA3AC' }}>کلید</Box>;
+                          return metaParamOptions.find((option) => option.value === selected)?.caption ?? String(selected);
+                        },
+                        MenuProps: { PaperProps: { sx: { borderRadius: '12px', maxHeight: 260 } } },
+                      },
+                    }}>
+                    {isFetchingMetaParams && !metaParamOptions.length && (
+                      <MenuItem value="" disabled>
+                        <SkeletonMenuItem />
+                      </MenuItem>
+                    )}
+                    {row.key && !metaParamOptions.some((option) => option.value === row.key) && (
+                      <MenuItem value={row.key}>{row.key}</MenuItem>
+                    )}
+                    {metaParamOptions.map((option) => (
+                      <MenuItem
+                        key={option.value}
+                        value={option.value}
+                        disabled={option.value !== row.key && rows.some((other) => other.key === option.value)}>
+                        {option.caption}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                   <Button
                     variant="outlined"
                     aria-label="حذف ردیف"
@@ -350,7 +380,7 @@ export default function FormulaValidateDialog({ open, onClose, label }: FormulaV
                 در حال محاسبه
               </>
             ) : (
-              'نتیجه'
+              'اجرا'
             )}
           </Button>
 

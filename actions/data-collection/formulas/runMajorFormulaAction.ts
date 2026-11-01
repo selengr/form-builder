@@ -8,7 +8,7 @@ const RUN_FORMULA_URL = '/admin/data-collection/formulas/saya-data-collection-ru
 const runMajorFormulaSchema = z.object({
   accessKey: z.string().trim().min(1),
   label: z.string().trim().min(1),
-  metaParameters: z.record(z.string().min(1), z.number()),
+  metaParameters: z.record(z.string().min(1), z.union([z.number(), z.string().min(1)])),
 });
 
 export type RunMajorFormulaInput = z.infer<typeof runMajorFormulaSchema>;

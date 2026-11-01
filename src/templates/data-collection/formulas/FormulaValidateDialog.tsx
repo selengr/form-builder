@@ -189,12 +189,7 @@ export default function FormulaValidateDialog({ open, onClose, label }: FormulaV
               <Typography fontWeight="600" fontSize="15px" sx={{ flex: 1 }}>
                 کلید:
               </Typography>
-              <Box
-                sx={{
-                  width: rows.length < MAX_ROWS ? { xs: 92, sm: 104 } : BUTTON_SIZE,
-                  flexShrink: 0,
-                }}
-              />
+              <Box sx={{ width: BUTTON_SIZE, flexShrink: 0 }} />
             </Box>
 
             {rows.map((row, index) => {
@@ -241,21 +236,7 @@ export default function FormulaValidateDialog({ open, onClose, label }: FormulaV
                       </MenuItem>
                     ))}
                   </TextField>
-                  <Button
-                    variant="outlined"
-                    aria-label="حذف ردیف"
-                    onClick={() => removeRow(row.id)}
-                    disabled={isPending || rows.length === 1}
-                    sx={{
-                      ...squareButtonSx,
-                      color: '#FA4D56',
-                      borderColor: '#FA4D56',
-                      '&:hover': { borderColor: '#FA4D56', backgroundColor: '#FFF5F5' },
-                      '&.Mui-disabled': { borderColor: '#F3C5C8', opacity: 0.5 },
-                    }}>
-                    <WeuiDeleteOutlined width={22} height={22} />
-                  </Button>
-                  {rows.length < MAX_ROWS && (
+                  {isLast && rows.length < MAX_ROWS ? (
                     <Button
                       variant="outlined"
                       aria-label="افزودن ردیف"
@@ -263,12 +244,26 @@ export default function FormulaValidateDialog({ open, onClose, label }: FormulaV
                       disabled={isPending}
                       sx={{
                         ...squareButtonSx,
-                        visibility: isLast ? 'visible' : 'hidden',
                         color: '#1758BA',
                         borderColor: '#1758BA',
                         '&:hover': { borderColor: '#1758BA', backgroundColor: '#F1F6FD' },
                       }}>
                       <IoAdd size={24} />
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outlined"
+                      aria-label="حذف ردیف"
+                      onClick={() => removeRow(row.id)}
+                      disabled={isPending}
+                      sx={{
+                        ...squareButtonSx,
+                        color: '#FA4D56',
+                        borderColor: '#FA4D56',
+                        '&:hover': { borderColor: '#FA4D56', backgroundColor: '#FFF5F5' },
+                        '&.Mui-disabled': { borderColor: '#F3C5C8', opacity: 0.5 },
+                      }}>
+                      <WeuiDeleteOutlined width={22} height={22} />
                     </Button>
                   )}
                 </Box>

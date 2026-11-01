@@ -183,13 +183,13 @@ export default function FormulaValidateDialog({ open, onClose, label }: FormulaV
             <TextField fullWidth value={label} disabled sx={latinInputSx} slotProps={{ htmlInput: { dir: 'ltr' } }} />
           </Box>
 
-          <Box display="flex" flexDirection="column" gap={1}>
+          <Box display="flex" flexDirection="column" gap={1} mt={1} mb={2}>
             <Box display="flex" alignItems="center" gap={ROW_GAP}>
-              <Typography fontWeight="600" fontSize="15px" sx={{ flex: 1 }}>
-                پارامترها:
-              </Typography>
               <Typography fontWeight="600" fontSize="15px" sx={{ width: VALUE_WIDTH, flexShrink: 0 }}>
                 مقدار:
+              </Typography>
+              <Typography fontWeight="600" fontSize="15px" sx={{ flex: 1 }}>
+                کلید:
               </Typography>
               <Box
                 sx={{
@@ -204,15 +204,6 @@ export default function FormulaValidateDialog({ open, onClose, label }: FormulaV
               return (
                 <Box key={row.id} display="flex" alignItems="center" gap={ROW_GAP}>
                   <TextField
-                    value={row.key}
-                    onChange={(event) => updateRow(row.id, { key: event.target.value })}
-                    placeholder="کلید"
-                    disabled={isPending}
-                    error={showErrors && isRowKeyInvalid(row)}
-                    sx={{ ...latinInputSx, flex: 1, minWidth: 0 }}
-                    slotProps={{ htmlInput: { dir: 'ltr', autoComplete: 'off', spellCheck: false } }}
-                  />
-                  <TextField
                     value={row.value}
                     onChange={(event) => updateRow(row.id, { value: toLatinNumber(event.target.value) })}
                     placeholder="مقدار"
@@ -220,6 +211,15 @@ export default function FormulaValidateDialog({ open, onClose, label }: FormulaV
                     error={showErrors && isRowValueInvalid(row)}
                     sx={{ ...latinInputSx, width: VALUE_WIDTH, flexShrink: 0 }}
                     slotProps={{ htmlInput: { dir: 'ltr', inputMode: 'decimal', style: { textAlign: 'center' } } }}
+                  />
+                  <TextField
+                    value={row.key}
+                    onChange={(event) => updateRow(row.id, { key: event.target.value })}
+                    placeholder="کلید"
+                    disabled={isPending}
+                    error={showErrors && isRowKeyInvalid(row)}
+                    sx={{ ...latinInputSx, flex: 1, minWidth: 0 }}
+                    slotProps={{ htmlInput: { dir: 'ltr', autoComplete: 'off', spellCheck: false } }}
                   />
                   <Button
                     variant="outlined"
@@ -260,7 +260,7 @@ export default function FormulaValidateDialog({ open, onClose, label }: FormulaV
                 ? 'کلید تکراری است'
                 : showErrors && hasRowError
                   ? 'کلید و مقدار همه‌ی ردیف‌ها را کامل کنید'
-                  : `حداکثر ${MAX_ROWS.toLocaleString('fa-IR')} ردیف`}
+                  : ``}
             </Typography>
           </Box>
 

@@ -14,6 +14,7 @@ interface SavedFormulaPreviewProps {
   formula: string;
   fields: IFieldQuestionData;
   isLoading: boolean;
+  showFormula?: boolean;
 }
 
 const SCRIPT_BOX_HEIGHT_DESKTOP = 245;
@@ -29,7 +30,13 @@ const fieldTextStyle = {
   textOverflow: 'ellipsis',
 };
 
-export default function SavedFormulaPreview({ elements, formula, fields, isLoading }: SavedFormulaPreviewProps) {
+export default function SavedFormulaPreview({
+  elements,
+  formula,
+  fields,
+  isLoading,
+  showFormula = false,
+}: SavedFormulaPreviewProps) {
   const fieldNames = useMemo(() => {
     const names: Record<string, string> = {};
     fields.dataList.forEach((item) => {
@@ -85,22 +92,24 @@ export default function SavedFormulaPreview({ elements, formula, fields, isLoadi
         )}
       </Box>
 
-      <div
-        dir="ltr"
-        title={formula}
-        className={`${styles.formulaPreview} relative shrink-0 rounded-[10px] border border-[#DDE1E6] bg-[#F4F5F7]`}
-        style={{ marginTop: 8, height: 34, fontSize: 13 }}>
+      {showFormula && (
         <div
-          className="absolute flex items-center"
-          style={{ inset: 0, padding: '0 12px', gap: 8, overflowX: 'auto', overflowY: 'hidden', whiteSpace: 'nowrap', scrollbarWidth: 'thin' }}>
-          <span style={{ color: '#9EA3AC', fontSize: 11, flexShrink: 0 }}>formula</span>
-          {formula ? (
-            <span style={{ color: '#1758BA', flexShrink: 0 }}>{formula}</span>
-          ) : (
-            <span style={{ color: '#C1C7CD' }}>—</span>
-          )}
+          dir="ltr"
+          title={formula}
+          className={`${styles.formulaPreview} relative shrink-0 rounded-[10px] border border-[#DDE1E6] bg-[#F4F5F7]`}
+          style={{ marginTop: 8, height: 34, fontSize: 13 }}>
+          <div
+            className="absolute flex items-center"
+            style={{ inset: 0, padding: '0 12px', gap: 8, overflowX: 'auto', overflowY: 'hidden', whiteSpace: 'nowrap', scrollbarWidth: 'thin' }}>
+            <span style={{ color: '#9EA3AC', fontSize: 11, flexShrink: 0 }}>formula</span>
+            {formula ? (
+              <span style={{ color: '#1758BA', flexShrink: 0 }}>{formula}</span>
+            ) : (
+              <span style={{ color: '#C1C7CD' }}>—</span>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

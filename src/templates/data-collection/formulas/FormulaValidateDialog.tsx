@@ -94,15 +94,8 @@ export default function FormulaValidateDialog({ open, onClose, label }: FormulaV
   const [showErrors, setShowErrors] = useState(false);
   const [result, setResult] = useState<{ value: unknown } | null>(null);
 
-  const keyCounts = rows.reduce<Record<string, number>>((counts, row) => {
-    const key = row.key.trim();
-    if (key) counts[key] = (counts[key] ?? 0) + 1;
-    return counts;
-  }, {});
-
-  const isRowKeyInvalid = (row: ParamRow) => !row.key.trim() || keyCounts[row.key.trim()] > 1;
+  const isRowKeyInvalid = (row: ParamRow) => !row.key.trim();
   const isRowValueInvalid = (row: ParamRow) => !row.value.trim();
-  const hasDuplicateKey = Object.values(keyCounts).some((count) => count > 1);
   const isAccessKeyInvalid = !accessKey.trim();
   const hasRowError = rows.some((row) => isRowKeyInvalid(row) || isRowValueInvalid(row));
 
@@ -283,11 +276,7 @@ export default function FormulaValidateDialog({ open, onClose, label }: FormulaV
             })}
 
             <Typography fontSize="12px" color={showErrors && hasRowError ? '#FA4D56' : '#9EA3AC'}>
-              {showErrors && hasDuplicateKey
-                ? 'کلید تکراری است'
-                : showErrors && hasRowError
-                  ? 'کلید و مقدار همه‌ی ردیف‌ها را کامل کنید'
-                  : ``}
+              {showErrors && hasRowError ? 'کلید و مقدار همه‌ی ردیف‌ها را کامل کنید' : ''}
             </Typography>
           </Box>
 

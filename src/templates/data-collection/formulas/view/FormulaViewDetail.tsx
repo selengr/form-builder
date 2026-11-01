@@ -1,11 +1,10 @@
 'use client';
 
 import clsx from 'clsx';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Box, Button, IconButton } from '@mui/material';
 import { IoIosArrowForward } from 'react-icons/io';
-import { IoSettingsOutline } from 'react-icons/io5';
 import { CodiconEye } from '@/../public/images/home-page/EyeIcon';
 import { useGetMinorFormulaList } from '../detail/useGetMinorFormulaList';
 import MinorFormulaRow from '../detail/MinorFormulaRow';
@@ -14,14 +13,15 @@ import { useGetMajorFormula } from '../detail/useGetMajorFormula';
 import { parseFrontFormulaData } from '@/components/formula-calculator';
 import { toCalculatorFields } from '../detail/utils/toCalculatorFields';
 import SavedFormulaPreview from './SavedFormulaPreview';
+import MajorFormulaSettingsDialog from '../detail/MajorFormulaSettingsDialog';
+import { useIsDevMode } from '@/hooks/useIsDevMode';
 
 const APP_SIDEBAR_WIDTH_PX = 440;
 const DESKTOP_MEDIA = '@media (min-width:1280px)';
 
-const disabledIconSx = {
+const iconSx = {
   border: 'none',
   backgroundColor: '#F7F7FF',
-  '&.Mui-disabled': { backgroundColor: '#F7F7FF', opacity: 0.5 },
 };
 
 interface FormulaViewDetailProps {
@@ -33,6 +33,8 @@ export default function FormulaViewDetail({ majorId, majorName }: FormulaViewDet
   const router = useRouter();
   const { minorList, isLoading, isError, error } = useGetMinorFormulaList(majorId);
   const { majorFormula, isLoading: isMajorFormulaLoading } = useGetMajorFormula(majorId);
+  const [openInfo, setOpenInfo] = useState(false);
+  const isDevMode = useIsDevMode();
   const savedElements = useMemo(() => parseFrontFormulaData(majorFormula?.frontFormulaData), [majorFormula?.frontFormulaData]);
   const minorFields = useMemo(() => toCalculatorFields(minorList), [minorList]);
 
@@ -69,15 +71,10 @@ export default function FormulaViewDetail({ majorId, majorName }: FormulaViewDet
 
                   <div className="flex items-center" style={{ gap: 12 }}>
                     <IconButton
-                      disabled
-                      sx={{ ...disabledIconSx, height: 34, width: 34, padding: '5px', borderRadius: '8px' }}>
+                      onClick={() => setOpenInfo(true)}
+                      aria-label="اطلاعات فرمول"
+                      sx={{ ...iconSx, height: 34, width: 34, padding: '5px', borderRadius: '8px' }}>
                       <CodiconEye color="#1758BA" className="p-0" />
-                    </IconButton>
-
-                    <IconButton
-                      disabled
-                      sx={{ ...disabledIconSx, height: 34, width: 34, padding: '5px', borderRadius: '8px' }}>
-                      <IoSettingsOutline color="#1758BA" className="p-0" />
                     </IconButton>
 
                     <Button
@@ -154,6 +151,7 @@ export default function FormulaViewDetail({ majorId, majorName }: FormulaViewDet
                         formula={majorFormula?.frontFormula ?? ''}
                         fields={minorFields}
                         isLoading={isMajorFormulaLoading}
+                        showFormula={isDevMode}
                       />
                     </div>
                   </div>
@@ -183,20 +181,9 @@ export default function FormulaViewDetail({ majorId, majorName }: FormulaViewDet
                   </Button>
 
                   <IconButton
-                    disabled
-                    sx={{
-                      ...disabledIconSx,
-                      height: { xs: 48, md: 32 },
-                      width: { xs: 48, md: 32 },
-                      padding: { xs: '13px', md: '6px' },
-                      borderRadius: '10px',
-                    }}>
-                    <IoSettingsOutline color="#1758BA" className="p-0" />
-                  </IconButton>
-
-                  <IconButton
-                    disabled
-                    sx={{ ...disabledIconSx, height: 48, width: 48, borderRadius: '10px', flexShrink: 0 }}>
+                    onClick={() => setOpenInfo(true)}
+                    aria-label="اطلاعات فرمول"
+                    sx={{ ...iconSx, height: 48, width: 48, borderRadius: '10px', flexShrink: 0 }}>
                     <CodiconEye color="#1758BA" />
                   </IconButton>
                 </div>
@@ -205,6 +192,16 @@ export default function FormulaViewDetail({ majorId, majorName }: FormulaViewDet
           </Box>
         </div>
       </main>
+
+      <MajorFormulaSettingsDialog
+        open={openInfo}
+        onClose={() => setOpenInfo(false)}
+        majorId={majorId}
+        majorName={title}
+        majorLabel={majorFormula?.majorLabel}
+        targetPlatformEnum={majorFormula?.targetPlatformEnum}
+        readOnly
+      />
     </div>
   );
 }

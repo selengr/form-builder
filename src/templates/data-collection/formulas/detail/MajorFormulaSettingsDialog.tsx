@@ -70,6 +70,7 @@ interface MajorFormulaSettingsDialogProps {
   majorName: string;
   majorLabel?: string | null;
   targetPlatformEnum?: string | null;
+  readOnly?: boolean;
 }
 
 export default function MajorFormulaSettingsDialog({
@@ -79,6 +80,7 @@ export default function MajorFormulaSettingsDialog({
   majorName,
   majorLabel,
   targetPlatformEnum,
+  readOnly = false,
 }: MajorFormulaSettingsDialogProps) {
   const { mutate: updateInfo, isPending } = useUpdateMajorFormulaInfo();
   const { TargetPlatform, isFetchingTargetPlatform } = useGetFormulaTargetPlatform(open);
@@ -158,7 +160,7 @@ export default function MajorFormulaSettingsDialog({
         }}>
         <div className="flex flex-col pb-4 p-2">
           <div className="flex justify-center items-baseline mb-6">
-            <p className="font-bold text-center text-[20px]">تنظیمات فرمول</p>
+            <p className="font-bold text-center text-[20px]">{readOnly ? 'اطلاعات فرمول' : 'تنظیمات فرمول'}</p>
           </div>
 
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -169,6 +171,7 @@ export default function MajorFormulaSettingsDialog({
                 </Typography>
                 <RHFTextField
                   name="majorName"
+                  disabled={readOnly}
                   sx={{
                     '& .MuiInputBase-root': {
                       borderRadius: '10px',
@@ -182,7 +185,7 @@ export default function MajorFormulaSettingsDialog({
                 <Typography fontWeight="600" fontSize="15px">
                   سرویس گیرنده:
                 </Typography>
-                <RHFSelect fullWidth name="targetPlatformEnum" sx={selectSx}>
+                <RHFSelect fullWidth name="targetPlatformEnum" disabled={readOnly} sx={selectSx}>
                   <MenuItem value="">انتخاب کنید</MenuItem>
                   {isFetchingTargetPlatform && (
                     <MenuItem value="" disabled>
@@ -212,6 +215,7 @@ export default function MajorFormulaSettingsDialog({
                 <RHFTextField
                   name="majorLabel"
                   dir="ltr"
+                  disabled={readOnly}
                   sx={{
                     '& .MuiInputBase-root': {
                       borderRadius: '10px',
@@ -223,22 +227,24 @@ export default function MajorFormulaSettingsDialog({
             </Box>
 
             <Box sx={{ display: 'flex', gap: '16px', paddingX: '16px', width: '100%', marginTop: '38px' }}>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                disabled={isPending}
-                sx={{
-                  bgcolor: '#1758BA',
-                  height: '50px',
-                  fontSize: '16px',
-                  fontWeight: '700',
-                  borderRadius: '10px',
-                  boxShadow: 'none',
-                  '&:hover': { bgcolor: '#1758BA' },
-                }}>
-                {isPending ? 'در حال ثبت...' : 'ثبت'}
-              </Button>
+              {!readOnly && (
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  disabled={isPending}
+                  sx={{
+                    bgcolor: '#1758BA',
+                    height: '50px',
+                    fontSize: '16px',
+                    fontWeight: '700',
+                    borderRadius: '10px',
+                    boxShadow: 'none',
+                    '&:hover': { bgcolor: '#1758BA' },
+                  }}>
+                  {isPending ? 'در حال ثبت...' : 'ثبت'}
+                </Button>
+              )}
 
               <Button
                 type="button"
@@ -254,7 +260,7 @@ export default function MajorFormulaSettingsDialog({
                   color: '#1758BA',
                   borderColor: '#1758BA',
                 }}>
-                انصراف
+                {readOnly ? 'بستن' : 'انصراف'}
               </Button>
             </Box>
           </FormProvider>

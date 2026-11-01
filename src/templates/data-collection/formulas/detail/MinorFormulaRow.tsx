@@ -41,11 +41,9 @@ function MinorFormulaMenu({ onEdit, onDelete, isDeleting = false }: MinorFormula
   };
 
   const handleDelete = () => {
+    handleClose();
     if (onDelete) onDelete();
-    else {
-      handleClose();
-      toast.info('این قابلیت به‌زودی اضافه می‌شود');
-    }
+    else toast.info('این قابلیت به‌زودی اضافه می‌شود');
   };
 
   return (

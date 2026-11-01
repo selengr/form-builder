@@ -13,6 +13,7 @@ import MinorFormulaRow from './MinorFormulaRow';
 import MinorFormulaDialog from '../minor-formula/MinorFormulaDialog';
 import MajorFormulaSettingsDialog from './MajorFormulaSettingsDialog';
 import { useDeleteMinorFormula } from '../minor-formula/hooks/useDeleteMinorFormula';
+import FormulaDeleteConfirmDialog from '../FormulaDeleteConfirmDialog';
 import MinorFormulaRowSkeleton from './MinorFormulaRowSkeleton';
 import { FormulaCalculator, type FormulaCalculatorHandle, parseFrontFormulaData } from '@/components/formula-calculator';
 import { useUpdateMajorFormula } from './useUpdateMajorFormula';
@@ -34,14 +35,16 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
   const [openSettings, setOpenSettings] = useState(false);
   const [editingMinorId, setEditingMinorId] = useState<number | undefined>(undefined);
   const [deletingMinorId, setDeletingMinorId] = useState<number | null>(null);
-  const { mutate: deleteMinorFormula } = useDeleteMinorFormula(majorId);
+  const { mutate: deleteMinorFormula, isPending: isDeletingMinor } = useDeleteMinorFormula(majorId);
 
-  const handleDeleteMinor = (minorId: number) => {
-    setDeletingMinorId(minorId);
-    deleteMinorFormula(minorId, {
-      onSuccess: () => toast.success('فرمول جزئی حذف شد'),
+  const handleDeleteMinor = () => {
+    if (deletingMinorId === null) return;
+    deleteMinorFormula(deletingMinorId, {
+      onSuccess: () => {
+        toast.success('فرمول جزئی حذف شد');
+        setDeletingMinorId(null);
+      },
       onError: (error) => toast.error(error.message),
-      onSettled: () => setDeletingMinorId(null),
     });
   };
   const { minorList, isLoading, isError, error } = useGetMinorFormulaList(majorId);
@@ -245,8 +248,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                               setEditingMinorId(item.id);
                               setOpenMinorFormulaDialog(true);
                             }}
-                            onDelete={() => handleDeleteMinor(item.id)}
-                            isDeleting={deletingMinorId === item.id}
+                            onDelete={() => setDeletingMinorId(item.id)}
                           />
                         ))}
 
@@ -402,6 +404,14 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
           cancelLeave();
           if (leave) handleSubmit(leave);
         }}
+      />
+
+      <FormulaDeleteConfirmDialog
+        open={deletingMinorId !== null}
+        content="آیا از حذف این فرمول جزئی اطمینان دارید؟"
+        loading={isDeletingMinor}
+        onClose={() => setDeletingMinorId(null)}
+        onConfirm={handleDeleteMinor}
       />
 
       <MajorFormulaSettingsDialog

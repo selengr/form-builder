@@ -13,6 +13,8 @@ import TrashIcon from '@/../public/images/home-page/trash.svg';
 import { useGetFormulaTargetPlatform } from './hooks/useGetFormulaTargetPlatform';
 import { MajorFormulaListItem } from './types';
 import FormulaValidateDialog from './FormulaValidateDialog';
+import FormulaDeleteConfirmDialog from './FormulaDeleteConfirmDialog';
+import { useDeleteMajorFormula } from './hooks/useDeleteMajorFormula';
 
 export default function FormulaListCard({
   data,
@@ -20,6 +22,8 @@ export default function FormulaListCard({
   const router = useRouter();
   const [enabled, setEnabled] = useState(true);
   const [openValidate, setOpenValidate] = useState(false);
+  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
+  const { mutate: deleteMajorFormula, isPending: isDeleting } = useDeleteMajorFormula();
   const { TargetPlatform } = useGetFormulaTargetPlatform(true);
 
   const platformCaption =
@@ -35,7 +39,17 @@ export default function FormulaListCard({
   };
 
   const handleDelete = () => {
-    toast.info('این قابلیت به‌زودی اضافه می‌شود');
+    setOpenDeleteConfirm(true);
+  };
+
+  const handleConfirmDelete = () => {
+    deleteMajorFormula(data.id, {
+      onSuccess: () => {
+        toast.success('فرمول حذف شد');
+        setOpenDeleteConfirm(false);
+      },
+      onError: (error) => toast.error(error.message),
+    });
   };
 
   const handleValidate = () => {
@@ -75,11 +89,19 @@ export default function FormulaListCard({
           <IconButton color="primary" onClick={handleEdit}>
             <Image src={EditIcon} alt="edit" width={24} height={24} />
           </IconButton>
-          {/* <IconButton color="error" onClick={handleDelete}>
+          <IconButton color="error" onClick={handleDelete}>
             <Image src={TrashIcon} alt="delete" width={24} height={24} />
-          </IconButton> */}
+          </IconButton>
         </div>
       </div>
+
+      <FormulaDeleteConfirmDialog
+        open={openDeleteConfirm}
+        content="آیا از حذف این فرمول اطمینان دارید؟"
+        loading={isDeleting}
+        onClose={() => setOpenDeleteConfirm(false)}
+        onConfirm={handleConfirmDelete}
+      />
 
       {openValidate && (
         <FormulaValidateDialog open onClose={() => setOpenValidate(false)} label={data.majorLabel} />

@@ -19,6 +19,7 @@ import { FormulaCalculator, type FormulaCalculatorHandle, parseFrontFormulaData 
 import { useUpdateMajorFormula } from './useUpdateMajorFormula';
 import { useUnsavedChangesGuard } from './useUnsavedChangesGuard';
 import UnsavedChangesDialog from './UnsavedChangesDialog';
+import { useIsDevMode } from '@/hooks/useIsDevMode';
 import { toCalculatorFields } from './utils/toCalculatorFields';
 
 const APP_SIDEBAR_WIDTH_PX = 440;
@@ -33,6 +34,7 @@ interface FormulaDetailViewProps {
 export default function FormulaDetailView({ majorId, majorName }: FormulaDetailViewProps) {
   const [openMinorFormulaDialog, setOpenMinorFormulaDialog] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
+  const isDevMode = useIsDevMode();
   const [editingMinorId, setEditingMinorId] = useState<number | undefined>(undefined);
   const [deletingMinor, setDeletingMinor] = useState<{ id: number; name: string } | null>(null);
   const { mutate: deleteMinorFormula, isPending: isDeletingMinor } = useDeleteMinorFormula(majorId);
@@ -320,7 +322,7 @@ export default function FormulaDetailView({ majorId, majorName }: FormulaDetailV
                         initialElements={savedCalculatorElements}
                         fields={calculatorFields}
                         beforeAddField={canAddCalculatorField}
-                        showFormulaPreview
+                        showFormulaPreview={isDevMode}
                         scriptLayout="stretch"
                         onFormulaChange={handleCalculatorFormulaChange}
                         onElementsCountChange={setCalculatorElementsCount}

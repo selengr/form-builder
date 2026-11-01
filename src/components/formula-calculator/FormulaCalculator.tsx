@@ -69,16 +69,19 @@ export default function FormulaCalculator({
 
   const requestFocus = useCallback(() => setFocusRequest((value) => value + 1), []);
 
-  const isLastElementOperand = (): boolean => {
-    if (elements.length === 0) return false;
-    const lastElement = elements[elements.length - 1];
-    return (
-      lastElement.type === 'NEW_FIELD' ||
-      lastElement.type === 'PARENTHESIS' ||
-      lastElement.type === 'NUMBER' ||
-      lastElement.type === 'NEW_FnFx'
-    );
-  };
+  const isOperandEnd = (element?: Element | null): boolean =>
+    !!element &&
+    (element.type === 'NEW_FIELD' ||
+      element.type === 'NUMBER' ||
+      element.type === 'NEW_FnFx' ||
+      ((element.type === 'PARENTHESIS' || element.type === 'AVG_PARENTHESIS') && element.content === ')'));
+
+  const isOperandStart = (element?: Element | null): boolean =>
+    !!element &&
+    (element.type === 'NEW_FIELD' ||
+      element.type === 'NUMBER' ||
+      element.type === 'NEW_FnFx' ||
+      (element.type === 'PARENTHESIS' && element.content === '('));
 
   const updateElements = useCallback(
     (incomingElements: Element[], newCursorIndex: number, normalize: boolean = true) => {
@@ -410,13 +413,7 @@ export default function FormulaCalculator({
     const prevElement = cursorIndex > 0 ? elements[cursorIndex - 1] : null;
     const nextElement = cursorIndex < elements.length ? elements[cursorIndex] : null;
 
-    if (
-      prevElement &&
-      (prevElement.type === 'NEW_FIELD' ||
-        prevElement.type === 'PARENTHESIS' ||
-        prevElement.type === 'NUMBER' ||
-        prevElement.type === 'NEW_FnFx')
-    ) {
+    if (isOperandEnd(prevElement)) {
       return false;
     }
 
@@ -476,7 +473,9 @@ export default function FormulaCalculator({
   const handleFnFX = () => {
     if (beforeAddField && !beforeAddField()) return;
 
-    if (isLastElementOperand()) {
+    const prevElement = cursorIndex > 0 ? elements[cursorIndex - 1] : null;
+    const nextElement = cursorIndex < elements.length ? elements[cursorIndex] : null;
+    if (isOperandEnd(prevElement) || isOperandStart(nextElement)) {
       toast.error('لطفاً ابتدا یک عملگر وارد کنید');
       return;
     }

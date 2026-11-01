@@ -13,6 +13,7 @@ import { FormulaFormOption, useGetFormulaForms } from './hooks/useGetFormulaForm
 import { useCreateMinorFormula } from './hooks/useCreateMinorFormula';
 import { useUpdateMinorFormula } from './hooks/useUpdateMinorFormula';
 import { useGetMinorFormula } from './hooks/useGetMinorFormula';
+import { useIsDevMode } from '@/hooks/useIsDevMode';
 
 const StyledDialog = styled(Dialog)({
   overflow: 'hidden',
@@ -87,6 +88,7 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
   const [calculatorFormula, setCalculatorFormula] = useState('');
   const [calculatorFrontData, setCalculatorFrontData] = useState('');
   const [demoContainer, setDemoContainer] = useState<HTMLDivElement | null>(null);
+  const isDevMode = useIsDevMode();
   const handleCalculatorChange = useCallback((formula: string, frontCalcData: string) => {
     setCalculatorFormula(formula);
     setCalculatorFrontData(frontCalcData);
@@ -309,12 +311,12 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
             initialElements={formId && formId === savedFormId ? savedCalculatorElements : undefined}
             beforeAddField={canAddCalculatorField}
             onFormulaChange={handleCalculatorChange}
-            showFormulaPreview
+            showFormulaPreview={isDevMode}
             scriptLayout="stretch"
           />
         </div>
 
-        <div ref={setDemoContainer} />
+        {isDevMode && <div ref={setDemoContainer} />}
       </div>
 
       <div

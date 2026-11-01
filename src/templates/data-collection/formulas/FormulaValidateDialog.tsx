@@ -115,7 +115,7 @@ export default function FormulaValidateDialog({ open, onClose, label }: FormulaV
   };
 
   const addRow = () => {
-    setRows((current) => (current.length < MAX_ROWS ? [...current, createRow(current)] : current));
+    setRows((current) => (current.length < MAX_ROWS ? [...current, createRow(current, REF_ID_KEY)] : current));
   };
 
   const handleRun = () => {
@@ -243,10 +243,7 @@ export default function FormulaValidateDialog({ open, onClose, label }: FormulaV
                       <MenuItem value={row.key}>{row.key}</MenuItem>
                     )}
                     {metaParamOptions.map((option) => (
-                      <MenuItem
-                        key={option.value}
-                        value={option.value}
-                        disabled={option.value !== row.key && rows.some((other) => other.key === option.value)}>
+                      <MenuItem key={option.value} value={option.value}>
                         {option.caption}
                       </MenuItem>
                     ))}

@@ -23,6 +23,7 @@ import {
 // import FormulaInput from '@/components/formula-editor/FormulaInput';
 // import FormulaKeypad from '@/components/formula-editor/FormulaKeypad';
 import FormulaControls from '@/components/formula-editor/FormulaControls';
+import { useIsDevMode } from '@/hooks/useIsDevMode';
 import { invalidateLogicListQueries } from '@/templates/builder/logic/useLogicItems';
 // action
 import {
@@ -76,6 +77,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
   const [isLoading, setLoading] = useState<boolean>(false);
 //   const [isMobileKeypadOpen, setIsMobileKeypadOpen] = useState<boolean>(false);
   const calculatorRef = useRef<FormulaCalculatorHandle>(null);
+  const isDevMode = useIsDevMode();
   const initialElements = useMemo(
     () => restoreBuilderElements(parseFrontFormulaData(editList?.frontCalcData as string | undefined), questionList),
     [editList?.frontCalcData, questionList],
@@ -977,7 +979,7 @@ const AdvancedFormulaEditor: React.FC<IAdvancedFormulaEditorProps> = ({
           ref={calculatorRef}
           fields={questionList as unknown as IFieldQuestionData}
           initialElements={initialElements}
-          showFormulaPreview
+          showFormulaPreview={isDevMode}
           scriptLayout="stretch"
         />
       </div>

@@ -115,7 +115,7 @@ export default function FormulaValidateDialog({ open, onClose, label }: FormulaV
     setShowErrors(true);
     if (isAccessKeyInvalid || hasRowError) return;
 
-    const metaParameters = Object.fromEntries(rows.map((row) => [row.key.trim(), toParamValue(row.value)]));
+    const metaParameters = rows.map((row): [string, number | string] => [row.key.trim(), toParamValue(row.value)]);
 
     setResult(null);
     runFormula(

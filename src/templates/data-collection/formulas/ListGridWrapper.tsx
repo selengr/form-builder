@@ -90,7 +90,7 @@ export default function FormulaListGridWrapper() {
           title: 'فرمول‌ها',
           queryKey: 'major_formula_list',
           textTotal: ['تعداد کل فرمول‌ها', 'عدد'],
-          searchField: 'majorName',
+          searchField: 'title',
           hasSidebarFilter: true,
           backHref: '/data-collection',
           onMobileFilterOpen: syncDraftFromApplied,
@@ -115,7 +115,7 @@ export default function FormulaListGridWrapper() {
           ),
         }}
         fetcher={majorFormulaListFetcher}
-        searchBoxList={createDefaultSearchBoxList('majorName')}
+        searchBoxList={createDefaultSearchBoxList('title')}
         searchQueryFilter={appliedFilter}
         skeletonHeaderName="تعداد کل فرمول‌ها"
         loadingHasCreateBtn

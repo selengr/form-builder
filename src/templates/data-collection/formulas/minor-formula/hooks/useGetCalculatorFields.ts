@@ -5,7 +5,7 @@ import type { IFieldQuestionData } from '@/components/formula-calculator';
 const EMPTY_FIELDS: IFieldQuestionData = { dataList: [] };
 
 export const useGetCalculatorFields = (formId: string) => {
-  const { data, isFetching } = useQuery({
+  const { data, isFetching, error } = useQuery({
     queryKey: ['MINOR_FORMULA_CALCULATOR_FIELDS', formId],
     queryFn: async () => {
       const res = await getCalculatorFieldsAction(formId);
@@ -19,11 +19,12 @@ export const useGetCalculatorFields = (formId: string) => {
     enabled: Boolean(formId),
     staleTime: 60 * 1000,
     gcTime: 10 * 60 * 1000,
-    retry: 3,
+    retry: 1,
   });
 
   return {
     questionList: data?.dataList ? data : EMPTY_FIELDS,
     isFetchingCalculatorFields: isFetching,
+    calculatorFieldsError: error,
   };
 };

@@ -225,6 +225,12 @@
 .NEW_FIELD .option {
   background-color: #1753af;
 }
+.NEW_FIELD .emptyOption {
+  padding: 6px 5px;
+  color: #9ea3ac;
+  font-size: 13px;
+  text-align: center;
+}
 .NEW_FIELD .option[data-selected] {
   color: #1758ba;
   background-color: #e8eef8;

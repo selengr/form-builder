@@ -136,7 +136,11 @@ function MinorFormulaDialogContent({ onClose, majorId, minorId }: MinorFormulaDi
     setIsFormListOpen(true);
   };
 
-  const { questionList: calculatorFields } = useGetCalculatorFields(formId);
+  const { questionList: calculatorFields, calculatorFieldsError } = useGetCalculatorFields(formId);
+
+  useEffect(() => {
+    if (calculatorFieldsError) toast.error(`خطا در دریافت سوالات فرم: ${calculatorFieldsError.message}`);
+  }, [calculatorFieldsError]);
 
   const isEditDataLoading = Boolean(minorId) && !minorFormulaError && !isPrefilled;
   const isEditLoading = isEditDataLoading || (Boolean(minorId) && Boolean(savedFormId) && !isConditionPrefilled);

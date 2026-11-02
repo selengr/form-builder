@@ -51,6 +51,7 @@ const FormulaFieldDropdown: React.FC<FormulaFieldDropdownProps> = ({ element, op
       </div>
       {isOpen && (
         <div ref={listRef} className={styles.optionsContainer} style={{ display: 'block', ...placementStyle }}>
+          {options.length === 0 && <div className={styles.emptyOption}>سوالی یافت نشد</div>}
           {options.map((item, index) => (
             <div
               key={index}

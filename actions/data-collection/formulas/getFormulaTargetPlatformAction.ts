@@ -27,7 +27,5 @@ export async function getFormulaTargetPlatformAction() {
 
   const result = await api.get<TargetPlatformResponse>(url);
 
-  console.log('[getFormulaTargetPlatformAction] response:', JSON.stringify(result, null, 2));
-
   return result;
 }

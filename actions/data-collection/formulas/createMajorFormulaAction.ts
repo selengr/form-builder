@@ -22,7 +22,5 @@ export async function createMajorFormulaAction(input: CreateMajorFormulaInput) {
 
   const result = await api.post(CREATE_MAJOR_URL, parsed.data);
 
-  console.log('[createMajorFormulaAction] response:', JSON.stringify(result, null, 2));
-
   return result;
 }

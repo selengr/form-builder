@@ -22,7 +22,5 @@ export async function updateMajorFormulaAction(input: UpdateMajorFormulaInput) {
 
   const result = await api.put(UPDATE_MAJOR_URL, parsed.data);
 
-  console.log('[updateMajorFormulaAction] response:', JSON.stringify(result, null, 2));
-
   return result;
 }

@@ -41,7 +41,5 @@ export async function createMinorFormulaAction(payload: CreateMinorFormulaPayloa
 
   const result = await api.post(CREATE_MINOR_URL, parsed.data);
 
-  console.log('[createMinorFormulaAction] response:', JSON.stringify(result, null, 2));
-
   return result;
 }

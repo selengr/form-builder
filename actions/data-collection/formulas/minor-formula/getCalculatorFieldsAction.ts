@@ -18,7 +18,5 @@ export async function getCalculatorFieldsAction(formId: string) {
 
   const result = await api.get(url);
 
-  console.log('[getCalculatorFieldsAction] response:', JSON.stringify(result, null, 2));
-
   return result;
 }

@@ -23,7 +23,5 @@ export async function getMetaParamsComboAction() {
 
   const result = await api.get<{ dataList?: MetaParamOption[] }>(url);
 
-  console.log('[getMetaParamsComboAction] response:', JSON.stringify(result, null, 2));
-
   return result;
 }

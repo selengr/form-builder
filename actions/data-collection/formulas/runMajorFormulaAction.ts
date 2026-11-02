@@ -23,18 +23,13 @@ export async function runMajorFormulaAction(input: RunMajorFormulaInput) {
     return { success: false as const, message: 'Validation error.' };
   }
 
-  // backend accepts the same key more than once inside metaParameters, so the body is built by hand
   const { accessKey, label, metaParameters } = parsed.data;
   const metaParametersJson = metaParameters
     .map(([key, value]) => `${JSON.stringify(key)}:${JSON.stringify(value)}`)
     .join(',');
   const body = `{"accessKey":${JSON.stringify(accessKey)},"label":${JSON.stringify(label)},"metaParameters":{${metaParametersJson}}}`;
 
-  console.log('[runMajorFormulaAction] body:', body);
-
   const result = await api.post<{ result?: unknown }>(RUN_FORMULA_URL, body);
-
-  console.log('[runMajorFormulaAction] response:', JSON.stringify(result, null, 2));
 
   return result;
 }

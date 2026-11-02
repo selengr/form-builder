@@ -18,7 +18,5 @@ export async function getFormulaFormsAction() {
 
   const result = await api.get(url);
 
-  console.log('[getFormulaFormsAction] response:', JSON.stringify(result, null, 2));
-
   return result;
 }

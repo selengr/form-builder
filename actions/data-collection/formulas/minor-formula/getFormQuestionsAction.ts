@@ -18,7 +18,5 @@ export async function getFormQuestionsAction(formId: string) {
 
   const result = await api.get(url);
 
-  console.log('[getFormQuestionsAction] response:', JSON.stringify(result, null, 2));
-
   return result;
 }

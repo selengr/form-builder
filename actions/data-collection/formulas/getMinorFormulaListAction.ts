@@ -17,7 +17,5 @@ export async function getMinorFormulaListAction(majorId: number | string) {
 
   const result = await api.get<{ content: unknown[]; totalElements: number }>(url);
 
-  console.log('[getMinorFormulaListAction] response:', JSON.stringify(result, null, 2));
-
   return result;
 }

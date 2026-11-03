@@ -1,6 +1,7 @@
 'use client';
 
 import { z } from 'zod';
+import { toast } from 'sonner';
 import { memo, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSearchParams } from 'next/navigation';
@@ -12,11 +13,19 @@ import FormProvider from '../../components/hook-form/FormProvider';
 import { FIELD_PROPERTIES_FORM_ID } from '@/constants/fieldDialog';
 import { RHFMultiSelect, RHFSwitch, RHFTextField } from '@/components/hook-form';
 import FieldDialogActionBottomButtons from '../FieldDialogActionBottomButtons/FieldDialogActionBottomButtons';
+// hook
+import useDesigner from '@/hooks/useDesigner';
+import useElements from '@/hooks/useElements';
+import useActionDesigner from '@/hooks/useActionDesigner';
+import useSelectedElement from '@/hooks/useSelectedElement';
+import useActionOpenDialog from '@/hooks/useActionOpenDialog';
+import useActionSelectedElement from '@/hooks/useActionSelectedElement';
 // images
 import VideoPlayIcon from '@/../public/images/home-page/video-play.svg';
 // type
 import { IFormElementConstructor, IQPLMediaUpload } from '@/types/bulider';
 import type { ElementsType, FormElement, FormElementInstance } from '@/types/formElementTypes';
+import { createQuestion, updateQuestion } from '@/lib/builderFieldActions';
 
 const questionType: ElementsType = 'IMAGE_UPLOAD';
 
@@ -123,6 +132,12 @@ type propertiesFormSchemaType = z.infer<typeof propertiesSchema>;
 
 function PropertiesComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
   const element = elementInstance as CustomInstance;
+  const elements = useElements();
+  const setOpenDialog = useActionOpenDialog();
+  const setSelectedElement = useActionSelectedElement();
+  const selectedElement = useSelectedElement();
+  const { updateElement, addElement } = useActionDesigner();
+  const { questionGroups } = useDesigner();
 
   const [openDescriptionSwitch, setOpenDescriptionSwitch] = useState<boolean>(() =>
     element.questionPropertyList.some((property) => property.questionPropertyEnum === 'DESCRIPTION' && property.value),
@@ -147,20 +162,116 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
     values.label = element.label ?? null;
     values.questionType = element.questionType === 'AUDIO_UPLOAD' ? 'AUDIO_UPLOAD' : 'IMAGE_UPLOAD';
     return values;
-  }, []);
+  }, [element]);
 
   const methods = useForm<propertiesFormSchemaType>({
     resolver: zodResolver(propertiesSchema),
-    mode: 'onSubmit',
+    mode: 'onChange',
     defaultValues,
   });
 
   const {
     handleSubmit,
+    reset,
     formState: { isSubmitting },
   } = methods;
 
-  async function onSubmit() {}
+  async function onSubmit(values: propertiesFormSchemaType) {
+    const { title, label, questionType: selectedQuestionType, DESCRIPTION, REQUIRED, EDIT_ANSWER_LOCKED } = values;
+
+    const selectedYet = elements?.find((el: any) => el?.questionId === element?.questionId);
+
+    const propertiesData = [
+      {
+        questionPropertyEnum: 'REQUIRED',
+        value: REQUIRED.value ? 'true' : 'false',
+        id: selectedYet ? REQUIRED.id : null,
+      },
+      {
+        questionPropertyEnum: 'EDIT_ANSWER_LOCKED',
+        value: EDIT_ANSWER_LOCKED.value ? 'true' : 'false',
+        id: selectedYet ? EDIT_ANSWER_LOCKED.id : null,
+      },
+      {
+        questionPropertyEnum: 'DESCRIPTION',
+        value: openDescriptionSwitch && DESCRIPTION.value ? DESCRIPTION.value : null,
+        id: selectedYet ? DESCRIPTION.id : null,
+      },
+    ];
+
+    const lastIndexOfGroup = elements.findLastIndex((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
+
+    const group = elements.filter((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
+
+    let findSelectedGroupPreviousGroup = questionGroups.findIndex((el: any) => el === selectedElement?.fieldElement?.questionGroupId) - 1;
+
+    if (findSelectedGroupPreviousGroup === -1) {
+      findSelectedGroupPreviousGroup = 0;
+    }
+
+    const firstIndexAfterThePreviousSelectedGroup = elements.findLastIndex((el: any) => el.questionGroupId === questionGroups[findSelectedGroupPreviousGroup]) + 1;
+
+    delete element.temp;
+
+    const finalFieldData = {
+      ...element,
+      title,
+      label: label ?? null,
+      questionType: selectedQuestionType,
+      position: selectedElement?.position?.apiPosition ?? group.length,
+      questionPropertyList: propertiesData,
+    };
+
+    if (!selectedYet) {
+      const removeId: any = { ...finalFieldData };
+      delete removeId.questionId;
+
+      try {
+        const res = await createQuestion(removeId as any);
+        if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
+        const data = res.data;
+        delete data.questionPropertyList;
+        delete data.optionList;
+        delete data.spectralPlaceList;
+        const newData = {
+          ...data,
+        };
+
+        const positionToUse = lastIndexOfGroup === -1 ? firstIndexAfterThePreviousSelectedGroup : lastIndexOfGroup + 1;
+        addElement(selectedElement?.position?.realPosition ?? positionToUse, newData);
+
+        setOpenDialog(false);
+        setSelectedElement(null);
+        reset();
+      } catch (error: any) {
+        toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
+      }
+    } else {
+      try {
+        const res = await updateQuestion(String(finalFieldData.questionId), finalFieldData);
+        if (!res.success) {
+          toast.error(res.message || 'انجام عملیات با خطا مواجه شد');
+          return;
+        }
+        const data = res.data;
+        delete data.questionPropertyList;
+        delete data.optionList;
+        delete data.spectralPlaceList;
+        const newData = {
+          ...data,
+        };
+        updateElement(element.questionId, newData);
+        setOpenDialog(false);
+        setSelectedElement(null);
+        reset();
+      } catch (error: any) {
+        toast.error(error?.message || 'انجام عملیات با خطا مواجه شد');
+      }
+    }
+  }
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} formId={FIELD_PROPERTIES_FORM_ID}>
@@ -201,12 +312,12 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
           </Stack>
         )}
 
-        <Stack spacing={1} marginTop={2.5}>
+        <div className="flex flex-col gap-2 mt-5">
           <Typography variant="subtitle2" fontWeight="700">
-            نوع فایل:
+            الگوی پاسخ:
           </Typography>
           <RHFMultiSelect name="questionType" options={mediaTypeOptions} />
-        </Stack>
+        </div>
 
         <Stack flexDirection="row" justifyContent="space-between" alignItems="flex-start" marginTop={3}>
           <Typography variant="subtitle2" fontWeight="700">

@@ -31,6 +31,7 @@ const ELEMENTS = [
   FormElements.MULTIPLE_CHOICE,
   FormElements.MULTIPLE_CHOICE_IMAGE,
   FormElements.SPECTRAL,
+  FormElements.IMAGE_UPLOAD,
   FormElements.RATING,
   FormElements.PACKAGE_INJECTION_FIELD,
   FormElements.INFO_FIELD,

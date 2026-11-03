@@ -87,6 +87,24 @@ export type IQPLTextField = [
 ];
 
 export type ISpectralQTapAndOptionsType = { value: string; label: string }[];
+export type IQPLMediaUpload = [
+  {
+    questionPropertyEnum: 'REQUIRED';
+    value: string;
+    id: number;
+  },
+  {
+    questionPropertyEnum: 'DESCRIPTION';
+    value: string;
+    id: number;
+  },
+  {
+    questionPropertyEnum: 'EDIT_ANSWER_LOCKED';
+    value: string;
+    id: number;
+  },
+];
+
 export type IRatingQTapAndOptionsType = { value: string; label: string }[];
 
 export type IQPLRating = [

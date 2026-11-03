@@ -9,7 +9,9 @@ export type ElementsType =
   | 'SPECTRAL'
   | 'INFO_FIELD'
   | 'RATING'
-  | 'PACKAGE_INJECTION_FIELD';
+  | 'PACKAGE_INJECTION_FIELD'
+  | 'IMAGE_UPLOAD'
+  | 'AUDIO_UPLOAD';
 
 export type SubmitFunction = (key: number, value: string) => void;
 

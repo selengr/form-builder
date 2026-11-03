@@ -9,6 +9,7 @@ import { TitleFieldFinishFormElement } from '@/components/Fields/TitleFieldFinis
 import { MultipleChoiceFormElement } from '@/components/Fields/MultipleChoiceField';
 import { PackageInjectionFormElement } from '@/components/Fields/PackageInjectionField';
 import { MultipleChoiceImageFormElement } from '@/components/Fields/MultipleChoiceImageField';
+import { MediaUploadFormElement } from '@/components/Fields/MediaUploadField';
 import type { ElementsType, FormElement } from './formElementTypes';
 
 export type {
@@ -32,4 +33,6 @@ export const FormElements: FormElementsType = {
   TitleFieldFinish: TitleFieldFinishFormElement,
   MULTIPLE_CHOICE_IMAGE: MultipleChoiceImageFormElement,
   PACKAGE_INJECTION_FIELD: PackageInjectionFormElement,
+  IMAGE_UPLOAD: MediaUploadFormElement,
+  AUDIO_UPLOAD: MediaUploadFormElement,
 };

@@ -98,14 +98,16 @@ type CustomInstance = FormElementInstance & {
 
 const DesignerComponent = memo(function DesignerComponent({ elementInstance }: { elementInstance: FormElementInstance }) {
   const element = elementInstance as CustomInstance;
-  const designerBtnLabel = MediaUploadFormElement.designerBtnElement.label;
+  const tagLabel =
+    mediaTypeOptions.find((option) => option.value === element.questionType)?.label ??
+    MediaUploadFormElement.designerBtnElement.label;
 
   return (
     <div className="flex items-start flex-col overflow-hidden min-w-0 w-full max-w-[90%]" dir="rtl">
       <p dir="rtl" className="text-[13px] overflow-hidden text-ellipsis w-full line-clamp-1 text-[#161616] max-w-[calc(100%-75px)]">
         {element.title}
       </p>
-      <p className="text-[11px] text-[#6F6F6F]">#{designerBtnLabel}</p>
+      <p className="text-[11px] text-[#6F6F6F]">#{tagLabel}</p>
     </div>
   );
 });

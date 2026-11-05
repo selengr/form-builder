@@ -153,7 +153,7 @@ export default function ShoppingCartPage() {
           <div className='flex-1 overflow-y-auto space-y-4 px-2 lg:px-6'>
             {error ? (
               <div className='w-full min-full h-full flex flex-col items-center justify-center p-6 text-center'>
-                <EmptyList error={error.message} />
+                <EmptyList error={error.message} showErrorMessage />
               </div>
             ) : !purchaseOrderDetailModels?.length ? (
               <EmptyCart />

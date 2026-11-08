@@ -48,6 +48,7 @@ export function UppyUploader({ fileRestriction = fileUploaderRestrictions, sx = 
         successful!.map((item: any) => {
           return item.uploadURL.split('/').pop();
         }),
+        successful,
       );
     }
   });

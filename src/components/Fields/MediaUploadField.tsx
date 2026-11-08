@@ -55,15 +55,19 @@ const mediaTypeOptions = [
   { value: 'AUDIO_UPLOAD', label: 'صدا' },
 ];
 
+const MAX_UPLOAD_SIZE = 20 * 1024 * 1024;
+
 const uploadRestrictions: Record<'IMAGE_UPLOAD' | 'AUDIO_UPLOAD', IFileRestriction> = {
   IMAGE_UPLOAD: {
     minNumberOfFiles: 1,
     maxNumberOfFiles: 1,
+    maxFileSize: MAX_UPLOAD_SIZE,
     allowedFileTypes: ['.jpeg', '.jpg', '.png'],
   },
   AUDIO_UPLOAD: {
     minNumberOfFiles: 1,
     maxNumberOfFiles: 1,
+    maxFileSize: MAX_UPLOAD_SIZE,
     allowedFileTypes: ['audio/*', '.mp3', '.wav', '.m4a', '.ogg', '.aac', '.webm'],
   },
 };
@@ -235,6 +239,7 @@ function FormComponent({
             getData={handleUploaded}
             onUppyReady={handleUppyReady}
           />
+          <Typography sx={{ fontSize: '12px', color: '#6F6F6F' }}>حداکثر حجم فایل 20 مگابایت</Typography>
           {isAudio && (
             <>
               <Typography sx={{ textAlign: 'center', fontSize: '13px', color: '#6F6F6F' }}>یا</Typography>

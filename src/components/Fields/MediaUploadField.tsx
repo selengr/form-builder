@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { toast } from 'sonner';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSearchParams } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,6 +10,7 @@ import { Box, Button, Stack, Typography } from '@mui/material';
 // components
 import { SwitchButton } from '../Switch/SwitchButton';
 import { UppyUploader } from '@/components/uploader/UppyUploader';
+import AudioRecorder from '@/components/uploader/AudioRecorder';
 import type { IFileRestriction } from '@/components/uploader/types';
 import FormProvider from '../../components/hook-form/FormProvider';
 import { FIELD_PROPERTIES_FORM_ID } from '@/constants/fieldDialog';
@@ -63,7 +64,7 @@ const uploadRestrictions: Record<'IMAGE_UPLOAD' | 'AUDIO_UPLOAD', IFileRestricti
   AUDIO_UPLOAD: {
     minNumberOfFiles: 1,
     maxNumberOfFiles: 1,
-    allowedFileTypes: ['audio/*', '.mp3', '.wav', '.m4a', '.ogg', '.aac'],
+    allowedFileTypes: ['audio/*', '.mp3', '.wav', '.m4a', '.ogg', '.aac', '.webm'],
   },
 };
 
@@ -146,6 +147,27 @@ function FormComponent({
   const [localPreview, setLocalPreview] = useState<string | null>(null);
   const [previewValue, setPreviewValue] = useState('');
   const uploadedId = isPreview ? previewValue : value;
+  const uppyRef = useRef<any>(null);
+  const [isRecordUploading, setIsRecordUploading] = useState(false);
+
+  const handleUppyReady = (uppy: any) => {
+    uppyRef.current = uppy;
+    uppy.on('complete', () => setIsRecordUploading(false));
+  };
+
+  const handleRecordedSubmit = (file: File) => {
+    const uppy = uppyRef.current;
+    if (!uppy) return;
+    try {
+      uppy.cancelAll();
+      uppy.addFile({ name: file.name, type: file.type, data: file, source: 'AudioRecorder' });
+      setIsRecordUploading(true);
+      uppy.upload();
+    } catch (err: any) {
+      setIsRecordUploading(false);
+      toast.error(err?.message || 'خطا! بارگذاری انجام نشد');
+    }
+  };
 
   useEffect(() => {
     return () => {
@@ -205,12 +227,21 @@ function FormComponent({
           </Button>
         </Box>
       ) : (
-        <UppyUploader
-          key={element.questionId}
-          sx={{}}
-          fileRestriction={uploadRestrictions[isAudio ? 'AUDIO_UPLOAD' : 'IMAGE_UPLOAD']}
-          getData={handleUploaded}
-        />
+        <>
+          <UppyUploader
+            key={element.questionId}
+            sx={{}}
+            fileRestriction={uploadRestrictions[isAudio ? 'AUDIO_UPLOAD' : 'IMAGE_UPLOAD']}
+            getData={handleUploaded}
+            onUppyReady={handleUppyReady}
+          />
+          {isAudio && (
+            <>
+              <Typography sx={{ textAlign: 'center', fontSize: '13px', color: '#6F6F6F' }}>یا</Typography>
+              <AudioRecorder uploading={isRecordUploading} onSubmit={handleRecordedSubmit} />
+            </>
+          )}
+        </>
       )}
 
       {!!error && <Typography sx={{ color: '#d32f2f', fontSize: '0.75rem' }}>{error}</Typography>}

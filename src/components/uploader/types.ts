@@ -7,6 +7,7 @@ export interface IUploader {
   sx: object;
   getData: any;
   register?: any;
+  onUppyReady?: (uppy: any) => void;
 }
 
 export interface IFileRestriction {
@@ -31,4 +32,5 @@ type TAllowedFileTypes =
   | '.wav'
   | '.m4a'
   | '.ogg'
-  | '.aac';
+  | '.aac'
+  | '.webm';

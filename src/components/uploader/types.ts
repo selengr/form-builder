@@ -7,7 +7,6 @@ export interface IUploader {
   sx: object;
   getData: any;
   register?: any;
-  onUppyReady?: (uppy: any) => void;
 }
 
 export interface IFileRestriction {
@@ -19,18 +18,4 @@ export interface IFileRestriction {
   allowedFileTypes?: Array<TAllowedFileTypes>;
 }
 
-type TAllowedFileTypes =
-  | '.xls'
-  | '.xlsx'
-  | '.png'
-  | '.jpeg'
-  | '.jpg'
-  | 'video/*'
-  | 'image/*'
-  | 'audio/*'
-  | '.mp3'
-  | '.wav'
-  | '.m4a'
-  | '.ogg'
-  | '.aac'
-  | '.webm';
+type TAllowedFileTypes = '.xls' | '.xlsx' | '.png' | '.jpeg' | '.jpg' | 'video/*';

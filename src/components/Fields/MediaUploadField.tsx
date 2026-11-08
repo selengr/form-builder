@@ -2,16 +2,14 @@
 
 import { z } from 'zod';
 import { toast } from 'sonner';
-import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSearchParams } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 // components
 import { SwitchButton } from '../Switch/SwitchButton';
-import { UppyUploader } from '@/components/uploader/UppyUploader';
-import AudioRecorder from '@/components/uploader/AudioRecorder';
-import type { IFileRestriction } from '@/components/uploader/types';
+import MediaAnswerUploader from '@/components/uploader/MediaAnswerUploader';
 import FormProvider from '../../components/hook-form/FormProvider';
 import { FIELD_PROPERTIES_FORM_ID } from '@/constants/fieldDialog';
 import { RHFMultiSelect, RHFSwitch, RHFTextField } from '@/components/hook-form';
@@ -54,23 +52,6 @@ const mediaTypeOptions = [
   { value: 'IMAGE_UPLOAD', label: 'تصویر' },
   { value: 'AUDIO_UPLOAD', label: 'صدا' },
 ];
-
-const MAX_UPLOAD_SIZE = 20 * 1024 * 1024;
-
-const uploadRestrictions: Record<'IMAGE_UPLOAD' | 'AUDIO_UPLOAD', IFileRestriction> = {
-  IMAGE_UPLOAD: {
-    minNumberOfFiles: 1,
-    maxNumberOfFiles: 1,
-    maxFileSize: MAX_UPLOAD_SIZE,
-    allowedFileTypes: ['.jpeg', '.jpg', '.png'],
-  },
-  AUDIO_UPLOAD: {
-    minNumberOfFiles: 1,
-    maxNumberOfFiles: 1,
-    maxFileSize: MAX_UPLOAD_SIZE,
-    allowedFileTypes: ['audio/*', '.mp3', '.wav', '.m4a', '.ogg', '.aac', '.webm'],
-  },
-};
 
 const propertiesSchema = z.object({
   title: z
@@ -146,116 +127,31 @@ function FormComponent({
   isPreview?: boolean;
 }) {
   const element = elementInstance as CustomInstance;
-  const description = element.questionPropertyList.find((el) => el.questionPropertyEnum === 'DESCRIPTION')?.value;
-  const isAudio = element.questionType === 'AUDIO_UPLOAD';
-  const [localPreview, setLocalPreview] = useState<string | null>(null);
+  const findProperty = (key: string) => element.questionPropertyList?.find((el) => el.questionPropertyEnum === key)?.value;
+  const description = findProperty('DESCRIPTION');
+  const required = findProperty('REQUIRED') === 'true';
   const [previewValue, setPreviewValue] = useState('');
-  const uploadedId = isPreview ? previewValue : value;
-  const uppyRef = useRef<any>(null);
-  const [isRecordUploading, setIsRecordUploading] = useState(false);
-
-  const handleUppyReady = (uppy: any) => {
-    uppyRef.current = uppy;
-    uppy.on('complete', () => setIsRecordUploading(false));
-  };
-
-  const handleRecordedSubmit = (file: File) => {
-    const uppy = uppyRef.current;
-    if (!uppy) return;
-    try {
-      uppy.cancelAll();
-      uppy.addFile({ name: file.name, type: file.type, data: file, source: 'AudioRecorder' });
-      setIsRecordUploading(true);
-      uppy.upload();
-    } catch (err: any) {
-      setIsRecordUploading(false);
-      toast.error(err?.message || 'خطا! بارگذاری انجام نشد');
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      if (localPreview) URL.revokeObjectURL(localPreview);
-    };
-  }, [localPreview]);
-
-  const handleUploaded = (ids: string[], files?: any[]) => {
-    const id = ids[0] ?? '';
-    const file = files?.[0]?.data;
-    setLocalPreview(file instanceof Blob ? URL.createObjectURL(file) : null);
-    if (isPreview) setPreviewValue(id);
-    else onChange?.(id);
-  };
-
-  const handleReplace = () => {
-    setLocalPreview(null);
-    if (isPreview) setPreviewValue('');
-    else onChange?.('');
-  };
+  const [locked] = useState(() => findProperty('EDIT_ANSWER_LOCKED') === 'true' && !isPreview && !!value);
 
   return (
-    <Box width="100%" maxWidth="600px" display="flex" flexDirection="column" gap={1}>
-      <Typography sx={{ marginBottom: '2rem', fontSize: { xs: 15, sm: 16 }, fontWeight: '600', textAlign: 'justify' }}>
+    <Box width="100%" maxWidth="600px" display="flex" flexDirection="column">
+      <Typography sx={{ fontSize: { xs: 15, sm: 16 }, fontWeight: '600', textAlign: 'justify' }}>
         {element.title}
+        {required && <span style={{ color: '#F04438', marginRight: 4 }}>*</span>}
       </Typography>
-
-      {uploadedId ? (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 1.5,
-            padding: 2,
-            borderRadius: '12px',
-            border: '1px solid #DDE1E6',
-            backgroundColor: '#F7F7FF',
-          }}>
-          {localPreview && !isAudio && (
-            <Box
-              component="img"
-              src={localPreview}
-              alt=""
-              sx={{ maxWidth: '100%', maxHeight: 240, borderRadius: '8px', objectFit: 'contain' }}
-            />
-          )}
-          {localPreview && isAudio && <audio controls src={localPreview} style={{ width: '100%' }} />}
-          <Typography sx={{ fontSize: '13px', color: '#2E7D32', fontWeight: 600 }}>
-            {isAudio ? 'فایل صوتی بارگذاری شد' : 'تصویر بارگذاری شد'}
-          </Typography>
-          <Button
-            variant="outlined"
-            onClick={handleReplace}
-            sx={{ borderRadius: '10px', borderColor: '#1758BA', color: '#1758BA', fontSize: '13px' }}>
-            تغییر فایل
-          </Button>
-        </Box>
-      ) : (
-        <>
-          <UppyUploader
-            key={element.questionId}
-            sx={{}}
-            fileRestriction={uploadRestrictions[isAudio ? 'AUDIO_UPLOAD' : 'IMAGE_UPLOAD']}
-            getData={handleUploaded}
-            onUppyReady={handleUppyReady}
-          />
-          <Typography sx={{ fontSize: '12px', color: '#6F6F6F' }}>حداکثر حجم فایل 20 مگابایت</Typography>
-          {isAudio && (
-            <>
-              <Typography sx={{ textAlign: 'center', fontSize: '13px', color: '#6F6F6F' }}>یا</Typography>
-              <AudioRecorder uploading={isRecordUploading} onSubmit={handleRecordedSubmit} />
-            </>
-          )}
-        </>
-      )}
-
-      {!!error && <Typography sx={{ color: '#d32f2f', fontSize: '0.75rem' }}>{error}</Typography>}
-
       {description && (
-        <Typography sx={{ fontSize: '12px', fontWeight: '500', marginTop: '2rem', textAlign: 'justify' }} variant="subtitle2">
-          {description}
-        </Typography>
+        <Typography sx={{ fontSize: '13px', color: '#667085', marginTop: 1, textAlign: 'justify' }}>{description}</Typography>
       )}
+      <Box marginTop={2.5}>
+        <MediaAnswerUploader
+          kind={element.questionType === 'AUDIO_UPLOAD' ? 'audio' : 'image'}
+          value={isPreview ? previewValue : value}
+          onChange={(id) => (isPreview ? setPreviewValue(id) : onChange?.(id))}
+          required={required}
+          locked={locked}
+          showRequiredError={!!error}
+        />
+      </Box>
     </Box>
   );
 }

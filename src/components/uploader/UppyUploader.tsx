@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import Uppy from '@uppy/core';
 import Tus from '@uppy/tus';
 import CustomUppy from './CustomeUppy';
@@ -13,7 +13,7 @@ import '@uppy/image-editor/dist/style.min.css';
 import Persian from '@uppy/locales/lib/fa_IR';
 import { v7 as uuidv7 } from "uuid";
 
-export function UppyUploader({ fileRestriction = fileUploaderRestrictions, sx = {}, getData, register, onUppyReady }: IUploader) {
+export function UppyUploader({ fileRestriction = fileUploaderRestrictions, sx = {}, getData, register }: IUploader) {
   const generateFileName = (file: any) => {
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     return `${uuidv7()}_${timestamp}_${file.name}`;
@@ -27,10 +27,6 @@ export function UppyUploader({ fileRestriction = fileUploaderRestrictions, sx = 
       removeFingerprintOnSuccess: true,
     }),
   );
-
-  useEffect(() => {
-    onUppyReady?.(uppy.current);
-  }, []);
 
   uppy.current.on('file-added', (file) => {
     uppy.current.setFileMeta(file.id, {
@@ -52,7 +48,6 @@ export function UppyUploader({ fileRestriction = fileUploaderRestrictions, sx = 
         successful!.map((item: any) => {
           return item.uploadURL.split('/').pop();
         }),
-        successful,
       );
     }
   });

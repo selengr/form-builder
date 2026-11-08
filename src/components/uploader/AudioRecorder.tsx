@@ -6,6 +6,7 @@ import { Box, Button, Typography } from '@mui/material';
 
 interface AudioRecorderProps {
   uploading?: boolean;
+  maxSeconds?: number;
   onSubmit: (file: File) => void;
 }
 
@@ -27,7 +28,7 @@ const extensionFor = (mimeType: string) => {
   return 'webm';
 };
 
-export default function AudioRecorder({ uploading = false, onSubmit }: AudioRecorderProps) {
+export default function AudioRecorder({ uploading = false, maxSeconds = 180, onSubmit }: AudioRecorderProps) {
   const [isRecording, setIsRecording] = useState(false);
   const [seconds, setSeconds] = useState(0);
   const [recordedFile, setRecordedFile] = useState<File | null>(null);
@@ -56,6 +57,13 @@ export default function AudioRecorder({ uploading = false, onSubmit }: AudioReco
       if (recordedUrl) URL.revokeObjectURL(recordedUrl);
     };
   }, [recordedUrl]);
+
+  useEffect(() => {
+    if (isRecording && seconds >= maxSeconds) {
+      stopRecording();
+      toast.info(`ضبط متوقف شد؛ حداکثر زمان ضبط ${Math.round(maxSeconds / 60)} دقیقه است`);
+    }
+  }, [isRecording, seconds, maxSeconds]);
 
   const startRecording = async () => {
     if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
@@ -122,7 +130,9 @@ export default function AudioRecorder({ uploading = false, onSubmit }: AudioReco
         <>
           <Box display="flex" alignItems="center" gap={1}>
             <Box sx={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#FA4D56' }} />
-            <Typography sx={{ fontSize: '14px', fontWeight: 600, direction: 'ltr' }}>{formatTime(seconds)}</Typography>
+            <Typography sx={{ fontSize: '14px', fontWeight: 600, direction: 'ltr' }}>
+              {formatTime(seconds)} / {formatTime(maxSeconds)}
+            </Typography>
           </Box>
           <Button
             variant="contained"
@@ -152,12 +162,15 @@ export default function AudioRecorder({ uploading = false, onSubmit }: AudioReco
           </Box>
         </>
       ) : (
-        <Button
-          variant="outlined"
-          onClick={startRecording}
-          sx={{ borderRadius: '10px', borderColor: '#1758BA', color: '#1758BA' }}>
-          شروع ضبط صدا
-        </Button>
+        <>
+          <Button
+            variant="outlined"
+            onClick={startRecording}
+            sx={{ borderRadius: '10px', borderColor: '#1758BA', color: '#1758BA' }}>
+            شروع ضبط صدا
+          </Button>
+          <Typography sx={{ fontSize: '12px', color: '#6F6F6F' }}>حداکثر زمان ضبط {Math.round(maxSeconds / 60)} دقیقه</Typography>
+        </>
       )}
     </Box>
   );

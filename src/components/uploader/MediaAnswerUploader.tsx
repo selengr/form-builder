@@ -88,6 +88,24 @@ const recordExtension = (mimeType: string) => {
   return 'webm';
 };
 
+const microphoneErrorText = (err: unknown) => {
+  const name = err instanceof DOMException || err instanceof Error ? err.name : '';
+  if (name === 'NotFoundError' || name === 'OverconstrainedError') {
+    return 'میکروفونی روی این دستگاه پیدا نشد؛ لطفاً میکروفون را وصل کنید';
+  }
+  if (name === 'NotReadableError' || name === 'AbortError') {
+    return 'میکروفون در دسترس نیست؛ ممکن است برنامه‌ی دیگری از آن استفاده کند';
+  }
+  if (name === 'NotAllowedError' || name === 'SecurityError') {
+    const policy = (document as any).permissionsPolicy ?? (document as any).featurePolicy;
+    if (policy?.allowsFeature && !policy.allowsFeature('microphone')) {
+      return 'دسترسی به میکروفون توسط تنظیمات امنیتی سایت (Permissions-Policy) مسدود شده است';
+    }
+    return 'دسترسی به میکروفون داده نشد؛ لطفاً از تنظیمات مرورگر اجازه دهید';
+  }
+  return `شروع ضبط ممکن نشد${name ? ` (${name})` : ''}`;
+};
+
 const remoteFileUrl = (id: string) => `${process.env.NEXT_PUBLIC_BASE_URL}/filemanager/${id}`;
 
 const pillButton = (variant: 'contained' | 'outlined', disabled?: boolean): React.CSSProperties => ({
@@ -350,48 +368,75 @@ export default function MediaAnswerUploader({
 
   const startRecording = async () => {
     if (locked) return;
+    if (typeof window !== 'undefined' && !window.isSecureContext) {
+      toast.error('ضبط صدا فقط در اتصال امن (HTTPS) امکان‌پذیر است');
+      return;
+    }
     if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
       toast.error('مرورگر شما از ضبط صدا پشتیبانی نمی‌کند');
       return;
     }
 
+    let stream: MediaStream;
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mimeType = pickRecordMimeType();
-      const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch (err) {
+      console.error('[MediaAnswerUploader] getUserMedia failed:', err);
+      toast.error(microphoneErrorText(err));
+      return;
+    }
 
-      streamRef.current = stream;
-      recorderRef.current = recorder;
-      chunksRef.current = [];
-      discardRecordingRef.current = false;
-
-      recorder.ondataavailable = (event) => {
-        if (event.data.size > 0) chunksRef.current.push(event.data);
-      };
-      recorder.onstop = () => {
-        streamRef.current?.getTracks().forEach((track) => track.stop());
-        streamRef.current = null;
-        stopTimer();
-        if (discardRecordingRef.current) return;
-        const type = (recorder.mimeType || mimeType || 'audio/webm').split(';')[0];
-        const file = new File([new Blob(chunksRef.current, { type })], `voice_record.${recordExtension(type)}`, { type });
-        startUpload(file, recordSecondsRef.current);
-      };
-
-      setError(null);
-      setRecordSeconds(0);
-      recordSecondsRef.current = 0;
-      recorder.start();
-      setIsRecording(true);
-      timerRef.current = setInterval(() => {
-        recordSecondsRef.current += 1;
-        setRecordSeconds(recordSecondsRef.current);
-      }, 1000);
+    let recorder: MediaRecorder;
+    const mimeType = pickRecordMimeType();
+    try {
+      recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
     } catch {
+      try {
+        recorder = new MediaRecorder(stream);
+      } catch (err) {
+        console.error('[MediaAnswerUploader] MediaRecorder failed:', err);
+        stream.getTracks().forEach((track) => track.stop());
+        toast.error('مرورگر شما از ضبط صدا پشتیبانی نمی‌کند');
+        return;
+      }
+    }
+
+    streamRef.current = stream;
+    recorderRef.current = recorder;
+    chunksRef.current = [];
+    discardRecordingRef.current = false;
+
+    recorder.ondataavailable = (event) => {
+      if (event.data.size > 0) chunksRef.current.push(event.data);
+    };
+    recorder.onstop = () => {
       streamRef.current?.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
-      toast.error('دسترسی به میکروفون داده نشد');
+      stopTimer();
+      if (discardRecordingRef.current) return;
+      const type = (recorder.mimeType || mimeType || 'audio/webm').split(';')[0];
+      const file = new File([new Blob(chunksRef.current, { type })], `voice_record.${recordExtension(type)}`, { type });
+      startUpload(file, recordSecondsRef.current);
+    };
+
+    try {
+      recorder.start();
+    } catch (err) {
+      console.error('[MediaAnswerUploader] recorder.start failed:', err);
+      stream.getTracks().forEach((track) => track.stop());
+      streamRef.current = null;
+      toast.error('شروع ضبط ممکن نشد، لطفاً دوباره تلاش کنید');
+      return;
     }
+
+    setError(null);
+    setRecordSeconds(0);
+    recordSecondsRef.current = 0;
+    setIsRecording(true);
+    timerRef.current = setInterval(() => {
+      recordSecondsRef.current += 1;
+      setRecordSeconds(recordSecondsRef.current);
+    }, 1000);
   };
 
   const finishRecording = (discard: boolean) => {

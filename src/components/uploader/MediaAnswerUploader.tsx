@@ -8,15 +8,12 @@ import { v7 as uuidv7 } from 'uuid';
 import {
   IoAdd,
   IoClose,
-  IoImageOutline,
   IoLockClosedOutline,
-  IoMusicalNotesOutline,
   IoPause,
   IoPlay,
-  IoRefresh,
-  IoTrashOutline,
   IoWarningOutline,
 } from 'react-icons/io5';
+import { GalleryIcon, MusicIcon, ReplaceIcon, TrashIcon } from './MediaIcons';
 
 export type MediaKind = 'audio' | 'image';
 
@@ -37,10 +34,13 @@ interface FileInfo {
   name: string;
   size?: number;
   duration?: number;
+  width?: number;
+  height?: number;
   url?: string;
 }
 
-const PRIMARY = '#3541F2';
+const PRIMARY = '#303CFB';
+const TRASH_COLOR = '#F25055';
 const DANGER = '#F04438';
 
 const KIND_CONFIG: Record<MediaKind, { accept: string; extensions: string[]; formats: string; dropTitle: string; requiredText: string }> = {
@@ -505,14 +505,22 @@ export default function MediaAnswerUploader({
     }
 
     if (value && fileInfo) {
-      const meta = [fileInfo.size ? formatSize(fileInfo.size) : null, fileInfo.duration ? formatTime(fileInfo.duration) : null]
+      const detail =
+        kind === 'audio'
+          ? fileInfo.duration
+            ? formatTime(fileInfo.duration)
+            : null
+          : fileInfo.width && fileInfo.height
+            ? `${fileInfo.width}×${fileInfo.height}`
+            : null;
+      const meta = [fileInfo.size ? formatSize(fileInfo.size) : null, detail]
         .filter(Boolean)
         .join(' | ');
       return (
         <div className="flex flex-col gap-3 rounded-2xl border border-[#E4E7EC] bg-white p-[18px]">
           <div className="flex items-center gap-3">
-            <div className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-[10px] bg-[#EEF4FF]" style={{ color: PRIMARY }}>
-              {kind === 'audio' ? <IoMusicalNotesOutline size={24} /> : <IoImageOutline size={24} />}
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#EEF4FF]" style={{ color: PRIMARY }}>
+              {kind === 'audio' ? <MusicIcon /> : <GalleryIcon />}
             </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-[15px] font-medium text-[#161616]" dir="auto">
@@ -526,18 +534,18 @@ export default function MediaAnswerUploader({
                 aria-label="جایگزینی فایل"
                 onClick={openPicker}
                 disabled={locked}
-                className="flex h-[34px] w-[34px] items-center justify-center rounded-lg"
-                style={{ backgroundColor: locked ? '#F2F4F7' : '#EEF2FF', color: locked ? '#D0D5DD' : PRIMARY }}>
-                <IoRefresh size={18} />
+                className="flex h-9 w-9 items-center justify-center rounded-[10px]"
+                style={{ backgroundColor: locked ? '#F2F4F7' : '#EEF4FF', color: locked ? '#D0D5DD' : PRIMARY }}>
+                <ReplaceIcon />
               </button>
               <button
                 type="button"
                 aria-label="حذف فایل"
                 onClick={removeFile}
                 disabled={locked}
-                className="flex h-[34px] w-[34px] items-center justify-center rounded-lg"
-                style={{ backgroundColor: locked ? '#F2F4F7' : '#FEF3F2', color: locked ? '#D0D5DD' : DANGER }}>
-                <IoTrashOutline size={18} />
+                className="flex h-9 w-9 items-center justify-center rounded-[10px]"
+                style={{ backgroundColor: locked ? '#F2F4F7' : '#FEF3F2', color: locked ? '#D0D5DD' : TRASH_COLOR }}>
+                <TrashIcon />
               </button>
             </div>
           </div>
@@ -551,7 +559,16 @@ export default function MediaAnswerUploader({
             />
           )}
           {fileInfo.url && kind === 'image' && (
-            <img src={fileInfo.url} alt="" className="max-h-[260px] w-full rounded-2xl bg-[#F8F9FB] object-contain" />
+            <img
+              src={fileInfo.url}
+              alt=""
+              className="max-h-[320px] w-full rounded-xl bg-[#F8F9FB] object-cover"
+              onLoad={(event) => {
+                const { naturalWidth, naturalHeight } = event.currentTarget;
+                setFileInfo((info) => (info && !info.width ? { ...info, width: naturalWidth, height: naturalHeight } : info));
+              }}
+              onError={() => setFileInfo((info) => (info ? { ...info, url: undefined } : info))}
+            />
           )}
 
           {locked && (

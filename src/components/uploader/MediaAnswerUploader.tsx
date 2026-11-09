@@ -91,12 +91,12 @@ const recordExtension = (mimeType: string) => {
 const remoteFileUrl = (id: string) => `${process.env.NEXT_PUBLIC_BASE_URL}/filemanager/${id}`;
 
 const pillButton = (variant: 'contained' | 'outlined', disabled?: boolean): React.CSSProperties => ({
-  height: 40,
-  minWidth: 120,
+  height: 42,
+  minWidth: 132,
   padding: '0 20px',
   borderRadius: 999,
-  fontSize: 14,
-  fontWeight: 500,
+  fontSize: 15,
+  fontWeight: 600,
   cursor: disabled ? 'not-allowed' : 'pointer',
   opacity: disabled ? 0.5 : 1,
   border: `1px solid ${PRIMARY}`,
@@ -132,7 +132,7 @@ function AudioPlayer({ src, knownDuration, onDuration }: { src: string; knownDur
   if (failed) return null;
 
   return (
-    <div className="flex items-center gap-3 rounded-2xl bg-[#F8F9FB] px-3 py-3">
+    <div className="flex items-center gap-3 rounded-xl bg-[#F8F9FB] px-2.5 py-2">
       <audio
         ref={audioRef}
         src={src}
@@ -152,14 +152,14 @@ function AudioPlayer({ src, knownDuration, onDuration }: { src: string; knownDur
         type="button"
         onClick={toggle}
         aria-label={playing ? 'توقف' : 'پخش'}
-        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white"
+        className="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full text-white"
         style={{ backgroundColor: PRIMARY }}>
-        {playing ? <IoPause size={20} /> : <IoPlay size={20} />}
+        {playing ? <IoPause size={16} /> : <IoPlay size={16} />}
       </button>
-      <div className="relative h-1.5 flex-1 cursor-pointer rounded-full bg-[#ECEEF2]" onClick={seek}>
+      <div className="relative h-1 flex-1 cursor-pointer rounded-full bg-[#ECEEF2]" onClick={seek}>
         <div className="absolute right-0 top-0 h-full rounded-full" style={{ width: `${progress}%`, backgroundColor: PRIMARY }} />
       </div>
-      <span className="shrink-0 text-[13px] text-[#6F6F6F]" dir="ltr">
+      <span className="shrink-0 text-[12px] text-[#667085]" dir="ltr">
         {formatTime(current)} / {formatTime(total)}
       </span>
     </div>
@@ -426,13 +426,13 @@ export default function MediaAnswerUploader({
       }}
       onDragLeave={() => setIsDragging(false)}
       onDrop={onDrop}
-      className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl px-4 py-7 text-center transition-colors"
+      className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl px-4 py-8 text-center transition-colors"
       style={{
         border: `1.5px dashed ${error || showRequired ? DANGER : isDragging ? PRIMARY : '#D0D5DD'}`,
         backgroundColor: error ? '#FEF3F2' : isDragging ? '#F3F4FF' : '#F8F9FB',
       }}>
       {error ? <IoClose size={26} color="#344054" /> : <IoAdd size={28} color="#344054" />}
-      <p className="text-[15px] font-semibold" style={{ color: error ? DANGER : '#161616' }}>
+      <p className="text-[16px] font-semibold" style={{ color: error ? DANGER : '#161616' }}>
         {error ? ERROR_TEXT[error] : config.dropTitle}
       </p>
       <p className="text-[12px] text-[#98A2B3]">
@@ -487,7 +487,7 @@ export default function MediaAnswerUploader({
         <>
           <div className="flex flex-col items-center gap-2 rounded-2xl px-4 py-6 text-center" style={{ border: '1.5px dashed #D0D5DD', backgroundColor: '#F8F9FB' }}>
             <IoAdd size={28} color="#344054" />
-            <p className="text-[15px] font-semibold text-[#161616]">در حال بارگذاری... {percent}٪</p>
+            <p className="text-[16px] font-semibold text-[#161616]">در حال بارگذاری... {percent}٪</p>
             <p className="max-w-full truncate text-[12px] text-[#98A2B3]">
               {formatSize(uploading.loaded)} از {formatSize(uploading.total)} | <span dir="ltr">{uploading.name}</span>
             </p>
@@ -509,50 +509,54 @@ export default function MediaAnswerUploader({
         .filter(Boolean)
         .join(' | ');
       return (
-        <div className="flex flex-col gap-3 rounded-3xl border border-[#E4E7EC] bg-white p-4">
+        <div className="flex flex-col gap-3 rounded-2xl border border-[#E4E7EC] bg-white p-[18px]">
           <div className="flex items-center gap-3">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#EEF2FF]" style={{ color: PRIMARY }}>
-              {kind === 'audio' ? <IoMusicalNotesOutline size={28} /> : <IoImageOutline size={28} />}
+            <div className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-[10px] bg-[#EEF4FF]" style={{ color: PRIMARY }}>
+              {kind === 'audio' ? <IoMusicalNotesOutline size={24} /> : <IoImageOutline size={24} />}
             </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-[15px] font-medium text-[#161616]" dir="auto">
                 {fileInfo.name}
               </p>
-              {meta && <p className="text-[13px] text-[#98A2B3]">{meta}</p>}
+              {meta && <p className="mt-0.5 text-[12px] text-[#98A2B3]">{meta}</p>}
             </div>
-            <button
-              type="button"
-              aria-label="جایگزینی فایل"
-              onClick={openPicker}
-              disabled={locked}
-              className="flex h-11 w-11 items-center justify-center rounded-xl"
-              style={{ backgroundColor: locked ? '#F2F4F7' : '#EEF2FF', color: locked ? '#D0D5DD' : PRIMARY }}>
-              <IoRefresh size={22} />
-            </button>
-            <button
-              type="button"
-              aria-label="حذف فایل"
-              onClick={removeFile}
-              disabled={locked}
-              className="flex h-11 w-11 items-center justify-center rounded-xl"
-              style={{ backgroundColor: locked ? '#F2F4F7' : '#FEF3F2', color: locked ? '#D0D5DD' : DANGER }}>
-              <IoTrashOutline size={22} />
-            </button>
+            <div className="flex shrink-0 items-center gap-1.5">
+              <button
+                type="button"
+                aria-label="جایگزینی فایل"
+                onClick={openPicker}
+                disabled={locked}
+                className="flex h-[34px] w-[34px] items-center justify-center rounded-lg"
+                style={{ backgroundColor: locked ? '#F2F4F7' : '#EEF2FF', color: locked ? '#D0D5DD' : PRIMARY }}>
+                <IoRefresh size={18} />
+              </button>
+              <button
+                type="button"
+                aria-label="حذف فایل"
+                onClick={removeFile}
+                disabled={locked}
+                className="flex h-[34px] w-[34px] items-center justify-center rounded-lg"
+                style={{ backgroundColor: locked ? '#F2F4F7' : '#FEF3F2', color: locked ? '#D0D5DD' : DANGER }}>
+                <IoTrashOutline size={18} />
+              </button>
+            </div>
           </div>
 
-          {fileInfo.url && kind === 'audio' && <AudioPlayer
+          {fileInfo.url && kind === 'audio' && (
+            <AudioPlayer
               key={fileInfo.url}
               src={fileInfo.url}
               knownDuration={fileInfo.duration}
               onDuration={(seconds) => setFileInfo((info) => (info && !info.duration ? { ...info, duration: seconds } : info))}
-            />}
+            />
+          )}
           {fileInfo.url && kind === 'image' && (
             <img src={fileInfo.url} alt="" className="max-h-[260px] w-full rounded-2xl bg-[#F8F9FB] object-contain" />
           )}
 
           {locked && (
-            <div className="flex items-center gap-2 rounded-xl bg-[#F2F4F7] px-3 py-3 text-[13px] text-[#667085]">
-              <IoLockClosedOutline size={18} />
+            <div className="flex items-center gap-2 rounded-lg bg-[#F2F4F7] px-3 py-2 text-[13px] text-[#667085]">
+              <IoLockClosedOutline size={16} />
               <span>پاسخ ثبت نهایی شده و امکان حذف یا جایگزینی وجود ندارد.</span>
             </div>
           )}

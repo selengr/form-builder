@@ -45,9 +45,9 @@ const DANGER = '#F04438';
 
 const KIND_CONFIG: Record<MediaKind, { accept: string; extensions: string[]; formats: string; dropTitle: string; requiredText: string }> = {
   audio: {
-    accept: 'audio/*,.mp3,.wav,.ogg,.m4a,.aac,.webm',
-    extensions: ['mp3', 'wav', 'ogg', 'm4a', 'aac', 'webm'],
-    formats: 'MP3، WAV، OGG، M4A',
+    accept: '.mp3,.wav,.m4a,.aac,.webm,.ogg',
+    extensions: ['mp3', 'wav', 'm4a', 'aac', 'webm', 'ogg'],
+    formats: 'MP3، WAV، M4A، AAC، WEBM، OGG',
     dropTitle: 'فایل صوتی را اینجا رها کنید',
     requiredText: 'لطفاً فایل صوتی را آپلود کنید.',
   },
@@ -293,9 +293,7 @@ export default function MediaAnswerUploader({
 
   const validateFile = (file: File): UploadError => {
     const extension = getExtension(file.name);
-    const typeOk =
-      config.extensions.includes(extension) || (kind === 'audio' && file.type.startsWith('audio/') && extension !== '');
-    if (!typeOk) return 'type';
+    if (!config.extensions.includes(extension)) return 'type';
     if (file.size > maxFileSize) return 'size';
     return null;
   };

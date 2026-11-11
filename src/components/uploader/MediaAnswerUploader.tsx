@@ -184,20 +184,62 @@ function AudioPlayer({ src, knownDuration, onDuration }: { src: string; knownDur
   );
 }
 
-function RecordingWave() {
-  const bars = [6, 12, 9, 18, 24, 14, 20, 28, 16, 10, 22, 30, 18, 12, 26, 20, 14, 8, 16, 24, 12, 18, 10, 6];
+const WAVE_BAR_COUNT = 24;
+const WAVE_MIN_HEIGHT = 4;
+const WAVE_MAX_HEIGHT = 30;
+
+function RecordingWave({ stream }: { stream: MediaStream | null }) {
+  const barsRef = useRef<(HTMLSpanElement | null)[]>([]);
+
+  useEffect(() => {
+    if (!stream) return;
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContextClass) return;
+
+    const context: AudioContext = new AudioContextClass();
+    const source = context.createMediaStreamSource(stream);
+    const analyser = context.createAnalyser();
+    analyser.fftSize = 256;
+    analyser.smoothingTimeConstant = 0.7;
+    analyser.minDecibels = -90;
+    analyser.maxDecibels = -15;
+    source.connect(analyser);
+    context.resume().catch(() => {});
+
+    const data = new Uint8Array(analyser.frequencyBinCount);
+    const half = WAVE_BAR_COUNT / 2;
+    let frame = 0;
+
+    const draw = () => {
+      analyser.getByteFrequencyData(data);
+      for (let index = 0; index < WAVE_BAR_COUNT; index += 1) {
+        const band = Math.floor(Math.abs(index + 0.5 - half));
+        const value = (data[1 + band * 2] + data[2 + band * 2]) / 2;
+        const level = Math.min(1, value / 255);
+        const bar = barsRef.current[index];
+        if (bar) bar.style.height = `${WAVE_MIN_HEIGHT + level * (WAVE_MAX_HEIGHT - WAVE_MIN_HEIGHT)}px`;
+      }
+      frame = requestAnimationFrame(draw);
+    };
+    draw();
+
+    return () => {
+      cancelAnimationFrame(frame);
+      source.disconnect();
+      context.close().catch(() => {});
+    };
+  }, [stream]);
+
   return (
     <div className="flex h-8 items-center gap-[3px]" dir="ltr">
-      <style>{`@keyframes media-wave { 0%, 100% { transform: scaleY(0.45); } 50% { transform: scaleY(1); } }`}</style>
-      {bars.map((height, index) => (
+      {Array.from({ length: WAVE_BAR_COUNT }, (_, index) => (
         <span
           key={index}
-          className="w-[3px] rounded-full"
-          style={{
-            height,
-            backgroundColor: DANGER,
-            animation: `media-wave ${0.7 + (index % 5) * 0.12}s ease-in-out ${index * 0.05}s infinite`,
+          ref={(element) => {
+            barsRef.current[index] = element;
           }}
+          className="w-[3px] rounded-full transition-[height] duration-75"
+          style={{ height: WAVE_MIN_HEIGHT, backgroundColor: DANGER }}
         />
       ))}
     </div>
@@ -229,6 +271,7 @@ export default function MediaAnswerUploader({
 
   const [isRecording, setIsRecording] = useState(false);
   const [recordSeconds, setRecordSeconds] = useState(0);
+  const [recordStream, setRecordStream] = useState<MediaStream | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -430,6 +473,7 @@ export default function MediaAnswerUploader({
     setError(null);
     setRecordSeconds(0);
     recordSecondsRef.current = 0;
+    setRecordStream(stream);
     setIsRecording(true);
     timerRef.current = setInterval(() => {
       recordSecondsRef.current += 1;
@@ -441,6 +485,7 @@ export default function MediaAnswerUploader({
     discardRecordingRef.current = discard;
     if (recorderRef.current?.state === 'recording') recorderRef.current.stop();
     stopTimer();
+    setRecordStream(null);
     setIsRecording(false);
   };
 
@@ -507,7 +552,7 @@ export default function MediaAnswerUploader({
               <span>در حال ضبط...</span>
               <span dir="ltr">{formatTime(recordSeconds)}</span>
             </div>
-            <RecordingWave />
+            <RecordingWave stream={recordStream} />
             <p className="text-[12px] text-[#667085]">حداکثر زمان ضبط {Math.round(maxRecordSeconds / 60)} دقیقه است</p>
           </div>
           {actionsRow(

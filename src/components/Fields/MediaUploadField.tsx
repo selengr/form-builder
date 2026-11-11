@@ -166,6 +166,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   const selectedElement = useSelectedElement();
   const { updateElement, addElement } = useActionDesigner();
   const { questionGroups } = useDesigner();
+  const isEditMode = elements?.some((el: any) => el?.questionId === element?.questionId);
 
   const [openDescriptionSwitch, setOpenDescriptionSwitch] = useState<boolean>(() =>
     element.questionPropertyList.some((property) => property.questionPropertyEnum === 'DESCRIPTION' && property.value),
@@ -344,7 +345,7 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
           <Typography variant="subtitle2" fontWeight="700">
             الگوی پاسخ:
           </Typography>
-          <RHFMultiSelect name="questionType" options={mediaTypeOptions} />
+          <RHFMultiSelect name="questionType" options={mediaTypeOptions} disabled={isEditMode} />
         </div>
 
         <Stack flexDirection="row" justifyContent="space-between" alignItems="flex-start" marginTop={3}>

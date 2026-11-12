@@ -167,7 +167,7 @@ export default function BuilderLoading() {
         </div>
 
         <div className="hidden lg:flex flex-col shrink- pt-[9px]">
-          <div className="px-6 min-[1440px]:px-8 min-[1680px]:px-10 pb-2">
+          <div className="px-10 pb-2">
             <TabsSkeleton />
           </div>
           <SidebarSkeleton />

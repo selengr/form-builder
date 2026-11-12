@@ -1,6 +1,7 @@
 'use client';
 
 import { memo } from 'react';
+import { BUILDER_SIDEBAR_WIDTH } from '@/constants/builderSidebar';
 import { FormElements } from '@/types/FormElements';
 import SidebarBtnElement from './SidebarBtnElement';
 import SidebarBtnLogic from './SidebarBtnLogic';
@@ -50,7 +51,7 @@ const DesignerSidebar = memo(function DesignerSidebar({
   return (
     <div
       dir="rtl"
-      className="hidden lg:flex bg-white rounded-[20px] sticky top-4 w-[340px] max-w-[340px] shrink-0 border border-[#DDE1E6] flex-col overflow-hidden select-none"
+      className={`hidden lg:flex bg-white rounded-[20px] sticky top-4 ${BUILDER_SIDEBAR_WIDTH} shrink-0 border border-[#DDE1E6] flex-col overflow-hidden select-none`}
     >
       <div
         className="flex flex-col gap-2 p-2 overflow-y-auto flex-1"

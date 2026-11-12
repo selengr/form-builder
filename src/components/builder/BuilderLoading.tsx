@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import { BUILDER_SIDEBAR_WIDTH } from '@/constants/builderSidebar';
 
 const pulse = 'animate-pulse';
 
@@ -105,7 +106,7 @@ function SidebarSkeleton() {
   return (
     <div
       dir="rtl"
-      className={`hidden lg:flex bg-white rounded-[20px] sticky top-4 w-[340px] max-w-[340px] shrink-0 border border-[#DDE1E6] flex-col overflow-hidden select-none ${pulse}`}
+      className={`hidden lg:flex bg-white rounded-[20px] sticky top-4 ${BUILDER_SIDEBAR_WIDTH} shrink-0 border border-[#DDE1E6] flex-col overflow-hidden select-none ${pulse}`}
       style={{ maxHeight: 'calc(100dvh - 120px)' }}
     >
       <div
@@ -166,7 +167,7 @@ export default function BuilderLoading() {
         </div>
 
         <div className="hidden lg:flex flex-col shrink- pt-[9px]">
-          <div className="px-10 pb-2">
+          <div className="px-6 min-[1440px]:px-8 min-[1680px]:px-10 pb-2">
             <TabsSkeleton />
           </div>
           <SidebarSkeleton />

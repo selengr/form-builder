@@ -214,7 +214,7 @@ const Designer = memo(function Designer({ data }: DesignerProps) {
         </div>
 
         <div className="hidden lg:flex flex-col shrink-0">
-          <div className="px-10">
+          <div className="px-6 min-[1440px]:px-8 min-[1680px]:px-10">
             <DesignerTabsNew
               variant="sidebar"
               value={selectedTab}

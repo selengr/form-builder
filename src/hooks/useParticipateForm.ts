@@ -87,6 +87,7 @@ export const useParticipateForm = () => {
 
       let value: any = '';
       let currentAnswerId: any
+      let answerLink: string | undefined;
 
       if (previousAnswers && previousAnswers.length > 0) {
         const first = previousAnswers[0];
@@ -133,6 +134,7 @@ export const useParticipateForm = () => {
         } else {
           value = first.answer;
           currentAnswerId = first?.id;
+          answerLink = first?.link;
         }
       } else {
         if (q.questionType === 'SPECTRAL') {
@@ -173,7 +175,7 @@ export const useParticipateForm = () => {
 
       setIsValid(valid);
       setFormData(value);
-      setQuestion(q);
+      setQuestion(answerLink ? { ...q, answerLink } : q);
       setAnswerId(currentAnswerId);
     },
     [extractProperty]

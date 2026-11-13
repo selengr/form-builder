@@ -20,6 +20,7 @@ export type MediaKind = 'audio' | 'image';
 interface MediaAnswerUploaderProps {
   kind: MediaKind;
   value?: string;
+  fileLink?: string;
   onChange: (value: string) => void;
   required?: boolean;
   locked?: boolean;
@@ -106,7 +107,10 @@ const microphoneErrorText = (err: unknown) => {
   return `شروع ضبط ممکن نشد${name ? ` (${name})` : ''}`;
 };
 
-const remoteFileUrl = (id: string) => `${process.env.NEXT_PUBLIC_BASE_URL}/filemanager/${id}`;
+const remoteFileUrl = (id: string, link?: string) => {
+  const path = link || id;
+  return `${process.env.NEXT_PUBLIC_BASE_URL}/filemanager${path.startsWith('/') ? path : `/${path}`}`;
+};
 
 const pillButton = (variant: 'contained' | 'outlined', disabled?: boolean): React.CSSProperties => ({
   height: 42,
@@ -249,6 +253,7 @@ function RecordingWave({ stream }: { stream: MediaStream | null }) {
 export default function MediaAnswerUploader({
   kind,
   value,
+  fileLink,
   onChange,
   required = false,
   locked = false,
@@ -266,7 +271,7 @@ export default function MediaAnswerUploader({
   const [isDragging, setIsDragging] = useState(false);
   const [uploading, setUploading] = useState<{ name: string; loaded: number; total: number } | null>(null);
   const [fileInfo, setFileInfo] = useState<FileInfo | null>(() =>
-    value ? { name: kind === 'audio' ? 'فایل صوتی' : 'تصویر', url: remoteFileUrl(value) } : null,
+    value ? { name: kind === 'audio' ? 'فایل صوتی' : 'تصویر', url: remoteFileUrl(value, fileLink) } : null,
   );
 
   const [isRecording, setIsRecording] = useState(false);

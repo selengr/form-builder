@@ -38,6 +38,7 @@ interface FileInfo {
   width?: number;
   height?: number;
   url?: string;
+  fallbackUrls?: string[];
 }
 
 const PRIMARY = '#303CFB';
@@ -107,10 +108,11 @@ const microphoneErrorText = (err: unknown) => {
   return `شروع ضبط ممکن نشد${name ? ` (${name})` : ''}`;
 };
 
-const remoteFileUrl = (id: string, link?: string) => {
-  const path = link || id;
-  return `${process.env.NEXT_PUBLIC_BASE_URL}/filemanager${path.startsWith('/') ? path : `/${path}`}`;
-};
+const fileManagerUrl = (path: string) =>
+  `${process.env.NEXT_PUBLIC_BASE_URL}/filemanager${path.startsWith('/') ? path : `/${path}`}`;
+
+const remoteFileUrls = (id: string, link?: string) =>
+  link ? [fileManagerUrl(link)] : [fileManagerUrl(`/download/${id}`), fileManagerUrl(`/upload/${id}`), fileManagerUrl(`/${id}`)];
 
 const pillButton = (variant: 'contained' | 'outlined', disabled?: boolean): React.CSSProperties => ({
   height: 42,
@@ -126,7 +128,17 @@ const pillButton = (variant: 'contained' | 'outlined', disabled?: boolean): Reac
   color: variant === 'contained' ? '#fff' : PRIMARY,
 });
 
-function AudioPlayer({ src, knownDuration, onDuration }: { src: string; knownDuration?: number; onDuration?: (seconds: number) => void }) {
+function AudioPlayer({
+  src,
+  knownDuration,
+  onDuration,
+  onError,
+}: {
+  src: string;
+  knownDuration?: number;
+  onDuration?: (seconds: number) => void;
+  onError?: () => void;
+}) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
   const [current, setCurrent] = useState(0);
@@ -168,7 +180,7 @@ function AudioPlayer({ src, knownDuration, onDuration }: { src: string; knownDur
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
         onEnded={() => setPlaying(false)}
-        onError={() => setFailed(true)}
+        onError={() => (onError ? onError() : setFailed(true))}
       />
       <button
         type="button"
@@ -270,8 +282,16 @@ export default function MediaAnswerUploader({
   const [error, setError] = useState<UploadError>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [uploading, setUploading] = useState<{ name: string; loaded: number; total: number } | null>(null);
+  const remoteFileInfo = (id: string, link?: string): FileInfo => {
+    const [url, ...fallbackUrls] = remoteFileUrls(id, link);
+    return { name: kind === 'audio' ? 'فایل صوتی' : 'تصویر', url, fallbackUrls };
+  };
+  const tryNextUrl = (failedUrl?: string) =>
+    setFileInfo((info) =>
+      info && info.url === failedUrl ? { ...info, url: info.fallbackUrls?.[0], fallbackUrls: info.fallbackUrls?.slice(1) } : info,
+    );
   const [fileInfo, setFileInfo] = useState<FileInfo | null>(() =>
-    value ? { name: kind === 'audio' ? 'فایل صوتی' : 'تصویر', url: remoteFileUrl(value, fileLink) } : null,
+    value ? remoteFileInfo(value, fileLink) : null,
   );
 
   const [isRecording, setIsRecording] = useState(false);
@@ -649,10 +669,15 @@ export default function MediaAnswerUploader({
               src={fileInfo.url}
               knownDuration={fileInfo.duration}
               onDuration={(seconds) => setFileInfo((info) => (info && !info.duration ? { ...info, duration: seconds } : info))}
+              onError={() => tryNextUrl(fileInfo.url)}
             />
           )}
           {fileInfo.url && kind === 'image' && (
             <img
+              key={fileInfo.url}
+              ref={(img) => {
+                if (img?.complete && img.naturalWidth === 0) tryNextUrl(fileInfo.url);
+              }}
               src={fileInfo.url}
               alt=""
               className="max-h-[320px] w-full rounded-xl bg-[#F8F9FB] object-cover"
@@ -660,7 +685,7 @@ export default function MediaAnswerUploader({
                 const { naturalWidth, naturalHeight } = event.currentTarget;
                 setFileInfo((info) => (info && !info.width ? { ...info, width: naturalWidth, height: naturalHeight } : info));
               }}
-              onError={() => setFileInfo((info) => (info ? { ...info, url: undefined } : info))}
+              onError={() => tryNextUrl(fileInfo.url)}
             />
           )}
 

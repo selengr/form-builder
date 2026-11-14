@@ -17,6 +17,10 @@ import {
 import { useUserInfoContext } from '@/context/UserInfoContext';
 import { ElementsType, FormElements } from '@/types/FormElements';
 
+const MEDIA_TYPES = ['IMAGE_UPLOAD', 'AUDIO_UPLOAD'];
+
+const mediaFileId = (value: string) => (value.includes('/') ? (value.split('?')[0].split('/').pop() ?? value) : value);
+
 export interface ILimitation {
   isLimited: boolean;
   limitationType: '' | 'PHONE_NUMBER' | 'EMAIL';
@@ -77,6 +81,10 @@ export const useParticipateForm = () => {
   const initializeQuestion = useCallback(
     (q: any, previousAnswers?: any[]) => {
       if (!q?.questionType) return setQuestion(null);
+
+      if (MEDIA_TYPES.includes(q.questionType)) {
+        console.log('[media-answer] received', { questionId: q.questionId, questionType: q.questionType, previousAnswers });
+      }
 
       const props = q.questionPropertyList;
       const required = extractProperty(props, 'REQUIRED') === 'true';
@@ -440,6 +448,15 @@ export const useParticipateForm = () => {
             answer: formData ? String(formData) : null,
           },
         ];
+      } else if (MEDIA_TYPES.includes(question.questionType)) {
+        answerList = [
+          {
+            optionId: null,
+            id: typeof answerId === 'number' ? answerId : undefined,
+            answer: mediaFileId(String(formData)),
+          },
+        ];
+        console.log('[media-answer] sent', { questionId: question.questionId, formData, answerList });
       } else {
         answerList = [
           {

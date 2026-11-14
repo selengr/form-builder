@@ -20,7 +20,6 @@ export type MediaKind = 'audio' | 'image';
 interface MediaAnswerUploaderProps {
   kind: MediaKind;
   value?: string;
-  fileLink?: string;
   onChange: (value: string) => void;
   required?: boolean;
   locked?: boolean;
@@ -38,7 +37,6 @@ interface FileInfo {
   width?: number;
   height?: number;
   url?: string;
-  fallbackUrls?: string[];
 }
 
 const PRIMARY = '#303CFB';
@@ -108,11 +106,20 @@ const microphoneErrorText = (err: unknown) => {
   return `شروع ضبط ممکن نشد${name ? ` (${name})` : ''}`;
 };
 
-const fileManagerUrl = (path: string) =>
-  `${process.env.NEXT_PUBLIC_BASE_URL}/filemanager${path.startsWith('/') ? path : `/${path}`}`;
+const downloadLinkUrl = (link: string) =>
+  /^https?:\/\//.test(link)
+    ? link
+    : `${process.env.NEXT_PUBLIC_BASE_URL}/filemanager${link.startsWith('/') ? link : `/${link}`}`;
 
-const remoteFileUrls = (id: string, link?: string) =>
-  link ? [fileManagerUrl(link)] : [fileManagerUrl(`/download/${id}`), fileManagerUrl(`/upload/${id}`), fileManagerUrl(`/${id}`)];
+const fileNameFromLink = (link: string) => {
+  if (!link.includes('/')) return '';
+  const last = link.split('?')[0].split('/').pop() ?? '';
+  let name = last;
+  try {
+    name = decodeURIComponent(last);
+  } catch {}
+  return name.match(/^[0-9a-f-]{36}_[^_]+_(.+)$/i)?.[1] ?? name;
+};
 
 const pillButton = (variant: 'contained' | 'outlined', disabled?: boolean): React.CSSProperties => ({
   height: 42,
@@ -128,17 +135,7 @@ const pillButton = (variant: 'contained' | 'outlined', disabled?: boolean): Reac
   color: variant === 'contained' ? '#fff' : PRIMARY,
 });
 
-function AudioPlayer({
-  src,
-  knownDuration,
-  onDuration,
-  onError,
-}: {
-  src: string;
-  knownDuration?: number;
-  onDuration?: (seconds: number) => void;
-  onError?: () => void;
-}) {
+function AudioPlayer({ src, knownDuration, onDuration }: { src: string; knownDuration?: number; onDuration?: (seconds: number) => void }) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
   const [current, setCurrent] = useState(0);
@@ -180,7 +177,7 @@ function AudioPlayer({
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
         onEnded={() => setPlaying(false)}
-        onError={() => (onError ? onError() : setFailed(true))}
+        onError={() => setFailed(true)}
       />
       <button
         type="button"
@@ -265,7 +262,6 @@ function RecordingWave({ stream }: { stream: MediaStream | null }) {
 export default function MediaAnswerUploader({
   kind,
   value,
-  fileLink,
   onChange,
   required = false,
   locked = false,
@@ -282,16 +278,8 @@ export default function MediaAnswerUploader({
   const [error, setError] = useState<UploadError>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [uploading, setUploading] = useState<{ name: string; loaded: number; total: number } | null>(null);
-  const remoteFileInfo = (id: string, link?: string): FileInfo => {
-    const [url, ...fallbackUrls] = remoteFileUrls(id, link);
-    return { name: kind === 'audio' ? 'فایل صوتی' : 'تصویر', url, fallbackUrls };
-  };
-  const tryNextUrl = (failedUrl?: string) =>
-    setFileInfo((info) =>
-      info && info.url === failedUrl ? { ...info, url: info.fallbackUrls?.[0], fallbackUrls: info.fallbackUrls?.slice(1) } : info,
-    );
   const [fileInfo, setFileInfo] = useState<FileInfo | null>(() =>
-    value ? remoteFileInfo(value, fileLink) : null,
+    value ? { name: fileNameFromLink(value) || (kind === 'audio' ? 'فایل صوتی' : 'تصویر'), url: downloadLinkUrl(value) } : null,
   );
 
   const [isRecording, setIsRecording] = useState(false);
@@ -669,15 +657,10 @@ export default function MediaAnswerUploader({
               src={fileInfo.url}
               knownDuration={fileInfo.duration}
               onDuration={(seconds) => setFileInfo((info) => (info && !info.duration ? { ...info, duration: seconds } : info))}
-              onError={() => tryNextUrl(fileInfo.url)}
             />
           )}
           {fileInfo.url && kind === 'image' && (
             <img
-              key={fileInfo.url}
-              ref={(img) => {
-                if (img?.complete && img.naturalWidth === 0) tryNextUrl(fileInfo.url);
-              }}
               src={fileInfo.url}
               alt=""
               className="max-h-[320px] w-full rounded-xl bg-[#F8F9FB] object-cover"
@@ -685,7 +668,7 @@ export default function MediaAnswerUploader({
                 const { naturalWidth, naturalHeight } = event.currentTarget;
                 setFileInfo((info) => (info && !info.width ? { ...info, width: naturalWidth, height: naturalHeight } : info));
               }}
-              onError={() => tryNextUrl(fileInfo.url)}
+              onError={() => setFileInfo((info) => (info ? { ...info, url: undefined } : info))}
             />
           )}
 

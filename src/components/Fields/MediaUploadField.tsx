@@ -146,7 +146,6 @@ function FormComponent({
         <MediaAnswerUploader
           kind={element.questionType === 'AUDIO_UPLOAD' ? 'audio' : 'image'}
           value={isPreview ? previewValue : value}
-          fileLink={isPreview ? undefined : (element as { answerLink?: string }).answerLink}
           onChange={(id) => (isPreview ? setPreviewValue(id) : onChange?.(id))}
           required={required}
           locked={locked}

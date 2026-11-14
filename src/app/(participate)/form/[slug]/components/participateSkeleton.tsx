@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Box, Skeleton, Button, IconButton } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 
 import ActionButtons from '@/templates/form/ActionButtons';
 import BugIcon from '@/../public/images/home-page/menu/bugIcon.svg';
@@ -21,7 +21,7 @@ export const ParticipateLoadingSkeleton = ({ firstload, isPreview }: { firstload
                     }
 
                     <div className="px-12 mx-5 flex items-center justify-center w-full">
-                        <div className="h-6 w-40 sm:w-48 md:w-64 rounded-md bg-gray-200 animate-pulse max-w-full" />
+                        <div className="h-5 w-40 sm:w-48 md:w-56 rounded-full bg-gray-200 animate-pulse max-w-full" />
                     </div>
 
                     {!isPreview &&
@@ -47,15 +47,8 @@ export const ParticipateLoadingSkeleton = ({ firstload, isPreview }: { firstload
                 </div>
 
                 <div className='flex-1 overflow-y-auto px-4'>
-                    <div className='w-full max-w-3xl mx-auto pb-6 animate-pulse'>
-                        <div
-                            className={`
-                                w-full h-full
-                                flex items-center
-                                rounded-xl
-                                my-8 p-8 md:p-12
-                            `}
-                            >
+                    <div className='w-full max-w-3xl mx-auto pb-6'>
+                        <div className='w-[99%] my-4 md:my-8 p-6 md:p-12 flex'>
                             <QuestionFieldSkeleton />
                         </div>
                     </div>
@@ -70,25 +63,33 @@ export const ParticipateLoadingSkeleton = ({ firstload, isPreview }: { firstload
 };
 
 
+function SkeletonBlock({ className = '' }: { className?: string }) {
+    return <div className={`bg-gray-200 rounded-lg animate-pulse ${className}`} />;
+}
+
+function OptionSkeleton({ width }: { width: string }) {
+    return (
+        <div dir='rtl' className='flex items-center gap-3 h-[52px] w-full px-4 rounded-xl border border-[#E8E8E8] bg-white'>
+            <SkeletonBlock className='h-5 w-5 shrink-0 rounded-full bg-gray-100' />
+            <SkeletonBlock className={`h-3.5 rounded-md ${width}`} />
+        </div>
+    );
+}
+
 const QuestionFieldSkeleton = () => {
     return (
-        <Box display='flex' gap={1.5} flexDirection='column' width='100%' maxWidth='600px'>
-            <Box display='flex' flexDirection='column' gap={0.5} width='100%'>
-                <Skeleton variant="text" sx={{ width: { xs: "80%", md: "60%", borderRadius: 1 } }} height={24} />
-                <Skeleton variant="text" sx={{ width: { xs: "50%", md: "20%", borderRadius: 1 } }} height={16} />
-            </Box>
+        <div dir='rtl' className='flex flex-col w-full max-w-[600px]'>
+            <div className='flex flex-col gap-2.5'>
+                <SkeletonBlock className='h-5 w-4/5 md:w-3/5 rounded-md' />
+                <SkeletonBlock className='h-5 w-1/2 md:w-2/5 rounded-md' />
+            </div>
+            <SkeletonBlock className='h-3.5 w-2/3 md:w-1/2 mt-3 rounded-md bg-gray-100' />
 
-            <Skeleton
-                variant="rectangular"
-                width="100%"
-                height={50}
-                sx={{
-                    borderRadius: '12px',
-                    bgcolor: 'rgba(0,0,0,0.06)',
-                }}
-            />
-
-            <Skeleton variant="text" sx={{ width: { xs: "65%", md: "40%", borderRadius: 1 } }} height={16} />
-        </Box>
+            <div className='flex flex-col gap-3 mt-7'>
+                <OptionSkeleton width='w-2/5' />
+                <OptionSkeleton width='w-1/2' />
+                <OptionSkeleton width='w-1/3' />
+            </div>
+        </div>
     );
 };

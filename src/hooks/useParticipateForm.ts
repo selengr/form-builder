@@ -37,6 +37,13 @@ const rememberMediaId = (questionId: number, fileId: string) => {
 
 const isDownloadLink = (value: string) => value.includes('/');
 
+const EMPTY_FILE_PARTS = ['', 'null', 'undefined', 'download'];
+
+const hasMediaFile = (value: string) => {
+  const last = value.split('?')[0].split('/').filter(Boolean).pop() ?? '';
+  return !EMPTY_FILE_PARTS.includes(last.trim().toLowerCase());
+};
+
 export interface ILimitation {
   isLimited: boolean;
   limitationType: '' | 'PHONE_NUMBER' | 'EMAIL';
@@ -157,8 +164,10 @@ export const useParticipateForm = () => {
           }
         } else if (MEDIA_TYPES.includes(q.questionType)) {
           const answer = String(first?.answer ?? '');
-          answerLink = first?.link ?? (isDownloadLink(answer) ? answer : undefined);
-          value = isDownloadLink(answer) ? (readMediaIds()[q.questionId] ?? answer) : answer;
+          if (hasMediaFile(answer)) {
+            answerLink = first?.link ?? (isDownloadLink(answer) ? answer : undefined);
+            value = isDownloadLink(answer) ? (readMediaIds()[q.questionId] ?? answer) : answer;
+          }
           currentAnswerId = first?.id;
         } else {
           value = first.answer;

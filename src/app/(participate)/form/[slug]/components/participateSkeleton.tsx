@@ -79,11 +79,7 @@ function OptionSkeleton({ width }: { width: string }) {
 const QuestionFieldSkeleton = () => {
     return (
         <div dir='rtl' className='flex flex-col w-full max-w-[600px]'>
-            <div className='flex flex-col gap-2.5'>
-                <SkeletonBlock className='h-5 w-4/5 md:w-3/5 rounded-md' />
-                <SkeletonBlock className='h-5 w-1/2 md:w-2/5 rounded-md' />
-            </div>
-            <SkeletonBlock className='h-3.5 w-2/3 md:w-1/2 mt-3 rounded-md bg-gray-100' />
+            <SkeletonBlock className='h-5 w-4/5 md:w-3/5 rounded-md' />
 
             <div className='flex flex-col gap-3 mt-7'>
                 <OptionSkeleton width='w-2/5' />

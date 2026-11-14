@@ -37,7 +37,7 @@ const rememberMediaId = (questionId: number, fileId: string) => {
 
 const isDownloadLink = (value: string) => value.includes('/');
 
-const EMPTY_FILE_PARTS = ['', 'null', 'undefined', 'download'];
+const EMPTY_FILE_PARTS = ['', 'null', 'undefined', 'download', '##none##'];
 
 const hasMediaFile = (value: string) => {
   const last = value.split('?')[0].split('/').filter(Boolean).pop() ?? '';

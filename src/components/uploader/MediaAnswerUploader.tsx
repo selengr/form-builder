@@ -20,6 +20,7 @@ export type MediaKind = 'audio' | 'image';
 interface MediaAnswerUploaderProps {
   kind: MediaKind;
   value?: string;
+  fileLink?: string;
   onChange: (value: string) => void;
   required?: boolean;
   locked?: boolean;
@@ -118,6 +119,7 @@ const fileNameFromLink = (link: string) => {
   try {
     name = decodeURIComponent(last);
   } catch {}
+  if (/^[0-9a-f-]{24,36}$/i.test(name)) return '';
   return name.match(/^[0-9a-f-]{36}_[^_]+_(.+)$/i)?.[1] ?? name;
 };
 
@@ -262,6 +264,7 @@ function RecordingWave({ stream }: { stream: MediaStream | null }) {
 export default function MediaAnswerUploader({
   kind,
   value,
+  fileLink,
   onChange,
   required = false,
   locked = false,
@@ -279,7 +282,12 @@ export default function MediaAnswerUploader({
   const [isDragging, setIsDragging] = useState(false);
   const [uploading, setUploading] = useState<{ name: string; loaded: number; total: number } | null>(null);
   const [fileInfo, setFileInfo] = useState<FileInfo | null>(() =>
-    value ? { name: fileNameFromLink(value) || (kind === 'audio' ? 'فایل صوتی' : 'تصویر'), url: downloadLinkUrl(value) } : null,
+    value
+      ? {
+          name: fileNameFromLink(fileLink ?? value) || (kind === 'audio' ? 'فایل صوتی' : 'تصویر'),
+          url: downloadLinkUrl(fileLink ?? value),
+        }
+      : null,
   );
 
   const [isRecording, setIsRecording] = useState(false);

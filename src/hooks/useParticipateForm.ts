@@ -19,7 +19,23 @@ import { ElementsType, FormElements } from '@/types/FormElements';
 
 const MEDIA_TYPES = ['IMAGE_UPLOAD', 'AUDIO_UPLOAD'];
 
-const mediaFileId = (value: string) => (value.includes('/') ? (value.split('?')[0].split('/').pop() ?? value) : value);
+const MEDIA_IDS_KEY = 'media-answer-ids';
+
+const readMediaIds = (): Record<string, string> => {
+  try {
+    return JSON.parse(sessionStorage.getItem(MEDIA_IDS_KEY) || '{}');
+  } catch {
+    return {};
+  }
+};
+
+const rememberMediaId = (questionId: number, fileId: string) => {
+  try {
+    sessionStorage.setItem(MEDIA_IDS_KEY, JSON.stringify({ ...readMediaIds(), [questionId]: fileId }));
+  } catch {}
+};
+
+const isDownloadLink = (value: string) => value.includes('/');
 
 export interface ILimitation {
   isLimited: boolean;
@@ -95,6 +111,7 @@ export const useParticipateForm = () => {
 
       let value: any = '';
       let currentAnswerId: any
+      let answerLink: string | undefined;
 
       if (previousAnswers && previousAnswers.length > 0) {
         const first = previousAnswers[0];
@@ -138,6 +155,11 @@ export const useParticipateForm = () => {
             value = first.optionId;
             currentAnswerId = first?.id;
           }
+        } else if (MEDIA_TYPES.includes(q.questionType)) {
+          const answer = String(first?.answer ?? '');
+          answerLink = first?.link ?? (isDownloadLink(answer) ? answer : undefined);
+          value = isDownloadLink(answer) ? (readMediaIds()[q.questionId] ?? answer) : answer;
+          currentAnswerId = first?.id;
         } else {
           value = first.answer;
           currentAnswerId = first?.id;
@@ -181,7 +203,7 @@ export const useParticipateForm = () => {
 
       setIsValid(valid);
       setFormData(value);
-      setQuestion(q);
+      setQuestion(answerLink ? { ...q, answerLink } : q);
       setAnswerId(currentAnswerId);
     },
     [extractProperty]
@@ -449,11 +471,20 @@ export const useParticipateForm = () => {
           },
         ];
       } else if (MEDIA_TYPES.includes(question.questionType)) {
+        const fileId = String(formData ?? '');
+        if (isDownloadLink(fileId)) {
+          toast.error('شناسه فایل پیدا نشد؛ لطفاً فایل را دوباره بارگذاری کنید', {
+            className: `max-w-[300px] ${isSurvey ? 'mb-12' : ''}`,
+            duration: 3000,
+          });
+          return;
+        }
+        if (fileId) rememberMediaId(question.questionId, fileId);
         answerList = [
           {
             optionId: null,
             id: typeof answerId === 'number' ? answerId : undefined,
-            answer: mediaFileId(String(formData)),
+            answer: fileId,
           },
         ];
         console.log('[media-answer] sent', { questionId: question.questionId, formData, answerList });

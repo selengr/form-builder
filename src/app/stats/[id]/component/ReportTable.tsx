@@ -14,6 +14,7 @@ import { useDeleteTakePart } from '../show-result/hooks/useDeleteTakePart';
 import ConfirmDialog from '@/components/confirm-dialog';
 import ReportTableSkeleton from './ReportTableSkeleton';
 import ReportImageAnswerCell from './ReportImageAnswerCell';
+import ReportAudioAnswerCell from './ReportAudioAnswerCell';
 import { normalizeSheetAnswer } from '@/lib/reportMediaAnswer';
 
 interface StatsTableProps {
@@ -184,21 +185,32 @@ export function ReportTable({
                       const columnMeta = headData[typeof i === 'number' ? i : Number(i)];
                       const columnQuestionType = resolveColumnQuestionType(columnMeta, data, questionTypes);
                       const isImageColumn = columnQuestionType === 'IMAGE_UPLOAD';
+                      const isAudioColumn = columnQuestionType === 'AUDIO_UPLOAD';
                       const cellText = renderDefaultCellContent(data.answer);
 
                       return (
                         <td
                           key={i}
                           className={`px-4 py-2 text-sm text-gray-800 text-center border-b border-r border-gray-200 align-top ${
-                            isImageColumn ? 'min-w-[110px] max-w-[140px]' : 'max-w-[150px]'
+                            isAudioColumn
+                              ? 'min-w-[260px] max-w-[320px]'
+                              : isImageColumn
+                                ? 'min-w-[110px] max-w-[140px]'
+                                : 'max-w-[150px]'
                           }`}
-                          style={{ minWidth: isImageColumn ? '110px' : '100px' }}>
+                          style={{
+                            minWidth: isAudioColumn ? '260px' : isImageColumn ? '110px' : '100px',
+                          }}>
                           {isImageColumn ? (
                             <ReportImageAnswerCell
                               answer={data.answer}
                               downloadLink={data.link}
                               respondentName={name}
                             />
+                          ) : isAudioColumn ? (
+                            <div className="flex justify-center">
+                              <ReportAudioAnswerCell answer={data.answer} downloadLink={data.link} />
+                            </div>
                           ) : (
                             <Tooltip title={cellText} followCursor arrow enterDelay={600} leaveDelay={100} placement="top">
                               <div

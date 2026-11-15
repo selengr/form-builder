@@ -129,7 +129,7 @@ export default function ReportImageAnswerDialog({
             gap: 2,
           }}
         >
-          <Box sx={{ textAlign: { xs: 'center', sm: 'right' } }}>
+          <Box sx={{ textAlign: { xs: 'center', sm: 'left' } }}>
             <Typography sx={{ fontSize: 15, fontWeight: 700, color: '#161616' }}>{fileName}</Typography>
             <Typography sx={{ fontSize: 13, color: '#667085', mt: 0.5 }}>
               ابعاد:{' '}

@@ -13,6 +13,8 @@ import { usePathname } from 'next/navigation';
 import { useDeleteTakePart } from '../show-result/hooks/useDeleteTakePart';
 import ConfirmDialog from '@/components/confirm-dialog';
 import ReportTableSkeleton from './ReportTableSkeleton';
+import ReportImageAnswerCell from './ReportImageAnswerCell';
+import { normalizeSheetAnswer } from '@/lib/reportMediaAnswer';
 
 interface StatsTableProps {
   headData: any[];
@@ -22,6 +24,25 @@ interface StatsTableProps {
   setSelectedUsers: (users: UserType[]) => void;
   formId: number;
   refetchStatsData: () => void;
+  questionTypes?: Record<string, string>;
+}
+
+function resolveColumnQuestionType(
+  column: { questionId?: string | number; questionType?: string } | undefined,
+  cell: { questionId?: string | number; questionType?: string } | undefined,
+  questionTypes: Record<string, string>,
+) {
+  const questionId = column?.questionId ?? cell?.questionId;
+  return (
+    column?.questionType ??
+    cell?.questionType ??
+    (questionId != null ? questionTypes[String(questionId)] : undefined)
+  );
+}
+
+function renderDefaultCellContent(answer: unknown) {
+  const text = normalizeSheetAnswer(answer);
+  return Array.isArray(answer) ? answer.join(' - ') : text;
 }
 
 export function ReportTable({
@@ -32,6 +53,7 @@ export function ReportTable({
   selectedUsers,
   setSelectedUsers,
   formId,
+  questionTypes = {},
 }: StatsTableProps) {
   const [open, setOpen] = React.useState(false);
   const [deleteTarget, setDeleteTarget] = React.useState<{ takePartId: number; name: string } | null>(null);
@@ -151,39 +173,50 @@ export function ReportTable({
             <tbody>
               {allData.map((row, rowIndex) => {
                 const takePartId = row.row[1]?.takePartId;
-                const name = row.row[1]?.answer[0];
+                const name = normalizeSheetAnswer(row.row[1]?.answer);
                 const isSelected = isUserSelected(takePartId);
 
                 return (
                   <tr
                     key={row.row[0]?.questionId + Math.random() || rowIndex}
                     className={`${rowIndex % 2 !== 0 ? 'bg-neutral-50' : 'bg-white'} hover:bg-blue-50 transition-colors duration-300 max-w-[150px] group`}>
-                    {row.row.map((data: { answer: any[] }, i: React.Key | null | undefined) => (
-                      <td
-                        key={i}
-                        className="px-4 py-2 text-sm text-gray-800 text-center border-b border-r border-gray-200 align-top max-w-[150px]"
-                        style={{ minWidth: '100px' }}>
-                        <Tooltip
-                          title={Array.isArray(data.answer) ? data.answer.join(' - ') : String(data.answer)}
-                          followCursor
-                          arrow
-                          enterDelay={600}
-                          leaveDelay={100}
-                          placement="top">
-                          <div
-                            className="overflow-hidden text-ellipsis"
-                            style={{
-                              display: '-webkit-box',
-                              WebkitBoxOrient: 'vertical',
-                              WebkitLineClamp: 3,
-                              wordBreak: 'break-word',
-                              whiteSpace: 'normal',
-                            }}>
-                            {Array.isArray(data.answer) ? data.answer.join(' - ') : String(data.answer)}
-                          </div>
-                        </Tooltip>
-                      </td>
-                    ))}
+                    {row.row.map((data: { answer: any[]; questionId?: number; questionType?: string; link?: string }, i: React.Key | null | undefined) => {
+                      const columnMeta = headData[typeof i === 'number' ? i : Number(i)];
+                      const columnQuestionType = resolveColumnQuestionType(columnMeta, data, questionTypes);
+                      const isImageColumn = columnQuestionType === 'IMAGE_UPLOAD';
+                      const cellText = renderDefaultCellContent(data.answer);
+
+                      return (
+                        <td
+                          key={i}
+                          className={`px-4 py-2 text-sm text-gray-800 text-center border-b border-r border-gray-200 align-top ${
+                            isImageColumn ? 'min-w-[110px] max-w-[140px]' : 'max-w-[150px]'
+                          }`}
+                          style={{ minWidth: isImageColumn ? '110px' : '100px' }}>
+                          {isImageColumn ? (
+                            <ReportImageAnswerCell
+                              answer={data.answer}
+                              downloadLink={data.link}
+                              respondentName={name}
+                            />
+                          ) : (
+                            <Tooltip title={cellText} followCursor arrow enterDelay={600} leaveDelay={100} placement="top">
+                              <div
+                                className="overflow-hidden text-ellipsis"
+                                style={{
+                                  display: '-webkit-box',
+                                  WebkitBoxOrient: 'vertical',
+                                  WebkitLineClamp: 3,
+                                  wordBreak: 'break-word',
+                                  whiteSpace: 'normal',
+                                }}>
+                                {cellText}
+                              </div>
+                            </Tooltip>
+                          )}
+                        </td>
+                      );
+                    })}
                     <td
                       className={`sticky left-0 px-4 py-2 text-center border-b border-r border-gray-200 align-middle ${
                         rowIndex % 2 !== 0
@@ -199,7 +232,7 @@ export function ReportTable({
                         </button>
                         {pathname.includes('stats') && (
                           <button
-                            onClick={() => handleShowResult(takePartId, row?.row[1]?.answer[0])}
+                            onClick={() => handleShowResult(takePartId, name)}
                             className="rounded-xl p-2 bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 shadow-sm">
                             <LuFileChartPie className="w-5 h-5" />
                           </button>

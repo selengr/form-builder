@@ -3,12 +3,15 @@ import { useParams } from 'next/navigation';
 // actions
 // import statsService from '@/services/statsService';
 import { getStatsDataAction } from '@actions/report/stats';
+import { getFormDataAction } from '@actions/builder/getForm';
+import { buildQuestionTypeMap } from '@/lib/reportMediaAnswer';
 
 export const useStatsViewModel = () => {
   const { id } = useParams();
   // const [formData, setFormData] = useState<any>({});
   const [headData, setHeadData] = useState<any[]>([]);
   const [allData, setAllData] = useState<any[]>([]);
+  const [questionTypes, setQuestionTypes] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [totalItems, setTotalItems] = useState(0);
 
@@ -53,6 +56,21 @@ export const useStatsViewModel = () => {
   }, [id]);
 
   useEffect(() => {
+    if (!id) return;
+    let cancelled = false;
+
+    (async () => {
+      const res = await getFormDataAction(id.toString());
+      if (cancelled || !res.success) return;
+      setQuestionTypes(buildQuestionTypeMap(res.data));
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
+
+  useEffect(() => {
     if (pageSize !== -1) {
       fetchStatsData(page, pageSize);
     }
@@ -70,6 +88,7 @@ export const useStatsViewModel = () => {
     pageSize,
     setPageSize,
     totalItems,
-    refetchStatsData
+    refetchStatsData,
+    questionTypes,
   };
 };

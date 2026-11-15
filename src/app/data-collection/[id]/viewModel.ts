@@ -2,6 +2,8 @@ import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { getStatsDataAction } from '@actions/data-collection/stats';
+import { getFormDataAction } from '@actions/builder/getForm';
+import { buildQuestionTypeMap } from '@/lib/reportMediaAnswer';
 
 export const useStatsViewModel = () => {
   const { id } = useParams();
@@ -11,6 +13,7 @@ export const useStatsViewModel = () => {
   const [page, setPage] = useState<number>(1);
   const [allData, setAllData] = useState<any[]>([]);
   const [headData, setHeadData] = useState<any[]>([]);
+  const [questionTypes, setQuestionTypes] = useState<Record<string, string>>({});
   const [pageSize, setPageSize] = useState<number>(25);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -39,6 +42,21 @@ export const useStatsViewModel = () => {
   }, [id]);
 
   useEffect(() => {
+    if (!id) return;
+    let cancelled = false;
+
+    (async () => {
+      const res = await getFormDataAction(id.toString());
+      if (cancelled || !res.success) return;
+      setQuestionTypes(buildQuestionTypeMap(res.data));
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
+
+  useEffect(() => {
     if (pageSize !== -1) {
       fetchStatsData(page, pageSize);
     }
@@ -57,5 +75,6 @@ export const useStatsViewModel = () => {
     totalItems,
     setPageSize,
     refetchStatsData,
+    questionTypes,
   };
 };

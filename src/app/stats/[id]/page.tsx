@@ -17,7 +17,7 @@ export default function StatsPage() {
   const search = searchParams.get('name');
   const formId = params?.id?.toString(); // اطمینان از string بودن id
 
-  const { headData, allData, refetchStatsData, isLoading, page: currentPage, setPage: setCurrentPage, pageSize: rowsPerPage, setPageSize: setRowsPerPage, totalItems } = useStatsViewModel();
+  const { headData, allData, refetchStatsData, isLoading, page: currentPage, setPage: setCurrentPage, pageSize: rowsPerPage, setPageSize: setRowsPerPage, totalItems, questionTypes } = useStatsViewModel();
 
   const [selectedUsers, setSelectedUsers] = useState<UserType[]>([]);
 
@@ -40,7 +40,7 @@ export default function StatsPage() {
         <ReportHeader title={search || 'گزارش'} onBack={handleNavigation} />
 
         <div className='flex-grow overflow-hidden min-w-0'>
-          <ReportTable refetchStatsData={refetchStatsData} headData={headData} allData={allData} isLoading={isLoading} selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers} formId={Number(formId)} />
+          <ReportTable refetchStatsData={refetchStatsData} headData={headData} allData={allData} isLoading={isLoading} selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers} formId={Number(formId)} questionTypes={questionTypes} />
         </div>
 
         <ReportPagination

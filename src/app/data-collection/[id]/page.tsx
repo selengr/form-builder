@@ -26,6 +26,7 @@ export default function StatsPage() {
     pageSize: rowsPerPage,
     setPageSize: setRowsPerPage,
     totalItems,
+    questionTypes,
   } = useStatsViewModel();
 
   useEffect(() => {
@@ -60,6 +61,7 @@ export default function StatsPage() {
             selectedUsers={selectedUsers}
             setSelectedUsers={setSelectedUsers}
             formId={numericFormId}
+            questionTypes={questionTypes}
           />
         </div>
 

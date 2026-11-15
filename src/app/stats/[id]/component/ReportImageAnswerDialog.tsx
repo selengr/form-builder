@@ -80,7 +80,7 @@ export default function ReportImageAnswerDialog({
     >
       <Box sx={{ px: 2.5, pt: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Typography sx={{ fontSize: 17, fontWeight: 700, color: '#161616' }}>
-          پاسخ تصویری | {titleName}
+            {titleName}
         </Typography>
         <IconButton onClick={onClose} aria-label="بستن" size="small">
           <CgClose size={22} color="#404040" />
@@ -156,10 +156,6 @@ export default function ReportImageAnswerDialog({
             دانلود
           </Button>
         </Box>
-
-        <Typography sx={{ mt: 2, textAlign: 'center', fontSize: 12, color: '#98A2B3' }}>
-          برای بستن، بیرون از کادر کلیک کنید یا کلید Esc را بزنید
-        </Typography>
       </Box>
     </Dialog>
   );

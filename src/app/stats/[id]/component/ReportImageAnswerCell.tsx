@@ -25,20 +25,12 @@ export default function ReportImageAnswerCell({
   const [open, setOpen] = useState(false);
 
   if (isEmptyMediaAnswer(raw)) {
-    return (
-      <span className="text-[13px] text-[#98A2B3] font-medium" dir="rtl">
-        بدون پاسخ
-      </span>
-    );
+    return null;
   }
 
   const imageUrl = fileManagerDownloadUrl(raw);
   if (!imageUrl) {
-    return (
-      <span className="text-[13px] text-[#98A2B3] font-medium" dir="rtl">
-        بدون پاسخ
-      </span>
-    );
+    return null;
   }
 
   return (

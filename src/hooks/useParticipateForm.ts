@@ -190,7 +190,7 @@ export const useParticipateForm = () => {
 
       setIsValid(valid);
       setFormData(value);
-      setQuestion(answerLink ? { ...q, answerLink } : q);
+      setQuestion({ ...q, uploadedFileLink: answerLink, answerLink });
       setAnswerId(currentAnswerId);
     },
     [extractProperty]

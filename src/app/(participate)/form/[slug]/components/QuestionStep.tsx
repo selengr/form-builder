@@ -81,7 +81,7 @@ export function QuestionStep({
           <div className='w-full max-w-3xl mx-auto pb-6'>
             {question && (
               <AnimatedBox key={question.questionId} direction={direction}>
-                <ValidatedInput key={question.id} formData={formData} elementInstance={question} onValidationUpdate={false ? () => { } : handleValidationUpdate} />
+                <ValidatedInput key={question.questionId} formData={formData} elementInstance={question} onValidationUpdate={false ? () => { } : handleValidationUpdate} />
               </AnimatedBox>
             )}
           </div>

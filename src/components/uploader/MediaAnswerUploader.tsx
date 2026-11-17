@@ -107,10 +107,11 @@ const microphoneErrorText = (err: unknown) => {
   return `شروع ضبط ممکن نشد${name ? ` (${name})` : ''}`;
 };
 
-const downloadLinkUrl = (link: string) =>
-  /^https?:\/\//.test(link)
-    ? link
-    : `${process.env.NEXT_PUBLIC_BASE_URL}/filemanager${link.startsWith('/') ? link : `/${link}`}`;
+const downloadLinkUrl = (link: string) => {
+  if (!link || !link.includes('/')) return '';
+  if (/^https?:\/\//.test(link)) return link;
+  return `${process.env.NEXT_PUBLIC_BASE_URL}/filemanager${link.startsWith('/') ? link : `/${link}`}`;
+};
 
 const fileNameFromLink = (link: string) => {
   if (!link.includes('/')) return '';
@@ -281,14 +282,20 @@ export default function MediaAnswerUploader({
   const [error, setError] = useState<UploadError>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [uploading, setUploading] = useState<{ name: string; loaded: number; total: number } | null>(null);
-  const [fileInfo, setFileInfo] = useState<FileInfo | null>(() =>
-    value
-      ? {
-          name: fileNameFromLink(fileLink ?? '') || (kind === 'audio' ? 'فایل صوتی' : 'تصویر'),
-          url: fileLink ? downloadLinkUrl(fileLink) : undefined,
-        }
-      : null,
-  );
+  const [fileInfo, setFileInfo] = useState<FileInfo | null>(null);
+
+  useEffect(() => {
+    if (!value || !fileLink) return;
+    const url = downloadLinkUrl(fileLink);
+    if (!url) return;
+    setFileInfo((info) => {
+      if (info?.url?.startsWith('blob:')) return info;
+      return {
+        name: fileNameFromLink(fileLink) || (kind === 'audio' ? 'فایل صوتی' : 'تصویر'),
+        url,
+      };
+    });
+  }, [value, fileLink, kind]);
 
   const [isRecording, setIsRecording] = useState(false);
   const [recordSeconds, setRecordSeconds] = useState(0);

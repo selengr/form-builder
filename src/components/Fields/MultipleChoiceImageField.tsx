@@ -29,6 +29,19 @@ import { useSearchParams } from 'next/navigation';
 // actions
 import { createQuestion, updateQuestion } from '@/lib/builderFieldActions';
 
+function optionFilePath(option?: { link?: string; uploadedFileLink?: string } | null) {
+  const path = option?.uploadedFileLink || option?.link || '';
+  if (!path.includes('/')) return '';
+  return path.startsWith('/') || /^https?:\/\//.test(path) ? path : `/${path}`;
+}
+
+function optionFileSrc(option?: { link?: string; uploadedFileLink?: string } | null) {
+  const path = optionFilePath(option);
+  if (!path) return '';
+  if (/^https?:\/\//.test(path)) return path;
+  return `${process.env.NEXT_PUBLIC_BASE_URL}/filemanager${path}`;
+}
+
 const questionType: ElementsType = 'MULTIPLE_CHOICE_IMAGE';
 
 const questionPropertyList: IQPLMultipleChoice = [
@@ -327,7 +340,7 @@ function FormComponent({ elementInstance, onChange, error, value }: { elementIns
                         }}
                       >
                         <Image
-                          src={`${process.env.NEXT_PUBLIC_BASE_URL}/filemanager${option?.link}`}
+                          src={optionFileSrc(option)}
                           alt={option?.title || 'option image'}
                           fill
                           sizes="(max-width: 600px) 100px, 150px"
@@ -417,7 +430,7 @@ function FormComponent({ elementInstance, onChange, error, value }: { elementIns
                         }}
                       >
                         <Image
-                          src={`${process.env.NEXT_PUBLIC_BASE_URL}/filemanager${option?.link}`}
+                          src={optionFileSrc(option)}
                           alt={option?.title || 'option image'}
                           fill
                           sizes="(max-width: 600px) 100px, 150px"
@@ -499,11 +512,13 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
     values.title = element?.title;
     values.label = element.label ?? null;
     values.optionList = matchingElement
-      ? optionListCopy.map((optionItem) => {
-        delete optionItem?.position;
-        delete optionItem?.isTarget;
-        return optionItem;
-      })
+      ? optionListCopy.map((optionItem: any) => {
+          const { position, isTarget, ...rest } = optionItem;
+          return {
+            ...rest,
+            link: optionItem.uploadedFileLink || optionItem.link,
+          };
+        })
       : [];
     return values;
   }, [element, elements]);
@@ -708,19 +723,20 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
           <Box marginTop={3}>
             {fields.map((field: any, index: number) => (
               <Box key={field.id} display='flex' alignItems='flex-start' border='1px dashed #1758BA' borderRadius='10px' justifyContent='space-between' my={1.5} p={0.75}>
-                {field?.link?.includes('/download/') ? (
+                {optionFileSrc(field) ? (
                   <Image
                     width={128}
                     height={128}
                     draggable={false}
                     loading={'eager'}
                     alt=''
+                    unoptimized
                     style={{
                       width: '100px',
                       height: '100px',
                       borderRadius: '12px',
                     }}
-                    src={`${process.env.NEXT_PUBLIC_BASE_URL}/filemanager${field?.link}`}
+                    src={optionFileSrc(field)}
                   />
                 ) : (
                   <div>

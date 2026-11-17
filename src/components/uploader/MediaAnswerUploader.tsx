@@ -284,8 +284,8 @@ export default function MediaAnswerUploader({
   const [fileInfo, setFileInfo] = useState<FileInfo | null>(() =>
     value
       ? {
-          name: fileNameFromLink(fileLink ?? value) || (kind === 'audio' ? 'فایل صوتی' : 'تصویر'),
-          url: downloadLinkUrl(fileLink ?? value),
+          name: fileNameFromLink(fileLink ?? '') || (kind === 'audio' ? 'فایل صوتی' : 'تصویر'),
+          url: fileLink ? downloadLinkUrl(fileLink) : undefined,
         }
       : null,
   );

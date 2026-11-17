@@ -33,6 +33,7 @@ function SidebarBtnElement({ formElement, disabled = false }: SidebarBtnElementP
       type: formElement.questionType,
       isSidebarBtnElement: true,
     },
+    disabled: disabled || isMobile,
   });
 
   const handleClick = () => {
@@ -57,27 +58,37 @@ function SidebarBtnElement({ formElement, disabled = false }: SidebarBtnElementP
     setSelectedElement({ fieldElement: newElement, position: null });
   };
 
-  return (
-    <button
-      onClick={handleClick}
-      ref={!isMobile ? draggable.setNodeRef : undefined}
-      {...(!isMobile ? draggable.listeners : {})}
-      {...(!isMobile ? draggable.attributes : {})}
-      disabled={disabled}
-      className={clsx(
-        'w-full flex items-center gap-3 h-[52px] rounded-xl px-2 flex-row-reverse',
-        'bg-[#F7F7FF] border border-[#F7F7FF] shadow-sm text-[#424242]',
-        'hover:cursor-grab active:cursor-grabbing hover:border-[#2CDFC9]',
-        disabled && 'opacity-50 cursor-not-allowed'
-      )}
-    >
+  const buttonClassName = clsx(
+    'w-full flex items-center gap-3 h-[52px] rounded-xl px-2 flex-row-reverse',
+    'bg-[#F7F7FF] border border-[#F7F7FF] shadow-sm text-[#424242]',
+    !isMobile && 'hover:cursor-grab active:cursor-grabbing',
+    'hover:border-[#2CDFC9]',
+    disabled && 'opacity-50 cursor-not-allowed',
+    draggable.isDragging && 'opacity-40',
+  );
+
+  const button = (
+    <button type="button" onClick={handleClick} disabled={disabled} className={buttonClassName}>
       {icon && (
         <span className="bg-white rounded-[10px] h-9 w-9 flex justify-center items-center shrink-0">
-          <Image src={icon} width={22} height={22} alt="" unoptimized/>
+          <Image src={icon} width={22} height={22} alt="" unoptimized />
         </span>
       )}
       <p className="text-right pr-1 text-[#161616] text-[13px] md:text-sm font-normal flex-1">{label}</p>
     </button>
+  );
+
+  if (isMobile) return button;
+
+  return (
+    <div
+      ref={draggable.setNodeRef}
+      {...draggable.listeners}
+      {...draggable.attributes}
+      className={clsx('touch-none', disabled && 'pointer-events-none')}
+    >
+      {button}
+    </div>
   );
 }
 

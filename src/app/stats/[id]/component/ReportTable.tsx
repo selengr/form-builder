@@ -193,13 +193,13 @@ export function ReportTable({
                           key={i}
                           className={`px-4 py-2 text-sm text-gray-800 text-center border-b border-r border-gray-200 align-top ${
                             isAudioColumn
-                              ? 'min-w-[260px] max-w-[320px]'
+                              ? 'min-w-[300px] max-w-[360px]'
                               : isImageColumn
                                 ? 'min-w-[110px] max-w-[140px]'
                                 : 'max-w-[150px]'
                           }`}
                           style={{
-                            minWidth: isAudioColumn ? '260px' : isImageColumn ? '110px' : '100px',
+                            minWidth: isAudioColumn ? '300px' : isImageColumn ? '110px' : '100px',
                           }}>
                           {isImageColumn ? (
                             <ReportImageAnswerCell

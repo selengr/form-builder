@@ -32,8 +32,10 @@ function useFieldDialogTitle() {
 
 const CreateFieldDialogLoading = memo(function CreateFieldDialogLoading({
   onClose,
+  compact = false,
 }: {
   onClose: () => void;
+  compact?: boolean;
 }) {
   return (
     <>
@@ -56,7 +58,10 @@ const CreateFieldDialogLoading = memo(function CreateFieldDialogLoading({
         </IconButton>
       </div>
 
-      <div dir="rtl" className="flex flex-1 items-center justify-center w-full min-h-[280px]">
+      <div
+        dir="rtl"
+        className={`flex flex-1 items-center justify-center w-full ${compact ? 'py-10' : 'min-h-[280px]'}`}
+      >
         <ImSpinner2 className="animate-spin h-12 w-12 text-[#1758BA]" />
       </div>
     </>
@@ -65,8 +70,10 @@ const CreateFieldDialogLoading = memo(function CreateFieldDialogLoading({
 
 const CreateFieldDialogBody = memo(function CreateFieldDialogBody({
   onClose,
+  compact = false,
 }: {
   onClose: () => void;
+  compact?: boolean;
 }) {
   const dialogTitle = useFieldDialogTitle();
 
@@ -96,10 +103,17 @@ const CreateFieldDialogBody = memo(function CreateFieldDialogBody({
         )}
       </div>
 
-      <div dir="rtl" className="flex flex-1 flex-col min-h-0 overflow-hidden bg-white">
+      <div
+        dir="rtl"
+        className={`flex flex-col bg-white ${compact ? '' : 'flex-1 min-h-0 overflow-hidden'}`}
+      >
         <div
-          className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-5 pt-2 pb-4"
-          style={{ scrollbarWidth: 'thin' }}
+          className={
+            compact
+              ? 'px-5 pt-2 pb-4'
+              : 'flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-5 pt-2 pb-4'
+          }
+          style={compact ? undefined : { scrollbarWidth: 'thin' }}
         >
           <PropertiesFormSidebar />
         </div>
@@ -115,7 +129,10 @@ const CreateFieldDialog = memo(function CreateFieldDialog() {
   const setOpenDialog = useActionOpenDialog();
   const openDialog = useOpenDialog();
   const questionLoading = useQuestionLoading();
+  const selectedElement = useSelectedElement();
   const setSelectedElement = useActionSelectedElement();
+  const isCompactDialog =
+    selectedElement?.fieldElement?.questionType === 'PACKAGE_INJECTION_FIELD';
 
   const handleClose = useCallback(() => {
     setOpenDialog((prev) => !prev);
@@ -126,7 +143,7 @@ const CreateFieldDialog = memo(function CreateFieldDialog() {
     <Dialog
       open={openDialog}
       dir="ltr"
-      fullScreen={!isDesktop}
+      fullScreen={!isDesktop && !isCompactDialog}
       onClose={handleClose}
       sx={{
         overflow: 'hidden',
@@ -145,16 +162,16 @@ const CreateFieldDialog = memo(function CreateFieldDialog() {
           borderRadius: '24px',
           width: isDesktop ? 480 : '100%',
           maxWidth: isDesktop ? 480 : '100%',
-          height: isDesktop ? 680 : 650,
+          height: isCompactDialog ? 'auto' : isDesktop ? 680 : 650,
           maxHeight: isDesktop ? 'min(680px, 75dvh)' : '70dvh',
         },
       }}
     >
       {openDialog &&
         (questionLoading ? (
-          <CreateFieldDialogLoading onClose={handleClose} />
+          <CreateFieldDialogLoading onClose={handleClose} compact={isCompactDialog} />
         ) : (
-          <CreateFieldDialogBody onClose={handleClose} />
+          <CreateFieldDialogBody onClose={handleClose} compact={isCompactDialog} />
         ))}
     </Dialog>
   );

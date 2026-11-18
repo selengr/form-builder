@@ -3,12 +3,12 @@
 import { z } from 'zod';
 import { memo } from 'react';
 import { toast } from 'sonner';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
-import { Box, MenuItem, Skeleton, Typography } from '@mui/material';
+import { Autocomplete, Box, CircularProgress, MenuItem, Skeleton, TextField } from '@mui/material';
+import Image from 'next/image';
 // components
-import { RHFSelect } from '../../components/hook-form';
 import FormProvider from '@/components/hook-form/FormProvider';
 import { FIELD_PROPERTIES_FORM_ID } from '@/constants/fieldDialog';
 // hooks
@@ -112,10 +112,14 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
   });
 
   const {
+    control,
     reset,
+    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+  const selectedFormId = watch('selectedFormId');
+  const selectedForm = FormsList?.find((item: IGetPAckagingForm) => item.value === selectedFormId);
 
   async function onSubmit(values: propertiesFormSchemaType) {
     const group = elements.filter((el: any) => el.questionGroupId === selectedElement?.fieldElement?.questionGroupId);
@@ -165,100 +169,76 @@ function PropertiesComponent({ elementInstance }: { elementInstance: FormElement
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} formId={FIELD_PROPERTIES_FORM_ID}>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          paddingX: 0,
-          direction: 'ltr',
-          width: '100%',
-        }}>
-
-        <Box display='flex' flexDirection='column' gap='8px' width='100%' paddingX={2.5}>
-          <Typography variant='subtitle2' fontWeight='700'>
-            انتخاب فرم:
-          </Typography>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              height: '100%',
-              width: '100%',
-              overflow: 'hidden',
-              boxSizing: 'border-box',
-              '& .MuiFormControl-root, & .MuiInputBase-root': {
-                borderRadius: '10px',
-                width: '100%',
-              },
-            }}
-          >
-            <RHFSelect
-              fullWidth
-              name="selectedFormId"
-              sx={{
-                '& .MuiInputBase-root': { bgcolor: '#fff' },
-              }}
-            >
-              {isFetchingForms ? (
-                <>
-                  <SkeletonMenuItem />
-                  <SkeletonMenuItem />
-                </>
-              ) : (
-                FormsList?.map((item: IGetPAckagingForm) => (
-                  <MenuItem
-                    key={item.value}
-                    value={item.value}
+      <div dir="rtl" className="flex flex-col w-full gap-4 px-2.5">
+        <div className="flex flex-col gap-2">
+          <p className="text-[14px] font-bold text-[#161616]">انتخاب فرم</p>
+          <Controller
+            name="selectedFormId"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <Autocomplete
+                options={FormsList ?? []}
+                loading={isFetchingForms}
+                disabled={isFetchingForms}
+                openOnFocus={!isFetchingForms}
+                getOptionLabel={(option) => option.caption}
+                isOptionEqualToValue={(option, value) => option.value === value.value}
+                value={FormsList?.find((item: IGetPAckagingForm) => item.value === field.value) ?? null}
+                onChange={(_, option) => field.onChange(option?.value ?? '')}
+                noOptionsText="فرمی یافت نشد"
+                loadingText="در حال بارگذاری فرم‌ها..."
+                slotProps={{
+                  paper: {
+                    sx: { direction: 'rtl', borderRadius: '12px' },
+                  },
+                }}
+                renderOption={(props, option) => (
+                  <li {...props} key={option.value}>
+                    <span className="text-[14px] leading-6 whitespace-normal break-words">{option.caption}</span>
+                  </li>
+                )}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    placeholder={isFetchingForms ? 'در حال بارگذاری فرم‌ها...' : 'جستجو یا انتخاب فرم'}
+                    error={!!error}
+                    helperText={error?.message}
                     sx={{
-                      borderRadius: '12px',
-                      mx: 1,
-                      my: 0.6,
-                      px: 2,
-                      py: 1.5,
-                      display: 'flex',
-                      transition: 'all 0.2s ease-in-out',
-                      flex: 1,
-                      '&:hover': {
-                        bgcolor: '#F3F6FD',
-                        color: '#1976d2',
-                      },
-                      '&.Mui-selected': {
-                        bgcolor: '#E8F0FF !important',
-                        color: '#1565c0',
-                        fontWeight: 600,
+                      '& .MuiInputBase-root': {
+                        bgcolor: '#fff',
+                        borderRadius: '10px',
+                        minHeight: 52,
                       },
                     }}
-                  >
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <>
+                          {isFetchingForms ? <CircularProgress color="inherit" size={18} /> : null}
+                          {params.InputProps.endAdornment}
+                        </>
+                      ),
+                    }}
+                  />
+                )}
+              />
+            )}
+          />
+        </div>
 
-                    <Box sx={{
-                      minWidth: 0,
-                      width: '100%',
-                      display: 'flex',
-                      flexDirection: 'column'
-                    }}>
-                      <Typography
-                        fontSize={14}
-                        fontWeight={500}
-                        lineHeight={1.4}
-                        sx={{
-                          maxWidth: 300,
-                          whiteSpace: 'normal',
-                          wordBreak: 'break-word',
-                          overflowWrap: 'break-word',
-                        }}
-                      >
-                        {item.caption}
-                      </Typography>
-                    </Box>
-                  </MenuItem>
-                )))}
-            </RHFSelect>
-
-          </Box>
-        </Box>
-        <FieldDialogActionBottomButtons status={isSubmitting} />
-      </Box>
+        {selectedForm ? (
+          <div className="flex items-center gap-3 rounded-xl border border-[#DDE1E6] bg-[#F8FAFC] px-3 py-3">
+            <Image src={Packaging} alt="" width={28} height={28} />
+            <div className="min-w-0">
+              <p className="text-[12px] text-[#6B7280]">فرم انتخاب‌شده</p>
+              <p className="text-[14px] font-medium text-[#161616] break-words">{selectedForm.caption}</p>
+            </div>
+          </div>
+        ) : (
+          <p className="text-[13px] text-[#6B7280]">یک فرم را انتخاب کنید.</p>
+        )}
+      </div>
+      <FieldDialogActionBottomButtons status={isSubmitting} />
     </FormProvider>
   );
 }

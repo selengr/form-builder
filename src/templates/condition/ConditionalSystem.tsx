@@ -83,7 +83,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
             } else if (operatorType === 'TEXT') {
               if (conditionType === '#startWithText' || conditionType === '#endWithText') {
                 const InfoField = questionType.split('*')[0];
-                if (InfoField === 'INFO_FIELD') {
+                if (InfoField === 'INFO_FIELD' || InfoField === 'IMAGE_UPLOAD' || InfoField === 'AUDIO_UPLOAD') {
                   formattedValue = `{"#"}`;
                 } else {
                   formattedValue = `{"${value}"}`;

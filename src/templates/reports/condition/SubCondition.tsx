@@ -4,6 +4,14 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { Box, IconButton, Typography } from '@mui/material';
 import { getCondition, getInput, getQuestion } from './GetConditionInput';
 import { SelectController } from '@/components/condition/form/SelectController';
+import { MediaConditionTip } from '@/components/condition/MediaConditionTip';
+import {
+  INFO_LIKE_DUMMY_CONDITION,
+  INFO_LIKE_DUMMY_OPERATOR,
+  INFO_LIKE_DUMMY_VALUE,
+  isInfoLikeQuestion,
+  isMediaUploadQuestion,
+} from '@/lib/conditionQuestionTypes';
 
 type SubConditionProps = {
   index: number;
@@ -39,6 +47,13 @@ export const SubCondition: React.FC<SubConditionProps> = ({
     control,
     name: `conditions.${index}.subConditions.${subIndex}`,
   });
+  const isMediaUpload = isMediaUploadQuestion(currentValues?.questionType);
+
+  const applyInfoLikeDefaults = () => {
+    setValue(`conditions.${index}.subConditions.${subIndex}.operatorType`, INFO_LIKE_DUMMY_OPERATOR);
+    setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, INFO_LIKE_DUMMY_CONDITION);
+    setValue(`conditions.${index}.subConditions.${subIndex}.value`, INFO_LIKE_DUMMY_VALUE);
+  };
 
   return (
     <Box
@@ -93,12 +108,9 @@ export const SubCondition: React.FC<SubConditionProps> = ({
             flexShrink: 0,
           }}
           onChange={(e:any) => {
-              const combinedKey = `${e.target?.value?.split('*')[0]}`;
-              if(combinedKey === "INFO_FIELD"){
-                setValue(`conditions.${index}.subConditions.${subIndex}.operatorType`, "TEXT");
-                setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, "#startWithText");
-                setValue(`conditions.${index}.subConditions.${subIndex}.value`, "---");
-              }else {
+              if (isInfoLikeQuestion(e.target?.value)) {
+                applyInfoLikeDefaults();
+              } else {
                 setValue(`conditions.${index}.subConditions.${subIndex}.operatorType`, '');
                 setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, '');
                 setValue(`conditions.${index}.subConditions.${subIndex}.value`, '');
@@ -108,46 +120,58 @@ export const SubCondition: React.FC<SubConditionProps> = ({
         <SelectController
           name={`conditions.${index}.subConditions.${subIndex}.operatorType`}
           options={getQuestion(currentValues.questionType, currentValues)}
+          placeholder="گویه"
+          forcePlaceholder={isMediaUpload}
           sx={{
             width: { sm: '100%', md: '22%' },
             minWidth: 156,
             flexShrink: 0,
+            ...(isMediaUpload && {
+              backgroundColor: '#EEF1F6',
+              '&.Mui-disabled': { backgroundColor: '#EEF1F6', opacity: 1 },
+            }),
           }}
           onChange={() => {
             const questionType = getValues(`conditions.${index}.subConditions.${subIndex}.questionType`)
-            const combinedKey = `${questionType?.split('*')[0]}`;
-            if (combinedKey === "INFO_FIELD") {
-              setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, "#startWithText");
-              setValue(`conditions.${index}.subConditions.${subIndex}.value`, "---");
+            if (isInfoLikeQuestion(questionType)) {
+              setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, INFO_LIKE_DUMMY_CONDITION);
+              setValue(`conditions.${index}.subConditions.${subIndex}.value`, INFO_LIKE_DUMMY_VALUE);
             } else {
               setValue(`conditions.${index}.subConditions.${subIndex}.conditionType`, '');
               setValue(`conditions.${index}.subConditions.${subIndex}.value`, '');
             }
           }}
           isOperator={true}
-          disabled={!currentValues.questionType}
+          disabled={!currentValues.questionType || isMediaUpload}
         />
         <SelectController
           name={`conditions.${index}.subConditions.${subIndex}.conditionType`}
           options={getCondition(currentValues.questionType, currentValues.operatorType, currentValues)}
+          placeholder="عملگر"
+          forcePlaceholder={isMediaUpload}
           sx={{
             width: { sm: '100%', md: '22%' },
             minWidth: 156,
             flexShrink: 0,
+            ...(isMediaUpload && {
+              backgroundColor: '#EEF1F6',
+              '&.Mui-disabled': { backgroundColor: '#EEF1F6', opacity: 1 },
+            }),
           }}
           onChange={() => {
            const questionType = getValues(`conditions.${index}.subConditions.${subIndex}.questionType`)
-            const combinedKey = `${questionType?.split('*')[0]}`;
-            if (combinedKey === "INFO_FIELD") {
-              setValue(`conditions.${index}.subConditions.${subIndex}.value`, "---");
+            if (isInfoLikeQuestion(questionType)) {
+              setValue(`conditions.${index}.subConditions.${subIndex}.value`, INFO_LIKE_DUMMY_VALUE);
             } else {
               setValue(`conditions.${index}.subConditions.${subIndex}.value`, '');
             }
           }}
           isOperator={true}
-          disabled={!currentValues.operatorType}
+          disabled={!currentValues.operatorType || isMediaUpload}
         />
-        {getInput(
+        {isMediaUpload ? (
+          <Box sx={{ minWidth: 156, flex: 1, height: 50, borderRadius: '12px', bgcolor: '#EEF1F6', border: '1px solid #E5E9F0' }} />
+        ) : getInput(
           currentValues.questionType,
           currentValues.operatorType,
           currentValues.conditionType,
@@ -164,6 +188,11 @@ export const SubCondition: React.FC<SubConditionProps> = ({
             control,
             setValue,
           },
+        )}
+        {isMediaUpload && (
+          <Box sx={{ flexBasis: '100%' }}>
+            <MediaConditionTip />
+          </Box>
         )}
         <Box
           sx={{

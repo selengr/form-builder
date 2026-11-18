@@ -1,5 +1,6 @@
 import { IGetCondition } from '@/types/condition';
 import { TConditionData, TSubConditionData } from '@/lib/ConditionFormSchema';
+import { isMediaUploadQuestion } from '@/lib/conditionQuestionTypes';
 import {
   ConditionLogicPill,
 } from './ConditionCardParts';
@@ -137,9 +138,12 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({
 
             <ConditionLogicPill variant="blue">{questionLabel(item, qacWithOutFilterOptions)}</ConditionLogicPill>
 
-            <span className="text-[#5A4154] font-normal">{operatorLabel(item)}</span>
-
-            <ConditionLogicPill variant="green">{formatValue(item, qacWithOutFilterOptions)}</ConditionLogicPill>
+            {!isMediaUploadQuestion(item.questionType) && (
+              <>
+                <span className="text-[#5A4154] font-normal">{operatorLabel(item)}</span>
+                <ConditionLogicPill variant="green">{formatValue(item, qacWithOutFilterOptions)}</ConditionLogicPill>
+              </>
+            )}
           </div>
         );
       })}

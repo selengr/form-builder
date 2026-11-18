@@ -50,6 +50,8 @@ export const getQuestion = (type: string, values: any) => {
         { value: 'CALCULATION', label: 'محاسبه‌گر' },
       ];
     case 'INFO_FIELD':
+    case 'IMAGE_UPLOAD':
+    case 'AUDIO_UPLOAD':
       return [
          { value: 'TEXT', label: '---' },
       ];
@@ -142,6 +144,8 @@ export const getCondition = (type: string, operator: string, values: any) => {
       ];
 
     case 'INFO_FIELD_TEXT':
+    case 'IMAGE_UPLOAD_TEXT':
+    case 'AUDIO_UPLOAD_TEXT':
       return [
          { value: '#startWithText', label: '---' },
       ];

@@ -14,6 +14,7 @@ interface CustomSelectProps extends Omit<SelectProps, 'sx' | 'name'> {
   isOperator?: boolean;
   isLoading?: boolean;
   placeholder?: string;
+  forcePlaceholder?: boolean;
   parentStyle?: SxProps<Theme>;
 }
 
@@ -26,6 +27,7 @@ export const SelectController: React.FC<CustomSelectProps> = ({
   isOperator = false,
   isLoading = false,
   placeholder = '',
+  forcePlaceholder = false,
   parentStyle,
   ...props
 }) => {
@@ -51,7 +53,7 @@ export const SelectController: React.FC<CustomSelectProps> = ({
               if (isLoading) {
                 return <LinearProgress variant='buffer' value={0} valueBuffer={0} sx={{ width: 28, pt: 1 }} />;
               }
-              if (!selected || selected === '') {
+              if (!selected || selected === '' || forcePlaceholder) {
                 return (
                   <Box component="span" sx={{ color: '#9EA3AC', fontSize: '14px' }}>
                     {placeholder}

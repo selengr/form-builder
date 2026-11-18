@@ -144,10 +144,14 @@ export const getCondition = (type: string, operator: string, values: any) => {
       ];
 
     case 'INFO_FIELD_TEXT':
+      return [
+         { value: '#startWithText', label: '---' },
+      ];
+
     case 'IMAGE_UPLOAD_TEXT':
     case 'AUDIO_UPLOAD_TEXT':
       return [
-         { value: '#startWithText', label: '---' },
+         { value: '#lenGreaterThanText', label: '---' },
       ];
 
     default:

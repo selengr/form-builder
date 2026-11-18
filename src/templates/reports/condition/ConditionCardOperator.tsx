@@ -3,7 +3,7 @@ import { IGetCondition } from '@/types/conditionReportSolo';
 import HtmlPreview from '@/components/HtmlPreview/HtmlPreview';
 import { TConditionData, TSubConditionData } from '@/lib/CreateSoloReportSchema';
 import { useGetQacWithOutFilter } from '@/app/reports/create-solo/[id]/_hooks/useGetQacWithOutFilter';
-import { isMediaUploadQuestion } from '@/lib/conditionQuestionTypes';
+import { isInfoLikeQuestion } from '@/lib/conditionQuestionTypes';
 
 interface IConditionCardOperatorProps {
   condition: IGetCondition;
@@ -75,7 +75,7 @@ export const ConditionCardOperator: React.FC<IConditionCardOperatorProps> = ({ c
           const conditionType = extractAfter(item.conditionType);
           const questionType = extractAfter(item.questionType);
           const formattedValue = formatValue(item);
-          const hideDummyFields = isMediaUploadQuestion(item.questionType);
+          const hideDummyFields = isInfoLikeQuestion(item.questionType);
 
           return (
             <div key={item.id} className='flex flex-row gap-2 w-full'>

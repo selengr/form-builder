@@ -83,7 +83,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
             } else if (operatorType === 'TEXT') {
               if (conditionType === '#startWithText' || conditionType === '#endWithText') {
                 const InfoField = questionType.split('*')[0];
-                if (InfoField === 'INFO_FIELD' || InfoField === 'IMAGE_UPLOAD' || InfoField === 'AUDIO_UPLOAD') {
+                if (InfoField === 'INFO_FIELD') {
                   formattedValue = `{"#"}`;
                 } else {
                   formattedValue = `{"${value}"}`;
@@ -93,6 +93,7 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
               } else if (
                 conditionType === '#lenEqualText' ||
                 conditionType === '#lenGraterThanText' ||
+                conditionType === '#lenGreaterThanText' ||
                 conditionType === '#lenLessThanText'
               ) {
                 formattedValue = `{#v_${value}}`;

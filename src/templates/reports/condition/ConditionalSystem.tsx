@@ -99,14 +99,14 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({ handleClo
               } else if (operatorType === 'TEXT') {
                 if (conditionType === '#startWithText' || conditionType === '#endWithText') {
                   const InfoField = questionType.split('*')[0]
-                  if (InfoField === "INFO_FIELD" || InfoField === "IMAGE_UPLOAD" || InfoField === "AUDIO_UPLOAD") {
+                  if (InfoField === "INFO_FIELD") {
                     formattedValue = `{"#"}`;
                   } else {
                     formattedValue = `{"${value}"}`;
                   }
                 } else if (conditionType === '!#containAnyText' || conditionType === '#containAnyText') {
                   formattedValue = `{${formatContainText(value as string)}}`;
-                } else if (conditionType === '#lenEqualText' || conditionType === '#lenGraterThanText' || conditionType === '#lenLessThanText') {
+                } else if (conditionType === '#lenEqualText' || conditionType === '#lenGraterThanText' || conditionType === '#lenGreaterThanText' || conditionType === '#lenLessThanText') {
                   formattedValue = `{#v_${value}}`;
                 } else {
                   formattedValue = value as string;

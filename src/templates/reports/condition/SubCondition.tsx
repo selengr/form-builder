@@ -89,6 +89,13 @@ export const SubCondition: React.FC<SubConditionProps> = ({
       </Box>
 
       <Box
+        sx={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1,
+        }}>
+        <Box
         rowGap={3}
         columnGap={2}
         sx={{
@@ -96,6 +103,7 @@ export const SubCondition: React.FC<SubConditionProps> = ({
           width: '100%',
           display: 'flex',
           flexWrap: 'wrap',
+          alignItems: 'start',
         }}>
         <SelectController
           name={`conditions.${index}.subConditions.${subIndex}.questionType`}
@@ -169,7 +177,17 @@ export const SubCondition: React.FC<SubConditionProps> = ({
           disabled={!currentValues.operatorType || isDisabledCombos}
         />
         {isDisabledCombos ? (
-          <Box sx={{ minWidth: 156, flex: 1, height: 50, borderRadius: '12px', bgcolor: '#EEF1F6', border: '1px solid #E5E9F0' }} />
+          <Box
+            sx={{
+              minWidth: 156,
+              width: { sm: '100%', md: '22%' },
+              flexShrink: 0,
+              height: 50,
+              borderRadius: '12px',
+              bgcolor: '#EEF1F6',
+              border: '1px solid #E5E9F0',
+            }}
+          />
         ) : getInput(
           currentValues.questionType,
           currentValues.operatorType,
@@ -188,15 +206,11 @@ export const SubCondition: React.FC<SubConditionProps> = ({
             setValue,
           },
         )}
-        {isDisabledCombos && (
-          <Box sx={{ flexBasis: '100%' }}>
-            <MediaConditionTip variant={isMediaUpload ? 'media' : 'info'} />
-          </Box>
-        )}
         <Box
           sx={{
             display: 'flex',
             gap: 1,
+            flexShrink: 0,
           }}>
           <IconButton
             onClick={onAddSubCondition}
@@ -226,6 +240,8 @@ export const SubCondition: React.FC<SubConditionProps> = ({
             </IconButton>
           )}
         </Box>
+        </Box>
+        {isDisabledCombos && <MediaConditionTip variant={isMediaUpload ? 'media' : 'info'} />}
       </Box>
     </Box>
   );

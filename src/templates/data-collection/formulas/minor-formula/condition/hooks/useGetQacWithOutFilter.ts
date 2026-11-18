@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { IConditionQuestionType } from '../types';
 import { REF_ID_QUESTION_TYPE } from '../utils/questionType';
+import { isInfoLikeQuestion } from '@/lib/conditionQuestionTypes';
 import { getFormQuestionsAction } from '@actions/data-collection/formulas/minor-formula/getFormQuestionsAction';
 
 export const useGetQacWithOutFilter = (formId: string) => {
@@ -57,6 +58,7 @@ export const useGetQacWithOutFilter = (formId: string) => {
     return {
       value: questionType,
       label: item.caption,
+      showInfoIcon: isInfoLikeQuestion(questionType),
     };
   });
 

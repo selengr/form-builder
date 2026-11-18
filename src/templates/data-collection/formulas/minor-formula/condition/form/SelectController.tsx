@@ -5,9 +5,10 @@ import { Box, Button, Checkbox, Chip, FormControl, FormHelperText, InputLabel, L
 
 import { IoIosArrowDown } from 'react-icons/io';
 import { Controller, useFormContext } from 'react-hook-form';
+import { ConditionInfoIcon } from '@/components/condition/form/MediaConditionTip';
 
 interface CustomSelectProps extends Omit<SelectProps, 'sx' | 'name'> {
-  options: { value: string; label: string; highlighted?: boolean }[];
+  options: { value: string; label: string; highlighted?: boolean; showInfoIcon?: boolean }[];
   sx?: SxProps<Theme>;
   name: string;
   onChange?: any;
@@ -89,7 +90,16 @@ export const SelectController: React.FC<CustomSelectProps> = ({
               const selectedOption = options?.find((option) =>
                 isOperator ? option.value === selectedText.split('@')[0] : option.value === selectedText,
               );
-              return selectedOption ? selectedOption.label : '';
+              if (!selectedOption) return '';
+              if (!selectedOption.showInfoIcon) return selectedOption.label;
+              return (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0 }}>
+                  <ConditionInfoIcon size={16} color="#8A919C" />
+                  <Box component="span" sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {selectedOption.label}
+                  </Box>
+                </Box>
+              );
             }}
             sx={{
               '& .MuiSelect-select.MuiSelect-outlined': {
@@ -122,9 +132,12 @@ export const SelectController: React.FC<CustomSelectProps> = ({
             {options?.map((option) => (
               <MenuItem
                 key={option.value}
+                dir="rtl"
                 value={!isOperator ? option.value : option.value + '@' + option.label}
                 sx={{
                   display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
                   py: 1,
                   px: 2,
                   mx: 1,
@@ -137,6 +150,7 @@ export const SelectController: React.FC<CustomSelectProps> = ({
                     '&:hover, &.Mui-selected, &.Mui-selected:hover': { backgroundColor: '#E6EEFB' },
                   }),
                 }}>
+                {option.showInfoIcon && <ConditionInfoIcon size={16} color="#8A919C" />}
                 {option.label}
               </MenuItem>
             ))}

@@ -1,6 +1,7 @@
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { IConditionQuestionType } from '@/types/condition';
+import { isInfoLikeQuestion } from '@/lib/conditionQuestionTypes';
 // action
 import { getQacWithOutFilterAction } from '../../../../../../actions/report/getQacWithOutFilterAction';
 
@@ -46,6 +47,7 @@ export const useGetQacWithOutFilter = () => {
     return {
       value: `${questionType}@${item.caption}`,
       label: item.caption,
+      showInfoIcon: isInfoLikeQuestion(questionType),
     };
   });
 

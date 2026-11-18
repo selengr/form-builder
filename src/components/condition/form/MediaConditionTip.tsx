@@ -22,8 +22,8 @@ export const ConditionInfoIcon = ({
     className="shrink-0"
     aria-hidden
   >
-    <circle cx="12" cy="12" r="8.15" stroke={color} strokeWidth="3.2" />
-    <rect x="10.2" y="6.4" width="3.6" height="11.2" rx="1.8" fill={color} />
+    <circle cx="12" cy="12" r="8.25" stroke={color} strokeWidth="2" />
+    <rect x="10.5" y="6.75" width="3" height="10.5" rx="1.5" fill={color} />
   </svg>
 );
 

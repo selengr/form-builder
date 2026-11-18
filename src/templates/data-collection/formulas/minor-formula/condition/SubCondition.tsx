@@ -4,7 +4,7 @@ import { Fragment } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { getCondition, getInput, getQuestion } from './GetConditionInput';
 import { SelectController } from './form/SelectController';
-import { MediaConditionTip } from '@/components/condition/MediaConditionTip';
+import { MediaConditionTip } from '@/components/condition/form/MediaConditionTip';
 import {
   getDisabledConditionDefaults,
   isInfoLikeQuestion,

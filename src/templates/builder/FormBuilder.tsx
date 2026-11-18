@@ -20,9 +20,7 @@ const FormBuilder = memo(function FormBuilder({ data }: FormBuilderProps) {
 
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
-      delay: 100,
-      distance: 15,
-      tolerance: 0,
+      distance: 8,
     },
   });
 

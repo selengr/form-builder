@@ -19,7 +19,7 @@ interface SidebarBtnElementProps {
 }
 
 function SidebarBtnElement({ formElement, disabled = false }: SidebarBtnElementProps) {
-  const isMobile = useMediaQuery('(max-width:1280px)');
+  const isMobile = useMediaQuery('(max-width:1023px)');
   const setOpenDialog = useActionOpenDialog();
   const setSelectedElement = useActionSelectedElement();
   const setOpenBottomSheet = useActionOpenBottomSheet();
@@ -39,9 +39,9 @@ function SidebarBtnElement({ formElement, disabled = false }: SidebarBtnElementP
   const handleClick = () => {
     if (disabled || !questionGroups.length) return;
 
-    const targetGroupId = isMobile
-      ? questionGroups.find((group) => group === selectedGroup)
-      : questionGroups[questionGroups.length - 1];
+    const targetGroupId =
+      questionGroups.find((group) => group === selectedGroup) ??
+      questionGroups[questionGroups.length - 1];
 
     if (!targetGroupId) return;
 

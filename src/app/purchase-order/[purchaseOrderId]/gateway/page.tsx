@@ -165,6 +165,10 @@ export default function PayWithMHesam() {
         toast.error(res.message || 'خطا در اتصال به درگاه');
         return;
       }
+      if (!res.data?.gatewayUrl) {
+        toast.error('خطا در اتصال به درگاه');
+        return;
+      }
       const newUrl = res.data.gatewayUrl.replace('www.', '');
       const param = {
         redirectUrl: res.data.redirectUrl,
@@ -172,6 +176,9 @@ export default function PayWithMHesam() {
       };
       const url = `${newUrl}?${new URLSearchParams(param)}`;
       window.location.href = url;
+    },
+    onError: () => {
+      toast.error('خطا در اتصال به درگاه');
     },
   });
 

@@ -1,16 +1,32 @@
 'use client';
 
-import { IoInformationCircle } from 'react-icons/io5';
-
 const TIPS = {
   media:
     'برای سوال صوتی و تصویری، گویه و عملگر غیرفعال است و فقط مسیر «برو به / در غیر اینصورت» قابل تعریف است.',
   info: 'برای سوال راهنما، گویه و عملگر غیرفعال است و فقط مسیر «برو به / در غیر اینصورت» قابل تعریف است.',
 } as const;
 
+const ConditionTipIcon = () => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className="shrink-0"
+    aria-hidden
+  >
+    <circle cx="12" cy="12" r="8.15" stroke="#2F80ED" strokeWidth="3.2" />
+    <rect x="10.2" y="6.4" width="3.6" height="11.2" rx="1.8" fill="#2F80ED" />
+  </svg>
+);
+
 export const MediaConditionTip = ({ variant = 'media' }: { variant?: keyof typeof TIPS }) => (
-  <div className="flex w-full items-center gap-2 rounded-xl bg-[#E8F4FF] px-3 py-2.5 text-[13px] leading-6 text-[#1758BA]">
-    <IoInformationCircle className="shrink-0" size={18} />
+  <div
+    dir="rtl"
+    className="flex w-full items-center gap-2 rounded-xl bg-[#E8F4FF] px-3 py-2.5 text-[13px] leading-6 text-[#1758BA]"
+  >
+    <ConditionTipIcon />
     <p className="text-right">{TIPS[variant]}</p>
   </div>
 );

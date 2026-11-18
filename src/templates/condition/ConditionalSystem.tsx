@@ -130,6 +130,15 @@ export const ConditionalSystem: React.FC<IConditionalSystemProps> = ({
     };
 
     const output: IPostCondition[] = transformInputToOutput(input);
+    console.log(
+      '[condition-payload] submit',
+      output.map((item) => ({
+        conditionFormula: item.conditionFormula,
+        returnQuestionId: item.returnQuestionId,
+        elseQuestionId: item.elseQuestionId,
+        frontConditionData: JSON.parse(item.frontConditionData),
+      })),
+    );
     postCondition.mutate(
       { data: output },
       {

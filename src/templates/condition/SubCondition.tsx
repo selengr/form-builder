@@ -111,8 +111,20 @@ export const SubCondition: React.FC<SubConditionProps> = ({
           placeholder="بر اساس"
           sx={{...fieldSx, width: {xs : "100%" , md : 320}}}
           onChange={(e: any) => {
-            if (isInfoLikeQuestion(e.target?.value)) {
-              applyDisabledDefaults(e.target?.value);
+            const questionType = e.target?.value;
+            if (isInfoLikeQuestion(questionType)) {
+              applyDisabledDefaults(questionType);
+              const defaults = getDisabledConditionDefaults(questionType);
+              const unicName = questionType?.split('*')[1]?.split('@')[0];
+              const formattedValue = isMediaUploadQuestion(questionType) ? `{#v_${defaults.value}}` : `{"#"}`;
+              console.log('[condition-payload] combo-change', {
+                kind: questionType?.split('*')[0],
+                operatorType: defaults.operatorType,
+                conditionType: defaults.conditionType,
+                value: defaults.value,
+                conditionFormula: `${defaults.conditionType}(${unicName},${formattedValue})`,
+                subCondition: getValues(`conditions.${index}.subConditions.${subIndex}`),
+              });
             } else {
               resetDependentFields();
             }

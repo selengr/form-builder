@@ -6,18 +6,24 @@ const TIPS = {
   info: 'برای سوال راهنما، گویه و عملگر غیرفعال است و فقط مسیر «برو به / در غیر اینصورت» قابل تعریف است.',
 } as const;
 
-const ConditionTipIcon = () => (
+export const ConditionInfoIcon = ({
+  size = 18,
+  color = '#2F80ED',
+}: {
+  size?: number;
+  color?: string;
+}) => (
   <svg
-    width="18"
-    height="18"
+    width={size}
+    height={size}
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className="shrink-0"
     aria-hidden
   >
-    <circle cx="12" cy="12" r="8.15" stroke="#2F80ED" strokeWidth="3.2" />
-    <rect x="10.2" y="6.4" width="3.6" height="11.2" rx="1.8" fill="#2F80ED" />
+    <circle cx="12" cy="12" r="8.15" stroke={color} strokeWidth="3.2" />
+    <rect x="10.2" y="6.4" width="3.6" height="11.2" rx="1.8" fill={color} />
   </svg>
 );
 
@@ -26,7 +32,7 @@ export const MediaConditionTip = ({ variant = 'media' }: { variant?: keyof typeo
     dir="rtl"
     className="flex w-full items-center gap-2 rounded-xl bg-[#E8F4FF] px-3 py-2.5 text-[13px] leading-6 text-[#1758BA]"
   >
-    <ConditionTipIcon />
+    <ConditionInfoIcon />
     <p className="text-right">{TIPS[variant]}</p>
   </div>
 );

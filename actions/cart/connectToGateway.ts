@@ -36,11 +36,21 @@ export async function connectToGatewayAction(redirectUrl: string, amount: number
     { baseURL: process.env.BASE_URL },
   );
 
+  try {
+    console.log('[connectToGateway] before-gateway', JSON.stringify(result));
+  } catch {
+    console.log('[connectToGateway] before-gateway', result);
+  }
+
   if (!result.success) return result;
 
   const payload = readGatewayPayload(result.data);
   if (!payload) {
-    return { success: false as const, message: 'خطا در اتصال به درگاه' };
+    return {
+      success: false as const,
+      message: 'خطا در اتصال به درگاه',
+      raw: result.data,
+    };
   }
 
   return { success: true as const, data: payload };

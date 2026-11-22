@@ -3,8 +3,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from 'sonner';
-import { Suspense, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { IconButton } from '@mui/material';
+import { HiOutlineUserGroup } from 'react-icons/hi2';
 import EditIcon from '@/../public/images/home-page/edit-2.svg';
 import { InfoRow } from '@/components/common/infoRow';
 import { SwitchButton } from '@/components/Switch/SwitchButton';
@@ -64,23 +65,30 @@ export default function ListCard({
 
   return (
     <>
-      <div className="relative border border-gray-200 rounded-xl p-4 transition flex flex-col gap-[10px] w-full">
-        <Suspense fallback={<div>در حال بارگذاری...</div>}>
-          <InfoRow label="نام" value={data.name} bold />
-          <InfoRow label="تعداد اعضا" value={`${data.userCount} نفر`} bold />
-        </Suspense>
+      <div
+        dir="rtl"
+        className="flex items-center gap-2 min-h-[72px] w-full py-3 pl-3 pr-2 border border-[#E8E8E8] rounded-xl bg-white transition-shadow duration-200 hover:shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+        <span className="rounded-[10px] h-9 w-9 flex justify-center items-center shrink-0 bg-[#F7F7FF]">
+          <HiOutlineUserGroup size={20} className="text-[#292D32]" />
+        </span>
 
-        <div className="flex w-full gap-2">
-          <Link
-            className="absolute top-[6px] left-16"
-            href={`/groups/${data.id}?groupName=${encodeURIComponent(data.name)}`}>
-            <IconButton color="primary">
-              <Image src={EditIcon} alt="edit" width={24} height={24} />
+        <div className="flex-1 min-w-0 flex flex-col gap-1 pr-1">
+          <InfoRow
+            label="نام"
+            value={<span className="truncate block">{data.name}</span>}
+            bold
+            className="min-w-0"
+          />
+          <InfoRow label="تعداد اعضا" value={`${data.userCount} نفر`} bold />
+        </div>
+
+        <div className="flex items-center gap-1 shrink-0 pl-1">
+          <Link href={`/groups/${data.id}?groupName=${encodeURIComponent(data.name)}`}>
+            <IconButton color="primary" sx={{ borderRadius: '10px' }} aria-label="ویرایش گروه">
+              <Image src={EditIcon} alt="edit" width={22} height={22} />
             </IconButton>
           </Link>
-
           <SwitchButton
-            sx={{ position: 'absolute', top: 15, right: 15 }}
             checked={!data.invalid}
             disabled={disabled}
             onChange={() => handleChangeStatus(Boolean(data.invalid))}
@@ -92,9 +100,7 @@ export default function ListCard({
         <InvalidConfirmDialog
           open={confirmOpen}
           onClose={handleCloseConfirm}
-          onConfirm={(rememberAllocation) =>
-            handleChangeStatus(pendingActive, rememberAllocation)
-          }
+          onConfirm={(rememberAllocation) => handleChangeStatus(pendingActive, rememberAllocation)}
           loading={loading}
           title="اعضای این گروه"
         />

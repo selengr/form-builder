@@ -1,34 +1,39 @@
 'use client';
 
-import { Skeleton, Box, Grid2 } from '@mui/material';
+const pulse = 'animate-pulse';
+
+function SkeletonBlock({ className = '' }: { className?: string }) {
+  return <div className={`bg-gray-200 rounded-lg ${pulse} ${className}`} />;
+}
+
+function AssessmentCardSkeleton() {
+  return (
+    <div
+      dir="rtl"
+      className="flex flex-col gap-3 w-full py-3 pl-3 pr-2 border border-[#E8E8E8] rounded-xl bg-white">
+      <div className="flex items-center gap-2 min-h-[72px]">
+        <SkeletonBlock className="h-9 w-9 shrink-0 rounded-[10px] bg-gray-100" />
+        <div className="flex-1 min-w-0 flex flex-col gap-2 pr-1">
+          <SkeletonBlock className="h-4 w-3/4 max-w-[180px]" />
+          <SkeletonBlock className="h-3 w-1/2 max-w-[120px]" />
+          <SkeletonBlock className="h-3 w-1/3 max-w-[80px]" />
+        </div>
+        <SkeletonBlock className="h-8 w-16 shrink-0 rounded-[10px]" />
+      </div>
+
+      <div className="flex items-center gap-2">
+        <SkeletonBlock className="h-[42px] flex-1 rounded-[10px]" />
+        <SkeletonBlock className="h-[42px] flex-1 rounded-[10px]" />
+      </div>
+    </div>
+  );
+}
 
 export default function CardSkeleton() {
   return (
     <>
       {Array.from({ length: 5 }).map((_, i) => (
-        <Grid2 key={i} sx={{ width: '100%', mx: 'auto' }} size={12}>
-          <div className="border border-[#DDE1E6] p-3 rounded-2xl flex flex-col gap-0 w-full max-w-full">
-            <div className="space-y-2 mt-2">
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Skeleton variant="text" width="30%" animation="wave" />
-                <Skeleton variant="text" width="50%" animation="wave" />
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Skeleton variant="text" width="25%" animation="wave" />
-                <Skeleton variant="text" width="40%" animation="wave" />
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Skeleton variant="text" width="35%" animation="wave" />
-                <Skeleton variant="text" width="45%" animation="wave" />
-              </Box>
-            </div>
-
-            <div className="flex w-full gap-4 flex-col sm:flex-row mt-2">
-              <Skeleton variant="rounded" height={42} sx={{ flex: 1 }} animation="wave" />
-              <Skeleton variant="rounded" height={42} sx={{ flex: 1 }} animation="wave" />
-            </div>
-          </div>
-        </Grid2>
+        <AssessmentCardSkeleton key={i} />
       ))}
     </>
   );

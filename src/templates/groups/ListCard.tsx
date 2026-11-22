@@ -67,12 +67,12 @@ export default function ListCard({
     <>
       <div
         dir="rtl"
-        className="flex items-center gap-2 min-h-[72px] w-full py-3 pl-3 pr-2 border border-[#E8E8E8] rounded-xl bg-white transition-shadow duration-200 hover:shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
-        <span className="rounded-[10px] h-9 w-9 flex justify-center items-center shrink-0 bg-[#F7F7FF]">
-          <HiOutlineUserGroup size={20} className="text-[#292D32]" />
+        className="flex items-center gap-2 min-h-[88px] w-full py-4 pl-3 pr-2 border border-[#E8E8E8] rounded-xl bg-white transition-shadow duration-200 hover:shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+        <span className="rounded-[10px] h-10 w-10 flex justify-center items-center shrink-0 bg-[#F7F7FF]">
+          <HiOutlineUserGroup size={24} className="text-[#1758BA]" />
         </span>
 
-        <div className="flex-1 min-w-0 flex flex-col gap-1 pr-1">
+        <div className="flex-1 min-w-0 flex flex-col gap-1.5 pr-1">
           <InfoRow
             label="نام"
             value={<span className="truncate block">{data.name}</span>}
@@ -82,17 +82,22 @@ export default function ListCard({
           <InfoRow label="تعداد اعضا" value={`${data.userCount} نفر`} bold />
         </div>
 
-        <div className="flex items-center gap-1 shrink-0 pl-1">
-          <Link href={`/groups/${data.id}?groupName=${encodeURIComponent(data.name)}`}>
-            <IconButton color="primary" sx={{ borderRadius: '10px' }} aria-label="ویرایش گروه">
+        <div className="flex items-center gap-1 shrink-0 pl-1 h-10">
+          <Link href={`/groups/${data.id}?groupName=${encodeURIComponent(data.name)}`} className="flex h-10 w-10 items-center justify-center">
+            <IconButton
+              color="primary"
+              aria-label="ویرایش گروه"
+              sx={{ width: 40, height: 40, borderRadius: '10px', padding: 0 }}>
               <Image src={EditIcon} alt="edit" width={22} height={22} />
             </IconButton>
           </Link>
-          <SwitchButton
-            checked={!data.invalid}
-            disabled={disabled}
-            onChange={() => handleChangeStatus(Boolean(data.invalid))}
-          />
+          <div className="flex h-10 items-center justify-center">
+            <SwitchButton
+              checked={!data.invalid}
+              disabled={disabled}
+              onChange={() => handleChangeStatus(Boolean(data.invalid))}
+            />
+          </div>
         </div>
       </div>
 

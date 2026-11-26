@@ -1,6 +1,7 @@
 import { IStaticLink } from "@/types/menus";
 
 export const STATIC_LINKS: IStaticLink[] = [
+  { id: 6, title: "بازی‌ها", icon: "tour.svg", link: "/games", order: 6 },
   { id: 7, title: "فرم‌های عمومی", icon: "formsMoney.svg", link: "/public-form", order: 7 },
   { id: 8, title: "آموزش", icon: "tour.svg", link: "/transactions", order: 8 },
   { id: 9, title: "سوالات پرتکرار", icon: "faq.svg", link: "/faq", order: 9 },

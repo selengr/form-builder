@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import ImmediateSearchInput from '@/components/ListGrid/ImmediateSearchInput';
 import GameCard from './GameCard';
+import GameHistory from './GameHistory';
 import GamesHeader from './GamesHeader';
 import { filterGamesCatalog } from './filterCatalog';
 import { CATEGORY_LABEL } from './labels';
@@ -52,6 +53,7 @@ export default function GamesPage() {
           ))}
         </div>
       )}
+      <GameHistory />
     </div>
   );
 }

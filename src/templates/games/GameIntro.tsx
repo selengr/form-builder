@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Button } from '@mui/material';
 import { InfoRow } from '@/components/common/infoRow';
 import GamesHeader from './GamesHeader';
+import { GAME_INSTRUCTIONS } from './instructions';
 import { CATEGORY_LABEL, DIFFICULTY_LABEL } from './labels';
 import type { GameCatalogItem } from './types';
 
@@ -17,6 +18,11 @@ export default function GameIntro({ game }: { game: GameCatalogItem }) {
         <InfoRow label="سطح" value={DIFFICULTY_LABEL[game.difficulty]} bold />
         <InfoRow label="زمان تقریبی" value={game.durationLabel} bold />
         <p className="text-sm text-[#637381] leading-7">{game.summary}</p>
+        <ul className="text-sm text-[#393939] leading-7 list-disc pr-4">
+          {GAME_INSTRUCTIONS[game.slug].map((line) => (
+            <li key={line}>{line}</li>
+          ))}
+        </ul>
       </div>
 
       <Link href={`/games/${game.slug}/play`} className="block mt-4">

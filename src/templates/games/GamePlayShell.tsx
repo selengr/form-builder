@@ -1,5 +1,6 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import GamesHeader from './GamesHeader';
 
 export default function GamePlayShell({
@@ -9,7 +10,7 @@ export default function GamePlayShell({
 }: {
   title: string;
   slug: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <div className="w-full max-w-[470px] mx-auto px-4 py-3 pb-10">
